@@ -1,0 +1,1007 @@
+#include "nsISupports.idl"
+#include "nsISupportsPrimitives.idl"
+#include "nsIArray.idl"
+#include "nsISupportsArray.idl"
+#include "nsIVariant.idl"
+#include "nsIStringEnumerator.idl"
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//
+//                       OPC DA 3.00
+//
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+
+
+/****************************************************************************
+ *                         Group Object                                     *
+ ****************************************************************************/
+
+//------------------------------------------------------------------------
+/**
+\brief интерфейс управления состоянием группы
+*/
+[scriptable, uuid(5FF4E49E-81AA-4a36-85C7-C0E87E3A7AAA)]
+interface nsIOPCGroupStateMgt : nsISupports
+{
+  attribute unsigned long updateRate;
+  attribute boolean       active;
+  attribute wstring       name;
+  attribute long          timebias;
+  attribute float         deadband;
+
+
+  /**
+  \brief задание параметров группы
+  \param requestedUpdateRate период обновления данных в группе, если невозможно установить в допустимое значение
+  \param active - активность группы
+  \param timeBias - временная зона
+  \param percentDeadband - зона нечуствительности
+  \param locale - идентификатор локали
+  \return код ошибки
+  */
+
+  PRUint32 setState(in unsigned long requestedUpdateRate,
+                    in boolean active,
+                    in long timeBias,
+                    in float percentDeadband,
+                    in unsigned long locale);
+  
+  /**
+  \brief setting group name
+  \param szName new group name
+  \return error code
+  */
+//  PRUint32 SetName(in wstring szName);
+
+  /**
+  \brief клонирование группы
+  \param name имя новой группы, если null сервер присвоит сам
+  \param group созданная группа
+  */
+  nsISupports CloneGroup(in wstring name);
+};
+//------------------------------------------------------------------------
+/**
+\brief расширенный интерфейс управления состоянием группы
+*/
+[scriptable, uuid(58F6748C-ABF7-4fff-9C57-453FF56A3A4E)]
+interface nsIOPCGroupStateMgt2:nsIOPCGroupStateMgt
+{
+  attribute unsigned long keepAliveTime;
+};
+//------------------------------------------------------------------------
+/**
+\brief интерфейс управления пользовательскими тегами
+*/
+
+interface nsIOPCItemDef;
+interface nsIOPCItemResult;
+interface nsIOPCItemAttributes;
+interface nsIOPCItemVQT;
+
+
+/// @brief Interface for simplifing user life.
+/// Create instances of objects with interfaces that user will pass to the group objects, that gives user no need to implement this interfaces.
+/// @note this interface can be accessed via any interface of group object.
+[scriptable, uuid(98a3b197-6040-4092-838d-98d65874c74c)]
+interface nsIOPCGroupInterfacesFactory : nsISupports
+{
+  nsIOPCItemDef CreateItemDef();
+  nsIOPCItemVQT CreateItemVQT();
+};
+
+
+///@interface nsIOPCItemMgt
+///@brief Interface for managing items withing group
+[scriptable, uuid(543152A6-BFA9-45bd-9496-2BDB6617074C)]
+interface nsIOPCItemMgt : nsISupports
+{
+  ///@brief Adding items to the group
+  ///@param itemDefArray array of nsOPCItemDef elements
+  ///@return array of nsIOPCIetemResult itemDefArray.length=result.length
+  nsIArray addItems(in nsIArray itemDefArray);
+
+  ///@brief checking item parameters without adding items to the group
+  ///@param itemDefArray array elements of type nsIOPCItemDef with items parameters
+  ///@return array of nsIOPCItemResult
+  nsIArray validateItems(in nsIArray  itemDefArray);
+
+  ///@brief Removing items from group
+  ///@param items an array of server handles to be removed
+  ///@return array of error codes.
+  ///@note serverHandles.length=return.length
+  nsIArray removeItems(in nsIArray serverHandles);
+
+  ///@brief Updating state of items
+  ///@param serverHandles items array of server handles of item which state is changes
+  ///@param isActive new state of items: active/inactive
+  ///@return array of error codes 
+  nsIArray  setActiveState(in nsIArray serverHandles,
+                           in boolean isActive);
+
+  ///@brief setting client handles for items
+  ///@param serverHandles array of server items handles
+  ///@param clientHandles array of new items handles
+  ///@return array of errors codes
+  ///@note serverHandles.length=clientHandles.length=return.length
+  nsIArray setClientHandles(in nsIArray serverHandles,
+                            in nsIArray clientHandles);
+
+  ///@brief Update type od data passed to user
+  ///@param serverHandles array of server handles (nsISupportsPrUint32)
+  ///@param requestedDatatypes new types of items data
+  ///@return array of error codes
+  nsIArray setDataTypes(in nsIArray serverHandles,
+                        in nsIArray requestedDataTypes);
+
+  ///@brief Enumerating items of a group
+  ///@return enum of nsISimplEnumerator with nsIOPCItemAttributes
+  nsISimpleEnumerator createEnumerator();
+};
+
+/**
+\brief descriptor of the item (OPCITEMDEF)
+*/
+[scriptable, uuid(3EB9E07F-24BC-411d-9657-445E2887BD30)]
+interface nsIOPCItemDef : nsISupports
+{
+  attribute wstring AccessPath;  //!< 
+  attribute wstring ItemID;      //!< item id 
+  attribute boolean IsActive;       //!< is data processing active for this itrm
+  attribute unsigned long ClientHandle; //!< ID of the item assigned by client
+  attribute unsigned long RequestedDataType; //!< Type of item data to which it should be converted and passed to client
+/*
+  DWORD dwBlobSize;
+  [size_is(dwBlobSize)] BYTE * pBlob;
+  VARTYPE vtRequestedDataType;
+  WORD wReserved;
+*/
+};
+
+/**
+\brief result of addong item  (OPCITEMRESULT)
+*/
+[scriptable, uuid(2C2A6F54-D209-40f5-8857-C908BC157270)]
+interface nsIOPCItemResult : nsISupports
+{
+  readonly attribute unsigned long ServerHandle; //!< идентификатор тега на сервере
+  readonly attribute unsigned long AccessRights; //!< права доступа к тегу
+  readonly attribute unsigned short  DataType;  //!< тип данных
+  readonly attribute unsigned long  Error;  //!< код ошибки
+} ;
+
+
+/**
+\brief интерфейс свойств пользовательского тега
+*/
+[scriptable, uuid(C53C6EA9-C56C-4cc0-8319-FBB6A4533554)]
+interface nsIOPCItemAttributes:nsISupports
+{
+  readonly attribute AString AccessPath;
+  readonly attribute AString ItemID;
+  readonly attribute boolean IsActive;
+  readonly attribute unsigned long ClientHandle;
+  readonly attribute unsigned long ServerHandle;
+  readonly attribute unsigned long AccessRights;
+/*
+  readonly attribute unsigned long dwBlobSize;
+  [size_is(dwBlobSize)] BYTE * pBlob;
+*/
+  readonly attribute unsigned long RequestedDataType;
+  readonly attribute unsigned long CanonicalDataType;
+/*
+  readonly attribute nsIVariant vEUInfo;
+*/
+};
+
+
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+/**
+\brief интерфейс 
+*/
+
+interface nsIOPCItemState;
+
+///@brief Interface for writing synchroniuos.
+///@note Interface of the group object
+
+[scriptable, uuid(5DEA1FD7-4FD9-489e-A6E9-9438D4032EBB)]
+interface nsIOPCSyncIO : nsISupports
+{
+  //
+  //тип источника при чтении
+  //OPC_DS_CACHE - из кэша
+  //OPC_DS_CACHE - из устройства
+  //const short OPC_DS_CACHE = 1;
+  //const short OPC_DS_DEVICE = 2;
+  //
+
+  /// @brief Reading items values
+  /// @param fromChache  if true - red from cahce, false - from device
+  /// @param serverHandles - Array of items server handles
+  /// @return array of nsIOPCItemState.
+  nsIArray Read(in boolean fromCache, //!< OPC_DS_CACHE or OPC_DS_DEVICE
+                in nsIArray serverHandles);   //!< array of unsigned long
+
+  /// @brief Write items data
+  /// @param ServerHandles array of server handles 
+  /// @param pItemValues new items values
+  /// @result Array of result errors for every item
+  nsIArray Write(in nsIArray serverHandles, //!< array of unsigned long
+                 in nsIArray itemValues); //!< array of arbitary type values
+};
+
+/**
+\brief Интерфейс OPCITEMSTATE 
+*/
+[scriptable, uuid(37616E74-0D54-4572-83FB-C9DBB1B1E352)]
+interface nsIOPCItemState : nsISupports
+{
+  readonly attribute unsigned long ServerHandle;
+  readonly attribute unsigned long ClientHandle;
+  readonly attribute PRTime TimeStamp;
+  readonly attribute unsigned short Quality;
+  readonly attribute nsIVariant Data;
+  readonly attribute unsigned long ErrorCode;
+};
+//------------------------------------------------------------------------
+/**
+\brief расширенный интерфейс синхронной записи
+*/
+[scriptable, uuid(5AD9CBF0-6B41-4af4-B711-585EA4C7D4FD)]
+interface nsIOPCSyncIO2:nsIOPCSyncIO
+{
+  /**
+  \brief чтение тегов с указанием максимального срока давности данных
+  \param hServer массив серверных хэндлов тегов
+  \param maxAge массив сроков давности в милисекундах
+  \param values массив прочитанных значений
+  \param qualities массив c качеством значений 
+  \param errors массив ошибок
+  \return код ошибки
+  */
+  unsigned long ReadMaxAge (
+                  in  nsIArray hServer,      //!< array of server handles itmes
+                  in  nsIArray maxAge,     //!< array of unsigned long - max age of value in  miliseconds
+                  out nsIArray values,     //!< array of value arbitary types
+                  out nsIArray qualities,  //!< array of unsigned short bit masks
+                  out nsIArray timeStamps,//!< array of PRTime
+                  out nsIArray errors);     //!< array of unsigned long
+
+  /**
+  \brief запись значений
+  \param hServer массив серверных хэндлов
+  \param itemVQT массив значений типа nsIOPCItemVQT
+  \param errors массив ошибок
+  \return код ошибки
+  */
+  unsigned long  WriteVQT (in nsIArray phServer, //!< array of unsigned long - item handles
+                           in nsIArray pItemVQT,//!< array of OPCITEMVQT 
+                           out nsIArray ppErrors);//!< array of unsigned long - error codes
+};
+
+
+/**
+OPCITEMVQT
+*/
+
+[scriptable, uuid(C747B4C2-814A-44d5-B9FC-781BD66415AF)]
+interface nsIOPCItemVQT:nsISupports
+{
+  attribute nsIVariant vDataValue;
+  attribute boolean bQualitySpecified;
+  attribute unsigned short wQuality;
+  attribute boolean bTimeStatmpSpecified;
+  attribute PRTime ftTimeStamp;
+};
+//------------------------------------------------------------------------
+/**
+\brief интерфейc асинхронной записи значений
+*/
+[scriptable, uuid(A69A88F7-FD91-48d3-94B8-6DA04102F151)]
+interface nsIOPCAsyncIO2:nsISupports
+{
+  /**
+  \brief асинхронное чтение значений тегов
+  \param hServer массив серверных хэндлов
+  \param dwTransactionID номер транзакции
+  \param pdwCancelID номер операции отмены чтения
+  \param errors массив ошибок
+  \return код ошибки
+  */
+  unsigned long Read( in  nsIArray phServer, //!< array of unsigned long - sever handles
+                      in  unsigned long dwTransactionID,
+                      out unsigned long pdwCancelID,
+                      out nsIArray ppErrors); //!< array of unsigned long  -error codes for every handle
+
+  /**
+  \brief асинхронная запись значений
+  \param hServer массив серверных хэндлов тегов для которых производится запись
+  \param itemValues - массив записываемых значений
+  \param transactionId номер транзакции
+  \param pdwCancelID идентификатор отмены
+  \param errors массив ошибок
+  \return код ошибки
+  */
+  unsigned long Write(in nsIArray phServer, //!< array of unsigned long - server handles
+                      in nsIArray pItemValues,//!< array of values
+                      in unsigned long transactionId,
+                      out unsigned long pdwCancelID,
+                      out nsIArray ppErrors); //!< array of unsirned long - error codes
+
+
+  /**
+  \brief возобновление транзакции
+  \param bCache true - обновить из кэша
+  \param transactionID - номер транзакции для выполнения
+  \param идентификатор для отмены операции
+  */
+  unsigned long refresh2( in boolean bChache,
+                    in unsigned long transactionID,
+                    out unsigned long pdwCancelID);
+
+
+  
+  /**
+  \brief отмена операции
+  \param cancelId идентификатор отменяемой операции
+  */
+  unsigned long cancel2(in unsigned long cancelId);
+
+  /**
+  \brief состояние асинхронных уведомлений посредством OnDataChange
+  \param cancelId идентификатор отменяемой операции
+  \return код ошибки
+  */
+
+  attribute boolean enable;
+
+};
+//------------------------------------------------------------------------
+/**
+\brief интерфейс 
+*/
+[scriptable, uuid(F4E6E116-2E6A-42fa-B044-7D8DECF5CAD3)]
+interface nsIOPCAsyncIO3:nsISupports
+{
+  /**
+  \brief асинхронное чтение с учетом срока давности значений
+  \param hServer массив серверных хэндлов для которых производится чтение 
+  \param maxAge массив времен жизни значений
+  \param transactionId номер транзакции
+  \param cancelId номер для отмены операции
+  \param errors массив ошибок
+  \return код ошибки
+  */
+
+  unsigned long ReadMaxAge (in nsIArray hServer, // array of unsigned long
+                            in nsIArray maxAge,// array of unsigned long
+                            in unsigned long transactionId,
+                            out unsigned long cancelID,
+                            out nsIArray errors);
+  /**
+  \brief асинхронное чтение с учетом срока давности значений
+  \param hServer массив серверных хэндлов для которых производится чтение 
+  \param itemVQT записываемые значения
+  \param transactionId номер транзакции
+  \param cancelId номер для отмены операции
+  \param errors массив ошибок
+  \return код ошибки
+  */
+
+  unsigned long WriteVQT( in nsIArray hServer,
+                          in nsISupportsArray itemVQT, // array of nsIOPCItemVQT
+                          in unsigned long transactionID,
+                          out unsigned long cancelId,
+                          out nsIArray errors);
+  /**
+  \brief обновление срока давности для значений.
+  \param maxAge максимльный срок давности пременных. По истечении котрого должен быть вызов onDataChange
+  \param transactionId номер транзакции
+  \param cancelId идентификатор операции для отмены
+  \return код ошибки
+  */
+  unsigned long RefreshMaxAge(in unsigned long maxAge,
+                              in unsigned long transactionId,
+                              out unsigned long cancelId);
+};
+//------------------------------------------------------------------------
+/**
+\brief интерфейс задания индивидуальной зоны нечуствительности для тега
+*/
+[scriptable, uuid(F57E48A6-ECF5-448e-9A4B-2572E9F1C8D7)]
+interface nsIOPCItemDeadbandMgt:nsISupports
+{
+  /**
+  \brief setting deadband for item personally
+  \param hServer array of server handles
+  \param percentDeadband array of deadbands for every handle from handles array
+  \return Array of error for every passed hServer element
+  */
+
+  nsIArray SetItemDeadband(in PRUint32 count,
+                           [array, size_is(count)] in unsigned long handles,
+                           [array, size_is(count)] in float deadbands);
+  /**
+  @brief получение зоны нечуствительности для тегов
+  @param count count of elements in handles array
+  @param handles array of handles deadbands need for
+  @return array of deadbands for every element of handles array
+  */
+  nsIArray GetItemDeadband(in PRUint32 count, 
+                           [array, size_is(count)] in unsigned long handles);
+  /**
+  @brief clearin deanbands for items
+  @param count size of handles array
+  @param handles array of handles deadbands clear for
+  @return array of errors for every item handle
+  */
+  nsIArray ClearItemDeadband(in PRUint32 count, 
+                             [array, size_is(count)] in unsigned long handles);
+};
+//------------------------------------------------------------------------
+/**
+\brief интерфейс предназначенный для управления минимальным периодом\
+вызова OnDataChange для в группе
+*/
+[scriptable, uuid(3B8B438E-9EE5-41ea-8AFF-A5F74A11A087)]
+interface nsIOPCItemSamplingMgt:nsISupports
+{
+  /**
+  \brief установка веремени вызова OnDataChange для тегов
+  \param hServer массив серверных хэндлов тегов
+  \param requestedSamplingRate массив чисел с периодами 
+  \param revisedSamplingRate,
+  \param errors массив ошибок
+  \return код ошибки
+  */
+  unsigned long SetItemSamplingRate(in nsIArray hServer,
+                                    in nsIArray requestedSamplingRate,
+                                    out nsIArray revisedSamplingRate,
+                                    out nsIArray errors);
+
+  /**
+  \brief установка веремени вызова OnDataChange для тегов
+  \param hServer массив серверных хэндлов тегов
+  \param samplingRate массив чисел с периодами 
+  \param errors массив ошибок
+  */
+  unsigned long GetItemSamplingRate(in nsIArray hServer,
+                                    out nsIArray samplingRate,
+                                    out nsIArray errors);
+  
+  /*
+  \brief Сброс веремени вызова OnDataChange для тегов
+  \param hServer массив серверных хэндлов тегов
+  \param errors массив ошибок
+  */
+  unsigned long ClearItemSamplingRate(in nsIArray  phServer,
+                              out nsIArray ppErrors);
+  
+  /**
+  \brief включение буфферизации для тегов
+  \param hServer массив серверных хэндлов тегов
+  \param hServer массив булевых переменных. true - включитьбуфферизацию, false - выключить
+  \param errors массив ошибок
+  */
+  unsigned long SetItemBufferEnable (in  nsIArray hServer,// unsigned long
+                                     in  nsIArray enable, // boolean
+                                     out nsIArray errors);
+  /**
+  \brief получение параметров буфферизации для тегов
+  \param hServer массив серверных хэндлов тегов
+  \param hServer массив булевых переменных. true - буфферизация включена, false - выключена
+  \param errors массив ошибок
+  */
+
+  unsigned long GetItemBufferEnable (in  nsIArray hServer,// unsigned long
+                                     out nsIArray enable, // boolean
+                                     out nsIArray errors);
+};
+
+
+/****************************************************************************
+ *                         Connection points                                *
+ ****************************************************************************/
+
+/**
+\brief перечислитель точек подключения
+*/
+/*
+[scriptable, uuid(F710828E-4DD5-4f18-8F52-8AE79DF98B22)]
+interface nsIOPCEnumConnections:nsISimpleEnumerator
+{
+  readonly attribute unsigned long cookie;
+};
+*/
+
+//------------------------------------------------------------------------
+/**
+\brief интерфейс точки подключения аналог IConnectionPoint мелкософта
+*/
+//----------------------------------------------------------------
+/**
+\brief Интерфейс OPC сервера (IOPCServer спецификация 3.0)
+*/
+[scriptable, uuid(301D6AD1-4D5C-4fc5-AAED-EF918A16A122)]
+interface nsIOPCPoint : nsISupports
+{
+  /**
+  \brief привязка интерфейса к точке подключения
+  \param cbk интерфейс точки подключения nsIOPCShutdown
+  \return cookie номер подключения
+  */
+  unsigned long Advise(in nsISupports itf);
+
+  /**
+  \brief удаление подключения по номеру.
+  \param cookie номер подключения
+  \return код ошибки
+  */
+  boolean Unadvise(in unsigned long cookie);
+};
+
+/**
+\brief Контейнер точек подключения аналог IConnectionPointContainer
+*/
+
+//[scriptable, uuid(90787B44-26EF-4128-A6CF-FA6A8CBB40CA)]
+//interface nsIOPCConnectionPointContainer:nsISupports
+//{
+
+  /**
+  \brief получение перечислителя точек подключения группы
+  \return en перечислитель точек подключения
+  */
+//  nsISimpleEnumerator EnumConnectionPoints();
+  /**
+  \brief поиск точки подключения. Искать иммет смысл только интерфейс 
+  IOPConnectionPoint для группы и IOPCShutdown для сервера
+  \param riid идентификатор интерфейса поддерживаемого точкой подключения
+  \return точка подключения
+  */
+//  nsIOPCConnectionPoint FindConnectionPoint (in nsIDPtr riid);
+//};
+
+
+/****************************************************************************
+ *                         Server Object                                    *
+ ****************************************************************************/
+
+/**
+\brief Client side interface for recieving server shutdown notification
+*/
+
+[scriptable, uuid(B3712F3F-66CD-4cf4-B42F-B60A5E1370EB)]
+interface nsIOPCShutdown : nsISupports
+{
+  void shutdownRequest (in wstring szReason);
+};
+
+//----------------------------------------------------------------
+/**
+\brief интерфейс получения информации о состоянии сервера (IOPCSERVERSTATUS спецификация 3.0)
+*/
+[scriptable, uuid(C4EFC891-BFDA-430c-9A1A-6FD331F745A7)]
+interface nsIOPCServerStatus : nsISupports
+{
+  /*
+  идентификатор состояния сервера
+  */
+  const PRUint32 OPC_STATUS_RUNNING=0;
+  const PRUint32 OPC_STATUS_FAILED=1;
+  const PRUint32 OPC_STATUS_NOCONFIG=2;
+  const PRUint32 OPC_STATUS_SUSPENDED=3;
+  const PRUint32 OPC_STATUS_TEST=4;
+  const PRUint32 OPC_STATUS_COMM_FAULT=5;
+
+  readonly attribute PRTime ftStartTime;//!< время запуска сервера
+  readonly attribute PRTime ftCurrentTime;//!< текущее время сервера
+  readonly attribute PRTime ftLastUpdateTime;//!< время последнего обновления данных клиента
+  readonly attribute PRUint32 dwServerState;//!< идентификатор состояния сервера
+  readonly attribute PRUint32 dwGroupCount;//!< текущее количество групп управляемых сервером
+  readonly attribute PRUint32 dwBandWidth;//!<  
+  readonly attribute PRUint32 wMajorVersion;//!<старшая версия
+  readonly attribute PRUint32 wMinorVersion;//!<  младшая версия
+  readonly attribute PRUint32 wBuildNumber;//!< номер билда
+  readonly attribute wstring  szVendorInfo;//!< информация производителя
+};
+
+
+//----------------------------------------------------------------
+/**
+\brief Интерфейс OPC сервера (IOPCServer спецификация 3.0)
+*/
+[scriptable, uuid(55208F6A-51EF-427f-A5A1-B613F3C995E3)]
+interface nsIOPCServer : nsISupports
+{
+  /**
+  \brief Adding user group to server
+  \param szName Group name
+  \param active active or not active group
+  \param requestedUpdateRate Update rate in miliseconds
+  \param timeBias time zone
+  \param percentDeadband (float) Dead band in percents
+  \param group new group have been added to server
+  \return group object
+  */
+  nsISupports addGroup(
+          in wstring szName,                    // group name
+          in boolean active,                   // 
+          in PRUint32 requestedUpdateRate,    // update rate in miliseconds
+          in PRUint32 timeBias,                // time zone
+          in float percentDeadband            // dead band percents 0.0 - 100.0 %
+          );               
+   
+  /**
+  \brief getting extended information about last error
+  */
+  wstring getLastError();
+
+  /**
+  \brief getting extended information about error
+  */
+  wstring getErrorString(in unsigned long error);
+
+  /**
+  \brief getting grou by name
+  \param name required group name
+  \return group or null
+  */
+  nsISupports getGroupByName(in wstring name);
+  /**
+  \brief getting server state
+  */
+  nsIOPCServerStatus getStatus();
+  /**
+  \brief deleting group from server
+  \param group group being deleted
+  \return error number
+  */
+  boolean removeGroup(in nsISupports group);
+
+  /**
+  \brief creatinr enumerator of groups
+  \param bAll if false wil enumerate user group, if true will enumerate also private groups
+  \param riid nsISimpleEnumerator or nsIStringEnumerator
+  \return enumerator
+  */
+  nsISupports createGroupEnumerator(in boolean bAll, in nsIDPtr riid);
+};
+
+//----------------------------------------------------------------
+/**
+\brief интерфейс элемента пространства тегов сервера (OPCBROWSEELEMENT спецификация 3.0)
+*/
+[scriptable, uuid(51051095-EF1C-4183-B634-E7B4BE31B097)]
+interface nsIOPCBrowseElement : nsISupports
+{
+  readonly attribute wstring name;
+  readonly attribute wstring itemID;
+  readonly attribute boolean hasChildren;
+  readonly attribute boolean isItem;
+  readonly attribute nsIArray properties; // array of nsIOPCItemProperty
+};
+
+//----------------------------------------------------------------
+/**
+ * \class nsIOPCProperties (IOPCITEMPROPERTY)
+ * \brief Interface for browsing server address space. 
+*/
+
+[scriptable, uuid(88EF72F9-89BD-498b-8968-6714CA9AC997)]
+interface nsIOPCItemProperty : nsISupports
+{
+  /**
+  \brief property ID
+  */
+  readonly attribute unsigned long ID;
+  readonly attribute AString itemId;
+  readonly attribute AString description;
+  readonly attribute AString value;
+};
+//----------------------------------------------------------------
+/**
+ * \class nsIOPCBrowse (IOPCBrowse)
+ * \brief Interface for browsing server address space. IOPCBrowse
+ **/
+[scriptable, uuid(58DE80B5-D104-4bbd-AFB8-6412229EA999)]
+interface nsIOPCBrowse : nsISupports
+{
+  const unsigned short OPC_BROWSE_FILTER_ALL      = 1;
+  const unsigned short OPC_BROWSE_FILTER_BRANCHES = 2;
+  const unsigned short OPC_BROWSE_FILTER_ITEMS    = 3;
+  /**
+  \brief browse address space for szItemID tag
+  \param szItemID identifier of current tag
+  \param bOnlyItems if true browse only items ie OPC_BROWSE_FILTER_ITEMS. If false OPC_BROWSE_FILTER_ALL , OPC_BROWSE_FILTER_ITEMS additional information OPC DA 3.0 page. 45.
+  \param szElementNameFilter wildcard filter on items
+  \param szVendorFilter vendor filter
+  \param bAllProperties return all preoprties.
+  \param bPropertiesValues return values in properties.
+  \param propertiesIDs ids of the properties should be returned. Ignored if bAllProperties is true.
+  \return nsISimpleEnumerator with elements that supports nsIOPCBrowseElement interface only
+  */
+  nsISimpleEnumerator browse(
+    in wstring szItemID,
+    in unsigned short dwBrowseFilter,
+    in wstring szElementNameFilter,
+    in wstring szVendorFilter,
+    in boolean bAllProperties,
+    in boolean bPropertiesValues,
+    in nsIArray propertiesIDs);
+
+  /**
+  \brief getting item properties
+  \param itemId item who properties are queried
+  \return array of nsIOPCProperties
+  */
+
+  nsIArray getProperties(in wstring itemID);
+
+};
+
+//-------------------------------------------------------------
+/**
+\brief интерфейс упрощенного доступа к данным тегов
+*/
+[scriptable, uuid(9AB46FD9-095B-4c29-9CCA-B6945F347818)]
+interface nsIOPCItemIO : nsISupports
+{
+  /**
+  \brief чтение значений из тегов
+  \param itemIDs массив идентификаторов тегов
+  \param maxAges массив максимального времени жизни значения
+  \param values  массив записываемых значений
+  \param qualities массив качества значений
+  \param timeStamps вреся получения значений
+  \param errors   массив ошибок
+  \rteturn код ошибки
+  */
+  unsigned long Read (in  nsIArray itemIDs, // wstrings
+                      in  nsIArray maxAges, // numbers
+                      out nsIArray values, // arbitary type array
+                      out nsIArray qualities,// unsigned short
+                      out nsIArray timeStamps, // PRTime
+                      out nsIArray errors); // unsigned long
+  /**
+  \brief запись значений тегов
+  \param идентификатороы тегов
+  \param значения тегов
+  \param errors массив ошибок
+  */
+  unsigned long WriteVQT (in nsIArray itemIDs, // wstring
+                          in nsIVariant itemVQT, // nsIOPCItemVQT
+                          out nsIArray errors); // unsigned long
+};
+
+
+
+
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//
+//                       OPC DA 2.05
+//
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+
+/**********************************************************************
+ *                          Group                                     *
+ **********************************************************************/
+
+/**
+\brief интерфейс преобразования группы из публичной в закрытую и обратно
+*/
+[scriptable, uuid(40BBE653-3428-4200-95C9-A0F2F801F33E)]
+interface nsIOPCPublicGroupStateMgt : nsISupports
+{
+  /**
+  \brief признак, является ли группа публичной или нет.
+  */
+  attribute boolean bPublic;
+/*
+  unsigned long GetState(out boolean pPublic);
+  unsigned long MoveToPublic();
+*/
+};
+/**********************************************************************
+ *                          Server                                    *
+ **********************************************************************/
+
+/**
+\brief интерфейс свойств тегов
+*/
+[scriptable, uuid(E681912A-C686-46f2-BD2E-23334B2B1943)]
+interface nsIOPCItemProperties : nsISupports
+{
+  /**
+  \brief retrieving properties of item
+  \param ID item, which must be obtained properties
+  \return array of nsIOPCProperty elements
+  */
+  
+  nsIArray getItemProperties(in wstring itemId);
+
+
+  /**
+  \brief получение доступных свойств тега
+  \param itemID имя тега
+  \param propertyIDs номера свойств
+  \param descriptions описание свойств
+  */
+//  unsigned long QueryAvailableProperties( in wstring itemID,
+//                                          out nsIArray propertyIDs, // unsigned long
+//                                          out nsIArray descriptions);// wstring
+  /**
+  \brief получение значений свойств тега
+  \param propertyIDs массив необходимых свойств
+  \param itemID имя тега
+  \param data   данные свойств
+  \param errors массив ошибок
+  */
+//  unsigned long GetItemProperties(in wstring itemID,
+//                            in nsIArray propertyIDs,// unsigned long
+//                            out nsIArray data,
+//                            out nsIArray errors);
+
+  /**
+  \brief получение название свойств
+  \param itemID имя тега
+  \param propertyIDs номера свойств
+  \param newItemIDs имена свойств
+  \param errors массив ошибок
+  */
+//  unsigned long LookupItemIDs(in wstring itemID,
+//                        in nsIArray propertyIDs,// unsigned long
+//                        out nsIArray newItemIDs,// wstring
+//                        out nsIArray errors); // unsigned long
+
+};
+
+
+/**
+\brief интерфейс публичных групп
+*/
+[scriptable, uuid(D2757716-FC8E-4227-9925-740ED48F28C2)]
+interface nsIOPCServerPublicGroups : nsISupports
+{
+  /**
+  \brief получение публичной группы по имени
+  \param name имя тркбуемой группы
+  \param riif интерфейс группы
+  \param gr найденная группа или null
+  */
+  unsigned long GetPublicGroupByName( in wstring name,
+                                      in nsIDPtr riid,
+                                      out nsISupports gr);
+
+  /**
+  \brief удаление публичной группы
+  \param hServerGroup серверный хэндл группы
+  \param bForce удалить группу даже если на нее есть ссылки
+  */
+  unsigned long RemovePublicGroup(in unsigned long hServerGroup,
+                                  in boolean bForce);
+};
+
+
+[scriptable, uuid(088E67EE-9F08-4a12-8ECA-48FE2073BA33)]
+/*
+\brief browsing server space interface
+\note analog IOPCBrowseServerAddressSpace
+*/
+interface nsIOPCBrowseServerAddressSpace : nsISupports
+{
+  /**
+  \brief quering address space organization. Instead of queryOrganization in OPCDA 2.05
+  \return true if queryOrganization return OPC_NS_HIERARCHIAL
+  */
+  readonly attribute boolean isHierarchical;
+
+  
+  const unsigned short OPC_BROWSE_UP=1;
+  const unsigned short OPC_BROWSE_DOWN=2;
+  const unsigned short OPC_BROWSE_TO=3;
+
+  /**
+  \brief Изменение позиции просмотра 
+  \param dwBrowseDirection направление изменения позпции\
+         просмотра OPC_BROWSE_UP или OPC_BROWSE_DOWN или OPC_BROWSE_TO
+  \param szString имя узла на который меняется позиция.
+  */
+
+  boolean changeBrowsePosition(in unsigned short dwBrowseDirection,
+                                     in wstring szString);
+
+  // dwBrowseFilterType 
+  const unsigned short OPC_BRANCH = 1;
+  const unsigned short OPC_LEAF   = 2;
+  const unsigned short OPC_FLAT   = 3;
+
+
+  const unsigned short OPC_READABLE=1; 
+  const unsigned short OPC_WRITEABLE=2;
+  
+  /**
+  \brief просмотр адресного пространства
+  \param dwBrowseFilterType тип просматриваемых узлов OPC_BRANCH или OPC_LEAF или OPC_FLAT
+  \param szFilterCriteria фильтр элементов по имени
+  \param dwAccessRightsFilter битовая маска - фильтр по правам OPC_READABLE или OPC_WRITEABLE
+  \param ppIEnumString массив имен выбранных элементов
+  */
+  
+  nsIStringEnumerator browseOPCItemIDs( in unsigned short dwBrowseFilterType,
+                                        in wstring szFilterCriteria,
+                                        in unsigned long dwAccessRightsFilter);
+  
+  /**
+  \brief получение полного уникального имени тега по короткому на текущем просматриваемом уровне
+  \param szItemDataID имя тега на текущем уровне
+  \return szItemID полное имя тега
+  */
+  AString getItemID(in wstring szItemDataID);
+
+  /**
+  \brief получение путей (Access Path) доступа к тегу
+  \param itemId полное имя тега
+  \return перечислитель Access path
+  */
+  nsIStringEnumerator browseAccessPaths(in wstring itemId);
+};
+
+[scriptable, uuid(46DDE06A-5F96-4393-93D8-9FB36E9D1886)]
+interface nsIOPCPersistFile : nsISupports
+{
+  /**
+  \brief проверка налачия изменений с момента последнего сохранения
+  */
+  boolean isDirty();
+
+  /**
+  \brief загрузка конфигурации из файла
+  \param pszFileName имя конфигурационного файла
+  */
+  boolean load(in wstring pszFileName);
+
+  /**
+  \brief сохранение конфигурации в файл
+  \param pszFileName имя конфигурационного файла
+  \param fRemember должно ли логически связанное с этой конфигурацией имя файла изменено (true)\
+                   или нет (false)
+  */
+  boolean save(in wstring pszFileName,
+               in boolean fRemember);
+
+  /**
+  \brief проверка завершения записи конфигурационного файла
+  \param pszFileName имя конфигурационного файла
+  */
+  boolean saveCompleted(in wstring pszFileName);
+  /**
+  \brief получение текущего имени конфигурационного файла.
+  */
+  wstring getCurFile();
+};
+

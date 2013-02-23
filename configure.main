@@ -1,0 +1,9 @@
+#! /bin/sh
+CUR_PATH=$(pwd)
+
+cd $(dirname $0)
+ROOT_DIRECTORY=$(pwd)
+cd $CUR_PATH
+
+$ROOT_DIRECTORY/configure --with-libcom=$ROOT_DIRECTORY/libcom --with-libopccore=$ROOT_DIRECTORY/libopccore --with-libopc=$ROOT_DIRECTORY/libopc --enable-linux-com --with-gtest=$ROOT_DIRECTORY/third-party/gtest --with-gmock=$ROOT_DIRECTORY/third-party/gmock --with-opc-test=$ROOT_DIRECTORY/opctestlinux $@
+

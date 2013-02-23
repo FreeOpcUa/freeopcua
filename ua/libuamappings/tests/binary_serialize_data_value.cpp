@@ -1,0 +1,193 @@
+/// @author Alexander Rykovanov 2012
+/// @email rykovanov.as@gmail.com
+/// @brief Test of opc ua binary attributes.
+/// @license GNU GPL/LGPL
+///
+/// Distributed under the GNU GPL/LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/copyleft/gpl.html)
+///
+/// $Id:  $
+/// $Date: $
+/// $Revision: $
+
+#include "common.h"
+
+#include <opc/ua/extension_identifiers.h>
+#include <opc/ua/message_identifiers.h>
+#include <opc/ua/binary/stream.h>
+#include <opc/ua/binary/types.h>
+#include <opc/ua/binary/variant.h>
+#include <opc/ua/binary/data_value.h>
+
+#include <algorithm>
+#include <stdexcept>
+
+//-------------------------------------------------------
+// Serialization
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, DataValue_NULL)
+{
+
+  using namespace OpcUa::Binary;
+
+  DataValue data;
+
+  GetStream() << data << flush;
+
+  const std::vector<char> expectedData = {
+  0
+  };
+
+  ASSERT_EQ(expectedData.size(), RawSize(data));
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+}
+
+TEST_F(OpcUaBinarySerialization, DataValue_Value)
+{
+
+  using namespace OpcUa::Binary;
+
+  DataValue data;
+  data.Encoding = DATA_VALUE;
+
+  Variant var;
+  data.Value.Type = VariantType::BOOLEAN;
+  data.Value.Value.Boolean = std::vector<bool>{true};
+ 
+  GetStream() << data << flush;
+
+  uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
+  const std::vector<char> expectedData = {
+  1,
+  encodingMask, 1
+  };
+
+  ASSERT_EQ(expectedData.size(), RawSize(data));
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+}
+
+TEST_F(OpcUaBinarySerialization, DataValue_Full)
+{
+
+  using namespace OpcUa::Binary;
+
+  uint8_t encodingMask = 
+     DATA_VALUE |
+     DATA_VALUE_STATUS_CODE |
+     DATA_VALUE_SOURCE_TIMESTAMP |
+     DATA_VALUE_SERVER_TIMESTAMP |
+     DATA_VALUE_SOURCE_PICOSECONDS |
+     DATA_VALUE_SERVER_PICOSECONDS;
+
+  DataValue data;
+  data.Encoding = encodingMask;
+
+  Variant var;
+  data.Value.Type = VariantType::BOOLEAN;
+  data.Value.Value.Boolean = std::vector<bool>{true};
+ 
+  data.Status = 1;
+  data.SourceTimestamp = 2;
+  data.SourcePicoseconds = 3;
+  data.ServerTimestamp = 4;
+  data.ServerPicoseconds = 5;
+
+
+  GetStream() << data << flush;
+
+
+  uint8_t variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);
+  const std::vector<char> expectedData = {
+  encodingMask,
+  variantMask, 1,
+  1,0,0,0,
+  2,0,0,0,0,0,0,0,
+  3,0,
+  4,0,0,0,0,0,0,0,
+  5,0
+  };
+
+  ASSERT_EQ(expectedData.size(), RawSize(data));
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+}
+
+
+//-------------------------------------------------------
+// Deserialization
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinaryDeserialization, DataValue_NUL)
+{
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  DataValue data;
+  GetStream() >> data;
+
+  ASSERT_EQ(data.Encoding, 0);
+}
+
+TEST_F(OpcUaBinaryDeserialization, DataValue_Value)
+{
+  using namespace OpcUa::Binary;
+
+  uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
+  const std::vector<char> expectedData = {
+  1,
+  encodingMask, 1
+  };
+
+  GetChannel().SetData(expectedData);
+
+  DataValue data;
+  GetStream() >> data;
+
+  ASSERT_EQ(data.Encoding, DATA_VALUE);
+  ASSERT_FALSE(data.Value.IsNul());
+}
+
+TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
+{
+  using namespace OpcUa::Binary;
+
+  uint8_t encodingMask = 
+     DATA_VALUE |
+     DATA_VALUE_STATUS_CODE |
+     DATA_VALUE_SOURCE_TIMESTAMP |
+     DATA_VALUE_SERVER_TIMESTAMP |
+     DATA_VALUE_SOURCE_PICOSECONDS |
+     DATA_VALUE_SERVER_PICOSECONDS;
+
+
+  uint8_t variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);
+  const std::vector<char> expectedData = {
+  encodingMask,
+  variantMask, 1,
+  1,0,0,0,
+  2,0,0,0,0,0,0,0,
+  3,0,
+  4,0,0,0,0,0,0,0,
+  5,0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  DataValue data;
+  GetStream() >> data;
+
+  ASSERT_EQ(data.Encoding, encodingMask);
+  ASSERT_FALSE(data.Value.IsNul());
+  ASSERT_EQ(data.Status, 1);
+  ASSERT_EQ(data.SourceTimestamp, 2);
+  ASSERT_EQ(data.SourcePicoseconds, 3);
+  ASSERT_EQ(data.ServerTimestamp, 4);
+  ASSERT_EQ(data.ServerPicoseconds, 5);
+}
+

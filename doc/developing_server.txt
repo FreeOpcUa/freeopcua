@@ -1,0 +1,14 @@
+Now it need to write:
+NOTE: Interface is subject for change.
+1. Addon.
+2. Device manager.
+3. Realize RegisterServerManagers() from opc_client/server.h.
+3. Realize functions from xpcom/src/module.h
+
+1. Addon.
+
+Addon registers different managers that realize server logic.
+The main manager is a DeviceManager. This manager performs input output operations
+with devices.
+Device manager should build property tree with items that represent structured information 
+about device data.

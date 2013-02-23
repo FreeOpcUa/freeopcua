@@ -1,0 +1,796 @@
+/// @author Alexander Rykovanov 2012
+/// @email rykovanov.as@gmail.com
+/// @brief Test of opc ua binary handshake.
+/// @license GNU GPL/LGPL
+///
+/// Distributed under the GNU GPL/LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/copyleft/gpl.html)
+///
+/// $Id:  $
+/// $Date: $
+/// $Revision: $
+
+#include "common.h"
+
+#include <opc/ua/extension_identifiers.h>
+#include <opc/ua/message_identifiers.h>
+#include <opc/ua/binary/stream.h>
+#include <opc/ua/binary/types.h>
+#include <opc/ua/binary/protocol/view.h>
+
+#include <algorithm>
+#include <stdexcept>
+
+
+
+//-------------------------------------------------------
+// BrowseDirection
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, BrowseDirection)
+{
+
+  using namespace OpcUa::Binary;
+
+  GetStream() << BrowseDirection::BOTH << flush;
+
+  const std::vector<char> expectedData = {
+  2,0,0,0
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(BrowseDirection::BOTH));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseDirection)
+{
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  2,0,0,0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  BrowseDirection direction;
+  GetStream() >> direction;
+
+  ASSERT_EQ(direction, BrowseDirection::BOTH);
+}
+
+//-------------------------------------------------------
+// ViewDescription
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, ViewDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  ViewDescription desc;
+
+  desc.ID.Encoding = EV_TWO_BYTE;
+  desc.ID.TwoByteData.Identifier = 1;
+  desc.Timestamp = 2;
+  desc.Version = 3;
+
+  GetStream() << desc << flush;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  2,0,0,0,0,0,0,0,
+  3,0,0,0
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(desc));
+}
+
+TEST_F(OpcUaBinaryDeserialization, ViewDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  2,0,0,0,0,0,0,0,
+  3,0,0,0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  ViewDescription desc;
+  GetStream() >> desc;
+  
+  ASSERT_EQ(desc.ID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.ID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.Timestamp, 2);
+  ASSERT_EQ(desc.Version, 3);
+}
+
+//-------------------------------------------------------
+// BrowseDescription
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, BrowseDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  BrowseDescription desc;
+
+  desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
+  desc.NodeToBrowse.TwoByteData.Identifier = 1;
+  desc.Direction = BrowseDirection::INVERSE;
+  desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
+  desc.ReferenceTypeID.TwoByteData.Identifier = 2;
+  desc.IncludeSubtypes = true;
+  desc.NodeClasses = NODE_CLASS_VARIABLE;
+  desc.ResultMask = REFERENCE_NODE_CLASS;
+
+  GetStream() << desc << flush;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  1,0,0,0,
+  0, 2,
+  1,
+  2,0,0,0,
+  4,0,0,0
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(desc));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  1,0,0,0,
+  0, 2,
+  1,
+  2,0,0,0,
+  4,0,0,0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  BrowseDescription desc;
+  GetStream() >> desc;
+
+  ASSERT_EQ(desc.NodeToBrowse.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.NodeToBrowse.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.Direction, BrowseDirection::INVERSE);
+  ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 2);
+  ASSERT_EQ(desc.IncludeSubtypes, true);
+  ASSERT_EQ(desc.NodeClasses, NODE_CLASS_VARIABLE);
+  ASSERT_EQ(desc.ResultMask, REFERENCE_NODE_CLASS);
+}
+
+//-------------------------------------------------------
+// BrowseRequest
+//-------------------------------------------------------
+
+OpcUa::Binary::BrowseDescription CreateBrowseDescription()
+{
+  using namespace OpcUa::Binary;
+  BrowseDescription desc; 
+  desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
+  desc.NodeToBrowse.TwoByteData.Identifier = 1;
+  desc.Direction = BrowseDirection::INVERSE;
+  desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
+  desc.ReferenceTypeID.TwoByteData.Identifier = 2;
+  desc.IncludeSubtypes = true;
+  desc.NodeClasses = NODE_CLASS_VARIABLE;
+  desc.ResultMask = REFERENCE_NODE_CLASS;
+  return desc;
+}
+
+bool operator==(const OpcUa::Binary::BrowseDescription& lhs, const OpcUa::Binary::BrowseDescription& rhs)
+{
+  return
+    rhs.NodeToBrowse.Encoding == lhs.NodeToBrowse.Encoding &&
+    rhs.NodeToBrowse.TwoByteData.Identifier == lhs.NodeToBrowse.TwoByteData.Identifier &&
+    rhs.Direction == lhs.Direction &&
+    rhs.ReferenceTypeID.Encoding == lhs.ReferenceTypeID.Encoding &&
+    rhs.ReferenceTypeID.TwoByteData.Identifier == lhs.ReferenceTypeID.TwoByteData.Identifier &&
+    rhs.IncludeSubtypes == lhs.IncludeSubtypes &&
+    rhs.NodeClasses == lhs.NodeClasses &&
+    rhs.ResultMask == lhs.ResultMask;
+}
+
+
+
+TEST_F(OpcUaBinarySerialization, BrowseRequest)
+{
+
+  using namespace OpcUa::Binary;
+
+  BrowseRequest request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
+
+  FILL_TEST_REQUEST_HEADER(request.Header);
+
+  request.View.ID.Encoding = EV_TWO_BYTE;
+  request.View.ID.TwoByteData.Identifier = 1;
+  request.View.Timestamp = 2;
+  request.View.Version = 3;
+
+  request.MaxReferenciesPerNode = 4;
+
+  request.NodesToBrowse.push_back(CreateBrowseDescription());
+  request.NodesToBrowse.push_back(CreateBrowseDescription());
+
+  GetStream() << request << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x0f, 0x2, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+
+  0, 1,
+  2,0,0,0,0,0,0,0,
+  3,0,0,0,
+
+  4,0,0,0,
+
+  2,0,0,0,
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+
+
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(request));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseRequest)
+{
+
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x0f, 0x2, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+
+  0, 1,
+  2,0,0,0,0,0,0,0,
+  3,0,0,0,
+
+  4,0,0,0,
+
+  2,0,0,0,
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+
+  };
+
+  GetChannel().SetData(expectedData);
+  BrowseRequest request;
+  GetStream() >> request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
+
+  ASSERT_REQUEST_HEADER_EQ(request.Header);
+
+  ASSERT_EQ(request.View.ID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(request.View.ID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.View.Timestamp, 2);
+  ASSERT_EQ(request.View.Version, 3);
+
+  ASSERT_EQ(request.MaxReferenciesPerNode, 4);
+
+  ASSERT_FALSE(request.NodesToBrowse.empty());
+
+  BrowseDescription desc = CreateBrowseDescription();
+
+  ASSERT_TRUE(request.NodesToBrowse[0] == desc);
+  ASSERT_TRUE(request.NodesToBrowse[1] == desc);
+
+}
+
+//-------------------------------------------------------
+// ReferenceDescription
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, ReferenceDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  ReferenceDescription desc;
+
+  desc.TypeID.Encoding = EV_TWO_BYTE;
+  desc.TypeID.TwoByteData.Identifier = 1;
+
+  desc.IsForward = true;
+
+  desc.TargetNodeID.Encoding = EV_TWO_BYTE;
+  desc.TargetNodeID.TwoByteData.Identifier = 2;
+
+  desc.BrowseName.NamespaceIndex = 3;
+  desc.BrowseName.Name = "name";
+
+  desc.DisplayName.Encoding = HAS_LOCALE | HAS_TEXT;
+  desc.DisplayName.Locale = "loc";
+  desc.DisplayName.Text = "text";
+
+  desc.TargetNodeClass = 4;
+
+  desc.TypeDefinition.Encoding = EV_TWO_BYTE;
+  desc.TypeDefinition.TwoByteData.Identifier = 5;
+
+
+  GetStream() << desc << flush;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(desc));
+}
+
+TEST_F(OpcUaBinaryDeserialization, ReferenceDescription)
+{
+
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5
+  };
+
+  GetChannel().SetData(expectedData);
+
+  ReferenceDescription desc;
+
+  GetStream() >> desc;
+
+  ASSERT_EQ(desc.TypeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TypeID.TwoByteData.Identifier, 1);
+
+  ASSERT_EQ(desc.IsForward, true);
+
+  ASSERT_EQ(desc.TargetNodeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TargetNodeID.TwoByteData.Identifier, 2);
+
+  ASSERT_EQ(desc.BrowseName.NamespaceIndex, 3);
+  ASSERT_EQ(desc.BrowseName.Name, "name");
+
+  ASSERT_EQ(desc.DisplayName.Encoding, HAS_LOCALE | HAS_TEXT);
+  ASSERT_EQ(desc.DisplayName.Locale, "loc");
+  ASSERT_EQ(desc.DisplayName.Text, "text");
+
+  ASSERT_EQ(desc.TargetNodeClass, 4);
+
+  ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
+}
+
+//-------------------------------------------------------
+// BrowseResult
+//-------------------------------------------------------
+
+OpcUa::Binary::ReferenceDescription CreateReferenceDescription()
+{
+  using namespace OpcUa::Binary;
+  ReferenceDescription desc;
+
+  desc.TypeID.Encoding = EV_TWO_BYTE;
+  desc.TypeID.TwoByteData.Identifier = 1;
+
+  desc.IsForward = true;
+
+  desc.TargetNodeID.Encoding = EV_TWO_BYTE;
+  desc.TargetNodeID.TwoByteData.Identifier = 2;
+
+  desc.BrowseName.NamespaceIndex = 3;
+  desc.BrowseName.Name = "name";
+
+  desc.DisplayName.Encoding = HAS_LOCALE | HAS_TEXT;
+  desc.DisplayName.Locale = "loc";
+  desc.DisplayName.Text = "text";
+
+  desc.TargetNodeClass = 4;
+
+  desc.TypeDefinition.Encoding = EV_TWO_BYTE;
+  desc.TypeDefinition.TwoByteData.Identifier = 5;
+  return desc;
+}
+
+TEST_F(OpcUaBinarySerialization, BrowseResult)
+{
+
+  using namespace OpcUa::Binary;
+
+  BrowseResult result;
+  result.StatusCode = 1;
+  result.ContinuationPoint = {2,3,4,5};
+  result.Referencies.push_back(CreateReferenceDescription());
+
+  GetStream() << result << flush;
+
+  const std::vector<char> expectedData = {
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5
+  };
+
+  ASSERT_EQ(expectedData.size(), RawSize(result));
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseResult)
+{
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5
+  };
+
+  GetChannel().SetData(expectedData);
+
+  BrowseResult result;
+  GetStream() >> result;
+
+  ASSERT_EQ(result.StatusCode, 1);
+  std::vector<uint8_t> cont = {2,3,4,5};
+  ASSERT_EQ(result.ContinuationPoint, cont);
+  ASSERT_FALSE(result.Referencies.empty());
+
+  const ReferenceDescription& desc = result.Referencies[0];
+  ASSERT_EQ(desc.TypeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TypeID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.IsForward, true);
+  ASSERT_EQ(desc.TargetNodeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TargetNodeID.TwoByteData.Identifier, 2);
+  ASSERT_EQ(desc.BrowseName.NamespaceIndex, 3);
+  ASSERT_EQ(desc.BrowseName.Name, "name");
+  ASSERT_EQ(desc.DisplayName.Encoding, HAS_LOCALE | HAS_TEXT);
+  ASSERT_EQ(desc.DisplayName.Locale, "loc");
+  ASSERT_EQ(desc.DisplayName.Text, "text");
+  ASSERT_EQ(desc.TargetNodeClass, 4);
+  ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
+}
+
+//-------------------------------------------------------
+// BrowseRessponce
+//-------------------------------------------------------
+
+OpcUa::Binary::BrowseResult CreateBrowseResult()
+{
+  OpcUa::Binary::BrowseResult result;
+  result.StatusCode = 1;
+  result.ContinuationPoint = {2,3,4,5};
+  result.Referencies.push_back(CreateReferenceDescription());
+  return result;
+}
+
+TEST_F(OpcUaBinarySerialization, BrowseResponse)
+{
+  using namespace OpcUa::Binary;
+
+  BrowseResponse response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
+
+  FILL_TEST_RESPONSE_HEADER(response.Header);
+
+  response.Results.push_back(CreateBrowseResult());
+
+  DiagnosticInfo diag1;
+  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag1.LocalizedText = 4;
+  DiagnosticInfo diag2;
+  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
+  diag2.AdditionalInfo = "add";
+  response.Diagnostics.push_back(diag1);
+  response.Diagnostics.push_back(diag2);
+
+  GetStream() << response << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x12, 0x2, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  // BrowseResults
+  1,0,0,0,
+
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5,
+
+  2,0,0,0,
+  // Diagnostics
+  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(response));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseResponse)
+{
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x12, 0x2, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  // BrowseResults
+  1,0,0,0,
+
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5,
+
+  2,0,0,0,
+  // Diagnostics
+  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+
+  GetChannel().SetData(expectedData);
+
+  BrowseResponse response;
+  GetStream() >> response;
+ 
+ ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
+
+  ASSERT_RESPONSE_HEADER_EQ(response.Header);
+
+  ASSERT_EQ(response.Results.size(), 1);
+  ASSERT_EQ(response.Diagnostics.size(), 2);
+}
+
+//-------------------------------------------------------
+// BrowseNextRequest
+//-------------------------------------------------------
+
+
+TEST_F(OpcUaBinarySerialization, BrowseNextRequest)
+{
+
+  using namespace OpcUa::Binary;
+
+  BrowseNextRequest request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
+
+  FILL_TEST_REQUEST_HEADER(request.Header);
+
+  request.ReleaseContinuationPoints = true;
+  request.ContinuationPoints.push_back(std::vector<uint8_t>{1});
+
+  GetStream() << request << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x15, 0x2, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+
+  1, 
+  1,0,0,0, 1,0,0,0, 1
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(request));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseNextRequest)
+{
+
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x15, 0x2, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+
+  1,
+  1,0,0,0, 1,0,0,0, 1
+  };
+
+  GetChannel().SetData(expectedData);
+  BrowseNextRequest request;
+  GetStream() >> request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
+
+  ASSERT_REQUEST_HEADER_EQ(request.Header);
+
+  ASSERT_EQ(request.ReleaseContinuationPoints, 1);
+  ASSERT_TRUE(!request.ContinuationPoints.empty());
+  ASSERT_EQ(request.ContinuationPoints[0], std::vector<uint8_t>(1,1));
+}
+
+//-------------------------------------------------------
+// BrowseNextRessponce
+//-------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, BrowseNextResponse)
+{
+  using namespace OpcUa::Binary;
+
+  BrowseNextResponse response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
+
+  FILL_TEST_RESPONSE_HEADER(response.Header);
+
+  response.Results.push_back(CreateBrowseResult());
+
+  DiagnosticInfo diag1;
+  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag1.LocalizedText = 4;
+  DiagnosticInfo diag2;
+  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
+  diag2.AdditionalInfo = "add";
+  response.Diagnostics.push_back(diag1);
+  response.Diagnostics.push_back(diag2);
+
+  GetStream() << response << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x18, 0x2, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  // BrowseResults
+  1,0,0,0,
+
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5,
+
+  2,0,0,0,
+  // Diagnostics
+  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(response));
+}
+
+TEST_F(OpcUaBinaryDeserialization, BrowseNextResponse)
+{
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0x18, 0x2, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  // BrowseResults
+  1,0,0,0,
+
+  1,0,0,0,
+  4,0,0,0, 2,3,4,5,
+  1,0,0,0,
+  0, 1,
+  1,
+  0, 2,
+  3,0, 4,0,0,0, 'n','a','m','e',
+  3,
+  3,0,0,0, 'l','o','c',
+  4,0,0,0, 't','e','x','t',
+  4,0,0,0,
+  0, 5,
+
+  2,0,0,0,
+  // Diagnostics
+  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+
+  GetChannel().SetData(expectedData);
+
+  BrowseNextResponse response;
+  GetStream() >> response;
+ 
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
+
+  ASSERT_RESPONSE_HEADER_EQ(response.Header);
+
+  ASSERT_EQ(response.Results.size(), 1);
+  ASSERT_EQ(response.Diagnostics.size(), 2);
+}
+
+

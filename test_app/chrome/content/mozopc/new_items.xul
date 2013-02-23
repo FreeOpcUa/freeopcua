@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE window SYSTEM "chrome://mozopc/locale/mozopc.dtd">
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<?xml-stylesheet href="chrome://mozopc/skin/mozopc.css" type="text/css"?>
+<dialog
+  id="newItemsWindows"
+  height="350"
+  width="300"
+  title="&mozopc.title;"
+  onload="init()"
+  ondialogaccept="onOK()"
+  ondialogcancel="onCancel()"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <stringbundle id="strings" src="chrome://mozopc/locale/mozopc.properties"/>
+  <script src="new_items.js"/>
+
+  <!-- tree with servers and its groups-->
+  <tree flex="1" id="itemsTree" seltype="multiple">
+    <treecols>
+      <treecol id="itemsTreeCol" primary="true" flex="1"/>
+    </treecols>
+    <treechildren/>
+  </tree>
+
+</dialog>

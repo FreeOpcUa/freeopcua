@@ -1,0 +1,34 @@
+/// @author Alexander Rykovanov 2012
+/// @email rykovanov.as@gmail.com
+/// @brief Interface base class.
+/// @license GNU GPL/LGPL
+///
+/// Distributed under the GNU GPL/LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/copyleft/gpl.html)
+///
+/// $Id:  $
+/// $Date: $
+/// $Revision: $
+
+#ifndef __OPC_UA_INTERFACE_BASE_H__
+#define __OPC_UA_INTERFACE_BASE_H__
+
+namespace OpcUa
+{
+
+  class Interface
+  {
+  protected:
+    Interface(){}
+    virtual ~Interface(){}
+
+  private:
+    Interface(const Interface&);
+    const Interface& operator=(const Interface&);
+  };
+
+}
+
+#endif // __OPC_UA_INTERFACE_BASE_H__
+

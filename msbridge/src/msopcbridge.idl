@@ -1,0 +1,19 @@
+#include "nsISupports.idl"
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------
+/**
+\brief interface for creating OPC servers instances
+*/
+[scriptable, uuid(E244D87D-3E94-4be1-ADC8-BAA606B5A6E7)]
+interface nsIMsOpc : nsISupports
+{
+  /**
+  \brief 
+  \param  ProgId or CLSID of opc server
+  \param host dns name or ip address remote host or null for localhost
+  \return true 
+  connect to server by name = ProgId | ClsId
+  */
+  nsISupports create(in wstring cls_name, in wstring host); 
+};

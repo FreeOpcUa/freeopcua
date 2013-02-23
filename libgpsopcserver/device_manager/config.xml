@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opc_gps>
+  <gpsd>
+    <host>
+     hostname
+    </host>
+    <port>
+      2749
+    </port>
+  </gpsd>
+</opc_gps>
+

@@ -1,0 +1,4 @@
+EXPORTS
+DllRegisterServer=DllRegisterServer PRIVATE
+DllUnregisterServer=DllUnregisterServer PRIVATE
+DllGetClassObject=DllGetClassObject PRIVATE

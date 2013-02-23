@@ -1,0 +1,110 @@
+/// @author Alexander Rykovanov 2012
+/// @email rykovanov.as@gmail.com
+/// @brief Opc binary cnnection channel.
+/// @license GNU GPL/LGPL
+///
+/// Distributed under the GNU GPL/LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/copyleft/gpl.html)
+///
+/// $Id:  $
+/// $Date: $
+/// $Revision: $
+
+
+#include <opc/ua/binary/remote_connection.h>
+
+#include "socket_channel.h"
+
+#include <arpa/inet.h>
+#include <errno.h>
+#include <iostream>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdexcept>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+
+namespace
+{
+
+  unsigned long GetIPAddress(const std::string& hostName)
+  {
+    hostent* host = gethostbyname(hostName.c_str());
+    if (!host)
+    {
+      throw std::logic_error("unable to resolve host '" + hostName + std::string("'. ") + strerror(errno));
+    }
+    return *(unsigned long*)host->h_addr_list[0];
+  }
+
+  int ConnectToRemoteHost(const std::string& host, unsigned short port)
+  {
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0)
+    {
+      throw std::logic_error(std::string("unable to create socket for connecting to the host '" + host + std::string("':") + strerror(errno)) + std::string("."));
+    }
+
+    sockaddr_in addr = {0};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = GetIPAddress(host);
+    
+    int error = connect(sock, (sockaddr*)& addr, sizeof(addr));
+    if (error < 0)
+    {
+      throw std::logic_error(std::string("Unable connect to host '") + host + std::string("'. ") + strerror(errno) + std::string("."));
+    }
+    return sock;
+  }
+
+  class BinaryConnection : public OpcUa::Binary::RemoteConnection
+  {
+  public:
+    BinaryConnection(int sock, const std::string host, unsigned short port)
+      : HostName(host)
+      , Port(port)
+      , Channel(sock)
+    {
+    }
+
+    virtual ~BinaryConnection()
+    {
+    }
+
+    virtual std::size_t Receive(char* data, std::size_t size)
+    {
+      return Channel.Receive(data, size);
+    }
+
+    virtual void Send(const char* message, std::size_t size)
+    {
+      return Channel.Send(message, size);
+    }
+
+    virtual std::string GetHost() const
+    {
+      return HostName;
+    }
+
+    virtual unsigned GetPort() const
+    {
+      return Port;
+    }
+
+  private:
+    const std::string HostName;
+    const unsigned Port;
+    OpcUa::SocketChannel Channel;
+  };
+
+}
+
+std::unique_ptr<OpcUa::Binary::RemoteConnection> OpcUa::Binary::Connect(const std::string& host, unsigned port)
+{
+  const int sock = ConnectToRemoteHost(host, port);
+  return std::unique_ptr<RemoteConnection>(new BinaryConnection(sock, host, port));
+}
+

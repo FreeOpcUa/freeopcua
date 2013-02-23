@@ -1,0 +1,8 @@
+PR = "r5"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+SRC_URI[md5sum] = "b387c42e1d2d1c56e2a8d4c0ae357f8d"
+SRC_URI[sha256sum] = "b6669d3d49a1d8899a1391ca48b9c2a09d97221f635e8a8cadd2791e45962725"
+
+require libopc.inc
+

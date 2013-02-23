@@ -1,0 +1,101 @@
+﻿<!-- строки основного диалога -->
+<!ENTITY mozopc.title      "Конфигуратор OPC">
+<!ENTITY mozopc.add_host   "Добавить хост">
+
+<!-- названия колонок списка тегов -->
+<!ENTITY tag_list.name     "Имя">
+<!ENTITY tag_list.id       "Серверное имя">
+<!ENTITY tag_list.is_active "Активен">
+<!ENTITY tag_list.gr       "Группа">
+<!ENTITY tag_list.val      "Значение">
+<!ENTITY tag_list.type     "Тип">
+<!ENTITY tag_list.time     "Время">
+
+<!-- меню управления хостами и серверами -->
+<!ENTITY mnu_srv.add       "Добавить сервер">
+<!ENTITY mnu_srv.groups    "Группы...">
+<!ENTITY mnu_srv.del       "Удалить">
+<!ENTITY mnu_srv.prop      "Свойства...">
+<!ENTITY mnu_srv.tags_add  "Добавить теги...">
+
+<!-- menu for manging items -->
+<!ENTITY mnu_items.active   "Активировать">
+<!ENTITY mnu_items.inactive "Деактивировать">
+<!ENTITY mnu_items.delete   "Удалить">
+<!ENTITY mnu_items.props    "Свойства">
+
+<!-- фильтр -->
+<!ENTITY tag_list.filter    "Фильтр">
+
+<!-- колонки списка логов -->
+<!ENTITY log.operation      "Операция">
+<!ENTITY log.result   	    "Результат">
+<!ENTITY log.description    "Описание">
+
+<!-- new host -->
+<!ENTITY new_host.title     "Новый хост">
+<!ENTITY new_host.name      "DNS имя или IP адрес">
+
+<!-- строки диалога добавления нового сервера -->
+<!ENTITY new_server.title   "Добавление OPC сервера">
+<!ENTITY new_server.list    "Список серверов">
+<!ENTITY new_server.name    "Имя сервера (ProgID или ClsID):">
+<!ENTITY new_server.add     "Добавить">
+<!ENTITY new_server.cancel  "Отмена">
+<!ENTITY new_server.host_name "Хост">
+
+<!-- диалог настройек групп-->
+<!ENTITY groups.title      "Конфигурация групп">
+<!ENTITY groups.params     "Параметры группы">
+<!ENTITY groups.name       "Имя">
+<!ENTITY groups.active     "Активная">
+<!ENTITY groups.period     "Период (мс)">
+<!ENTITY groups.max_period "Макс. Период (мс)">
+<!ENTITY groups.bias       "Временной сдвиг (мин)">
+<!ENTITY groups.dead       "Зона нечувствительности">
+<!ENTITY groups.close      "Закрыть">
+
+<!ENTITY groups.add        "Добавить">
+<!ENTITY groups.save       "Сохранить">
+<!ENTITY groups.del        "Удалить">
+
+
+<!-- Server properties dialog -->
+<!ENTITY server.title  "Свойства OPC сервера">
+<!ENTITY server.start "Время запуска">
+<!ENTITY server.current "Текущее время">
+<!ENTITY server.update "Время последнего обновления данных">
+<!ENTITY server.state  "Состояние сервера">
+<!ENTITY server.count  "Количество групп">
+<!ENTITY server.band   "Band width">
+<!ENTITY server.major  "Старшая версия">
+<!ENTITY server.minor  "Младшая версия">
+<!ENTITY server.build  "Номер сборки">
+<!ENTITY server.vendor "Информация производителя">
+
+<!-- New tags dialog -->
+<!ENTITY new_tags.title "Адресное пространство тегов">
+<!ENTITY new_tags.srv   "Теги сервера">
+<!ENTITY new_tags.add   "Добавить выбранные теги">
+<!ENTITY new_tags.groups "Группа тегов">
+
+<!-- Item properties dialog -->
+<!ENTITY item_props.title "Свойства тега">
+<!ENTITY item_props.id    "Номер">
+<!ENTITY item_props.name  "Имя">
+<!ENTITY item_props.value "Значение">
+<!ENTITY item_props.desc  "Описание">
+
+<!ENTITY tag_props.itemId      "Имя">
+<!ENTITY tag_props.access_path "Путь доступа">
+<!ENTITY tag_props.active      "Активнвый">
+<!ENTITY tag_props.hClient     "Номер">
+<!ENTITY tag_props.hServer     "Номер на сервере">
+<!ENTITY tag_props.access      "Доступ">
+<!ENTITY tag_props.req_type    "Запрошенный тип">
+<!ENTITY tag_props.srv_type    "Исходный тип">
+<!ENTITY tag_props.euinfo      "Доп. информация">
+<!ENTITY tag_props.main        "Основные">
+<!ENTITY tag_props.deadband    "Зона нечуствительности">
+<!ENTITY tag_props.additional  "Дополнительно">
+<!ENTITY tag_props.clear       "Очистить">

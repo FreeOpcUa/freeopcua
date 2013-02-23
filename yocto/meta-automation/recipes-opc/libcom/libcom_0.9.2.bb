@@ -1,0 +1,8 @@
+PR = "r0"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+SRC_URI[md5sum] = "826ecea77a953e2b2288270ec5611a9f"
+SRC_URI[sha256sum] = "5eb53107847298f14f1a89023ce1b9018ae58631a2bafce01872147ab612a75c"
+
+require libcom.inc
+
