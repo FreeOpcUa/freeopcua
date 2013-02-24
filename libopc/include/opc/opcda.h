@@ -1,3 +1,11 @@
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
+
 #ifndef __opcda_h__
 #define __opcda_h__
 

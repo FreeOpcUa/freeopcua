@@ -1,3 +1,12 @@
+/// @author Alexander Rykovanov 2010
+/// @email rykovanov.as@gmail.com
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
 
 #ifndef CPP_UNIT_TREE_OBJECT_TEST_H__
 #define CPP_UNIT_TREE_OBJECT_TEST_H__

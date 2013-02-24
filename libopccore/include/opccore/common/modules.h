@@ -2,15 +2,12 @@
 /// @email rykovanov.as@gmail.com
 /// @brief modules identifiers. Used for building error codes.
 /// Modules are parts of project not addons.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __modules_h__f01eb2ae_a824_4dc3_a0f2_bf586d241024
 #define __modules_h__f01eb2ae_a824_4dc3_a0f2_bf586d241024

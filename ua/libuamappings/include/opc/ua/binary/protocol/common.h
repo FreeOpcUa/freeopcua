@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
 /// @brief Opc binary messages.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __OPC_UA_BINARY_COMMON_H__
 #define __OPC_UA_BINARY_COMMON_H__

@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2011
 /// @email rykovanov.as@gmail.com
 /// @brief Io manager errors dfinitions
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #include <opccore/managers/io_manager/errors.h>
 #include <opccore/common/modules.h>

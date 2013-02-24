@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2010
 /// @email rykovanov.as@gmail.com
 /// @brief Group interface.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __group_h_488eca0d_e5b1_4514_9dbd_66a510f7a8d6
 #define __group_h_488eca0d_e5b1_4514_9dbd_66a510f7a8d6

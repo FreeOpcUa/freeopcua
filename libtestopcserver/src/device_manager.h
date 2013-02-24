@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2010
 /// @email rykovanov.as@gmail.com
 /// @brief Registrator of gps Device Manager
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef _device_manager_h_924038eb_558e_4308_919f_7e062c12027b
 #define _device_manager_h_924038eb_558e_4308_919f_7e062c12027b

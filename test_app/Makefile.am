@@ -1,3 +1,14 @@
+# @author Alexander Rykovanov 2011
+# @email rykovanov.as@gmail.com
+# @brief Addons manager realization
+# @license GNU GPL
+#
+# Distributed under the GNU GPL License
+# (See accompanying file LICENSE or copy at 
+# http://www.gnu.org/licenses/gpl.html)
+#
+
+
 sources = \
  application.ini \
  chrome.manifest\

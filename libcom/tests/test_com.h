@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
 /// @brief Test COM server.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __test_com_class_h_85d76a27_dfda_43c3_a5b0_212cc9b8694c
 #define __test_com_class_h_85d76a27_dfda_43c3_a5b0_212cc9b8694c

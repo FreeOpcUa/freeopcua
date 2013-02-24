@@ -2,15 +2,12 @@
 /// @email rykovanov.as@gmail.com
 /// @brief IClassFactory interface. 
 /// Interface through which classes can be created.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __IClassFactory_a0693351_4ddf_4ab5_8ce1_6bf434cc8dd7
 #define __IClassFactory_a0693351_4ddf_4ab5_8ce1_6bf434cc8dd7

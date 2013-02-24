@@ -2,15 +2,12 @@
 /// @email rykovanov.as@gmail.com
 /// @brief IClassRegistry interface. 
 /// Interface through which classes can be registered and class creation will be performed via one point.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __IClassRegistry_980dbac5_197b_4e81_9d27_ce0a562fb3c7
 #define __IClassRegistry_980dbac5_197b_4e81_9d27_ce0a562fb3c7

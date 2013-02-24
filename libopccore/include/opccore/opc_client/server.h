@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2010
 /// @email rykovanov.as@gmail.com
 /// @brief Server class
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __server_h_c7469dd7_c591_474e_91f9_2944b15a5c5c
 #define __server_h_c7469dd7_c591_474e_91f9_2944b15a5c5c

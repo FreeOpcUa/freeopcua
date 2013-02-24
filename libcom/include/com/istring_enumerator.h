@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
 /// @brief Interface of string enumerator.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef string_enumerator_h__5c537970_c47b_4209_ad76_8cb39c9c0196
 #define string_enumerator_h__5c537970_c47b_4209_ad76_8cb39c9c0196

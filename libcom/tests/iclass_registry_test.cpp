@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
 /// @brief Tests of IClassRegistry implementation.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #include "../src/iclass_registry_impl.h"
 #include "../src/sqlite_registry.h"

@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
 /// @brief Com registry implementation based on SQLite dabase.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __sqlite_registry_h_f79ce3aa_c10bde7a_9b45_4c66_a145_2c05ca9899bf
 #define __sqlite_registry_h_f79ce3aa_c10bde7a_9b45_4c66_a145_2c05ca9899bf

@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2010
 /// @email rykovanov.as@gmail.com
 /// @brief Processor of data received from gpsd.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __GPSD_DATA_PROCESSOR_H__7a0f3676_1a5f_46f6_9705_8c4d6147226a
 #define __GPSD_DATA_PROCESSOR_H__7a0f3676_1a5f_46f6_9705_8c4d6147226a

@@ -1,12 +1,9 @@
 # Author: Alexander Rykovanov 2009
 #
-# Distributed under the GNU GPL License
+# Distributed under the GNU LGPL License
 # (See accompanying file LICENSE or copy at 
-# http://www.gnu.org/copyleft/gpl.html)
+# http://www.gnu.org/licenses/lgpl.html)
 #
-# $Id:  $
-# $Date: $
-# $Revision: $
 
 noinst_LIBRARIES = libtestdevicemanager.a
 

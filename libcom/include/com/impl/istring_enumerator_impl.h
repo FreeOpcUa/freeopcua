@@ -5,7 +5,7 @@
 ///
 /// Distributed under the GNU GPL/LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
 /// $Id:  $
 /// $Date: $

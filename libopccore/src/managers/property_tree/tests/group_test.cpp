@@ -1,3 +1,13 @@
+/// @author Alexander Rykovanov 2010
+/// @email rykovanov.as@gmail.com
+/// @brief Manager of Property tree
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
 #include "group_test.h"
 
 #include <opccore/managers/property_tree/group.h>

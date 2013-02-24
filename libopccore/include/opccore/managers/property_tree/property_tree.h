@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2011
 /// @email rykovanov.as@gmail.com
 /// @brief Property tree
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __PROPERTY_TREE_H__
 #define __PROPERTY_TREE_H__

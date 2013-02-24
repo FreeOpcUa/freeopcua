@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2010
 /// @email rykovanov.as@gmail.com
 /// @brief Class connects to gpsd and retrieves data from it.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef gpsd_h_e243f5bc_6b8e_4f1f_83ef_d86592f7c08f
 #define gpsd_h_e243f5bc_6b8e_4f1f_83ef_d86592f7c08f

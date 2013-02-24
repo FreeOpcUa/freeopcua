@@ -1,13 +1,11 @@
 # Author: Alexander Rykovanov 2012
 #
-# Distributed under the GNU GPL License
-# (See accompanying file LICENSE or copy at 
-# http://www.gnu.org/copyleft/gpl.html)
+# @license GNU LGPL
 #
-# $Id:  $
-# $Date: $
-# $Revision: $
-
+# Distributed under the GNU LGPL License
+# (See accompanying file LICENSE or copy at 
+# http://www.gnu.org/licenses/lgpl.html)
+#
 
 
 comincludedir = $(includedir)/com

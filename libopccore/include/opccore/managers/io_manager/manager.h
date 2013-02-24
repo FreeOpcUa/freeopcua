@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2011
 /// @email rykovanov.as@gmail.com
 /// @brief Interface of Io Manager
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __io_manaher_h_e5915eba_d836_44ed_941b_439c21be598f
 #define __io_manaher_h_e5915eba_d836_44ed_941b_439c21be598f

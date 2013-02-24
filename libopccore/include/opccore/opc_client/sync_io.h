@@ -1,15 +1,12 @@
 /// @author Alexander Rykovanov 2011
 /// @email rykovanov.as@gmail.com
 /// @brief Class for performing synchronious io operations.
-/// @license GNU GPL/LGPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL/LGPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/copyleft/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
-/// $Id:  $
-/// $Date: $
-/// $Revision: $
 
 #ifndef __sync_io_h__f07084cd_e74d_4b8d_bea7_66895edce9f9
 #define __sync_io_h__f07084cd_e74d_4b8d_bea7_66895edce9f9

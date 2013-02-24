@@ -1,12 +1,11 @@
-// Author: Alexander Rykovanov 2009
-//
-// Distributed under the GNU GPL License
-// (See accompanying file LICENSE or copy at 
-// http://www.gnu.org/copyleft/gpl.html)
-//
-// $Id:  $
-// $Date: $
-// $Revision: $
+/// @author Alexander Rykovanov 2009
+///
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
 
 #include <common/addons_core/addon_manager.h>
 #include <managers/common_managers/common_managers.h>
