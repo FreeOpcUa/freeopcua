@@ -15,14 +15,15 @@
 
 @SET_MAKE@
 
-# Author: Alexander Rykovanov 2009
-#
-# @license GNU LGPL
+# Author: Alexander Rykovanov 2012
 #
 # Distributed under the GNU LGPL License
 # (See accompanying file LICENSE or copy at 
-# http://www.gnu.org/licenses/lgpl.html)
+# http://www.gnu.org/copyleft/gpl.html)
 #
+# $Id:  $
+# $Date: $
+# $Revision: $
 
 
 VPATH = @srcdir@
@@ -44,9 +45,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@BUILD_UA_CMD_TRUE@bin_PROGRAMS = uacmd$(EXEEXT)
+TESTS = libuaclient_test$(EXEEXT)
+check_PROGRAMS = $(am__EXEEXT_1)
 subdir = .
-DIST_COMMON = README $(am__configure_deps) $(opcimplinclude_HEADERS) \
-	$(opcinclude_HEADERS) $(srcdir)/Makefile.am \
+DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
 	config.guess config.sub depcomp install-sh ltmain.sh missing
@@ -87,15 +90,28 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(opcimplincludedir)" "$(DESTDIR)$(opcincludedir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"
 LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
-libopc_a_AR = $(AR) $(ARFLAGS)
-libopc_a_LIBADD =
-am_libopc_a_OBJECTS = libopc_a-module.$(OBJEXT) \
-	libopc_a-opc_server.$(OBJEXT) libopc_a-opc_group.$(OBJEXT)
-libopc_a_OBJECTS = $(am_libopc_a_OBJECTS)
+libuaclient_a_AR = $(AR) $(ARFLAGS)
+libuaclient_a_LIBADD =
+am_libuaclient_a_OBJECTS =
+libuaclient_a_OBJECTS = $(am_libuaclient_a_OBJECTS)
+am__EXEEXT_1 = libuaclient_test$(EXEEXT)
+PROGRAMS = $(bin_PROGRAMS)
+am_libuaclient_test_OBJECTS = libuaclient_test-main.$(OBJEXT)
+libuaclient_test_OBJECTS = $(am_libuaclient_test_OBJECTS)
+libuaclient_test_DEPENDENCIES = libuaclient.a
+libuaclient_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libuaclient_test_LDFLAGS) $(LDFLAGS) -o $@
+am__uacmd_SOURCES_DIST = src/main.cpp
+@BUILD_UA_CMD_TRUE@am_uacmd_OBJECTS = uacmd-main.$(OBJEXT)
+uacmd_OBJECTS = $(am_uacmd_OBJECTS)
+@BUILD_UA_CMD_TRUE@uacmd_DEPENDENCIES = libuaclient.a
+uacmd_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(uacmd_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -118,11 +134,14 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopc_a_SOURCES)
-DIST_SOURCES = $(libopc_a_SOURCES)
-HEADERS = $(opcimplinclude_HEADERS) $(opcinclude_HEADERS)
+SOURCES = $(libuaclient_a_SOURCES) $(libuaclient_test_SOURCES) \
+	$(uacmd_SOURCES)
+DIST_SOURCES = $(libuaclient_a_SOURCES) $(libuaclient_test_SOURCES) \
+	$(am__uacmd_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
+am__tty_colors = \
+red=; grn=; lgn=; blu=; std=
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -170,7 +189,8 @@ GMOCK_INCLUDES = @GMOCK_INCLUDES@
 GMOCK_LIBS = @GMOCK_LIBS@
 GREP = @GREP@
 GTEST_INCLUDES = @GTEST_INCLUDES@
-GTEST_LIBS = @GTEST_LIBS@
+GTEST_LIB = @GTEST_LIB@
+GTEST_MAIN_LIB = @GTEST_MAIN_LIB@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -178,8 +198,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBCOM_INCLUDES = @LIBCOM_INCLUDES@
-LIBCOM_LIBS = @LIBCOM_LIBS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -193,8 +211,6 @@ NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-OPC_CORE_INCLUDES = @OPC_CORE_INCLUDES@
-OPC_CORE_LIBS = @OPC_CORE_LIBS@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -267,27 +283,24 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lib_LIBRARIES = libopc.a
 opcincludedir = $(includedir)/opc
-opcinclude_HEADERS = \
-       include/opc/opcda.h \
-       include/opc/opcerror.h
+opcuaincludedir = $(opcincludedir)/ua
 
-opcimplincludedir = $(opcincludedir)/impl
-opcimplinclude_HEADERS = \
-       include/opc/impl/module.h
+#opcuainclude_HEADERS = \
+# include/opc/ua/channel.h
+lib_LIBRARIES = libuaclient.a
+libuaclient_a_SOURCES = 
+libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
+@BUILD_UA_CMD_TRUE@uacmd_SOURCES = src/main.cpp
+@BUILD_UA_CMD_TRUE@uacmd_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+@BUILD_UA_CMD_TRUE@uacmd_LDADD = libuaclient.a
+@BUILD_UA_CMD_TRUE@uacmd_LDFLAGS = -lpthread -Wl,-z,defs
+libuaclient_test_SOURCES = \
+ tests/main.cpp
 
-libopc_a_SOURCES = \
-       src/opc_server.h \
-       src/module.cpp \
-       src/opc_server.cpp \
-       src/opc_group.cpp \
-       src/opc_group.h \
-       include/opc/impl/module.h \
-       include/opc/opcda.h \
-       include/opc/opcerror.h
-
-libopc_a_CPPFLAGS = -I$(top_srcdir)/include $(LIBCOM_INCLUDES) $(OPC_CORE_INCLUDES)
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+libuaclient_test_LDADD = libuaclient.a
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -372,10 +385,68 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libopc.a: $(libopc_a_OBJECTS) $(libopc_a_DEPENDENCIES) $(EXTRA_libopc_a_DEPENDENCIES) 
-	-rm -f libopc.a
-	$(libopc_a_AR) libopc.a $(libopc_a_OBJECTS) $(libopc_a_LIBADD)
-	$(RANLIB) libopc.a
+libuaclient.a: $(libuaclient_a_OBJECTS) $(libuaclient_a_DEPENDENCIES) $(EXTRA_libuaclient_a_DEPENDENCIES) 
+	-rm -f libuaclient.a
+	$(libuaclient_a_AR) libuaclient.a $(libuaclient_a_OBJECTS) $(libuaclient_a_LIBADD)
+	$(RANLIB) libuaclient.a
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	for p in $$list; do echo "$$p $$p"; done | \
+	sed 's/$(EXEEXT)$$//' | \
+	while read p p1; do if test -f $$p || test -f $$p1; \
+	  then echo "$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n;h' -e 's|.*|.|' \
+	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
+	sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
+	    else { print "f", $$3 "/" $$4, $$1; } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	    test -z "$$files" || { \
+	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	    } \
+	; done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
+	      -e 's/$$/$(EXEEXT)/' `; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+libuaclient_test$(EXEEXT): $(libuaclient_test_OBJECTS) $(libuaclient_test_DEPENDENCIES) $(EXTRA_libuaclient_test_DEPENDENCIES) 
+	@rm -f libuaclient_test$(EXEEXT)
+	$(libuaclient_test_LINK) $(libuaclient_test_OBJECTS) $(libuaclient_test_LDADD) $(LIBS)
+uacmd$(EXEEXT): $(uacmd_OBJECTS) $(uacmd_DEPENDENCIES) $(EXTRA_uacmd_DEPENDENCIES) 
+	@rm -f uacmd$(EXEEXT)
+	$(uacmd_LINK) $(uacmd_OBJECTS) $(uacmd_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -383,9 +454,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopc_a-module.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopc_a-opc_group.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopc_a-opc_server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uacmd-main.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -408,47 +478,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libopc_a-module.o: src/module.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-module.o -MD -MP -MF $(DEPDIR)/libopc_a-module.Tpo -c -o libopc_a-module.o `test -f 'src/module.cpp' || echo '$(srcdir)/'`src/module.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-module.Tpo $(DEPDIR)/libopc_a-module.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/module.cpp' object='libopc_a-module.o' libtool=no @AMDEPBACKSLASH@
+libuaclient_test-main.o: tests/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-main.o -MD -MP -MF $(DEPDIR)/libuaclient_test-main.Tpo -c -o libuaclient_test-main.o `test -f 'tests/main.cpp' || echo '$(srcdir)/'`tests/main.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-main.Tpo $(DEPDIR)/libuaclient_test-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/main.cpp' object='libuaclient_test-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-module.o `test -f 'src/module.cpp' || echo '$(srcdir)/'`src/module.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-main.o `test -f 'tests/main.cpp' || echo '$(srcdir)/'`tests/main.cpp
 
-libopc_a-module.obj: src/module.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-module.obj -MD -MP -MF $(DEPDIR)/libopc_a-module.Tpo -c -o libopc_a-module.obj `if test -f 'src/module.cpp'; then $(CYGPATH_W) 'src/module.cpp'; else $(CYGPATH_W) '$(srcdir)/src/module.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-module.Tpo $(DEPDIR)/libopc_a-module.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/module.cpp' object='libopc_a-module.obj' libtool=no @AMDEPBACKSLASH@
+libuaclient_test-main.obj: tests/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-main.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-main.Tpo -c -o libuaclient_test-main.obj `if test -f 'tests/main.cpp'; then $(CYGPATH_W) 'tests/main.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/main.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-main.Tpo $(DEPDIR)/libuaclient_test-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/main.cpp' object='libuaclient_test-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-module.obj `if test -f 'src/module.cpp'; then $(CYGPATH_W) 'src/module.cpp'; else $(CYGPATH_W) '$(srcdir)/src/module.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-main.obj `if test -f 'tests/main.cpp'; then $(CYGPATH_W) 'tests/main.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/main.cpp'; fi`
 
-libopc_a-opc_server.o: src/opc_server.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-opc_server.o -MD -MP -MF $(DEPDIR)/libopc_a-opc_server.Tpo -c -o libopc_a-opc_server.o `test -f 'src/opc_server.cpp' || echo '$(srcdir)/'`src/opc_server.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-opc_server.Tpo $(DEPDIR)/libopc_a-opc_server.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/opc_server.cpp' object='libopc_a-opc_server.o' libtool=no @AMDEPBACKSLASH@
+uacmd-main.o: src/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT uacmd-main.o -MD -MP -MF $(DEPDIR)/uacmd-main.Tpo -c -o uacmd-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/uacmd-main.Tpo $(DEPDIR)/uacmd-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='uacmd-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-opc_server.o `test -f 'src/opc_server.cpp' || echo '$(srcdir)/'`src/opc_server.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uacmd-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
 
-libopc_a-opc_server.obj: src/opc_server.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-opc_server.obj -MD -MP -MF $(DEPDIR)/libopc_a-opc_server.Tpo -c -o libopc_a-opc_server.obj `if test -f 'src/opc_server.cpp'; then $(CYGPATH_W) 'src/opc_server.cpp'; else $(CYGPATH_W) '$(srcdir)/src/opc_server.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-opc_server.Tpo $(DEPDIR)/libopc_a-opc_server.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/opc_server.cpp' object='libopc_a-opc_server.obj' libtool=no @AMDEPBACKSLASH@
+uacmd-main.obj: src/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT uacmd-main.obj -MD -MP -MF $(DEPDIR)/uacmd-main.Tpo -c -o uacmd-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/uacmd-main.Tpo $(DEPDIR)/uacmd-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='uacmd-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-opc_server.obj `if test -f 'src/opc_server.cpp'; then $(CYGPATH_W) 'src/opc_server.cpp'; else $(CYGPATH_W) '$(srcdir)/src/opc_server.cpp'; fi`
-
-libopc_a-opc_group.o: src/opc_group.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-opc_group.o -MD -MP -MF $(DEPDIR)/libopc_a-opc_group.Tpo -c -o libopc_a-opc_group.o `test -f 'src/opc_group.cpp' || echo '$(srcdir)/'`src/opc_group.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-opc_group.Tpo $(DEPDIR)/libopc_a-opc_group.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/opc_group.cpp' object='libopc_a-opc_group.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-opc_group.o `test -f 'src/opc_group.cpp' || echo '$(srcdir)/'`src/opc_group.cpp
-
-libopc_a-opc_group.obj: src/opc_group.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopc_a-opc_group.obj -MD -MP -MF $(DEPDIR)/libopc_a-opc_group.Tpo -c -o libopc_a-opc_group.obj `if test -f 'src/opc_group.cpp'; then $(CYGPATH_W) 'src/opc_group.cpp'; else $(CYGPATH_W) '$(srcdir)/src/opc_group.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopc_a-opc_group.Tpo $(DEPDIR)/libopc_a-opc_group.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/opc_group.cpp' object='libopc_a-opc_group.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopc_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopc_a-opc_group.obj `if test -f 'src/opc_group.cpp'; then $(CYGPATH_W) 'src/opc_group.cpp'; else $(CYGPATH_W) '$(srcdir)/src/opc_group.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uacmd-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -458,42 +514,6 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
-install-opcimplincludeHEADERS: $(opcimplinclude_HEADERS)
-	@$(NORMAL_INSTALL)
-	test -z "$(opcimplincludedir)" || $(MKDIR_P) "$(DESTDIR)$(opcimplincludedir)"
-	@list='$(opcimplinclude_HEADERS)'; test -n "$(opcimplincludedir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(opcimplincludedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(opcimplincludedir)" || exit $$?; \
-	done
-
-uninstall-opcimplincludeHEADERS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(opcimplinclude_HEADERS)'; test -n "$(opcimplincludedir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(opcimplincludedir)'; $(am__uninstall_files_from_dir)
-install-opcincludeHEADERS: $(opcinclude_HEADERS)
-	@$(NORMAL_INSTALL)
-	test -z "$(opcincludedir)" || $(MKDIR_P) "$(DESTDIR)$(opcincludedir)"
-	@list='$(opcinclude_HEADERS)'; test -n "$(opcincludedir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(opcincludedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(opcincludedir)" || exit $$?; \
-	done
-
-uninstall-opcincludeHEADERS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(opcinclude_HEADERS)'; test -n "$(opcincludedir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(opcincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -546,6 +566,99 @@ GTAGS:
 
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
+
+check-TESTS: $(TESTS)
+	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
+	srcdir=$(srcdir); export srcdir; \
+	list=' $(TESTS) '; \
+	$(am__tty_colors); \
+	if test -n "$$list"; then \
+	  for tst in $$list; do \
+	    if test -f ./$$tst; then dir=./; \
+	    elif test -f $$tst; then dir=; \
+	    else dir="$(srcdir)/"; fi; \
+	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *[\ \	]$$tst[\ \	]*) \
+		xpass=`expr $$xpass + 1`; \
+		failed=`expr $$failed + 1`; \
+		col=$$red; res=XPASS; \
+	      ;; \
+	      *) \
+		col=$$grn; res=PASS; \
+	      ;; \
+	      esac; \
+	    elif test $$? -ne 77; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *[\ \	]$$tst[\ \	]*) \
+		xfail=`expr $$xfail + 1`; \
+		col=$$lgn; res=XFAIL; \
+	      ;; \
+	      *) \
+		failed=`expr $$failed + 1`; \
+		col=$$red; res=FAIL; \
+	      ;; \
+	      esac; \
+	    else \
+	      skip=`expr $$skip + 1`; \
+	      col=$$blu; res=SKIP; \
+	    fi; \
+	    echo "$${col}$$res$${std}: $$tst"; \
+	  done; \
+	  if test "$$all" -eq 1; then \
+	    tests="test"; \
+	    All=""; \
+	  else \
+	    tests="tests"; \
+	    All="All "; \
+	  fi; \
+	  if test "$$failed" -eq 0; then \
+	    if test "$$xfail" -eq 0; then \
+	      banner="$$All$$all $$tests passed"; \
+	    else \
+	      if test "$$xfail" -eq 1; then failures=failure; else failures=failures; fi; \
+	      banner="$$All$$all $$tests behaved as expected ($$xfail expected $$failures)"; \
+	    fi; \
+	  else \
+	    if test "$$xpass" -eq 0; then \
+	      banner="$$failed of $$all $$tests failed"; \
+	    else \
+	      if test "$$xpass" -eq 1; then passes=pass; else passes=passes; fi; \
+	      banner="$$failed of $$all $$tests did not behave as expected ($$xpass unexpected $$passes)"; \
+	    fi; \
+	  fi; \
+	  dashes="$$banner"; \
+	  skipped=""; \
+	  if test "$$skip" -ne 0; then \
+	    if test "$$skip" -eq 1; then \
+	      skipped="($$skip test was not run)"; \
+	    else \
+	      skipped="($$skip tests were not run)"; \
+	    fi; \
+	    test `echo "$$skipped" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$skipped"; \
+	  fi; \
+	  report=""; \
+	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
+	    report="Please report to $(PACKAGE_BUGREPORT)"; \
+	    test `echo "$$report" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$report"; \
+	  fi; \
+	  dashes=`echo "$$dashes" | sed s/./=/g`; \
+	  if test "$$failed" -eq 0; then \
+	    col="$$grn"; \
+	  else \
+	    col="$$red"; \
+	  fi; \
+	  echo "$${col}$$dashes$${std}"; \
+	  echo "$${col}$$banner$${std}"; \
+	  test -z "$$skipped" || echo "$${col}$$skipped$${std}"; \
+	  test -z "$$report" || echo "$${col}$$report$${std}"; \
+	  echo "$${col}$$dashes$${std}"; \
+	  test "$$failed" -eq 0; \
+	else :; fi
 
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
@@ -710,10 +823,12 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(LIBRARIES) $(HEADERS) config.h
+all-am: Makefile $(LIBRARIES) $(PROGRAMS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(opcimplincludedir)" "$(DESTDIR)$(opcincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -748,8 +863,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLIBRARIES clean-libtool \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
+	clean-libLIBRARIES clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -770,14 +885,13 @@ info: info-am
 
 info-am:
 
-install-data-am: install-opcimplincludeHEADERS \
-	install-opcincludeHEADERS
+install-data-am:
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLIBRARIES
 
 install-html: install-html-am
 
@@ -819,29 +933,28 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLIBRARIES uninstall-opcimplincludeHEADERS \
-	uninstall-opcincludeHEADERS
+uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES
 
-.MAKE: all install-am install-strip
+.MAKE: all check-am install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-generic clean-libLIBRARIES clean-libtool ctags dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar \
-	dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
+.PHONY: CTAGS GTAGS all all-am am--refresh check check-TESTS check-am \
+	clean clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
+	clean-libLIBRARIES clean-libtool ctags dist dist-all \
+	dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar dist-tarZ \
+	dist-xz dist-zip distcheck distclean distclean-compile \
+	distclean-generic distclean-hdr distclean-libtool \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-opcimplincludeHEADERS \
-	install-opcincludeHEADERS install-pdf install-pdf-am \
+	install-libLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLIBRARIES \
-	uninstall-opcimplincludeHEADERS uninstall-opcincludeHEADERS
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-libLIBRARIES
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
