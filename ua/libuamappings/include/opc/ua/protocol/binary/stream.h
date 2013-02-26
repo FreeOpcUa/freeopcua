@@ -1,6 +1,7 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Opc bbinary stream.
+/// @brief Opc binary stream. 
+/// Stream classes perform Serialization/Deserialization of opc ua structures.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
