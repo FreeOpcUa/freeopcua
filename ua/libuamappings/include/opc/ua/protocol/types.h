@@ -19,65 +19,63 @@
 
 namespace OpcUa
 {
-  namespace Binary
+
+  typedef uint32_t StatusCode;
+
+  struct Guid
   {
+    uint32_t Data1;
+    uint16_t Data2;
+    uint16_t Data3;
+    uint8_t  Data4[8];
 
-    typedef uint32_t StatusCode;
-
-    struct Guid
-    {
-      uint32_t Data1;
-      uint16_t Data2;
-      uint16_t Data3;
-      uint8_t  Data4[8];
-
-      Guid()
-        : Data1(0)
-        , Data2(0)
-        , Data3(0)
-      {
-        for (unsigned i = 0; i < 8; ++i)
-        {
-          Data4[i] = 0;
-        }
-      }
-    };
-
-    inline bool operator== (const Guid& l, const Guid&r)
+    Guid()
+      : Data1(0)
+      , Data2(0)
+      , Data3(0)
     {
       for (unsigned i = 0; i < 8; ++i)
       {
-        if (l.Data4[i] != r.Data4[i])
-        {
-          return false;
-        }
+        Data4[i] = 0;
       }
+    }
+  };
 
-      return l.Data1 == r.Data1 && l.Data2 == r.Data2 && l.Data3 == r.Data3;
+  inline bool operator== (const Guid& l, const Guid&r)
+  {
+    for (unsigned i = 0; i < 8; ++i)
+    {
+      if (l.Data4[i] != r.Data4[i])
+      {
+        return false;
+      }
     }
 
-    struct QualifiedName
+    return l.Data1 == r.Data1 && l.Data2 == r.Data2 && l.Data3 == r.Data3;
+  }
+
+  struct QualifiedName
+  {
+    uint16_t NamespaceIndex;
+    std::string Name;
+
+    QualifiedName()
+      : NamespaceIndex(0)
     {
-      uint16_t NamespaceIndex;
-      std::string Name;
+    }
+  };
 
-      QualifiedName()
-        : NamespaceIndex(0)
-      {
-      }
-    };
+  // LocalizedText encoding mask
+  const uint8_t HAS_LOCALE = 1;
+  const uint8_t HAS_TEXT = 2;
 
-    // LocalizedText encoding mask
-    const uint8_t HAS_LOCALE = 1;
-    const uint8_t HAS_TEXT = 2;
+  struct LocalizedText
+  {
+    uint8_t Encoding;
+    std::string Locale;
+    std::string Text;
+  };
 
-    struct LocalizedText
-    {
-      uint8_t Encoding;
-      std::string Locale;
-      std::string Text;
-    };
-  } // namespace Binary
 } // namespace OpcUa
 
 #endif // __OPC_UA_MAPPING_TYPES_H__

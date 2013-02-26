@@ -18,81 +18,77 @@
 
 namespace OpcUa
 {
-  namespace Binary
+  enum class TimestampsToReturn
   {
+    SOURCE = 0,
+    SERVER = 1,
+    BOTH   = 2,
+    NEITHER = 3
+  };
 
-    enum class TimestampsToReturn
-    {
-      SOURCE = 0,
-      SERVER = 1,
-      BOTH   = 2,
-      NEITHER = 3
-    };
+  struct AttributeValueID
+  {
+    NodeID Node;
+    AttributeID Attribute;
+    std::string IndexRange;
+    QualifiedName DataEncoding;
 
-    struct AttributeValueID
-    {
-      NodeID Node;
-      AttributeID Attribute;
-      std::string IndexRange;
-      QualifiedName DataEncoding;
+    AttributeValueID();
+  };
 
-      AttributeValueID();
-    };
+  struct ReadRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    
+    Duration MaxAge;
+    TimestampsToReturn TimestampsType;
+    std::vector<AttributeValueID> AttributesToRead;
 
-    struct ReadRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
-      
-      Duration MaxAge;
-      TimestampsToReturn TimestampsType;
-      std::vector<AttributeValueID> AttributesToRead;
+    ReadRequest();
+  };
 
-      ReadRequest();
-    };
+  struct ReadResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
 
-    struct ReadResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
+    std::vector<DataValue> Results;
+    std::vector<DiagnosticInfo> Diagnostics;
 
-      std::vector<DataValue> Results;
-      std::vector<DiagnosticInfo> Diagnostics;
-
-      ReadResponse();
-    };
+    ReadResponse();
+  };
 
 
-    struct WriteValue
-    {
-      NodeID Node;
-      AttributeID Attribute;
-      std::string NumericRange;
-      DataValue Data;
-    };
+  struct WriteValue
+  {
+    NodeID Node;
+    AttributeID Attribute;
+    std::string NumericRange;
+    DataValue Data;
+  };
 
-    struct WriteRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
+  struct WriteRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
 
-      std::vector<WriteValue> NodesToWrite;
+    std::vector<WriteValue> NodesToWrite;
 
-      WriteRequest();
-    };
+    WriteRequest();
+  };
 
-    struct WriteResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
+  struct WriteResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
 
-      std::vector<uint32_t> StatusCodes;
-      std::vector<DiagnosticInfo> Diagnostics;
+    std::vector<uint32_t> StatusCodes;
+    std::vector<DiagnosticInfo> Diagnostics;
 
-      WriteResponse();
-    };
+    WriteResponse();
+  };
 
-  } // namespace Binary
 } // namespace OpcUa
 
 #endif // __OPC_UA_BINARY_ATTRIBUTES_H__

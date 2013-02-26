@@ -15,38 +15,35 @@
 
 namespace OpcUa
 {
-  namespace Binary
+
+  //------------------------------------------------------
+  // Endpoints
+  //------------------------------------------------------
+
+  struct GetEndpointsRequest
   {
+    NodeID TypeID;
+    RequestHeader Header;
 
-    //------------------------------------------------------
-    // Endpoints
-    //------------------------------------------------------
+    std::string EndpointURL;
+    std::vector<std::string> LocaleIDs;
+    std::vector<std::string> ProfileUries;
 
-    struct GetEndpointsRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
-
-      std::string EndpointURL;
-      std::vector<std::string> LocaleIDs;
-      std::vector<std::string> ProfileUries;
-
-      GetEndpointsRequest();
-    };
+    GetEndpointsRequest();
+  };
 
 
-    struct GetEndpointsResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
+  struct GetEndpointsResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
 
-      std::vector<EndpointDescription> Endpoints;
+    std::vector<EndpointDescription> Endpoints;
 
-      GetEndpointsResponse();
-    };
+    GetEndpointsResponse();
+  };
 
-  }
-}
+} // namespace OpcUa
 
 #endif // __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 

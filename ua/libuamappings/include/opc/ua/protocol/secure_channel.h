@@ -15,75 +15,72 @@
 
 namespace OpcUa
 {
-  namespace Binary
+  // OpenSecureChannel
+  // os << SecureHeader 
+  //    << AssymmetricAlgoripthmHeader
+  //    << SequenceHeader
+  //    << NodeID << ExpandedNodeId // if present
+  //    << RequestHeader
+  //    << OpenSecureChannel
+
+  struct OpenSecureChannelRequest
   {
-    // OpenSecureChannel
-    // os << SecureHeader 
-    //    << AssymmetricAlgoripthmHeader
-    //    << SequenceHeader
-    //    << NodeID << ExpandedNodeId // if present
-    //    << RequestHeader
-    //    << OpenSecureChannel
+    NodeID TypeID;
+    RequestHeader Header;
 
-    struct OpenSecureChannelRequest
+    uint32_t ClientProtocolVersion;
+    SecurityTokenRequestType RequestType;
+    MessageSecurityMode SecurityMode;
+    std::vector<uint8_t> ClientNonce;
+    uint32_t RequestLifeTime;
+
+    OpenSecureChannelRequest();
+  };
+
+  
+  // OpenSecureChannelResponse
+  // is >> SecureHeader 
+  //    >> AsymmetricAlgorithmHeader 
+  //    >> SequenceHeader 
+  //    >> ResponseHeader
+  //    >> GetEndpointsResponse
+
+  struct SecurityToken
+  {
+    uint32_t SecureChannelID;
+    uint32_t TokenID;
+    DateTime CreatedAt;
+    int32_t RevisedLifetime;
+
+    SecurityToken()
+      : SecureChannelID(0)
+      , TokenID(0)
+      , CreatedAt(0)
+      , RevisedLifetime(0)
     {
-      NodeID TypeID;
-      RequestHeader Header;
+    }
+  };
 
-      uint32_t ClientProtocolVersion;
-      SecurityTokenRequestType RequestType;
-      MessageSecurityMode SecurityMode;
-      std::vector<uint8_t> ClientNonce;
-      uint32_t RequestLifeTime;
+  struct OpenSecureChannelResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
 
-      OpenSecureChannelRequest();
-    };
+    uint32_t ServerProtocolVersion;
+    SecurityToken ChannelSecurityToken;
+    std::vector<uint8_t> ServerNonce;
 
-    
-    // OpenSecureChannelResponse
-    // is >> SecureHeader 
-    //    >> AsymmetricAlgorithmHeader 
-    //    >> SequenceHeader 
-    //    >> ResponseHeader
-    //    >> GetEndpointsResponse
+    OpenSecureChannelResponse();
+  };
 
-    struct SecurityToken
-    {
-      uint32_t SecureChannelID;
-      uint32_t TokenID;
-      DateTime CreatedAt;
-      int32_t RevisedLifetime;
+  struct CloseSecureChannelRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
 
-      SecurityToken()
-        : SecureChannelID(0)
-        , TokenID(0)
-        , CreatedAt(0)
-        , RevisedLifetime(0)
-      {
-      }
-    };
+    CloseSecureChannelRequest();
+  };
 
-    struct OpenSecureChannelResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
-
-      uint32_t ServerProtocolVersion;
-      SecurityToken ChannelSecurityToken;
-      std::vector<uint8_t> ServerNonce;
-
-      OpenSecureChannelResponse();
-    };
-
-    struct CloseSecureChannelRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
-
-      CloseSecureChannelRequest();
-    };
-
-  } // namespace Binary
 } // namespace OpcUa
 
 #endif // __OPC_UA_MESSAGES_SECURE_CHANNEL_H__

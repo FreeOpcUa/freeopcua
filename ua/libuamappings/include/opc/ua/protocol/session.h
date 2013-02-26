@@ -15,111 +15,109 @@
 
 namespace OpcUa
 {
-  namespace Binary
+
+  //---------------------------------------------------
+  // CreateSession
+  //---------------------------------------------------
+
+  struct CreateSessionRequest
   {
-    //---------------------------------------------------
-    // CreateSession
-    //---------------------------------------------------
+    NodeID TypeID;
+    RequestHeader Header;
 
-    struct CreateSessionRequest
+    ApplicationDescription ClientDescription;
+    std::string ServerURI;
+    std::string EndpointURL;
+    std::string SessionName;
+    std::vector<uint8_t> ClientNonce;
+    CertificateData ClientCertificate;
+    Duration RequestedSessionTimeout;
+    uint32_t MaxResponseMessageSize;
+
+    CreateSessionRequest();
+  };
+
+
+  struct CreateSessionResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+
+    NodeID SessionID;
+    NodeID AuthenticationToken;
+    Duration RevisedSessionTimeout;
+    std::vector<uint8_t> ServerNonce;
+    CertificateData ServerCertificate;
+    std::vector<EndpointDescription> ServerEndpoints;
+    std::vector<CertificateData> SignedServerCertificates;
+    SignatureData ServerSignature;
+    uint32_t MaxRequestMessageSize;
+
+    CreateSessionResponse();
+  };
+
+  //-------------------------------------------------
+  // ActivateSessionRequest
+  //-------------------------------------------------
+
+  struct UserIdentifyToken
+  {
+    ExtensionObjectHeader Header;
+    struct AnonymousStruct
     {
-      NodeID TypeID;
-      RequestHeader Header;
+      std::vector<uint8_t> Data;
+    } Anonymous;
 
-      ApplicationDescription ClientDescription;
-      std::string ServerURI;
-      std::string EndpointURL;
-      std::string SessionName;
-      std::vector<uint8_t> ClientNonce;
-      CertificateData ClientCertificate;
-      Duration RequestedSessionTimeout;
-      uint32_t MaxResponseMessageSize;
+    UserIdentifyToken();
+  };
 
-      CreateSessionRequest();
-    };
+  struct ActivateSessionRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
 
+    SignatureData ClientSignature;
+    std::vector<CertificateData> ClientCertificates;
+    std::vector<std::string> LocaleIDs;
+    UserIdentifyToken IdentifyToken;
+    SignatureData UserTokenSignature;
 
-    struct CreateSessionResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
+    ActivateSessionRequest();
+  };
 
-      NodeID SessionID;
-      NodeID AuthenticationToken;
-      Duration RevisedSessionTimeout;
-      std::vector<uint8_t> ServerNonce;
-      CertificateData ServerCertificate;
-      std::vector<EndpointDescription> ServerEndpoints;
-      std::vector<CertificateData> SignedServerCertificates;
-      SignatureData ServerSignature;
-      uint32_t MaxRequestMessageSize;
+  struct ActivateSessionResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    std::vector<uint8_t> ServerNonce;
+    std::vector<uint32_t>StatusCodes;
+    std::vector<DiagnosticInfo> DiagnosticInfos;
 
-      CreateSessionResponse();
-    };
+    ActivateSessionResponse();
+  }; 
 
-    //-------------------------------------------------
-    // ActivateSessionRequest
-    //-------------------------------------------------
+  //-------------------------------------------------
+  // CloseSessionRequest
+  //-------------------------------------------------
 
-    struct UserIdentifyToken
-    {
-      ExtensionObjectHeader Header;
-      struct AnonymousStruct
-      {
-        std::vector<uint8_t> Data;
-      } Anonymous;
+  struct CloseSessionRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
 
-      UserIdentifyToken();
-    };
+    bool DeleteSubscriptions;
 
-    struct ActivateSessionRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
+    CloseSessionRequest();
+  };
 
-      SignatureData ClientSignature;
-      std::vector<CertificateData> ClientCertificates;
-      std::vector<std::string> LocaleIDs;
-      UserIdentifyToken IdentifyToken;
-      SignatureData UserTokenSignature;
+  struct CloseSessionResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
 
-      ActivateSessionRequest();
-    };
+    CloseSessionResponse();
+  };
 
-    struct ActivateSessionResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
-      std::vector<uint8_t> ServerNonce;
-      std::vector<uint32_t>StatusCodes;
-      std::vector<DiagnosticInfo> DiagnosticInfos;
-
-      ActivateSessionResponse();
-    }; 
-
-    //-------------------------------------------------
-    // CloseSessionRequest
-    //-------------------------------------------------
-  
-    struct CloseSessionRequest
-    {
-      NodeID TypeID;
-      RequestHeader Header;
-
-      bool DeleteSubscriptions;
-
-      CloseSessionRequest();
-    };
-
-    struct CloseSessionResponse
-    {
-      NodeID TypeID;
-      ResponseHeader Header;
-
-      CloseSessionResponse();
-    };
-
-  }
-}
+} // namespace OpcUa
 
 #endif // __OPC_UA_BINARY_SESSIONS_H__

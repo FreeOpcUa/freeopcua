@@ -15,31 +15,27 @@
 
 namespace OpcUa
 {
-  namespace Binary
-  {
+   const uint8_t DATA_VALUE = 1;
+   const uint8_t DATA_VALUE_STATUS_CODE = 2;
+   const uint8_t DATA_VALUE_SOURCE_TIMESTAMP = 4;
+   const uint8_t DATA_VALUE_SERVER_TIMESTAMP = 8;
+   const uint8_t DATA_VALUE_SOURCE_PICOSECONDS = 16;
+   const uint8_t DATA_VALUE_SERVER_PICOSECONDS = 32;
 
-     const uint8_t DATA_VALUE = 1;
-     const uint8_t DATA_VALUE_STATUS_CODE = 2;
-     const uint8_t DATA_VALUE_SOURCE_TIMESTAMP = 4;
-     const uint8_t DATA_VALUE_SERVER_TIMESTAMP = 8;
-     const uint8_t DATA_VALUE_SOURCE_PICOSECONDS = 16;
-     const uint8_t DATA_VALUE_SERVER_PICOSECONDS = 32;
+   struct DataValue
+   {
+     uint8_t Encoding;
+     Variant Value;
+     StatusCode Status;
+     DateTime SourceTimestamp;
+     uint16_t SourcePicoseconds;
+     DateTime ServerTimestamp;
+     uint16_t ServerPicoseconds;
 
-     struct DataValue
-     {
-       uint8_t Encoding;
-       Variant Value;
-       StatusCode Status;
-       DateTime SourceTimestamp;
-       uint16_t SourcePicoseconds;
-       DateTime ServerTimestamp;
-       uint16_t ServerPicoseconds;
+     DataValue();
+   };
 
-       DataValue();
-     };
-
-  }
-}
+} // namespace OpcUa
 
 #endif // __OPC_UA_DATA_VALUE_H__
 

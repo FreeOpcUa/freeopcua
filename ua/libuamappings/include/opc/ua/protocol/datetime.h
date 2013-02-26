@@ -15,16 +15,13 @@
 
 namespace OpcUa
 {
-  namespace Binary
-  {
 
-    typedef uint64_t DateTime;
+  typedef uint64_t DateTime;
 
-    DateTime CurrentDateTime();
+  DateTime CurrentDateTime();
 
-    typedef uint64_t Duration; // Time duration in miliseconds.
+  typedef uint64_t Duration; // Time duration in miliseconds.
 
-  } // Binary
 } // OpcUa
 
 
