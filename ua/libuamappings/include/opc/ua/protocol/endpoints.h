@@ -1,6 +1,6 @@
-/// @author Alexander Rykovanov 2013
+/// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Opc Ua binary Endpoints service.
+/// @brief Opc Ua Binary. Secure channel service.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -8,27 +8,45 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_BINARY_ENDPOINTS
-#define __OPC_UA_BINARY_ENDPOINTS
+#ifndef __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
+#define __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 
-#include <opc/ua/channel.h>
-
-#include <memory>
-#include <string>
-#include <vector>
+#include <opc/ua/binary/protocol/common.h>
 
 namespace OpcUa
 {
   namespace Binary
   {
- 
-    struct EndpointsFilter
+
+    //------------------------------------------------------
+    // Endpoints
+    //------------------------------------------------------
+
+    struct GetEndpointsRequest
     {
-      std::string EndpointUrl;
+      NodeID TypeID;
+      RequestHeader Header;
+
+      std::string EndpointURL;
+      std::vector<std::string> LocaleIDs;
+      std::vector<std::string> ProfileUries;
+
+      GetEndpointsRequest();
     };
 
-  } // nmespace Bunary
-} // namespace OpcUa
 
-#endif // __OPC_UA_BINARY_ENDPOINTS
+    struct GetEndpointsResponse
+    {
+      NodeID TypeID;
+      ResponseHeader Header;
+
+      std::vector<EndpointDescription> Endpoints;
+
+      GetEndpointsResponse();
+    };
+
+  }
+}
+
+#endif // __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 

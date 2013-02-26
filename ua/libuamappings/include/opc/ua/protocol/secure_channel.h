@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Opc Ua binary secure channel.
+/// @brief Opc Ua Binary. Secure channel service.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -8,40 +8,83 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_BINARY_SECURE_CHANNEL
-#define __OPC_UA_BINARY_SECURE_CHANNEL
+#ifndef __OPC_UA_MESSAGES_SECURE_CHANNEL_H__
+#define __OPC_UA_MESSAGES_SECURE_CHANNEL_H__
 
-#include <opc/ua/channel.h>
-
-#include <memory>
-#include <string>
-#include <vector>
+#include <opc/ua/binary/protocol/common.h>
 
 namespace OpcUa
 {
   namespace Binary
   {
- 
-    struct SecureConnectionParams
-    {
-      std::string EndpointUrl;
-      std::string SecurePolicy;
-      std::vector<uint8_t> SenderCertificate;
-      std::vector<uint8_t> ReceiverCertificateThumbPrint;
-      uint32_t SecureChannelID;
+    // OpenSecureChannel
+    // os << SecureHeader 
+    //    << AssymmetricAlgoripthmHeader
+    //    << SequenceHeader
+    //    << NodeID << ExpandedNodeId // if present
+    //    << RequestHeader
+    //    << OpenSecureChannel
 
-      SecureConnectionParams()
-        : SecureChannelID(0)
-      {
-      }     
+    struct OpenSecureChannelRequest
+    {
+      NodeID TypeID;
+      RequestHeader Header;
+
+      uint32_t ClientProtocolVersion;
+      SecurityTokenRequestType RequestType;
+      MessageSecurityMode SecurityMode;
+      std::vector<uint8_t> ClientNonce;
+      uint32_t RequestLifeTime;
+
+      OpenSecureChannelRequest();
     };
 
-    /// @brief Open secure channel with remote server
-    /// @param rawChannel connection to remote server
-    std::unique_ptr<IOChannel> CreateSecureChannel(std::shared_ptr<IOChannel> remoteConnection, const SecureConnectionParams& params);
+    
+    // OpenSecureChannelResponse
+    // is >> SecureHeader 
+    //    >> AsymmetricAlgorithmHeader 
+    //    >> SequenceHeader 
+    //    >> ResponseHeader
+    //    >> GetEndpointsResponse
 
-  } // nmespace Bunary
+    struct SecurityToken
+    {
+      uint32_t SecureChannelID;
+      uint32_t TokenID;
+      DateTime CreatedAt;
+      int32_t RevisedLifetime;
+
+      SecurityToken()
+        : SecureChannelID(0)
+        , TokenID(0)
+        , CreatedAt(0)
+        , RevisedLifetime(0)
+      {
+      }
+    };
+
+    struct OpenSecureChannelResponse
+    {
+      NodeID TypeID;
+      ResponseHeader Header;
+
+      uint32_t ServerProtocolVersion;
+      SecurityToken ChannelSecurityToken;
+      std::vector<uint8_t> ServerNonce;
+
+      OpenSecureChannelResponse();
+    };
+
+    struct CloseSecureChannelRequest
+    {
+      NodeID TypeID;
+      RequestHeader Header;
+
+      CloseSecureChannelRequest();
+    };
+
+  } // namespace Binary
 } // namespace OpcUa
 
-#endif // __OPC_UA_BINARY_SECURE_CHANNEL
+#endif // __OPC_UA_MESSAGES_SECURE_CHANNEL_H__
 
