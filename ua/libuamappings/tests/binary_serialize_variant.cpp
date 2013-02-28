@@ -12,10 +12,10 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/variant.h>
-#include <opc/ua/binary/data_value.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/data_value.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/variant.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -27,6 +27,7 @@
 TEST_F(OpcUaBinarySerialization, Variant_NUL)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   Variant var;
@@ -44,6 +45,7 @@ TEST_F(OpcUaBinarySerialization, Variant_NUL)
 TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   Variant var;
@@ -65,6 +67,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN)
 TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_Array)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   Variant var;
@@ -89,6 +92,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_Array)
 TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_DIMENSIONS)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   Variant var;
@@ -117,6 +121,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_DIMENSIONS)
 
 TEST_F(OpcUaBinaryDeserialization, Variant_NUL)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -135,6 +140,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NUL)
 
 TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
@@ -158,6 +164,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN)
 
 TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_Array)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_ARRAY_MASK;
@@ -185,6 +192,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_Array)
 
 TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_DIMENSIONS)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_DIMENSIONS_MASK;

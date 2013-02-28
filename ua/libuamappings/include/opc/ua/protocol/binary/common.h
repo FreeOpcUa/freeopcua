@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_BINARY_COMMON_H__
 #define __OPC_UA_BINARY_COMMON_H__
 
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/types.h>
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
 

@@ -8,10 +8,9 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/binary/secure_channel.h>
-
-#include <opc/ua/binary/protocol/secure_channel.h>
-#include <opc/ua/binary/stream.h>
+#include <opc/ua/protocol/binary/secure_connection.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/secure_channel.h>
 
 #include <memory>
 #include <stdexcept>
@@ -19,6 +18,7 @@
 
 namespace
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   OpcUa::Binary::Acknowledge HelloServer(std::shared_ptr<OpcUa::IOChannel> channel, const SecureConnectionParams& params)
@@ -181,7 +181,7 @@ namespace
       BufferInput.Reset();
     }
 
-    OpcUa::Binary::OpenSecureChannelResponse OpenChannel(std::shared_ptr<OpcUa::IOChannel> channel)
+    OpcUa::OpenSecureChannelResponse OpenChannel(std::shared_ptr<OpcUa::IOChannel> channel)
     {
       SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, 0);
       AsymmetricAlgorithmHeader algorithmHeader;

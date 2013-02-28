@@ -13,14 +13,13 @@
 #include <gtest/gtest.h>
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/object_ids.h>
-#include <opc/ua/binary/protocol/attribute.h>
-#include <opc/ua/binary/protocol/secure_channel.h>
-#include <opc/ua/binary/protocol/endpoints.h>
-#include <opc/ua/binary/protocol/session.h>
-#include <opc/ua/binary/protocol/view.h>
-#include <opc/ua/binary/remote_connection.h>
-#include <opc/ua/binary/secure_channel.h>
-#include <opc/ua/binary/stream.h>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/remote_connection.h>
+#include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/session.h>
+#include <opc/ua/protocol/view.h>
 
 namespace
 {

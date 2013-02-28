@@ -10,9 +10,10 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/attribute.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/attribute_ids.h>
 
 #include <algorithm>
 #include <memory>
@@ -20,6 +21,40 @@
 
 namespace OpcUa
 {
+  // TODO move to appropriate file
+  AttributeValueID::AttributeValueID()
+    : Attribute(AttributeID::VALUE)
+  {
+  }
+
+
+  ReadRequest::ReadRequest()
+    : TypeID(READ_REQUEST)
+    , MaxAge(0)
+    , TimestampsType(TimestampsToReturn::NEITHER)
+  {
+  }
+
+
+  ReadResponse::ReadResponse()
+    : TypeID(READ_RESPONSE)
+  {
+  }
+
+
+  WriteRequest::WriteRequest()
+    : TypeID(WRITE_REQUEST)
+  {
+  }
+
+
+  WriteResponse::WriteResponse()
+    : TypeID(WRITE_RESPONSE)
+  {
+  }
+
+
+
   namespace Binary
   {
 
@@ -72,11 +107,6 @@ namespace OpcUa
     // AttributeValueID
     //---------------------------------------------------
 
-    AttributeValueID::AttributeValueID()
-      : Attribute(AttributeID::VALUE)
-    {
-    }
-
     template<>
     std::size_t RawSize<AttributeValueID>(const AttributeValueID& attr)
     {
@@ -104,14 +134,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ReadRequest
     //---------------------------------------------------
-
-    ReadRequest::ReadRequest()
-      : TypeID(READ_REQUEST)
-      , MaxAge(0)
-      , TimestampsType(TimestampsToReturn::NEITHER)
-    {
-    }
-
     template<>
     std::size_t RawSize<ReadRequest>(const ReadRequest& request)
     {
@@ -146,12 +168,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ReadResponse
     //---------------------------------------------------
-
-    ReadResponse::ReadResponse()
-      : TypeID(READ_RESPONSE)
-    {
-    }
-
     template<>
     std::size_t RawSize<ReadResponse>(const ReadResponse& resp)
     {
@@ -215,12 +231,6 @@ namespace OpcUa
     //---------------------------------------------------
     // WriteRequest
     //---------------------------------------------------
-
-    WriteRequest::WriteRequest()
-      : TypeID(WRITE_REQUEST)
-    {
-    }
-
     template<>
     std::size_t RawSize<WriteRequest>(const WriteRequest& request)
     {
@@ -249,12 +259,6 @@ namespace OpcUa
     //---------------------------------------------------
     // WriteResponse
     //---------------------------------------------------
-
-    WriteResponse::WriteResponse()
-      : TypeID(WRITE_RESPONSE)
-    {
-    }
-
     template<>
     std::size_t RawSize<WriteResponse>(const WriteResponse& resp)
     {

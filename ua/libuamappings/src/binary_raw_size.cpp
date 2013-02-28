@@ -8,7 +8,9 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/binary/protocol/secure_channel.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <stdexcept>

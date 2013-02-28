@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 #define __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 
-#include <opc/ua/binary/protocol/common.h>
+#include <opc/ua/protocol/types.h>
 
 namespace OpcUa
 {

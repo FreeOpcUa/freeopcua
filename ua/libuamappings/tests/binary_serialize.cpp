@@ -102,7 +102,7 @@ TEST_F(OpcUaBinarySerialization, Int64)
 
 TEST_F(OpcUaBinarySerialization, Guid)
 {
-  OpcUa::Binary::Guid dataForSerialize;
+  OpcUa::Guid dataForSerialize;
   dataForSerialize.Data1 = 0x01020304;
   dataForSerialize.Data2 = 0x0506;
   dataForSerialize.Data3 = 0x0708;
@@ -198,6 +198,7 @@ TEST_F(OpcUaBinarySerialization, RawMessage)
 
 TEST_F(OpcUaBinarySerialization, LocalizedText_Full)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   LocalizedText lt;
@@ -214,6 +215,7 @@ TEST_F(OpcUaBinarySerialization, LocalizedText_Full)
 
 TEST_F(OpcUaBinarySerialization, LocalizedText_Locale)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   LocalizedText lt;
@@ -230,6 +232,7 @@ TEST_F(OpcUaBinarySerialization, LocalizedText_Locale)
 
 TEST_F(OpcUaBinarySerialization, LocalizedText_Text)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   LocalizedText lt;
@@ -506,6 +509,7 @@ TEST_F(OpcUaBinarySerialization, Sequence)
 
 TEST_F(OpcUaBinarySerialization, ToByteNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_TWO_BYTE;
@@ -524,6 +528,7 @@ TEST_F(OpcUaBinarySerialization, ToByteNodeID)
 
 TEST_F(OpcUaBinarySerialization, FourByteNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_FOUR_BYTE;
@@ -544,6 +549,7 @@ TEST_F(OpcUaBinarySerialization, FourByteNodeID)
 
 TEST_F(OpcUaBinarySerialization, NumericNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_NUMERIC;
@@ -564,6 +570,7 @@ TEST_F(OpcUaBinarySerialization, NumericNodeID)
 
 TEST_F(OpcUaBinarySerialization, StringNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_STRING;
@@ -585,6 +592,7 @@ TEST_F(OpcUaBinarySerialization, StringNodeID)
 
 TEST_F(OpcUaBinarySerialization, GuidNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_BYTE_STRING;
@@ -606,6 +614,7 @@ TEST_F(OpcUaBinarySerialization, GuidNodeID)
 
 TEST_F(OpcUaBinarySerialization, ByteStringNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_GUID;
@@ -639,6 +648,7 @@ TEST_F(OpcUaBinarySerialization, ByteStringNodeID)
 
 TEST_F(OpcUaBinarySerialization, NamespaceUriNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG);
@@ -663,6 +673,7 @@ TEST_F(OpcUaBinarySerialization, NamespaceUriNodeID)
 
 TEST_F(OpcUaBinarySerialization, ServerIndexFlagNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_SERVER_INDEX_FLAG);
@@ -686,6 +697,7 @@ TEST_F(OpcUaBinarySerialization, ServerIndexFlagNodeID)
 
 TEST_F(OpcUaBinarySerialization, NamespaceUriAndServerIndexNodeID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
@@ -716,6 +728,7 @@ TEST_F(OpcUaBinarySerialization, NamespaceUriAndServerIndexNodeID)
 
 TEST_F(OpcUaBinarySerialization, AdditionalHeader)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   AdditionalHeader header;
   header.TypeID.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
@@ -749,6 +762,7 @@ TEST_F(OpcUaBinarySerialization, AdditionalHeader)
 
 TEST_F(OpcUaBinarySerialization, RequestHeader)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   RequestHeader header;
@@ -770,6 +784,7 @@ TEST_F(OpcUaBinarySerialization, RequestHeader)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_Empty)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -787,6 +802,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_Empty)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -806,6 +822,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_Namespace)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -827,6 +844,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_Namespace)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_LocalizedText)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -848,6 +866,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_LocalizedText)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_LocalizedText_Locale)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -869,6 +888,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_LocalizedText_Locale)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_AdditionalInfo)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -889,6 +909,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_AdditionalInfo)
 
 TEST_F(OpcUaBinarySerialization, DiagnosticInfo_InnerStatusCode)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
@@ -914,6 +935,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_InnerStatusCode)
 
 TEST_F(OpcUaBinarySerialization, ResponseHeader)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ResponseHeader header;
@@ -935,6 +957,7 @@ TEST_F(OpcUaBinarySerialization, ResponseHeader)
 
 TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   OpenSecureChannelRequest request;
@@ -972,6 +995,7 @@ TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
 
 TEST_F(OpcUaBinarySerialization, SecurityToken)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   SecurityToken token;
@@ -1000,6 +1024,7 @@ TEST_F(OpcUaBinarySerialization, SecurityToken)
 
 TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   OpenSecureChannelResponse response;
@@ -1044,6 +1069,7 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
 
 TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   CloseSecureChannelRequest request;
@@ -1073,7 +1099,7 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 
 TEST_F(OpcUaBinarySerialization, SignatureData)
 {
-  OpcUa::Binary::SignatureData s;
+  OpcUa::SignatureData s;
   s.Signature = {1,2,3,4};
   s.Algorithm = "aes";
  
@@ -1094,6 +1120,7 @@ TEST_F(OpcUaBinarySerialization, SignatureData)
 
 TEST_F(OpcUaBinarySerialization, ExtensionObjectHeader)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ExtensionObjectHeader header(OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY);
@@ -1115,6 +1142,7 @@ TEST_F(OpcUaBinarySerialization, ExtensionObjectHeader)
 
 TEST_F(OpcUaBinarySerialization, QualifiedName)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   QualifiedName name;

@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/binary/remote_connection.h>
+#include <opc/ua/protocol/remote_connection.h>
 
 #include "socket_channel.h"
 
@@ -56,7 +56,7 @@ namespace
     return sock;
   }
 
-  class BinaryConnection : public OpcUa::Binary::RemoteConnection
+  class BinaryConnection : public OpcUa::RemoteConnection
   {
   public:
     BinaryConnection(int sock, const std::string host, unsigned short port)
@@ -98,7 +98,7 @@ namespace
 
 }
 
-std::unique_ptr<OpcUa::Binary::RemoteConnection> OpcUa::Binary::Connect(const std::string& host, unsigned port)
+std::unique_ptr<OpcUa::RemoteConnection> OpcUa::Connect(const std::string& host, unsigned port)
 {
   const int sock = ConnectToRemoteHost(host, port);
   return std::unique_ptr<RemoteConnection>(new BinaryConnection(sock, host, port));

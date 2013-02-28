@@ -10,10 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/endpoints.h>
-#include <opc/ua/binary/protocol/secure_channel.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/binary/stream.h>
 
 #include <algorithm>
 #include <iostream>
@@ -105,6 +104,14 @@ namespace
 
 namespace OpcUa
 {
+  /// TODO move to apropriate file
+  ExtensionObjectHeader::ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding)
+    : Encoding(encoding)
+  {
+    TypeID.Encoding = EV_FOUR_BYTE;
+    TypeID.FourByteData.Identifier = objectID;
+  }
+
   namespace Binary
   {
 
@@ -298,14 +305,14 @@ namespace OpcUa
     }
  
     template<>
-    void OStream::Serialize<OpcUa::Binary::Guid>(const OpcUa::Binary::Guid& value)
+    void OStream::Serialize<OpcUa::Guid>(const OpcUa::Guid& value)
     {
       *this << value.Data1 << value.Data2 << value.Data3;
       Buffer.insert(Buffer.end(), value.Data4, value.Data4 + 8);
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::Guid>(OpcUa::Binary::Guid& value)
+    void IStream::Deserialize<OpcUa::Guid>(OpcUa::Guid& value)
     {
       *this >> value.Data1 >> value.Data2 >> value.Data3;
       char data[8] = {0};
@@ -660,7 +667,7 @@ namespace OpcUa
     }
  
     template<>
-    void OStream::Serialize<OpcUa::Binary::NodeID>(const OpcUa::Binary::NodeID& id)
+    void OStream::Serialize<OpcUa::NodeID>(const OpcUa::NodeID& id)
     {
       *this << id.Encoding;
 
@@ -717,7 +724,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::NodeID>(OpcUa::Binary::NodeID& id)
+    void IStream::Deserialize<OpcUa::NodeID>(OpcUa::NodeID& id)
     {
       *this >> id.Encoding;
 
@@ -777,14 +784,14 @@ namespace OpcUa
 
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::AdditionalHeader>(const OpcUa::Binary::AdditionalHeader& header)
+    void OStream::Serialize<OpcUa::AdditionalHeader>(const OpcUa::AdditionalHeader& header)
     {
       *this << header.TypeID;
       *this << header.Encoding;
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::AdditionalHeader>(OpcUa::Binary::AdditionalHeader& header)
+    void IStream::Deserialize<OpcUa::AdditionalHeader>(OpcUa::AdditionalHeader& header)
     {
       *this >> header.TypeID;
       *this >> header.Encoding;
@@ -792,7 +799,7 @@ namespace OpcUa
 
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::RequestHeader>(const OpcUa::Binary::RequestHeader& header)
+    void OStream::Serialize<OpcUa::RequestHeader>(const OpcUa::RequestHeader& header)
     {
       *this << header.SessionAuthenticationToken;
       *this << header.UtcTime;
@@ -804,7 +811,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::RequestHeader>(OpcUa::Binary::RequestHeader& header)
+    void IStream::Deserialize<OpcUa::RequestHeader>(OpcUa::RequestHeader& header)
     {
       *this >> header.SessionAuthenticationToken;
       *this >> header.UtcTime;
@@ -830,7 +837,7 @@ namespace OpcUa
     }
  
     template<>
-    void OStream::Serialize<OpcUa::Binary::DiagnosticInfo>(const OpcUa::Binary::DiagnosticInfo& info)
+    void OStream::Serialize<OpcUa::DiagnosticInfo>(const OpcUa::DiagnosticInfo& info)
     {
       *this << info.EncodingMask;
 
@@ -861,7 +868,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::DiagnosticInfo>(OpcUa::Binary::DiagnosticInfo& info)
+    void IStream::Deserialize<OpcUa::DiagnosticInfo>(OpcUa::DiagnosticInfo& info)
     {
       *this >> info.EncodingMask;
 
@@ -892,7 +899,7 @@ namespace OpcUa
     };
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::ResponseHeader>(const OpcUa::Binary::ResponseHeader& header)
+    void OStream::Serialize<OpcUa::ResponseHeader>(const OpcUa::ResponseHeader& header)
     {
       *this << header.Timestamp;
       *this << header.RequestHandle;
@@ -906,7 +913,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::ResponseHeader>(OpcUa::Binary::ResponseHeader& header)
+    void IStream::Deserialize<OpcUa::ResponseHeader>(OpcUa::ResponseHeader& header)
     {
       *this >> header.Timestamp;
       *this >> header.RequestHandle;
@@ -925,7 +932,7 @@ namespace OpcUa
 
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::OpenSecureChannelRequest>(const OpcUa::Binary::OpenSecureChannelRequest& request)
+    void OStream::Serialize<OpcUa::OpenSecureChannelRequest>(const OpcUa::OpenSecureChannelRequest& request)
     {
       *this << request.TypeID;
       *this << request.Header;
@@ -937,7 +944,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::OpenSecureChannelRequest>(OpcUa::Binary::OpenSecureChannelRequest& request)
+    void IStream::Deserialize<OpcUa::OpenSecureChannelRequest>(OpcUa::OpenSecureChannelRequest& request)
     {
       *this >> request.TypeID;
       *this >> request.Header;
@@ -958,7 +965,7 @@ namespace OpcUa
 
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::SecurityToken>(const OpcUa::Binary::SecurityToken& token)
+    void OStream::Serialize<OpcUa::SecurityToken>(const OpcUa::SecurityToken& token)
     {
       *this << token.SecureChannelID;
       *this << token.TokenID;
@@ -967,7 +974,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::SecurityToken>(OpcUa::Binary::SecurityToken& token)
+    void IStream::Deserialize<OpcUa::SecurityToken>(OpcUa::SecurityToken& token)
     {
       *this >> token.SecureChannelID;
       *this >> token.TokenID;
@@ -977,7 +984,7 @@ namespace OpcUa
 
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::OpenSecureChannelResponse>(const OpcUa::Binary::OpenSecureChannelResponse& response)
+    void OStream::Serialize<OpcUa::OpenSecureChannelResponse>(const OpcUa::OpenSecureChannelResponse& response)
     {
       *this << response.TypeID;
       *this << response.Header;
@@ -987,7 +994,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::OpenSecureChannelResponse>(OpcUa::Binary::OpenSecureChannelResponse& response)
+    void IStream::Deserialize<OpcUa::OpenSecureChannelResponse>(OpcUa::OpenSecureChannelResponse& response)
     {
       *this >> response.TypeID;
       *this >> response.Header;
@@ -1009,21 +1016,21 @@ namespace OpcUa
     };
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::CloseSecureChannelRequest>(const OpcUa::Binary::CloseSecureChannelRequest& request)
+    void OStream::Serialize<OpcUa::CloseSecureChannelRequest>(const OpcUa::CloseSecureChannelRequest& request)
     {
       *this << request.TypeID;
       *this << request.Header;
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::CloseSecureChannelRequest>(OpcUa::Binary::CloseSecureChannelRequest& request)
+    void IStream::Deserialize<OpcUa::CloseSecureChannelRequest>(OpcUa::CloseSecureChannelRequest& request)
     {
       *this >> request.TypeID;
       *this >> request.Header;
     };
 
     template<>
-    void OStream::Serialize<OpcUa::Binary::LocalizedText>(const OpcUa::Binary::LocalizedText& lt)
+    void OStream::Serialize<OpcUa::LocalizedText>(const OpcUa::LocalizedText& lt)
     {
       *this << lt.Encoding;
       if (lt.Encoding & HAS_LOCALE)
@@ -1037,7 +1044,7 @@ namespace OpcUa
     }
 
     template<>
-    void IStream::Deserialize<OpcUa::Binary::LocalizedText>(OpcUa::Binary::LocalizedText& lt)
+    void IStream::Deserialize<OpcUa::LocalizedText>(OpcUa::LocalizedText& lt)
     {
       *this >> lt.Encoding;
       if (lt.Encoding & HAS_LOCALE)
@@ -1063,13 +1070,6 @@ namespace OpcUa
     {
       *this >> value.Signature;
       *this >> value.Algorithm;
-    }
-
-    ExtensionObjectHeader::ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding)
-      : Encoding(encoding)
-    {
-      TypeID.Encoding = EV_FOUR_BYTE;
-      TypeID.FourByteData.Identifier = objectID;
     }
 
     template<>

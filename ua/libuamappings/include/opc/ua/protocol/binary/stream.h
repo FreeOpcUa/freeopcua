@@ -14,6 +14,7 @@
 #define __OPC_UA_MAPPING_SERIALIZE_H__
 
 #include <opc/ua/channel.h>
+#include <opc/ua/protocol/binary/common.h>
 #include <memory>
 #include <vector>
 

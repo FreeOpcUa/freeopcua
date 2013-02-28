@@ -12,9 +12,9 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/protocol/session.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/session.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -28,6 +28,7 @@
 TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   CreateSessionRequest request;
@@ -70,6 +71,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
 
 TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -117,6 +119,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
 TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   CreateSessionResponse response;
@@ -173,6 +176,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
 
 TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -238,6 +242,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
 
 TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   UserIdentifyToken token;
@@ -262,6 +267,7 @@ TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
 
 TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   const std::vector<char> expectedData = {
   1, 0, (char)0x41, 0x1, // TypeID
@@ -290,6 +296,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
 TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ActivateSessionRequest request;
@@ -333,6 +340,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
 TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -382,6 +390,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
 TEST_F(OpcUaBinarySerialization, ActivateSessionResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ActivateSessionResponse response;
@@ -411,6 +420,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionResponse)
 
 TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -445,6 +455,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
 TEST_F(OpcUaBinarySerialization, CloseSessionRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   CloseSessionRequest request;
@@ -471,6 +482,7 @@ TEST_F(OpcUaBinarySerialization, CloseSessionRequest)
 TEST_F(OpcUaBinaryDeserialization, CloseSessionRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -501,6 +513,7 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionRequest)
 TEST_F(OpcUaBinarySerialization, CloseSessionResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   CloseSessionResponse response;
@@ -526,6 +539,7 @@ TEST_F(OpcUaBinarySerialization, CloseSessionResponse)
 TEST_F(OpcUaBinaryDeserialization, CloseSessionResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {

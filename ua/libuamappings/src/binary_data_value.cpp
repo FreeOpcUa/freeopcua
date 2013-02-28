@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/attribute.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <functional>
@@ -20,24 +20,11 @@
 #include <stdexcept>
 #include <string>
 
-
 namespace OpcUa
 {
+
   namespace Binary
   {
-   //---------------------------------------------------
-    // Variant
-    //---------------------------------------------------
-
-    DataValue::DataValue()
-      : Encoding(0)
-      , Status(0)
-      , SourceTimestamp(0)
-      , SourcePicoseconds(0)
-      , ServerTimestamp(0)
-      , ServerPicoseconds(0)
-    {
-    }
 
     template<>
     std::size_t RawSize<DataValue>(const DataValue& val)
@@ -129,7 +116,6 @@ namespace OpcUa
         *this >> val.ServerPicoseconds;
       }
     }
-
   } // namespace Binary
 } // namespace OpcUa
 

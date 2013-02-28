@@ -8,8 +8,9 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/binary/protocol/common.h>
-#include <opc/ua/binary/protocol/secure_channel.h>
+#include <opc/ua/protocol/binary/common.h>
+#include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -17,20 +18,9 @@
 
 namespace OpcUa
 {
+  // TODO move all in binary namespace to the binary_common.h
   namespace Binary
   {
-    DateTime CurrentDateTime()
-    {
-      static const OpcUa::Binary::DateTime epochDiff =  11644473600LL;
-      timeval tv;
-      OpcUa::Binary::DateTime t = epochDiff;
-      gettimeofday(&tv, 0);
-      t += tv.tv_sec;
-      t *= 10000000LL;
-      t += tv.tv_usec * 10;
-      return t;
-    }
-
     Header::Header()
       : Type(MT_INVALID)
       , Chunk(CHT_INVALID)
@@ -124,46 +114,9 @@ namespace OpcUa
     {
     }
 
-    NodeID::NodeID()
-      : Encoding(EV_TWO_BYTE)
-      , ServerIndex(0)
-    {
-    }
-
-    NodeID::NodeID(MessageID messageID)
-      : Encoding(EV_FOUR_BYTE)
-      , ServerIndex(0)
-    {
-      FourByteData.Identifier = messageID;
-    }
-
-
     SequenceHeader::SequenceHeader()
       : SequenceNumber(0)
       , RequestID(0)
-    {
-    }
-
-
-    RequestHeader::RequestHeader()
-    {
-      SessionAuthenticationToken.Encoding = OpcUa::Binary::EV_TWO_BYTE;
-      SessionAuthenticationToken.TwoByteData.Identifier = 0;
-      UtcTime = CurrentDateTime();
-      RequestHandle = 0;
-      ReturnDiagnostics = 0;
-      AuditEntryID = "";
-      Timeout = 0; // in miliseconds
-      Additional.TypeID.Encoding = OpcUa::Binary::EV_TWO_BYTE;
-      Additional.TypeID.TwoByteData.Identifier = 0;
-    }
-
-    OpenSecureChannelRequest::OpenSecureChannelRequest()
-      : TypeID(OPEN_SECURE_CHANNEL_REQUEST)
-      , ClientProtocolVersion(0)
-      , RequestType(STR_ISSUE)
-      , SecurityMode(MSM_INVALID)
-      , RequestLifeTime(0)
     {
     }
 
@@ -172,25 +125,74 @@ namespace OpcUa
     {
     }
 
-    ResponseHeader::ResponseHeader()
-      : Timestamp(CurrentDateTime())
-      , RequestHandle(0)
-      , ServiceResult(0)
-    {
-    }
-
-    OpenSecureChannelResponse::OpenSecureChannelResponse()
-      : TypeID(OPEN_SECURE_CHANNEL_RESPONSE)
-      , ServerProtocolVersion(0)
-    {
-    }
-
-    CloseSecureChannelRequest::CloseSecureChannelRequest()
-      : TypeID(OpcUa::CLOSE_SECURE_CHANNEL_REQUEST)
-    {
-    }
-
-
   } // namespace Binary
+
+  // TODO move to separate file with time utils.
+  DateTime CurrentDateTime()
+  {
+    static const OpcUa::DateTime epochDiff =  11644473600LL;
+    timeval tv;
+    OpcUa::DateTime t = epochDiff;
+    gettimeofday(&tv, 0);
+    t += tv.tv_sec;
+    t *= 10000000LL;
+    t += tv.tv_usec * 10;
+    return t;
+  }
+
+
+  NodeID::NodeID()
+    : Encoding(EV_TWO_BYTE)
+    , ServerIndex(0)
+  {
+  }
+
+  NodeID::NodeID(MessageID messageID)
+    : Encoding(EV_FOUR_BYTE)
+    , ServerIndex(0)
+  {
+    FourByteData.Identifier = messageID;
+  }
+
+  RequestHeader::RequestHeader()
+  {
+    SessionAuthenticationToken.Encoding = EV_TWO_BYTE;
+    SessionAuthenticationToken.TwoByteData.Identifier = 0;
+    UtcTime = CurrentDateTime();
+    RequestHandle = 0;
+    ReturnDiagnostics = 0;
+    AuditEntryID = "";
+    Timeout = 0; // in miliseconds
+    Additional.TypeID.Encoding = EV_TWO_BYTE;
+    Additional.TypeID.TwoByteData.Identifier = 0;
+  }
+
+  OpenSecureChannelRequest::OpenSecureChannelRequest()
+    : TypeID(OPEN_SECURE_CHANNEL_REQUEST)
+    , ClientProtocolVersion(0)
+    , RequestType(STR_ISSUE)
+    , SecurityMode(MSM_INVALID)
+    , RequestLifeTime(0)
+  {
+  }
+
+  ResponseHeader::ResponseHeader()
+    : Timestamp(CurrentDateTime())
+    , RequestHandle(0)
+    , ServiceResult(0)
+  {
+  }
+
+  OpenSecureChannelResponse::OpenSecureChannelResponse()
+    : TypeID(OPEN_SECURE_CHANNEL_RESPONSE)
+    , ServerProtocolVersion(0)
+  {
+  }
+
+  CloseSecureChannelRequest::CloseSecureChannelRequest()
+    : TypeID(OpcUa::CLOSE_SECURE_CHANNEL_REQUEST)
+  {
+  }
+
 } // namespace OpcUa
 

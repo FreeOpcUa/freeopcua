@@ -11,9 +11,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/protocol/endpoints.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -28,6 +28,7 @@
 TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   GetEndpointsRequest request;
@@ -59,6 +60,7 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
 
 TEST_F(OpcUaBinaryDeserialization, GetEndpointsRequest)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -93,6 +95,7 @@ TEST_F(OpcUaBinaryDeserialization, GetEndpointsRequest)
 TEST_F(OpcUaBinarySerialization, GetEndpointsResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   GetEndpointsResponse response;
@@ -124,6 +127,7 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsResponse)
 
 TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -266,6 +270,7 @@ const std::vector<unsigned char> GetEndpointsResponseRealData = {
 
 TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponseReal)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   GetChannel().SetData(std::vector<char>(GetEndpointsResponseRealData.begin(), GetEndpointsResponseRealData.end()));

@@ -11,7 +11,10 @@
 #ifndef __OPC_UA_MAPPING_TYPES_H__
 #define __OPC_UA_MAPPING_TYPES_H__
 
-#include <opc/ua/binary/datetime.h>
+#include <opc/ua/protocol/datetime.h>
+#include <opc/ua/message_identifiers.h>
+#include <opc/ua/object_ids.h>
+#include <opc/ua/extension_identifiers.h>
 
 #include <stdint.h>
 #include <string>

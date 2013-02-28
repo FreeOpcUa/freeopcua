@@ -13,45 +13,52 @@
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 
+
+
 opcuainclude_HEADERS = \
- include/opc/ua/channel.h \
- include/opc/ua/binary/protocol/attribute.h \
- include/opc/ua/binary/protocol/common.h \
- include/opc/ua/binary/protocol/endpoints.h \
- include/opc/ua/binary/protocol/secure_channel.h \
- include/opc/ua/binary/protocol/session.h \
- include/opc/ua/binary/protocol/view.h \
- include/opc/ua/binary/remote_connection.h \
- include/opc/ua/binary/server.h \
- include/opc/ua/binary/types.h \
- include/opc/ua/binary/stream.h \
- include/opc/ua/binary/secure_channel.h \
- include/opc/ua/binary/datetime.h \
- include/opc/ua/interface.h \
- include/opc/ua/message_identifiers.h \
- include/opc/ua/session.h
+  include/opc/ua/protocol/attribute.h \
+  include/opc/ua/protocol/endpoints.h \
+  include/opc/ua/protocol/remote_connection.h \
+  include/opc/ua/protocol/server.h \
+  include/opc/ua/protocol/types.h \
+  include/opc/ua/protocol/binary/stream.h \
+  include/opc/ua/protocol/binary/common.h \
+  include/opc/ua/protocol/binary/secure_connection.h \
+  include/opc/ua/protocol/variant.h \
+  include/opc/ua/protocol/secure_channel.h \
+  include/opc/ua/protocol/datetime.h \
+  include/opc/ua/protocol/view.h \
+  include/opc/ua/protocol/session.h \
+  include/opc/ua/protocol/data_value.h \
+  include/opc/ua/extension_identifiers.h \
+  include/opc/ua/channel.h \
+  include/opc/ua/object_ids.h \
+  include/opc/ua/interface.h \
+  include/opc/ua/attribute_ids.h \
+  include/opc/ua/message_identifiers.h \
+  include/opc/ua/session.h
 
 lib_LIBRARIES = libopcuabinary.a
 
 
 libopcuabinary_a_SOURCES = \
- src/socket_channel.h \
- src/binary_attribute.cpp \
- src/binary_data_value.cpp \
- src/binary_endpoints.cpp \
- src/binary_messages.cpp \
- src/binary_raw_size.cpp \
- src/socket_channel.cpp \
- src/binary_serialization.h \
- src/binary_server.cpp \
- src/binary_session.cpp \
- src/binary_stream.cpp \
- src/binary_variant.cpp \
- src/binary_view.cpp \
- src/thread.h \
- src/binary_secure_channel.cpp \
- src/binary_connection.cpp \
- src/thread.cpp
+  src/binary_variant.cpp \
+  src/socket_channel.h \
+  src/binary_data_value.cpp \
+  src/binary_endpoints.cpp \
+  src/binary_messages.cpp \
+  src/binary_serialization.h \
+  src/socket_channel.cpp \
+  src/binary_server.cpp \
+  src/binary_raw_size.cpp \
+  src/binary_stream.cpp \
+  src/thread.h \
+  src/binary_attribute.cpp \
+  src/binary_view.cpp \
+  src/binary_session.cpp \
+  src/binary_secure_channel.cpp \
+  src/binary_connection.cpp \
+  src/thread.cpp
 
 libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
 

@@ -16,9 +16,9 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/protocol/secure_channel.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <stdexcept>

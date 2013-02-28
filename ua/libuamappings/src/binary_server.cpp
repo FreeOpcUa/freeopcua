@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/binary/server.h>
+#include <opc/ua/protocol/server.h>
 
 #include "socket_channel.h"
 #include "thread.h"
@@ -50,11 +50,11 @@ namespace
 
 
   class TcpServer
-    : public OpcUa::Binary::Server
+    : public OpcUa::Server
     , protected OpcUa::ThreadObserver
   {
   public:
-    TcpServer(unsigned short port, std::unique_ptr<OpcUa::Binary::IncomingConnectionProcessor> processor)
+    TcpServer(unsigned short port, std::unique_ptr<OpcUa::IncomingConnectionProcessor> processor)
       : Port(port)
       , Processor(std::move(processor))
       , Stopped(true)
@@ -173,15 +173,15 @@ namespace
 
   private:
     const unsigned short Port;
-    const std::unique_ptr<OpcUa::Binary::IncomingConnectionProcessor> Processor;
+    const std::unique_ptr<OpcUa::IncomingConnectionProcessor> Processor;
     volatile bool Stopped;
     volatile int Socket;
     std::unique_ptr<OpcUa::Thread> ServerThread;
   };
 }
 
-std::unique_ptr<OpcUa::Binary::Server> OpcUa::Binary::CreateServer(unsigned short port, std::unique_ptr<OpcUa::Binary::IncomingConnectionProcessor> processor)
+std::unique_ptr<OpcUa::Server> OpcUa::CreateServer(unsigned short port, std::unique_ptr<OpcUa::IncomingConnectionProcessor> processor)
 {
-  return std::unique_ptr<Binary::Server>(new TcpServer(port, std::move(processor)));
+  return std::unique_ptr<Server>(new TcpServer(port, std::move(processor)));
 }
 

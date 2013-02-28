@@ -12,9 +12,9 @@
 #define __OPC_UA_BINARY_ATTRIBUTES_H__
 
 #include <opc/ua/attribute_ids.h>
-#include <opc/ua/binary/data_value.h>
-#include <opc/ua/binary/variant.h>
-#include <opc/ua/binary/protocol/common.h>
+#include <opc/ua/protocol/data_value.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/variant.h>
 
 namespace OpcUa
 {

@@ -10,9 +10,10 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/attribute.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/variant.h>
 
 #include <algorithm>
 #include <functional>
@@ -25,6 +26,7 @@
 namespace
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
 
@@ -174,49 +176,50 @@ namespace
 
 namespace OpcUa
 {
+  //---------------------------------------------------
+  // Variant
+  //---------------------------------------------------
+
+
+  Variant::Variant()
+    : Type(VariantType::NUL)
+  {
+  }
+
+  Variant::Variant(const Variant& var)
+  {
+    *this = var;
+  }
+
+  Variant& Variant::operator= (const Variant& var)
+  {
+    Type = var.Type;
+    Dimensions = var.Dimensions;
+    CopyValue(Type, var.Value, this->Value);
+    return *this;
+  }
+
+  bool Variant::IsArray() const
+  {
+    bool isArray = false;
+    ApplyToVariantValue(Type, Value, IsValueArray, isArray);
+    return isArray;
+  }
+
+  bool Variant::IsNul() const
+  {
+    if (Type == VariantType::NUL)
+    {
+      return true;
+    }
+    bool isNul = false;
+    ApplyToVariantValue(Type, Value, IsNulValue, isNul);
+    return isNul;
+  }
+
+
   namespace Binary
   {
-
-    //---------------------------------------------------
-    // Variant
-    //---------------------------------------------------
-
-    Variant::Variant()
-      : Type(VariantType::NUL)
-    {
-    }
-
-    Variant::Variant(const Variant& var)
-    {
-      *this = var;
-    }
-
-    Variant& Variant::operator= (const Variant& var)
-    {
-      Type = var.Type;
-      Dimensions = var.Dimensions;
-      CopyValue(Type, var.Value, this->Value);
-      return *this;
-    }
-
-
-    bool Variant::IsArray() const
-    {
-      bool isArray = false;
-      ApplyToVariantValue(Type, Value, IsValueArray, isArray);
-      return isArray;
-    }
-
-    bool Variant::IsNul() const
-    {
-      if (Type == VariantType::NUL)
-      {
-        return true;
-      }
-      bool isNul = false;
-      ApplyToVariantValue(Type, Value, IsNulValue, isNul);
-      return isNul;
-    }
 
     template<>
     std::size_t RawSize<Variant>(const Variant& var)

@@ -12,9 +12,9 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/protocol/view.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/view.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -28,6 +28,7 @@
 TEST_F(OpcUaBinarySerialization, BrowseDirection)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   GetStream() << BrowseDirection::BOTH << flush;
@@ -42,6 +43,7 @@ TEST_F(OpcUaBinarySerialization, BrowseDirection)
 
 TEST_F(OpcUaBinaryDeserialization, BrowseDirection)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -63,6 +65,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseDirection)
 TEST_F(OpcUaBinarySerialization, ViewDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ViewDescription desc;
@@ -87,6 +90,7 @@ TEST_F(OpcUaBinarySerialization, ViewDescription)
 TEST_F(OpcUaBinaryDeserialization, ViewDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -113,6 +117,7 @@ TEST_F(OpcUaBinaryDeserialization, ViewDescription)
 TEST_F(OpcUaBinarySerialization, BrowseDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseDescription desc;
@@ -144,6 +149,7 @@ TEST_F(OpcUaBinarySerialization, BrowseDescription)
 TEST_F(OpcUaBinaryDeserialization, BrowseDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -174,8 +180,9 @@ TEST_F(OpcUaBinaryDeserialization, BrowseDescription)
 // BrowseRequest
 //-------------------------------------------------------
 
-OpcUa::Binary::BrowseDescription CreateBrowseDescription()
+OpcUa::BrowseDescription CreateBrowseDescription()
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   BrowseDescription desc; 
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
@@ -189,7 +196,7 @@ OpcUa::Binary::BrowseDescription CreateBrowseDescription()
   return desc;
 }
 
-bool operator==(const OpcUa::Binary::BrowseDescription& lhs, const OpcUa::Binary::BrowseDescription& rhs)
+bool operator==(const OpcUa::BrowseDescription& lhs, const OpcUa::BrowseDescription& rhs)
 {
   return
     rhs.NodeToBrowse.Encoding == lhs.NodeToBrowse.Encoding &&
@@ -207,6 +214,7 @@ bool operator==(const OpcUa::Binary::BrowseDescription& lhs, const OpcUa::Binary
 TEST_F(OpcUaBinarySerialization, BrowseRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseRequest request;
@@ -254,6 +262,7 @@ TEST_F(OpcUaBinarySerialization, BrowseRequest)
 TEST_F(OpcUaBinaryDeserialization, BrowseRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -306,6 +315,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseRequest)
 TEST_F(OpcUaBinarySerialization, ReferenceDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ReferenceDescription desc;
@@ -352,6 +362,7 @@ TEST_F(OpcUaBinarySerialization, ReferenceDescription)
 TEST_F(OpcUaBinaryDeserialization, ReferenceDescription)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -397,8 +408,9 @@ TEST_F(OpcUaBinaryDeserialization, ReferenceDescription)
 // BrowseResult
 //-------------------------------------------------------
 
-OpcUa::Binary::ReferenceDescription CreateReferenceDescription()
+OpcUa::ReferenceDescription CreateReferenceDescription()
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   ReferenceDescription desc;
 
@@ -427,6 +439,7 @@ OpcUa::Binary::ReferenceDescription CreateReferenceDescription()
 TEST_F(OpcUaBinarySerialization, BrowseResult)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseResult result;
@@ -458,6 +471,7 @@ TEST_F(OpcUaBinarySerialization, BrowseResult)
 
 TEST_F(OpcUaBinaryDeserialization, BrowseResult)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -506,9 +520,9 @@ TEST_F(OpcUaBinaryDeserialization, BrowseResult)
 // BrowseRessponce
 //-------------------------------------------------------
 
-OpcUa::Binary::BrowseResult CreateBrowseResult()
+OpcUa::BrowseResult CreateBrowseResult()
 {
-  OpcUa::Binary::BrowseResult result;
+  OpcUa::BrowseResult result;
   result.StatusCode = 1;
   result.ContinuationPoint = {2,3,4,5};
   result.Referencies.push_back(CreateReferenceDescription());
@@ -517,6 +531,7 @@ OpcUa::Binary::BrowseResult CreateBrowseResult()
 
 TEST_F(OpcUaBinarySerialization, BrowseResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseResponse response;
@@ -573,6 +588,7 @@ TEST_F(OpcUaBinarySerialization, BrowseResponse)
 
 TEST_F(OpcUaBinaryDeserialization, BrowseResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -626,6 +642,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseResponse)
 TEST_F(OpcUaBinarySerialization, BrowseNextRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseNextRequest request;
@@ -657,6 +674,7 @@ TEST_F(OpcUaBinarySerialization, BrowseNextRequest)
 TEST_F(OpcUaBinaryDeserialization, BrowseNextRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -689,6 +707,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseNextRequest)
 
 TEST_F(OpcUaBinarySerialization, BrowseNextResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   BrowseNextResponse response;
@@ -745,6 +764,7 @@ TEST_F(OpcUaBinarySerialization, BrowseNextResponse)
 
 TEST_F(OpcUaBinaryDeserialization, BrowseNextResponse)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {

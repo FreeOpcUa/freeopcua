@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/session.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/session.h>
+#include <opc/ua/protocol/types.h>
 #include <opc/ua/extension_identifiers.h>
 
 #include <algorithm>
@@ -21,6 +21,49 @@
 
 namespace OpcUa
 {
+
+  CreateSessionRequest::CreateSessionRequest()
+    : TypeID(CREATE_SESSION_REQUEST)
+    , RequestedSessionTimeout(0)
+    , MaxResponseMessageSize(0)
+  {
+  }
+
+  CreateSessionResponse::CreateSessionResponse()
+    : TypeID(CREATE_SESSION_RESPONSE)
+    , RevisedSessionTimeout(0)
+    , MaxRequestMessageSize(0)
+  {
+  }
+
+  CloseSessionResponse::CloseSessionResponse()
+    : TypeID(CLOSE_SESSION_RESPONSE)
+  {
+  }
+
+  UserIdentifyToken::UserIdentifyToken()
+    : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
+  {
+    Anonymous.Data = {9,0,0,0,'A', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'};
+  }
+
+  ActivateSessionRequest::ActivateSessionRequest()
+    : TypeID(ACTIVATE_SESSION_REQUEST)
+  {
+  }
+
+  ActivateSessionResponse::ActivateSessionResponse()
+    : TypeID(ACTIVATE_SESSION_RESPONSE)
+  {
+  }
+
+  CloseSessionRequest::CloseSessionRequest()
+    : TypeID(CLOSE_SESSION_REQUEST)
+    , DeleteSubscriptions(true)
+  {
+  }
+
+
   namespace Binary
   {
 
@@ -40,13 +83,6 @@ namespace OpcUa
         RawSize(request.ClientCertificate) +
         sizeof(request.RequestedSessionTimeout) +
         sizeof(request.MaxResponseMessageSize);
-    }
-
-    CreateSessionRequest::CreateSessionRequest()
-      : TypeID(CREATE_SESSION_REQUEST)
-      , RequestedSessionTimeout(0)
-      , MaxResponseMessageSize(0)
-    {
     }
 
     template<>
@@ -100,13 +136,6 @@ namespace OpcUa
       sizeof(response.MaxRequestMessageSize);
     }
 
-    CreateSessionResponse::CreateSessionResponse()
-      : TypeID(CREATE_SESSION_RESPONSE)
-      , RevisedSessionTimeout(0)
-      , MaxRequestMessageSize(0)
-    {
-    }
-
     template<>
     void OStream::Serialize<CreateSessionResponse>(const CreateSessionResponse& response)
     {
@@ -142,11 +171,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ActivateSessionRequest
     //---------------------------------------------------
-    UserIdentifyToken::UserIdentifyToken()
-      : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
-    {
-      Anonymous.Data = {9,0,0,0,'A', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'};
-    }
 
     template<>
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
@@ -166,13 +190,6 @@ namespace OpcUa
     {
       *this >> token.Header;
       *this >> token.Anonymous.Data;
-    }
-
-
-
-    ActivateSessionRequest::ActivateSessionRequest()
-      : TypeID(ACTIVATE_SESSION_REQUEST)
-    {
     }
 
     template<>
@@ -230,12 +247,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ActivateSessionResponse
     //---------------------------------------------------
-
-    ActivateSessionResponse::ActivateSessionResponse()
-      : TypeID(ACTIVATE_SESSION_RESPONSE)
-    {
-    }
-
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& response)
     {
@@ -292,12 +303,6 @@ namespace OpcUa
         RawSize(request.DeleteSubscriptions);
     }
 
-    CloseSessionRequest::CloseSessionRequest()
-      : TypeID(CLOSE_SESSION_REQUEST)
-      , DeleteSubscriptions(true)
-    {
-    }
-
     template<>
     void OStream::Serialize<CloseSessionRequest>(const CloseSessionRequest& request)
     {
@@ -324,11 +329,6 @@ namespace OpcUa
     std::size_t RawSize<CloseSessionResponse>(const CloseSessionResponse& response)
     {
       return RawSize(response.TypeID) + RawSize(response.Header);
-    }
-
-    CloseSessionResponse::CloseSessionResponse()
-      : TypeID(CLOSE_SESSION_RESPONSE)
-    {
     }
 
     template<>

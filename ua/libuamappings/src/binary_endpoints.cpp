@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/endpoints.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <memory>
@@ -20,6 +20,17 @@
 
 namespace OpcUa
 {
+
+  GetEndpointsRequest::GetEndpointsRequest()
+    : TypeID(GET_ENDPOINTS_REQUEST)
+  {
+  }
+
+  GetEndpointsResponse::GetEndpointsResponse()
+    : TypeID(GET_ENDPOINTS_RESPONSE)
+  {
+  }
+
   namespace Binary
   {
 
@@ -31,11 +42,6 @@ namespace OpcUa
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& request)
     {
       return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIDs) + RawSize(request.ProfileUries);
-    }
-
-    GetEndpointsRequest::GetEndpointsRequest()
-      : TypeID(GET_ENDPOINTS_REQUEST)
-    {
     }
 
     template<>
@@ -301,11 +307,6 @@ namespace OpcUa
     //-----------------------------------------------------
     // GetEndpointsResponse
     //-----------------------------------------------------
-
-    GetEndpointsResponse::GetEndpointsResponse()
-      : TypeID(GET_ENDPOINTS_RESPONSE)
-    {
-    }
 
     template<>
     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& resp)

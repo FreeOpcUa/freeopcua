@@ -12,9 +12,9 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
-#include <opc/ua/binary/protocol/attribute.h>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -67,6 +67,7 @@ TEST_F(OpcUaBinaryDeserialization, AttributeID)
 TEST_F(OpcUaBinarySerialization, TimestampsToReturn)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   GetStream() << TimestampsToReturn::NEITHER << flush;
@@ -81,6 +82,7 @@ TEST_F(OpcUaBinarySerialization, TimestampsToReturn)
 
 TEST_F(OpcUaBinaryDeserialization, TimetampsToReturn)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -102,6 +104,7 @@ TEST_F(OpcUaBinaryDeserialization, TimetampsToReturn)
 TEST_F(OpcUaBinarySerialization, AttributeValueID)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   using OpcUa::AttributeID;
 
@@ -130,6 +133,7 @@ TEST_F(OpcUaBinarySerialization, AttributeValueID)
 
 TEST_F(OpcUaBinaryDeserialization, AttributeValueID)
 {
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
   using OpcUa::AttributeID;
 
@@ -157,11 +161,12 @@ TEST_F(OpcUaBinaryDeserialization, AttributeValueID)
 // ReadRequest
 //-------------------------------------------------------
 
-OpcUa::Binary::AttributeValueID CreateAttributeValueID()
+OpcUa::AttributeValueID CreateAttributeValueID()
 {
-  OpcUa::Binary::AttributeValueID attr;
+  using namespace OpcUa;
+  OpcUa::AttributeValueID attr;
 
-  attr.Node.Encoding = OpcUa::Binary::EV_TWO_BYTE;
+  attr.Node.Encoding = OpcUa::EV_TWO_BYTE;
   attr.Node.TwoByteData.Identifier = 1;
   attr.Attribute = OpcUa::AttributeID::VALUE;
   attr.IndexRange = "1,2";
@@ -173,7 +178,7 @@ OpcUa::Binary::AttributeValueID CreateAttributeValueID()
 
 TEST_F(OpcUaBinarySerialization, ReadRequest)
 {
-
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ReadRequest request;
@@ -215,6 +220,7 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
 TEST_F(OpcUaBinaryDeserialization, ReadRequest)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
@@ -266,6 +272,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
 TEST_F(OpcUaBinarySerialization, ReadResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   ReadResponse resp;
@@ -293,6 +300,7 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
 TEST_F(OpcUaBinaryDeserialization, ReadResponse)
 {
 
+  using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   uint8_t variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);

@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/binary/protocol/view.h>
-#include <opc/ua/binary/stream.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/view.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/types.h>
 #include <opc/ua/extension_identifiers.h>
 
 #include <algorithm>
@@ -21,6 +21,54 @@
 
 namespace OpcUa
 {
+
+  ViewDescription::ViewDescription()
+    : Timestamp(0)
+    , Version(0)
+  {
+  }
+
+  BrowseDescription::BrowseDescription()
+    : Direction(BrowseDirection::FORWARD)
+    , IncludeSubtypes(false)
+    , NodeClasses(NODE_CLASS_ALL)
+    , ResultMask(REFERENCE_ALL)
+  {
+  }
+
+  BrowseRequest::BrowseRequest()
+    : TypeID(BROWSE_REQUEST)
+    , MaxReferenciesPerNode(0)
+  {
+  }
+
+  ReferenceDescription::ReferenceDescription()
+    : IsForward(false)
+    , TargetNodeClass(NODE_CLASS_ALL)
+  {
+  }
+
+  BrowseResult::BrowseResult()
+    : StatusCode(0)
+  {
+  }
+
+  BrowseResponse::BrowseResponse()
+    : TypeID(BROWSE_RESPONSE)
+  {
+  }
+
+  BrowseNextRequest::BrowseNextRequest()
+    : TypeID(BROWSE_NEXT_REQUEST)
+    , ReleaseContinuationPoints(false)
+  {
+  }
+
+  BrowseNextResponse::BrowseNextResponse()
+    : TypeID(BROWSE_NEXT_RESPONSE)
+  {
+  }
+
   namespace Binary
   {
 
@@ -47,12 +95,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ViewDescription
     //---------------------------------------------------
-
-    ViewDescription::ViewDescription()
-      : Timestamp(0)
-      , Version(0)
-    {
-    }
 
     template<>
     std::size_t RawSize<ViewDescription>(const ViewDescription& desc)
@@ -86,14 +128,6 @@ namespace OpcUa
     //---------------------------------------------------
     // BrowseDescription
     //---------------------------------------------------
-
-    BrowseDescription::BrowseDescription()
-      : Direction(BrowseDirection::FORWARD)
-      , IncludeSubtypes(false)
-      , NodeClasses(NODE_CLASS_ALL)
-      , ResultMask(REFERENCE_ALL)
-    {
-    }
 
     template<>
     std::size_t RawSize<BrowseDescription>(const BrowseDescription& desc)
@@ -134,12 +168,6 @@ namespace OpcUa
     // BrowseRequest
     //---------------------------------------------------
 
-    BrowseRequest::BrowseRequest()
-      : TypeID(BROWSE_REQUEST)
-      , MaxReferenciesPerNode(0)
-    {
-    }
-
     template<>
     std::size_t RawSize<BrowseRequest>(const BrowseRequest& request)
     {
@@ -174,12 +202,6 @@ namespace OpcUa
     //---------------------------------------------------
     // ReferenceDescription
     //---------------------------------------------------
-
-    ReferenceDescription::ReferenceDescription()
-      : IsForward(false)
-      , TargetNodeClass(NODE_CLASS_ALL)
-    {
-    }
 
     template<>
     std::size_t RawSize<ReferenceDescription>(const ReferenceDescription& desc)
@@ -221,11 +243,6 @@ namespace OpcUa
     // BrowseResult
     //---------------------------------------------------
 
-    BrowseResult::BrowseResult()
-      : StatusCode(0)
-    {
-    }
-
     template<>
     std::size_t RawSize<BrowseResult>(const BrowseResult& result)
     {
@@ -253,12 +270,6 @@ namespace OpcUa
     //---------------------------------------------------
     // BrowseResponse
     //---------------------------------------------------
-
-    BrowseResponse::BrowseResponse()
-      : TypeID(BROWSE_RESPONSE)
-    {
-    }
-
     template<>
     std::size_t RawSize<BrowseResponse>(const BrowseResponse& response)
     {
@@ -290,13 +301,6 @@ namespace OpcUa
     //---------------------------------------------------
     // BrowseNextRequest
     //---------------------------------------------------
-
-    BrowseNextRequest::BrowseNextRequest()
-      : TypeID(BROWSE_NEXT_REQUEST)
-      , ReleaseContinuationPoints(false)
-    {
-    }
-
     template<>
     std::size_t RawSize<BrowseNextRequest>(const BrowseNextRequest& request)
     {
@@ -328,12 +332,6 @@ namespace OpcUa
     //---------------------------------------------------
     // BrowseNextResponse
     //---------------------------------------------------
-
-    BrowseNextResponse::BrowseNextResponse()
-      : TypeID(BROWSE_NEXT_RESPONSE)
-    {
-    }
-
     template<>
     std::size_t RawSize<BrowseNextResponse>(const BrowseNextResponse& response)
     {

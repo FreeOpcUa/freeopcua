@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_DATA_VALUE_H__
 #define __OPC_UA_DATA_VALUE_H__
 
-#include <opc/ua/binary/variant.h>
+#include <opc/ua/protocol/variant.h>
 
 namespace OpcUa
 {
@@ -32,7 +32,15 @@ namespace OpcUa
      DateTime ServerTimestamp;
      uint16_t ServerPicoseconds;
 
-     DataValue();
+     DataValue()
+       : Encoding(0)
+       , Status(0)
+       , SourceTimestamp(0)
+       , SourcePicoseconds(0)
+       , ServerTimestamp(0)
+       , ServerPicoseconds(0)
+     {
+     }
    };
 
 } // namespace OpcUa

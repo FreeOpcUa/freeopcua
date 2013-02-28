@@ -11,9 +11,8 @@
 #ifndef __OPC_UA_VARIANT_H__
 #define __OPC_UA_VARIANT_H__
 
-#include <opc/ua/binary/datetime.h>
-#include <opc/ua/binary/protocol/common.h>
-#include <opc/ua/binary/types.h>
+#include <opc/ua/protocol/datetime.h>
+#include <opc/ua/protocol/types.h>
 #include <string>
 
 

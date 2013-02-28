@@ -11,50 +11,44 @@
 #ifndef __OPC_UA_BINARY_SERIALIZATION_TOOLS_H__
 #define __OPC_UA_BINARY_SERIALIZATION_TOOLS_H__
 
-#include <opc/ua/binary/stream.h>
 #include <stdint.h>
 
 
 namespace OpcUa
 {
-  namespace Binary
+  template<class Stream, class Container>
+  inline void SerializeContainer(Stream& out, const Container& c)
   {
-
-    template<class Container>
-    inline void SerializeContainer(OpcUa::Binary::OStream& out, const Container& c)
+    if (c.size() == 0)
     {
-      if (c.size() == 0)
-      {
-        out << ~uint32_t();
-        return;
-      }
-      out << (uint32_t)c.size();
-      for (auto it = c.begin(); it != c.end(); ++ it)
-      {
-        out << *it;
-      }
+      out << ~uint32_t();
+      return;
+    }
+    out << (uint32_t)c.size();
+    for (auto it = c.begin(); it != c.end(); ++ it)
+    {
+      out << *it;
+    }
+  }
+
+  template<class Stream, class Container>
+  inline void DeserializeContainer(Stream& in, Container& c)
+  {
+    uint32_t size = 0;
+    in >> size;
+
+    c.clear();
+    if (!size || size == ~uint32_t())
+    {
+      return;
     }
 
-    template<class Container>
-    inline void DeserializeContainer(OpcUa::Binary::IStream& in, Container& c)
+    for (uint32_t i = 0; i < size; ++i)
     {
-      uint32_t size = 0;
-      in >> size;
-
-      c.clear();
-      if (!size || size == ~uint32_t())
-      {
-        return;
-      }
-
-      for (uint32_t i = 0; i < size; ++i)
-      {
-        typename Container::value_type val;
-        in >> val;
-        c.push_back(val);
-      }
+      typename Container::value_type val;
+      in >> val;
+      c.push_back(val);
     }
-
   }
 }
 
