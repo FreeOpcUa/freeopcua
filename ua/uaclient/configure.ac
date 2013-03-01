@@ -42,11 +42,22 @@ AC_ARG_WITH([gmock],
             [ 
             ])
 
+AC_ARG_WITH([ua-mappings], 
+            [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
+            [ 
+              AC_SUBST([UA_MAPPING_LIBS], [-Wl,-L$with_ua_mappings,--whole-archive,-lopcuabinary,--no-whole-archive ])
+              AC_SUBST([UA_MAPPING_INCLUDES], [-I$with_ua_mappings/include])
+              AC_MSG_NOTICE([ua mappings path: $with_ua_mappings]) 
+            ], 
+            [ 
+            ])
+
+
 AC_ARG_ENABLE([ua-cmd],
               [AS_HELP_STRING([--enable-ua-cmd], [enable building of ua client command line tool. yes or no (default is no) ])],
               [
                 case "x$enable_ua_cmd" in
-                xyes) AC_MSG_NOTICE([Building UA client enabled.])
+                xyes) AC_MSG_NOTICE([Building of UA client enabled.])
                 ;;
                 xno)
                 ;;

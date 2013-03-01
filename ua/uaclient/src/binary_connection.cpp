@@ -8,9 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/protocol/remote_connection.h>
-
-#include "socket_channel.h"
+#include <opc/ua/client/remote_connection.h>
+#include <opc/ua/client/socket_channel.h>
 
 #include <arpa/inet.h>
 #include <errno.h>

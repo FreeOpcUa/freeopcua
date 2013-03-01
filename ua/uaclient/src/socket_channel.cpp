@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "socket_channel.h"
+#include <opc/ua/client/socket_channel.h>
 
 #include <errno.h>
 #include <iostream>

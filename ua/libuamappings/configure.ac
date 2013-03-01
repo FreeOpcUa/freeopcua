@@ -42,41 +42,6 @@ AC_ARG_WITH([gmock],
             [ 
             ])
 
-AC_ARG_ENABLE([server],
-              [AS_HELP_STRING([--enable-server], [enable building of ua server. yes or no (default is no) ])],
-              [
-                case "x$enable_server" in
-                xyes) AC_MSG_NOTICE([Building UA Server enabled.])
-                ;;
-                xno)
-                ;;
-                *)      AC_MSG_ERROR([Invalid argument of option --enable-server. Should be yes or no.]) 
-                ;;
-                esac
-              ],
-              [
-              ])
-
-AM_CONDITIONAL([BUILD_SERVER], [test x$enable_server = xyes])
-
-AC_ARG_ENABLE([client],
-              [AS_HELP_STRING([--enable-client], [enable building of ua client. yes or no (default is no) ])],
-              [
-                case "x$enable_client" in
-                xyes) AC_MSG_NOTICE([Building UA client enabled.])
-                ;;
-                xno)
-                ;;
-                *)      AC_MSG_ERROR([Invalid argument of option --enable-client. Should be yes or no.]) 
-                ;;
-                esac
-              ],
-              [
-              ])
-
-AM_CONDITIONAL([BUILD_CLIENT], [test x$enable_client = xyes])
-
-
 #check headers
 AC_CHECK_HEADERS([unistd.h])
 

@@ -9,10 +9,11 @@ $ROOT_DIRECTORY/configure \
   --with-libcom=$ROOT_DIRECTORY/libcom \
   --with-libopccore=$ROOT_DIRECTORY/libopccore \
   --with-libopc=$ROOT_DIRECTORY/libopc \
+  --with-ua-mappings=$ROOT_DIRECTORY/ua/libuamappings \
   --with-gtest=$ROOT_DIRECTORY/third-party/gtest \
   --with-gmock=$ROOT_DIRECTORY/third-party/gmock \
   --with-opc-test=$ROOT_DIRECTORY/opctestlinux \
   --enable-linux-com \
-  --enable-ua-client \
+  --enable-ua-cmd \
   $@
 

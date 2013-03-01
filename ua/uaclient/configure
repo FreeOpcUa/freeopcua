@@ -615,6 +615,8 @@ LTLIBOBJS
 LIBOBJS
 BUILD_UA_CMD_FALSE
 BUILD_UA_CMD_TRUE
+UA_MAPPING_INCLUDES
+UA_MAPPING_LIBS
 GMOCK_INCLUDES
 GMOCK_LIBS
 GTEST_INCLUDES
@@ -751,6 +753,7 @@ with_sysroot
 enable_libtool_lock
 with_gtest
 with_gmock
+with_ua_mappings
 enable_ua_cmd
 '
       ac_precious_vars='build_alias
@@ -1407,6 +1410,7 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-gtest=DIR        defines path to gtest root directory
   --with-gmock=DIR        defines path to gmock root directory
+  --with-ua-mappings=DIR  defines path to ua mappings root directory
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -15158,12 +15162,27 @@ $as_echo "$as_me: Gmock path: $GMOCK_INCLUDES" >&6;}
 fi
 
 
+
+# Check whether --with-ua-mappings was given.
+if test "${with_ua_mappings+set}" = set; then :
+  withval=$with_ua_mappings;
+              UA_MAPPING_LIBS=-Wl,-L$with_ua_mappings,--whole-archive,-lopcuabinary,--no-whole-archive
+
+              UA_MAPPING_INCLUDES=-I$with_ua_mappings/include
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: ua mappings path: $with_ua_mappings" >&5
+$as_echo "$as_me: ua mappings path: $with_ua_mappings" >&6;}
+
+fi
+
+
+
 # Check whether --enable-ua-cmd was given.
 if test "${enable_ua_cmd+set}" = set; then :
   enableval=$enable_ua_cmd;
                 case "x$enable_ua_cmd" in
-                xyes) { $as_echo "$as_me:${as_lineno-$LINENO}: Building UA client enabled." >&5
-$as_echo "$as_me: Building UA client enabled." >&6;}
+                xyes) { $as_echo "$as_me:${as_lineno-$LINENO}: Building of UA client enabled." >&5
+$as_echo "$as_me: Building of UA client enabled." >&6;}
                 ;;
                 xno)
                 ;;
