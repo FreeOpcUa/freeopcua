@@ -13,4 +13,13 @@
 *.a
 
 .deps
+Makefile
+*.log
+*.status
+config.h
+libtool
+stamp-h1
+*gmock*
+*gtest*
+opc_ua_binary_test
 
