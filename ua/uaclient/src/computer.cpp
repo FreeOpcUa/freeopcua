@@ -10,8 +10,9 @@
 
 #include "uri_facade.h"
 
+#include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/client/computer.h>
-
+#include <opc/ua/client/remote_connection.h>
 
 namespace
 {
@@ -24,7 +25,11 @@ namespace
     UaComputer(const std::string& uri)
       : ServerUri(uri)
     {
-      
+      std::shared_ptr<IOChannel> connection(OpcUa::Connect(ServerUri.Host(), ServerUri.Port()));
+      Binary::SecureConnectionParams params;
+      params.EndpointUrl = uri;
+      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      Channel = OpcUa::Binary::CreateSecureChannel(connection, params);
     }
 
     virtual void CreateSession(const SessionParameters& parameters)
@@ -56,6 +61,7 @@ namespace
 
   private:
     const Uri ServerUri;
+    std::shared_ptr<OpcUa::IOChannel> Channel;
   };
 
 

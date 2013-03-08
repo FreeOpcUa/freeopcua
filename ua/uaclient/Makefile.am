@@ -37,6 +37,7 @@ uacmd_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs
 
 endif
 
+TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI)
 TESTS = libuaclient_test
 
 check_PROGRAMS = $(TESTS)
