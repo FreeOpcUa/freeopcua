@@ -17,17 +17,30 @@ gtest-1.6.0: gtest-1.6.0.zip
 gtest : gtest-1.6.0
 	test -e gtest || ln -s gtest-1.6.0 gtest
 
-all: gmock gtest
+uripp-1.0.0.tar.gz:
+	test -e uripp-1.0.0.tar.gz || wget http://citylan.dl.sourceforge.net/project/uripp/uripp/1.0.0/uripp-1.0.0.tar.gz
+
+uripp-1.0.0: uripp-1.0.0.tar.gz
+	test -e uripp-1.0.0 || (tar -xf uripp-1.0.0.tar.gz && cd uripp-1.0.0 && autoreconf -f -i && ./configure --disable-shared && cd ..)
+
+uri: uripp-1.0.0
+	test -e uri || ln -s uripp-1.0.0 uri
+
+all: gmock gtest uri
 	$(MAKE) -C gmock
 	$(MAKE) -C gtest
+	$(MAKE) -C uri
 
 check: gmock gtest
 	$(MAKE) -C gmock
 	$(MAKE) -C gtest
+	$(MAKE) -C uri check
 
 clean:
 	if test -e gtest ; then make -C gtest clean ; fi
 	if test -e gmock ; then make -C gmock clean ; fi
+	if test -e uri   ; then make -C uri clean ; fi
 
 distclean:
-	rm -rf gmock* gtest* Makefile
+	rm -rf gmock* gtest* uri* Makefile
+
