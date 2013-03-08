@@ -16,7 +16,7 @@
 #include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/endpoints.h>
-#include <opc/ua/protocol/remote_connection.h>
+#include <opc/ua/client/remote_connection.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/view.h>
@@ -42,7 +42,7 @@ TEST_F(OpcBinaryHandshake, EstablishConnection)
 {
   const std::string host = GetHost();
   const unsigned port = GetPort();
-  std::unique_ptr<OpcUa::Binary::RemoteConnection> connect = OpcUa::Binary::Connect(host, port);
+  std::unique_ptr<OpcUa::RemoteConnection> connect = OpcUa::Connect(host, port);
   ASSERT_EQ(connect->GetHost(), host);
   ASSERT_EQ(connect->GetPort(), port);
 }
@@ -53,7 +53,7 @@ TEST_F(OpcBinaryHandshake, EstablishConnection)
 
 TEST_F(OpcBinaryHandshake, SayingHello)
 {
-  std::shared_ptr<OpcUa::Binary::RemoteConnection> connection(OpcUa::Binary::Connect(GetHost(), GetPort()));
+  std::shared_ptr<OpcUa::RemoteConnection> connection(OpcUa::Connect(GetHost(), GetPort()));
   OpcUa::Binary::OStream os(connection);
   OpcUa::Binary::IStream is(connection);
 
@@ -95,7 +95,7 @@ std::string GetEndpointUrl()
 
 TEST_F(OpcBinaryHandshake, OpenSecureChannel_PolicyNone)
 {
-  std::shared_ptr<OpcUa::Binary::RemoteConnection> connection(OpcUa::Binary::Connect(GetHost(), GetPort()));
+  std::shared_ptr<OpcUa::RemoteConnection> connection(OpcUa::Connect(GetHost(), GetPort()));
 
   OpcUa::Binary::SecureConnectionParams params;
   params.EndpointUrl = GetEndpointUrl();
@@ -111,7 +111,7 @@ TEST_F(OpcBinaryHandshake, OpenSecureChannel_PolicyNone)
 
 TEST_F(OpcBinaryHandshake, GetEndpoints)
 {
-  std::shared_ptr<OpcUa::Binary::RemoteConnection> connection(OpcUa::Binary::Connect(GetHost(), GetPort()));
+  std::shared_ptr<OpcUa::RemoteConnection> connection(OpcUa::Connect(GetHost(), GetPort()));
 
   OpcUa::Binary::SecureConnectionParams params;
   params.EndpointUrl = GetEndpointUrl();

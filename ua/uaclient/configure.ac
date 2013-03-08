@@ -42,6 +42,18 @@ AC_ARG_WITH([gmock],
             [ 
             ])
 
+
+AC_ARG_WITH([uri-library], 
+            [AS_HELP_STRING([--with-uri-library=DIR], [defines path to uri library])],
+            [ 
+              AC_SUBST([URI_LIBS], [-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive])
+              AC_SUBST([URI_INCLUDES], [-I$with_uri_library/src])
+              AC_MSG_NOTICE([URI library path: $with_uri_library]) 
+            ], 
+            [ 
+            ])
+
+
 AC_ARG_WITH([ua-mappings], 
             [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
             [ 
@@ -67,6 +79,16 @@ AC_ARG_ENABLE([ua-cmd],
               ],
               [
               ])
+
+AC_ARG_WITH([testserver-uri], 
+            [AS_HELP_STRING([--with-testserver-uri=uri], [defines uri of the server for performing testing of client.])],
+            [ 
+              AC_SUBST([TEST_SERVER_URI], [$with_testserver_uri])
+              AC_MSG_NOTICE([Test server uri: $TEST_SERVER_URI]) 
+            ], 
+            [ 
+            ])
+
 
 AM_CONDITIONAL([BUILD_UA_CMD], [test x$enable_ua_cmd = xyes])
 

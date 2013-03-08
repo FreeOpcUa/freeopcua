@@ -615,8 +615,11 @@ LTLIBOBJS
 LIBOBJS
 BUILD_UA_CMD_FALSE
 BUILD_UA_CMD_TRUE
+TEST_SERVER_URI
 UA_MAPPING_INCLUDES
 UA_MAPPING_LIBS
+URI_INCLUDES
+URI_LIBS
 GMOCK_INCLUDES
 GMOCK_LIBS
 GTEST_INCLUDES
@@ -753,8 +756,10 @@ with_sysroot
 enable_libtool_lock
 with_gtest
 with_gmock
+with_uri_library
 with_ua_mappings
 enable_ua_cmd
+with_testserver_uri
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1410,7 +1415,11 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-gtest=DIR        defines path to gtest root directory
   --with-gmock=DIR        defines path to gmock root directory
+  --with-uri-library=DIR  defines path to uri library
   --with-ua-mappings=DIR  defines path to ua mappings root directory
+  --with-testserver-uri=uri
+                          defines uri of the server for performing testing of
+                          client.
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -15163,6 +15172,22 @@ fi
 
 
 
+
+# Check whether --with-uri-library was given.
+if test "${with_uri_library+set}" = set; then :
+  withval=$with_uri_library;
+              URI_LIBS=-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive
+
+              URI_INCLUDES=-I$with_uri_library/src
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: URI library path: $with_uri_library" >&5
+$as_echo "$as_me: URI library path: $with_uri_library" >&6;}
+
+fi
+
+
+
+
 # Check whether --with-ua-mappings was given.
 if test "${with_ua_mappings+set}" = set; then :
   withval=$with_ua_mappings;
@@ -15191,6 +15216,19 @@ $as_echo "$as_me: Building of UA client enabled." >&6;}
                 esac
 
 fi
+
+
+
+# Check whether --with-testserver-uri was given.
+if test "${with_testserver_uri+set}" = set; then :
+  withval=$with_testserver_uri;
+              TEST_SERVER_URI=$with_testserver_uri
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: Test server uri: $TEST_SERVER_URI" >&5
+$as_echo "$as_me: Test server uri: $TEST_SERVER_URI" >&6;}
+
+fi
+
 
 
  if test x$enable_ua_cmd = xyes; then

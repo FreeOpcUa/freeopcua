@@ -98,14 +98,14 @@ LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 libuaclient_a_AR = $(AR) $(ARFLAGS)
 libuaclient_a_LIBADD =
-am_libuaclient_a_OBJECTS = libuaclient_a-socket_channel.$(OBJEXT) \
-	libuaclient_a-binary_connection.$(OBJEXT)
+am_libuaclient_a_OBJECTS = libuaclient_a-binary_connection.$(OBJEXT) \
+	libuaclient_a-computer.$(OBJEXT) \
+	libuaclient_a-socket_channel.$(OBJEXT)
 libuaclient_a_OBJECTS = $(am_libuaclient_a_OBJECTS)
 am__EXEEXT_1 = libuaclient_test$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am_libuaclient_test_OBJECTS =  \
-	libuaclient_test-binary_handshake.$(OBJEXT) \
-	libuaclient_test-thread_test.$(OBJEXT)
+	libuaclient_test-computer_connect.$(OBJEXT)
 libuaclient_test_OBJECTS = $(am_libuaclient_test_OBJECTS)
 libuaclient_test_DEPENDENCIES = libuaclient.a
 libuaclient_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -227,8 +227,11 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TEST_SERVER_URI = @TEST_SERVER_URI@
 UA_MAPPING_INCLUDES = @UA_MAPPING_INCLUDES@
 UA_MAPPING_LIBS = @UA_MAPPING_LIBS@
+URI_INCLUDES = @URI_INCLUDES@
+URI_LIBS = @URI_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -287,25 +290,28 @@ opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 uaclientincludedir = $(opcuaincludedir)/client
 uaclientinclude_HEADERS = \
- include/opc/ua/client/socket_channel.h
+ include/opc/ua/client/computer.h
 
 lib_LIBRARIES = libuaclient.a
 libuaclient_a_SOURCES = \
-  src/socket_channel.cpp \
-  src/binary_connection.cpp
+  src/binary_connection.cpp \
+  src/computer.cpp \
+  src/socket_channel.cpp
 
-libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES)
+libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
 @BUILD_UA_CMD_TRUE@uacmd_SOURCES = src/main.cpp
-@BUILD_UA_CMD_TRUE@uacmd_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(UA_MAPPING_INCLUDES)
+@BUILD_UA_CMD_TRUE@uacmd_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 @BUILD_UA_CMD_TRUE@uacmd_LDADD = libuaclient.a
-@BUILD_UA_CMD_TRUE@uacmd_LDFLAGS = $(UA_MAPPING_LIBS) -lpthread -Wl,-z,defs 
-libuaclient_test_SOURCES = \
- tests/binary_handshake.cpp \
- tests/thread_test.cpp
+@BUILD_UA_CMD_TRUE@uacmd_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
 
-libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+# tests/binary_handshake.cpp
+# tests/thread_test.cpp
+libuaclient_test_SOURCES = \
+ tests/computer_connect.cpp
+
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -460,9 +466,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-binary_connection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-socket_channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-binary_handshake.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-thread_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_connect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uacmd-main.Po@am__quote@
 
 .cpp.o:
@@ -486,20 +492,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libuaclient_a-socket_channel.o: src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-socket_channel.o -MD -MP -MF $(DEPDIR)/libuaclient_a-socket_channel.Tpo -c -o libuaclient_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-socket_channel.Tpo $(DEPDIR)/libuaclient_a-socket_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libuaclient_a-socket_channel.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
-
-libuaclient_a-socket_channel.obj: src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-socket_channel.obj -MD -MP -MF $(DEPDIR)/libuaclient_a-socket_channel.Tpo -c -o libuaclient_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-socket_channel.Tpo $(DEPDIR)/libuaclient_a-socket_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libuaclient_a-socket_channel.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
-
 libuaclient_a-binary_connection.o: src/binary_connection.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-binary_connection.o -MD -MP -MF $(DEPDIR)/libuaclient_a-binary_connection.Tpo -c -o libuaclient_a-binary_connection.o `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-binary_connection.Tpo $(DEPDIR)/libuaclient_a-binary_connection.Po
@@ -514,33 +506,47 @@ libuaclient_a-binary_connection.obj: src/binary_connection.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
 
-libuaclient_test-binary_handshake.o: tests/binary_handshake.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-binary_handshake.o -MD -MP -MF $(DEPDIR)/libuaclient_test-binary_handshake.Tpo -c -o libuaclient_test-binary_handshake.o `test -f 'tests/binary_handshake.cpp' || echo '$(srcdir)/'`tests/binary_handshake.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-binary_handshake.Tpo $(DEPDIR)/libuaclient_test-binary_handshake.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_handshake.cpp' object='libuaclient_test-binary_handshake.o' libtool=no @AMDEPBACKSLASH@
+libuaclient_a-computer.o: src/computer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-computer.o -MD -MP -MF $(DEPDIR)/libuaclient_a-computer.Tpo -c -o libuaclient_a-computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-computer.Tpo $(DEPDIR)/libuaclient_a-computer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='libuaclient_a-computer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-binary_handshake.o `test -f 'tests/binary_handshake.cpp' || echo '$(srcdir)/'`tests/binary_handshake.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
 
-libuaclient_test-binary_handshake.obj: tests/binary_handshake.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-binary_handshake.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-binary_handshake.Tpo -c -o libuaclient_test-binary_handshake.obj `if test -f 'tests/binary_handshake.cpp'; then $(CYGPATH_W) 'tests/binary_handshake.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_handshake.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-binary_handshake.Tpo $(DEPDIR)/libuaclient_test-binary_handshake.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_handshake.cpp' object='libuaclient_test-binary_handshake.obj' libtool=no @AMDEPBACKSLASH@
+libuaclient_a-computer.obj: src/computer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-computer.obj -MD -MP -MF $(DEPDIR)/libuaclient_a-computer.Tpo -c -o libuaclient_a-computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-computer.Tpo $(DEPDIR)/libuaclient_a-computer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='libuaclient_a-computer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-binary_handshake.obj `if test -f 'tests/binary_handshake.cpp'; then $(CYGPATH_W) 'tests/binary_handshake.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_handshake.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
 
-libuaclient_test-thread_test.o: tests/thread_test.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-thread_test.o -MD -MP -MF $(DEPDIR)/libuaclient_test-thread_test.Tpo -c -o libuaclient_test-thread_test.o `test -f 'tests/thread_test.cpp' || echo '$(srcdir)/'`tests/thread_test.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-thread_test.Tpo $(DEPDIR)/libuaclient_test-thread_test.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/thread_test.cpp' object='libuaclient_test-thread_test.o' libtool=no @AMDEPBACKSLASH@
+libuaclient_a-socket_channel.o: src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-socket_channel.o -MD -MP -MF $(DEPDIR)/libuaclient_a-socket_channel.Tpo -c -o libuaclient_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-socket_channel.Tpo $(DEPDIR)/libuaclient_a-socket_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libuaclient_a-socket_channel.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-thread_test.o `test -f 'tests/thread_test.cpp' || echo '$(srcdir)/'`tests/thread_test.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
 
-libuaclient_test-thread_test.obj: tests/thread_test.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-thread_test.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-thread_test.Tpo -c -o libuaclient_test-thread_test.obj `if test -f 'tests/thread_test.cpp'; then $(CYGPATH_W) 'tests/thread_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/thread_test.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-thread_test.Tpo $(DEPDIR)/libuaclient_test-thread_test.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/thread_test.cpp' object='libuaclient_test-thread_test.obj' libtool=no @AMDEPBACKSLASH@
+libuaclient_a-socket_channel.obj: src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_a-socket_channel.obj -MD -MP -MF $(DEPDIR)/libuaclient_a-socket_channel.Tpo -c -o libuaclient_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_a-socket_channel.Tpo $(DEPDIR)/libuaclient_a-socket_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libuaclient_a-socket_channel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-thread_test.obj `if test -f 'tests/thread_test.cpp'; then $(CYGPATH_W) 'tests/thread_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/thread_test.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
+
+libuaclient_test-computer_connect.o: tests/computer_connect.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_connect.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_connect.Tpo -c -o libuaclient_test-computer_connect.o `test -f 'tests/computer_connect.cpp' || echo '$(srcdir)/'`tests/computer_connect.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_connect.Tpo $(DEPDIR)/libuaclient_test-computer_connect.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_connect.cpp' object='libuaclient_test-computer_connect.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_connect.o `test -f 'tests/computer_connect.cpp' || echo '$(srcdir)/'`tests/computer_connect.cpp
+
+libuaclient_test-computer_connect.obj: tests/computer_connect.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_connect.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_connect.Tpo -c -o libuaclient_test-computer_connect.obj `if test -f 'tests/computer_connect.cpp'; then $(CYGPATH_W) 'tests/computer_connect.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_connect.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_connect.Tpo $(DEPDIR)/libuaclient_test-computer_connect.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_connect.cpp' object='libuaclient_test-computer_connect.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_connect.obj `if test -f 'tests/computer_connect.cpp'; then $(CYGPATH_W) 'tests/computer_connect.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_connect.cpp'; fi`
 
 uacmd-main.o: src/main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT uacmd-main.o -MD -MP -MF $(DEPDIR)/uacmd-main.Tpo -c -o uacmd-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
