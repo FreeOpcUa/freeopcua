@@ -9,10 +9,14 @@
 ///
 
 #include "uri_facade.h"
+#include "stream_computer.h"
 
 #include <opc/ua/protocol/binary/secure_connection.h>
+#include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/client/computer.h>
 #include <opc/ua/client/remote_connection.h>
+#include <stdexcept>
+
 
 namespace
 {
@@ -25,43 +29,62 @@ namespace
     UaComputer(const std::string& uri)
       : ServerUri(uri)
     {
-      std::shared_ptr<IOChannel> connection(OpcUa::Connect(ServerUri.Host(), ServerUri.Port()));
-      Binary::SecureConnectionParams params;
-      params.EndpointUrl = uri;
-      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-      Channel = OpcUa::Binary::CreateSecureChannel(connection, params);
+      std::shared_ptr<IOChannel>  channel = CreateSecureChannel(uri);
+      Impl = CreateComputerByProtocol(ServerUri.Scheme(), channel);
     }
 
     virtual void CreateSession(const SessionParameters& parameters)
     {
+      Impl->CreateSession(parameters);
     }
 
     virtual void UpdateSession(const IdentifyParameters& parameters)
     {
+      Impl->UpdateSession(parameters);
     }
 
     virtual void CloseSession()
     {
+      Impl->CloseSession();
     }
 
     virtual std::shared_ptr<EndpointServices> Endpoints() const
     {
-      return std::shared_ptr<EndpointServices>();
+      return Impl->Endpoints();
     }
 
     virtual std::shared_ptr<ViewServices> Views() const
     {
-      return std::shared_ptr<ViewServices>();
+      return Impl->Views();
     }
 
     virtual std::shared_ptr<AttributeServices> Attributes() const
     {
-      return std::shared_ptr<AttributeServices>();
+      return Impl->Attributes();
+    }
+
+  private:
+    std::unique_ptr<OpcUa::Remote::Computer> CreateComputerByProtocol(const std::string& protocol, std::shared_ptr<IOChannel> channel) const
+    {
+      if (protocol == "opc.tcp")
+      {
+        return std::unique_ptr<OpcUa::Remote::Computer>(new OpcUa::Internal::Computer<OpcUa::Binary::IOStream>(channel));
+      }
+      throw std::invalid_argument("Unknown protocol: " + ServerUri.Scheme());
+    }
+
+    std::shared_ptr<OpcUa::IOChannel> CreateSecureChannel(const std::string& endpointUrl) const
+    {
+      std::shared_ptr<IOChannel> connection(OpcUa::Connect(ServerUri.Host(), ServerUri.Port()));
+      Binary::SecureConnectionParams params;
+      params.EndpointUrl = endpointUrl;
+      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      return OpcUa::Binary::CreateSecureChannel(connection, params);
     }
 
   private:
     const Uri ServerUri;
-    std::shared_ptr<OpcUa::IOChannel> Channel;
+    std::unique_ptr<OpcUa::Remote::Computer> Impl;
   };
 
 

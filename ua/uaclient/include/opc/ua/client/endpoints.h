@@ -1,0 +1,53 @@
+/// @author Alexander Rykovanov 2013
+/// @email rykovanov.as@gmail.com
+/// @brief Opc endpoints interface.
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
+#ifndef OPC_UA_CLIENT_ENDPOINTS_H
+#define OPC_UA_CLIENT_ENDPOINTS_H
+
+#include <opc/ua/protocol/types.h>
+#include <vector>
+
+namespace OpcUa
+{
+  namespace Remote
+  {
+
+    struct ApplicationFilter
+    {
+    };
+
+    struct ApplicationDescription
+    {
+    };
+
+    struct EndpointFilter
+    {
+      std::string EndpointUrl;
+      std::vector<std::string> LocaleIDs;
+      std::vector<std::string> ProfileUries;
+    };
+
+    struct ServerParameters
+    {
+    };
+
+    class EndpointServices
+    {
+    public:
+      virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
+      virtual std::vector<EndpointDescription> GetEndpoints(const EndpointFilter& filter) const = 0;
+      virtual void RegisterServer(const ServerParameters& parameters) = 0;
+    };
+
+  } // namespace Remote
+} // namespace OpcUa
+
+#endif // OPC_UA_CLIENT_ENDPOINTS_H
+

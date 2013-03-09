@@ -14,15 +14,21 @@ uaclientincludedir = $(opcuaincludedir)/client
 
 
 uaclientinclude_HEADERS = \
- include/opc/ua/client/computer.h
+  include/opc/ua/client/computer.h \
+  include/opc/ua/client/socket_channel.h \
+  include/opc/ua/client/endpoints.h \
+  include/opc/ua/client/remote_connection.h
 
 lib_LIBRARIES = libuaclient.a
 
 
 libuaclient_a_SOURCES = \
-  src/binary_connection.cpp \
+  src/endpoints.h \
+  src/socket_channel.cpp \
+  src/uri_facade.h \
   src/computer.cpp \
-  src/socket_channel.cpp
+  src/binary_connection.cpp \
+  src/stream_computer.h
 
 libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
 
@@ -45,7 +51,8 @@ check_PROGRAMS = $(TESTS)
 # tests/binary_handshake.cpp
 # tests/thread_test.cpp
 libuaclient_test_SOURCES =  \
- tests/computer_connect.cpp
+ tests/computer_connect.cpp \
+ tests/computer_endpoints.cpp
 
 libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a

@@ -18,7 +18,7 @@ namespace OpcUa
   class Uri
   {
   public:
-    Uri(const std::string& uriString)
+    explicit Uri(const std::string& uriString)
       : Impl(uriString)
     {
     }

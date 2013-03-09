@@ -1,6 +1,6 @@
-/// @author Alexander Rykovanov 2012
+/// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Opc binary cnnection channel.
+/// @brief Opc Ua computer interface.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -11,6 +11,7 @@
 #ifndef OPC_UA_CLIENT_COMPUTER_H
 #define OPC_UA_CLIENT_COMPUTER_H
 
+#include <opc/ua/client/endpoints.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/data_value.h>
 
@@ -22,35 +23,6 @@ namespace OpcUa
   namespace Remote
   {
 
-    struct ApplicationFilter
-    {
-    };
-
-    struct ApplicationDescription
-    {
-    };
-
-    struct EndpointFilter
-    {
-    };
-
-    struct EndpointDescription
-    {
-    };
-
-    struct ServerParameters
-    {
-    };
-
-    class EndpointServices
-    {
-    public:
-      virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
-      virtual std::vector<EndpointDescription> GetEndpoints(const EndpointFilter& filter) const = 0;
-      virtual void RegisterServer(const ServerParameters& parameters) = 0;
-    };
-
-    
     struct SessionParameters
     {
     };
