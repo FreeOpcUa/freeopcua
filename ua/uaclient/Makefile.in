@@ -46,7 +46,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@BUILD_UA_CMD_TRUE@bin_PROGRAMS = uacmd$(EXEEXT)
+@BUILD_UA_CMD_TRUE@bin_PROGRAMS = opcua$(EXEEXT)
 TESTS = libuaclient_test$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = .
@@ -112,13 +112,13 @@ libuaclient_test_DEPENDENCIES = libuaclient.a
 libuaclient_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libuaclient_test_LDFLAGS) $(LDFLAGS) -o $@
-am__uacmd_SOURCES_DIST = src/main.cpp
-@BUILD_UA_CMD_TRUE@am_uacmd_OBJECTS = uacmd-main.$(OBJEXT)
-uacmd_OBJECTS = $(am_uacmd_OBJECTS)
-@BUILD_UA_CMD_TRUE@uacmd_DEPENDENCIES = libuaclient.a
-uacmd_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+am__opcua_SOURCES_DIST = src/main.cpp
+@BUILD_UA_CMD_TRUE@am_opcua_OBJECTS = opcua-main.$(OBJEXT)
+opcua_OBJECTS = $(am_opcua_OBJECTS)
+@BUILD_UA_CMD_TRUE@opcua_DEPENDENCIES = libuaclient.a
+opcua_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
-	$(uacmd_LDFLAGS) $(LDFLAGS) -o $@
+	$(opcua_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -142,9 +142,9 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libuaclient_a_SOURCES) $(libuaclient_test_SOURCES) \
-	$(uacmd_SOURCES)
+	$(opcua_SOURCES)
 DIST_SOURCES = $(libuaclient_a_SOURCES) $(libuaclient_test_SOURCES) \
-	$(am__uacmd_SOURCES_DIST)
+	$(am__opcua_SOURCES_DIST)
 HEADERS = $(uaclientinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -315,10 +315,10 @@ libuaclient_a_SOURCES = \
   src/stream_computer.h
 
 libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
-@BUILD_UA_CMD_TRUE@uacmd_SOURCES = src/main.cpp
-@BUILD_UA_CMD_TRUE@uacmd_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
-@BUILD_UA_CMD_TRUE@uacmd_LDADD = libuaclient.a
-@BUILD_UA_CMD_TRUE@uacmd_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
+@BUILD_UA_CMD_TRUE@opcua_SOURCES = src/main.cpp
+@BUILD_UA_CMD_TRUE@opcua_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
+@BUILD_UA_CMD_TRUE@opcua_LDADD = libuaclient.a
+@BUILD_UA_CMD_TRUE@opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
 TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI)
 
 # tests/binary_handshake.cpp
@@ -473,9 +473,9 @@ clean-checkPROGRAMS:
 libuaclient_test$(EXEEXT): $(libuaclient_test_OBJECTS) $(libuaclient_test_DEPENDENCIES) $(EXTRA_libuaclient_test_DEPENDENCIES) 
 	@rm -f libuaclient_test$(EXEEXT)
 	$(libuaclient_test_LINK) $(libuaclient_test_OBJECTS) $(libuaclient_test_LDADD) $(LIBS)
-uacmd$(EXEEXT): $(uacmd_OBJECTS) $(uacmd_DEPENDENCIES) $(EXTRA_uacmd_DEPENDENCIES) 
-	@rm -f uacmd$(EXEEXT)
-	$(uacmd_LINK) $(uacmd_OBJECTS) $(uacmd_LDADD) $(LIBS)
+opcua$(EXEEXT): $(opcua_OBJECTS) $(opcua_DEPENDENCIES) $(EXTRA_opcua_DEPENDENCIES) 
+	@rm -f opcua$(EXEEXT)
+	$(opcua_LINK) $(opcua_OBJECTS) $(opcua_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -488,7 +488,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_connect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_endpoints.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uacmd-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-main.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -581,19 +581,19 @@ libuaclient_test-computer_endpoints.obj: tests/computer_endpoints.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_endpoints.obj `if test -f 'tests/computer_endpoints.cpp'; then $(CYGPATH_W) 'tests/computer_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_endpoints.cpp'; fi`
 
-uacmd-main.o: src/main.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT uacmd-main.o -MD -MP -MF $(DEPDIR)/uacmd-main.Tpo -c -o uacmd-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/uacmd-main.Tpo $(DEPDIR)/uacmd-main.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='uacmd-main.o' libtool=no @AMDEPBACKSLASH@
+opcua-main.o: src/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-main.o -MD -MP -MF $(DEPDIR)/opcua-main.Tpo -c -o opcua-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opcua-main.Tpo $(DEPDIR)/opcua-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='opcua-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uacmd-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcua-main.o `test -f 'src/main.cpp' || echo '$(srcdir)/'`src/main.cpp
 
-uacmd-main.obj: src/main.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT uacmd-main.obj -MD -MP -MF $(DEPDIR)/uacmd-main.Tpo -c -o uacmd-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/uacmd-main.Tpo $(DEPDIR)/uacmd-main.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='uacmd-main.obj' libtool=no @AMDEPBACKSLASH@
+opcua-main.obj: src/main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-main.obj -MD -MP -MF $(DEPDIR)/opcua-main.Tpo -c -o opcua-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opcua-main.Tpo $(DEPDIR)/opcua-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/main.cpp' object='opcua-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uacmd_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uacmd-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcua-main.obj `if test -f 'src/main.cpp'; then $(CYGPATH_W) 'src/main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

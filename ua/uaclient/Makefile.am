@@ -34,12 +34,12 @@ libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_IN
 
 if BUILD_UA_CMD
 
-bin_PROGRAMS = uacmd
+bin_PROGRAMS = opcua
 
-uacmd_SOURCES = src/main.cpp
-uacmd_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
-uacmd_LDADD = libuaclient.a
-uacmd_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
+opcua_SOURCES = src/main.cpp
+opcua_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
+opcua_LDADD = libuaclient.a
+opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
 
 endif
 
