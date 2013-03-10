@@ -23,3 +23,4 @@ stamp-h1
 *gtest*
 opc_ua_binary_test
 
+*.libs
