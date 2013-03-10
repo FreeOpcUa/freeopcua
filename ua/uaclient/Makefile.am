@@ -39,7 +39,7 @@ bin_PROGRAMS = opcua
 opcua_SOURCES = src/main.cpp
 opcua_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 opcua_LDADD = libuaclient.a
-opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
+opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs 
 
 endif
 

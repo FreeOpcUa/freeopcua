@@ -318,7 +318,7 @@ libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_IN
 @BUILD_UA_CMD_TRUE@opcua_SOURCES = src/main.cpp
 @BUILD_UA_CMD_TRUE@opcua_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 @BUILD_UA_CMD_TRUE@opcua_LDADD = libuaclient.a
-@BUILD_UA_CMD_TRUE@opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -Wl,-z,defs 
+@BUILD_UA_CMD_TRUE@opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs 
 TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI)
 
 # tests/binary_handshake.cpp
