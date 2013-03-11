@@ -12,7 +12,6 @@
 #define OPC_UA_CLIENT_COMPUTER_H
 
 #include <opc/ua/client/endpoints.h>
-#include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/data_value.h>
 
 #include <memory>
@@ -25,13 +24,13 @@ namespace OpcUa
 
     struct SessionParameters
     {
+      ApplicationDescription ClientDescription;
+      std::vector<uint8_t> ClientCertificate;
+      std::string SessionName;
+      std::string ServerURI;
+      std::string EndpointURL;
+      Duration Timeout;
     };
-
-
-    struct IdentifyParameters
-    {
-    };
-
 
     struct BrowseParameters
     {
@@ -80,7 +79,7 @@ namespace OpcUa
     {
     public:
       virtual void CreateSession(const SessionParameters& parameters) = 0;
-      virtual void UpdateSession(const IdentifyParameters& parameters) = 0;
+      virtual void ActivateSession() = 0;
       virtual void CloseSession() = 0;
 
      virtual std::shared_ptr<EndpointServices> Endpoints() const = 0;

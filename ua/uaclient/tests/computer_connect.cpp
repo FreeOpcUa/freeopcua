@@ -22,13 +22,13 @@ TEST(Computer, EstablishValidConnection)
   ASSERT_TRUE(computer.get());
 }
 
-TEST(Computer, EstablishInvalidUri)
+TEST(Computer, ErrorIfInvalidUri)
 {
   const std::string endpoint = "invalid uri";
   ASSERT_THROW(OpcUa::Remote::Connect(endpoint), std::logic_error);
 }
 
-TEST(Computer, EstablishUnknownHost)
+TEST(Computer, ErrorIdUnknownHost)
 {
   const std::string endpoint = "opc.tcp://host.at.tne.mars:4840";
   ASSERT_THROW(OpcUa::Remote::Connect(endpoint), std::logic_error);

@@ -14,8 +14,18 @@
 
 #include <stdexcept>
 
-TEST(Computer, CanCreateSession)
+TEST(Session, Works)
 {
   std::unique_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(GetEndpoint());
+
+  OpcUa::Remote::SessionParameters session;
+  session.ClientDescription.Name.Text = "opcua client";
+  session.SessionName = "test";
+  session.EndpointURL = GetEndpoint();
+  session.Timeout = 1000;
+
+  computer->CreateSession(session);
+  computer->ActivateSession();
+  computer->CloseSession();
 }
 

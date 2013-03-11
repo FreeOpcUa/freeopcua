@@ -38,9 +38,9 @@ namespace
       Impl->CreateSession(parameters);
     }
 
-    virtual void UpdateSession(const IdentifyParameters& parameters)
+    virtual void ActivateSession()
     {
-      Impl->UpdateSession(parameters);
+      Impl->ActivateSession();
     }
 
     virtual void CloseSession()

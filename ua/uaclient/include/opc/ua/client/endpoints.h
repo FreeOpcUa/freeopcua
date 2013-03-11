@@ -23,10 +23,6 @@ namespace OpcUa
     {
     };
 
-    struct ApplicationDescription
-    {
-    };
-
     struct EndpointFilter
     {
       std::string EndpointUrl;

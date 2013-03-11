@@ -184,12 +184,22 @@ namespace
     const std::string serverUri = vm[OPTION_SERVER_URI].as<std::string>();
     std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverUri);
 
+    OpcUa::Remote::SessionParameters session;
+    session.ClientDescription.Name.Text = "opcua client";
+    session.SessionName = "opua command line";
+    session.EndpointURL = serverUri;
+    session.Timeout = 1000;
+
+    computer->CreateSession(session);
+    computer->ActivateSession();
+
     if (vm.count(OPTION_GET_ENDPOINTS)) 
     {
       PrintEndpoints(*computer);
     }
-  }
 
+    computer->CloseSession();
+  }
 }
 
 int main(int argc, char** argv)

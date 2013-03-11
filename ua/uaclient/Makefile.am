@@ -52,7 +52,8 @@ check_PROGRAMS = $(TESTS)
 # tests/thread_test.cpp
 libuaclient_test_SOURCES =  \
  tests/computer_connect.cpp \
- tests/computer_endpoints.cpp
+ tests/computer_endpoints.cpp \
+ tests/computer_session.cpp
 
 libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a

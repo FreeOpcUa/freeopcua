@@ -23,14 +23,15 @@ namespace OpcUa
     class EndpointServices : public OpcUa::Remote::EndpointServices
     {
     public:
-      explicit EndpointServices(std::shared_ptr<IOChannel> channel)
+      explicit EndpointServices(std::shared_ptr<IOChannel> channel, const NodeID& sessionToken)
         : Stream(channel)
+        , AuthenticationToken(sessionToken)
       {
       }
 
-      virtual std::vector<Remote::ApplicationDescription> FindServers(const Remote::ApplicationFilter& filter) const
+      virtual std::vector<ApplicationDescription> FindServers(const Remote::ApplicationFilter& filter) const
       {
-        return std::vector<Remote::ApplicationDescription>();
+        return std::vector<ApplicationDescription>();
       }
 
       virtual std::vector<EndpointDescription> GetEndpoints(const Remote::EndpointFilter& filter) const
@@ -52,6 +53,7 @@ namespace OpcUa
 
     private:
       mutable StreamType Stream;
+      NodeID AuthenticationToken;
     };
 
   } // namespace Internal
