@@ -9,6 +9,7 @@
 ///
 
 #include "endpoints.h"
+#include "stream_view.h"
 
 #include <opc/ua/channel.h>
 #include <opc/ua/client/computer.h>
@@ -84,7 +85,7 @@ namespace OpcUa
 
       virtual std::shared_ptr<Remote::ViewServices> Views() const
       {
-        return std::shared_ptr<Remote::ViewServices>();
+        return std::shared_ptr<Remote::ViewServices>(new Internal::ViewServices<StreamType>(Channel, AuthenticationToken));
       }
 
       virtual std::shared_ptr<Remote::AttributeServices> Attributes() const

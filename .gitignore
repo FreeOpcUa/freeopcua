@@ -21,6 +21,23 @@ libtool
 stamp-h1
 *gmock*
 *gtest*
-opc_ua_binary_test
 
 *.libs
+
+#compiled binaries
+comreg
+linux_com_tests
+opc_ua_binary_test
+
+common_test
+error_manager_test
+managers_test
+opc_client_test
+property_tree_manager_test
+opctest
+third-party/uri
+third-party/uripp-1.0.0.tar.gz
+third-party/uripp-1.0.0/
+ua/uaclient/libuaclient_test
+ua/uaclient/opcua
+

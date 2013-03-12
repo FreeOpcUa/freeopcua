@@ -12,6 +12,7 @@
 #define OPC_UA_CLIENT_COMPUTER_H
 
 #include <opc/ua/client/endpoints.h>
+#include <opc/ua/client/view.h>
 #include <opc/ua/protocol/data_value.h>
 
 #include <memory>
@@ -30,23 +31,6 @@ namespace OpcUa
       std::string ServerURI;
       std::string EndpointURL;
       Duration Timeout;
-    };
-
-    struct BrowseParameters
-    {
-    };
-
-    struct BrowseResult
-    {
-      std::vector<char> ContnuationPoint;
-      std::vector<NodeID> Nodes;
-    };
-   
-    class ViewServices
-    {
-    public:
-      virtual BrowseResult Browse(const BrowseParameters& filter) = 0;
-      virtual BrowseResult BrowseNext(const std::vector<char>& continuationPoint) = 0;
     };
 
     struct AttributeValue

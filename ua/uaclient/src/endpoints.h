@@ -13,6 +13,8 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/endpoints.h>
 
+#ifndef OPC_UA_INTERNAL_SERVICES_H
+#define OPC_UA_INTERNAL_SERVICES_H
 
 namespace OpcUa
 {
@@ -58,4 +60,6 @@ namespace OpcUa
 
   } // namespace Internal
 } // namespace OpcUa
+
+#endif //  OPC_UA_INTERNAL_SERVICES_H
 
