@@ -53,7 +53,7 @@ namespace OpcUa
 
     class AttributeServices
     {
-      virtual std::vector<AttributeValue> Browse(const ReadParameters& filter) = 0;
+      virtual std::vector<AttributeValue> Read(const ReadParameters& filter) = 0;
       virtual std::vector<WriteResult> Write(const WriteParameters& filter) = 0;
     };
 

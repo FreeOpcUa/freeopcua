@@ -31,19 +31,73 @@ namespace OpcUa
       {
       }
 
-      virtual BrowseResult Browse(const BrowseDescription& desc) const
+      virtual std::vector<ReferenceDescription> Browse(const BrowseDescription& desc)
       {
-        return BrowseResult();
+        BrowseRequest browse;
+        browse.Header.SessionAuthenticationToken = AuthenticationToken;
+        browse.MaxReferenciesPerNode = 100;
+        browse.NodesToBrowse.push_back(desc);
+        
+        Stream << browse << OpcUa::Binary::flush;
+
+        BrowseResponse response;
+        Stream >> response;
+
+        if (!response.Results.empty())
+        {
+          const BrowseResult& result = *response.Results.begin();
+          ContinuationPoint = result.ContinuationPoint;
+          return result.Referencies;
+        }
+
+        return  std::vector<ReferenceDescription>();
       }
 
-      virtual BrowseResult BrowseNext(const std::vector<char>& continuationPoint, bool releaseContinuationPoint) const
+      virtual std::vector<ReferenceDescription> BrowseNext()
       {
-        return BrowseResult();
+        if (ContinuationPoint.empty())
+        {
+          return std::vector<ReferenceDescription>();
+        }
+
+        const std::vector<ReferenceDescription>& referencies = Next();
+        if (referencies.empty())
+        {
+          Release();
+        }
+        return referencies;
+      }
+
+    private:
+      std::vector<ReferenceDescription> Next()
+      {
+        return SendBrowseNext(false);
+      }
+
+      void Release() 
+      {
+        SendBrowseNext(true);
+      }
+
+      std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint)
+      {
+        BrowseNextRequest browseNext;
+        browseNext.Header.SessionAuthenticationToken = AuthenticationToken;
+        browseNext.ReleaseContinuationPoints= false;
+        browseNext.ContinuationPoints.push_back(ContinuationPoint);  
+
+        Stream << browseNext << OpcUa::Binary::flush;
+
+        BrowseNextResponse response;
+        Stream >> response;
+        return !response.Results.empty() ? response.Results.begin()->Referencies :  std::vector<ReferenceDescription>();
       }
 
     private:
       mutable StreamType Stream;
       NodeID AuthenticationToken;
+
+      std::vector<uint8_t> ContinuationPoint;
     };
 
   } // namespace Internal

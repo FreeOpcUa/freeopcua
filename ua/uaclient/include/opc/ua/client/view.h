@@ -24,8 +24,8 @@ namespace OpcUa
     class ViewServices
     {
     public:
-      virtual BrowseResult Browse(const BrowseDescription& desc) const = 0;
-      virtual BrowseResult BrowseNext(const std::vector<char>& continuationPoint, bool releaseContinuationPoint) const = 0;
+      virtual std::vector<ReferenceDescription> Browse(const BrowseDescription& desc) = 0;
+      virtual std::vector<ReferenceDescription> BrowseNext() = 0;
     };
 
 
