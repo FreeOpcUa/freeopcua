@@ -28,7 +28,8 @@ libuaclient_a_SOURCES = \
   src/uri_facade.h \
   src/computer.cpp \
   src/binary_connection.cpp \
-  src/stream_computer.h
+  src/stream_computer.h \
+  src/stream_attribute.h
 
 libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
 
@@ -51,6 +52,7 @@ check_PROGRAMS = $(TESTS)
 # tests/binary_handshake.cpp
 # tests/thread_test.cpp
 libuaclient_test_SOURCES =  \
+ tests/computer_attribute.cpp \
  tests/computer_connect.cpp \
  tests/computer_endpoints.cpp \
  tests/computer_session.cpp \

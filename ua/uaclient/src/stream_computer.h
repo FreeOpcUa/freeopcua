@@ -9,6 +9,7 @@
 ///
 
 #include "endpoints.h"
+#include "stream_attribute.h"
 #include "stream_view.h"
 
 #include <opc/ua/channel.h>
@@ -90,7 +91,7 @@ namespace OpcUa
 
       virtual std::shared_ptr<Remote::AttributeServices> Attributes() const
       {
-        return std::shared_ptr<Remote::AttributeServices>();
+        return std::shared_ptr<Remote::AttributeServices>(new Internal::AttributeServices<StreamType>(Channel, AuthenticationToken));
       }
 
     private:

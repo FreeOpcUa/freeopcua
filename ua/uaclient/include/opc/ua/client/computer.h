@@ -11,9 +11,9 @@
 #ifndef OPC_UA_CLIENT_COMPUTER_H
 #define OPC_UA_CLIENT_COMPUTER_H
 
+#include <opc/ua/client/attributes.h>
 #include <opc/ua/client/endpoints.h>
 #include <opc/ua/client/view.h>
-#include <opc/ua/protocol/data_value.h>
 
 #include <memory>
 #include <vector>
@@ -31,30 +31,6 @@ namespace OpcUa
       std::string ServerURI;
       std::string EndpointURL;
       Duration Timeout;
-    };
-
-    struct AttributeValue
-    {
-      DataValue Value;
-      DiagnosticInfo Info;
-    };
-
-    struct ReadParameters
-    {
-    };
-
-    struct WriteParameters
-    {
-    };
-
-    struct WriteResult
-    {
-    };
-
-    class AttributeServices
-    {
-      virtual std::vector<AttributeValue> Read(const ReadParameters& filter) = 0;
-      virtual std::vector<WriteResult> Write(const WriteParameters& filter) = 0;
     };
 
 

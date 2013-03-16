@@ -105,6 +105,7 @@ libuaclient_a_OBJECTS = $(am_libuaclient_a_OBJECTS)
 am__EXEEXT_1 = libuaclient_test$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 am_libuaclient_test_OBJECTS =  \
+	libuaclient_test-computer_attribute.$(OBJEXT) \
 	libuaclient_test-computer_connect.$(OBJEXT) \
 	libuaclient_test-computer_endpoints.$(OBJEXT) \
 	libuaclient_test-computer_session.$(OBJEXT) \
@@ -314,7 +315,8 @@ libuaclient_a_SOURCES = \
   src/uri_facade.h \
   src/computer.cpp \
   src/binary_connection.cpp \
-  src/stream_computer.h
+  src/stream_computer.h \
+  src/stream_attribute.h
 
 libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
 @BUILD_UA_CMD_TRUE@opcua_SOURCES = src/main.cpp
@@ -326,6 +328,7 @@ TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI)
 # tests/binary_handshake.cpp
 # tests/thread_test.cpp
 libuaclient_test_SOURCES = \
+ tests/computer_attribute.cpp \
  tests/computer_connect.cpp \
  tests/computer_endpoints.cpp \
  tests/computer_session.cpp \
@@ -490,6 +493,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_a-socket_channel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_attribute.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_connect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_endpoints.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_session.Po@am__quote@
@@ -558,6 +562,20 @@ libuaclient_a-binary_connection.obj: src/binary_connection.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='libuaclient_a-binary_connection.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
+
+libuaclient_test-computer_attribute.o: tests/computer_attribute.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_attribute.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_attribute.Tpo -c -o libuaclient_test-computer_attribute.o `test -f 'tests/computer_attribute.cpp' || echo '$(srcdir)/'`tests/computer_attribute.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_attribute.Tpo $(DEPDIR)/libuaclient_test-computer_attribute.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_attribute.cpp' object='libuaclient_test-computer_attribute.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_attribute.o `test -f 'tests/computer_attribute.cpp' || echo '$(srcdir)/'`tests/computer_attribute.cpp
+
+libuaclient_test-computer_attribute.obj: tests/computer_attribute.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_attribute.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_attribute.Tpo -c -o libuaclient_test-computer_attribute.obj `if test -f 'tests/computer_attribute.cpp'; then $(CYGPATH_W) 'tests/computer_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_attribute.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_attribute.Tpo $(DEPDIR)/libuaclient_test-computer_attribute.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_attribute.cpp' object='libuaclient_test-computer_attribute.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_attribute.obj `if test -f 'tests/computer_attribute.cpp'; then $(CYGPATH_W) 'tests/computer_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_attribute.cpp'; fi`
 
 libuaclient_test-computer_connect.o: tests/computer_connect.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_connect.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_connect.Tpo -c -o libuaclient_test-computer_connect.o `test -f 'tests/computer_connect.cpp' || echo '$(srcdir)/'`tests/computer_connect.cpp

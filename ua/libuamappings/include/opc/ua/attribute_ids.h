@@ -11,6 +11,8 @@
 #ifndef __OPC_UA_BINARY_ATTRIBUTE_IDENTIFIERS
 #define __OPC_UA_BINARY_ATTRIBUTE_IDENTIFIERS
 
+#include <stdint.h>
+
 namespace OpcUa
 {
   enum class AttributeID : uint32_t
