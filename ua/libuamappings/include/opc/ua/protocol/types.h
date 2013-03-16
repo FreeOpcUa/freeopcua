@@ -90,6 +90,8 @@ namespace OpcUa
 
     EV_SERVER_INDEX_FLAG = 0x40,
     EV_NAMESPACE_URI_FLAG = 0x80,
+
+    EV_VALUE_MASK = 0x3f,
   };
 
   struct NodeID
