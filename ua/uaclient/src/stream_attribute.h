@@ -42,7 +42,7 @@ namespace OpcUa
         ReadRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
         request.MaxAge = 0;
-        request.TimestampsType = TimestampsToReturn::NEITHER;
+        request.TimestampsType = TimestampsToReturn::SERVER;
         request.AttributesToRead.push_back(value);
        
         Stream << request << OpcUa::Binary::flush;

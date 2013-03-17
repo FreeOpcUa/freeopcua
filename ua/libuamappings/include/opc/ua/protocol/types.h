@@ -60,7 +60,7 @@ namespace OpcUa
   struct QualifiedName
   {
     uint16_t NamespaceIndex;
-    std::string Name;
+    std::string Name; // TODO rename to Text
 
     QualifiedName()
       : NamespaceIndex(0)
@@ -76,7 +76,7 @@ namespace OpcUa
   {
     uint8_t Encoding;
     std::string Locale;
-    std::string Text;
+    std::string Text; // TODO rename to Data
   };
 
   enum NodeIDEncoding : uint8_t

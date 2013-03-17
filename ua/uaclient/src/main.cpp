@@ -30,6 +30,10 @@ namespace
   const char* OPTION_NODE_ID_TWO_BYTE = "node-id-two-byte";
   const char* OPTION_NODE_ID_STRING = "node-id-string";
 
+  
+  const char* OPTION_READ = "read";
+  const char* OPTION_ATTRIBUTE = "attribute";
+
   struct Tabs
   {
     Tabs(unsigned num = 0)
@@ -172,6 +176,9 @@ namespace
 
     return result;
   }
+
+
+
 
   void Print(const OpcUa::NodeID& nodeID, const Tabs& tabs)
   {
@@ -360,6 +367,159 @@ namespace
     }
   }
 
+  void Print(const OpcUa::Variant& var, const Tabs& tabs)
+  {
+    switch (var.Type)
+    {
+      case VariantType::BOOLEAN:
+      {
+        std::cout << tabs << "boolean: ";
+        for (auto val : var.Value.Boolean) std::cout << val << " "; 
+        break;
+      }
+      case VariantType::SBYTE:
+      {
+        std::cout << tabs << "signed byte: ";
+        for (auto val : var.Value.SByte) std::cout << (int)val << " "; 
+        break;
+      }
+      case VariantType::BYTE:
+      {
+        std::cout << tabs << "byte: ";
+        for (auto val : var.Value.Byte) std::cout << (unsigned)val << " "; 
+        break;
+      }
+      case VariantType::INT16:
+      {
+        std::cout << tabs << "int16: ";
+        for (auto val : var.Value.Int16) std::cout << val << " "; 
+        break;
+      }
+      case VariantType::UINT16:
+      {
+        std::cout << tabs << "unsigned int16: ";
+        for (auto val : var.Value.UInt16) std::cout << val << " "; 
+        break;
+      }
+      case VariantType::INT32:
+      {
+        std::cout << tabs << "int32: ";
+        for (auto val : var.Value.Int32) std::cout << val << " "; 
+        break;
+      }
+      case VariantType::UINT32:
+      {
+        std::cout << tabs << "unsigned int32: ";
+        for (auto val : var.Value.UInt32) std::cout << val << " "; 
+        break;
+      }
+
+      case VariantType::INT64:
+      {
+        std::cout << tabs << "int64: ";
+        for (auto val : var.Value.Int64) std::cout << val << " "; 
+        break;
+      }
+
+
+      case VariantType::UINT64:
+      {
+        std::cout << tabs << "unsigned int64: ";
+        for (auto val : var.Value.UInt64) std::cout << val << " "; 
+        break;
+      }
+
+
+      case VariantType::FLOAT:
+      {
+        std::cout << tabs << "float: ";
+        for (auto val : var.Value.Float) std::cout << val << " "; 
+        break;
+      }
+
+
+      case VariantType::DOUBLE:
+      {
+        std::cout << tabs << "double: ";
+        for (auto val : var.Value.Double) std::cout << val << " "; 
+        break;
+      }
+
+
+      case VariantType::STRING:
+      {
+        std::cout << tabs << "string: ";
+        for (auto val : var.Value.String) std::cout << val << " "; 
+        break;
+      }
+
+
+      case VariantType::EXPANDED_NODE_ID: 
+      case VariantType::NODE_ID:
+      {
+        std::cout << tabs << "NodeID: " << std::endl;
+        for (auto val : var.Value.Node) Print(val, Tabs(tabs.Num + 2)); 
+        break;
+      }
+
+      case VariantType::QUALIFIED_NAME:
+      {
+        std::cout << tabs << "Name: ";
+        for (auto val : var.Value.Name) std::cout << val.NamespaceIndex << ":" << val.Name << " ";
+        break;
+      }
+
+      case VariantType::LOCALIZED_TEXT:   
+      {
+        std::cout << tabs << "Text: ";
+        for (auto val : var.Value.Text) std::cout << val.Locale << ":" << val.Text << " ";
+        break;
+      }
+
+
+      case VariantType::DATE_TIME:
+      case VariantType::GUID:            
+      case VariantType::BYTE_STRING:    
+      case VariantType::XML_ELEMENT:     
+      case VariantType::STATUS_CODE:     
+      case VariantType::DIAGNOSTIC_INFO: 
+      case VariantType::VARIANT:         
+      case VariantType::DATA_VALUE:       
+      case VariantType::NUL:
+      case VariantType::EXTENSION_OBJECT:
+        break;
+      default:
+        throw std::logic_error("Unknown variant type.");
+    }
+   std::cout << std::endl;
+  }
+
+  void Print(const DataValue& value, const Tabs& tabs)
+  {
+    const Tabs tabs1(tabs.Num + 2);
+    if (value.Encoding & DATA_VALUE_STATUS_CODE)
+    {
+      std::cout << tabs << "Status code:" << std::endl;
+      std::cout << tabs1 << "0x" << std::hex << value.Status << std::endl;
+    }
+    if (value.Encoding & DATA_VALUE)
+    {
+      std::cout << tabs << "Value:" << std::endl;
+      Print(value.Value, tabs1);
+    }
+  }
+
+
+  void Read(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
+  {
+    OpcUa::Remote::ReadParameters params;
+    params.Node = nodeID;
+    params.Attribute = attributeID;
+    const DataValue value = attributes.Read(params);
+    std::cout << "data value:" << std::endl;
+    Print(value, Tabs(2));
+  }
+
   uint16_t GetNamespaceIndexOptionValue(const po::variables_map& vm)
   {
     if (vm.count(OPTION_NAMESPACE_INDEX))
@@ -391,6 +551,75 @@ namespace
     return nodeID;
   }
 
+  OpcUa::AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
+  {
+    const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
+    if (name == "node id")
+    {
+      return OpcUa::AttributeID::NODE_ID;
+    }
+    if (name == "node class")
+    {
+      return OpcUa::AttributeID::NODE_ID;
+    }
+    if (name == "browse name")
+    {
+      return OpcUa::AttributeID::BROWSE_NAME;
+    }
+    if (name == "display name")
+    {
+      return OpcUa::AttributeID::DISPLAY_NAME;
+    }
+    if (name == "description")
+    {
+      return OpcUa::AttributeID::DISPLAY_NAME;
+    }
+    if (name == "write mask")
+    {
+      return OpcUa::AttributeID::WRITE_MASK;
+    }
+    if (name == "user write mask")
+    {
+      return OpcUa::AttributeID::USER_WRITE_MASK;
+    }
+    if (name == "is abstract")
+    {
+      return OpcUa::AttributeID::IS_ABSTRACT;
+    }
+    if (name == "symmetric")
+    {
+      return OpcUa::AttributeID::SYMMETRIC;
+    }
+    if (name == "inverse name")
+    {
+      return OpcUa::AttributeID::INVERSE_NAME;
+    }
+    if (name == "value")
+    {
+      return OpcUa::AttributeID::VALUE;
+    }
+    if (name == "data type")
+    {
+      return OpcUa::AttributeID::DATA_TYPE;
+    }
+
+/*
+    CONTAINS_NO_LOOPS = 11,
+    EVENT_NOTIFIER = 12,
+    DATA_TYPE = 14,
+    VALUE_RANK = 15,
+    ARRAY_DIMENSIONS = 16,
+    ACCESS_LEVEL = 17,
+    USER_ACCESS_LEVEL = 18,
+    MINIMUM_SAMPLING_INTERVAL = 19,
+    HISTORIZING = 20,
+    EXECUTABLE = 21,
+    USER_EXECUTABLE = 22
+*/
+    throw std::logic_error(std::string("Unknown attribute: ") + name);
+  }
+
+
   void Process(int argc, char** argv)
   {
     // Declare the supported options.
@@ -399,10 +628,12 @@ namespace
       (OPTION_HELP, "produce help message")
       (OPTION_GET_ENDPOINTS, "List endpoints endpoints.")
       (OPTION_BROWSE, "browse command.")
+      (OPTION_READ, "read command.")
       (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_NODE_ID_TWO_BYTE, po::value<unsigned>(), "Two byte NodeId.")
       (OPTION_NODE_ID_STRING, po::value<std::string>(), "string NodeId.")
-      (OPTION_NAMESPACE_INDEX, po::value<uint16_t>(), "Namespace index of the node.");
+      (OPTION_NAMESPACE_INDEX, po::value<uint16_t>(), "Namespace index of the node.")
+      (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -440,6 +671,12 @@ namespace
       const OpcUa::NodeID nodeID = GetNodeIDOptionValue(vm);
       Print(nodeID, Tabs(0));
       Browse(*computer->Views(), nodeID);
+    }
+    if (vm.count(OPTION_READ))
+    {
+      const OpcUa::NodeID nodeID = GetNodeIDOptionValue(vm);
+      const OpcUa::AttributeID attributeID = GetAttributeIDOptionValue(vm);
+      Read(*computer->Attributes(), nodeID, attributeID);
     }
 
     computer->CloseSession();
