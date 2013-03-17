@@ -72,4 +72,19 @@ TEST_F(Attribute, Read)
   ASSERT_TRUE(value.Encoding & DATA_VALUE);
 }
 
+TEST_F(Attribute, Write)
+{
+  using namespace OpcUa;
+  ASSERT_TRUE(static_cast<bool>(Service));
+
+
+  Remote::WriteParameters params;
+  params.Node.Encoding = EV_TWO_BYTE;
+  params.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
+  params.Attribute = AttributeID::BROWSE_NAME;
+
+  const StatusCode code = Service->Write(params);
+  ASSERT_NE(code, 0);
+}
+
 

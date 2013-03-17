@@ -53,9 +53,23 @@ namespace OpcUa
         return response.Results.empty() ? DataValue() : response.Results.at(0);
       }
 
-      virtual std::vector<Remote::WriteResult> Write(const Remote::WriteParameters& filter)
+      virtual OpcUa::StatusCode Write(const Remote::WriteParameters& params)
       {
-        return std::vector<Remote::WriteResult>();
+        WriteRequest request;
+        request.Header.SessionAuthenticationToken = AuthenticationToken;
+
+        WriteValue value;
+        value.Node = params.Node;
+        value.Attribute = params.Attribute;
+        value.Data = params.Value;
+        request.NodesToWrite.push_back(value);
+
+        Stream << request << OpcUa::Binary::flush;
+
+        WriteResponse response;
+        Stream >> response;
+
+        return response.StatusCodes.at(0);
       }
 
     private:

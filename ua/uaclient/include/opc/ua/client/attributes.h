@@ -35,15 +35,11 @@ namespace OpcUa
       DataValue Value;
     };
 
-    struct WriteResult
-    {
-    };
-
     class AttributeServices
     {
     public:
       virtual DataValue Read(const ReadParameters& filter) const = 0;
-      virtual std::vector<WriteResult> Write(const WriteParameters& filter) = 0;
+      virtual StatusCode Write(const WriteParameters& filter) = 0;
     };
 
   } // namespace Remote
