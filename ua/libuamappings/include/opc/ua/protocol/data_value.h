@@ -41,6 +41,13 @@ namespace OpcUa
        , ServerPicoseconds(0)
      {
      }
+
+     DataValue& operator= (const Variant& value)
+     {
+       Value = value;
+       Encoding |= DATA_VALUE;
+       return *this;
+     }
    };
 
 } // namespace OpcUa

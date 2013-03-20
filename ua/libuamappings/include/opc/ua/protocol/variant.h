@@ -15,6 +15,7 @@
 #include <opc/ua/protocol/types.h>
 #include <string>
 
+#include <boost/variant.hpp>
 
 namespace OpcUa
 {
@@ -80,8 +81,9 @@ namespace OpcUa
     std::vector<DataValue> Value;
     std::vector<Variant> Variants;
     std::vector<DiagnosticInfo> Diagnostic;
-  };
 
+    VariantType GetType() const;
+  };
 
   struct Variant
   {
@@ -96,6 +98,7 @@ namespace OpcUa
     bool IsNul() const;
     Variant();
     Variant(const Variant& var);
+
     Variant& operator= (const Variant& variant);
   };
 } // namespace OpcUa

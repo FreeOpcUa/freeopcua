@@ -217,6 +217,108 @@ namespace OpcUa
     return isNul;
   }
 
+  VariantType VariantValue::GetType() const
+  {
+    if (!Boolean.empty())
+    {
+      return VariantType::BOOLEAN;
+    }
+    if (!SByte.empty())
+    {
+      return VariantType::SBYTE;
+    }
+
+    if (!Byte.empty())
+    {
+      return VariantType::BYTE;
+    }
+
+    if (!UInt16.empty())
+    {
+      return VariantType::UINT16;
+    }
+
+    if (!Int16.empty())
+    {
+      return VariantType::INT16;
+    }
+
+    if (!UInt32.empty())
+    {
+      return VariantType::UINT32;
+    }
+
+    if (!Int32.empty())
+    {
+      return VariantType::INT32;
+    }
+
+    if (!UInt64.empty())
+    {
+      return VariantType::UINT64;
+    }
+
+    if (!Int64.empty())
+    {
+      return VariantType::INT64;
+    }
+
+    if (!Float.empty())
+    {
+      return VariantType::FLOAT;
+    }
+
+    if (!Double.empty())
+    {
+      return VariantType::DOUBLE;
+    }
+    if (!Time.empty())
+    {
+      return VariantType::DATE_TIME;
+    }
+    if (!Guids.empty())
+    {
+      return VariantType::GUID;
+    }
+    if (!Guids.empty())
+    {
+      return VariantType::GUID;
+    }
+    if (!ByteString.empty())
+    {
+      return VariantType::BYTE_STRING;
+    }
+    if (!Node.empty())
+    {
+      return VariantType::EXPANDED_NODE_ID;
+    }
+    if (!StatusCode.empty())
+    {
+      return VariantType::STATUS_CODE;
+    }
+    if (!Name.empty())
+    {
+      return VariantType::QUALIFIED_NAME;
+    }
+    if (!Text.empty())
+    {
+      return VariantType::LOCALIZED_TEXT;
+    }
+    if (!Value.empty())
+    {
+      return VariantType::DATA_VALUE;
+    }
+    if (!Variants.empty())
+    {
+      return VariantType::VARIANT;
+    }
+    if (!Diagnostic.empty())
+    {
+      return VariantType::DIAGNOSTIC_INFO;
+    }
+    return VariantType::NUL;
+  }
+
 
   namespace Binary
   {
