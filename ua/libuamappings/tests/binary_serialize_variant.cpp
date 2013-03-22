@@ -215,7 +215,6 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_DIMENSIONS)
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
 }
-/*
 TEST(Variant, InitializeNUL)
 {
   const OpcUa::Variant var;
@@ -231,6 +230,17 @@ TEST(Variant, InitializeWithBoolValue)
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
+
+TEST(Variant, AssignBoolValue)
+{
+  OpcUa::Variant var;
+  var = true;
+  ASSERT_EQ(var.Type, OpcUa::VariantType::BOOLEAN);
+  ASSERT_FALSE(var.IsArray());
+  ASSERT_FALSE(var.IsNul());
+}
+// TODO add tests for assign and initializing of variant with different types
+/*
 
 TEST(Variant, InitializeWithBoolVector)
 {

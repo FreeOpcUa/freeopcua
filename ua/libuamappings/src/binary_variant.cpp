@@ -176,6 +176,31 @@ namespace
 
 namespace OpcUa
 {
+
+    VariantValue::VariantValue(bool val) : Boolean(1, val) {}
+    VariantValue::VariantValue(int8_t val) : SByte{val} {}
+    VariantValue::VariantValue(uint8_t val) :  Byte{val} {}
+    VariantValue::VariantValue(int16_t val) : Int16{val} {}
+    VariantValue::VariantValue(uint16_t val) : UInt16{val} {}
+    VariantValue::VariantValue(int32_t val) : Int32{val} {}
+    VariantValue::VariantValue(uint32_t val) : UInt32{val} {}
+    VariantValue::VariantValue(int64_t val) : Int64{val} {}
+    VariantValue::VariantValue(uint64_t val) : UInt64{val} {}
+    VariantValue::VariantValue(float val) : Float{val} {}
+    VariantValue::VariantValue(double val) : Double{val} {}
+    VariantValue::VariantValue(const std::string& val) : String{val} {}
+//    VariantValue::VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue::VariantValue(const Guid& val) : Guids{val} {}
+    VariantValue::VariantValue(const std::vector<uint8_t> val) : ByteString{val} {}
+    VariantValue::VariantValue(const NodeID& val) : Node{val} {}
+//    VariantValue(uint32_t val) : StatusCode{val} {} // TODO create separate type for Status code
+    VariantValue::VariantValue(const QualifiedName& val) : Name{val} {}
+    VariantValue::VariantValue(const LocalizedText& val) : Text{val} {}
+    VariantValue::VariantValue(const DataValue& val) : Value{val} {}
+    VariantValue::VariantValue(const Variant& val) : Variants{val} {}
+    VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{val} {}
+
+
   //---------------------------------------------------
   // Variant
   //---------------------------------------------------
@@ -397,7 +422,6 @@ namespace OpcUa
         DeserializeContainer(*this, var.Dimensions);
       }      
     }
-
   } // namespace Binary
 } // namespace OpcUa
 

@@ -83,13 +83,40 @@ namespace OpcUa
     std::vector<DiagnosticInfo> Diagnostic;
 
     VariantType GetType() const;
+
+    VariantValue()
+    {
+    }
+
+    explicit VariantValue(bool val);
+    explicit VariantValue(int8_t val);
+    explicit VariantValue(uint8_t val);
+    explicit VariantValue(int16_t val);
+    explicit VariantValue(uint16_t val);
+    explicit VariantValue(int32_t val);
+    explicit VariantValue(uint32_t val);
+    explicit VariantValue(int64_t val);
+    explicit VariantValue(uint64_t val);
+    explicit VariantValue(float val);
+    explicit VariantValue(double val);
+    explicit VariantValue(const std::string& val);
+//    VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    explicit VariantValue(const Guid& val);
+    explicit VariantValue(const std::vector<uint8_t> val);
+    explicit VariantValue(const NodeID& val);
+//    VariantValue(uint32_t val) : StatusCode{val} {} // TODO create separate type for Status code
+    explicit VariantValue(const QualifiedName& val);
+    explicit VariantValue(const LocalizedText& val);
+    explicit VariantValue(const DataValue& val);
+    explicit VariantValue(const Variant& val);
+    explicit VariantValue(const DiagnosticInfo& val);
   };
 
   struct Variant
   {
   public:
-    VariantType Type;
     VariantValue Value;
+    VariantType Type;
     std::vector<uint32_t> Dimensions;
 
     /// @brief test if holded value is an array.
@@ -98,6 +125,14 @@ namespace OpcUa
     bool IsNul() const;
     Variant();
     Variant(const Variant& var);
+
+    template <typename T>
+    Variant(const T& value)
+      : Value(value)
+      , Type(VariantType::NUL)
+    {
+      Type = Value.GetType();
+    }
 
     Variant& operator= (const Variant& variant);
   };
