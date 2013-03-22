@@ -1,38 +1,24 @@
-/// @author Alexander Rykovanov 2012
+/// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
 /// @brief Remote Computer implementaion.
-/// @license GNU LGPL
+/// @license GNU GPL
 ///
-/// Distributed under the GNU LGPL License
+/// Distributed under the GNU GPL License
 /// (See accompanying file LICENSE or copy at 
-/// http://www.gnu.org/licenses/lgpl.html)
+/// http://www.gnu.org/licenses/gpl.html)
 ///
 
+
+#include "opcua_options.h"
 
 #include <opc/ua/client/computer.h>
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/parsers.hpp>
-#include <boost/program_options/variables_map.hpp>
 
+#include <stdexcept>
 
 namespace
 {
 
   using namespace OpcUa;
-  namespace po = boost::program_options;
-
-  const char* OPTION_HELP = "help";
-  const char* OPTION_GET_ENDPOINTS = "get-endpoints";
-  const char* OPTION_SERVER_URI = "uri";
-
-  const char* OPTION_BROWSE = "browse";
-  const char* OPTION_NAMESPACE_INDEX = "namespace-index";
-  const char* OPTION_NODE_ID_TWO_BYTE = "node-id-two-byte";
-  const char* OPTION_NODE_ID_STRING = "node-id-string";
-
-  
-  const char* OPTION_READ = "read";
-  const char* OPTION_ATTRIBUTE = "attribute";
 
   struct Tabs
   {
@@ -336,8 +322,6 @@ namespace
 
     std::cout << tabs << "Type definition ID:" << std::endl;
     Print(desc.TypeDefinition, tabs1);
-
-
   }
 
   void Browse(OpcUa::Remote::ViewServices& view, OpcUa::NodeID nodeID)
@@ -520,164 +504,60 @@ namespace
     Print(value, Tabs(2));
   }
 
-  uint16_t GetNamespaceIndexOptionValue(const po::variables_map& vm)
+  void Write(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
   {
-    if (vm.count(OPTION_NAMESPACE_INDEX))
-    {
-      return vm[OPTION_NAMESPACE_INDEX].as<uint16_t>();
-    }
-    return 0;
-  }
-
-  OpcUa::NodeID GetNodeIDOptionValue(const po::variables_map& vm)
-  {
-    OpcUa::NodeID nodeID;
-    if (vm.count(OPTION_NODE_ID_TWO_BYTE))
-    {
-      nodeID.Encoding = OpcUa::EV_TWO_BYTE;
-      nodeID.TwoByteData.Identifier = vm[OPTION_NODE_ID_TWO_BYTE].as<unsigned>();
-    }
-    else if (vm.count(OPTION_NODE_ID_STRING))
-    {
-      nodeID.Encoding = OpcUa::EV_STRING;
-      nodeID.StringData.NamespaceIndex = GetNamespaceIndexOptionValue(vm);
-      nodeID.StringData.Identifier = vm[OPTION_NODE_ID_STRING].as<std::string>();
-    }
-    else
-    {
-      nodeID.Encoding = OpcUa::EV_TWO_BYTE;
-      nodeID.TwoByteData.Identifier = static_cast<uint8_t>(OpcUa::ObjectID::RootFolder);
-    }
-    return nodeID;
-  }
-
-  OpcUa::AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
-  {
-    const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
-    if (name == "node id")
-    {
-      return OpcUa::AttributeID::NODE_ID;
-    }
-    if (name == "node class")
-    {
-      return OpcUa::AttributeID::NODE_ID;
-    }
-    if (name == "browse name")
-    {
-      return OpcUa::AttributeID::BROWSE_NAME;
-    }
-    if (name == "display name")
-    {
-      return OpcUa::AttributeID::DISPLAY_NAME;
-    }
-    if (name == "description")
-    {
-      return OpcUa::AttributeID::DISPLAY_NAME;
-    }
-    if (name == "write mask")
-    {
-      return OpcUa::AttributeID::WRITE_MASK;
-    }
-    if (name == "user write mask")
-    {
-      return OpcUa::AttributeID::USER_WRITE_MASK;
-    }
-    if (name == "is abstract")
-    {
-      return OpcUa::AttributeID::IS_ABSTRACT;
-    }
-    if (name == "symmetric")
-    {
-      return OpcUa::AttributeID::SYMMETRIC;
-    }
-    if (name == "inverse name")
-    {
-      return OpcUa::AttributeID::INVERSE_NAME;
-    }
-    if (name == "value")
-    {
-      return OpcUa::AttributeID::VALUE;
-    }
-    if (name == "data type")
-    {
-      return OpcUa::AttributeID::DATA_TYPE;
-    }
-
-/*
-    CONTAINS_NO_LOOPS = 11,
-    EVENT_NOTIFIER = 12,
-    DATA_TYPE = 14,
-    VALUE_RANK = 15,
-    ARRAY_DIMENSIONS = 16,
-    ACCESS_LEVEL = 17,
-    USER_ACCESS_LEVEL = 18,
-    MINIMUM_SAMPLING_INTERVAL = 19,
-    HISTORIZING = 20,
-    EXECUTABLE = 21,
-    USER_EXECUTABLE = 22
-*/
-    throw std::logic_error(std::string("Unknown attribute: ") + name);
+    OpcUa::Remote::WriteParameters params;
+    params.Node = nodeID;
+    params.Attribute = attributeID;
+    params.Value = value;
+    std::cout << "Status code: 0x" << std::hex << attributes.Write(params) << std::endl;
   }
 
 
   void Process(int argc, char** argv)
   {
-    // Declare the supported options.
-    po::options_description desc("Parameters");
-    desc.add_options()
-      (OPTION_HELP, "produce help message")
-      (OPTION_GET_ENDPOINTS, "List endpoints endpoints.")
-      (OPTION_BROWSE, "browse command.")
-      (OPTION_READ, "read command.")
-      (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
-      (OPTION_NODE_ID_TWO_BYTE, po::value<unsigned>(), "Two byte NodeId.")
-      (OPTION_NODE_ID_STRING, po::value<std::string>(), "string NodeId.")
-      (OPTION_NAMESPACE_INDEX, po::value<uint16_t>(), "Namespace index of the node.")
-      (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.");
+    OpcUa::CommandLine cmd(argc, argv);
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);    
-
-    if (vm.count(OPTION_HELP)) 
-    {
-      desc.print(std::cout);
-      return;
-    }
-
-    if (!vm.count(OPTION_SERVER_URI))
-    {
-      throw po::invalid_command_line_syntax(OPTION_SERVER_URI, po::invalid_command_line_syntax::missing_parameter);
-    }
-
-    const std::string serverUri = vm[OPTION_SERVER_URI].as<std::string>();
-    std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverUri);
+    const std::string serverURI = cmd.GetServerURI();
+    std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverURI);
 
     OpcUa::Remote::SessionParameters session;
     session.ClientDescription.Name.Text = "opcua client";
     session.SessionName = "opua command line";
-    session.EndpointURL = serverUri;
+    session.EndpointURL = serverURI;
     session.Timeout = 1000;
 
     computer->CreateSession(session);
     computer->ActivateSession();
 
-    if (vm.count(OPTION_GET_ENDPOINTS)) 
+    if (cmd.IsGetEndpointsOperation()) 
     {
       PrintEndpoints(*computer);
     }
-    if (vm.count(OPTION_BROWSE)) 
+    else if (cmd.IsBrowseOperation())
     {
-      const OpcUa::NodeID nodeID = GetNodeIDOptionValue(vm);
+      const OpcUa::NodeID nodeID = cmd.GetNodeID();
       Print(nodeID, Tabs(0));
       Browse(*computer->Views(), nodeID);
     }
-    if (vm.count(OPTION_READ))
+    else if (cmd.IsReadOperation())
     {
-      const OpcUa::NodeID nodeID = GetNodeIDOptionValue(vm);
-      const OpcUa::AttributeID attributeID = GetAttributeIDOptionValue(vm);
+      const OpcUa::NodeID nodeID = cmd.GetNodeID();
+      const OpcUa::AttributeID attributeID = cmd.GetAttribute();
       Read(*computer->Attributes(), nodeID, attributeID);
     }
+    else if (cmd.IsWriteOperation())
+    {
+      const OpcUa::NodeID nodeID = cmd.GetNodeID();
+      const OpcUa::AttributeID attributeID = cmd.GetAttribute();
+      const OpcUa::Variant value = cmd.GetValue();
+      Write(*computer->Attributes(), nodeID, attributeID, value);
+    }
+    else
+    {
+      std::cout << "nothing to do" << std::endl;
+    }
+
 
     computer->CloseSession();
   }
