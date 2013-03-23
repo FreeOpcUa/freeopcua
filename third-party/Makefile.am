@@ -1,3 +1,7 @@
+EXTRA_DIST = \
+  patch/uri/utils.h \
+  patch/uri/query.cpp \
+  patch/uri/utils.cpp
 
 gmock-1.6.0.zip:
 	test -e gmock-1.6.0.zip || wget http://googlemock.googlecode.com/files/gmock-1.6.0.zip
@@ -21,7 +25,7 @@ uripp-1.0.0.tar.gz:
 	test -e uripp-1.0.0.tar.gz || wget http://citylan.dl.sourceforge.net/project/uripp/uripp/1.0.0/uripp-1.0.0.tar.gz
 
 uripp-1.0.0: uripp-1.0.0.tar.gz
-	test -e uripp-1.0.0 || (tar -xf uripp-1.0.0.tar.gz && cp patch/uri/* uripp-1.0.0/src && cd uripp-1.0.0 && autoreconf -f -i && ./configure --disable-shared && cd ..)
+	test -e uripp-1.0.0 || (tar -xf uripp-1.0.0.tar.gz && cp -f patch/uri/* uripp-1.0.0/src && cd uripp-1.0.0 && autoreconf -f -i && ./configure --disable-shared && cd ..)
 
 uri: uripp-1.0.0
 	test -e uri || ln -s uripp-1.0.0 uri
