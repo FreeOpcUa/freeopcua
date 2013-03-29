@@ -613,9 +613,9 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+TEST_SERVER_URI
 BUILD_UA_CMD_FALSE
 BUILD_UA_CMD_TRUE
-TEST_SERVER_URI
 UA_MAPPING_INCLUDES
 UA_MAPPING_LIBS
 URI_INCLUDES
@@ -2806,7 +2806,7 @@ fi
 
 
 # Define the identity of the package.
- PACKAGE=libuaclient
+ PACKAGE=opcua
  VERSION=0.1.0
 
 
@@ -15218,6 +15218,15 @@ $as_echo "$as_me: Building of UA client enabled." >&6;}
 fi
 
 
+ if test x$enable_ua_cmd = xyes; then
+  BUILD_UA_CMD_TRUE=
+  BUILD_UA_CMD_FALSE='#'
+else
+  BUILD_UA_CMD_TRUE='#'
+  BUILD_UA_CMD_FALSE=
+fi
+
+
 
 # Check whether --with-testserver-uri was given.
 if test "${with_testserver_uri+set}" = set; then :
@@ -15230,14 +15239,6 @@ $as_echo "$as_me: Test server uri: $TEST_SERVER_URI" >&6;}
 fi
 
 
-
- if test x$enable_ua_cmd = xyes; then
-  BUILD_UA_CMD_TRUE=
-  BUILD_UA_CMD_FALSE='#'
-else
-  BUILD_UA_CMD_TRUE='#'
-  BUILD_UA_CMD_FALSE=
-fi
 
 
 

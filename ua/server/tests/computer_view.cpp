@@ -54,7 +54,10 @@ protected:
   virtual void TearDown()
   {
     Service = std::unique_ptr<ViewServices>();
-    Server->CloseSession();
+    if (Server)
+    {
+      Server->CloseSession();
+    }
     Server.reset();
   }
 

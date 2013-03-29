@@ -24,7 +24,7 @@ AC_CONFIG_SUBDIRS([
  opctestlinux 
  libtestopcserver 
  ua/libuamappings 
- ua/uaclient])
+ ua/server])
 
 AC_CONFIG_FILES([Makefile])
 

@@ -29,6 +29,10 @@ protected:
   virtual void SetUp()
   {
     Server = Connect(GetEndpoint());
+    if (!Server)
+    {
+      return;
+    }
 
     SessionParameters session;
     session.ClientDescription.Name.Text = "opcua view service test";
@@ -45,8 +49,11 @@ protected:
   virtual void TearDown()
   {
     Service = std::unique_ptr<AttributeServices>();
-    Server->CloseSession();
-    Server.reset();
+    if (Server)
+    {
+      Server->CloseSession();
+      Server.reset();
+    }
   }
 
 protected:

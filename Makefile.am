@@ -16,7 +16,7 @@ SUBDIRS = \
           opctestlinux \
           libtestopcserver \
           ua/libuamappings \
-          ua/uaclient
+          ua/server
 
 EXTRA_DIST = configure.main
 
