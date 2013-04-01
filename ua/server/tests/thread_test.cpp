@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <src/thread.h>
+#include <internal/thread.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -18,7 +18,7 @@ using namespace testing;
 namespace
 {
 
-  class ThreadObserver : public OpcUa::ThreadObserver
+  class ThreadObserver : public ::OpcUa::Internal::ThreadObserver
   {
   public:
     typedef NiceMock<ThreadObserver> Mock;
@@ -43,7 +43,7 @@ TEST(OpcUaThread, CallsOnSuccess)
   EXPECT_CALL(observer, OnSuccess()).Times(1);
   EXPECT_CALL(observer, OnError(_)).Times(0);
 
-  OpcUa::Thread thread(std::function<void()>(DoNothing), observer);
+  OpcUa::Internal::Thread thread(std::function<void()>(DoNothing), observer);
   thread.Join();  
 }
 
@@ -53,7 +53,7 @@ TEST(OpcUaThread, CallsOnError)
   EXPECT_CALL(observer, OnSuccess()).Times(0);
   EXPECT_CALL(observer, OnError(_)).Times(1);
 
-  OpcUa::Thread thread(std::function<void()>(ThrowsException), observer);
+  OpcUa::Internal::Thread thread(std::function<void()>(ThrowsException), observer);
   thread.Join();  
 }
 

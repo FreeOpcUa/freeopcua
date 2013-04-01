@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_CLIENT_COMPUTER_H
-#define OPC_UA_CLIENT_COMPUTER_H
+#ifndef OPC_UA_COMPUTER_H
+#define OPC_UA_COMPUTER_H
 
-#include <opc/ua/client/attributes.h>
-#include <opc/ua/client/endpoints.h>
-#include <opc/ua/client/view.h>
+#include <opc/ua/attributes.h>
+#include <opc/ua/endpoints.h>
+#include <opc/ua/view.h>
 
 #include <memory>
 #include <vector>

@@ -9,7 +9,7 @@
 ///
 
 
-#include <opc/ua/client/view.h>
+#include <opc/ua/view.h>
 #include <opc/ua/protocol/binary/stream.h>
 
 #ifndef OPC_UA_CLIENT_INTERNAL_STREAM_VIEW_H

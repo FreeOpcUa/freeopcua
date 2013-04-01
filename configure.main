@@ -16,5 +16,6 @@ $ROOT_DIRECTORY/configure \
   --with-opc-test=$ROOT_DIRECTORY/opctestlinux \
   --enable-linux-com \
   --enable-ua-cmd \
+  --enable-ua-server \
   $@
 

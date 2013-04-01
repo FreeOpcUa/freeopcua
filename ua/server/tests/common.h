@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_TESTS_COMMON_H__
 #define __OPC_UA_TESTS_COMMON_H__
 
-#include <uri_facade.h>
+#include <internal/uri_facade.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -23,7 +23,7 @@ inline std::string GetHost()
 {
   if (const char* uri = getenv("TEST_SERVER_URI"))
   {
-    return OpcUa::Uri(uri).Host();
+    return OpcUa::Internal::Uri(uri).Host();
   }
   return "localhost";
 }
@@ -32,7 +32,7 @@ inline int GetPort()
 {
   if (const char* uri = getenv("TEST_SERVER_URI"))
   {
-    return OpcUa::Uri(uri).Port();
+    return OpcUa::Internal::Uri(uri).Port();
   }
   return 4841;
 }

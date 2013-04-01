@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "uri_facade.h"
+#include "internal/uri_facade.h"
 #include "stream_computer.h"
 
 #include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/protocol/binary/stream.h>
-#include <opc/ua/client/computer.h>
+#include <opc/ua/client/remote_computer.h>
 #include <opc/ua/client/remote_connection.h>
 #include <stdexcept>
 
@@ -83,7 +83,7 @@ namespace
     }
 
   private:
-    const Uri ServerUri;
+    const Internal::Uri ServerUri;
     std::unique_ptr<OpcUa::Remote::Computer> Impl;
   };
 

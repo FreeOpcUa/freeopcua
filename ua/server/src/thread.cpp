@@ -8,52 +8,57 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "thread.h"
+#include <internal/thread.h>
 
 #include <iostream>
 
 namespace OpcUa
 {
-  Thread::Thread(std::function<void()> f, ThreadObserver& observer)
-    : Observer(observer)
-    , Func(f)
-    , Impl(Thread::ThreadProc, this)
+  namespace Internal
   {
-  }
 
-  void Thread::Join()
-  {
-    Impl.join();
-  }
-
-  void Thread::Run() const
-  {
-    try
-    {
-      Func();
-      Observer.OnSuccess();
-    }
-    catch (const std::exception& exc)
-    {
-      Observer.OnError(exc);
-    }
-  }
-
-  void Thread::ReportSuccess() const
-  {
-    try
+    Thread::Thread(std::function<void()> f, ThreadObserver& observer)
+      : Observer(observer)
+      , Func(f)
+      , Impl(Thread::ThreadProc, this)
     {
     }
-    catch (const std::logic_error& exc)
-    {
-      std::cerr << "FATAL ERROR! Oserver threw an exception during call of OnSuccess. " << exc.what() << std::endl;
-      exit(-1);
-    }
-  }
 
-  void Thread::ThreadProc(Thread* thread)
-  {
-    thread->Run();
-  }
-}
+    void Thread::Join()
+    {
+      Impl.join();
+    }
+
+    void Thread::Run() const
+    {
+      try
+      {
+        Func();
+        Observer.OnSuccess();
+      }
+      catch (const std::exception& exc)
+      {
+        Observer.OnError(exc);
+      }
+    }
+
+    void Thread::ReportSuccess() const
+    {
+      try
+      {
+      }
+      catch (const std::logic_error& exc)
+      {
+        std::cerr << "FATAL ERROR! Oserver threw an exception during call of OnSuccess. " << exc.what() << std::endl;
+        exit(-1);
+      }
+    }
+
+    void Thread::ThreadProc(Thread* thread)
+    {
+      thread->Run();
+    }
+
+  } // bnamespace Server
+} // namespace OpcUa
 

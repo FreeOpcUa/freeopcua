@@ -16,7 +16,6 @@ opcuaincludedir = $(opcincludedir)/ua
 opcuainclude_HEADERS = \
   include/opc/ua/protocol/attribute.h \
   include/opc/ua/protocol/endpoints.h \
-  include/opc/ua/protocol/server.h \
   include/opc/ua/protocol/types.h \
   include/opc/ua/protocol/binary/stream.h \
   include/opc/ua/protocol/binary/common.h \

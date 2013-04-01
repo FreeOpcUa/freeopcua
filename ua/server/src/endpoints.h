@@ -9,7 +9,7 @@
 ///
 
 
-#include <opc/ua/client/computer.h>
+#include <opc/ua/computer.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/endpoints.h>
 

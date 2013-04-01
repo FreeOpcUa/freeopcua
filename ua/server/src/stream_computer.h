@@ -13,7 +13,7 @@
 #include "stream_view.h"
 
 #include <opc/ua/channel.h>
-#include <opc/ua/client/computer.h>
+#include <opc/ua/computer.h>
 #include <opc/ua/protocol/session.h>
 
 namespace OpcUa

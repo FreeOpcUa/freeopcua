@@ -614,6 +614,8 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
 TEST_SERVER_URI
+BUILD_UA_SERVER_FALSE
+BUILD_UA_SERVER_TRUE
 BUILD_UA_CMD_FALSE
 BUILD_UA_CMD_TRUE
 UA_MAPPING_INCLUDES
@@ -759,6 +761,7 @@ with_gmock
 with_uri_library
 with_ua_mappings
 enable_ua_cmd
+enable_ua_server
 with_testserver_uri
 '
       ac_precious_vars='build_alias
@@ -1404,6 +1407,8 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-ua-cmd         enable building of ua client command line tool. yes
                           or no (default is no)
+  --enable-ua-server      enable building of ua server. yes or no (default is
+                          no)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -15227,6 +15232,33 @@ else
 fi
 
 
+# Check whether --enable-ua-server was given.
+if test "${enable_ua_server+set}" = set; then :
+  enableval=$enable_ua_server;
+                case "x$enable_ua_cmd" in
+                xyes) { $as_echo "$as_me:${as_lineno-$LINENO}: Building of UA server enabled." >&5
+$as_echo "$as_me: Building of UA server enabled." >&6;}
+                ;;
+                xno)
+                ;;
+                *)      as_fn_error $? "Invalid argument of option --enable-ua-server. Should be yes or no." "$LINENO" 5
+                ;;
+                esac
+
+fi
+
+
+ if test x$enable_ua_server = xyes; then
+  BUILD_UA_SERVER_TRUE=
+  BUILD_UA_SERVER_FALSE='#'
+else
+  BUILD_UA_SERVER_TRUE='#'
+  BUILD_UA_SERVER_FALSE=
+fi
+
+
+
+
 
 # Check whether --with-testserver-uri was given.
 if test "${with_testserver_uri+set}" = set; then :
@@ -15391,6 +15423,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${BUILD_UA_CMD_TRUE}" && test -z "${BUILD_UA_CMD_FALSE}"; then
   as_fn_error $? "conditional \"BUILD_UA_CMD\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${BUILD_UA_SERVER_TRUE}" && test -z "${BUILD_UA_SERVER_FALSE}"; then
+  as_fn_error $? "conditional \"BUILD_UA_SERVER\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

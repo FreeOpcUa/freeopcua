@@ -17,23 +17,24 @@
 
 namespace OpcUa
 {
-
-  class IncomingConnectionProcessor : private Interface
+  namespace Server
   {
-  public:
-    virtual void Process(std::unique_ptr<IOChannel> clientChannel) = 0;
-  };
 
-  class Server : private Interface
-  {
-  public:
-    virtual void Start() = 0;
-    virtual void Stop() = 0;
-  };
+    class IncomingConnectionProcessor : private Interface
+    {
+    public:
+      virtual void Process(std::unique_ptr<IOChannel> clientChannel) = 0;
+    };
 
-  std::unique_ptr<Server> CreateServer(unsigned short port, std::unique_ptr<IncomingConnectionProcessor> processor);
+    class ConnectionListener : private Interface
+    {
+    public:
+      virtual void Start(std::unique_ptr<IncomingConnectionProcessor> connectionProcssor) = 0;
+      virtual void Stop() = 0;
+    };
 
-}
+  } // namespace Server
+}  // namespace OpcUA
 
 #endif // _OPC_UA_BINARY_SERVER_H
 

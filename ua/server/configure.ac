@@ -82,6 +82,25 @@ AC_ARG_ENABLE([ua-cmd],
 
 AM_CONDITIONAL([BUILD_UA_CMD], [test x$enable_ua_cmd = xyes])
 
+AC_ARG_ENABLE([ua-server],
+              [AS_HELP_STRING([--enable-ua-server], [enable building of ua server. yes or no (default is no) ])],
+              [
+                case "x$enable_ua_cmd" in
+                xyes) AC_MSG_NOTICE([Building of UA server enabled.])
+                ;;
+                xno)
+                ;;
+                *)      AC_MSG_ERROR([Invalid argument of option --enable-ua-server. Should be yes or no.]) 
+                ;;
+                esac
+              ],
+              [
+              ])
+
+AM_CONDITIONAL([BUILD_UA_SERVER], [test x$enable_ua_server = xyes])
+
+
+
 AC_ARG_WITH([testserver-uri], 
             [AS_HELP_STRING([--with-testserver-uri=uri], [defines uri of the server for performing testing of client.])],
             [ 

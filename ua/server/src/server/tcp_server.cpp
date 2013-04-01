@@ -8,10 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/protocol/server.h>
+#include <internal/thread.h>
 
-#include "socket_channel.h"
-#include "thread.h"
+#include <opc/ua/server/tcp_server.h>
+#include <opc/ua/socket_channel.h>
 
 #include <arpa/inet.h>
 #include <errno.h>
@@ -26,8 +26,12 @@
 
 namespace
 {
+  using namespace OpcUa;
+  using namespace OpcUa::Internal;
+  using namespace OpcUa::Server;
 
- class SocketHolder
+ 
+  class SocketHolder
   {
   public:
     SocketHolder(int socket)
@@ -50,13 +54,12 @@ namespace
 
 
   class TcpServer
-    : public OpcUa::Server
-    , protected OpcUa::ThreadObserver
+    : public ConnectionListener
+    , private ThreadObserver
   {
   public:
-    TcpServer(unsigned short port, std::unique_ptr<OpcUa::IncomingConnectionProcessor> processor)
+    TcpServer(unsigned short port)
       : Port(port)
-      , Processor(std::move(processor))
       , Stopped(true)
       , Socket(-1)
     {
@@ -74,8 +77,9 @@ namespace
       }
     }
 
-    virtual void Start()
+    virtual void Start(std::unique_ptr<IncomingConnectionProcessor> connectionProcessor) 
     {
+      Processor = std::move(connectionProcessor);
       StartNewThread();
     }
 
@@ -99,7 +103,7 @@ namespace
 
     virtual void OnError(const std::exception& exc)
     {
-      std::cerr << "Server thread was exited with error:" << exc.what() << std::endl;
+      std::cerr << "Server thread has exited with error:" << exc.what() << std::endl;
       if (!Stopped)
       {
         StartNewThread();
@@ -112,8 +116,8 @@ namespace
       std::clog << "Starting new server thread." << std::endl;
       Stopped = false;
       std::function<void()> func = std::bind(&TcpServer::Run, std::ref(*this));
-      OpcUa::ThreadObserver& observer = *this;
-      ServerThread.reset(new OpcUa::Thread(func, observer));
+      ThreadObserver& observer = *this;
+      ServerThread.reset(new Thread(func, observer));
     }
 
     void Run()
@@ -161,7 +165,7 @@ namespace
 
         try
         {
-          std::unique_ptr<OpcUa::SocketChannel> connection(new OpcUa::SocketChannel(clientSocket));
+          std::unique_ptr<SocketChannel> connection(new SocketChannel(clientSocket));
           Processor->Process(std::move(connection));
         }
         catch (const std::exception& exc)
@@ -173,15 +177,15 @@ namespace
 
   private:
     const unsigned short Port;
-    const std::unique_ptr<OpcUa::IncomingConnectionProcessor> Processor;
+    std::unique_ptr<IncomingConnectionProcessor> Processor;
     volatile bool Stopped;
     volatile int Socket;
-    std::unique_ptr<OpcUa::Thread> ServerThread;
+    std::unique_ptr<Thread> ServerThread;
   };
 }
 
-std::unique_ptr<OpcUa::Server> OpcUa::CreateServer(unsigned short port, std::unique_ptr<OpcUa::IncomingConnectionProcessor> processor)
+std::unique_ptr<OpcUa::Server::ConnectionListener> OpcUa::CreateTcpServer(unsigned short port)
 {
-  return std::unique_ptr<Server>(new TcpServer(port, std::move(processor)));
+  return std::unique_ptr<OpcUa::Server::ConnectionListener>(new TcpServer(port));
 }
 

@@ -9,7 +9,7 @@
 ///
 
 
-#include <opc/ua/client/view.h>
+#include <opc/ua/view.h>
 #include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 

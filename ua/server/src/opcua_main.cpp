@@ -11,7 +11,7 @@
 
 #include "opcua_options.h"
 
-#include <opc/ua/client/computer.h>
+#include <opc/ua/client/remote_computer.h>
 
 #include <stdexcept>
 

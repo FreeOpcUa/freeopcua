@@ -9,7 +9,7 @@
 ///
 
 #include <opc/ua/client/remote_connection.h>
-#include <opc/ua/client/socket_channel.h>
+#include <opc/ua/socket_channel.h>
 
 #include <arpa/inet.h>
 #include <errno.h>
