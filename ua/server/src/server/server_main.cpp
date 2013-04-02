@@ -66,8 +66,13 @@ namespace
     boost::mutex::scoped_lock lock(ExitMutex);
     if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
     {
-      std::cout << "unable to set signal handler" << std::endl;
+      std::cout << "unable to set SIGTERM handler" << std::endl;
     }
+    if (signal(SIGINT, TerminateSignal) == SIG_ERR)
+    {
+      std::cout << "unable to set SIGINT handler" << std::endl;
+    }
+
 
     Server::CommandLine cmdLine(argc, argv);
     std::unique_ptr<Server::ConnectionListener> server = CreateTcpServer(cmdLine.GetPort());
