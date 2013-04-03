@@ -111,12 +111,13 @@ if BUILD_UA_SERVER
 
 
 test_opcuaserver_SOURCES = \
- tests/server/test_server_options.cpp \
  src/server/server_options.cpp \
+ tests/server/binary_server_test.cpp \
+ tests/server/test_server_options.cpp \
  tests/thread_test.cpp
 
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
-test_opcuaserver_LDADD = libopcuaserver.a
+test_opcuaserver_LDADD = libopcuaserver.a libuaclient.a
 test_opcuaserver_LDFLAGS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
 
 #bin_PROGRAMS += libopcua_server_test
