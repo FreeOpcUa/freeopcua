@@ -64,8 +64,8 @@ namespace
 
 
 
-void ErrorManager::RegisterErrorManagerAddon()
+void ErrorManager::RegisterErrorManagerAddon(Common::AddonsManager& addonsManager)
 {
-  const Common::AddonsManager::SharedPtr manager = Common::GetAddonsManager();
-  manager->Register(Common::ADDON_ID_ERROR_MANAGER, Common::AddonFactory::UniquePtr(new ErrorManagerFactory()));
+  addonsManager.Register(Common::ADDON_ID_ERROR_MANAGER, Common::AddonFactory::UniquePtr(new ErrorManagerFactory()));
 }
+

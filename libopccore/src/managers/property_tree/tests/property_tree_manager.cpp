@@ -33,11 +33,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PropertyTreeManagerTestCase);
 
 void PropertyTreeManagerTestCase::Test()
 {
-  PropertyTree::RegisterPropertyTreeAddon();
-  Common::AddonsManager::SharedPtr manager = Common::GetAddonsManager();
-  CPPUNIT_ASSERT_NO_THROW(manager->Start());
+  Common::AddonsConfiguration addonsConfig;
+  addonsConfig.StaticAddonsInitializers.push_back(std::bind(PropertyTree::RegisterPropertyTreeAddon, std::placeholders::_1));
+
+  Common::AddonsManager::UniquePtr addons = Common::CreateAddonsManager();
+  CPPUNIT_ASSERT_NO_THROW(addons->Start(addonsConfig));
   PropertyTree::Manager::SharedPtr propertyTreeManager;
-  CPPUNIT_ASSERT_NO_THROW(propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(Common::ADDON_ID_PROPERTY_TREE));
+  CPPUNIT_ASSERT_NO_THROW(propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(*addons, Common::ADDON_ID_PROPERTY_TREE));
   CPPUNIT_ASSERT(propertyTreeManager);
   CPPUNIT_ASSERT(propertyTreeManager->GetPropertyTree());
 }

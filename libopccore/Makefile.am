@@ -8,14 +8,14 @@
 
 opccoredir = $(includedir)/opccore
 
-opcclientdir = $(opccoredir)/opc_client
-opcclient_HEADERS = \
-                  include/opccore/opc_client/errors.h \
-                  include/opccore/opc_client/group.h \
-                  include/opccore/opc_client/items_manager.h \
-                  include/opccore/opc_client/server_browser.h \
-                  include/opccore/opc_client/server.h \
-                  include/opccore/opc_client/sync_io.h
+#opcclientdir = $(opccoredir)/opc_client
+#opcclient_HEADERS = \
+#                  include/opccore/opc_client/errors.h \
+#                  include/opccore/opc_client/group.h \
+#                  include/opccore/opc_client/items_manager.h \
+#                  include/opccore/opc_client/server_browser.h \
+#                  include/opccore/opc_client/server.h \
+#                  include/opccore/opc_client/sync_io.h
 
 commondir = $(opccoredir)/common
 common_HEADERS = \
@@ -63,6 +63,18 @@ property_tree_manager_HEADERS = \
                   include/opccore/managers/property_tree/property_tree.h \
                   include/opccore/managers/property_tree/tree_object.h
 
+#                  include/opccore/opc_client/errors.h 
+#                  include/opccore/opc_client/group.h 
+#                  include/opccore/opc_client/items_manager.h 
+#                  include/opccore/opc_client/server.h 
+#                  include/opccore/opc_client/server_browser.h 
+#                  include/opccore/opc_client/sync_io.h 
+#                  src/opc_client/sync_io.cpp 
+#                  src/opc_client/items_manager.cpp 
+#                  src/opc_client/server.cpp 
+#                  src/opc_client/server_browser.cpp 
+#                  src/opc_client/oc_errors.cpp 
+#                  src/opc_client/oc_group.cpp 
 
 lib_LIBRARIES = libopccore.a
 libopccore_a_SOURCES = \
@@ -89,24 +101,12 @@ libopccore_a_SOURCES = \
                   include/opccore/managers/property_tree/named_object.h \
                   include/opccore/managers/property_tree/property_tree.h \
                   include/opccore/managers/property_tree/tree_object.h \
-                  include/opccore/opc_client/errors.h \
-                  include/opccore/opc_client/group.h \
-                  include/opccore/opc_client/items_manager.h \
-                  include/opccore/opc_client/server.h \
-                  include/opccore/opc_client/server_browser.h \
-                  include/opccore/opc_client/sync_io.h \
                   src/common/object_id.cpp \
                   src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/addon_manager.cpp \
                   src/common/value.cpp \
                   src/common/exception.cpp \
                   src/common/common_errors.cpp \
-                  src/opc_client/sync_io.cpp \
-                  src/opc_client/items_manager.cpp \
-                  src/opc_client/server.cpp \
-                  src/opc_client/server_browser.cpp \
-                  src/opc_client/oc_errors.cpp \
-                  src/opc_client/oc_group.cpp \
                   src/managers/device_manager/dm_errors.cpp \
                   src/managers/property_tree/pt_errors.cpp \
                   src/managers/property_tree/tree_object.cpp \
@@ -127,7 +127,9 @@ libopccore_a_SOURCES = \
 
 libopccore_a_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 
-TESTS = common_test error_manager_test property_tree_manager_test managers_test opc_client_test
+#opc_client_test
+
+TESTS = common_test error_manager_test property_tree_manager_test managers_test 
 
 check_PROGRAMS = $(TESTS)
 
@@ -167,11 +169,12 @@ property_tree_manager_test_LDADD = libopccore.a
 property_tree_manager_test_LDFLAGS = -lcppunit
 
 
+#                  src/managers/tests/environment.cpp
+#                  src/managers/tests/environment.h
+
 managers_test_SOURCES = \
                   src/managers/tests/environment/device_manager.cpp \
                   src/managers/tests/environment/device_manager.h \
-                  src/managers/tests/environment.cpp \
-                  src/managers/tests/environment.h \
                   src/managers/tests/io_manager_tests.cpp \
                   src/managers/tests/main.cpp
 
@@ -179,16 +182,16 @@ managers_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 managers_test_LDADD = libopccore.a
 managers_test_LDFLAGS = -lcppunit
 
-opc_client_test_SOURCES = \
-                  src/opc_client/tests/items_manager_test.cpp \
-                  src/opc_client/tests/main.cpp \
-                  src/opc_client/tests/opc_browse_test.cpp \
-                  src/opc_client/tests/property_tree_builder.cpp \
-                  src/opc_client/tests/property_tree_builder.h \
-                  src/opc_client/tests/server_test.cpp \
-                  src/opc_client/tests/sync_io_test.cpp
-
-opc_client_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
-opc_client_test_LDADD = libopccore.a
-opc_client_test_LDFLAGS = -lcppunit
+#opc_client_test_SOURCES = \
+#                  src/opc_client/tests/items_manager_test.cpp \
+#                  src/opc_client/tests/main.cpp \
+#                  src/opc_client/tests/opc_browse_test.cpp \
+#                  src/opc_client/tests/property_tree_builder.cpp \
+#                  src/opc_client/tests/property_tree_builder.h \
+#                  src/opc_client/tests/server_test.cpp \
+#                  src/opc_client/tests/sync_io_test.cpp
+#
+#opc_client_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+#opc_client_test_LDADD = libopccore.a
+#opc_client_test_LDFLAGS = -lcppunit
 

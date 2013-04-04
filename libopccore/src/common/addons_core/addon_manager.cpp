@@ -84,7 +84,7 @@ namespace
       Addons.insert(std::make_pair(id, AddonData(std::move(factory), dependencies)));
       if (ManagerStarted)
       {
-        DoStart();
+        DoStart(Common::AddonsConfiguration());
       }
     }
 
@@ -108,14 +108,14 @@ namespace
       return Addons.find(id)->second.Addon;
     }
 
-    virtual void Start()
+    virtual void Start(const Common::AddonsConfiguration& configuration)
     {
       if (ManagerStarted)
       {
         THROW_ERROR(AddonsManagerAlreadyStarted);
       }
       // TODO lock manager
-      DoStart();
+      DoStart(configuration);
       ManagerStarted = true;
     }
 
@@ -136,8 +136,14 @@ namespace
       ManagerStarted = false;
     }
   private:
-    void DoStart()
+    void DoStart(const Common::AddonsConfiguration& configuration)
     {
+      for (Common::AddonInitilizersList::const_iterator addonIt = configuration.StaticAddonsInitializers.begin(); addonIt != configuration.StaticAddonsInitializers.end(); ++addonIt)
+      {
+        Common::AddonInitializerFunc initializeAddon = *addonIt;
+        initializeAddon(*this);
+      }
+
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
@@ -226,22 +232,24 @@ namespace
   };
 }
 
-namespace Common
+Common::AddonsManager::SharedPtr Common::GetAddonsManager()
 {
-  AddonsManager::SharedPtr GetAddonsManager()
+  static boost::mutex mutex;
+  boost::mutex::scoped_lock lock(mutex);
+  static AddonsManager::WeakPtr manager;
+  AddonsManager::SharedPtr managerInstance = manager.lock();
+  if (managerInstance)
   {
-    static boost::mutex mutex;
-    boost::mutex::scoped_lock lock(mutex);
-    static AddonsManager::WeakPtr manager;
-    AddonsManager::SharedPtr managerInstance = manager.lock();
-    if (managerInstance)
-    {
-      return managerInstance;
-    }
-    
-    managerInstance = AddonsManager::SharedPtr(new AddonsManagerImpl);
-    manager = managerInstance;
     return managerInstance;
   }
-} // namespace Common
+  
+  managerInstance = AddonsManager::SharedPtr(new AddonsManagerImpl());
+  manager = managerInstance;
+  return managerInstance;
+}
+
+Common::AddonsManager::UniquePtr Common::CreateAddonsManager()
+{
+  return AddonsManager::UniquePtr(new AddonsManagerImpl());
+}
 

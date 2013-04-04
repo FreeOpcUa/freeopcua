@@ -15,7 +15,5 @@
 
 void Common::RegisterCommonManagers()
 {
-  PropertyTree::RegisterPropertyTreeAddon();
-  ErrorManager::RegisterErrorManagerAddon();
   InputOutputManager::RegisterManagerAddon();
 }

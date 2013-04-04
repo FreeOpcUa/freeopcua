@@ -60,9 +60,8 @@ namespace
 } // unnamed namespace
 
 
-
-void PropertyTree::RegisterPropertyTreeAddon()
+void PropertyTree::RegisterPropertyTreeAddon(Common::AddonsManager& addonsManager)
 {
-  const Common::AddonsManager::SharedPtr manager = Common::GetAddonsManager();
-  manager->Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory()));
+  addonsManager.Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory()));
 }
+

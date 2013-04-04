@@ -34,11 +34,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ErrorManagerTestCase);
 
 void ErrorManagerTestCase::Test()
 {
-  Common::AddonsManager::SharedPtr manager = Common::GetAddonsManager();
-  ErrorManager::RegisterErrorManagerAddon();
-  CPPUNIT_ASSERT_NO_THROW(manager->Start());
+  Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+  Common::AddonsConfiguration addonsConfig;
+  addonsConfig.StaticAddonsInitializers.push_back(std::bind(ErrorManager::RegisterErrorManagerAddon, std::placeholders::_1));
+
+  CPPUNIT_ASSERT_NO_THROW(manager->Start(addonsConfig));
   ErrorManager::Manager::SharedPtr errorManager;
-  CPPUNIT_ASSERT_NO_THROW(errorManager = Common::GetAddon<ErrorManager::Manager>(Common::ADDON_ID_ERROR_MANAGER));
+  CPPUNIT_ASSERT_NO_THROW(errorManager = Common::GetAddon<ErrorManager::Manager>(*manager, Common::ADDON_ID_ERROR_MANAGER));
   CPPUNIT_ASSERT(errorManager);
   const Common::Error& err = CREATE_COMMON_ERROR(1, "error");
   CPPUNIT_ASSERT_NO_THROW(errorManager->SetLastError(err));

@@ -8,6 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+
 #ifndef __COMMON_ADDONS_MANAGER_H__
 #define __COMMON_ADDONS_MANAGER_H__
 
@@ -19,6 +20,17 @@ namespace Common
 {
   class Addon;
   class AddonFactory;
+  class AddonsManager;
+
+
+  typedef std::function<void(AddonsManager&)> AddonInitializerFunc;
+  typedef std::vector<AddonInitializerFunc> AddonInitilizersList;
+
+  struct AddonsConfiguration
+  {
+    AddonInitilizersList StaticAddonsInitializers;
+    std::vector<std::string> DynamicModules; // path to shared libraries of dynamic modules 
+  };
 
   class AddonsManager : private NonCopyable
   {
@@ -49,7 +61,7 @@ namespace Common
     /// @brief starting work.
     /// creates all addons and initializes them.
     /// @throws if not all addons dependencies can be resolved.
-    virtual void Start() = 0;
+    virtual void Start(const AddonsConfiguration& config) = 0;
 
     // @brief Stopping all addons;
     virtual void Stop() = 0;
@@ -61,6 +73,7 @@ namespace Common
   /// @note Only one instance of addons manager can be at one time.
   /// When all smart pointers are gone addons manager deletes.
   AddonsManager::SharedPtr GetAddonsManager();
+  AddonsManager::UniquePtr CreateAddonsManager();
 
   /// @brief Get instance of addon
   /// @return instance od addon casted to specified type
@@ -70,6 +83,16 @@ namespace Common
   {
     return std::dynamic_pointer_cast<AddonClass>(GetAddonsManager()->GetAddon(id));
   }
+
+  /// @brief Get instance of addon
+  /// @return instance od addon casted to specified type
+  /// @throws if unable to cast addon, unable to find addon, or in casr of error
+  template <class AddonClass>
+  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, AddonID id)
+  {
+    return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
+  }
+
 
 } // namespace Common
 

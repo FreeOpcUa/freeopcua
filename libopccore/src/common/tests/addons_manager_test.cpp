@@ -130,10 +130,10 @@ void AddonsManagerTestCase::TestOneManager()
 
   CPPUNIT_ASSERT_NO_THROW(manager->Register(Common::ADDON_ID_DEVICE_IO_MANAGER, Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory), std::vector<Common::AddonID>(1, Common::ADDON_ID_PROPERTY_TREE)));
 
- CPPUNIT_ASSERT_NO_THROW(manager->Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory)));
+  CPPUNIT_ASSERT_NO_THROW(manager->Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory)));
 
-  CPPUNIT_ASSERT_NO_THROW(manager->Start());
-  CPPUNIT_ASSERT_THROW(manager->Start(), Common::Error);
+  CPPUNIT_ASSERT_NO_THROW(manager->Start(Common::AddonsConfiguration()));
+  CPPUNIT_ASSERT_THROW(manager->Start(Common::AddonsConfiguration()), Common::Error);
 
   std::shared_ptr<PropertyTreeAddon> propertyTree;
   CPPUNIT_ASSERT_NO_THROW(propertyTree = Common::GetAddon<PropertyTreeAddon>(Common::ADDON_ID_PROPERTY_TREE));
@@ -158,8 +158,8 @@ void AddonsManagerTestCase::TestTwoManagers()
   CPPUNIT_ASSERT_NO_THROW(manager->Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory)));
   CPPUNIT_ASSERT_THROW(manager->GetAddon(Common::ADDON_ID_PROPERTY_TREE), Common::Error);
 
-  CPPUNIT_ASSERT_NO_THROW(manager->Start());
-  CPPUNIT_ASSERT_THROW(manager->Start(), Common::Error);
+  CPPUNIT_ASSERT_NO_THROW(manager->Start(Common::AddonsConfiguration()));
+  CPPUNIT_ASSERT_THROW(manager->Start(Common::AddonsConfiguration()), Common::Error);
 
   std::shared_ptr<PropertyTreeAddon> propertyTree;
   CPPUNIT_ASSERT_NO_THROW(propertyTree = Common::GetAddon<PropertyTreeAddon>(Common::ADDON_ID_PROPERTY_TREE));
