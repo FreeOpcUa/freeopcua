@@ -13,7 +13,9 @@
 
 #include <opccore/common/addons_core/addon.h>
 
-extern "C" Common::Addon::UniquePtr CreateAddon(const char* configuration);
+extern "C" Common::Addon::UniquePtr CreateAddon();
+
+typedef Common::Addon::UniquePtr (*CreateAddonFunc)();
 
 #endif // OPC_CORE_DYNAMIC_ADDON_H
 

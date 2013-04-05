@@ -82,6 +82,7 @@ libopccore_a_SOURCES = \
                   include/opccore/common/addons_core/errors.h \
                   include/opccore/common/addons_core/addon_manager.h \
                   include/opccore/common/addons_core/addon_ids.h \
+                  include/opccore/common/addons_core/dynamic_addon.h \
                   include/opccore/common/class_pointers.h \
                   include/opccore/common/errors.h \
                   include/opccore/common/exception.h \
@@ -102,8 +103,12 @@ libopccore_a_SOURCES = \
                   include/opccore/managers/property_tree/property_tree.h \
                   include/opccore/managers/property_tree/tree_object.h \
                   src/common/object_id.cpp \
-                  src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/addon_manager.cpp \
+                  src/common/addons_core/errors_addon_manager.cpp \
+                  src/common/addons_core/dynamic_addon_factory.cpp \
+                  src/common/addons_core/dynamic_addon_factory.h \
+                  src/common/addons_core/dynamic_library.cpp \
+                  src/common/addons_core/dynamic_library.h \
                   src/common/value.cpp \
                   src/common/exception.cpp \
                   src/common/common_errors.cpp \
@@ -127,9 +132,22 @@ libopccore_a_SOURCES = \
 
 libopccore_a_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 
+test_dynamic_addon.o: tests/test_dynamic_addon.cpp
+	$(CC) -std=c++0x -I$(top_srcdir)/src -I$(top_srcdir)/include -fPIC -g -c -Wall tests/test_dynamic_addon.cpp 
+
+
+libtest_dynamic_addon.so: test_dynamic_addon.o
+	$(CC) -std=c++0x -g -Wall -ldl -shared -module -o libtest_dynamic_addon.so test_dynamic_addon.o
+
+.PHONY: libtest_dynamic_addon.o ibtest_dynamic_addon.so
+
+all-local: libtest_dynamic_addon.so
+
+CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
+
 #opc_client_test
 
-TESTS = common_test error_manager_test property_tree_manager_test managers_test 
+TESTS = common_gtest common_test error_manager_test property_tree_manager_test managers_test 
 
 check_PROGRAMS = $(TESTS)
 
@@ -139,9 +157,15 @@ common_test_SOURCES = \
                   src/common/tests/main.cpp \
                   src/common/tests/value_test.cpp
 
-common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 common_test_LDADD = libopccore.a
-common_test_LDFLAGS = -lcppunit
+common_test_LDFLAGS = -lcppunit -ldl
+
+common_gtest_SOURCES = \
+                  tests/test_dynamic_addon_factory.cpp
+
+common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lopccore,--no-whole-archive  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 
 error_manager_test_SOURCES = \
@@ -149,7 +173,7 @@ error_manager_test_SOURCES = \
                   src/managers/error_manager/tests/main.cpp
 error_manager_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 error_manager_test_LDADD = libopccore.a
-error_manager_test_LDFLAGS = -lcppunit
+error_manager_test_LDFLAGS = -lcppunit -ldl
 
 
 property_tree_manager_test_SOURCES = \
@@ -166,7 +190,7 @@ property_tree_manager_test_SOURCES = \
 
 property_tree_manager_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 property_tree_manager_test_LDADD = libopccore.a
-property_tree_manager_test_LDFLAGS = -lcppunit
+property_tree_manager_test_LDFLAGS = -lcppunit -ldl
 
 
 #                  src/managers/tests/environment.cpp
@@ -180,7 +204,7 @@ managers_test_SOURCES = \
 
 managers_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 managers_test_LDADD = libopccore.a
-managers_test_LDFLAGS = -lcppunit
+managers_test_LDFLAGS = -lcppunit -ldl
 
 #opc_client_test_SOURCES = \
 #                  src/opc_client/tests/items_manager_test.cpp \

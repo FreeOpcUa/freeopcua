@@ -22,4 +22,6 @@ ADDONS_MANAGER_ERROR(AddonNotInitializedYet,           5, "Addon with id '%1%' i
 ADDONS_MANAGER_ERROR(AddonNotRegistered,               6, "Addon with id '%1%' is not registered, but should.");
 ADDONS_MANAGER_ERROR(AddonRegisteredButShouldnt,       7, "Addon with id '%1%' registered, but shouldn't.");
 ADDONS_MANAGER_ERROR(AddonIsNotStarted,                8, "Addons with id '%1%' is not started.");
+ADDONS_MANAGER_ERROR(UnableToLoadDynamicLibrary,       9, "Unable to load library '%1%'. %2%");
+ADDONS_MANAGER_ERROR(UnableToFundSymbolInTheLibrary,  10, "Unable to find symbol '%1%' in the library '%2%'. %3%");
 

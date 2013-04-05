@@ -22,6 +22,27 @@ AC_CONFIG_HEADER([config.h])
 #check headers
 AC_CHECK_HEADERS([unistd.h])
 
+AC_ARG_WITH([gtest], 
+            [AS_HELP_STRING([--with-gtest=DIR], [defines path to gtest root directory])],
+            [ 
+              AC_SUBST([GTEST_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive])
+              AC_SUBST([GTEST_MAIN_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive])
+              AC_SUBST([GTEST_INCLUDES], [-I$with_gtest/include])
+              AC_MSG_NOTICE([Gtest path: $GTEST_INCLUDES]) 
+            ], 
+            [ 
+            ])
+
+AC_ARG_WITH([gmock], 
+            [AS_HELP_STRING([--with-gmock=DIR], [defines path to gmock root directory])],
+            [ 
+              AC_SUBST([GMOCK_LIB], [-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive ])
+              AC_SUBST([GMOCK_INCLUDES], [-I$with_gmock/include])
+              AC_MSG_NOTICE([Gmock path: $GMOCK_INCLUDES]) 
+            ], 
+            [ 
+            ])
+
 
 #################################################################
 AC_CONFIG_FILES([Makefile])
