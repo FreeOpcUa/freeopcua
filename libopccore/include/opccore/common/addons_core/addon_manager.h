@@ -14,6 +14,7 @@
 
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/class_pointers.h>
+#include <string>
 #include <vector>
 
 namespace Common
@@ -26,10 +27,17 @@ namespace Common
   typedef std::function<void(AddonsManager&)> AddonInitializerFunc;
   typedef std::vector<AddonInitializerFunc> AddonInitilizersList;
 
+  struct DynamicAddonData
+  {
+    std::vector<std::string> ModulePath;  //!< path to shared libraries of dynamic modules
+    AddonID ID;                           //!< unique addonid in the scope of one process
+    std::vector<AddonID> AddonDependsOn; //!< list of addonst durrent module depends on
+  };
+
   struct AddonsConfiguration
   {
     AddonInitilizersList StaticAddonsInitializers;
-    std::vector<std::string> DynamicModules; // path to shared libraries of dynamic modules 
+    std::vector<DynamicAddonData> DynamicModules;  
   };
 
   class AddonsManager : private NonCopyable

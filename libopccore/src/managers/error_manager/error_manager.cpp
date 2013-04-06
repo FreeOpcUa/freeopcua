@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "register.h"
-
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/managers/error_manager/id.h>
 #include <opccore/managers/error_manager/manager.h>
+#include <opccore/managers/error_manager/register.h>
 #include <opccore/managers/property_tree/property_tree.h>
 
 namespace
@@ -66,6 +66,6 @@ namespace
 
 void ErrorManager::RegisterErrorManagerAddon(Common::AddonsManager& addonsManager)
 {
-  addonsManager.Register(Common::ADDON_ID_ERROR_MANAGER, Common::AddonFactory::UniquePtr(new ErrorManagerFactory()));
+  addonsManager.Register(ManagerID, Common::AddonFactory::UniquePtr(new ErrorManagerFactory()));
 }
 

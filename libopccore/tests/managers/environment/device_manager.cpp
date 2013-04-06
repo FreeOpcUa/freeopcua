@@ -2,10 +2,14 @@
 
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/managers/device_manager/id.h>
 #include <opccore/managers/device_manager/manager.h>
+#include <opccore/managers/io_manager/id.h>
 #include <opccore/managers/io_manager/manager.h>
 #include <opccore/managers/property_tree/group.h>
+#include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/item.h>
+#include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/manager.h>
 #include <opccore/managers/property_tree/property_tree.h>
 
@@ -88,11 +92,11 @@ namespace
     }
     virtual void Initialize()
     {
-      std::shared_ptr<PropertyTree::Manager> propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(Common::ADDON_ID_PROPERTY_TREE);
+      std::shared_ptr<PropertyTree::Manager> propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(PropertyTree::ManagerID);
       std::shared_ptr<Gefest::PropertyTree> tree = propertyTreeManager->GetPropertyTree();
       std::shared_ptr<Gefest::Group> rootGroup = tree->GetRootGroup();
      
-      std::shared_ptr<InputOutputManager::RequestManager> ioManager = Common::GetAddon<InputOutputManager::RequestManager>(Common::ADDON_ID_IO_MANAGER);
+      std::shared_ptr<InputOutputManager::RequestManager> ioManager = Common::GetAddon<InputOutputManager::RequestManager>(InputOutputManager::RequestManagerID);
       ioManager->RegisterDeviceManager(DeviceManager::Manager::SharedPtr(new DeviceManagerImpl(Prefix, rootGroup)));
     }
 
@@ -122,12 +126,10 @@ namespace
 
 } // namespace
 
-void RegisterDeviceManager(Common::AddonID addonID, const std::string& propertyTreePrefix)
+void RegisterDeviceManager(Common::AddonsManager& manager, Common::AddonID addonID, const std::string& propertyTreePrefix)
 {
-  const std::shared_ptr<Common::AddonsManager> manager = Common::GetAddonsManager();
-  Common::AddonID id = static_cast<Common::AddonID>(Common::ADDON_ID_MIN_USER + addonID);
   std::vector<Common::AddonID> dependencies;
-  dependencies.push_back(Common::ADDON_ID_PROPERTY_TREE);
-  dependencies.push_back(Common::ADDON_ID_IO_MANAGER);
-  manager->Register(id, std::unique_ptr<Common::AddonFactory>(new DeviceManagerFactory(propertyTreePrefix)), dependencies);
+  dependencies.push_back(PropertyTree::ManagerID);
+  dependencies.push_back(DeviceManager::ManagerID);
+  manager.Register(addonID, std::unique_ptr<Common::AddonFactory>(new DeviceManagerFactory(propertyTreePrefix)), dependencies);
 }

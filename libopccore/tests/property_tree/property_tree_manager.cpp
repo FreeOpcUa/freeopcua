@@ -15,7 +15,7 @@
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/property_tree/manager.h>
-#include "../manager/register.h"
+#include <opccore/managers/property_tree/register.h>
 
 
 class PropertyTreeManagerTestCase : public CPPUNIT_NS::TestFixture
@@ -39,7 +39,7 @@ void PropertyTreeManagerTestCase::Test()
   Common::AddonsManager::UniquePtr addons = Common::CreateAddonsManager();
   CPPUNIT_ASSERT_NO_THROW(addons->Start(addonsConfig));
   PropertyTree::Manager::SharedPtr propertyTreeManager;
-  CPPUNIT_ASSERT_NO_THROW(propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(*addons, Common::ADDON_ID_PROPERTY_TREE));
+  CPPUNIT_ASSERT_NO_THROW(propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(*addons, "property_tree"));
   CPPUNIT_ASSERT(propertyTreeManager);
   CPPUNIT_ASSERT(propertyTreeManager->GetPropertyTree());
 }

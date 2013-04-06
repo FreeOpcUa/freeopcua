@@ -3,6 +3,7 @@
 
 #include <string>
 #include <opccore/common/addons_core/addon_ids.h>
+#include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/device_manager/manager.h>
 
 //register new device manager
@@ -27,6 +28,6 @@ public:
 };
 
 
-void RegisterDeviceManager(Common::AddonID addonID, const std::string& propertyTreePrefix);
+void RegisterDeviceManager(Common::AddonsManager& manager, Common::AddonID addonID, const std::string& propertyTreePrefix);
 
 #endif // __device_manager_h_456bd15c_7286_44b3_ba12_fbb8490d2e16

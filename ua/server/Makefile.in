@@ -273,6 +273,8 @@ NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OPC_CORE_INCLUDES = @OPC_CORE_INCLUDES@
+OPC_CORE_LIBS = @OPC_CORE_LIBS@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -400,9 +402,9 @@ libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_IN
 @BUILD_UA_SERVER_TRUE@  src/server/server_main.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/server_options.cpp
 
-@BUILD_UA_SERVER_TRUE@opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
+@BUILD_UA_SERVER_TRUE@opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 @BUILD_UA_SERVER_TRUE@opcuaserver_LDADD = libopcuaserver.a
-@BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+@BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
 
 ##############################################################################
 # Tests
@@ -416,9 +418,9 @@ libuaclient_test_SOURCES = \
  tests/computer_session.cpp \
  tests/computer_view.cpp
 
-libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(OPC_CORE_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS)
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_SOURCES = \
 @BUILD_UA_SERVER_TRUE@ src/server/server_options.cpp \
 @BUILD_UA_SERVER_TRUE@ tests/server/binary_server_test.cpp \

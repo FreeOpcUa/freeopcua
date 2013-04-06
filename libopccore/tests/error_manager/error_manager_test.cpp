@@ -12,11 +12,12 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
 
+#include <opccore/managers/error_manager/id.h>
 #include <opccore/managers/error_manager/manager.h>
+#include <opccore/managers/error_manager/register.h>
 #include <opccore/common/exception.h>
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
-#include "../register.h"
 
 
 class ErrorManagerTestCase : public CPPUNIT_NS::TestFixture
@@ -40,7 +41,7 @@ void ErrorManagerTestCase::Test()
 
   CPPUNIT_ASSERT_NO_THROW(manager->Start(addonsConfig));
   ErrorManager::Manager::SharedPtr errorManager;
-  CPPUNIT_ASSERT_NO_THROW(errorManager = Common::GetAddon<ErrorManager::Manager>(*manager, Common::ADDON_ID_ERROR_MANAGER));
+  CPPUNIT_ASSERT_NO_THROW(errorManager = Common::GetAddon<ErrorManager::Manager>(*manager, ErrorManager::ManagerID));
   CPPUNIT_ASSERT(errorManager);
   const Common::Error& err = CREATE_COMMON_ERROR(1, "error");
   CPPUNIT_ASSERT_NO_THROW(errorManager->SetLastError(err));

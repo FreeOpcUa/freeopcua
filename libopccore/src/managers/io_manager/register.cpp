@@ -11,8 +11,8 @@
 #include "manager_impl.h"
 #include "register.h"
 
+#include <opccore/managers/io_manager/id.h>
 #include <opccore/managers/io_manager/manager.h>
-#include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/addon.h>
 
 namespace
@@ -79,8 +79,8 @@ namespace
   };
 } // namespace
 
-void InputOutputManager::RegisterManagerAddon()
+void InputOutputManager::RegisterManagerAddon(Common::AddonsManager& addonsManager)
 {
-  const Common::AddonsManager::SharedPtr manager = Common::GetAddonsManager();
-  manager->Register(Common::ADDON_ID_IO_MANAGER, Common::AddonFactory::UniquePtr(new RequestManagerFactory()));
+  addonsManager.Register(RequestManagerID, Common::AddonFactory::UniquePtr(new RequestManagerFactory()));
 }
+

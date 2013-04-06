@@ -11,9 +11,11 @@
 #ifndef __register_h_2d74858e_6cd0_41a8_887f_f95ca7acbe0d
 #define __register_h_2d74858e_6cd0_41a8_887f_f95ca7acbe0d
 
+#include <opccore/common/addons_core/addon_manager.h>
+
 namespace InputOutputManager
 {
-  void RegisterManagerAddon();
+  void RegisterManagerAddon(Common::AddonsManager& addonsManager);
 }
 
 #endif // __register_h_2d74858e_6cd0_41a8_887f_f95ca7acbe0d

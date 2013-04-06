@@ -64,6 +64,16 @@ AC_ARG_WITH([ua-mappings],
             [ 
             ])
 
+AC_ARG_WITH([libopccore], 
+            [AS_HELP_STRING([--with-libopccore=DIR], [defines path to the root directory of libopccore library.])],
+            [ 
+              AC_SUBST([OPC_CORE_LIBS], [-Wl,-L$with_libopccore,--whole-archive,-lopccore,--no-whole-archive])
+              AC_SUBST([OPC_CORE_INCLUDES], [-I$with_libopccore/include])
+              AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
+            ], 
+            [ 
+              AC_SUBST([OPC_CORE_LIBS], [-Wl,--whole-archive,-lopccore,--no-whole-archive])
+            ])
 
 AC_ARG_ENABLE([ua-cmd],
               [AS_HELP_STRING([--enable-ua-cmd], [enable building of ua client command line tool. yes or no (default is no) ])],

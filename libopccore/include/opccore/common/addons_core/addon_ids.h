@@ -15,6 +15,8 @@
 
 namespace Common
 {
+  typedef std::string AddonID;
+/*
   enum AddonID
   {
     ADDON_ID_PROPERTY_TREE,
@@ -24,6 +26,7 @@ namespace Common
     
     ADDON_ID_MIN_USER = 0x8000,
   };
+*/
 } // namespace Common
 
 #endif // __COMMON_ADDONS_IDS_H__

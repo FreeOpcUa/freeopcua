@@ -9,13 +9,13 @@
 ///
 
 #include <opccore/managers/property_tree/manager.h>
+#include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/property_tree.h>
+#include <opccore/managers/property_tree/register.h>
 
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
-
-#include "register.h"
 
 namespace
 {
@@ -62,6 +62,6 @@ namespace
 
 void PropertyTree::RegisterPropertyTreeAddon(Common::AddonsManager& addonsManager)
 {
-  addonsManager.Register(Common::ADDON_ID_PROPERTY_TREE, Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory()));
+  addonsManager.Register(ManagerID, Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory()));
 }
 

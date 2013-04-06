@@ -618,6 +618,8 @@ BUILD_UA_SERVER_FALSE
 BUILD_UA_SERVER_TRUE
 BUILD_UA_CMD_FALSE
 BUILD_UA_CMD_TRUE
+OPC_CORE_INCLUDES
+OPC_CORE_LIBS
 UA_MAPPING_INCLUDES
 UA_MAPPING_LIBS
 URI_INCLUDES
@@ -760,6 +762,7 @@ with_gtest
 with_gmock
 with_uri_library
 with_ua_mappings
+with_libopccore
 enable_ua_cmd
 enable_ua_server
 with_testserver_uri
@@ -1422,6 +1425,8 @@ Optional Packages:
   --with-gmock=DIR        defines path to gmock root directory
   --with-uri-library=DIR  defines path to uri library
   --with-ua-mappings=DIR  defines path to ua mappings root directory
+  --with-libopccore=DIR   defines path to the root directory of libopccore
+                          library.
   --with-testserver-uri=uri 
                           defines uri of the server for performing testing of
                           client.
@@ -15209,6 +15214,24 @@ $as_echo "$as_me: ua mappings path: $with_ua_mappings" >&6;}
             
 fi
 
+
+
+@%:@ Check whether --with-libopccore was given.
+if test "${with_libopccore+set}" = set; then :
+  withval=$with_libopccore;  
+              OPC_CORE_LIBS=-Wl,-L$with_libopccore,--whole-archive,-lopccore,--no-whole-archive
+
+              OPC_CORE_INCLUDES=-I$with_libopccore/include
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: libopccore path: $with_libopccore" >&5
+$as_echo "$as_me: libopccore path: $with_libopccore" >&6;} 
+            
+else
+   
+              OPC_CORE_LIBS=-Wl,--whole-archive,-lopccore,--no-whole-archive
+
+            
+fi
 
 
 @%:@ Check whether --enable-ua-cmd was given.

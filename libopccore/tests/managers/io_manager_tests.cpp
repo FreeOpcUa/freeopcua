@@ -5,7 +5,7 @@
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/managers/io_manager/manager.h>
-#include "../io_manager/manager_impl.h"
+#include <src/managers/io_manager/manager_impl.h>
 
 #include <tr1/functional>
 
@@ -14,6 +14,19 @@ class IoManagerTestCase : public CPPUNIT_NS::TestFixture
   CPPUNIT_TEST_SUITE(IoManagerTestCase);
   CPPUNIT_TEST(Test);
   CPPUNIT_TEST_SUITE_END();
+
+ public:
+  virtual void setUp()
+  {
+    Addons = Common::CreateAddonsManager();
+  }
+
+  virtual void tearDown()
+  {
+    Addons.reset();
+  }
+protected:
+  Common::AddonsManager::UniquePtr Addons;
 
 protected:
   void Test();

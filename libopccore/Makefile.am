@@ -125,8 +125,6 @@ libopccore_a_SOURCES = \
                   src/managers/io_manager/register.cpp \
                   src/managers/io_manager/manager_impl.cpp \
                   src/managers/io_manager/io_errors.cpp \
-                  src/managers/common_managers/common_managers.cpp \
-                  src/managers/common_managers/common_managers.h \
                   src/managers/error_manager/register.h \
                   src/managers/error_manager/error_manager.cpp
 
@@ -150,10 +148,10 @@ TESTS = common_gtest common_test error_manager_test property_tree_manager_test m
 check_PROGRAMS = $(TESTS)
 
 common_test_SOURCES = \
-                  src/common/tests/addons_manager_test.cpp \
-                  src/common/tests/error_test.cpp \
-                  src/common/tests/main.cpp \
-                  src/common/tests/value_test.cpp
+                  tests/common/addons_manager_test.cpp \
+                  tests/common/error_test.cpp \
+                  tests/common/main.cpp \
+                  tests/common/value_test.cpp
 
 common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 common_test_LDADD = libopccore.a
@@ -167,24 +165,25 @@ common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lop
 
 
 error_manager_test_SOURCES = \
-                  src/managers/error_manager/tests/error_manager_test.cpp \
-                  src/managers/error_manager/tests/main.cpp
+                  tests/error_manager/error_manager_test.cpp \
+                  tests/error_manager/main.cpp
+
 error_manager_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 error_manager_test_LDADD = libopccore.a
 error_manager_test_LDFLAGS = -lcppunit -ldl
 
 
 property_tree_manager_test_SOURCES = \
-                  src/managers/property_tree/tests/group_test.cpp \
-                  src/managers/property_tree/tests/group_test.h \
-                  src/managers/property_tree/tests/item_test.cpp \
-                  src/managers/property_tree/tests/item_test.h \
-                  src/managers/property_tree/tests/main.cpp \
-                  src/managers/property_tree/tests/named_object_test.cpp \
-                  src/managers/property_tree/tests/named_object_test.h \
-                  src/managers/property_tree/tests/property_tree_manager.cpp \
-                  src/managers/property_tree/tests/tree_object_test.cpp \
-                  src/managers/property_tree/tests/tree_object_test.h
+                  tests/property_tree/group_test.cpp \
+                  tests/property_tree/group_test.h \
+                  tests/property_tree/item_test.cpp \
+                  tests/property_tree/item_test.h \
+                  tests/property_tree/main.cpp \
+                  tests/property_tree/named_object_test.cpp \
+                  tests/property_tree/named_object_test.h \
+                  tests/property_tree/property_tree_manager.cpp \
+                  tests/property_tree/tree_object_test.cpp \
+                  tests/property_tree/tree_object_test.h
 
 property_tree_manager_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 property_tree_manager_test_LDADD = libopccore.a
@@ -195,10 +194,10 @@ property_tree_manager_test_LDFLAGS = -lcppunit -ldl
 #                  src/managers/tests/environment.h
 
 managers_test_SOURCES = \
-                  src/managers/tests/environment/device_manager.cpp \
-                  src/managers/tests/environment/device_manager.h \
-                  src/managers/tests/io_manager_tests.cpp \
-                  src/managers/tests/main.cpp
+                  tests/managers/environment/device_manager.cpp \
+                  tests/managers/environment/device_manager.h \
+                  tests/managers/io_manager_tests.cpp \
+                  tests/managers/main.cpp
 
 managers_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 managers_test_LDADD = libopccore.a

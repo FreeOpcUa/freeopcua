@@ -80,9 +80,9 @@ opcuaserver_SOURCES = \
   src/server/server_main.cpp \
   src/server/server_options.cpp
 
-opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
+opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 opcuaserver_LDADD = libopcuaserver.a
-opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
 
 TESTS += test_opcuaserver
 
@@ -103,9 +103,9 @@ libuaclient_test_SOURCES =  \
  tests/computer_session.cpp \
  tests/computer_view.cpp
 
-libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(OPC_CORE_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS)
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
 
 if BUILD_UA_SERVER
 
