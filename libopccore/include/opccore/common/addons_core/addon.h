@@ -11,6 +11,7 @@
 #ifndef __COMMON_ADDON_H__
 #define __COMMON_ADDON_H__
 
+#include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/class_pointers.h>
 #include <opccore/common/noncopyable.h>
 
@@ -25,7 +26,7 @@ namespace Common
     /// @brief initialize addon. 
     /// @note Calls when all addons dependencies resolved.
     /// suppose that addon fully ready for work.
-    virtual void Initialize() = 0;
+    virtual void Initialize(AddonsManager& manager) = 0;
 
     /// @brief Stopping addon work.
     /// After calling this method addon should throw exception on any calls.

@@ -90,13 +90,13 @@ namespace
       : Prefix(prefix)
     {
     }
-    virtual void Initialize()
+    virtual void Initialize(Common::AddonsManager& addons)
     {
-      std::shared_ptr<PropertyTree::Manager> propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(PropertyTree::ManagerID);
+      std::shared_ptr<PropertyTree::Manager> propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(addons, PropertyTree::ManagerID);
       std::shared_ptr<Gefest::PropertyTree> tree = propertyTreeManager->GetPropertyTree();
       std::shared_ptr<Gefest::Group> rootGroup = tree->GetRootGroup();
      
-      std::shared_ptr<InputOutputManager::RequestManager> ioManager = Common::GetAddon<InputOutputManager::RequestManager>(InputOutputManager::RequestManagerID);
+      std::shared_ptr<InputOutputManager::RequestManager> ioManager = Common::GetAddon<InputOutputManager::RequestManager>(addons, InputOutputManager::RequestManagerID);
       ioManager->RegisterDeviceManager(DeviceManager::Manager::SharedPtr(new DeviceManagerImpl(Prefix, rootGroup)));
     }
 

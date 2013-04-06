@@ -11,22 +11,13 @@
 #ifndef __COMMON_ADDONS_IDS_H__
 #define __COMMON_ADDONS_IDS_H__
 
-#include <opccore/common/addons_core/addon.h>
+#include <string>
 
 namespace Common
 {
+
   typedef std::string AddonID;
-/*
-  enum AddonID
-  {
-    ADDON_ID_PROPERTY_TREE,
-    ADDON_ID_DEVICE_IO_MANAGER,
-    ADDON_ID_ERROR_MANAGER,
-    ADDON_ID_IO_MANAGER,
-    
-    ADDON_ID_MIN_USER = 0x8000,
-  };
-*/
+
 } // namespace Common
 
 #endif // __COMMON_ADDONS_IDS_H__

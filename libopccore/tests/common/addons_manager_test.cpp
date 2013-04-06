@@ -63,7 +63,7 @@ public:
   {
   }
 
-  virtual void Initialize()
+  virtual void Initialize(Common::AddonsManager&)
   {
     CPPUNIT_ASSERT(InitializedAddonsCount == 0);
     InitializedAddonsCount++;
@@ -108,7 +108,7 @@ public:
   {
   }
 
-  virtual void Initialize()
+  virtual void Initialize(Common::AddonsManager&)
   {
     CPPUNIT_ASSERT(InitializedAddonsCount == 1);
     InitializedAddonsCount++;

@@ -12,6 +12,7 @@
 #define __device_manager_h__82176679_1c3e_4512_bbf4_5657a390dbf7
 
 #include <opccore/common/exception.h>
+#include <opccore/common/class_pointers.h>
 #include <opccore/common/noncopyable.h>
 #include <opccore/common/object_id.h>
 #include <opccore/common/value.h>

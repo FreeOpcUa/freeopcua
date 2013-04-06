@@ -16,6 +16,7 @@
 #include <opccore/managers/error_manager/manager.h>
 #include <opccore/managers/error_manager/register.h>
 #include <opccore/common/exception.h>
+#include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 

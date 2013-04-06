@@ -12,6 +12,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
 
+#include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/property_tree/manager.h>

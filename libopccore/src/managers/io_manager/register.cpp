@@ -51,9 +51,10 @@ namespace
     }
 
   public:  // Common::Addon
-    virtual void Initialize()
+    virtual void Initialize(Common::AddonsManager&)
     {
     }
+
     virtual void Stop()
     {
     }

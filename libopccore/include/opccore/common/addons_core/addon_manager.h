@@ -14,6 +14,7 @@
 
 #include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/class_pointers.h>
+#include <opccore/common/noncopyable.h>
 #include <string>
 #include <vector>
 
@@ -52,7 +53,7 @@ namespace Common
     /// @param dependencies ids of addons of which this addon depends on.
     /// @throws if addon already redistered. If manager started thows if not all dependencies resolved.
     /// If manager already started addon will be immediately created and initialized.
-    virtual void Register(AddonID id, AddonFactory::UniquePtr factory, const std::vector<AddonID>& dependencies = std::vector<AddonID>()) = 0;
+    virtual void Register(AddonID id, std::unique_ptr<AddonFactory> factory, const std::vector<AddonID>& dependencies = std::vector<AddonID>()) = 0;
 
     /// @brief unregister addon
     /// @param id id of unregistering addon
@@ -64,7 +65,7 @@ namespace Common
     /// @param id id of the required addon
     /// @return addon instance
     /// @throws if addon is not registered or not initialized yet.
-    virtual Addon::SharedPtr GetAddon(AddonID id) const = 0;
+    virtual std::shared_ptr<Addon> GetAddon(AddonID id) const = 0;
 
     /// @brief starting work.
     /// creates all addons and initializes them.
@@ -80,19 +81,9 @@ namespace Common
   /// @throws in case of error
   /// @note Only one instance of addons manager can be at one time.
   /// When all smart pointers are gone addons manager deletes.
-  AddonsManager::SharedPtr GetAddonsManager();
   AddonsManager::UniquePtr CreateAddonsManager();
 
-  /// @brief Get instance of addon
-  /// @return instance od addon casted to specified type
-  /// @throws if unable to cast addon, unable to find addon, or in casr of error
-  template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(AddonID id)
-  {
-    return std::dynamic_pointer_cast<AddonClass>(GetAddonsManager()->GetAddon(id));
-  }
-
-  /// @brief Get instance of addon
+ /// @brief Get instance of addon
   /// @return instance od addon casted to specified type
   /// @throws if unable to cast addon, unable to find addon, or in casr of error
   template <class AddonClass>

@@ -148,7 +148,7 @@ namespace
       {
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
         addonData->Addon = addon;
-        addon->Initialize();
+        addon->Initialize(*this);
       }
       EnsureAllAddonsStarted();
    }
@@ -230,22 +230,6 @@ namespace
     AddonList Addons;
     bool ManagerStarted;
   };
-}
-
-Common::AddonsManager::SharedPtr Common::GetAddonsManager()
-{
-  static boost::mutex mutex;
-  boost::mutex::scoped_lock lock(mutex);
-  static AddonsManager::WeakPtr manager;
-  AddonsManager::SharedPtr managerInstance = manager.lock();
-  if (managerInstance)
-  {
-    return managerInstance;
-  }
-  
-  managerInstance = AddonsManager::SharedPtr(new AddonsManagerImpl());
-  manager = managerInstance;
-  return managerInstance;
 }
 
 Common::AddonsManager::UniquePtr Common::CreateAddonsManager()

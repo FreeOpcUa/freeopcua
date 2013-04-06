@@ -30,7 +30,7 @@ namespace
     }
   
   public: // Addon interface
-    virtual void Initialize()
+    virtual void Initialize(Common::AddonsManager&)
     {
     }
 

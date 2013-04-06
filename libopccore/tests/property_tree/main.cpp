@@ -16,13 +16,10 @@
 #include <exception>
 #include <iostream>
 
-#include <opccore/common/addons_core/addon_manager.h>
-
 int main(int argc, char** argv)
 {
   try
   {
-    std::shared_ptr<Common::AddonsManager> manager(Common::GetAddonsManager());
     CPPUNIT_NS::TestResult controller;
     CPPUNIT_NS::TestResultCollector result;
     controller.addListener(&result);
