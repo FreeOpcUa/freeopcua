@@ -139,8 +139,6 @@ test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 libtest_dynamic_addon.so: test_dynamic_addon.o
 	$(CC) -std=c++0x -g -Wall -ldl -shared -module -o libtest_dynamic_addon.so test_dynamic_addon.o
 
-.PHONY: libtest_dynamic_addon.o ibtest_dynamic_addon.so
-
 all-local: libtest_dynamic_addon.so
 
 CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o

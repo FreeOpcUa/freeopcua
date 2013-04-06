@@ -23,8 +23,9 @@ namespace
     {
     }
 
-    virtual void DoNothing()
+    virtual std::string GetStringWithHello() const
     {
+      return "hello";
     }
   };
 }

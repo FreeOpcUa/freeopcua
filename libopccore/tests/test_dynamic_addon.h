@@ -13,12 +13,14 @@
 
 #include <opccore/common/addons_core/addon.h>
 
+#include <string>
+
 namespace OpcCoreTests
 {
   class TestDynamicAddon : public Common::Addon
   {
   public:
-    virtual void DoNothing() = 0;
+    virtual std::string GetStringWithHello() const = 0;
   };
 
 }

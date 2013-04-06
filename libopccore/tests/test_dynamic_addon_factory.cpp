@@ -14,9 +14,27 @@
 
 #include <gtest/gtest.h>
 
+const char* modulePath = "./libtest_dynamic_addon.so";
+
 TEST(DynamicAddonFactory, CanCreateAddons)
 {
-  Common::DynamicAddonFactory dynamicFactory("./libtest_dynamic_addon.so");
+  Common::DynamicAddonFactory dynamicFactory(modulePath);
   ASSERT_TRUE(dynamicFactory.CreateAddon().get());
+}
+
+TEST(DynamicAddonFactory, AddonInterfaceCastsToManagerInterface)
+{
+  Common::DynamicAddonFactory dynamicFactory(modulePath);
+  std::shared_ptr<Common::Addon> addon(dynamicFactory.CreateAddon());
+  std::shared_ptr<OpcCoreTests::TestDynamicAddon> testAddon = std::dynamic_pointer_cast<OpcCoreTests::TestDynamicAddon>(addon);
+  ASSERT_TRUE(static_cast<bool>(testAddon));
+}
+
+TEST(DynamicAddonFactory, CanCallMethodsOfAddon)
+{
+  Common::DynamicAddonFactory dynamicFactory(modulePath);
+  std::shared_ptr<Common::Addon> addon(dynamicFactory.CreateAddon());
+  std::shared_ptr<OpcCoreTests::TestDynamicAddon> testAddon = std::dynamic_pointer_cast<OpcCoreTests::TestDynamicAddon>(addon);
+  ASSERT_EQ(testAddon->GetStringWithHello(), "hello");
 }
 
