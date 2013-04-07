@@ -11,12 +11,14 @@
 #ifndef register_h_79d7e2ad_2cb4_4ed4_97e4_5fdc1d25e87e
 #define register_h_79d7e2ad_2cb4_4ed4_97e4_5fdc1d25e87e
 
-#include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/common/addons_core/addon.h>
 
-namespace ErrorManager
+namespace InputOutputManager
 {
-  /// @brief register error manager in the Addons Manager
-  void RegisterErrorManagerAddon(Common::AddonsManager& addonsManager);
+
+  /// @brief create factory of io manager
+  Common::AddonFactory::UniquePtr CreateAddonFactory();
+
 }
 
 #endif // register_h_79d7e2ad_2cb4_4ed4_97e4_5fdc1d25e87e

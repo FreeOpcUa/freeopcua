@@ -9,8 +9,8 @@
 ///
 
 #include "manager_impl.h"
-#include "register.h"
 
+#include <opccore/managers/io_manager/factory.h>
 #include <opccore/managers/io_manager/id.h>
 #include <opccore/managers/io_manager/manager.h>
 #include <opccore/common/addons_core/addon.h>
@@ -80,8 +80,8 @@ namespace
   };
 } // namespace
 
-void InputOutputManager::RegisterManagerAddon(Common::AddonsManager& addonsManager)
+Common::AddonFactory::UniquePtr InputOutputManager::CreateAddonFactory()
 {
-  addonsManager.Register(RequestManagerID, Common::AddonFactory::UniquePtr(new RequestManagerFactory()));
+  return Common::AddonFactory::UniquePtr(new RequestManagerFactory());
 }
 

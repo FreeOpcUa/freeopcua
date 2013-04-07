@@ -14,7 +14,7 @@
 
 #include <opccore/managers/error_manager/id.h>
 #include <opccore/managers/error_manager/manager.h>
-#include <opccore/managers/error_manager/register.h>
+#include <opccore/managers/error_manager/factory.h>
 #include <opccore/common/exception.h>
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
@@ -37,10 +37,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ErrorManagerTestCase);
 void ErrorManagerTestCase::Test()
 {
   Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+/*
   Common::AddonsConfiguration addonsConfig;
   addonsConfig.StaticAddonsInitializers.push_back(std::bind(ErrorManager::RegisterErrorManagerAddon, std::placeholders::_1));
+*/
 
-  CPPUNIT_ASSERT_NO_THROW(manager->Start(addonsConfig));
+  manager->Register(ErrorManager::ManagerID, ErrorManager::CreateAddonFactory());
+  CPPUNIT_ASSERT_NO_THROW(manager->Start(/*addonsConfig*/));
   ErrorManager::Manager::SharedPtr errorManager;
   CPPUNIT_ASSERT_NO_THROW(errorManager = Common::GetAddon<ErrorManager::Manager>(*manager, ErrorManager::ManagerID));
   CPPUNIT_ASSERT(errorManager);

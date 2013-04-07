@@ -8,24 +8,18 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef TEST_DYNAMIC_ADDON_H
-#define TEST_DYNAMIC_ADDON_H
+#ifndef TEST_DYNAMIC_ADDON_ID_H
+#define TEST_DYNAMIC_ADDON_ID_H
 
 #include <opccore/common/addons_core/addon.h>
-#include <opccore/common/class_pointers.h>
 
 #include <string>
 
 namespace OpcCoreTests
 {
-  class TestDynamicAddon : public Common::Addon
-  {
-  public:
-    DEFINE_CLASS_POINTERS(TestDynamicAddon);
-  public:
-    virtual std::string GetStringWithHello() const = 0;
-  };
+
+  const char TestDynamicAddonID[] = "test_dynamic_addon";
 
 }
 
-#endif // TEST_DYNAMIC_ADDON_H
+#endif // TEST_DYNAMIC_ADDON_ID_H

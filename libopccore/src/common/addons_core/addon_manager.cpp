@@ -84,7 +84,7 @@ namespace
       Addons.insert(std::make_pair(id, AddonData(std::move(factory), dependencies)));
       if (ManagerStarted)
       {
-        DoStart(Common::AddonsConfiguration());
+        DoStart();
       }
     }
 
@@ -108,14 +108,14 @@ namespace
       return Addons.find(id)->second.Addon;
     }
 
-    virtual void Start(const Common::AddonsConfiguration& configuration)
+    virtual void Start()
     {
       if (ManagerStarted)
       {
         THROW_ERROR(AddonsManagerAlreadyStarted);
       }
       // TODO lock manager
-      DoStart(configuration);
+      DoStart();
       ManagerStarted = true;
     }
 
@@ -136,14 +136,8 @@ namespace
       ManagerStarted = false;
     }
   private:
-    void DoStart(const Common::AddonsConfiguration& configuration)
+    void DoStart()
     {
-      for (Common::AddonInitilizersList::const_iterator addonIt = configuration.StaticAddonsInitializers.begin(); addonIt != configuration.StaticAddonsInitializers.end(); ++addonIt)
-      {
-        Common::AddonInitializerFunc initializeAddon = *addonIt;
-        initializeAddon(*this);
-      }
-
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();

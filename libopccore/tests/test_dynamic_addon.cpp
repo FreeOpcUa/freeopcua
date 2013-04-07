@@ -15,7 +15,7 @@ namespace
   class TestDynamicAddonImpl : public OpcCoreTests::TestDynamicAddon
   {
   public:
-    virtual void Initialize()
+    virtual void Initialize(Common::AddonsManager&)
     {
     }
 

@@ -13,7 +13,7 @@
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/error_manager/id.h>
 #include <opccore/managers/error_manager/manager.h>
-#include <opccore/managers/error_manager/register.h>
+#include <opccore/managers/error_manager/factory.h>
 #include <opccore/managers/property_tree/property_tree.h>
 
 namespace
@@ -63,9 +63,8 @@ namespace
 } // unnamed namespace
 
 
-
-void ErrorManager::RegisterErrorManagerAddon(Common::AddonsManager& addonsManager)
+Common::AddonFactory::UniquePtr ErrorManager::CreateAddonFactory()
 {
-  addonsManager.Register(ManagerID, Common::AddonFactory::UniquePtr(new ErrorManagerFactory()));
+  return Common::AddonFactory::UniquePtr(new ErrorManagerFactory());
 }
 

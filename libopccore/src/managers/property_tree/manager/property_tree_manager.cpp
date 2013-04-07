@@ -11,7 +11,7 @@
 #include <opccore/managers/property_tree/manager.h>
 #include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/property_tree.h>
-#include <opccore/managers/property_tree/register.h>
+#include <opccore/managers/property_tree/factory.h>
 
 #include <opccore/common/addons_core/addon.h>
 #include <opccore/common/addons_core/addon_ids.h>
@@ -59,9 +59,8 @@ namespace
 
 } // unnamed namespace
 
-
-void PropertyTree::RegisterPropertyTreeAddon(Common::AddonsManager& addonsManager)
+Common::AddonFactory::UniquePtr PropertyTree::CreateAddonFactory()
 {
-  addonsManager.Register(ManagerID, Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory()));
+  return Common::AddonFactory::UniquePtr(new PropertyTreeManagerFactory());
 }
 

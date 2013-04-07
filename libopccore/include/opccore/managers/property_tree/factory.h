@@ -12,11 +12,14 @@
 #define register_h_e0917a15_c487_47cd_979b_02f5e8e4e31f
 
 
-#include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/common/addons_core/addon.h>
 
 namespace PropertyTree
 {
-  void RegisterPropertyTreeAddon(Common::AddonsManager& addonsManager);
+
+  Common::AddonFactory::UniquePtr CreateAddonFactory();
+
 }
 
 #endif // register_h_e0917a15_c487_47cd_979b_02f5e8e4e31f
+

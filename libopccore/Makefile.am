@@ -94,10 +94,14 @@ libopccore_a_SOURCES = \
                   include/opccore/managers/device_manager/manager.h \
                   include/opccore/managers/error_manager/manager.h \
                   include/opccore/managers/io_manager/errors.h \
+                  include/opccore/managers/io_manager/factory.h \
+                  include/opccore/managers/io_manager/id.h \
                   include/opccore/managers/io_manager/manager.h \
                   include/opccore/managers/property_tree/errors.h \
                   include/opccore/managers/property_tree/item.h \
                   include/opccore/managers/property_tree/group.h \
+                  include/opccore/managers/property_tree/factory.h \
+                  include/opccore/managers/property_tree/id.h \
                   include/opccore/managers/property_tree/manager.h \
                   include/opccore/managers/property_tree/named_object.h \
                   include/opccore/managers/property_tree/property_tree.h \
@@ -117,14 +121,12 @@ libopccore_a_SOURCES = \
                   src/managers/property_tree/tree_object.cpp \
                   src/managers/property_tree/group.cpp \
                   src/managers/property_tree/property_tree.cpp \
-                  src/managers/property_tree/manager/register.h \
                   src/managers/property_tree/manager/property_tree_manager.cpp \
                   src/managers/property_tree/item.cpp \
-                  src/managers/io_manager/manager_impl.h \
-                  src/managers/io_manager/register.h \
-                  src/managers/io_manager/register.cpp \
-                  src/managers/io_manager/manager_impl.cpp \
+                  src/managers/io_manager/factory.cpp \
                   src/managers/io_manager/io_errors.cpp \
+                  src/managers/io_manager/manager_impl.h \
+                  src/managers/io_manager/manager_impl.cpp \
                   src/managers/error_manager/register.h \
                   src/managers/error_manager/error_manager.cpp
 
@@ -158,6 +160,7 @@ common_test_LDADD = libopccore.a
 common_test_LDFLAGS = -lcppunit -ldl
 
 common_gtest_SOURCES = \
+                  tests/test_addon_manager.cpp \
                   tests/test_dynamic_addon_factory.cpp
 
 common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)

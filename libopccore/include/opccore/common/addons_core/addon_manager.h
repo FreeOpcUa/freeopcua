@@ -22,24 +22,6 @@ namespace Common
 {
   class Addon;
   class AddonFactory;
-  class AddonsManager;
-
-
-  typedef std::function<void(AddonsManager&)> AddonInitializerFunc;
-  typedef std::vector<AddonInitializerFunc> AddonInitilizersList;
-
-  struct DynamicAddonData
-  {
-    std::vector<std::string> ModulePath;  //!< path to shared libraries of dynamic modules
-    AddonID ID;                           //!< unique addonid in the scope of one process
-    std::vector<AddonID> AddonDependsOn; //!< list of addonst durrent module depends on
-  };
-
-  struct AddonsConfiguration
-  {
-    AddonInitilizersList StaticAddonsInitializers;
-    std::vector<DynamicAddonData> DynamicModules;  
-  };
 
   class AddonsManager : private NonCopyable
   {
@@ -70,7 +52,7 @@ namespace Common
     /// @brief starting work.
     /// creates all addons and initializes them.
     /// @throws if not all addons dependencies can be resolved.
-    virtual void Start(const AddonsConfiguration& config) = 0;
+    virtual void Start(/*const AddonsConfiguration& config*/) = 0;
 
     // @brief Stopping all addons;
     virtual void Stop() = 0;
@@ -83,7 +65,7 @@ namespace Common
   /// When all smart pointers are gone addons manager deletes.
   AddonsManager::UniquePtr CreateAddonsManager();
 
- /// @brief Get instance of addon
+  /// @brief Get instance of addon
   /// @return instance od addon casted to specified type
   /// @throws if unable to cast addon, unable to find addon, or in casr of error
   template <class AddonClass>

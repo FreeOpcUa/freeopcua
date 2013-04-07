@@ -113,15 +113,15 @@ am_libopccore_a_OBJECTS = libopccore_a-object_id.$(OBJEXT) \
 	libopccore_a-group.$(OBJEXT) \
 	libopccore_a-property_tree.$(OBJEXT) \
 	libopccore_a-property_tree_manager.$(OBJEXT) \
-	libopccore_a-item.$(OBJEXT) libopccore_a-register.$(OBJEXT) \
-	libopccore_a-manager_impl.$(OBJEXT) \
+	libopccore_a-item.$(OBJEXT) libopccore_a-factory.$(OBJEXT) \
 	libopccore_a-io_errors.$(OBJEXT) \
+	libopccore_a-manager_impl.$(OBJEXT) \
 	libopccore_a-error_manager.$(OBJEXT)
 libopccore_a_OBJECTS = $(am_libopccore_a_OBJECTS)
 am__EXEEXT_1 = common_gtest$(EXEEXT) common_test$(EXEEXT) \
 	error_manager_test$(EXEEXT) \
 	property_tree_manager_test$(EXEEXT) managers_test$(EXEEXT)
-am_common_gtest_OBJECTS =  \
+am_common_gtest_OBJECTS = common_gtest-test_addon_manager.$(OBJEXT) \
 	common_gtest-test_dynamic_addon_factory.$(OBJEXT)
 common_gtest_OBJECTS = $(am_common_gtest_OBJECTS)
 common_gtest_LDADD = $(LDADD)
@@ -422,10 +422,14 @@ libopccore_a_SOURCES = \
                   include/opccore/managers/device_manager/manager.h \
                   include/opccore/managers/error_manager/manager.h \
                   include/opccore/managers/io_manager/errors.h \
+                  include/opccore/managers/io_manager/factory.h \
+                  include/opccore/managers/io_manager/id.h \
                   include/opccore/managers/io_manager/manager.h \
                   include/opccore/managers/property_tree/errors.h \
                   include/opccore/managers/property_tree/item.h \
                   include/opccore/managers/property_tree/group.h \
+                  include/opccore/managers/property_tree/factory.h \
+                  include/opccore/managers/property_tree/id.h \
                   include/opccore/managers/property_tree/manager.h \
                   include/opccore/managers/property_tree/named_object.h \
                   include/opccore/managers/property_tree/property_tree.h \
@@ -445,14 +449,12 @@ libopccore_a_SOURCES = \
                   src/managers/property_tree/tree_object.cpp \
                   src/managers/property_tree/group.cpp \
                   src/managers/property_tree/property_tree.cpp \
-                  src/managers/property_tree/manager/register.h \
                   src/managers/property_tree/manager/property_tree_manager.cpp \
                   src/managers/property_tree/item.cpp \
-                  src/managers/io_manager/manager_impl.h \
-                  src/managers/io_manager/register.h \
-                  src/managers/io_manager/register.cpp \
-                  src/managers/io_manager/manager_impl.cpp \
+                  src/managers/io_manager/factory.cpp \
                   src/managers/io_manager/io_errors.cpp \
+                  src/managers/io_manager/manager_impl.h \
+                  src/managers/io_manager/manager_impl.cpp \
                   src/managers/error_manager/register.h \
                   src/managers/error_manager/error_manager.cpp
 
@@ -468,6 +470,7 @@ common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES)
 common_test_LDADD = libopccore.a
 common_test_LDFLAGS = -lcppunit -ldl
 common_gtest_SOURCES = \
+                  tests/test_addon_manager.cpp \
                   tests/test_dynamic_addon_factory.cpp
 
 common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
@@ -625,6 +628,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_addon_manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_dynamic_addon_factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-addons_manager_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-error_test.Po@am__quote@
@@ -640,6 +644,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-error_manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-errors_addon_manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-exception.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-group.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-io_errors.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-item.Po@am__quote@
@@ -648,7 +653,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-property_tree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-property_tree_manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-pt_errors.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-register.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-tree_object.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-value.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/managers_test-device_manager.Po@am__quote@
@@ -892,33 +896,19 @@ libopccore_a-item.obj: src/managers/property_tree/item.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-item.obj `if test -f 'src/managers/property_tree/item.cpp'; then $(CYGPATH_W) 'src/managers/property_tree/item.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/property_tree/item.cpp'; fi`
 
-libopccore_a-register.o: src/managers/io_manager/register.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-register.o -MD -MP -MF $(DEPDIR)/libopccore_a-register.Tpo -c -o libopccore_a-register.o `test -f 'src/managers/io_manager/register.cpp' || echo '$(srcdir)/'`src/managers/io_manager/register.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-register.Tpo $(DEPDIR)/libopccore_a-register.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/register.cpp' object='libopccore_a-register.o' libtool=no @AMDEPBACKSLASH@
+libopccore_a-factory.o: src/managers/io_manager/factory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-factory.o -MD -MP -MF $(DEPDIR)/libopccore_a-factory.Tpo -c -o libopccore_a-factory.o `test -f 'src/managers/io_manager/factory.cpp' || echo '$(srcdir)/'`src/managers/io_manager/factory.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-factory.Tpo $(DEPDIR)/libopccore_a-factory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/factory.cpp' object='libopccore_a-factory.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-register.o `test -f 'src/managers/io_manager/register.cpp' || echo '$(srcdir)/'`src/managers/io_manager/register.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-factory.o `test -f 'src/managers/io_manager/factory.cpp' || echo '$(srcdir)/'`src/managers/io_manager/factory.cpp
 
-libopccore_a-register.obj: src/managers/io_manager/register.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-register.obj -MD -MP -MF $(DEPDIR)/libopccore_a-register.Tpo -c -o libopccore_a-register.obj `if test -f 'src/managers/io_manager/register.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/register.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/register.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-register.Tpo $(DEPDIR)/libopccore_a-register.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/register.cpp' object='libopccore_a-register.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_a-factory.obj: src/managers/io_manager/factory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-factory.obj -MD -MP -MF $(DEPDIR)/libopccore_a-factory.Tpo -c -o libopccore_a-factory.obj `if test -f 'src/managers/io_manager/factory.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/factory.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-factory.Tpo $(DEPDIR)/libopccore_a-factory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/factory.cpp' object='libopccore_a-factory.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-register.obj `if test -f 'src/managers/io_manager/register.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/register.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/register.cpp'; fi`
-
-libopccore_a-manager_impl.o: src/managers/io_manager/manager_impl.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-manager_impl.o -MD -MP -MF $(DEPDIR)/libopccore_a-manager_impl.Tpo -c -o libopccore_a-manager_impl.o `test -f 'src/managers/io_manager/manager_impl.cpp' || echo '$(srcdir)/'`src/managers/io_manager/manager_impl.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-manager_impl.Tpo $(DEPDIR)/libopccore_a-manager_impl.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/manager_impl.cpp' object='libopccore_a-manager_impl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-manager_impl.o `test -f 'src/managers/io_manager/manager_impl.cpp' || echo '$(srcdir)/'`src/managers/io_manager/manager_impl.cpp
-
-libopccore_a-manager_impl.obj: src/managers/io_manager/manager_impl.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-manager_impl.obj -MD -MP -MF $(DEPDIR)/libopccore_a-manager_impl.Tpo -c -o libopccore_a-manager_impl.obj `if test -f 'src/managers/io_manager/manager_impl.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/manager_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/manager_impl.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-manager_impl.Tpo $(DEPDIR)/libopccore_a-manager_impl.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/manager_impl.cpp' object='libopccore_a-manager_impl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-manager_impl.obj `if test -f 'src/managers/io_manager/manager_impl.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/manager_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/manager_impl.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-factory.obj `if test -f 'src/managers/io_manager/factory.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/factory.cpp'; fi`
 
 libopccore_a-io_errors.o: src/managers/io_manager/io_errors.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-io_errors.o -MD -MP -MF $(DEPDIR)/libopccore_a-io_errors.Tpo -c -o libopccore_a-io_errors.o `test -f 'src/managers/io_manager/io_errors.cpp' || echo '$(srcdir)/'`src/managers/io_manager/io_errors.cpp
@@ -934,6 +924,20 @@ libopccore_a-io_errors.obj: src/managers/io_manager/io_errors.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-io_errors.obj `if test -f 'src/managers/io_manager/io_errors.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/io_errors.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/io_errors.cpp'; fi`
 
+libopccore_a-manager_impl.o: src/managers/io_manager/manager_impl.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-manager_impl.o -MD -MP -MF $(DEPDIR)/libopccore_a-manager_impl.Tpo -c -o libopccore_a-manager_impl.o `test -f 'src/managers/io_manager/manager_impl.cpp' || echo '$(srcdir)/'`src/managers/io_manager/manager_impl.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-manager_impl.Tpo $(DEPDIR)/libopccore_a-manager_impl.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/manager_impl.cpp' object='libopccore_a-manager_impl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-manager_impl.o `test -f 'src/managers/io_manager/manager_impl.cpp' || echo '$(srcdir)/'`src/managers/io_manager/manager_impl.cpp
+
+libopccore_a-manager_impl.obj: src/managers/io_manager/manager_impl.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-manager_impl.obj -MD -MP -MF $(DEPDIR)/libopccore_a-manager_impl.Tpo -c -o libopccore_a-manager_impl.obj `if test -f 'src/managers/io_manager/manager_impl.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/manager_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/manager_impl.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-manager_impl.Tpo $(DEPDIR)/libopccore_a-manager_impl.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/io_manager/manager_impl.cpp' object='libopccore_a-manager_impl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-manager_impl.obj `if test -f 'src/managers/io_manager/manager_impl.cpp'; then $(CYGPATH_W) 'src/managers/io_manager/manager_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/io_manager/manager_impl.cpp'; fi`
+
 libopccore_a-error_manager.o: src/managers/error_manager/error_manager.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-error_manager.o -MD -MP -MF $(DEPDIR)/libopccore_a-error_manager.Tpo -c -o libopccore_a-error_manager.o `test -f 'src/managers/error_manager/error_manager.cpp' || echo '$(srcdir)/'`src/managers/error_manager/error_manager.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-error_manager.Tpo $(DEPDIR)/libopccore_a-error_manager.Po
@@ -947,6 +951,20 @@ libopccore_a-error_manager.obj: src/managers/error_manager/error_manager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/managers/error_manager/error_manager.cpp' object='libopccore_a-error_manager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-error_manager.obj `if test -f 'src/managers/error_manager/error_manager.cpp'; then $(CYGPATH_W) 'src/managers/error_manager/error_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/src/managers/error_manager/error_manager.cpp'; fi`
+
+common_gtest-test_addon_manager.o: tests/test_addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_addon_manager.o -MD -MP -MF $(DEPDIR)/common_gtest-test_addon_manager.Tpo -c -o common_gtest-test_addon_manager.o `test -f 'tests/test_addon_manager.cpp' || echo '$(srcdir)/'`tests/test_addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_addon_manager.Tpo $(DEPDIR)/common_gtest-test_addon_manager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_addon_manager.cpp' object='common_gtest-test_addon_manager.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_addon_manager.o `test -f 'tests/test_addon_manager.cpp' || echo '$(srcdir)/'`tests/test_addon_manager.cpp
+
+common_gtest-test_addon_manager.obj: tests/test_addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_addon_manager.obj -MD -MP -MF $(DEPDIR)/common_gtest-test_addon_manager.Tpo -c -o common_gtest-test_addon_manager.obj `if test -f 'tests/test_addon_manager.cpp'; then $(CYGPATH_W) 'tests/test_addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_addon_manager.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_addon_manager.Tpo $(DEPDIR)/common_gtest-test_addon_manager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_addon_manager.cpp' object='common_gtest-test_addon_manager.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_addon_manager.obj `if test -f 'tests/test_addon_manager.cpp'; then $(CYGPATH_W) 'tests/test_addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_addon_manager.cpp'; fi`
 
 common_gtest-test_dynamic_addon_factory.o: tests/test_dynamic_addon_factory.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_dynamic_addon_factory.o -MD -MP -MF $(DEPDIR)/common_gtest-test_dynamic_addon_factory.Tpo -c -o common_gtest-test_dynamic_addon_factory.o `test -f 'tests/test_dynamic_addon_factory.cpp' || echo '$(srcdir)/'`tests/test_dynamic_addon_factory.cpp

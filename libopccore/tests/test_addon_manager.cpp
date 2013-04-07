@@ -8,17 +8,31 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <src/common/addons_core/addon_manager.h>
+#include "test_dynamic_addon_id.h"
+#include "test_dynamic_addon.h"
+
+#include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/common/addons_core/dynamic_addon_factory.h>
 
 #include <gtest/gtest.h>
 
-const char* modulePath = "./libtest_dynamic_addon.so";
+using namespace Common;
+
+namespace
+{
+  const char* modulePath = "./libtest_dynamic_addon.so";
+}
 
 TEST(AddonManager, CanCreateDynamicAddons)
 {
-  AddonsConfiguration dynamicAddonsCinfig;
-  dynamicAddonsConfig.DynamicModules.push_back(modulePath); 
   AddonsManager::UniquePtr addonsManager = CreateAddonsManager();
-  addonsManager->Start(dynamicAddonsConfig);
+  addonsManager->Register(OpcCoreTests::TestDynamicAddonID, Common::CreateDynamicAddonFactory(modulePath));
+  addonsManager->Start();
+  Addon::SharedPtr addon = addonsManager->GetAddon(OpcCoreTests::TestDynamicAddonID);
+  ASSERT_TRUE(static_cast<bool>(addon));
+
+  OpcCoreTests::TestDynamicAddon::SharedPtr test = GetAddon<OpcCoreTests::TestDynamicAddon>(*addonsManager, OpcCoreTests::TestDynamicAddonID);
+  ASSERT_TRUE(static_cast<bool>(test));
+  ASSERT_EQ(test->GetStringWithHello(), "hello");
 }
 

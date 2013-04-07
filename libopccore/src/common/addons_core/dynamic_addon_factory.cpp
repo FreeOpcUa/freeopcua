@@ -27,5 +27,9 @@ namespace Common
     return Create();
   }
 
+  Common::AddonFactory::UniquePtr CreateDynamicAddonFactory(const char* modulePath)
+  {
+    return Common::AddonFactory::UniquePtr(new DynamicAddonFactory(modulePath));
+  }
 }
 
