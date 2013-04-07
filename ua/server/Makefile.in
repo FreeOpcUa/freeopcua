@@ -155,10 +155,10 @@ opcuaserver_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(opcuaserver_LDFLAGS) $(LDFLAGS) -o $@
 am__test_opcuaserver_SOURCES_DIST = src/server/server_options.cpp \
-	tests/server/binary_server_test.cpp \
+	tests/server/tcp_server_test.cpp \
 	tests/server/test_server_options.cpp tests/thread_test.cpp
 @BUILD_UA_SERVER_TRUE@am_test_opcuaserver_OBJECTS = test_opcuaserver-server_options.$(OBJEXT) \
-@BUILD_UA_SERVER_TRUE@	test_opcuaserver-binary_server_test.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@	test_opcuaserver-tcp_server_test.$(OBJEXT) \
 @BUILD_UA_SERVER_TRUE@	test_opcuaserver-test_server_options.$(OBJEXT) \
 @BUILD_UA_SERVER_TRUE@	test_opcuaserver-thread_test.$(OBJEXT)
 test_opcuaserver_OBJECTS = $(am_test_opcuaserver_OBJECTS)
@@ -404,7 +404,7 @@ libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_IN
 
 @BUILD_UA_SERVER_TRUE@opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 @BUILD_UA_SERVER_TRUE@opcuaserver_LDADD = libopcuaserver.a
-@BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+@BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
 
 ##############################################################################
 # Tests
@@ -418,18 +418,18 @@ libuaclient_test_SOURCES = \
  tests/computer_session.cpp \
  tests/computer_view.cpp
 
-libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(OPC_CORE_INCLUDES)
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS)
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_SOURCES = \
 @BUILD_UA_SERVER_TRUE@ src/server/server_options.cpp \
-@BUILD_UA_SERVER_TRUE@ tests/server/binary_server_test.cpp \
+@BUILD_UA_SERVER_TRUE@ tests/server/tcp_server_test.cpp \
 @BUILD_UA_SERVER_TRUE@ tests/server/test_server_options.cpp \
 @BUILD_UA_SERVER_TRUE@ tests/thread_test.cpp
 
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_LDADD = libopcuaserver.a libuaclient.a
-@BUILD_UA_SERVER_TRUE@test_opcuaserver_LDFLAGS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+@BUILD_UA_SERVER_TRUE@test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -609,8 +609,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_options.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-binary_server_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-server_options.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-tcp_server_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-test_server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-thread_test.Po@am__quote@
 
@@ -873,19 +873,19 @@ test_opcuaserver-server_options.obj: src/server/server_options.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcuaserver-server_options.obj `if test -f 'src/server/server_options.cpp'; then $(CYGPATH_W) 'src/server/server_options.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/server_options.cpp'; fi`
 
-test_opcuaserver-binary_server_test.o: tests/server/binary_server_test.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-binary_server_test.o -MD -MP -MF $(DEPDIR)/test_opcuaserver-binary_server_test.Tpo -c -o test_opcuaserver-binary_server_test.o `test -f 'tests/server/binary_server_test.cpp' || echo '$(srcdir)/'`tests/server/binary_server_test.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcuaserver-binary_server_test.Tpo $(DEPDIR)/test_opcuaserver-binary_server_test.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/binary_server_test.cpp' object='test_opcuaserver-binary_server_test.o' libtool=no @AMDEPBACKSLASH@
+test_opcuaserver-tcp_server_test.o: tests/server/tcp_server_test.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-tcp_server_test.o -MD -MP -MF $(DEPDIR)/test_opcuaserver-tcp_server_test.Tpo -c -o test_opcuaserver-tcp_server_test.o `test -f 'tests/server/tcp_server_test.cpp' || echo '$(srcdir)/'`tests/server/tcp_server_test.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcuaserver-tcp_server_test.Tpo $(DEPDIR)/test_opcuaserver-tcp_server_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/tcp_server_test.cpp' object='test_opcuaserver-tcp_server_test.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcuaserver-binary_server_test.o `test -f 'tests/server/binary_server_test.cpp' || echo '$(srcdir)/'`tests/server/binary_server_test.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcuaserver-tcp_server_test.o `test -f 'tests/server/tcp_server_test.cpp' || echo '$(srcdir)/'`tests/server/tcp_server_test.cpp
 
-test_opcuaserver-binary_server_test.obj: tests/server/binary_server_test.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-binary_server_test.obj -MD -MP -MF $(DEPDIR)/test_opcuaserver-binary_server_test.Tpo -c -o test_opcuaserver-binary_server_test.obj `if test -f 'tests/server/binary_server_test.cpp'; then $(CYGPATH_W) 'tests/server/binary_server_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/binary_server_test.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcuaserver-binary_server_test.Tpo $(DEPDIR)/test_opcuaserver-binary_server_test.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/binary_server_test.cpp' object='test_opcuaserver-binary_server_test.obj' libtool=no @AMDEPBACKSLASH@
+test_opcuaserver-tcp_server_test.obj: tests/server/tcp_server_test.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-tcp_server_test.obj -MD -MP -MF $(DEPDIR)/test_opcuaserver-tcp_server_test.Tpo -c -o test_opcuaserver-tcp_server_test.obj `if test -f 'tests/server/tcp_server_test.cpp'; then $(CYGPATH_W) 'tests/server/tcp_server_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/tcp_server_test.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcuaserver-tcp_server_test.Tpo $(DEPDIR)/test_opcuaserver-tcp_server_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/tcp_server_test.cpp' object='test_opcuaserver-tcp_server_test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcuaserver-binary_server_test.obj `if test -f 'tests/server/binary_server_test.cpp'; then $(CYGPATH_W) 'tests/server/binary_server_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/binary_server_test.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcuaserver-tcp_server_test.obj `if test -f 'tests/server/tcp_server_test.cpp'; then $(CYGPATH_W) 'tests/server/tcp_server_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/tcp_server_test.cpp'; fi`
 
 test_opcuaserver-test_server_options.o: tests/server/test_server_options.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-test_server_options.o -MD -MP -MF $(DEPDIR)/test_opcuaserver-test_server_options.Tpo -c -o test_opcuaserver-test_server_options.o `test -f 'tests/server/test_server_options.cpp' || echo '$(srcdir)/'`tests/server/test_server_options.cpp

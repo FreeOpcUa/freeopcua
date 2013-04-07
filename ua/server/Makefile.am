@@ -82,7 +82,7 @@ opcuaserver_SOURCES = \
 
 opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 opcuaserver_LDADD = libopcuaserver.a
-opcuaserver_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
 
 TESTS += test_opcuaserver
 
@@ -103,22 +103,22 @@ libuaclient_test_SOURCES =  \
  tests/computer_session.cpp \
  tests/computer_view.cpp
 
-libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(OPC_CORE_INCLUDES)
+libuaclient_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 libuaclient_test_LDADD = libuaclient.a
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
+libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS)
 
 if BUILD_UA_SERVER
 
 
 test_opcuaserver_SOURCES = \
  src/server/server_options.cpp \
- tests/server/binary_server_test.cpp \
+ tests/server/tcp_server_test.cpp \
  tests/server/test_server_options.cpp \
  tests/thread_test.cpp
 
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 test_opcuaserver_LDADD = libopcuaserver.a libuaclient.a
-test_opcuaserver_LDFLAGS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread -Wl,-z,defs 
+test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 
 #bin_PROGRAMS += libopcua_server_test
 
@@ -130,3 +130,4 @@ test_opcuaserver_LDFLAGS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(UA_MAP
 
 
 endif
+

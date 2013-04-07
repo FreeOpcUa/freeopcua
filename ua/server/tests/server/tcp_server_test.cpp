@@ -48,14 +48,14 @@ namespace
 }
 
 
-TEST(OpcBinaryServer, AcceptConnections)
+TEST(TcpServer, AcceptConnections)
 {
   std::unique_ptr<IncomingConnectionProcessorMock> clientsProcessor(new IncomingConnectionProcessorMock);
   EXPECT_CALL(*clientsProcessor, DoProcess()).Times(1);
 
   std::unique_ptr<OpcUa::Server::ConnectionListener> server = OpcUa::CreateTcpServer(TestPort);
   server->Start(std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor>(clientsProcessor.release()));
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   std::unique_ptr<OpcUa::RemoteConnection> connect;
   ASSERT_NO_THROW(connect = OpcUa::Connect("localhost", TestPort));
   ASSERT_TRUE(connect.get());
@@ -76,7 +76,7 @@ namespace
   };
 }
 
-TEST(OpcBinaryServer, CanSendAndReceiveData)
+TEST(TcpServer, CanSendAndReceiveData)
 {
   const unsigned int port = TestPort + 1;
   std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
