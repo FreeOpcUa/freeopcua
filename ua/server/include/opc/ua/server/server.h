@@ -23,13 +23,14 @@ namespace OpcUa
     class IncomingConnectionProcessor : private Interface
     {
     public:
-      virtual void Process(std::unique_ptr<IOChannel> clientChannel) = 0;
+      virtual void Process(std::shared_ptr<IOChannel> clientChannel) = 0;
+      virtual void StopProcessing(std::shared_ptr<IOChannel> clientChannel) = 0;
     };
 
     class ConnectionListener : private Interface
     {
     public:
-      virtual void Start(std::unique_ptr<IncomingConnectionProcessor> connectionProcssor) = 0;
+      virtual void Start(std::shared_ptr<IncomingConnectionProcessor> connectionProcssor) = 0;
       virtual void Stop() = 0;
     };
 

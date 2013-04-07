@@ -27,6 +27,7 @@
 
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -52,6 +53,7 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@am__append_2 = libopcuaserver.a
 @BUILD_UA_SERVER_TRUE@am__append_3 = opcuaserver
 @BUILD_UA_SERVER_TRUE@am__append_4 = test_opcuaserver
+@BUILD_UA_SERVER_TRUE@am__append_5 = libopcua_tcp_server.la
 check_PROGRAMS = $(am__EXEEXT_4)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) \
@@ -98,8 +100,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(opcuaincludedir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(opcuaincludedir)" \
 	"$(DESTDIR)$(uaclientincludedir)" \
 	"$(DESTDIR)$(uaserverincludedir)"
 LIBRARIES = $(lib_LIBRARIES)
@@ -120,6 +122,17 @@ am_libuaclient_a_OBJECTS = libuaclient_a-socket_channel.$(OBJEXT) \
 	libuaclient_a-computer.$(OBJEXT) \
 	libuaclient_a-binary_connection.$(OBJEXT)
 libuaclient_a_OBJECTS = $(am_libuaclient_a_OBJECTS)
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libopcua_tcp_server_la_LIBADD =
+am__libopcua_tcp_server_la_SOURCES_DIST =  \
+	src/server/tcp_server_addon.cpp
+@BUILD_UA_SERVER_TRUE@am_libopcua_tcp_server_la_OBJECTS = libopcua_tcp_server_la-tcp_server_addon.lo
+libopcua_tcp_server_la_OBJECTS = $(am_libopcua_tcp_server_la_OBJECTS)
+libopcua_tcp_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libopcua_tcp_server_la_LDFLAGS) $(LDFLAGS) -o $@
+@BUILD_UA_SERVER_TRUE@am_libopcua_tcp_server_la_rpath = -rpath \
+@BUILD_UA_SERVER_TRUE@	$(libdir)
 @BUILD_UA_CMD_TRUE@am__EXEEXT_1 = opcua$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_2 = opcuaserver$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_3 = test_opcuaserver$(EXEEXT)
@@ -190,11 +203,14 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libopcuaserver_a_SOURCES) $(libuaclient_a_SOURCES) \
-	$(libuaclient_test_SOURCES) $(opcua_SOURCES) \
-	$(opcuaserver_SOURCES) $(test_opcuaserver_SOURCES)
+	$(libopcua_tcp_server_la_SOURCES) $(libuaclient_test_SOURCES) \
+	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
+	$(test_opcuaserver_SOURCES)
 DIST_SOURCES = $(am__libopcuaserver_a_SOURCES_DIST) \
-	$(libuaclient_a_SOURCES) $(libuaclient_test_SOURCES) \
-	$(am__opcua_SOURCES_DIST) $(am__opcuaserver_SOURCES_DIST) \
+	$(libuaclient_a_SOURCES) \
+	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
+	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
+	$(am__opcuaserver_SOURCES_DIST) \
 	$(am__test_opcuaserver_SOURCES_DIST)
 am__uaserverinclude_HEADERS_DIST = include/opc/ua/server/server.h \
 	include/opc/ua/server/tcp_server.h
@@ -379,6 +395,7 @@ libuaclient_a_SOURCES = \
   src/stream_attribute.h
 
 libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_INCLUDES)
+lib_LTLIBRARIES = $(am__append_5)
 @BUILD_UA_CMD_TRUE@opcua_SOURCES = \
 @BUILD_UA_CMD_TRUE@  src/opcua_main.cpp \
 @BUILD_UA_CMD_TRUE@  src/opcua_options.cpp
@@ -405,6 +422,11 @@ libuaclient_a_CPPFLAGS = -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(URI_IN
 @BUILD_UA_SERVER_TRUE@opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 @BUILD_UA_SERVER_TRUE@opcuaserver_LDADD = libopcuaserver.a
 @BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
+@BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_SOURCES = \
+@BUILD_UA_SERVER_TRUE@  src/server/tcp_server_addon.cpp
+
+@BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(URI_INCLUDES) $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES)
+@BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)
 
 ##############################################################################
 # Tests
@@ -522,6 +544,39 @@ libuaclient.a: $(libuaclient_a_OBJECTS) $(libuaclient_a_DEPENDENCIES) $(EXTRA_li
 	-rm -f libuaclient.a
 	$(libuaclient_a_AR) libuaclient.a $(libuaclient_a_OBJECTS) $(libuaclient_a_LIBADD)
 	$(RANLIB) libuaclient.a
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+	}
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+	for p in $$list; do \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
+	done
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libopcua_tcp_server.la: $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_DEPENDENCIES) $(EXTRA_libopcua_tcp_server_la_DEPENDENCIES) 
+	$(libopcua_tcp_server_la_LINK) $(am_libopcua_tcp_server_la_rpath) $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -593,6 +648,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_a-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_a-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_a-tcp_server.Po@am__quote@
@@ -732,6 +788,13 @@ libuaclient_a-binary_connection.obj: src/binary_connection.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='libuaclient_a-binary_connection.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_a-binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
+
+libopcua_tcp_server_la-tcp_server_addon.lo: src/server/tcp_server_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_tcp_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_tcp_server_la-tcp_server_addon.lo -MD -MP -MF $(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Tpo -c -o libopcua_tcp_server_la-tcp_server_addon.lo `test -f 'src/server/tcp_server_addon.cpp' || echo '$(srcdir)/'`src/server/tcp_server_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Tpo $(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/tcp_server_addon.cpp' object='libopcua_tcp_server_la-tcp_server_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_tcp_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_tcp_server_la-tcp_server_addon.lo `test -f 'src/server/tcp_server_addon.cpp' || echo '$(srcdir)/'`src/server/tcp_server_addon.cpp
 
 libuaclient_test-computer_attribute.o: tests/computer_attribute.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_attribute.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_attribute.Tpo -c -o libuaclient_test-computer_attribute.o `test -f 'tests/computer_attribute.cpp' || echo '$(srcdir)/'`tests/computer_attribute.cpp
@@ -1289,9 +1352,12 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS) config.h
+all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) \
+		config.h
+install-binPROGRAMS: install-libLTLIBRARIES
+
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(uaclientincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(uaclientincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1327,7 +1393,8 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-libtool mostlyclean-am
+	clean-libLIBRARIES clean-libLTLIBRARIES clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -1355,7 +1422,8 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS install-libLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLIBRARIES \
+	install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -1398,30 +1466,32 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
-	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
+	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
+	uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 
 .MAKE: all check-am install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-TESTS check-am \
 	clean clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-libtool ctags dist dist-all \
-	dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-compile \
-	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-opcuaincludeHEADERS \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-uaclientincludeHEADERS \
-	install-uaserverincludeHEADERS installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-libLIBRARIES \
+	clean-libLIBRARIES clean-libLTLIBRARIES clean-libtool ctags \
+	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-lzma \
+	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-hdr \
+	distclean-libtool distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLIBRARIES install-libLTLIBRARIES \
+	install-man install-opcuaincludeHEADERS install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	install-uaclientincludeHEADERS install-uaserverincludeHEADERS \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-libLIBRARIES uninstall-libLTLIBRARIES \
 	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 

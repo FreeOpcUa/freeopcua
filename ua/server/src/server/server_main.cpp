@@ -47,7 +47,11 @@ namespace
   class Stub : public Server::IncomingConnectionProcessor
   {
    public:
-    virtual void Process(std::unique_ptr<IOChannel> clientChannel)
+    virtual void Process(std::shared_ptr<IOChannel> clientChannel)
+    {
+    }
+
+    virtual void StopProcessing(std::shared_ptr<IOChannel> clientChannel)
     {
     }
   };

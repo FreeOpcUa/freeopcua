@@ -43,6 +43,7 @@ TESTS = libuaclient_test
 
 
 bin_PROGRAMS =
+lib_LTLIBRARIES =
 
 if BUILD_UA_CMD
 
@@ -85,6 +86,13 @@ opcuaserver_LDADD = libopcuaserver.a
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS)
 
 TESTS += test_opcuaserver
+
+lib_LTLIBRARIES += libopcua_tcp_server.la
+libopcua_tcp_server_la_SOURCES = \
+  src/server/tcp_server_addon.cpp
+
+libopcua_tcp_server_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(URI_INCLUDES) $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES)
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)
 
 endif
 

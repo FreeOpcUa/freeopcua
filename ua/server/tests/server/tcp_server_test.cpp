@@ -24,40 +24,28 @@ const unsigned short TestPort = 33445;
 
 namespace 
 {
-    class IncomingConnectionProcessorGarbage : public OpcUa::Server::IncomingConnectionProcessor
+
+    class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
     {
     public:
-      virtual void Process(std::unique_ptr<OpcUa::IOChannel>)
-      {
-        DoProcess();
-      }
-
-      virtual void DoProcess() = 0;
+      MOCK_METHOD1(Process, void (std::shared_ptr<OpcUa::IOChannel>));
+      MOCK_METHOD1(StopProcessing, void (std::shared_ptr<OpcUa::IOChannel> clientChannel));
    };
 
-
-    class IncomingConnectionProcessorMock : public IncomingConnectionProcessorGarbage
-    {
-    public:
-      //StrictMock<IncomingConnectionProcessorMock> Strict;
-      //NiceMock<IncomingConnectionProcessorMock> Nice;
-
-    public:
-      MOCK_METHOD0(DoProcess, void());
-    };
 }
 
 
 TEST(TcpServer, AcceptConnections)
 {
-  std::unique_ptr<IncomingConnectionProcessorMock> clientsProcessor(new IncomingConnectionProcessorMock);
-  EXPECT_CALL(*clientsProcessor, DoProcess()).Times(1);
+  std::shared_ptr<IncomingConnectionProcessorMock> clientsProcessor(new IncomingConnectionProcessorMock);
+  EXPECT_CALL(*clientsProcessor, Process(_)).Times(1);
 
   std::unique_ptr<OpcUa::Server::ConnectionListener> server = OpcUa::CreateTcpServer(TestPort);
-  server->Start(std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor>(clientsProcessor.release()));
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  server->Start(clientsProcessor);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   std::unique_ptr<OpcUa::RemoteConnection> connect;
   ASSERT_NO_THROW(connect = OpcUa::Connect("localhost", TestPort));
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
   ASSERT_TRUE(connect.get());
   server->Stop();
 }
@@ -67,11 +55,14 @@ namespace
   class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
   {
   public:
-    virtual void Process(std::unique_ptr<OpcUa::IOChannel> clientChannel)
+    virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
       char data[4] = {0};
       clientChannel->Receive(data, 4);
       clientChannel->Send(data, 4);
+    }
+    virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+    {
     }
   };
 }
@@ -79,9 +70,9 @@ namespace
 TEST(TcpServer, CanSendAndReceiveData)
 {
   const unsigned int port = TestPort + 1;
-  std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
+  std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
   std::unique_ptr<OpcUa::Server::ConnectionListener> server = OpcUa::CreateTcpServer(port);
-  server->Start(std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor>(clientsProcessor.release()));
+  server->Start(clientsProcessor);
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", port);
 

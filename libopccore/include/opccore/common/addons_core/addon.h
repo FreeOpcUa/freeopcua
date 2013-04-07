@@ -30,7 +30,7 @@ namespace Common
 
     /// @brief Stopping addon work.
     /// After calling this method addon should throw exception on any calls.
-   virtual void Stop() = 0;
+    virtual void Stop() = 0;
   };
 
   // @brief factory of addon.

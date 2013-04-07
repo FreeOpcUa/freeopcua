@@ -77,9 +77,9 @@ namespace
       }
     }
 
-    virtual void Start(std::unique_ptr<IncomingConnectionProcessor> connectionProcessor) 
+    virtual void Start(std::shared_ptr<IncomingConnectionProcessor> connectionProcessor) 
     {
-      Processor = std::move(connectionProcessor);
+      Processor = connectionProcessor;
       StartNewThread();
     }
 
@@ -173,7 +173,7 @@ namespace
 
   private:
     const unsigned short Port;
-    std::unique_ptr<IncomingConnectionProcessor> Processor;
+    std::shared_ptr<IncomingConnectionProcessor> Processor;
     volatile bool Stopped;
     volatile int Socket;
     std::unique_ptr<Thread> ServerThread;
