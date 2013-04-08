@@ -11,10 +11,22 @@
 #ifndef _OPC_UA_SERVER_OPTIONS_H_
 #define _OPC_UA_SERVER_OPTIONS_H_
 
+#include <string>
+#include <vector>
+
 namespace OpcUa
 {
   namespace Server
   {
+
+    struct ModuleConfig
+    {
+      std::string ID;
+      std::string Path;
+      std::vector<std::string> DependsOn;
+    };
+
+    typedef std::vector<ModuleConfig> ModulesConfiguration;
 
     class CommandLine
     {
@@ -26,8 +38,14 @@ namespace OpcUa
         return Port;
       }
 
+      ModulesConfiguration GetModules()
+      {
+        return Modules;
+      }
+
     private:
       int Port;
+      ModulesConfiguration Modules;
     };
 
   }

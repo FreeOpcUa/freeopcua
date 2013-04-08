@@ -12,16 +12,17 @@
 
 #include <gtest/gtest.h>
 
-TEST(ServerOptions, DefaultPortIs4841)
+TEST(ServerOptions, ParsesConfigurationFile)
 {
-  OpcUa::Server::CommandLine cmdline(0,0);
-  ASSERT_EQ(cmdline.GetPort(), 4841);
-}
-
-TEST(ServerOptions, PortCanBeSet)
-{
-  char* argv[2] = { "test.exe", "--port=12345" };
+  char* argv[2] = { "test.exe", "--config=./tests/configs/test.xml" };
   OpcUa::Server::CommandLine cmdline(2, argv);
-  ASSERT_EQ(cmdline.GetPort(), 12345);
+  OpcUa::Server::ModulesConfiguration modules = cmdline.GetModules();
+  ASSERT_EQ(modules.size(), 1);
+  const OpcUa::Server::ModuleConfig& module = modules.front();
+  ASSERT_EQ(module.ID, "child_module");
+  ASSERT_EQ(module.Path, "child_module.so");
+  ASSERT_EQ(module.DependsOn.size(), 2);
+  ASSERT_EQ(module.DependsOn[0], "parent_module1");
+  ASSERT_EQ(module.DependsOn[1], "parent_module2");
 }
 

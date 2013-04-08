@@ -10,10 +10,14 @@
 
 #include "server_options.h"
 
+#include <boost/foreach.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
-
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <string>
+#include <iostream>
 
 namespace
 {
@@ -21,15 +25,57 @@ namespace
   using namespace OpcUa;
 
   const char* OPTION_HELP = "help";
-  const char* OPTION_PORT = "port";
+  const char* OPTION_CONFIG = "config";
 
-  int GetPortOptionValue(const po::variables_map& vm)
+  std::string GetConfigOptionValue(const po::variables_map& vm)
   {
-    if (vm.count(OPTION_PORT))
+    if (vm.count(OPTION_CONFIG))
     {
-      return vm[OPTION_PORT].as<int>();
+      return vm[OPTION_CONFIG].as<std::string>();
     }
-    return 4841;
+    return "/etc/opcua/server.config";
+  }
+
+  struct Configuration
+  {
+    OpcUa::Server::ModulesConfiguration Modules;
+  };
+
+  Configuration ParseConfigurationFile(const std::string& configPath)
+  {
+    using boost::property_tree::ptree;
+    ptree pt;
+    read_xml(configPath, pt);
+    Configuration configuration;
+    const boost::optional<ptree&> modules = pt.get_child_optional("config.modules");
+    if (modules)
+    {
+      BOOST_FOREACH(const ptree::value_type& module, modules.get())
+      {
+        if (module.first != "module")
+        {
+          continue;
+        }
+
+        Server::ModuleConfig moduleConfig;
+        moduleConfig.ID = module.second.get<std::string>("id");
+        moduleConfig.Path = module.second.get<std::string>("path");
+        boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on");
+        if (dependsOn)
+        {
+          BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
+          {
+            if (depend.first != "id")
+            {
+              continue;
+            }
+            moduleConfig.DependsOn.push_back(depend.second.data());
+          }
+        }
+        configuration.Modules.push_back(moduleConfig);
+      }
+    }
+    return configuration;
   }
 
 }
@@ -46,7 +92,7 @@ namespace OpcUa
       po::options_description desc("Parameters");
       desc.add_options()
         (OPTION_HELP, "produce help message")
-        (OPTION_PORT, po::value<int>(), "Port number which will be listen for client conection.")
+        (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
         ;
 
       po::variables_map vm;
@@ -59,7 +105,9 @@ namespace OpcUa
         return;
       }
 
-      Port = GetPortOptionValue(vm);
+      std::string configFile = GetConfigOptionValue(vm);
+      Configuration configuration = ParseConfigurationFile(configFile);
+      Modules = configuration.Modules;
     }
 
   } // namespace Server

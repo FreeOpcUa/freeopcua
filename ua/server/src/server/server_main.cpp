@@ -12,6 +12,8 @@
 #include "server_options.h"
 
 #include <opc/ua/server/tcp_server.h>
+#include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/common/addons_core/dynamic_addon_factory.h>
 
 
 #include <boost/thread/mutex.hpp>
@@ -79,10 +81,18 @@ namespace
 
 
     Server::CommandLine cmdLine(argc, argv);
-    std::unique_ptr<Server::ConnectionListener> server = CreateTcpServer(cmdLine.GetPort());
-    server->Start(std::unique_ptr<Server::IncomingConnectionProcessor>(new Stub()));
+    Common::AddonsManager::UniquePtr addons = Common::CreateAddonsManager();
+    const Server::ModulesConfiguration& modules = cmdLine.GetModules();
+    for (Server::ModulesConfiguration::const_iterator moduleIt = modules.begin(); moduleIt != modules.end(); ++moduleIt)
+    {
+      addons->Register(moduleIt->ID, Common::CreateDynamicAddonFactory(moduleIt->Path.c_str()), moduleIt->DependsOn);
+    }
+    addons->Start();
+//    std::unique_ptr<Server::ConnectionListener> server = CreateTcpServer(cmdLine.GetPort());
+//    server->Start(std::unique_ptr<Server::IncomingConnectionProcessor>(new Stub()));
     ExitEvent.wait(lock);
-    server->Stop();
+    addons->Stop();
+//    server->Stop();
   }
 }
 

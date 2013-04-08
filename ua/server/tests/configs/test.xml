@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <module>
+      <id>child_module</id>
+      <path>child_module.so</path>
+      <depends_on>
+        <id>parent_module1</id>
+        <id>parent_module2</id>
+      </depends_on>
+    </module>
+  </module>
+</config>
+

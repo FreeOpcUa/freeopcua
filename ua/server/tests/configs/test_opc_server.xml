@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <module>
+      <id>test_opc_server</id>
+      <path>./.libs/libopcua_tcp_server.so</path>
+    </module>
+  </module>
+</config>
+
