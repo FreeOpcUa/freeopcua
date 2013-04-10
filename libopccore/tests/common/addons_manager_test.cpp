@@ -13,7 +13,6 @@
 
 #include <opccore/common/exception.h>
 #include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/device_manager/id.h>
 #include <opccore/managers/property_tree/id.h>

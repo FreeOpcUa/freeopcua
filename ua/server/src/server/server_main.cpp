@@ -88,11 +88,8 @@ namespace
       addons->Register(moduleIt->ID, Common::CreateDynamicAddonFactory(moduleIt->Path.c_str()), moduleIt->DependsOn);
     }
     addons->Start();
-//    std::unique_ptr<Server::ConnectionListener> server = CreateTcpServer(cmdLine.GetPort());
-//    server->Start(std::unique_ptr<Server::IncomingConnectionProcessor>(new Stub()));
     ExitEvent.wait(lock);
     addons->Stop();
-//    server->Stop();
   }
 }
 

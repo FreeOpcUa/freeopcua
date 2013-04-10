@@ -9,7 +9,6 @@
 ///
 
 #include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/error_manager/id.h>
 #include <opccore/managers/error_manager/manager.h>

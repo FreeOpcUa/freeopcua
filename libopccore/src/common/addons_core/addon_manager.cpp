@@ -72,7 +72,7 @@ namespace
       }
     }
 
-    virtual void Register(Common::AddonID id, Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID>& dependencies)
+    virtual void Register(const Common::AddonID& id, Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID>& dependencies)
     {
       // TODO lock manager
       if (ManagerStarted && !dependencies.empty())
@@ -88,7 +88,7 @@ namespace
       }
     }
 
-    virtual void Unregister(Common::AddonID id)
+    virtual void Unregister(const Common::AddonID& id)
     {
       // TODO lock manager
       EnsureAddonRegistered(id);
@@ -100,7 +100,7 @@ namespace
       Addons.erase(id);
     }
 
-    virtual Common::Addon::SharedPtr GetAddon(Common::AddonID id) const
+    virtual Common::Addon::SharedPtr GetAddon(const Common::AddonID& id) const
     {
       // TODO lock manager
       EnsureAddonRegistered(id);

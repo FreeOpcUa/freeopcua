@@ -9,14 +9,20 @@
 ///
 
 #include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/tcp_server.h>
 
+#include <algorithm>
 #include <iostream>
+#include <map>
 
 namespace
 {
 
-  class TcpServerAddon : public OpcUa::Server::TcpServerAddon
+  using namespace OpcUa::Server;
+
+  class TcpServerAddon : public ::OpcUa::Server::TcpServerAddon
   {
+    typedef std::map<unsigned short, std::shared_ptr<ConnectionListener>> ServersMap;
   public:
     TcpServerAddon()
     {
@@ -29,8 +35,23 @@ namespace
     }
 
 
-    virtual void SetConnectionProcessor(std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
+    virtual void Listen(const TcpParameters& params, std::shared_ptr<IncomingConnectionProcessor> processor)
     {
+      std::shared_ptr<ConnectionListener> server = OpcUa::CreateTcpServer(params.Port);
+      server->Start(processor);
+      Servers.insert(std::make_pair(params.Port, server));
+    }
+
+    virtual void StopListen(unsigned port)
+    {
+      ServersMap::iterator serverIt = Servers.find(port);
+      if (serverIt == Servers.end())
+      {
+        std::cerr << "Was an attempt to stop listening unknown tcp server." << std::endl;
+        return;
+      }
+      serverIt->second->Stop();
+      Servers.erase(serverIt);
     }
 
   public: // Common::Addon
@@ -41,9 +62,24 @@ namespace
 
     virtual void Stop()
     {
-      std::clog << "Stopping TcpServerAddon." << std::endl;
+      try
+      {
+        std::clog << "Stopping TcpServerAddon." << std::endl;
+        for (ServersMap::iterator serverIt = Servers.begin(); serverIt != Servers.end(); ++serverIt)
+        {
+          serverIt->second->Stop();
+        }
+        Servers.clear();
+        std::clog << "TcpServerAddon successfully stopped." << std::endl;
+      }
+      catch (const std::exception& exc)
+      {
+        std::clog << "Stopping TcpServerAddon failed with error: " << exc.what() << std::endl;
+      }
     }
 
+  private:
+    ServersMap Servers;
   };
 
 }

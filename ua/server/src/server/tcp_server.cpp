@@ -92,6 +92,10 @@ namespace
         shutdown(Socket, SHUT_RDWR);
         ServerThread->Join();
         ServerThread.reset();
+        if (Processor)
+        {
+          Processor.reset();
+        }
       }
     }
 

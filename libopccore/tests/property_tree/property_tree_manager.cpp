@@ -13,7 +13,6 @@
 #include <memory>
 
 #include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/property_tree/factory.h>
 #include <opccore/managers/property_tree/id.h>

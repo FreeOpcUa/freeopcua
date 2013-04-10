@@ -2,7 +2,6 @@
 #define __device_manager_h_456bd15c_7286_44b3_ba12_fbb8490d2e16
 
 #include <string>
-#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/managers/device_manager/manager.h>
 

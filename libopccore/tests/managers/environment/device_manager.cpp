@@ -9,7 +9,6 @@
 #include <opccore/managers/property_tree/group.h>
 #include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/item.h>
-#include <opccore/managers/property_tree/id.h>
 #include <opccore/managers/property_tree/manager.h>
 #include <opccore/managers/property_tree/property_tree.h>
 

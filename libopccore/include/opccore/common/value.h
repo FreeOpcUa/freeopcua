@@ -11,7 +11,7 @@
 #ifndef __MOZOPC_VALUE_H__
 #define __MOZOPC_VALUE_H__
 
-#include <opccore/common/addons_core/addon_ids.h>
+//#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/exception.h>
 
 #include <boost/variant.hpp>

@@ -12,7 +12,6 @@
 #ifndef __COMMON_ADDONS_MANAGER_H__
 #define __COMMON_ADDONS_MANAGER_H__
 
-#include <opccore/common/addons_core/addon_ids.h>
 #include <opccore/common/class_pointers.h>
 #include <opccore/common/noncopyable.h>
 #include <string>
@@ -20,6 +19,8 @@
 
 namespace Common
 {
+  typedef std::string AddonID;
+
   class Addon;
   class AddonFactory;
 
@@ -35,19 +36,19 @@ namespace Common
     /// @param dependencies ids of addons of which this addon depends on.
     /// @throws if addon already redistered. If manager started thows if not all dependencies resolved.
     /// If manager already started addon will be immediately created and initialized.
-    virtual void Register(AddonID id, std::unique_ptr<AddonFactory> factory, const std::vector<AddonID>& dependencies = std::vector<AddonID>()) = 0;
+    virtual void Register(const AddonID& id, std::unique_ptr<AddonFactory> factory, const std::vector<AddonID>& dependencies = std::vector<AddonID>()) = 0;
 
     /// @brief unregister addon
     /// @param id id of unregistering addon
     /// @throws if addon not found
     /// For unregistering addon will be called method Addon::Stop() and addon data will be removed.
-    virtual void Unregister(AddonID id) = 0;
+    virtual void Unregister(const AddonID& id) = 0;
 
     /// @brief getting addon by id
     /// @param id id of the required addon
     /// @return addon instance
     /// @throws if addon is not registered or not initialized yet.
-    virtual std::shared_ptr<Addon> GetAddon(AddonID id) const = 0;
+    virtual std::shared_ptr<Addon> GetAddon(const AddonID& id) const = 0;
 
     /// @brief starting work.
     /// creates all addons and initializes them.
@@ -69,7 +70,7 @@ namespace Common
   /// @return instance od addon casted to specified type
   /// @throws if unable to cast addon, unable to find addon, or in casr of error
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, AddonID id)
+  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, const AddonID& id)
   {
     return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
   }

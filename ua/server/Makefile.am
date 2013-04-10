@@ -67,9 +67,6 @@ uaserverinclude_HEADERS = \
 lib_LIBRARIES += libopcuaserver.a
 
 libopcuaserver_a_SOURCES = \
-  src/server/server_options.h \
-  src/server/server_options.cpp \
-  src/server/tcp_server.cpp \
   src/socket_channel.cpp \
   src/thread.cpp
 
@@ -79,7 +76,8 @@ libopcuaserver_a_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAP
 bin_PROGRAMS += opcuaserver
 opcuaserver_SOURCES = \
   src/server/server_main.cpp \
-  src/server/server_options.cpp
+  src/server/server_options.cpp \
+  src/server/server_options.h
 
 opcuaserver_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 opcuaserver_LDADD = libopcuaserver.a
@@ -89,10 +87,15 @@ TESTS += test_opcuaserver
 
 lib_LTLIBRARIES += libopcua_tcp_server.la
 libopcua_tcp_server_la_SOURCES = \
+  src/server/tcp_server.cpp \
   src/server/tcp_server_addon.cpp
 
-libopcua_tcp_server_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(URI_INCLUDES) $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES)
-libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)
+libopcua_tcp_server_la_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(URI_INCLUDES) $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES)
+libopcua_tcp_server_la_LIBADD = libopcuaserver.a
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+
+TESTS += test_tcp_server_addon
+TESTS += test_tcp_server
 
 endif
 
@@ -100,7 +103,7 @@ endif
 ##############################################################################
 # Tests
 
-TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI)
+TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI) TCP_ADDON_PATH=${top_builddir}/.libs/libopcua_tcp_server.so
 check_PROGRAMS = $(TESTS)
 
 # tests/binary_handshake.cpp
@@ -120,13 +123,27 @@ if BUILD_UA_SERVER
 
 test_opcuaserver_SOURCES = \
  src/server/server_options.cpp \
- tests/server/tcp_server_test.cpp \
  tests/server/test_server_options.cpp \
  tests/thread_test.cpp
 
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES)
 test_opcuaserver_LDADD = libopcuaserver.a libuaclient.a
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
+
+test_tcp_server_SOURCES = \
+ tests/server/tcp_server_test.cpp
+
+test_tcp_server_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+test_tcp_server_LDADD = libopcuaserver.a libuaclient.a libopcua_tcp_server.la
+test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+
+test_tcp_server_addon_SOURCES = \
+ tests/server/tcp_server_addon_test.cpp
+
+test_tcp_server_addon_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+test_tcp_server_addon_LDADD = libopcuaserver.a libuaclient.a 
+test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+
 
 #bin_PROGRAMS += libopcua_server_test
 
@@ -135,7 +152,6 @@ test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl
 #libopcua_server_test_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include $(UA_MAPPING_INCLUDES) $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(URI_INCLUDES)
 #libopcua_server_test_LDADD = libopcuaserver.a
 #libopcua_server_test_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lboost_thread -lpthread  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs
-
 
 endif
 

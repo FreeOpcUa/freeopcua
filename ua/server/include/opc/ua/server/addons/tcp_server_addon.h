@@ -19,10 +19,21 @@ namespace OpcUa
   namespace Server
   {
 
+    struct TcpParameters
+    {
+      unsigned short Port;
+
+      TcpParameters()
+        : Port(0)
+      {
+      }
+    };
+
     class TcpServerAddon : public Common::Addon
     {
     public:
-      virtual void SetConnectionProcessor(std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
+      virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
+      virtual void StopListen(unsigned port) = 0;
     };
 
   }
