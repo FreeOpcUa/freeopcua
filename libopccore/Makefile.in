@@ -362,7 +362,6 @@ common_HEADERS = \
 addonsdir = $(commondir)/addons_core
 addons_HEADERS = \
                   include/opccore/common/addons_core/addon.h \
-                  include/opccore/common/addons_core/addon_ids.h \
                   include/opccore/common/addons_core/addon_manager.h \
                   include/opccore/common/addons_core/errors.h
 
