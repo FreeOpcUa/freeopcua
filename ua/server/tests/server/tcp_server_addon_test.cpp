@@ -10,8 +10,9 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <opc/ua/server/server.h>
+#include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/server.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/dynamic_addon_factory.h>
 
@@ -70,26 +71,30 @@ TEST(TcpServerAddon, CanBeLoadedLoaded)
   addons->Stop();
 }
 
-
-TEST(TcpServerAddon, StopProcessingWhenError)
+TEST(TcpServerAddon, CanSendAndReceiveData)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
   addons->Register(TcpServerAddonID, Common::CreateDynamicAddonFactory(GetTcpServerAddonPath().c_str()));
   addons->Start();
 
-  std::weak_ptr<OpcUa::Server::IncomingConnectionProcessor> testProcessor;
-  {
-    std::shared_ptr<OpcUa::Server::TcpServerAddon> tcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(*addons, TcpServerAddonID);
-    OpcUa::Server::TcpParameters tcpParams;
-    tcpParams.Port = 1;
-    std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
-    testProcessor = clientsProcessor;
-    ASSERT_TRUE(static_cast<bool>(testProcessor.lock()));
-    tcpAddon->Listen(tcpParams, clientsProcessor);
-  }
+  std::shared_ptr<OpcUa::Server::TcpServerAddon> tcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(*addons, TcpServerAddonID);
+
+  std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
+  OpcUa::Server::TcpParameters tcpParams;
+  tcpParams.Port = TestPort + 1;
+  tcpAddon->Listen(tcpParams, clientsProcessor);
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  ASSERT_FALSE(static_cast<bool>(testProcessor.lock()));
+  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", tcpParams.Port);
+
+  char data[4] = {0, 1, 2, 3};
+  connection->Send(data, 4);
+  char dataReceived[4] = {0};
+  connection->Receive(dataReceived, 4);
+
+  ASSERT_EQ(memcmp(data, dataReceived, 4), 0);
+
+  connection.reset();
 
   addons->Stop();
 }
