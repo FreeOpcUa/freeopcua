@@ -7,7 +7,7 @@
 
 AC_INIT
 AC_CONFIG_AUX_DIR([.])
-AC_CONFIG_SRCDIR([src/opc_client/server.cpp])
+AC_CONFIG_SRCDIR([src/common/addons_core/addon_manager.cpp])
 AM_INIT_AUTOMAKE([libopccore], [0.1.0], [rykovanov.as@gmail.com])
 
 CXXFLAGS="-O0 -g -Wall -std=c++0x"

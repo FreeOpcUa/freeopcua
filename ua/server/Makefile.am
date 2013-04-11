@@ -12,6 +12,7 @@ opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 uaclientincludedir = $(opcuaincludedir)/client
 uaserverincludedir = $(opcuaincludedir)/server
+addonsincludedir = $(uaserverincludedir)/addons
 
 
 opcuainclude_HEADERS = \
@@ -30,7 +31,9 @@ EXTRA_DIST = \
   src/internal/thread.h \
   src/endpoints.h \
   src/stream_computer.h \
-  src/stream_attribute.h
+  src/stream_attribute.h \
+  tests/configs/test.xml \
+  tests/configs/test_tcp_server.xml
 
 
 TESTS = libuaclient_test
@@ -43,11 +46,18 @@ if BUILD_UA_CMD
 bin_PROGRAMS += opcua
 
 opcua_SOURCES = \
-  src/socket_channel.cpp \
-  src/computer.cpp \
   src/binary_connection.cpp \
+  src/computer.cpp \
+  src/endpoints.h \
   src/opcua_main.cpp \
-  src/opcua_options.cpp
+  src/opcua_options.cpp \
+  src/opcua_options.h \
+  src/socket_channel.cpp \
+  src/stream_attribute.h \
+  src/stream_computer.h \
+  src/stream_view.h
+
+#src/thread.cpp
 
 
 INCLUDES= -I$(top_srcdir)/src -I$(top_srcdir)/include  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
@@ -85,6 +95,10 @@ opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(U
 TESTS += test_opcuaserver
 
 lib_LTLIBRARIES += libopcua_tcp_server.la
+
+addonsinclude_HEADERS = \
+  include/opc/ua/server/addons/tcp_server_addon.h
+
 libopcua_tcp_server_la_SOURCES = \
   src/server/tcp_server.cpp \
   src/server/tcp_server_addon.cpp \
@@ -111,6 +125,7 @@ libuaclient_test_SOURCES =  \
   src/socket_channel.cpp \
   src/computer.cpp \
   src/binary_connection.cpp \
+  tests/common.h \
   tests/computer_attribute.cpp \
   tests/computer_connect.cpp \
   tests/computer_endpoints.cpp \

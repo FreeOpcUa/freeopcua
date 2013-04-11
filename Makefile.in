@@ -24,6 +24,12 @@
 # $Id:  $
 # $Date: $
 # $Revision: $
+
+#temporary unused projects
+# libcom
+# opctestlinux
+# libtestopcserver
+# libopc
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -186,11 +192,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = \
           third-party \
-          libcom \
           libopccore \
-          libopc \
-          opctestlinux \
-          libtestopcserver \
           ua/libuamappings \
           ua/server
 

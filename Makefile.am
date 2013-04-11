@@ -8,13 +8,16 @@
 # $Date: $
 # $Revision: $
 
+
+#temporary unused projects
+# libcom
+# opctestlinux
+# libtestopcserver
+# libopc
+
 SUBDIRS = \
           third-party \
-          libcom \
           libopccore \
-          libopc \
-          opctestlinux \
-          libtestopcserver \
           ua/libuamappings \
           ua/server
 

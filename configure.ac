@@ -17,12 +17,13 @@ AC_CONFIG_MACRO_DIR([m4])
 #################################################################
 AC_CONFIG_FILES([third-party/Makefile])
 
+# libcom 
+# libopc 
+# libtestopcserver 
+# opctestlinux 
+
 AC_CONFIG_SUBDIRS([
- libcom 
  libopccore 
- libopc 
- opctestlinux 
- libtestopcserver 
  ua/libuamappings 
  ua/server])
 

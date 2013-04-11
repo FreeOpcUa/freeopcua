@@ -635,11 +635,7 @@ enable_option_checking
 host_alias
 target_alias'
 ac_subdirs_all='
- libcom 
  libopccore 
- libopc 
- opctestlinux 
- libtestopcserver 
  ua/libuamappings 
  ua/server'
 
@@ -2184,9 +2180,14 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 ac_config_files="$ac_config_files third-party/Makefile"
 
 
+# libcom 
+# libopc 
+# libtestopcserver 
+# opctestlinux 
 
 
-subdirs="$subdirs libcom libopccore libopc opctestlinux libtestopcserver ua/libuamappings ua/server"
+
+subdirs="$subdirs libopccore ua/libuamappings ua/server"
 
 
 ac_config_files="$ac_config_files Makefile"

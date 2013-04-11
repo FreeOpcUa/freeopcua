@@ -22,7 +22,7 @@
 
 using namespace testing;
 
-const unsigned short TestPort = 33445;
+const unsigned short TestPort = 33449;
 
 
 namespace 
@@ -77,13 +77,15 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
   addons->Register(TcpServerAddonID, Common::CreateDynamicAddonFactory(GetTcpServerAddonPath().c_str()));
   addons->Start();
 
-  std::shared_ptr<OpcUa::Server::TcpServerAddon> tcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(*addons, TcpServerAddonID);
-
-  std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
   OpcUa::Server::TcpParameters tcpParams;
   tcpParams.Port = TestPort + 1;
-  tcpAddon->Listen(tcpParams, clientsProcessor);
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  {
+    std::shared_ptr<OpcUa::Server::TcpServerAddon> tcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(*addons, TcpServerAddonID);
+    std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
+    tcpAddon->Listen(tcpParams, clientsProcessor);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
 
   std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", tcpParams.Port);
 
@@ -97,5 +99,6 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
   connection.reset();
 
   addons->Stop();
+  addons.reset();
 }
 

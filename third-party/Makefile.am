@@ -29,11 +29,11 @@ uripp-1.0.0: uripp-1.0.0.tar.gz
 
 uri: uripp-1.0.0
 	test -e uri || ln -s uripp-1.0.0 uri
-	$(MAKE) -C uri
 
 all: gmock gtest uri
 	$(MAKE) -C gmock
 	$(MAKE) -C gtest
+	$(MAKE) -C uri
 
 check: gmock gtest
 	$(MAKE) -C gmock
