@@ -26,12 +26,10 @@ namespace
   public:
     TcpServerAddon()
     {
-      std::clog << "Created TcpServerAddon." << std::endl;
     }
 
     virtual ~TcpServerAddon()
     {
-      std::clog << "Destroyed TcpServerAddon." << std::endl;
     }
 
 
@@ -57,20 +55,17 @@ namespace
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& manager)
     {
-      std::clog << "Initializing TcpServerAddon." << std::endl;
     }
 
     virtual void Stop()
     {
       try
       {
-        std::clog << "Stopping TcpServerAddon." << std::endl;
         for (ServersMap::iterator serverIt = Servers.begin(); serverIt != Servers.end(); ++serverIt)
         {
           serverIt->second->Stop();
         }
         Servers.clear();
-        std::clog << "TcpServerAddon successfully stopped." << std::endl;
       }
       catch (const std::exception& exc)
       {

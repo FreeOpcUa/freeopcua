@@ -12,7 +12,6 @@
 #include <gtest/gtest.h>
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opc/ua/server/server.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/dynamic_addon_factory.h>
 

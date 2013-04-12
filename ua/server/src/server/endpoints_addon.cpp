@@ -20,8 +20,13 @@ namespace
   class Endpoints : public EndpointsAddon
   {
   public:
+    Endpoints()
+    {
+    }
+
     virtual std::vector<Endpoint> GetEndpoints() const
     {
+      return std::vector<Endpoint>();
     }
 
   public:

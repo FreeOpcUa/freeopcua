@@ -29,6 +29,8 @@ namespace OpcUa
       virtual std::vector<Endpoint> GetEndpoints() const = 0;
     };
 
+    const char EndpointsAddonID[] = "endpoints";
+
   } // namespace Server
 } // nmespace OpcUa
 

@@ -21,12 +21,14 @@ namespace
 {
   struct AddonData
   {
+    Common::AddonID ID;
     Common::AddonFactory::SharedPtr Factory;
     std::vector<Common::AddonID> Dependencies;
     Common::Addon::SharedPtr Addon;
 
-    AddonData(Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID> dependencies)
-      : Factory(std::move(factory))
+    AddonData(const Common::AddonID& id, Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID> dependencies)
+      : ID(id)
+      , Factory(std::move(factory))
       , Dependencies(dependencies)
     {
     }
@@ -41,6 +43,7 @@ namespace
   {
     if (addonPair.second.Addon)
     {
+      std::clog << "Stopping addon '" << addonPair.second.ID << "'" <<  std::endl; 
       addonPair.second.Addon->Stop();
     }
   }
@@ -81,7 +84,7 @@ namespace
       }
 
       EnsureAddonNotRegistered(id);
-      Addons.insert(std::make_pair(id, AddonData(std::move(factory), dependencies)));
+      Addons.insert(std::make_pair(id, AddonData(id, std::move(factory), dependencies)));
       if (ManagerStarted)
       {
         DoStart();
@@ -140,8 +143,10 @@ namespace
     {
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
+        std::clog << "Creating addon '" << addonData->ID << "'" <<  std::endl; 
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
         addonData->Addon = addon;
+        std::clog << "Initializing addon '" << addonData->ID << "'" <<  std::endl; 
         addon->Initialize(*this);
       }
       EnsureAllAddonsStarted();

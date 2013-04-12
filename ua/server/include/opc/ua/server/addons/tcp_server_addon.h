@@ -36,6 +36,8 @@ namespace OpcUa
       virtual void StopListen(unsigned port) = 0;
     };
 
+    const char TcpServerAddonID[] = "tcp_server";
+
   }
 }
 

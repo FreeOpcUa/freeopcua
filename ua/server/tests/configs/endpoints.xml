@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+
+    <module>
+      <id>tcp_server</id>
+      <path>./.libs/libopcua_tcp_server.so</path>
+    </module>
+
+    <module>
+      <id>endpoints</id>
+      <path>./.libs/libopcua_endpoints.so</path>
+      <depends_on>
+        <id>tcp_server</id>
+      </depends_on>
+    </module>
+
+  </modules>
+</config>
+
