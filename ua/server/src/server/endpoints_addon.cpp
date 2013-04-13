@@ -11,6 +11,7 @@
 #include <opc/ua/server/addons/endpoints.h>
 
 #include <opccore/common/addons_core/addon_manager.h>
+#include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 
@@ -25,11 +26,38 @@ namespace
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
       OpcUa::Binary::IOStream stream(clientChannel);
+      Hello(stream);
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
-    }   
+    }
+
+  private:
+    void Hello(OpcUa::Binary::IOStream& stream)
+    {
+      using namespace OpcUa::Binary;
+
+      Header hdr;
+      stream >> hdr;
+      if (hdr.Type != MT_HELLO || hdr.Chunk != CHT_SINGLE)
+      {
+        return;
+      }
+
+      OpcUa::Binary::Hello hello;
+      stream >> hello;
+
+      OpcUa::Binary::Acknowledge ack;
+      ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      ack.MaxChunkCount = 1;
+
+      OpcUa::Binary::Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
+      ackHeader.AddSize(RawSize(ack));
+      stream << ackHeader << ack << flush; 
+    }
   };
 
 

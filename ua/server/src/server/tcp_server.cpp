@@ -75,6 +75,7 @@ namespace
     {
       ServerThread->Join();
       ServerThread.reset();
+      std::clog << "Client thread stopped." << std::endl;
     }
 
   protected:

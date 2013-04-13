@@ -495,7 +495,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@libopcua_endpoints_la_SOURCES = src/server/endpoints_addon.cpp
 @BUILD_UA_SERVER_TRUE@libopcua_endpoints_la_CPPFLAGS = $(INCLUDES)
-@BUILD_UA_SERVER_TRUE@libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 ##############################################################################
 # Tests
