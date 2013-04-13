@@ -19,8 +19,6 @@ Makefile
 config.h
 libtool
 stamp-h1
-*gmock*
-*gtest*
 
 *.libs
 
@@ -35,9 +33,6 @@ managers_test
 opc_client_test
 property_tree_manager_test
 opctest
-third-party/uri
-third-party/uripp-1.0.0.tar.gz
-third-party/uripp-1.0.0/
 ua/uaclient/libuaclient_test
 ua/uaclient/opcua
 

@@ -15,7 +15,7 @@ AM_INIT_AUTOMAKE([opc-infrastructure], [0.1], [rykovanov.as@gmail.com])
 AC_CONFIG_MACRO_DIR([m4])
 
 #################################################################
-AC_CONFIG_FILES([third-party/Makefile])
+#AC_CONFIG_FILES([third-party/Makefile])
 
 # libcom 
 # libopc 
@@ -23,6 +23,9 @@ AC_CONFIG_FILES([third-party/Makefile])
 # opctestlinux 
 
 AC_CONFIG_SUBDIRS([
+ third-party/gmock
+ third-party/gtest
+ third-party/uripp
  libopccore 
  ua/libuamappings 
  ua/server])

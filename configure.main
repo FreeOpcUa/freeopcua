@@ -12,7 +12,7 @@ $ROOT_DIRECTORY/configure \
   --with-ua-mappings=$ROOT_DIRECTORY/ua/libuamappings \
   --with-gtest=$ROOT_DIRECTORY/third-party/gtest \
   --with-gmock=$ROOT_DIRECTORY/third-party/gmock \
-  --with-uri-library=$ROOT_DIRECTORY/third-party/uri \
+  --with-uri-library=$ROOT_DIRECTORY/third-party/uripp \
   --with-opc-test=$ROOT_DIRECTORY/opctestlinux \
   --enable-linux-com \
   --enable-ua-cmd \

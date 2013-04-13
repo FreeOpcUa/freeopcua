@@ -15155,9 +15155,11 @@ ac_config_headers="$ac_config_headers config.h"
 @%:@ Check whether --with-gtest was given.
 if test "${with_gtest+set}" = set; then :
   withval=$with_gtest;  
-              GTEST_LIB=-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive
+#              AC_SUBST([GTEST_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive])
+              GTEST_LIB=-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest.a,--no-whole-archive
 
-              GTEST_MAIN_LIB=-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive
+#              AC_SUBST([GTEST_MAIN_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive])
+              GTEST_MAIN_LIB=-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest_main.a,--no-whole-archive
 
               GTEST_INCLUDES=-I$with_gtest/include
 
@@ -15171,7 +15173,8 @@ fi
 @%:@ Check whether --with-gmock was given.
 if test "${with_gmock+set}" = set; then :
   withval=$with_gmock;  
-              GMOCK_LIBS=-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive 
+#              AC_SUBST([GMOCK_LIBS], [-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive ])
+              GMOCK_LIBS=-Wl,--whole-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive 
 
               GMOCK_INCLUDES=-I$with_gmock/include
 
@@ -15186,7 +15189,8 @@ fi
 @%:@ Check whether --with-uri-library was given.
 if test "${with_uri_library+set}" = set; then :
   withval=$with_uri_library;  
-              URI_LIBS=-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive
+#              AC_SUBST([URI_LIBS], [-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive])
+              URI_LIBS=-Wl,--whole-archive,$with_uri_library/src/.libs/liburipp.a,--no-whole-archive
 
               URI_INCLUDES=-I$with_uri_library/src
 

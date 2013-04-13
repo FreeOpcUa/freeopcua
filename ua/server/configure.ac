@@ -24,8 +24,10 @@ AC_CONFIG_HEADER([config.h])
 AC_ARG_WITH([gtest], 
             [AS_HELP_STRING([--with-gtest=DIR], [defines path to gtest root directory])],
             [ 
-              AC_SUBST([GTEST_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive])
-              AC_SUBST([GTEST_MAIN_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive])
+#              AC_SUBST([GTEST_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive])
+              AC_SUBST([GTEST_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest.a,--no-whole-archive])
+#              AC_SUBST([GTEST_MAIN_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive])
+              AC_SUBST([GTEST_MAIN_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest_main.a,--no-whole-archive])
               AC_SUBST([GTEST_INCLUDES], [-I$with_gtest/include])
               AC_MSG_NOTICE([Gtest path: $GTEST_INCLUDES]) 
             ], 
@@ -35,7 +37,8 @@ AC_ARG_WITH([gtest],
 AC_ARG_WITH([gmock], 
             [AS_HELP_STRING([--with-gmock=DIR], [defines path to gmock root directory])],
             [ 
-              AC_SUBST([GMOCK_LIBS], [-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive ])
+#              AC_SUBST([GMOCK_LIBS], [-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive ])
+              AC_SUBST([GMOCK_LIBS], [-Wl,--whole-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive ])
               AC_SUBST([GMOCK_INCLUDES], [-I$with_gmock/include])
               AC_MSG_NOTICE([Gmock path: $GMOCK_INCLUDES]) 
             ], 
@@ -46,7 +49,8 @@ AC_ARG_WITH([gmock],
 AC_ARG_WITH([uri-library], 
             [AS_HELP_STRING([--with-uri-library=DIR], [defines path to uri library])],
             [ 
-              AC_SUBST([URI_LIBS], [-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive])
+#              AC_SUBST([URI_LIBS], [-Wl,-L$with_uri_library/src/.libs,--whole-archive,-luripp,--no-whole-archive])
+              AC_SUBST([URI_LIBS], [-Wl,--whole-archive,$with_uri_library/src/.libs/liburipp.a,--no-whole-archive])
               AC_SUBST([URI_INCLUDES], [-I$with_uri_library/src])
               AC_MSG_NOTICE([URI library path: $with_uri_library]) 
             ], 
