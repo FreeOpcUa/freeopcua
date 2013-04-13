@@ -17,7 +17,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    Thread::Thread(std::function<void()> f, ThreadObserver& observer)
+    Thread::Thread(std::function<void()> f, ThreadObserver* observer)
       : Observer(observer)
       , Func(f)
       , Impl(Thread::ThreadProc, this)
@@ -29,28 +29,22 @@ namespace OpcUa
       Impl.join();
     }
 
-    void Thread::Run() const
+    void Thread::Run()
     {
       try
       {
         Func();
-        Observer.OnSuccess();
+        if (Observer)
+        {
+          Observer->OnSuccess();
+        }
       }
       catch (const std::exception& exc)
       {
-        Observer.OnError(exc);
-      }
-    }
-
-    void Thread::ReportSuccess() const
-    {
-      try
-      {
-      }
-      catch (const std::logic_error& exc)
-      {
-        std::cerr << "FATAL ERROR! Oserver threw an exception during call of OnSuccess. " << exc.what() << std::endl;
-        exit(-1);
+        if (Observer)
+        {
+          Observer->OnError(exc);
+        }
       }
     }
 

@@ -16,6 +16,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <iostream>
+#include <map>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdexcept>
@@ -34,7 +35,7 @@ namespace
   class SocketHolder
   {
   public:
-    SocketHolder(int socket)
+    explicit SocketHolder(int socket)
       : Socket(socket)
     {
     }
@@ -47,10 +48,67 @@ namespace
       }
     }
 
+    bool operator < (int sock) const
+    {
+      return Socket < sock;
+    }
+
   private:
     int Socket;
   };
 
+
+  class ClientThread : public ThreadObserver
+  {
+  public:
+    ClientThread(std::shared_ptr<IOChannel> channel, std::shared_ptr<IncomingConnectionProcessor> processor, std::function<void()> onFinish)
+      : Channel(channel)
+      , Processor(processor)
+      , OnFinish(onFinish)
+    {
+      std::clog << "Starting new client thread." << std::endl;
+      std::function<void()> func = std::bind(&ClientThread::Run, std::ref(*this));
+      ServerThread.reset(new Thread(func));
+    }
+
+    ~ClientThread()
+    {
+      ServerThread->Join();
+      ServerThread.reset();
+    }
+
+  protected:
+    virtual void OnSuccess()
+    {
+      std::cerr << "Server thread was exited successfully." << std::endl;
+    }
+
+    virtual void OnError(const std::exception& exc)
+    {
+      std::cerr << "Server thread has exited with error:" << exc.what() << std::endl;
+    }   
+
+  private:
+    void Run()
+    {
+      try
+      {
+        Processor->Process(Channel); 
+      }
+      catch (const std::exception& exc)
+      {
+        std::cerr << "unable to process client connection. " << exc.what() << std::endl;
+      }
+      std::thread t(OnFinish);
+      t.detach();
+    }
+
+  private:
+    std::shared_ptr<IOChannel> Channel;
+    std::shared_ptr<IncomingConnectionProcessor> Processor;
+    std::function<void()> OnFinish;
+    std::unique_ptr<Thread> ServerThread;
+  };
 
 
   class TcpServer
@@ -116,8 +174,7 @@ namespace
       std::clog << "Starting new server thread." << std::endl;
       Stopped = false;
       std::function<void()> func = std::bind(&TcpServer::Run, std::ref(*this));
-      ThreadObserver& observer = *this;
-      ServerThread.reset(new Thread(func, observer));
+      ServerThread.reset(new Thread(func, this));
     }
 
     void Run()
@@ -149,7 +206,8 @@ namespace
 
       const unsigned ServerQueueSize = 5;
       listen (Socket, ServerQueueSize);
-      
+ 
+     
       while (!Stopped)
       {
         int clientSocket = accept(Socket, NULL, NULL);
@@ -163,15 +221,21 @@ namespace
           throw std::logic_error(std::string("Unable to accept client connection. ") + strerror(errno));
         }
 
-        try
-        {
-          std::unique_ptr<SocketChannel> connection(new SocketChannel(clientSocket));
-          Processor->Process(std::move(connection));
-        }
-        catch (const std::exception& exc)
-        {
-          std::cerr << "unable to process client connection. " << exc.what() << std::endl;
-        }
+        std::unique_lock<std::mutex> lock(ClientsMutex);
+        std::shared_ptr<IOChannel> clientChannel(new SocketChannel(clientSocket));
+        std::shared_ptr<ClientThread> clientThread(new ClientThread(clientChannel, Processor, std::bind(&TcpServer::Erase, std::ref(*this), clientSocket)));
+        ClientThreads.insert(std::make_pair(clientSocket, clientThread));
+      }
+
+      ClientThreads.clear();
+    }
+
+    void Erase(int client)
+    {
+      std::unique_lock<std::mutex> lock(ClientsMutex);
+      if (!Stopped)
+      {
+        ClientThreads.erase(client);
       }
     }
 
@@ -181,6 +245,8 @@ namespace
     volatile bool Stopped;
     volatile int Socket;
     std::unique_ptr<Thread> ServerThread;
+    std::mutex ClientsMutex;
+    std::map<int, std::shared_ptr<ClientThread>> ClientThreads;
   };
 }
 

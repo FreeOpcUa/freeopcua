@@ -43,10 +43,12 @@ TEST(TcpServer, AcceptConnections)
   std::unique_ptr<OpcUa::Server::ConnectionListener> server = OpcUa::CreateTcpServer(TestPort);
   server->Start(clientsProcessor);
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  std::unique_ptr<OpcUa::RemoteConnection> connect;
-  ASSERT_NO_THROW(connect = OpcUa::Connect("localhost", TestPort));
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
-  ASSERT_TRUE(connect.get());
+  {
+    std::unique_ptr<OpcUa::RemoteConnection> connect;
+    ASSERT_NO_THROW(connect = OpcUa::Connect("localhost", TestPort));
+    ASSERT_TRUE(connect.get());
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   server->Stop();
 }
 

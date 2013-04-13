@@ -40,9 +40,9 @@ namespace
       Servers.insert(std::make_pair(params.Port, server));
     }
 
-    virtual void StopListen(unsigned port)
+    virtual void StopListen(const TcpParameters& tcpParams)
     {
-      ServersMap::iterator serverIt = Servers.find(port);
+      ServersMap::iterator serverIt = Servers.find(tcpParams.Port);
       if (serverIt == Servers.end())
       {
         std::cerr << "Was an attempt to stop listening unknown tcp server." << std::endl;

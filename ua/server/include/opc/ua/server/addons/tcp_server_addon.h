@@ -33,7 +33,7 @@ namespace OpcUa
     {
     public:
       virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
-      virtual void StopListen(unsigned port) = 0;
+      virtual void StopListen(const TcpParameters& tcpParams) = 0;
     };
 
     const char TcpServerAddonID[] = "tcp_server";

@@ -43,7 +43,7 @@ TEST(OpcUaThread, CallsOnSuccess)
   EXPECT_CALL(observer, OnSuccess()).Times(1);
   EXPECT_CALL(observer, OnError(_)).Times(0);
 
-  OpcUa::Internal::Thread thread(std::function<void()>(DoNothing), observer);
+  OpcUa::Internal::Thread thread(std::function<void()>(DoNothing), &observer);
   thread.Join();  
 }
 
@@ -53,7 +53,7 @@ TEST(OpcUaThread, CallsOnError)
   EXPECT_CALL(observer, OnSuccess()).Times(0);
   EXPECT_CALL(observer, OnError(_)).Times(1);
 
-  OpcUa::Internal::Thread thread(std::function<void()>(ThrowsException), observer);
+  OpcUa::Internal::Thread thread(std::function<void()>(ThrowsException), &observer);
   thread.Join();  
 }
 

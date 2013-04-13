@@ -32,20 +32,18 @@ namespace OpcUa
     {
     public:
       /// @brief Starts f in a separate thread. 
-      Thread(std::function<void()> f, ThreadObserver& observer);
+      Thread(std::function<void()> f, ThreadObserver* observer = 0);
       /// @brief Wait until started thread stop.
       void Join();
 
     public:
       /// @brief Calls in the separate thread from ThreadProc.
-      void Run() const;
+      void Run();
       /// @brief static member required for std::thread
       static void ThreadProc(Thread* thread);
 
-      void ReportSuccess() const;
-
     private:
-      ThreadObserver& Observer;
+      ThreadObserver* Observer;
       std::function<void()> Func;
       std::thread Impl;
     };
