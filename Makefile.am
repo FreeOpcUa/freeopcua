@@ -16,8 +16,8 @@
 # libopc
 
 SUBDIRS = \
-          third-party/gmock \
           third-party/gtest \
+          third-party/gmock \
           third-party/uripp \
           libopccore \
           ua/libuamappings \

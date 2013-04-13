@@ -15010,9 +15010,9 @@ done
 @%:@ Check whether --with-gtest was given.
 if test "${with_gtest+set}" = set; then :
   withval=$with_gtest;  
-              GTEST_LIB=-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive
+              GTEST_LIB=-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest.a,--no-whole-archive
 
-              GTEST_MAIN_LIB=-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive
+              GTEST_MAIN_LIB=-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest_main.a,--no-whole-archive
 
               GTEST_INCLUDES=-I$with_gtest/include
 
@@ -15026,7 +15026,7 @@ fi
 @%:@ Check whether --with-gmock was given.
 if test "${with_gmock+set}" = set; then :
   withval=$with_gmock;  
-              GMOCK_LIB=-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive 
+              GMOCK_LIB=-Wl,--wholde-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive 
 
               GMOCK_INCLUDES=-I$with_gmock/include
 

@@ -23,8 +23,8 @@ AC_CONFIG_MACRO_DIR([m4])
 # opctestlinux 
 
 AC_CONFIG_SUBDIRS([
- third-party/gmock
  third-party/gtest
+ third-party/gmock
  third-party/uripp
  libopccore 
  ua/libuamappings 

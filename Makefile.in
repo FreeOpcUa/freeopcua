@@ -191,8 +191,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = \
-          third-party/gmock \
           third-party/gtest \
+          third-party/gmock \
           third-party/uripp \
           libopccore \
           ua/libuamappings \

@@ -25,8 +25,8 @@ AC_CHECK_HEADERS([unistd.h])
 AC_ARG_WITH([gtest], 
             [AS_HELP_STRING([--with-gtest=DIR], [defines path to gtest root directory])],
             [ 
-              AC_SUBST([GTEST_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest,--no-whole-archive])
-              AC_SUBST([GTEST_MAIN_LIB], [-Wl,-L$with_gtest/lib/.libs,--whole-archive,-lgtest_main,--no-whole-archive])
+              AC_SUBST([GTEST_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest.a,--no-whole-archive])
+              AC_SUBST([GTEST_MAIN_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest_main.a,--no-whole-archive])
               AC_SUBST([GTEST_INCLUDES], [-I$with_gtest/include])
               AC_MSG_NOTICE([Gtest path: $GTEST_INCLUDES]) 
             ], 
@@ -36,7 +36,7 @@ AC_ARG_WITH([gtest],
 AC_ARG_WITH([gmock], 
             [AS_HELP_STRING([--with-gmock=DIR], [defines path to gmock root directory])],
             [ 
-              AC_SUBST([GMOCK_LIB], [-Wl,-L$with_gmock/lib/.libs,--whole-archive,-lgmock,--no-whole-archive ])
+              AC_SUBST([GMOCK_LIB], [-Wl,--wholde-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive ])
               AC_SUBST([GMOCK_INCLUDES], [-I$with_gmock/include])
               AC_MSG_NOTICE([Gmock path: $GMOCK_INCLUDES]) 
             ], 
