@@ -61,7 +61,7 @@ opcua_SOURCES = \
 
 
 INCLUDES= -I$(top_srcdir)/src -I$(top_srcdir)/include  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
-TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
@@ -103,7 +103,8 @@ libopcua_tcp_server_la_SOURCES = \
   src/thread.cpp
 libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
 libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
-TESTS += test_tcp_server_addon
+#TESTS += test_tcp_server
+#TESTS += test_tcp_server_addon
 
 
 lib_LTLIBRARIES += libopcua_endpoints.la
@@ -113,7 +114,13 @@ libopcua_endpoints_la_CPPFLAGS = $(INCLUDES)
 libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 TESTS += test_endpoints_addon
 
-TESTS += test_tcp_server
+lib_LTLIBRARIES += libbuiltin_computer_addon.la
+libbuiltin_computer_addon_la_SOURCES = \
+  src/binary_computer.cpp \
+  src/server/builtin_computer_addon.cpp \
+  src/thread.cpp
+libibultin_computer_addon_la_CPPFLAGS = $(INCLUDES)
+libbuiltin_computer_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 endif
 
@@ -121,7 +128,12 @@ endif
 ##############################################################################
 # Tests
 
-TESTS_ENVIRONMENT = TEST_SERVER_URI=$(TEST_SERVER_URI) TCP_ADDON_PATH=${top_builddir}/.libs/libopcua_tcp_server.so ENDPOINTS_ADDON_PATH=$(top_builddir)/.libs/libopcua_endpoints.so
+TESTS_ENVIRONMENT = \
+  TEST_SERVER_URI=$(TEST_SERVER_URI) \
+  TCP_ADDON_PATH=${top_builddir}/.libs/libopcua_tcp_server.so \
+  ENDPOINTS_ADDON_PATH=$(top_builddir)/.libs/libopcua_endpoints.so \
+  ENDPOINTS_CONFIG_PATH=$(top_builddir)/tests/configs/test_endpoints_config.xml
+
 check_PROGRAMS = $(TESTS)
 
 # tests/binary_handshake.cpp
@@ -150,29 +162,30 @@ test_opcuaserver_SOURCES = \
 test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
-test_tcp_server_SOURCES = \
-  src/socket_channel.cpp \
-  src/computer.cpp \
-  src/binary_connection.cpp \
-  src/server/tcp_server.cpp \
-  src/thread.cpp \
-  tests/server/tcp_server_test.cpp
+#test_tcp_server_SOURCES = \
+#  src/socket_channel.cpp \
+#  src/computer.cpp \
+#  src/binary_connection.cpp \
+#  src/server/tcp_server.cpp \
+#  src/thread.cpp \
+#  tests/server/tcp_server_test.cpp
 
-test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+#test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
-test_tcp_server_addon_SOURCES = \
-  src/binary_connection.cpp \
-  src/socket_channel.cpp \
-  tests/server/tcp_server_addon_test.cpp
-test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+#test_tcp_server_addon_SOURCES = \
+#  src/binary_connection.cpp \
+#  src/socket_channel.cpp \
+#  tests/server/tcp_server_addon_test.cpp
+#test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 test_endpoints_addon_SOURCES = \
-  tests/server/endpoints_addon_test.cpp
+  src/server/server_options.cpp \
+  tests/server/endpoints_addon_test.cpp \
+  tests/server/common.cpp
 test_endpoints_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_endpoints_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
-
+test_endpoints_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 endif
 

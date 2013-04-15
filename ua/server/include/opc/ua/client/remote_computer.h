@@ -25,6 +25,7 @@ namespace OpcUa
     /// @note url in the form: opc.tcp://host:port connect with opc ua binary protocol
     /// @note url in the form https://host:port
     std::unique_ptr<Computer> Connect(const std::string& url);
+
   }
 }
 

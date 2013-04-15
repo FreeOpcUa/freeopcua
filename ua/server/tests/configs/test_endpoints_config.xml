@@ -3,15 +3,15 @@
   <modules>
 
     <module>
-      <id>tcp_server</id>
-      <path>./.libs/libtest_channel_addon.so</path>
+      <id>endpoints</id>
+      <path>./.libs/libopcua_endpoints.so</path>
     </module>
 
     <module>
-      <id>endpoints</id>
-      <path>./.libs/libopcua_endpoints.so</path>
+      <id>builtin_computer</id>
+      <path>./.libs/libbuiltin_computer_addon.so</path>
       <depends_on>
-        <id>tcp_server</id>
+        <id>endpoints</id>
       </depends_on>
     </module>
 

@@ -24,6 +24,17 @@ namespace OpcUa
     {
     }
 
+    Thread::~Thread()
+    {
+      try 
+      {
+        Join();
+      }
+      catch (std::exception&)
+      {
+      }
+    }
+
     void Thread::Join()
     {
       Impl.join();

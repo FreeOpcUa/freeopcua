@@ -33,6 +33,8 @@ namespace OpcUa
     public:
       /// @brief Starts f in a separate thread. 
       Thread(std::function<void()> f, ThreadObserver* observer = 0);
+
+      ~Thread();
       /// @brief Wait until started thread stop.
       void Join();
 

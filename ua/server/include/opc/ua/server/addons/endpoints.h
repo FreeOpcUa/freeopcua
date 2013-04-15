@@ -12,6 +12,7 @@
 #define opc_ua_endpoints_addon_h
 
 #include <opccore/common/addons_core/addon.h>
+#include <opc/ua/server/server.h>
 
 namespace OpcUa
 {
@@ -27,6 +28,8 @@ namespace OpcUa
     {
     public:
       virtual std::vector<Endpoint> GetEndpoints() const = 0;
+
+      virtual std::shared_ptr<IncomingConnectionProcessor> GetProcessor() const = 0;
     };
 
     const char EndpointsAddonID[] = "endpoints";

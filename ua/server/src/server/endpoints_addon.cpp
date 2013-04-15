@@ -15,6 +15,8 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 
+#include <iostream>
+
 namespace
 {
 
@@ -25,6 +27,12 @@ namespace
   public:
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
+      if (!clientChannel)
+      {
+        std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
+        return;
+      }
+
       OpcUa::Binary::IOStream stream(clientChannel);
       Hello(stream);
     }
@@ -65,35 +73,29 @@ namespace
   {
   public:
     Endpoints()
-       : OpcTcpProtocol(new OpcTcp())
     {
     }
 
-    virtual std::vector<Endpoint> GetEndpoints() const
+    std::vector<Endpoint> GetEndpoints() const
     {
       return std::vector<Endpoint>();
+    }
+
+    std::shared_ptr<IncomingConnectionProcessor> GetProcessor() const
+    {
+      return std::shared_ptr<IncomingConnectionProcessor>(new OpcTcp());
     }
 
   public:
     virtual void Initialize(Common::AddonsManager& addons)
     {
-      TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
-      OpcUa::Server::TcpParameters tcpParams;
-      tcpParams.Port = 4841;
-      TcpAddon->Listen(tcpParams, OpcTcpProtocol);
     }
 
     virtual void Stop()
     {
-      TcpParameters tcpParams;
-      tcpParams.Port = 4841;
-      TcpAddon->StopListen(tcpParams);
-      TcpAddon.reset();
     }
 
   private:
-    std::shared_ptr<IncomingConnectionProcessor> OpcTcpProtocol;
-    std::shared_ptr<TcpServerAddon> TcpAddon;
   };
 
 }

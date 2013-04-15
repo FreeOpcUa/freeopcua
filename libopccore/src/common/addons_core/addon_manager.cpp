@@ -45,6 +45,7 @@ namespace
     {
       std::clog << "Stopping addon '" << addonPair.second.ID << "'" <<  std::endl; 
       addonPair.second.Addon->Stop();
+      std::clog << "Addon '" << addonPair.second.ID << "' successfuly stopped." <<  std::endl; 
     }
   }
 
@@ -148,6 +149,7 @@ namespace
         addonData->Addon = addon;
         std::clog << "Initializing addon '" << addonData->ID << "'" <<  std::endl; 
         addon->Initialize(*this);
+        std::clog << "Addon '" << addonData->ID << "' successfuly initialized." <<  std::endl; 
       }
       EnsureAllAddonsStarted();
    }

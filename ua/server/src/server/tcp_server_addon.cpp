@@ -8,6 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/ua/server/addons/endpoints.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 #include <opc/ua/server/tcp_server.h>
 
@@ -22,7 +23,6 @@ namespace
 
   class TcpServerAddon : public ::OpcUa::Server::TcpServerAddon
   {
-    typedef std::map<unsigned short, std::shared_ptr<ConnectionListener>> ServersMap;
   public:
     TcpServerAddon()
     {
@@ -32,40 +32,31 @@ namespace
     {
     }
 
-
+/*
     virtual void Listen(const TcpParameters& params, std::shared_ptr<IncomingConnectionProcessor> processor)
     {
-      std::shared_ptr<ConnectionListener> server = OpcUa::CreateTcpServer(params.Port);
-      server->Start(processor);
-      Servers.insert(std::make_pair(params.Port, server));
     }
 
     virtual void StopListen(const TcpParameters& tcpParams)
     {
-      ServersMap::iterator serverIt = Servers.find(tcpParams.Port);
-      if (serverIt == Servers.end())
-      {
-        std::cerr << "Was an attempt to stop listening unknown tcp server." << std::endl;
-        return;
-      }
-      serverIt->second->Stop();
-      Servers.erase(serverIt);
     }
-
+*/
   public: // Common::Addon
-    virtual void Initialize(Common::AddonsManager& manager)
+    virtual void Initialize(Common::AddonsManager& addons)
     {
+      std::shared_ptr<EndpointsAddon> endpoints = Common::GetAddon<EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
+      TcpParameters params;
+      params.Port = 4841;
+      Server = OpcUa::CreateTcpServer(params.Port);
+      std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
+      Server->Start(processor);
     }
 
     virtual void Stop()
     {
       try
       {
-        for (ServersMap::iterator serverIt = Servers.begin(); serverIt != Servers.end(); ++serverIt)
-        {
-          serverIt->second->Stop();
-        }
-        Servers.clear();
+        Server->Stop();
       }
       catch (const std::exception& exc)
       {
@@ -74,7 +65,7 @@ namespace
     }
 
   private:
-    ServersMap Servers;
+    std::shared_ptr<ConnectionListener> Server;
   };
 
 }

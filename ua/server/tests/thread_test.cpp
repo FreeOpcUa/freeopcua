@@ -10,8 +10,10 @@
 
 #include <internal/thread.h>
 
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <chrono>
 
 using namespace testing;
 
@@ -44,6 +46,7 @@ TEST(OpcUaThread, CallsOnSuccess)
   EXPECT_CALL(observer, OnError(_)).Times(0);
 
   OpcUa::Internal::Thread thread(std::function<void()>(DoNothing), &observer);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   thread.Join();  
 }
 

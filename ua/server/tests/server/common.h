@@ -11,7 +11,10 @@
 #ifndef opcua_tests_common_utils_h
 #define opcua_tests_common_utils_h
 
+#include <opccore/common/addons_core/addon_manager.h>
 #include <opc/ua/server/server.h>
+
+#include <gmock/gmock.h>
 
 namespace OpcUa
 {
@@ -28,6 +31,15 @@ namespace OpcUa
   inline std::string GetEndpointsAddonPath()
   {
     if (const char* path = getenv("ENDPOINTS_ADDON_PATH"))
+    {
+      return path;
+    }
+    return std::string();
+  }
+
+  inline std::string GetEndpointsConfigPath()
+  {
+    if (const char* path = getenv("ENDPOINTS_CONFIG_PATH"))
     {
       return path;
     }
@@ -55,6 +67,9 @@ namespace OpcUa
     {
     }
   };
+
+
+  std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
 
 }
 

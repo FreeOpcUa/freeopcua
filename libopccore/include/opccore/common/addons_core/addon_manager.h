@@ -75,6 +75,12 @@ namespace Common
     return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
   }
 
+  template <class AddonClass>
+  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, const char* id)
+  {
+    return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
+  }
+
 
 } // namespace Common
 

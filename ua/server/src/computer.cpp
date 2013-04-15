@@ -13,6 +13,7 @@
 
 #include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/client/binary_computer.h>
 #include <opc/ua/client/remote_computer.h>
 #include <opc/ua/client/remote_connection.h>
 #include <stdexcept>
@@ -93,5 +94,10 @@ namespace
 std::unique_ptr<OpcUa::Remote::Computer> OpcUa::Remote::Connect(const std::string& url)
 {
   return std::unique_ptr<OpcUa::Remote::Computer>(new UaComputer(url));
+}
+
+std::unique_ptr<OpcUa::Remote::Computer> OpcUa::Remote::CreateBinaryComputer(std::shared_ptr<IOChannel> channel)
+{
+  return std::unique_ptr<OpcUa::Remote::Computer>(new OpcUa::Internal::Computer<OpcUa::Binary::IOStream>(channel));
 }
 
