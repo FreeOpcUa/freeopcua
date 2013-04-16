@@ -20,18 +20,79 @@
 
 namespace
 {
-
-  class ClientChannel : public OpcUa::IOChannel
+  class BufferedInput : public OpcUa::InputChannel
   {
   public:
+    BufferedInput()
+      : Stopped(false)
+    {
+    }
+  
     virtual std::size_t Receive(char* data, std::size_t size)
     {
-      return 0;
+      DataEvent.wait();
+      std::unique_lock<std::mutex> lock(BufferMutex);
+      if (Stopped)
+      {
+        return 0;
+      }
+
+      std::copy(begin(Buffer), end(Buffer), data)
+      Buffer.erase(Buffer.begin(), end);
+    }
+
+    void AddBuffer(char buf, std::size_t size)
+    {
+      std::unique_lock<std::mutex> lock(BufferMutex);
+      if (Stopped)
+      {
+        return;
+      }
+
+      Buffer.insert(Buffer.begin(), buf, buf + size);
+      DataEvent.notify_one();
+    }
+
+    void Stop()
+    {
+      Stopped = true;
+    }
+
+  private:
+    std::atomic<bool> Stopped;
+  };
+
+
+  class BufferedIO : public IOChannel
+  {
+  public:
+    BufferedIO(std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output)
+      : Input(input)
+      , Ouput(output)
+    {
+    }
+
+    virtual std::size_t Receive(char* data, std::size_t size)
+    {
+      std::shared_ptr<InputChannel> input = Input.lock();
+      if (input)
+      {
+        return input->Receive(data, size);
+      }
     }
 
     virtual void Send(const char* message, std::size_t size)
     {
+      std::shared_ptr<BufferedInput> output = Output.lock();
+      if (output)
+      {
+        output->AddBuffer(message, size);
+      }
     }
+
+  private:
+    std::weak_ptr<InputChannel> Input;
+    std::weak_ptr<BufferedInput> Output;
   };
 
 
@@ -46,29 +107,44 @@ namespace
   public:
     virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const
     {
-      return OpcUa::Remote::CreateBinaryComputer(Channel);
+      return OpcUa::Remote::CreateBinaryComputer(ClientChannel);
     }
 
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& addons)
     {
-      Channel = std::shared_ptr<OpcUa::IOChannel>(new ClientChannel());
+      ServerInput.reset(new BufferedInput());
+      ClientInput.reset(new BufferedInput());
+
+      ClientChannel.reset(new BufferedIO(*ClientInput, *ServerInput));
+      ServerChannel.reset(new BufferedIO(*ServerInput, *ClientInput));
+
       std::shared_ptr<OpcUa::Server::EndpointsAddon> endpoints = Common::GetAddon<OpcUa::Server::EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
-      Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, Channel)));
+
+      Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel)));
     }
 
     virtual void Stop()
     {
+      ClientInput->Stop();
+      ServerInput->Stop();
+
       if (Thread.get())
       {
         Thread->Join();
         Thread.reset();
       }
+      ClientINput.reset();
+      SlientINput.reset();
     }
 
   private:
-    std::shared_ptr<OpcUa::IOChannel> Channel;
+    std::shared_ptr<BufferedInput> ClientInput;
+    std::shared_ptr<BufferedInput> ServerInput;
+
+    std::shared_ptr<OpcUa::IOChannel> ClientChannel;
+    std::shared_ptr<OpcUa::IOChannel> ServerChannel;
     std::unique_ptr<OpcUa::Internal::Thread> Thread;
   };
 
