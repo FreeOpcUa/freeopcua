@@ -16,12 +16,11 @@
 # libopc
 
 SUBDIRS = \
-          third-party/gtest \
-          third-party/gmock \
+          third-party \
           third-party/uripp \
           libopccore \
           ua/libuamappings \
           ua/server
 
-EXTRA_DIST = configure.main
+EXTRA_DIST = third-party/gmock third-party/gtest configure.main
 

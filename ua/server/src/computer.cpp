@@ -95,9 +95,9 @@ std::unique_ptr<OpcUa::Remote::Computer> OpcUa::Remote::Connect(const std::strin
 {
   return std::unique_ptr<OpcUa::Remote::Computer>(new UaComputer(url));
 }
-
+/*
 std::unique_ptr<OpcUa::Remote::Computer> OpcUa::Remote::CreateBinaryComputer(std::shared_ptr<IOChannel> channel)
 {
   return std::unique_ptr<OpcUa::Remote::Computer>(new OpcUa::Internal::Computer<OpcUa::Binary::IOStream>(channel));
 }
-
+*/

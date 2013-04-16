@@ -23,6 +23,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/view.h
 
 uaclientinclude_HEADERS = \
+  include/opc/ua/client/binary_computer.h \
   include/opc/ua/client/remote_computer.h \
   include/opc/ua/client/remote_connection.h
 
@@ -32,7 +33,9 @@ EXTRA_DIST = \
   src/endpoints.h \
   src/stream_computer.h \
   src/stream_attribute.h \
+  tests/configs/endpoints.xml \
   tests/configs/test.xml \
+  tests/configs/test_endpoints_config.xml \
   tests/configs/test_tcp_server.xml
 
 
@@ -46,6 +49,7 @@ if BUILD_UA_CMD
 bin_PROGRAMS += opcua
 
 opcua_SOURCES = \
+  src/binary_computer.cpp \
   src/binary_connection.cpp \
   src/computer.cpp \
   src/endpoints.h \
@@ -115,6 +119,8 @@ libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LI
 TESTS += test_endpoints_addon
 
 lib_LTLIBRARIES += libbuiltin_computer_addon.la
+addonsinclude_HEADERS += \
+  include/opc/ua/server/addons/builtin_computer.h
 libbuiltin_computer_addon_la_SOURCES = \
   src/binary_computer.cpp \
   src/server/builtin_computer_addon.cpp \
@@ -156,6 +162,8 @@ if BUILD_UA_SERVER
 test_opcuaserver_SOURCES = \
   src/server/server_options.cpp \
   src/thread.cpp \
+  tests/server/common.cpp \
+  tests/server/common.h \
   tests/server/test_server_options.cpp \
   tests/thread_test.cpp
 

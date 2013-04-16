@@ -23,14 +23,12 @@ AC_CONFIG_MACRO_DIR([m4])
 # opctestlinux 
 
 AC_CONFIG_SUBDIRS([
- third-party/gtest
- third-party/gmock
  third-party/uripp
- libopccore 
- ua/libuamappings 
+ libopccore
+ ua/libuamappings
  ua/server])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([third-party/Makefile Makefile])
 
 AC_OUTPUT
 
