@@ -18,60 +18,70 @@
 
 namespace OpcUa
 {
-
-  inline std::string GetTcpServerAddonPath()
+  namespace Tests
   {
-    if (const char* path = getenv("TCP_ADDON_PATH"))
+    inline std::string GetTcpServerAddonPath()
     {
-      return path;
+      if (const char* path = getenv("TCP_ADDON_PATH"))
+      {
+        return path;
+      }
+      return std::string();
     }
-    return std::string();
-  }
-
-  inline std::string GetEndpointsAddonPath()
-  {
-    if (const char* path = getenv("ENDPOINTS_ADDON_PATH"))
+    inline std::string GetBuiltinComputerAddonPath()
     {
-      return path;
+      if (const char* path = getenv("BUILTIN_COMPUTER_ADDON_PATH"))
+      {
+        return path;
+      }
+      return std::string();
     }
-    return std::string();
-  }
 
-  inline std::string GetEndpointsConfigPath()
-  {
-    if (const char* path = getenv("ENDPOINTS_CONFIG_PATH"))
+    inline std::string GetEndpointsAddonPath()
     {
-      return path;
+      if (const char* path = getenv("ENDPOINTS_ADDON_PATH"))
+      {
+        return path;
+      }
+      return std::string();
     }
-    return std::string();
-  }
 
-
-   class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
-   {
-   public:
-     MOCK_METHOD1(Process, void (std::shared_ptr<OpcUa::IOChannel>));
-     MOCK_METHOD1(StopProcessing, void (std::shared_ptr<OpcUa::IOChannel> clientChannel));
-   };
-
-  class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
-  {
-  public:
-    virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+    inline std::string GetEndpointsConfigPath()
     {
-      char data[4] = {0};
-      clientChannel->Receive(data, 4);
-      clientChannel->Send(data, 4);
+      if (const char* path = getenv("ENDPOINTS_CONFIG_PATH"))
+      {
+        return path;
+      }
+      return std::string();
     }
-    virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+
+
+     class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
+     {
+     public:
+       MOCK_METHOD1(Process, void (std::shared_ptr<OpcUa::IOChannel>));
+       MOCK_METHOD1(StopProcessing, void (std::shared_ptr<OpcUa::IOChannel> clientChannel));
+     };
+
+    class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
     {
-    }
-  };
+    public:
+      virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+      {
+        char data[4] = {0};
+        clientChannel->Receive(data, 4);
+        clientChannel->Send(data, 4);
+      }
+      virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+      {
+      }
+    };
 
 
-  std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
+    std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
 
-}
+  } // namspace Tests
+} // namespace OpcUa
 
 #endif //  opcua_tests_common_utils_h
 

@@ -16,6 +16,9 @@
 
 #include <internal/thread.h>
 
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
 #include <thread>
 
 namespace
@@ -24,51 +27,89 @@ namespace
   {
   public:
     BufferedInput()
-      : Stopped(false)
+      : MaxBufferSize(4096)
+      , Buffer(MaxBufferSize)
+      , Stopped(false)
     {
+      Buffer.reserve(MaxBufferSize);
     }
-  
+
     virtual std::size_t Receive(char* data, std::size_t size)
     {
-      DataEvent.wait();
-      std::unique_lock<std::mutex> lock(BufferMutex);
-      if (Stopped)
+      ThrowIfStopped();
+
+      std::size_t totalConsumedSize = 0;
+      while (totalConsumedSize < size)
       {
-        return 0;
+        std::unique_lock<std::mutex> lock(BufferMutex);
+        NotEmpty.wait(lock, [&Stopped, &Buffer, &MaxBufferSize](){return !(Stopped || Buffer.size() != 0);});
+        ThrowIfStopped();
+
+        const std::size_t sizeToConsume = std::min(size - totalConsumedSize, Buffer.size());
+        auto endIt = Buffer.begin() + sizeToConsume;
+        std::copy(begin(Buffer), endIt, data + totalConsumedSize);
+        Buffer.erase(Buffer.begin(), endIt); // TODO make behavoior with round buffer to avoid this.
+        totalConsumedSize += sizeToConsume;
       }
 
-      std::copy(begin(Buffer), end(Buffer), data)
-      Buffer.erase(Buffer.begin(), end);
+      if (totalConsumedSize)
+      {
+        NotFull.notify_one();
+      }
+      return totalConsumedSize;
     }
+  
 
-    void AddBuffer(char buf, std::size_t size)
+    void AddBuffer(const char* buf, std::size_t size)
     {
-      std::unique_lock<std::mutex> lock(BufferMutex);
-      if (Stopped)
-      {
-        return;
-      }
+      ThrowIfStopped();
 
-      Buffer.insert(Buffer.begin(), buf, buf + size);
-      DataEvent.notify_one();
+      std::size_t totalSendedSize = 0;
+      while(totalSendedSize != size)
+      {
+        std::unique_lock<std::mutex> lock(BufferMutex);
+        NotFull.wait(lock, [&Stopped, &Buffer, &MaxBufferSize]() { return !(Stopped || Buffer.size() <= MaxBufferSize); });
+        ThrowIfStopped();
+
+        const std::size_t sizeToSend = std::min(MaxBufferSize - Buffer.size(), size - totalSendedSize); 
+        Buffer.insert(Buffer.end(), buf + totalSendedSize, buf + sizeToSend);
+        totalSendedSize += sizeToSend;
+        NotEmpty.notify_one();
+      }
     }
 
     void Stop()
     {
       Stopped = true;
+      NotEmpty.notify_all();
+      NotFull.notify_all();
     }
 
   private:
+    void ThrowIfStopped()
+    {
+      if (Stopped)
+      {
+        throw std::logic_error("Conversation through connection stopped.");
+      }
+    }
+
+  private:
+    const std::size_t MaxBufferSize;
+    std::vector<char> Buffer;
     std::atomic<bool> Stopped;
+    std::mutex BufferMutex;
+    std::condition_variable NotEmpty;
+    std::condition_variable NotFull;
   };
 
 
-  class BufferedIO : public IOChannel
+  class BufferedIO : public OpcUa::IOChannel
   {
   public:
     BufferedIO(std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output)
       : Input(input)
-      , Ouput(output)
+      , Output(output)
     {
     }
 
@@ -79,6 +120,7 @@ namespace
       {
         return input->Receive(data, size);
       }
+      return 0;
     }
 
     virtual void Send(const char* message, std::size_t size)
@@ -116,12 +158,12 @@ namespace
       ServerInput.reset(new BufferedInput());
       ClientInput.reset(new BufferedInput());
 
-      ClientChannel.reset(new BufferedIO(*ClientInput, *ServerInput));
-      ServerChannel.reset(new BufferedIO(*ServerInput, *ClientInput));
+
+      ClientChannel.reset(new BufferedIO(ClientInput, ServerInput));
+      ServerChannel.reset(new BufferedIO(ServerInput, ClientInput));
 
       std::shared_ptr<OpcUa::Server::EndpointsAddon> endpoints = Common::GetAddon<OpcUa::Server::EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
-
       Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel)));
     }
 
@@ -135,8 +177,9 @@ namespace
         Thread->Join();
         Thread.reset();
       }
-      ClientINput.reset();
-      SlientINput.reset();
+
+      ClientInput.reset();
+      ServerInput.reset();
     }
 
   private:

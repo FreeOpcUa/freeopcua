@@ -108,7 +108,7 @@ libopcua_tcp_server_la_SOURCES = \
 libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
 libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 #TESTS += test_tcp_server
-#TESTS += test_tcp_server_addon
+TESTS += test_tcp_server_addon
 
 
 lib_LTLIBRARIES += libopcua_endpoints.la
@@ -116,7 +116,7 @@ addonsinclude_HEADERS += include/opc/ua/server/addons/endpoints.h
 libopcua_endpoints_la_SOURCES = src/server/endpoints_addon.cpp
 libopcua_endpoints_la_CPPFLAGS = $(INCLUDES)
 libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
-TESTS += test_endpoints_addon
+#TESTS += test_endpoints_addon
 
 lib_LTLIBRARIES += libbuiltin_computer_addon.la
 addonsinclude_HEADERS += \
@@ -135,8 +135,9 @@ endif
 # Tests
 
 TESTS_ENVIRONMENT = \
-  TEST_SERVER_URI=$(TEST_SERVER_URI) \
-  TCP_ADDON_PATH=${top_builddir}/.libs/libopcua_tcp_server.so \
+  TEST_SERVER_URI="$(TEST_SERVER_URI)" \
+  BUILTIN_COMPUTER_ADDON_PATH="${top_builddir}/.libs/libbuiltin_computer_addon.so" \
+  TCP_ADDON_PATH="${top_builddir}/.libs/libopcua_tcp_server.so" \
   ENDPOINTS_ADDON_PATH=$(top_builddir)/.libs/libopcua_endpoints.so \
   ENDPOINTS_CONFIG_PATH=$(top_builddir)/tests/configs/test_endpoints_config.xml
 
@@ -181,19 +182,19 @@ test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl
 #test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 #test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
-#test_tcp_server_addon_SOURCES = \
-#  src/binary_connection.cpp \
-#  src/socket_channel.cpp \
-#  tests/server/tcp_server_addon_test.cpp
-#test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-#test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+test_tcp_server_addon_SOURCES = \
+  src/binary_connection.cpp \
+  src/socket_channel.cpp \
+  tests/server/tcp_server_addon_test.cpp
+test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
-test_endpoints_addon_SOURCES = \
-  src/server/server_options.cpp \
-  tests/server/endpoints_addon_test.cpp \
-  tests/server/common.cpp
-test_endpoints_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_endpoints_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+#test_endpoints_addon_SOURCES = \
+#  src/server/server_options.cpp \
+#  tests/server/endpoints_addon_test.cpp \
+#  tests/server/common.cpp
+#test_endpoints_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#test_endpoints_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 endif
 
