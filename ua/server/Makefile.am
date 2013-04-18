@@ -107,7 +107,7 @@ libopcua_tcp_server_la_SOURCES = \
   src/thread.cpp
 libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
 libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
-#TESTS += test_tcp_server
+TESTS += test_tcp_server
 TESTS += test_tcp_server_addon
 
 
@@ -171,16 +171,16 @@ test_opcuaserver_SOURCES = \
 test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
-#test_tcp_server_SOURCES = \
-#  src/socket_channel.cpp \
-#  src/computer.cpp \
-#  src/binary_connection.cpp \
-#  src/server/tcp_server.cpp \
-#  src/thread.cpp \
-#  tests/server/tcp_server_test.cpp
+test_tcp_server_SOURCES = \
+  src/socket_channel.cpp \
+  src/computer.cpp \
+  src/binary_connection.cpp \
+  src/server/tcp_server.cpp \
+  src/thread.cpp \
+  tests/server/tcp_server_test.cpp
 
-#test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-#test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 test_tcp_server_addon_SOURCES = \
   src/binary_connection.cpp \

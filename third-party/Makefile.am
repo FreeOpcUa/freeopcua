@@ -22,22 +22,32 @@ EXTRA_DIST = \
 #	test -e gtest || ln -s gtest-1.6.0 gtest
 
 #all: gmock gtest uri
-all:
-	cd gmock && ./configure && cd ..
-	$(MAKE) -C gmock
-	cd gtest && ./configure && cd ..
-	$(MAKE) -C gtest
 
-#check: gmock gtest
-#check:
+gmock/Makefile:
+	cd gmock && ./configure && cd ..
+
+gtest/Makefile:
+	cd gtest && ./configure && cd ..
+
+all:
 #	$(MAKE) -C gmock
 #	$(MAKE) -C gtest
 
-clean:
+check: gmock/Makefile gtest/Makefile
+	$(MAKE) -C gmock
+	$(MAKE) -C gtest
+
+clean: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest clean
 	$(MAKE) -C gmock clean
 
-distclean:
+
+dist: gmock/Makefile gtest/Makefile
+	$(MAKE) -C gtest clean
+	$(MAKE) -C gmock clean
+
+distclean: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest distclean
 	$(MAKE) -C gmock distclean
+	rm -rf Makefile
 
