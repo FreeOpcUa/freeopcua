@@ -34,7 +34,9 @@ namespace
       }
 
       OpcUa::Binary::IOStream stream(clientChannel);
+      std::clog << "Hello client!" << std::endl;
       Hello(stream);
+      std::cout << "Creating secure channel with client." << std::endl;
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -45,14 +47,16 @@ namespace
     void Hello(OpcUa::Binary::IOStream& stream)
     {
       using namespace OpcUa::Binary;
-
+      std::cout << "Reading header." << std::endl;
       Header hdr;
       stream >> hdr;
       if (hdr.Type != MT_HELLO || hdr.Chunk != CHT_SINGLE)
       {
+        std::cout << "Invalid header received." << std::endl;
         return;
       }
 
+      std::cout << "Reading hello message." << std::endl;
       OpcUa::Binary::Hello hello;
       stream >> hello;
 
@@ -64,6 +68,7 @@ namespace
 
       OpcUa::Binary::Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
+      std::cout << "Sending answer to client." << std::endl;
       stream << ackHeader << ack << flush; 
     }
   };

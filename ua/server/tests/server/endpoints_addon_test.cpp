@@ -17,6 +17,7 @@
 #include <opccore/common/addons_core/dynamic_addon_factory.h>
 
 #include <chrono>
+#include <iostream>
 #include <thread>
 
 #include "common.h"
@@ -28,7 +29,7 @@ class EndpointsAddonTest : public Test
 public:
   void SetUp()
   {
-    Addons = OpcUa::LoadAddons(OpcUa::GetEndpointsConfigPath());
+    Addons = OpcUa::Tests::LoadAddons(OpcUa::Tests::GetEndpointsConfigPath());
   }
 
   void TearDown()

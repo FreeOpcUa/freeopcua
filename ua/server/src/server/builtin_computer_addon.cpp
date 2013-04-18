@@ -23,43 +23,54 @@
 
 namespace
 {
+
   class BufferedInput : public OpcUa::InputChannel
   {
   public:
     BufferedInput()
-      : MaxBufferSize(4096)
-      , Buffer(MaxBufferSize)
-      , Running(true)
+      : Running(true)
     {
-      Buffer.reserve(MaxBufferSize);
+      Buffer.reserve(4096);
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)
     {
+      std::clog << "Consuming " << size << " bytes of data." << std::endl;
       ThrowIfStopped();
+
 
       std::size_t totalConsumedSize = 0;
       while (totalConsumedSize < size)
       {
-        std::unique_lock<std::mutex> lock(BufferMutex);
-        NotEmpty.wait(lock);
+        std::unique_lock<std::mutex> event(BufferMutex);
+        if (Buffer.empty())
+        {
+          std::clog << "Waiting data from client" << std::endl;
+          DataReady.wait(event);
+        }
+        else
+        {
+          event.lock();
+        }
+        std::clog << "Buffer contain data from client." << std::endl;
+        ThrowIfStopped();
+        std::clog << "Client sent data." << std::endl;
+
         ThrowIfStopped();
         if (Buffer.empty())
         {
+          std::clog << "No data in buffer." << std::endl;
           continue;
         }
 
         const std::size_t sizeToConsume = std::min(size - totalConsumedSize, Buffer.size());
+        std::clog << "Consuming " << sizeToConsume << " bytes of data." << std::endl;
         auto endIt = Buffer.begin() + sizeToConsume;
         std::copy(begin(Buffer), endIt, data + totalConsumedSize);
         Buffer.erase(Buffer.begin(), endIt); // TODO make behavoior with round buffer to avoid this.
         totalConsumedSize += sizeToConsume;
       }
 
-      if (totalConsumedSize)
-      {
-        NotFull.notify_one();
-      }
       return totalConsumedSize;
     }
   
@@ -67,30 +78,19 @@ namespace
     void AddBuffer(const char* buf, std::size_t size)
     {
       ThrowIfStopped();
+      std::clog << "Client want to send " << size << " bytes of data" << std::endl;
+      std::lock_guard<std::mutex> lock(BufferMutex);
+      ThrowIfStopped();
 
-      std::size_t totalSendedSize = 0;
-      while(totalSendedSize != size)
-      {
-        std::unique_lock<std::mutex> lock(BufferMutex);
-        NotFull.wait(lock);
-        ThrowIfStopped();
-        if (Buffer.size() == MaxBufferSize)
-        {
-          continue;
-        }
-
-        const std::size_t sizeToSend = std::min(MaxBufferSize - Buffer.size(), size - totalSendedSize); 
-        Buffer.insert(Buffer.end(), buf + totalSendedSize, buf + sizeToSend);
-        totalSendedSize += sizeToSend;
-        NotEmpty.notify_one();
-      }
+      Buffer.insert(Buffer.end(), buf, buf + size);
+      std::clog << "Size of buffer " << Buffer.size() << " bytes." << std::endl;
+      DataReady.notify_all();
     }
 
     void Stop()
     {
       Running = false;
-      NotEmpty.notify_all();
-      NotFull.notify_all();
+      DataReady.notify_all();
     }
 
   private:
@@ -103,26 +103,24 @@ namespace
     }
 
   private:
-    const std::size_t MaxBufferSize;
     std::vector<char> Buffer;
     std::atomic<bool> Running;
     std::mutex BufferMutex;
-    std::condition_variable NotEmpty;
-    std::condition_variable NotFull;
+    std::condition_variable DataReady;
   };
-
-
   class BufferedIO : public OpcUa::IOChannel
   {
   public:
-    BufferedIO(std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output)
+    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output)
       : Input(input)
       , Output(output)
+      , ID(channelID)
     {
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)
     {
+      std::clog << ID << ": receive data." << std::endl;
       std::shared_ptr<InputChannel> input = Input.lock();
       if (input)
       {
@@ -133,6 +131,7 @@ namespace
 
     virtual void Send(const char* message, std::size_t size)
     {
+      std::clog << ID << ": send data." << std::endl;
       std::shared_ptr<BufferedInput> output = Output.lock();
       if (output)
       {
@@ -143,6 +142,7 @@ namespace
   private:
     std::weak_ptr<InputChannel> Input;
     std::weak_ptr<BufferedInput> Output;
+    const std::string ID;
   };
 
 
@@ -152,7 +152,9 @@ namespace
   }
 
 
-  class BuiltinComputerAddon : public OpcUa::Server::BuiltinComputerAddon
+  class BuiltinComputerAddon
+    : public OpcUa::Server::BuiltinComputerAddon
+    , private OpcUa::Internal::ThreadObserver
   {
   public:
     virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const
@@ -178,12 +180,12 @@ namespace
       ClientInput.reset(new BufferedInput());
 
 
-      ClientChannel.reset(new BufferedIO(ClientInput, ServerInput));
-      ServerChannel.reset(new BufferedIO(ServerInput, ClientInput));
+      ClientChannel.reset(new BufferedIO("Client", ClientInput, ServerInput));
+      ServerChannel.reset(new BufferedIO("Server", ServerInput, ClientInput));
 
       std::shared_ptr<OpcUa::Server::EndpointsAddon> endpoints = Common::GetAddon<OpcUa::Server::EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
-      Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel)));
+      Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel), this));
     }
 
     virtual void Stop()
@@ -203,6 +205,18 @@ namespace
       ClientInput.reset();
       ServerInput.reset();
     }
+
+  private:
+    virtual void OnSuccess()
+    {
+      ClientInput->Stop();
+    }
+
+    virtual void OnError(const std::exception& exc)
+    {
+      ClientInput->Stop();
+    }
+
 
   private:
     std::shared_ptr<BufferedInput> ClientInput;

@@ -52,8 +52,8 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@am__append_2 = opcuaserver
 #TESTS += test_tcp_server
 @BUILD_UA_SERVER_TRUE@am__append_3 = test_opcuaserver \
-@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon
-#TESTS += test_endpoints_addon
+@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon \
+@BUILD_UA_SERVER_TRUE@	test_endpoints_addon
 @BUILD_UA_SERVER_TRUE@am__append_4 = libopcua_tcp_server.la \
 @BUILD_UA_SERVER_TRUE@	libopcua_endpoints.la \
 @BUILD_UA_SERVER_TRUE@	libbuiltin_computer_addon.la
@@ -151,7 +151,8 @@ libopcua_tcp_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 @BUILD_UA_CMD_TRUE@am__EXEEXT_1 = opcua$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_2 = opcuaserver$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_3 = test_opcuaserver$(EXEEXT) \
-@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon$(EXEEXT)
+@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon$(EXEEXT) \
+@BUILD_UA_SERVER_TRUE@	test_endpoints_addon$(EXEEXT)
 am__EXEEXT_4 = libuaclient_test$(EXEEXT) $(am__EXEEXT_3)
 PROGRAMS = $(bin_PROGRAMS)
 am_libuaclient_test_OBJECTS =  \
@@ -197,6 +198,16 @@ opcuaserver_LDADD = $(LDADD)
 opcuaserver_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(opcuaserver_LDFLAGS) $(LDFLAGS) -o $@
+am__test_endpoints_addon_SOURCES_DIST = src/server/server_options.cpp \
+	tests/server/endpoints_addon_test.cpp tests/server/common.cpp
+@BUILD_UA_SERVER_TRUE@am_test_endpoints_addon_OBJECTS = test_endpoints_addon-server_options.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@	test_endpoints_addon-endpoints_addon_test.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@	test_endpoints_addon-common.$(OBJEXT)
+test_endpoints_addon_OBJECTS = $(am_test_endpoints_addon_OBJECTS)
+test_endpoints_addon_LDADD = $(LDADD)
+test_endpoints_addon_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(test_endpoints_addon_LDFLAGS) $(LDFLAGS) -o $@
 am__test_opcuaserver_SOURCES_DIST = src/server/server_options.cpp \
 	src/thread.cpp tests/server/common.cpp tests/server/common.h \
 	tests/server/test_server_options.cpp tests/thread_test.cpp
@@ -246,12 +257,14 @@ SOURCES = $(libbuiltin_computer_addon_la_SOURCES) \
 	$(libopcua_endpoints_la_SOURCES) \
 	$(libopcua_tcp_server_la_SOURCES) $(libuaclient_test_SOURCES) \
 	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
-	$(test_opcuaserver_SOURCES) $(test_tcp_server_addon_SOURCES)
+	$(test_endpoints_addon_SOURCES) $(test_opcuaserver_SOURCES) \
+	$(test_tcp_server_addon_SOURCES)
 DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
 	$(am__libopcua_endpoints_la_SOURCES_DIST) \
 	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
 	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
 	$(am__opcuaserver_SOURCES_DIST) \
+	$(am__test_endpoints_addon_SOURCES_DIST) \
 	$(am__test_opcuaserver_SOURCES_DIST) \
 	$(am__test_tcp_server_addon_SOURCES_DIST)
 am__addonsinclude_HEADERS_DIST =  \
@@ -555,6 +568,13 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 
 @BUILD_UA_SERVER_TRUE@test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 @BUILD_UA_SERVER_TRUE@test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@test_endpoints_addon_SOURCES = \
+@BUILD_UA_SERVER_TRUE@  src/server/server_options.cpp \
+@BUILD_UA_SERVER_TRUE@  tests/server/endpoints_addon_test.cpp \
+@BUILD_UA_SERVER_TRUE@  tests/server/common.cpp
+
+@BUILD_UA_SERVER_TRUE@test_endpoints_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+@BUILD_UA_SERVER_TRUE@test_endpoints_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -707,6 +727,9 @@ opcua$(EXEEXT): $(opcua_OBJECTS) $(opcua_DEPENDENCIES) $(EXTRA_opcua_DEPENDENCIE
 opcuaserver$(EXEEXT): $(opcuaserver_OBJECTS) $(opcuaserver_DEPENDENCIES) $(EXTRA_opcuaserver_DEPENDENCIES) 
 	@rm -f opcuaserver$(EXEEXT)
 	$(opcuaserver_LINK) $(opcuaserver_OBJECTS) $(opcuaserver_LDADD) $(LIBS)
+test_endpoints_addon$(EXEEXT): $(test_endpoints_addon_OBJECTS) $(test_endpoints_addon_DEPENDENCIES) $(EXTRA_test_endpoints_addon_DEPENDENCIES) 
+	@rm -f test_endpoints_addon$(EXEEXT)
+	$(test_endpoints_addon_LINK) $(test_endpoints_addon_OBJECTS) $(test_endpoints_addon_LDADD) $(LIBS)
 test_opcuaserver$(EXEEXT): $(test_opcuaserver_OBJECTS) $(test_opcuaserver_DEPENDENCIES) $(EXTRA_test_opcuaserver_DEPENDENCIES) 
 	@rm -f test_opcuaserver$(EXEEXT)
 	$(test_opcuaserver_LINK) $(test_opcuaserver_OBJECTS) $(test_opcuaserver_LDADD) $(LIBS)
@@ -745,6 +768,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-thread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_addon-common.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_addon-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcuaserver-test_server_options.Po@am__quote@
@@ -1083,6 +1109,48 @@ opcuaserver-thread.obj: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='opcuaserver-thread.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcuaserver-thread.obj `if test -f 'src/thread.cpp'; then $(CYGPATH_W) 'src/thread.cpp'; else $(CYGPATH_W) '$(srcdir)/src/thread.cpp'; fi`
+
+test_endpoints_addon-server_options.o: src/server/server_options.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-server_options.o -MD -MP -MF $(DEPDIR)/test_endpoints_addon-server_options.Tpo -c -o test_endpoints_addon-server_options.o `test -f 'src/server/server_options.cpp' || echo '$(srcdir)/'`src/server/server_options.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-server_options.Tpo $(DEPDIR)/test_endpoints_addon-server_options.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/server_options.cpp' object='test_endpoints_addon-server_options.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-server_options.o `test -f 'src/server/server_options.cpp' || echo '$(srcdir)/'`src/server/server_options.cpp
+
+test_endpoints_addon-server_options.obj: src/server/server_options.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-server_options.obj -MD -MP -MF $(DEPDIR)/test_endpoints_addon-server_options.Tpo -c -o test_endpoints_addon-server_options.obj `if test -f 'src/server/server_options.cpp'; then $(CYGPATH_W) 'src/server/server_options.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/server_options.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-server_options.Tpo $(DEPDIR)/test_endpoints_addon-server_options.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/server_options.cpp' object='test_endpoints_addon-server_options.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-server_options.obj `if test -f 'src/server/server_options.cpp'; then $(CYGPATH_W) 'src/server/server_options.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/server_options.cpp'; fi`
+
+test_endpoints_addon-endpoints_addon_test.o: tests/server/endpoints_addon_test.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-endpoints_addon_test.o -MD -MP -MF $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Tpo -c -o test_endpoints_addon-endpoints_addon_test.o `test -f 'tests/server/endpoints_addon_test.cpp' || echo '$(srcdir)/'`tests/server/endpoints_addon_test.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Tpo $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/endpoints_addon_test.cpp' object='test_endpoints_addon-endpoints_addon_test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-endpoints_addon_test.o `test -f 'tests/server/endpoints_addon_test.cpp' || echo '$(srcdir)/'`tests/server/endpoints_addon_test.cpp
+
+test_endpoints_addon-endpoints_addon_test.obj: tests/server/endpoints_addon_test.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-endpoints_addon_test.obj -MD -MP -MF $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Tpo -c -o test_endpoints_addon-endpoints_addon_test.obj `if test -f 'tests/server/endpoints_addon_test.cpp'; then $(CYGPATH_W) 'tests/server/endpoints_addon_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/endpoints_addon_test.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Tpo $(DEPDIR)/test_endpoints_addon-endpoints_addon_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/endpoints_addon_test.cpp' object='test_endpoints_addon-endpoints_addon_test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-endpoints_addon_test.obj `if test -f 'tests/server/endpoints_addon_test.cpp'; then $(CYGPATH_W) 'tests/server/endpoints_addon_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/endpoints_addon_test.cpp'; fi`
+
+test_endpoints_addon-common.o: tests/server/common.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-common.o -MD -MP -MF $(DEPDIR)/test_endpoints_addon-common.Tpo -c -o test_endpoints_addon-common.o `test -f 'tests/server/common.cpp' || echo '$(srcdir)/'`tests/server/common.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-common.Tpo $(DEPDIR)/test_endpoints_addon-common.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/common.cpp' object='test_endpoints_addon-common.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-common.o `test -f 'tests/server/common.cpp' || echo '$(srcdir)/'`tests/server/common.cpp
+
+test_endpoints_addon-common.obj: tests/server/common.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_addon-common.obj -MD -MP -MF $(DEPDIR)/test_endpoints_addon-common.Tpo -c -o test_endpoints_addon-common.obj `if test -f 'tests/server/common.cpp'; then $(CYGPATH_W) 'tests/server/common.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/common.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_addon-common.Tpo $(DEPDIR)/test_endpoints_addon-common.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/common.cpp' object='test_endpoints_addon-common.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_addon-common.obj `if test -f 'tests/server/common.cpp'; then $(CYGPATH_W) 'tests/server/common.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/common.cpp'; fi`
 
 test_opcuaserver-server_options.o: src/server/server_options.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcuaserver-server_options.o -MD -MP -MF $(DEPDIR)/test_opcuaserver-server_options.Tpo -c -o test_opcuaserver-server_options.o `test -f 'src/server/server_options.cpp' || echo '$(srcdir)/'`src/server/server_options.cpp
@@ -1729,13 +1797,6 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-binPROGRAMS \
 	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 
-
-#test_endpoints_addon_SOURCES = \
-#  src/server/server_options.cpp \
-#  tests/server/endpoints_addon_test.cpp \
-#  tests/server/common.cpp
-#test_endpoints_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-#test_endpoints_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
