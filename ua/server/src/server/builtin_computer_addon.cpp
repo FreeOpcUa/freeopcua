@@ -29,7 +29,7 @@ namespace
     BufferedInput()
       : MaxBufferSize(4096)
       , Buffer(MaxBufferSize)
-      , Stopped(false)
+      , Running(true)
     {
       Buffer.reserve(MaxBufferSize);
     }
@@ -42,8 +42,12 @@ namespace
       while (totalConsumedSize < size)
       {
         std::unique_lock<std::mutex> lock(BufferMutex);
-        NotEmpty.wait(lock, [&Stopped, &Buffer, &MaxBufferSize](){return !(Stopped || Buffer.size() != 0);});
+        NotEmpty.wait(lock);
         ThrowIfStopped();
+        if (Buffer.empty())
+        {
+          continue;
+        }
 
         const std::size_t sizeToConsume = std::min(size - totalConsumedSize, Buffer.size());
         auto endIt = Buffer.begin() + sizeToConsume;
@@ -68,8 +72,12 @@ namespace
       while(totalSendedSize != size)
       {
         std::unique_lock<std::mutex> lock(BufferMutex);
-        NotFull.wait(lock, [&Stopped, &Buffer, &MaxBufferSize]() { return !(Stopped || Buffer.size() <= MaxBufferSize); });
+        NotFull.wait(lock);
         ThrowIfStopped();
+        if (Buffer.size() == MaxBufferSize)
+        {
+          continue;
+        }
 
         const std::size_t sizeToSend = std::min(MaxBufferSize - Buffer.size(), size - totalSendedSize); 
         Buffer.insert(Buffer.end(), buf + totalSendedSize, buf + sizeToSend);
@@ -80,7 +88,7 @@ namespace
 
     void Stop()
     {
-      Stopped = true;
+      Running = false;
       NotEmpty.notify_all();
       NotFull.notify_all();
     }
@@ -88,7 +96,7 @@ namespace
   private:
     void ThrowIfStopped()
     {
-      if (Stopped)
+      if (!Running)
       {
         throw std::logic_error("Conversation through connection stopped.");
       }
@@ -97,7 +105,7 @@ namespace
   private:
     const std::size_t MaxBufferSize;
     std::vector<char> Buffer;
-    std::atomic<bool> Stopped;
+    std::atomic<bool> Running;
     std::mutex BufferMutex;
     std::condition_variable NotEmpty;
     std::condition_variable NotFull;
@@ -152,6 +160,17 @@ namespace
       return OpcUa::Remote::CreateBinaryComputer(ClientChannel);
     }
 
+    ~BuiltinComputerAddon()
+    {
+      try
+      {
+        Stop();
+      }
+      catch (...)
+      {
+      }
+    }
+
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& addons)
     {
@@ -169,8 +188,11 @@ namespace
 
     virtual void Stop()
     {
-      ClientInput->Stop();
-      ServerInput->Stop();
+      if (ClientInput)
+      {
+        ClientInput->Stop();
+        ServerInput->Stop();
+      }
 
       if (Thread.get())
       {

@@ -133,33 +133,8 @@ TEST(BuiltinComputerAddon, CanBeLoadedLoaded)
   addons->Register(OpcUa::Server::BuiltinComputerAddonID, Common::CreateDynamicAddonFactory(modulePath.c_str()), std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID));
   addons->Start();
 
-  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
+  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::BuiltinComputerAddonID)));
 
   addons->Stop();
-}
-
-TEST(BuiltinComputerAddon, CanSendAndReceiveData)
-{
-  std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
-  const std::string modulePath = "./.libs/libbuiltin_computer_addon.so";
-  addons->Register(OpcUa::Server::BuiltinComputerAddonID, Common::CreateDynamicAddonFactory(modulePath.c_str()), std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID));
-  addons->Register(OpcUa::Server::EndpointsAddonID, CreateEchoAddonFactory());
-  addons->Start();
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
-/*
-  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", 4841);
-
-  char data[4] = {0, 1, 2, 3};
-  connection->Send(data, 4);
-  char dataReceived[4] = {0};
-  connection->Receive(dataReceived, 4);
-
-  ASSERT_EQ(memcmp(data, dataReceived, 4), 0);
-
-  connection.reset();
-*/
-  addons->Stop();
-  addons.reset();
 }
 
