@@ -85,7 +85,11 @@ namespace
     const Server::ModulesConfiguration& modules = cmdLine.GetModules();
     for (Server::ModulesConfiguration::const_iterator moduleIt = modules.begin(); moduleIt != modules.end(); ++moduleIt)
     {
-      addons->Register(moduleIt->ID, Common::CreateDynamicAddonFactory(moduleIt->Path.c_str()), moduleIt->DependsOn);
+      Common::AddonConfiguration addonConfig;
+      addonConfig.ID = moduleIt->ID;
+      addonConfig.Factory = Common::CreateDynamicAddonFactory(moduleIt->Path.c_str());
+      addonConfig.Dependencies = moduleIt->DependsOn;
+      addons->Register(addonConfig);
     }
     addons->Start();
     ExitEvent.wait(lock);

@@ -24,12 +24,14 @@ namespace
     Common::AddonID ID;
     Common::AddonFactory::SharedPtr Factory;
     std::vector<Common::AddonID> Dependencies;
+    Common::AddonParameters Parameters;
     Common::Addon::SharedPtr Addon;
 
-    AddonData(const Common::AddonID& id, Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID> dependencies)
-      : ID(id)
-      , Factory(std::move(factory))
-      , Dependencies(dependencies)
+    AddonData(const Common::AddonConfiguration& configuration)
+      : ID(configuration.ID)
+      , Factory(configuration.Factory)
+      , Dependencies(configuration.Dependencies)
+      , Parameters(configuration.Parameters)
     {
     }
   };
@@ -76,16 +78,16 @@ namespace
       }
     }
 
-    virtual void Register(const Common::AddonID& id, Common::AddonFactory::UniquePtr factory, const std::vector<Common::AddonID>& dependencies)
+    virtual void Register(const Common::AddonConfiguration& addonConfiguration)
     {
       // TODO lock manager
-      if (ManagerStarted && !dependencies.empty())
+      if (ManagerStarted && !addonConfiguration.Dependencies.empty())
       {
-        THROW_ERROR1(UnableToRegisterAddonWhenStarted, id);
+        THROW_ERROR1(UnableToRegisterAddonWhenStarted, addonConfiguration.ID);
       }
 
-      EnsureAddonNotRegistered(id);
-      Addons.insert(std::make_pair(id, AddonData(id, std::move(factory), dependencies)));
+      EnsureAddonNotRegistered(addonConfiguration.ID);
+      Addons.insert(std::make_pair(addonConfiguration.ID, AddonData(addonConfiguration)));
       if (ManagerStarted)
       {
         DoStart();
@@ -148,7 +150,7 @@ namespace
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
         addonData->Addon = addon;
         std::clog << "Initializing addon '" << addonData->ID << "'" <<  std::endl; 
-        addon->Initialize(*this);
+        addon->Initialize(*this, addonData->Parameters);
         std::clog << "Addon '" << addonData->ID << "' successfuly initialized." <<  std::endl; 
       }
       EnsureAllAddonsStarted();

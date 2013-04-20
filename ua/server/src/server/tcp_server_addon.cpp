@@ -18,7 +18,7 @@
 
 namespace
 {
-
+ 
   using namespace OpcUa::Server;
 
   class TcpServerAddon : public ::OpcUa::Server::TcpServerAddon
@@ -32,22 +32,14 @@ namespace
     {
     }
 
-/*
-    virtual void Listen(const TcpParameters& params, std::shared_ptr<IncomingConnectionProcessor> processor)
-    {
-    }
-
-    virtual void StopListen(const TcpParameters& tcpParams)
-    {
-    }
-*/
   public: // Common::Addon
-    virtual void Initialize(Common::AddonsManager& addons)
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      // TODO Get TcpParameters from addon parameters.
       std::shared_ptr<EndpointsAddon> endpoints = Common::GetAddon<EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
-      TcpParameters params;
-      params.Port = 4841;
-      Server = OpcUa::CreateTcpServer(params.Port);
+      TcpParameters tcpParams;
+      tcpParams.Port = 4841;
+      Server = OpcUa::CreateTcpServer(tcpParams.Port);
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
       Server->Start(processor);
     }

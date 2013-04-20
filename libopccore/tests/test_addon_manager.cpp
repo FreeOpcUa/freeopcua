@@ -26,7 +26,15 @@ namespace
 TEST(AddonManager, CanCreateDynamicAddons)
 {
   AddonsManager::UniquePtr addonsManager = CreateAddonsManager();
-  addonsManager->Register(OpcCoreTests::TestDynamicAddonID, Common::CreateDynamicAddonFactory(modulePath));
+  AddonConfiguration config;
+  config.ID = OpcCoreTests::TestDynamicAddonID;
+  config.Factory = Common::CreateDynamicAddonFactory(modulePath);
+  Common::Parameter param;
+  param.Name = "name";
+  param.Value = "value";
+  config.Parameters.Parameters.push_back(param);
+
+  addonsManager->Register(config);
   addonsManager->Start();
   Addon::SharedPtr addon = addonsManager->GetAddon(OpcCoreTests::TestDynamicAddonID);
   ASSERT_TRUE(static_cast<bool>(addon));
@@ -34,5 +42,9 @@ TEST(AddonManager, CanCreateDynamicAddons)
   OpcCoreTests::TestDynamicAddon::SharedPtr test = GetAddon<OpcCoreTests::TestDynamicAddon>(*addonsManager, OpcCoreTests::TestDynamicAddonID);
   ASSERT_TRUE(static_cast<bool>(test));
   ASSERT_EQ(test->GetStringWithHello(), "hello");
+  Common::AddonParameters params = test->GetParameters();
+  ASSERT_EQ(params.Parameters.size(), 1);
+  ASSERT_EQ(params.Parameters[0].Name, "name");
+  ASSERT_EQ(params.Parameters[0].Value, "value");
 }
 

@@ -179,7 +179,7 @@ namespace
     }
 
   public: // Common::Addon
-    virtual void Initialize(Common::AddonsManager& addons)
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
       ServerInput.reset(new BufferedInput());
       ClientInput.reset(new BufferedInput());

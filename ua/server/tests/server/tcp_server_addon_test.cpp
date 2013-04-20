@@ -63,7 +63,7 @@ namespace
     }
 
   public:
-    virtual void Initialize(Common::AddonsManager& addons)
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
     }
 
@@ -89,13 +89,49 @@ namespace
     return Common::AddonFactory::UniquePtr(new EchoAddonFactory());
   }
 
+
+  Common::AddonConfiguration CreateEchoAddonConfiguration()
+  {
+    Common::AddonConfiguration config;
+    config.ID = OpcUa::Server::EndpointsAddonID;
+    config.Factory =  CreateEchoAddonFactory();
+    return config;
+  }
+
+  Common::AddonConfiguration CreateBuiltinComputerAddonConfiguration()
+  {
+    Common::AddonConfiguration config;
+    const std::string modulePath = "./.libs/libbuiltin_computer_addon.so";
+    config.ID = OpcUa::Server::BuiltinComputerAddonID;
+    config.Factory =  Common::CreateDynamicAddonFactory(modulePath.c_str());
+    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID);
+    return config;
+  }
+
+
+  Common::AddonConfiguration CreateTcpAddonConfig()
+  {
+    Common::AddonConfiguration tcpConfig;
+    tcpConfig.ID = OpcUa::Server::TcpServerAddonID;
+    tcpConfig.Factory = Common::CreateDynamicAddonFactory(OpcUa::Tests::GetTcpServerAddonPath().c_str());
+    tcpConfig.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID);
+    return tcpConfig;
+  }
+
+  Common::AddonConfiguration CreateEndpointsAddonConfig()
+  {
+    Common::AddonConfiguration endpointsConfig;
+    endpointsConfig.ID = OpcUa::Server::EndpointsAddonID;
+    endpointsConfig.Factory = CreateEchoAddonFactory();
+    return endpointsConfig;
+  }
 }
 
 TEST(TcpServerAddon, CanBeLoadedLoaded)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
-  addons->Register(OpcUa::Server::TcpServerAddonID, Common::CreateDynamicAddonFactory(OpcUa::Tests::GetTcpServerAddonPath().c_str()), std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID));
-  addons->Register(OpcUa::Server::EndpointsAddonID, CreateEchoAddonFactory());
+  addons->Register(CreateTcpAddonConfig());
+  addons->Register(CreateEndpointsAddonConfig());
   addons->Start();
   ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
   addons->Stop();
@@ -104,8 +140,8 @@ TEST(TcpServerAddon, CanBeLoadedLoaded)
 TEST(TcpServerAddon, CanSendAndReceiveData)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
-  addons->Register(OpcUa::Server::EndpointsAddonID, CreateEchoAddonFactory());
-  addons->Register(OpcUa::Server::TcpServerAddonID, Common::CreateDynamicAddonFactory(OpcUa::Tests::GetTcpServerAddonPath().c_str()), std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID));
+  addons->Register(CreateTcpAddonConfig());
+  addons->Register(CreateEndpointsAddonConfig());
   addons->Start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -128,9 +164,8 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
 TEST(BuiltinComputerAddon, CanBeLoadedLoaded)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
-  addons->Register(OpcUa::Server::EndpointsAddonID, CreateEchoAddonFactory());
-  const std::string modulePath = "./.libs/libbuiltin_computer_addon.so";
-  addons->Register(OpcUa::Server::BuiltinComputerAddonID, Common::CreateDynamicAddonFactory(modulePath.c_str()), std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID));
+  addons->Register(CreateEchoAddonConfiguration());
+  addons->Register(CreateBuiltinComputerAddonConfiguration());
   addons->Start();
 
   ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::BuiltinComputerAddonID)));

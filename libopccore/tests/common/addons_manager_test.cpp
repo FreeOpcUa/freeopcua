@@ -62,7 +62,7 @@ public:
   {
   }
 
-  virtual void Initialize(Common::AddonsManager&)
+  virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)
   {
     CPPUNIT_ASSERT(InitializedAddonsCount == 0);
     InitializedAddonsCount++;
@@ -107,7 +107,7 @@ public:
   {
   }
 
-  virtual void Initialize(Common::AddonsManager&)
+  virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)
   {
     CPPUNIT_ASSERT(InitializedAddonsCount == 1);
     InitializedAddonsCount++;
@@ -142,8 +142,16 @@ void AddonsManagerTestCase::TestOneManager()
 {
   InitializedAddonsCount = 0;
 
-  CPPUNIT_ASSERT_NO_THROW(Addons->Register(DeviceManager::ManagerID, Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory), std::vector<Common::AddonID>(1, PropertyTree::ManagerID)));
-  CPPUNIT_ASSERT_NO_THROW(Addons->Register(PropertyTree::ManagerID, Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory)));
+  Common::AddonConfiguration dmConfig;
+  dmConfig.ID = DeviceManager::ManagerID;
+  dmConfig.Factory = Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory);
+  dmConfig.Dependencies = std::vector<Common::AddonID>(1, PropertyTree::ManagerID);
+  CPPUNIT_ASSERT_NO_THROW(Addons->Register(dmConfig));
+
+  Common::AddonConfiguration ptConfig;
+  ptConfig.ID = PropertyTree::ManagerID;
+  ptConfig.Factory = Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory);
+  CPPUNIT_ASSERT_NO_THROW(Addons->Register(ptConfig));
 
   CPPUNIT_ASSERT_NO_THROW(Addons->Start(/*Common::AddonsConfiguration()*/));
   CPPUNIT_ASSERT_THROW(Addons->Start(/*Common::AddonsConfiguration()*/), Common::Error);
@@ -163,11 +171,18 @@ void AddonsManagerTestCase::TestTwoManagers()
 {
   InitializedAddonsCount = 0;
 
-  CPPUNIT_ASSERT_NO_THROW(Addons->Register(DeviceManager::ManagerID, Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory), std::vector<Common::AddonID>(1, PropertyTree::ManagerID)));
-  CPPUNIT_ASSERT_THROW(Addons->Register(DeviceManager::ManagerID, Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory), std::vector<Common::AddonID>(1, PropertyTree::ManagerID)), Common::Error);
+  Common::AddonConfiguration dmConfig;
+  dmConfig.ID = DeviceManager::ManagerID;
+  dmConfig.Factory = Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory);
+  dmConfig.Dependencies = std::vector<Common::AddonID>(1, PropertyTree::ManagerID);
+  CPPUNIT_ASSERT_NO_THROW(Addons->Register(dmConfig));
+  CPPUNIT_ASSERT_THROW(Addons->Register(dmConfig), Common::Error);
   CPPUNIT_ASSERT_THROW(Addons->GetAddon(DeviceManager::ManagerID), Common::Error);
 
-  CPPUNIT_ASSERT_NO_THROW(Addons->Register(PropertyTree::ManagerID, Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory)));
+  Common::AddonConfiguration ptConfig;
+  ptConfig.ID = PropertyTree::ManagerID;
+  ptConfig.Factory = Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory);
+  CPPUNIT_ASSERT_NO_THROW(Addons->Register(ptConfig));
   CPPUNIT_ASSERT_THROW(Addons->GetAddon(PropertyTree::ManagerID), Common::Error);
 
   CPPUNIT_ASSERT_NO_THROW(Addons->Start(/*Common::AddonsConfiguration()*/));

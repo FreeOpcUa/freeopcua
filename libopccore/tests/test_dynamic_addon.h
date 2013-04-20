@@ -24,6 +24,7 @@ namespace OpcCoreTests
     DEFINE_CLASS_POINTERS(TestDynamicAddon);
   public:
     virtual std::string GetStringWithHello() const = 0;
+    virtual Common::AddonParameters GetParameters() const = 0;
   };
 
 }

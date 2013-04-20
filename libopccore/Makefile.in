@@ -389,6 +389,7 @@ addonsdir = $(commondir)/addons_core
 addons_HEADERS = \
                   include/opccore/common/addons_core/addon.h \
                   include/opccore/common/addons_core/addon_manager.h \
+                  include/opccore/common/addons_core/addon_parameters.h \
                   include/opccore/common/addons_core/dynamic_addon.h \
                   include/opccore/common/addons_core/dynamic_addon_factory.h \
                   include/opccore/common/addons_core/errors.h

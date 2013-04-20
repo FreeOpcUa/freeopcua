@@ -89,7 +89,7 @@ namespace
       : Prefix(prefix)
     {
     }
-    virtual void Initialize(Common::AddonsManager& addons)
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
       std::shared_ptr<PropertyTree::Manager> propertyTreeManager = Common::GetAddon<PropertyTree::Manager>(addons, PropertyTree::ManagerID);
       std::shared_ptr<Gefest::PropertyTree> tree = propertyTreeManager->GetPropertyTree();
@@ -127,8 +127,10 @@ namespace
 
 void RegisterDeviceManager(Common::AddonsManager& manager, Common::AddonID addonID, const std::string& propertyTreePrefix)
 {
-  std::vector<Common::AddonID> dependencies;
-  dependencies.push_back(PropertyTree::ManagerID);
-  dependencies.push_back(DeviceManager::ManagerID);
-  manager.Register(addonID, std::unique_ptr<Common::AddonFactory>(new DeviceManagerFactory(propertyTreePrefix)), dependencies);
+  Common::AddonConfiguration config;
+  config.ID = addonID;
+  config.Factory = std::unique_ptr<Common::AddonFactory>(new DeviceManagerFactory(propertyTreePrefix));
+  config.Dependencies.push_back(PropertyTree::ManagerID);
+  config.Dependencies.push_back(DeviceManager::ManagerID);
+  manager.Register(config);
 }

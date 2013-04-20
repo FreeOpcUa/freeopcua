@@ -206,8 +206,9 @@ namespace
     }
 
   public:
-    virtual void Initialize(Common::AddonsManager& addons)
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      // TODO Use params;
     }
 
     virtual void Stop()

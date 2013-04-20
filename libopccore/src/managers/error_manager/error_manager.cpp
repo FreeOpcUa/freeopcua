@@ -27,7 +27,7 @@ namespace
     }
 
   public: // Addon interface
-    virtual void Initialize(Common::AddonsManager&)
+    virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)
     {
     }
 

@@ -12,11 +12,13 @@
 #define __COMMON_ADDON_H__
 
 #include <opccore/common/addons_core/addon_manager.h>
+#include <opccore/common/addons_core/addon_parameters.h>
 #include <opccore/common/class_pointers.h>
 #include <opccore/common/noncopyable.h>
 
 namespace Common
 {
+
   class Addon : private Common::NonCopyable
   {
   public:
@@ -26,7 +28,7 @@ namespace Common
     /// @brief initialize addon. 
     /// @note Calls when all addons dependencies resolved.
     /// suppose that addon fully ready for work.
-    virtual void Initialize(AddonsManager& manager) = 0;
+    virtual void Initialize(AddonsManager& manager, const AddonParameters& parameters) = 0;
 
     /// @brief Stopping addon work.
     /// After calling this method addon should throw exception on any calls.

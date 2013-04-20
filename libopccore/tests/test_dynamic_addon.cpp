@@ -15,8 +15,9 @@ namespace
   class TestDynamicAddonImpl : public OpcCoreTests::TestDynamicAddon
   {
   public:
-    virtual void Initialize(Common::AddonsManager&)
+    virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters& params)
     {
+      Params = params;
     }
 
     virtual void Stop()
@@ -27,6 +28,13 @@ namespace
     {
       return "hello";
     }
+    
+    virtual Common::AddonParameters GetParameters() const
+    {
+      return Params;
+    }
+  private:
+    Common::AddonParameters Params;
   };
 }
 

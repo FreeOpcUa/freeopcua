@@ -27,7 +27,11 @@ std::unique_ptr<Common::AddonsManager> OpcUa::Tests::LoadAddons(const std::strin
   Common::AddonsManager::UniquePtr addons = Common::CreateAddonsManager();
   for (auto module : modules)
   {
-    addons->Register(module.ID, Common::CreateDynamicAddonFactory(module.Path.c_str()), module.DependsOn);
+    Common::AddonConfiguration config;
+    config.ID = module.ID;
+    config.Factory = Common::CreateDynamicAddonFactory(module.Path.c_str());
+    config.Dependencies = module.DependsOn;
+    addons->Register(config);
   }
   addons->Start();
   return addons;

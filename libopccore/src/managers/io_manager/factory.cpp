@@ -51,7 +51,7 @@ namespace
     }
 
   public:  // Common::Addon
-    virtual void Initialize(Common::AddonsManager&)
+    virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)
     {
     }
 

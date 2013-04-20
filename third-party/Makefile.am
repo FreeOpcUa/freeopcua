@@ -43,8 +43,8 @@ clean: gmock/Makefile gtest/Makefile
 
 
 dist: gmock/Makefile gtest/Makefile
-	$(MAKE) -C gtest clean
-	$(MAKE) -C gmock clean
+	$(MAKE) -C gtest distclean
+	$(MAKE) -C gmock distclean
 
 distclean: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest distclean

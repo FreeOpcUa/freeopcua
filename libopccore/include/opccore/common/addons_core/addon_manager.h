@@ -12,6 +12,7 @@
 #ifndef __COMMON_ADDONS_MANAGER_H__
 #define __COMMON_ADDONS_MANAGER_H__
 
+#include <opccore/common/addons_core/addon_parameters.h>
 #include <opccore/common/class_pointers.h>
 #include <opccore/common/noncopyable.h>
 #include <string>
@@ -24,6 +25,14 @@ namespace Common
   class Addon;
   class AddonFactory;
 
+  struct AddonConfiguration
+  {
+    AddonID ID;
+    std::shared_ptr<AddonFactory> Factory;
+    std::vector<AddonID> Dependencies;
+    AddonParameters Parameters;
+  };
+
   class AddonsManager : private NonCopyable
   {
   public: 
@@ -31,12 +40,10 @@ namespace Common
 
   public:
     /// @brief register new addon.
-    /// @param id id of registering addon
-    /// @param factory addon factory
-    /// @param dependencies ids of addons of which this addon depends on.
+    /// @param addonConfiguration configuration of new addon.
     /// @throws if addon already redistered. If manager started thows if not all dependencies resolved.
     /// If manager already started addon will be immediately created and initialized.
-    virtual void Register(const AddonID& id, std::unique_ptr<AddonFactory> factory, const std::vector<AddonID>& dependencies = std::vector<AddonID>()) = 0;
+    virtual void Register(const AddonConfiguration& caddonConfiguration) = 0;
 
     /// @brief unregister addon
     /// @param id id of unregistering addon
