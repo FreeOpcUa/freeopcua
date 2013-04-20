@@ -47,14 +47,20 @@ TEST_F(EndpointsAddonTest, Loads)
   ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::EndpointsAddonID)));
 }
 
-TEST_F(EndpointsAddonTest, CanListEndpoints)
+TEST_F(EndpointsAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
 {
   std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::BuiltinComputerAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   ASSERT_TRUE(static_cast<bool>(computer));
-  std::vector<OpcUa::EndpointDescription> endpoints;
-  ASSERT_NO_THROW(endpoints = computer->Endpoints()->GetEndpoints(OpcUa::Remote::EndpointFilter()));
-  EXPECT_FALSE(endpoints.empty());
+  computer.reset();
+}
+
+TEST_F(EndpointsAddonTest, CanListEndpoints)
+{
+  std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::BuiltinComputerAddonID);
+  std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
+  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  computer.reset();
 }
 

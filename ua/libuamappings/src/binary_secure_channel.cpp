@@ -12,6 +12,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/secure_channel.h>
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -97,20 +98,27 @@ namespace
 
     virtual ~SecureIOChannel()
     {
-      SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+      try
+      {
+        SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
 
-      const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
-      hdr.AddSize(RawSize(algorithmHeader));
+        const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
+        hdr.AddSize(RawSize(algorithmHeader));
 
-      const SequenceHeader sequence = CreateSequenceHeader();
-      hdr.AddSize(RawSize(sequence));
+        const SequenceHeader sequence = CreateSequenceHeader();
+        hdr.AddSize(RawSize(sequence));
 
-      CloseSecureChannelRequest request;
-      hdr.AddSize(RawSize(request));
+        CloseSecureChannelRequest request;
+        hdr.AddSize(RawSize(request));
 
-      OStream os(RawChannel);
-      os << hdr << algorithmHeader << sequence << request;
-      os.Flush();
+        OStream os(RawChannel);
+        os << hdr << algorithmHeader << sequence << request;
+        os.Flush();
+      }
+      catch (const std::exception& exc)
+      {
+        std::cerr << "Closing secure channel failed with error: " << exc.what() << std::endl;
+      }
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)

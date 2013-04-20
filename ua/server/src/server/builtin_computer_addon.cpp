@@ -10,6 +10,7 @@
 
 #include <opccore/common/addons_core/addon.h>
 #include <opc/ua/client/binary_computer.h>
+#include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>
 #include <opc/ua/server/addons/endpoints.h>
 #include <opc/ua/server/server.h>
@@ -48,7 +49,7 @@ namespace
           std::clog << "Waiting data from client" << std::endl;
           DataReady.wait(event);
         }
-        else
+        else if(!event.owns_lock())
         {
           event.lock();
         }
@@ -159,7 +160,11 @@ namespace
   public:
     virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const
     {
-      return OpcUa::Remote::CreateBinaryComputer(ClientChannel);
+      OpcUa::Binary::SecureConnectionParams params;
+      params.EndpointUrl = "opc.tcp://localhost:4841";
+      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      std::shared_ptr<OpcUa::IOChannel> secureChannel = OpcUa::Binary::CreateSecureChannel(ClientChannel, params);
+      return OpcUa::Remote::CreateBinaryComputer(secureChannel);
     }
 
     ~BuiltinComputerAddon()
@@ -210,11 +215,13 @@ namespace
     virtual void OnSuccess()
     {
       ClientInput->Stop();
+      std::clog  << "Server thread exited with success." << std::endl;
     }
 
     virtual void OnError(const std::exception& exc)
     {
       ClientInput->Stop();
+      std::clog  << "Server thread exited with error: " << exc.what() << std::endl;
     }
 
 

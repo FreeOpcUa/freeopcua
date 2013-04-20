@@ -13,18 +13,29 @@
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 
 #include <iostream>
+#include <stdexcept>
 
 namespace
 {
 
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
   using namespace OpcUa::Server;
+
 
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
+    OpcTcp()
+      : ChannelID(1)
+      , TokenID(2)
+    {
+    }
+
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
       if (!clientChannel)
@@ -33,10 +44,9 @@ namespace
         return;
       }
 
-      OpcUa::Binary::IOStream stream(clientChannel);
       std::clog << "Hello client!" << std::endl;
-      Hello(stream);
-      std::cout << "Creating secure channel with client." << std::endl;
+      OpcUa::Binary::IOStream stream(clientChannel);
+      while(ProcessChunk(stream));
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -44,33 +54,137 @@ namespace
     }
 
   private:
-    void Hello(OpcUa::Binary::IOStream& stream)
+    bool ProcessChunk(OpcUa::Binary::IOStream& stream)
     {
       using namespace OpcUa::Binary;
-      std::cout << "Reading header." << std::endl;
+
       Header hdr;
       stream >> hdr;
-      if (hdr.Type != MT_HELLO || hdr.Chunk != CHT_SINGLE)
+      switch (hdr.Type)
       {
-        std::cout << "Invalid header received." << std::endl;
-        return;
+        case MT_HELLO:
+        {
+          HelloClient(stream);
+          break;
+        }
+
+
+        case MT_SECURE_OPEN:
+        {
+          OpenChannel(stream);
+          break;
+        }
+
+        case MT_SECURE_CLOSE:
+        {
+          CloseChannel(stream);
+          return false;
+        }
+
+        case MT_SECURE_MESSAGE:
+        {
+          break;
+        }
+
+        case MT_ACKNOWLEDGE:
+        {
+          throw std::logic_error("Thank to client about acknowledge.");
+        }
+        case MT_ERROR:
+        {
+          throw std::logic_error("It is very nice get to know server about error in the client.");
+        }
+        default:
+        {
+          throw std::logic_error("Invalid message type received.");
+        }
       }
+      return true;
+    }
+
+    void HelloClient(OpcUa::Binary::IOStream& stream)
+    {
+      using namespace OpcUa::Binary;
 
       std::cout << "Reading hello message." << std::endl;
-      OpcUa::Binary::Hello hello;
+      Hello hello;
       stream >> hello;
 
-      OpcUa::Binary::Acknowledge ack;
+      Acknowledge ack;
       ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
       ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
       ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
       ack.MaxChunkCount = 1;
 
-      OpcUa::Binary::Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
+      Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
       std::cout << "Sending answer to client." << std::endl;
       stream << ackHeader << ack << flush; 
     }
+
+    void OpenChannel(IOStream& stream)
+    {
+      std::cout << "Creating secure channel with client." << std::endl;
+      uint32_t channelID = 0;
+      stream >> channelID;
+      AsymmetricAlgorithmHeader algorithmHeader;
+      stream >> algorithmHeader;
+
+      if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
+      {
+        throw std::logic_error(std::string("Client want to create secure channel with of invalid policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+      }
+
+      SequenceHeader sequence;
+      stream >> sequence;
+
+      OpenSecureChannelRequest openChannel;
+      stream >> openChannel;
+
+      if (openChannel.RequestType != STR_ISSUE)
+      {
+        throw std::logic_error("Client have to create secure channel!");
+      }
+
+      if (openChannel.SecurityMode != MSM_NONE)
+      {
+        throw std::logic_error("Unsupported security mode.");
+      }
+
+      OpenSecureChannelResponse response;
+      response.Header.InnerDiagnostics.push_back(DiagnosticInfo());
+      response.ChannelSecurityToken.SecureChannelID = ChannelID;
+      response.ChannelSecurityToken.TokenID = TokenID;
+      response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
+      response.ChannelSecurityToken.RevisedLifetime = 3600;
+
+
+      SecureHeader responseHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+      responseHeader.AddSize(RawSize(algorithmHeader));
+      responseHeader.AddSize(RawSize(sequence));
+      responseHeader.AddSize(RawSize(response));
+      stream << responseHeader << algorithmHeader << sequence << response << flush;
+    }
+
+    void CloseChannel(IOStream& stream)
+    {
+      std::cout << "Closing secure channel with client." << std::endl;
+      uint32_t channelID = 0;
+      stream >> channelID;
+     
+      SymmetricAlgorithmHeader algorithmHeader;
+      stream >> algorithmHeader;
+
+      SequenceHeader sequence;
+      stream >> sequence;
+
+      CloseSecureChannelRequest request;
+      stream >> request;
+    }
+
+  private:
+    uint32_t ChannelID;
+    uint32_t TokenID;
   };
 
 
