@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Addon for accessing opcua server insideprocess.
+/// @brief Addon for accessing opcua server inside process.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License

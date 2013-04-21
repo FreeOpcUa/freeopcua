@@ -38,6 +38,7 @@ namespace OpcUa
     {
     public:
       virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
+      // TODO Here all structuresmust be in one namespace.
       virtual std::vector<EndpointDescription> GetEndpoints(const EndpointFilter& filter) const = 0;
       virtual void RegisterServer(const ServerParameters& parameters) = 0;
     };

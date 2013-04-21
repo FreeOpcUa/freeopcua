@@ -35,7 +35,6 @@ EXTRA_DIST = \
   src/stream_attribute.h \
   tests/configs/endpoints.xml \
   tests/configs/test.xml \
-  tests/configs/test_endpoints_config.xml \
   tests/configs/test_tcp_server.xml
 
 
@@ -113,7 +112,10 @@ TESTS += test_tcp_server_addon
 
 lib_LTLIBRARIES += libopcua_endpoints.la
 addonsinclude_HEADERS += include/opc/ua/server/addons/endpoints.h
-libopcua_endpoints_la_SOURCES = src/server/endpoints_addon.cpp
+libopcua_endpoints_la_SOURCES = \
+ src/server/endpoints_addon.cpp \
+ src/server/opc_tcp_processor.cpp \
+ src/server/opc_tcp_processor.h
 libopcua_endpoints_la_CPPFLAGS = $(INCLUDES)
 libopcua_endpoints_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 TESTS += test_endpoints_addon
@@ -128,6 +130,15 @@ libbuiltin_computer_addon_la_SOURCES = \
 libibultin_computer_addon_la_CPPFLAGS = $(INCLUDES)
 libbuiltin_computer_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
+lib_LTLIBRARIES += libinternal_computer_addon.la
+addonsinclude_HEADERS += \
+  include/opc/ua/server/addons/internal_computer.h
+libinternal_computer_addon_la_SOURCES = \
+  src/server/internal_computer.cpp
+libinternal_computer_addon_la_CPPFLAGS = $(INCLUDES)
+libinternal_computer_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+
+
 endif
 
 
@@ -139,7 +150,7 @@ TESTS_ENVIRONMENT = \
   BUILTIN_COMPUTER_ADDON_PATH="${top_builddir}/.libs/libbuiltin_computer_addon.so" \
   TCP_ADDON_PATH="${top_builddir}/.libs/libopcua_tcp_server.so" \
   ENDPOINTS_ADDON_PATH=$(top_builddir)/.libs/libopcua_endpoints.so \
-  ENDPOINTS_CONFIG_PATH=$(top_builddir)/tests/configs/test_endpoints_config.xml
+  ENDPOINTS_CONFIG_PATH=$(top_builddir)/tests/configs/endpoints.xml
 
 check_PROGRAMS = $(TESTS)
 

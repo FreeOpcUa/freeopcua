@@ -22,6 +22,7 @@
 namespace
 {
   namespace po = boost::program_options;
+  using boost::property_tree::ptree;
   using namespace OpcUa;
 
   const char* OPTION_HELP = "help";
@@ -41,9 +42,42 @@ namespace
     OpcUa::Server::ModulesConfiguration Modules;
   };
 
+
+  Common::ParametersGroup GetGroup(const std::string& name, const ptree& groupTree)
+  {
+    Common::ParametersGroup group(name);
+
+    if (groupTree.empty())
+    {
+      return group;
+    }
+
+    BOOST_FOREACH(const ptree::value_type& child, groupTree)
+    {
+      if (child.second.empty())
+      {
+        group.Parameters.push_back(Common::Parameter(child.first, child.second.data()));
+        continue;
+      }
+      group.Groups.push_back(GetGroup(child.first, child.second));
+    }
+
+    return group;
+  }
+
+  void AddParameter(Common::AddonParameters& params, const std::string& name, const ptree& tree)
+  {
+    if (tree.empty())
+    {
+      params.Parameters.push_back(Common::Parameter(name, tree.data()));
+      return;
+    }
+    params.Groups.push_back(GetGroup(name, tree));
+  }
+
+
   Configuration ParseConfigurationFile(const std::string& configPath)
   {
-    using boost::property_tree::ptree;
     ptree pt;
     read_xml(configPath, pt);
     Configuration configuration;
@@ -60,8 +94,7 @@ namespace
         Server::ModuleConfig moduleConfig;
         moduleConfig.ID = module.second.get<std::string>("id");
         moduleConfig.Path = module.second.get<std::string>("path");
-        boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on");
-        if (dependsOn)
+        if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
         {
           BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
           {
@@ -72,6 +105,15 @@ namespace
             moduleConfig.DependsOn.push_back(depend.second.data());
           }
         }
+        
+        if (boost::optional<const ptree&> parameters = module.second.get_child_optional("parameters"))
+        {
+          BOOST_FOREACH(const ptree::value_type& parameter, parameters.get())
+          {
+            AddParameter(moduleConfig.Parameters, parameter.first, parameter.second);
+          }
+        }
+
         configuration.Modules.push_back(moduleConfig);
       }
     }

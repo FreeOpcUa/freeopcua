@@ -11,6 +11,8 @@
 #ifndef _OPC_UA_SERVER_OPTIONS_H_
 #define _OPC_UA_SERVER_OPTIONS_H_
 
+
+#include <opccore/common/addons_core/addon_parameters.h>
 #include <string>
 #include <vector>
 
@@ -24,6 +26,7 @@ namespace OpcUa
       std::string ID;
       std::string Path;
       std::vector<std::string> DependsOn;
+      Common::AddonParameters Parameters;
     };
 
     typedef std::vector<ModuleConfig> ModulesConfiguration;

@@ -61,6 +61,9 @@ TEST_F(EndpointsAddonTest, CanListEndpoints)
   std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::BuiltinComputerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::vector<OpcUa::EndpointDescription> desc;
+  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::Remote::EndpointFilter()));
+  endpoints.reset();
   computer.reset();
 }
 

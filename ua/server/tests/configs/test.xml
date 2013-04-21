@@ -8,6 +8,13 @@
         <id>parent_module1</id>
         <id>parent_module2</id>
       </depends_on>
+      <parameters>
+        <group1>
+          <parameter1>value1</parameter1>
+          <parameter2>value2</parameter2>
+        </group1>
+        <parameter1>value1</parameter1>
+      </parameters>
     </module>
   </module>
 </config>

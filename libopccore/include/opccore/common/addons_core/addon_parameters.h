@@ -22,12 +22,32 @@ namespace Common
   {
     std::string Name;
     std::string Value;
+
+    Parameter()
+    {
+    }
+
+    Parameter(const std::string& name, const std::string& value)
+      : Name(name)
+      , Value(value)
+    {
+    }
   };
 
   struct ParametersGroup
   {
     std::string Name;
     std::vector<Parameter> Parameters;
+    std::vector<ParametersGroup> Groups;
+
+    ParametersGroup()
+    {
+    }
+
+    ParametersGroup(const std::string& name)
+      : Name(name)
+    {
+    }
   };
 
 

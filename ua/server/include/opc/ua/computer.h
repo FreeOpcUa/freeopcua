@@ -42,9 +42,9 @@ namespace OpcUa
       virtual void ActivateSession() = 0;
       virtual void CloseSession() = 0;
 
-     virtual std::shared_ptr<EndpointServices> Endpoints() const = 0;
-     virtual std::shared_ptr<ViewServices> Views() const = 0;
-     virtual std::shared_ptr<AttributeServices> Attributes() const = 0;
+      virtual std::shared_ptr<EndpointServices> Endpoints() const = 0;
+      virtual std::shared_ptr<ViewServices> Views() const = 0;
+      virtual std::shared_ptr<AttributeServices> Attributes() const = 0;
     };
 
   }
