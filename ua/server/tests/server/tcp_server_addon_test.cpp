@@ -57,21 +57,26 @@ namespace
       return std::vector<OpcUa::Server::Endpoint>();
     }
 
-    std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> GetProcessor() const
-    {
-      return std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor>(new EchoProcessor());
-    }
-
   public:
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
+      std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor(new EchoProcessor());
+      TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
+      OpcUa::Server::TcpParameters tcpParams;
+      tcpParams.Port = 4841;
+
+      TcpAddon->Listen(tcpParams, processor);
     }
 
     virtual void Stop()
     {
+      OpcUa::Server::TcpParameters params;
+      params.Port = 4841;
+      TcpAddon->StopListen(params);
     }
 
   private:
+    std::shared_ptr<OpcUa::Server::TcpServerAddon> TcpAddon;
   };
 
   class EchoAddonFactory : public Common::AddonFactory
@@ -95,6 +100,7 @@ namespace
     Common::AddonConfiguration config;
     config.ID = OpcUa::Server::EndpointsAddonID;
     config.Factory =  CreateEchoAddonFactory();
+    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
     return config;
   }
 
@@ -102,9 +108,8 @@ namespace
   {
     Common::AddonConfiguration config;
     const std::string modulePath = "./.libs/libbuiltin_computer_addon.so";
-    config.ID = OpcUa::Server::BuiltinComputerAddonID;
+    config.ID = OpcUa::Server::TcpServerAddonID;
     config.Factory =  Common::CreateDynamicAddonFactory(modulePath.c_str());
-    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID);
     return config;
   }
 
@@ -114,16 +119,16 @@ namespace
     Common::AddonConfiguration tcpConfig;
     tcpConfig.ID = OpcUa::Server::TcpServerAddonID;
     tcpConfig.Factory = Common::CreateDynamicAddonFactory(OpcUa::Tests::GetTcpServerAddonPath().c_str());
-    tcpConfig.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::EndpointsAddonID);
     return tcpConfig;
   }
 
   Common::AddonConfiguration CreateEndpointsAddonConfig()
   {
-    Common::AddonConfiguration endpointsConfig;
-    endpointsConfig.ID = OpcUa::Server::EndpointsAddonID;
-    endpointsConfig.Factory = CreateEchoAddonFactory();
-    return endpointsConfig;
+    Common::AddonConfiguration config;
+    config.ID = OpcUa::Server::EndpointsAddonID;
+    config.Factory = CreateEchoAddonFactory();
+    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
+    return config;
   }
 }
 
@@ -168,7 +173,7 @@ TEST(BuiltinComputerAddon, CanBeLoadedLoaded)
   addons->Register(CreateBuiltinComputerAddonConfiguration());
   addons->Start();
 
-  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::BuiltinComputerAddonID)));
+  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
 
   addons->Stop();
 }

@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 
 namespace
 {
@@ -23,6 +24,9 @@ namespace
 
   class TcpServerAddon : public ::OpcUa::Server::TcpServerAddon
   {
+  private:
+    typedef std::map<unsigned short, std::shared_ptr<ConnectionListener>> ServersMap;
+
   public:
     TcpServerAddon()
     {
@@ -32,32 +36,55 @@ namespace
     {
     }
 
+    virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
+    {
+     if (Servers.find(params.Port) != std::end(Servers))
+     {
+       // TODO add portnumber into message.
+       throw std::logic_error("Server already started at this port.");
+     }
+
+     std::shared_ptr<ConnectionListener> listener = OpcUa::CreateTcpServer(params.Port);
+     listener->Start(processor);
+     Servers.insert(std::make_pair(params.Port, listener));
+   }
+   
+   virtual void StopListen(const TcpParameters& params)
+   { 
+     ServersMap::iterator serverIt = Servers.find(params.Port);
+     if (serverIt == std::end(Servers))
+     {
+       return;
+     }
+
+     try
+     {
+       serverIt->second->Stop();
+       Servers.erase(serverIt);
+     }
+     catch (const std::exception& exc)
+     {
+       // TODO add port number to the message
+       std::clog << "Stopping TcpServerAddon failed with error: " << exc.what() << std::endl;
+     }
+   }
+
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      // TODO Get TcpParameters from addon parameters.
-      std::shared_ptr<EndpointsAddon> endpoints = Common::GetAddon<EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
-      TcpParameters tcpParams;
-      tcpParams.Port = 4841;
-      Server = OpcUa::CreateTcpServer(tcpParams.Port);
-      std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
-      Server->Start(processor);
     }
 
     virtual void Stop()
     {
-      try
+      for (auto server : Servers)
       {
-        Server->Stop();
+        server.second->Stop();
       }
-      catch (const std::exception& exc)
-      {
-        std::clog << "Stopping TcpServerAddon failed with error: " << exc.what() << std::endl;
-      }
+      Servers.clear();
     }
 
   private:
-    std::shared_ptr<ConnectionListener> Server;
+    ServersMap Servers;
   };
 
 }

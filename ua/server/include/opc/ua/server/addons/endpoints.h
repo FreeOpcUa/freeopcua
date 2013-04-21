@@ -28,8 +28,6 @@ namespace OpcUa
     {
     public:
       virtual std::vector<Endpoint> GetEndpoints() const = 0;
-
-      virtual std::shared_ptr<IncomingConnectionProcessor> GetProcessor() const = 0;
     };
 
     const char EndpointsAddonID[] = "endpoints";

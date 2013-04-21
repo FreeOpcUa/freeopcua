@@ -3,12 +3,8 @@
   <modules>
 
     <module>
-      <id>builtin_computer</id>
+      <id>tcp_server</id>
       <path>./.libs/libbuiltin_computer_addon.so</path>
-      <depends_on>
-        <id>endpoints</id>
-      </depends_on>
-
     </module>
 
     <module>
@@ -20,6 +16,7 @@
       <id>endpoints</id>
       <path>./.libs/libopcua_endpoints.so</path>
       <depends_on>
+        <id>tcp_server</id>
         <id>internal_computer</id>
       </depends_on>
       <parameters>

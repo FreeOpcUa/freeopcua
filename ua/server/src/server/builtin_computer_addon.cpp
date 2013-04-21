@@ -181,19 +181,29 @@ namespace
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+    }
+
+    virtual void Stop()
+    {
+    }
+
+    virtual void Listen(const OpcUa::Server::TcpParameters&, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
+    {
+      if (Thread)
+      {
+        throw std::logic_error("Unable to start second thread. Builtin computer can listen only one binary connection.");
+      }
+
       ServerInput.reset(new BufferedInput());
       ClientInput.reset(new BufferedInput());
-
 
       ClientChannel.reset(new BufferedIO("Client", ClientInput, ServerInput));
       ServerChannel.reset(new BufferedIO("Server", ServerInput, ClientInput));
 
-      std::shared_ptr<OpcUa::Server::EndpointsAddon> endpoints = Common::GetAddon<OpcUa::Server::EndpointsAddon>(addons, OpcUa::Server::EndpointsAddonID);
-      std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor = endpoints->GetProcessor();
       Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel), this));
     }
 
-    virtual void Stop()
+    virtual void StopListen(const OpcUa::Server::TcpParameters&)
     {
       if (ClientInput)
       {

@@ -12,6 +12,8 @@
 #define opc_ua_builtin_addon_addon_h
 
 #include <opc/ua/computer.h>
+#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/server.h>
 #include <opccore/common/addons_core/addon.h>
 
 namespace OpcUa
@@ -19,13 +21,11 @@ namespace OpcUa
   namespace Server
   {
 
-    class BuiltinComputerAddon : public Common::Addon
+    class BuiltinComputerAddon : public TcpServerAddon
     {
     public:
       virtual std::shared_ptr<Remote::Computer> GetComputer() const = 0;
     };
-
-    const char BuiltinComputerAddonID[] = "builtin_computer";
 
   } // namespace Server
 } // namespace OpcUa
