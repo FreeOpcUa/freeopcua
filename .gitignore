@@ -21,6 +21,10 @@ libtool
 stamp-h1
 
 *.libs
+autom4te.cache
+gmock
+gtest
+third-party/uripp/test/main
 
 #compiled binaries
 comreg
@@ -35,4 +39,13 @@ property_tree_manager_test
 opctest
 ua/uaclient/libuaclient_test
 ua/uaclient/opcua
+common_gtest
+
+ua/server/libuaclient_test
+ua/server/opcua
+ua/server/opcuaserver
+ua/server/test_endpoints_addon
+ua/server/test_opcuaserver
+ua/server/test_tcp_server
+ua/server/test_tcp_server_addon
 
