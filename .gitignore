@@ -44,7 +44,7 @@ common_gtest
 ua/server/libuaclient_test
 ua/server/opcua
 ua/server/opcuaserver
-ua/server/test_endpoints_addon
+ua/server/test_opcua_protocol_addon
 ua/server/test_opcuaserver
 ua/server/test_tcp_server
 ua/server/test_tcp_server_addon
