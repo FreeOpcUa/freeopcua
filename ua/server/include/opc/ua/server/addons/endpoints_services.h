@@ -8,25 +8,27 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef opc_ua_endpoints_addon_h
-#define opc_ua_endpoints_addon_h
+#ifndef opc_ua_endpoints_service_h
+#define opc_ua_endpoints_service_h
 
+#include <opc/ua/protocol/types.h>
 #include <opccore/common/addons_core/addon.h>
-#include <opc/ua/server/server.h>
 
 namespace OpcUa
 {
   namespace Server
   {
 
-    class EndpointsAddon : public Common::Addon
+    class EndpointsServicesAddon : public Common::Addon
     {
+    public:
+      virtual void AddEndpoints(const std::vector<OpcUa::EndpointDescription>& endpoints) = 0;
     };
 
-    const char EndpointsAddonID[] = "endpoints";
+    const char EndpointsServicesAddonID[] = "endpoints_services";
 
   } // namespace Server
 } // nmespace OpcUa
 
-#endif // opc_ua_endpoints_addon_h
+#endif // opc_ua_get_endpoints_service_h
 

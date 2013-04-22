@@ -12,6 +12,7 @@
 #include "opc_tcp_processor.h"
 
 #include <opc/ua/server/addons/endpoints.h>
+#include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/internal_computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 #include <opccore/common/addons_core/addon_manager.h>
@@ -34,15 +35,27 @@ namespace
     {
     }
 
-    std::vector<Endpoint> GetEndpoints() const
-    {
-      return std::vector<Endpoint>();
-    }
-
   public:
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      InternalComputer = Common::GetAddon<OpcUa::Server::InternalComputerAddon>(addons, OpcUa::Server::InternalComputerAddonID);
+      std::shared_ptr<EndpointsServicesAddon> endpointsAddon = Common::GetAddon<EndpointsServicesAddon>(addons, EndpointsServicesAddonID);
+      EndpointDescription desc;
+      desc.EndpointURL = "opc.tcp://localhost:4841";
+      desc.ServerDescription.URI = "server.opcua.treww.org";
+      desc.ServerDescription.ProductURI = "server.opcua.treww.org";
+      desc.ServerDescription.Name.Encoding = HAS_TEXT;
+      desc.ServerDescription.Name.Text = "opcua_server";
+      desc.ServerDescription.Type = ApplicationType::SERVER;
+      desc.SecurityMode = MessageSecurityMode::MSM_NONE;
+      UserTokenPolicy tokenPolicy;
+      tokenPolicy.PolicyID = "Anonymous";
+      tokenPolicy.TokenType = UserIdentifyTokenType::ANONYMOUS;
+      tokenPolicy.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      desc.UserIdentifyTokens.push_back(tokenPolicy);
+      desc.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
+      endpointsAddon->AddEndpoints(std::vector<EndpointDescription>(1, desc));
+
+
       TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
       std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer());
       TcpParameters tcpParams;
@@ -56,9 +69,6 @@ namespace
       TcpParameters params;
       params.Port = 4841;
       TcpAddon->StopListen(params);
-
-      InternalComputer->UnregisterEndpointsServices();
-      InternalComputer.reset();
       TcpAddon.reset();
     }
 

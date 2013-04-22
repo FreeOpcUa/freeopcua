@@ -76,14 +76,6 @@ uaserverinclude_HEADERS = \
   include/opc/ua/server/server.h \
   include/opc/ua/server/tcp_server.h
 
-#lib_LIBRARIES += libopcuaserver.a
-#libopcuaserver_a_SOURCES = \
-#  src/socket_channel.cpp \
-#  src/thread.cpp
-
-
-libopcuaserver_a_CPPFLAGS = $(INCLUDES)
-
 bin_PROGRAMS += opcuaserver
 opcuaserver_SOURCES = \
   src/server/server_main.cpp \
@@ -137,6 +129,14 @@ libinternal_computer_addon_la_SOURCES = \
   src/server/internal_computer.cpp
 libinternal_computer_addon_la_CPPFLAGS = $(INCLUDES)
 libinternal_computer_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+
+lib_LTLIBRARIES += libendpoints_services_addon.la
+addonsinclude_HEADERS += \
+  include/opc/ua/server/addons/endpoints_services.h
+libendpoints_services_addon_la_SOURCES = \
+  src/server/endpoints_services_addon.cpp
+libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
+libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 
 
 endif

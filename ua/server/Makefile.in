@@ -56,7 +56,8 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@am__append_4 = libopcua_tcp_server.la \
 @BUILD_UA_SERVER_TRUE@	libopcua_endpoints.la \
 @BUILD_UA_SERVER_TRUE@	libbuiltin_computer_addon.la \
-@BUILD_UA_SERVER_TRUE@	libinternal_computer_addon.la
+@BUILD_UA_SERVER_TRUE@	libinternal_computer_addon.la \
+@BUILD_UA_SERVER_TRUE@	libendpoints_services_addon.la
 check_PROGRAMS = $(am__EXEEXT_4)
 subdir = .
 DIST_COMMON = README $(am__addonsinclude_HEADERS_DIST) \
@@ -123,6 +124,18 @@ libbuiltin_computer_addon_la_LINK = $(LIBTOOL) --tag=CXX \
 	$(libbuiltin_computer_addon_la_LDFLAGS) $(LDFLAGS) -o $@
 @BUILD_UA_SERVER_TRUE@am_libbuiltin_computer_addon_la_rpath = -rpath \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
+libendpoints_services_addon_la_LIBADD =
+am__libendpoints_services_addon_la_SOURCES_DIST =  \
+	src/server/endpoints_services_addon.cpp
+@BUILD_UA_SERVER_TRUE@am_libendpoints_services_addon_la_OBJECTS = libendpoints_services_addon_la-endpoints_services_addon.lo
+libendpoints_services_addon_la_OBJECTS =  \
+	$(am_libendpoints_services_addon_la_OBJECTS)
+libendpoints_services_addon_la_LINK = $(LIBTOOL) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(libendpoints_services_addon_la_LDFLAGS) $(LDFLAGS) -o $@
+@BUILD_UA_SERVER_TRUE@am_libendpoints_services_addon_la_rpath =  \
+@BUILD_UA_SERVER_TRUE@	-rpath $(libdir)
 libinternal_computer_addon_la_LIBADD =
 am__libinternal_computer_addon_la_SOURCES_DIST =  \
 	src/server/internal_computer.cpp
@@ -285,6 +298,7 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libbuiltin_computer_addon_la_SOURCES) \
+	$(libendpoints_services_addon_la_SOURCES) \
 	$(libinternal_computer_addon_la_SOURCES) \
 	$(libopcua_endpoints_la_SOURCES) \
 	$(libopcua_tcp_server_la_SOURCES) $(libuaclient_test_SOURCES) \
@@ -292,6 +306,7 @@ SOURCES = $(libbuiltin_computer_addon_la_SOURCES) \
 	$(test_endpoints_addon_SOURCES) $(test_opcuaserver_SOURCES) \
 	$(test_tcp_server_SOURCES) $(test_tcp_server_addon_SOURCES)
 DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
+	$(am__libendpoints_services_addon_la_SOURCES_DIST) \
 	$(am__libinternal_computer_addon_la_SOURCES_DIST) \
 	$(am__libopcua_endpoints_la_SOURCES_DIST) \
 	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
@@ -305,7 +320,8 @@ am__addonsinclude_HEADERS_DIST =  \
 	include/opc/ua/server/addons/tcp_server_addon.h \
 	include/opc/ua/server/addons/endpoints.h \
 	include/opc/ua/server/addons/builtin_computer.h \
-	include/opc/ua/server/addons/internal_computer.h
+	include/opc/ua/server/addons/internal_computer.h \
+	include/opc/ua/server/addons/endpoints_services.h
 am__uaserverinclude_HEADERS_DIST = include/opc/ua/server/server.h \
 	include/opc/ua/server/tcp_server.h
 HEADERS = $(addonsinclude_HEADERS) $(opcuainclude_HEADERS) \
@@ -513,12 +529,6 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@  include/opc/ua/server/server.h \
 @BUILD_UA_SERVER_TRUE@  include/opc/ua/server/tcp_server.h
 
-
-#lib_LIBRARIES += libopcuaserver.a
-#libopcuaserver_a_SOURCES = \
-#  src/socket_channel.cpp \
-#  src/thread.cpp
-@BUILD_UA_SERVER_TRUE@libopcuaserver_a_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@opcuaserver_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/server/server_main.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/server_options.cpp \
@@ -531,7 +541,8 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@addonsinclude_HEADERS = include/opc/ua/server/addons/tcp_server_addon.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/endpoints.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/builtin_computer.h \
-@BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/internal_computer.h
+@BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/internal_computer.h \
+@BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/endpoints_services.h
 @BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/server/tcp_server.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/tcp_server_addon.cpp \
@@ -559,6 +570,11 @@ lib_LTLIBRARIES = $(am__append_4)
 
 @BUILD_UA_SERVER_TRUE@libinternal_computer_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libinternal_computer_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libendpoints_services_addon_la_SOURCES = \
+@BUILD_UA_SERVER_TRUE@  src/server/endpoints_services_addon.cpp
+
+@BUILD_UA_SERVER_TRUE@libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
+@BUILD_UA_SERVER_TRUE@libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 
 ##############################################################################
 # Tests
@@ -705,6 +721,8 @@ clean-libLTLIBRARIES:
 	done
 libbuiltin_computer_addon.la: $(libbuiltin_computer_addon_la_OBJECTS) $(libbuiltin_computer_addon_la_DEPENDENCIES) $(EXTRA_libbuiltin_computer_addon_la_DEPENDENCIES) 
 	$(libbuiltin_computer_addon_la_LINK) $(am_libbuiltin_computer_addon_la_rpath) $(libbuiltin_computer_addon_la_OBJECTS) $(libbuiltin_computer_addon_la_LIBADD) $(LIBS)
+libendpoints_services_addon.la: $(libendpoints_services_addon_la_OBJECTS) $(libendpoints_services_addon_la_DEPENDENCIES) $(EXTRA_libendpoints_services_addon_la_DEPENDENCIES) 
+	$(libendpoints_services_addon_la_LINK) $(am_libendpoints_services_addon_la_rpath) $(libendpoints_services_addon_la_OBJECTS) $(libendpoints_services_addon_la_LIBADD) $(LIBS)
 libinternal_computer_addon.la: $(libinternal_computer_addon_la_OBJECTS) $(libinternal_computer_addon_la_DEPENDENCIES) $(EXTRA_libinternal_computer_addon_la_DEPENDENCIES) 
 	$(libinternal_computer_addon_la_LINK) $(am_libinternal_computer_addon_la_rpath) $(libinternal_computer_addon_la_OBJECTS) $(libinternal_computer_addon_la_LIBADD) $(LIBS)
 libopcua_endpoints.la: $(libopcua_endpoints_la_OBJECTS) $(libopcua_endpoints_la_DEPENDENCIES) $(EXTRA_libopcua_endpoints_la_DEPENDENCIES) 
@@ -793,6 +811,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/builtin_computer_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libinternal_computer_addon_la-internal_computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_endpoints_la-endpoints_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_endpoints_la-opc_tcp_processor.Plo@am__quote@
@@ -878,6 +897,13 @@ thread.lo: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='thread.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o thread.lo `test -f 'src/thread.cpp' || echo '$(srcdir)/'`src/thread.cpp
+
+libendpoints_services_addon_la-endpoints_services_addon.lo: src/server/endpoints_services_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libendpoints_services_addon_la-endpoints_services_addon.lo -MD -MP -MF $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Tpo -c -o libendpoints_services_addon_la-endpoints_services_addon.lo `test -f 'src/server/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/server/endpoints_services_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Tpo $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/endpoints_services_addon.cpp' object='libendpoints_services_addon_la-endpoints_services_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libendpoints_services_addon_la-endpoints_services_addon.lo `test -f 'src/server/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/server/endpoints_services_addon.cpp
 
 libinternal_computer_addon_la-internal_computer.lo: src/server/internal_computer.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libinternal_computer_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libinternal_computer_addon_la-internal_computer.lo -MD -MP -MF $(DEPDIR)/libinternal_computer_addon_la-internal_computer.Tpo -c -o libinternal_computer_addon_la-internal_computer.lo `test -f 'src/server/internal_computer.cpp' || echo '$(srcdir)/'`src/server/internal_computer.cpp
