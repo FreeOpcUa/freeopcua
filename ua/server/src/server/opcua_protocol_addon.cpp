@@ -11,7 +11,7 @@
 
 #include "opc_tcp_processor.h"
 
-#include <opc/ua/server/addons/endpoints.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/internal_computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
@@ -24,14 +24,14 @@ namespace
   using namespace OpcUa::Server;
 
 
-  class Endpoints : public EndpointsAddon
+  class OpcUaProtocol : public Common::Addon
   {
   public:
-    Endpoints()
+    OpcUaProtocol()
     {
     }
 
-    virtual ~Endpoints()
+    virtual ~OpcUaProtocol()
     {
     }
 
@@ -56,6 +56,7 @@ namespace
       endpointsAddon->AddEndpoints(std::vector<EndpointDescription>(1, desc));
 
 
+      InternalComputer = Common::GetAddon<OpcUa::Server::InternalComputerAddon>(addons, OpcUa::Server::InternalComputerAddonID);
       TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
       std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer());
       TcpParameters tcpParams;
@@ -82,6 +83,6 @@ namespace
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new ::Endpoints());
+  return Common::Addon::UniquePtr(new OpcUaProtocol());
 }
 

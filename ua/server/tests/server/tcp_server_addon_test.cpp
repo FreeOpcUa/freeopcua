@@ -13,7 +13,6 @@
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opc/ua/server/addons/endpoints.h>
 #include <opc/ua/server/server.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/dynamic_addon_factory.h>
@@ -45,16 +44,11 @@ namespace
     }
   };
 
-  class EchoAddon : public OpcUa::Server::EndpointsAddon
+  class EchoAddon : public Common::Addon
   {
   public:
     EchoAddon()
     {
-    }
-
-    std::vector<OpcUa::Server::Endpoint> GetEndpoints() const
-    {
-      return std::vector<OpcUa::Server::Endpoint>();
     }
 
   public:
@@ -98,7 +92,7 @@ namespace
   Common::AddonConfiguration CreateEchoAddonConfiguration()
   {
     Common::AddonConfiguration config;
-    config.ID = OpcUa::Server::EndpointsAddonID;
+    config.ID = "echo_addon";
     config.Factory =  CreateEchoAddonFactory();
     config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
     return config;
@@ -125,7 +119,7 @@ namespace
   Common::AddonConfiguration CreateEndpointsAddonConfig()
   {
     Common::AddonConfiguration config;
-    config.ID = OpcUa::Server::EndpointsAddonID;
+    config.ID = "echo_addon";
     config.Factory = CreateEchoAddonFactory();
     config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
     return config;

@@ -8,7 +8,6 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server/addons/endpoints.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 #include <opc/ua/server/tcp_server.h>
 

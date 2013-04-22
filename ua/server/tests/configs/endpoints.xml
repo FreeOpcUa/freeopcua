@@ -13,11 +13,21 @@
     </module>
 
     <module>
-      <id>endpoints</id>
-      <path>./.libs/libopcua_endpoints.so</path>
+      <id>endpoints_services</id>
+      <path>./.libs/libendpoints_services_addon.so</path>
+      <depends_on>
+        <id>internal_computer</id>
+      </depends_on>
+    </module>
+
+
+    <module>
+      <id>opcua_protocol</id>
+      <path>./.libs/libopcua_protocol.so</path>
       <depends_on>
         <id>tcp_server</id>
         <id>internal_computer</id>
+        <id>endpoints_services</id>
       </depends_on>
       <parameters>
         <application_name>Test OPC UA Server</application_name>

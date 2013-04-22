@@ -19,11 +19,7 @@ namespace OpcUa
   namespace Server
   {
 
-    class EndpointsAddon : public Common::Addon
-    {
-    };
-
-    const char EndpointsAddonID[] = "endpoints";
+    const char OpcUaProtocolAddonID[] = "opcua_protocol";
 
   } // namespace Server
 } // nmespace OpcUa

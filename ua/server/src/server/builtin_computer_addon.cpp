@@ -12,7 +12,6 @@
 #include <opc/ua/client/binary_computer.h>
 #include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>
-#include <opc/ua/server/addons/endpoints.h>
 #include <opc/ua/server/server.h>
 
 #include <internal/thread.h>

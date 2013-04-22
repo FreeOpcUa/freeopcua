@@ -12,7 +12,7 @@
 #include <gtest/gtest.h>
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>
-#include <opc/ua/server/addons/endpoints.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
 #include <opccore/common/addons_core/addon_manager.h>
 #include <opccore/common/addons_core/dynamic_addon_factory.h>
 
@@ -24,7 +24,7 @@
 
 using namespace testing;
 
-class EndpointsAddonTest : public Test
+class OpcUaProtocolAddonTest : public Test
 {
 public:
   void SetUp()
@@ -42,12 +42,12 @@ protected:
   std::unique_ptr<Common::AddonsManager> Addons;
 };
 
-TEST_F(EndpointsAddonTest, Loads)
+TEST_F(OpcUaProtocolAddonTest, Loads)
 {
-  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::EndpointsAddonID)));
+  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::OpcUaProtocolAddonID)));
 }
 
-TEST_F(EndpointsAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
+TEST_F(OpcUaProtocolAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
 {
   std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
@@ -56,7 +56,7 @@ TEST_F(EndpointsAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
   computer.reset();
 }
 
-TEST_F(EndpointsAddonTest, CanListEndpoints)
+TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 {
   std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();

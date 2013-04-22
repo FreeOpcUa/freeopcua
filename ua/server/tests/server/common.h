@@ -36,7 +36,7 @@ namespace OpcUa
       }
       return std::string();
     }
-
+/*
     inline std::string GetEndpointsAddonPath()
     {
       if (const char* path = getenv("ENDPOINTS_ADDON_PATH"))
@@ -45,7 +45,7 @@ namespace OpcUa
       }
       return std::string();
     }
-
+*/
     inline std::string GetEndpointsConfigPath()
     {
       if (const char* path = getenv("ENDPOINTS_CONFIG_PATH"))
