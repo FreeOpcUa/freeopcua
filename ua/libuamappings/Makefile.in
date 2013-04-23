@@ -116,7 +116,8 @@ am_opc_ua_binary_test_OBJECTS =  \
 	opc_ua_binary_test-binary_serialize_session.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_variant.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_view.$(OBJEXT) \
-	opc_ua_binary_test-binary_serialize.$(OBJEXT)
+	opc_ua_binary_test-binary_serialize.$(OBJEXT) \
+	opc_ua_binary_test-message_id.$(OBJEXT)
 opc_ua_binary_test_OBJECTS = $(am_opc_ua_binary_test_OBJECTS)
 opc_ua_binary_test_DEPENDENCIES = libopcuabinary.a
 opc_ua_binary_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -339,7 +340,8 @@ opc_ua_binary_test_SOURCES = \
  tests/binary_serialize_variant.cpp \
  tests/binary_serialize_view.cpp \
  tests/binary_serialize.cpp \
- tests/common.h
+ tests/common.h \
+ tests/message_id.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 opc_ua_binary_test_LDADD = libopcuabinary.a
@@ -469,6 +471,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-message_id.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -742,6 +745,20 @@ opc_ua_binary_test-binary_serialize.obj: tests/binary_serialize.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
+
+opc_ua_binary_test-message_id.o: tests/message_id.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-message_id.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-message_id.Tpo -c -o opc_ua_binary_test-message_id.o `test -f 'tests/message_id.cpp' || echo '$(srcdir)/'`tests/message_id.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-message_id.Tpo $(DEPDIR)/opc_ua_binary_test-message_id.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/message_id.cpp' object='opc_ua_binary_test-message_id.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-message_id.o `test -f 'tests/message_id.cpp' || echo '$(srcdir)/'`tests/message_id.cpp
+
+opc_ua_binary_test-message_id.obj: tests/message_id.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-message_id.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-message_id.Tpo -c -o opc_ua_binary_test-message_id.obj `if test -f 'tests/message_id.cpp'; then $(CYGPATH_W) 'tests/message_id.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/message_id.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-message_id.Tpo $(DEPDIR)/opc_ua_binary_test-message_id.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/message_id.cpp' object='opc_ua_binary_test-message_id.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-message_id.obj `if test -f 'tests/message_id.cpp'; then $(CYGPATH_W) 'tests/message_id.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/message_id.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

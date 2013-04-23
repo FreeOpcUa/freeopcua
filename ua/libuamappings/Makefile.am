@@ -64,7 +64,8 @@ opc_ua_binary_test_SOURCES =  \
  tests/binary_serialize_variant.cpp \
  tests/binary_serialize_view.cpp \
  tests/binary_serialize.cpp \
- tests/common.h
+ tests/common.h \
+ tests/message_id.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 opc_ua_binary_test_LDADD = libopcuabinary.a

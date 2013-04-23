@@ -154,6 +154,41 @@ namespace OpcUa
     FourByteData.Identifier = messageID;
   }
 
+  MessageID GetMessageID(const NodeID& id)
+  {
+    if (id.Encoding != EV_FOUR_BYTE)
+    {
+      return INVALID;
+    }
+
+    switch (id.FourByteData.Identifier)
+    {
+      case ACTIVATE_SESSION_REQUEST: //  = 0x1d3, //467;
+      case ACTIVATE_SESSION_RESPONSE: // = 0x1d6, //470;
+      case BROWSE_REQUEST: //  = 0x20f // 527;
+      case BROWSE_RESPONSE: // = 0x212 //530;
+      case BROWSE_NEXT_REQUEST: //  = 0x215 // 533
+      case BROWSE_NEXT_RESPONSE: // = 0x218 // 536
+      case CLOSE_SECURE_CHANNEL_REQUEST: // = 0x1c4 // 452
+      case CLOSE_SESSION_REQUEST: //  = 0x1d9 // 473;
+      case CLOSE_SESSION_RESPONSE: // = 0x1dc // 476;
+      case CREATE_SESSION_REQUEST: //  = 0x1cd // 461;
+      case CREATE_SESSION_RESPONSE: // = 0x1d0 // 464;
+      case GET_ENDPOINTS_REQUEST: //  = 0x1ac // 428
+      case GET_ENDPOINTS_RESPONSE: // = 0x1af // 431
+      case OPEN_SECURE_CHANNEL_REQUEST: //  = 0x1be // 446
+      case OPEN_SECURE_CHANNEL_RESPONSE: // = 0x1c1 // 449
+      case READ_REQUEST: //  = 0x277 // 631
+      case READ_RESPONSE: // = 0x27A // 634
+      case WRITE_REQUEST: //  = 0x2A1 //673
+      case WRITE_RESPONSE: // = 0x2A4 // 676
+        return static_cast<MessageID>(id.FourByteData.Identifier);
+
+      default:
+        return INVALID;
+    }
+  }
+
   RequestHeader::RequestHeader()
   {
     SessionAuthenticationToken.Encoding = EV_TWO_BYTE;

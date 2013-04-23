@@ -15,6 +15,8 @@ namespace OpcUa
 {
   enum MessageID
   {
+    INVALID = 0,
+
     ACTIVATE_SESSION_REQUEST   = 0x1d3, //467;
     ACTIVATE_SESSION_RESPONSE = 0x1d6, //470;
 
@@ -48,6 +50,11 @@ namespace OpcUa
     WRITE_RESPONSE = 0x2A4, // 676
 
   };
+
+  struct NodeID;
+
+  MessageID GetMessageID(const NodeID& id);
+
 }
 
 #endif // __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
