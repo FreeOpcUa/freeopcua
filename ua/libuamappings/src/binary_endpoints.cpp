@@ -35,13 +35,56 @@ namespace OpcUa
   {
 
     //---------------------------------------------------
+    // EndpointsFilter
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<EndpointsFilter>(const EndpointsFilter& filter)
+    {
+      return RawSize(filter.EndpointURL) + RawSize(filter.LocaleIDs) + RawSize(filter.ProfileUries);
+    }
+
+    template<>
+    void OStream::Serialize<EndpointsFilter>(const EndpointsFilter& filter)
+    {
+      *this << filter.EndpointURL;
+
+      if (filter.LocaleIDs.empty())
+      {
+        *this << uint32_t(0);
+      }
+      else
+      {
+        *this << filter.LocaleIDs;
+      }
+
+      if (filter.ProfileUries.empty())
+      {
+        *this << uint32_t(0);
+      }
+      else
+      {
+        *this << filter.ProfileUries;
+      }
+    }
+
+    template<>
+    void IStream::Deserialize<EndpointsFilter>(EndpointsFilter& filter)
+    {
+      *this >> filter.EndpointURL;
+      *this >> filter.LocaleIDs;
+      *this >> filter.ProfileUries;
+    };
+
+    //---------------------------------------------------
     // GetEndpointsRequest
     //---------------------------------------------------
 
     template<>
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIDs) + RawSize(request.ProfileUries);
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Filter);
+      //return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIDs) + RawSize(request.ProfileUries);
     }
 
     template<>
@@ -49,25 +92,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-      *this << request.EndpointURL;
-
-      if (request.LocaleIDs.empty())
-      {
-        *this << uint32_t(0);
-      }
-      else
-      {
-        *this << request.LocaleIDs;
-      }
-
-      if (request.ProfileUries.empty())
-      {
-        *this << uint32_t(0);
-      }
-      else
-      {
-        *this << request.ProfileUries;
-      }
+      *this << request.Filter;
     }
 
     template<>
@@ -75,10 +100,8 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
-      *this >> request.EndpointURL;
-      *this >> request.LocaleIDs;
-      *this >> request.ProfileUries;
-    };
+      *this >> request.Filter;
+    }
 
     //-----------------------------------------------------
     // ApplicationType

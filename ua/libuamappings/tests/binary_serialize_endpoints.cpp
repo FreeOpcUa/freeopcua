@@ -38,9 +38,9 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
   ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
-  request.EndpointURL = "test";
-  request.LocaleIDs.push_back("RU");
-  request.ProfileUries.push_back("pro");
+  request.Filter.EndpointURL = "test";
+  request.Filter.LocaleIDs.push_back("RU");
+  request.Filter.ProfileUries.push_back("pro");
 
  
   GetStream() << request << flush;
@@ -83,9 +83,9 @@ TEST_F(OpcUaBinaryDeserialization, GetEndpointsRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.EndpointURL, "test");
-  ASSERT_EQ(request.LocaleIDs, std::vector<std::string>(1, "RU"));
-  ASSERT_EQ(request.ProfileUries, std::vector<std::string>(1, "pro"));
+  ASSERT_EQ(request.Filter.EndpointURL, "test");
+  ASSERT_EQ(request.Filter.LocaleIDs, std::vector<std::string>(1, "RU"));
+  ASSERT_EQ(request.Filter.ProfileUries, std::vector<std::string>(1, "pro"));
 }
 
 //----------------------------------------------------

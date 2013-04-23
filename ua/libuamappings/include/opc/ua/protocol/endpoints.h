@@ -20,14 +20,18 @@ namespace OpcUa
   // Endpoints
   //------------------------------------------------------
 
+  struct EndpointsFilter
+  {
+    std::string EndpointURL;
+    std::vector<std::string> LocaleIDs;
+    std::vector<std::string> ProfileUries;
+  };
+
   struct GetEndpointsRequest
   {
     NodeID TypeID;
     RequestHeader Header;
-
-    std::string EndpointURL;
-    std::vector<std::string> LocaleIDs;
-    std::vector<std::string> ProfileUries;
+    EndpointsFilter Filter;
 
     GetEndpointsRequest();
   };
