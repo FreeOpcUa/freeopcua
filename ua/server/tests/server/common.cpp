@@ -31,6 +31,7 @@ std::unique_ptr<Common::AddonsManager> OpcUa::Tests::LoadAddons(const std::strin
     config.ID = module.ID;
     config.Factory = Common::CreateDynamicAddonFactory(module.Path.c_str());
     config.Dependencies = module.DependsOn;
+    config.Parameters = module.Parameters;
     addons->Register(config);
   }
   addons->Start();

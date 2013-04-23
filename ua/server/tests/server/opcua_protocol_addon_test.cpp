@@ -62,7 +62,8 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
-  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::Remote::EndpointFilter()));
+  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
+  ASSERT_EQ(desc.size(), 1);
   endpoints.reset();
   computer.reset();
 }

@@ -82,6 +82,7 @@ namespace
 
         case MT_SECURE_MESSAGE:
         {
+          ProcessMessage(stream);
           break;
         }
 
@@ -137,21 +138,21 @@ namespace
       SequenceHeader sequence;
       stream >> sequence;
 
-      OpenSecureChannelRequest openChannel;
-      stream >> openChannel;
+      OpenSecureChannelRequest request;
+      stream >> request;
 
-      if (openChannel.RequestType != STR_ISSUE)
+      if (request.RequestType != STR_ISSUE)
       {
         throw std::logic_error("Client have to create secure channel!");
       }
 
-      if (openChannel.SecurityMode != MSM_NONE)
+      if (request.SecurityMode != MSM_NONE)
       {
         throw std::logic_error("Unsupported security mode.");
       }
 
       OpenSecureChannelResponse response;
-      response.Header.InnerDiagnostics.push_back(DiagnosticInfo());
+      FillResponseHeader(request.Header, response.Header);
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
       response.ChannelSecurityToken.TokenID = TokenID;
       response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
@@ -181,12 +182,63 @@ namespace
       stream >> request;
     }
 
+    void ProcessMessage(IOStream& stream)
+    {
+      std::cout << "Closing secure channel with client." << std::endl;
+      uint32_t channelID = 0;
+      stream >> channelID;
+     
+      SymmetricAlgorithmHeader algorithmHeader;
+      stream >> algorithmHeader;
+
+      SequenceHeader sequence;
+      stream >> sequence;
+
+      NodeID typeID;
+      stream >> typeID;
+
+      RequestHeader requestHeader;
+      stream >> requestHeader;
+
+      switch (GetMessageID(typeID))
+      {
+        case OpcUa::GET_ENDPOINTS_REQUEST:
+        {
+          EndpointsFilter filter;
+          stream >> filter;
+          GetEndpointsResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        default:
+        {
+          // TODO add code of message ID to the text of exception
+          throw std::logic_error("Unknown message type was recieved.");
+        }
+      }
+    }
+
+  private:
+    void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
+    {
+       responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
+       responseHeader.Timestamp = CurrentDateTime();
+       responseHeader.RequestHandle = requestHeader.RequestHandle;
+    }
+
   private:
     std::shared_ptr<OpcUa::Remote::Computer> Computer;
     uint32_t ChannelID;
     uint32_t TokenID;
   };
-
 
 }
 

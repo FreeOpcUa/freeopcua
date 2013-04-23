@@ -36,12 +36,12 @@ namespace OpcUa
         return std::vector<ApplicationDescription>();
       }
 
-      virtual std::vector<EndpointDescription> GetEndpoints(const Remote::EndpointFilter& filter) const
+      virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
       {
         OpcUa::GetEndpointsRequest request;
-        request.EndpointURL = filter.EndpointUrl;
-        request.LocaleIDs = filter.LocaleIDs;
-        request.ProfileUries = filter.ProfileUries;
+        request.Filter.EndpointURL = filter.EndpointURL;
+        request.Filter.LocaleIDs = filter.LocaleIDs;
+        request.Filter.ProfileUries = filter.ProfileUries;
         Stream << request << OpcUa::Binary::flush;
 
         OpcUa::GetEndpointsResponse response;

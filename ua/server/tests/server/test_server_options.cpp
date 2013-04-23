@@ -25,16 +25,16 @@ TEST(ServerOptions, ParsesConfigurationFile)
   ASSERT_EQ(module.DependsOn[0], "parent_module1");
   ASSERT_EQ(module.DependsOn[1], "parent_module2");
 
-  ASSERT_EQ(module.Parameters.Parameters.size(), 1);
-  ASSERT_EQ(module.Parameters.Parameters[0].Name, "parameter1");
-  ASSERT_EQ(module.Parameters.Parameters[0].Value, "value1");
+  ASSERT_EQ(module.Parameters.Parameters.size(), 5);
+  ASSERT_EQ(module.Parameters.Parameters[0].Name, "application_name");
+  ASSERT_EQ(module.Parameters.Parameters[0].Value, "Test OPC UA Server");
 
-  ASSERT_EQ(module.Parameters.Groups.size(), 1);
-  ASSERT_EQ(module.Parameters.Groups[0].Name, "group1");
-  ASSERT_EQ(module.Parameters.Groups[0].Parameters.size(), 2);
-  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Name, "parameter1");
-  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Value, "value1");
-  ASSERT_EQ(module.Parameters.Groups[0].Parameters[1].Name, "parameter2");
-  ASSERT_EQ(module.Parameters.Groups[0].Parameters[1].Value, "value2");
+  ASSERT_EQ(module.Parameters.Groups.size(), 2);
+  ASSERT_EQ(module.Parameters.Groups[0].Name, "user_token_policy");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters.size(), 3);
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Name, "id");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Value, "anonymous");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[1].Name, "type");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[1].Value, "anonymous");
 }
 

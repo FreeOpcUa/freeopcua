@@ -29,7 +29,7 @@ namespace
       return std::vector<ApplicationDescription>();
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
     {
       return Endpoints;
     }

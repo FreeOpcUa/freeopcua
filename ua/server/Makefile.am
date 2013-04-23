@@ -109,7 +109,7 @@ libopcua_protocol_la_SOURCES = \
  src/server/opc_tcp_processor.cpp \
  src/server/opc_tcp_processor.h
 libopcua_protocol_la_CPPFLAGS = $(INCLUDES)
-libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -no-undefined
 TESTS += test_opcua_protocol_addon
 
 lib_LTLIBRARIES += libbuiltin_computer_addon.la

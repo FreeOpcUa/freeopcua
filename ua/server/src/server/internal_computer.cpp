@@ -9,9 +9,11 @@
 ///
 
 #include <opc/ua/server/addons/internal_computer.h>
+#include <opc/ua/protocol/endpoints.h>
 
 namespace
 {
+  using namespace OpcUa;
   using namespace OpcUa::Remote;
 
   class DefaultEndpoints : public EndpointServices
@@ -21,7 +23,7 @@ namespace
     {
       return std::vector<OpcUa::ApplicationDescription>();
     }
-    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const EndpointFilter& filter) const
+    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
     {
       return std::vector<OpcUa::EndpointDescription>();
     }

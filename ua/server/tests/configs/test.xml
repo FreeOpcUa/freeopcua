@@ -9,11 +9,22 @@
         <id>parent_module2</id>
       </depends_on>
       <parameters>
-        <group1>
-          <parameter1>value1</parameter1>
-          <parameter2>value2</parameter2>
-        </group1>
-        <parameter1>value1</parameter1>
+
+        <application_name>Test OPC UA Server</application_name>
+        <application_uri>opcua.treww.org</application_uri>
+        <application_type>server</application_type>
+        <security_mode>none</security_mode>
+        <transport_profile_uri>http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary</transport_profile_uri>
+        <user_token_policy>
+          <id>anonymous</id>
+          <type>anonymous</type>
+          <uri>http://opcfoundation.org/UA/SecurityPolicy#None</uri>
+        </user_token_policy>
+
+        <endpoint>
+          <url>opc.tcp://localhost:4841</url>
+        </endpoint>
+
       </parameters>
     </module>
   </module>

@@ -89,6 +89,7 @@ namespace
       addonConfig.ID = moduleIt->ID;
       addonConfig.Factory = Common::CreateDynamicAddonFactory(moduleIt->Path.c_str());
       addonConfig.Dependencies = moduleIt->DependsOn;
+      addonConfig.Parameters = moduleIt->Parameters;
       addons->Register(addonConfig);
     }
     addons->Start();

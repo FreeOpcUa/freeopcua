@@ -561,7 +561,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@ src/server/opc_tcp_processor.h
 
 @BUILD_UA_SERVER_TRUE@libopcua_protocol_la_CPPFLAGS = $(INCLUDES)
-@BUILD_UA_SERVER_TRUE@libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@libbuiltin_computer_addon_la_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/binary_computer.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/builtin_computer_addon.cpp \

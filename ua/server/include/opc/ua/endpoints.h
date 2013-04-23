@@ -11,7 +11,7 @@
 #ifndef OPC_UA_CLIENT_ENDPOINTS_H
 #define OPC_UA_CLIENT_ENDPOINTS_H
 
-#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/endpoints.h>
 #include <vector>
 
 namespace OpcUa
@@ -22,14 +22,6 @@ namespace OpcUa
     struct ApplicationFilter
     {
     };
-
-    struct EndpointFilter
-    {
-      std::string EndpointUrl;
-      std::vector<std::string> LocaleIDs;
-      std::vector<std::string> ProfileUries;
-    };
-
     struct ServerParameters
     {
     };
@@ -39,7 +31,7 @@ namespace OpcUa
     public:
       virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
       // TODO Here all structuresmust be in one namespace.
-      virtual std::vector<EndpointDescription> GetEndpoints(const EndpointFilter& filter) const = 0;
+      virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const = 0;
       virtual void RegisterServer(const ServerParameters& parameters) = 0;
     };
 
