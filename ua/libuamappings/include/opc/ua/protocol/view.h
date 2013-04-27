@@ -11,6 +11,7 @@
 #ifndef __OPC_UA_BINARY_VIEW_H__
 #define __OPC_UA_BINARY_VIEW_H__
 
+#include <opc/ua/node_classes.h>
 #include <opc/ua/protocol/types.h>
 
 namespace OpcUa
@@ -88,7 +89,7 @@ namespace OpcUa
     NodeID TargetNodeID;
     QualifiedName BrowseName;
     LocalizedText DisplayName;
-    uint32_t TargetNodeClass; 
+    NodeClass TargetNodeClass; 
     NodeID TypeDefinition;
 
     ReferenceDescription();

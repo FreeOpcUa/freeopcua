@@ -43,7 +43,7 @@ namespace OpcUa
       }
     }
   };
-
+/*
   inline bool operator== (const Guid& l, const Guid&r)
   {
     for (unsigned i = 0; i < 8; ++i)
@@ -56,7 +56,7 @@ namespace OpcUa
 
     return l.Data1 == r.Data1 && l.Data2 == r.Data2 && l.Data3 == r.Data3;
   }
-
+*/
   struct QualifiedName
   {
     uint16_t NamespaceIndex;

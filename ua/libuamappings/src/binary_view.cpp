@@ -44,7 +44,7 @@ namespace OpcUa
 
   ReferenceDescription::ReferenceDescription()
     : IsForward(false)
-    , TargetNodeClass(NODE_CLASS_ALL)
+    , TargetNodeClass(NodeClass::ALL)
   {
   }
 
@@ -71,6 +71,35 @@ namespace OpcUa
 
   namespace Binary
   {
+    ////////////////////////////////////////////////////////////////
+    // NodeClass
+    ////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<NodeClass>(const NodeClass&)
+    {
+      return 4;
+    }
+
+    template<>
+    void OStream::Serialize<NodeClass>(const NodeClass& cls)
+    {
+      *this << static_cast<uint32_t>(cls);
+    }
+
+    template<>
+    void IStream::Deserialize<NodeClass>(NodeClass& direction)
+    {
+      uint32_t tmp = 0;
+      *this >> tmp;
+      direction = static_cast<NodeClass>(tmp);
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    // BrowseDirection
+    ////////////////////////////////////////////////////////////////
+
 
     template<>
     std::size_t RawSize<BrowseDirection>(const BrowseDirection&)
