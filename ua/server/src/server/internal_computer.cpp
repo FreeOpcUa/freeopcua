@@ -16,7 +16,9 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Remote;
 
-  class DefaultEndpoints : public EndpointServices
+  class DefaultServices
+    : public EndpointServices
+    , public ViewServices
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const ApplicationFilter& filter) const
@@ -30,18 +32,24 @@ namespace
     virtual void RegisterServer(const ServerParameters& parameters)
     {
     }
+
+    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params)
+    {
+      return std::vector<ReferenceDescription>();
+    }
+
+    virtual std::vector<ReferenceDescription> BrowseNext()
+    {
+      return std::vector<ReferenceDescription>();
+    }
   };
 
-  std::shared_ptr<EndpointServices> CreateDefaultEndpoints()
-  {
-    return std::shared_ptr<EndpointServices>(new DefaultEndpoints());
-  }
 
   class InternalComputer : public Computer
   {
   public:
     InternalComputer()
-      : EndpointsServices(CreateDefaultEndpoints())
+      : Services(new DefaultServices())
     {
     }
 
@@ -64,7 +72,7 @@ namespace
 
     virtual std::shared_ptr<ViewServices> Views() const
     {
-      return std::shared_ptr<ViewServices>();
+      return ViewsServices;
     }
 
     virtual std::shared_ptr<AttributeServices> Attributes() const
@@ -75,11 +83,19 @@ namespace
   public:
     void SetEndpoints(std::shared_ptr<EndpointServices> endpoints)
     {
-      EndpointsServices = endpoints ? endpoints : CreateDefaultEndpoints();
+      EndpointsServices = endpoints ? endpoints : Services;
     }
 
+    void SetViews(std::shared_ptr<ViewServices> views)
+    {
+      ViewsServices = views ? views : Services;
+    }
+
+
   public:
+    std::shared_ptr<ViewServices> ViewsServices;
     std::shared_ptr<EndpointServices> EndpointsServices;
+    std::shared_ptr<DefaultServices> Services;
   };
 
   class RequestProcessor
@@ -112,6 +128,14 @@ namespace
     virtual void UnregisterEndpointsServices()
     {
       Comp->SetEndpoints(std::shared_ptr<EndpointServices>());
+    }
+
+    virtual void RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
+    {
+    }
+
+    virtual void UnregisterViewServices()
+    {
     }
 
   private:

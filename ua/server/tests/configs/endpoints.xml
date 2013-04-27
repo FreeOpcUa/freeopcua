@@ -20,6 +20,14 @@
       </depends_on>
     </module>
 
+    <module>
+      <id>view_services</id>
+      <path>./.libs/libview_services_addon.so</path>
+      <depends_on>
+        <id>internal_computer</id>
+      </depends_on>
+    </module>
+
 
     <module>
       <id>opcua_protocol</id>
