@@ -333,7 +333,7 @@ TEST_F(OpcUaBinarySerialization, ReferenceDescription)
   desc.DisplayName.Locale = "loc";
   desc.DisplayName.Text = "text";
 
-  desc.TargetNodeClass = NodeClass::METHOD;
+  desc.TargetNodeClass = NodeClass::Method;
 
   desc.TypeDefinition.Encoding = EV_TWO_BYTE;
   desc.TypeDefinition.TwoByteData.Identifier = 5;
@@ -396,7 +396,7 @@ TEST_F(OpcUaBinaryDeserialization, ReferenceDescription)
   ASSERT_EQ(desc.DisplayName.Locale, "loc");
   ASSERT_EQ(desc.DisplayName.Text, "text");
 
-  ASSERT_EQ(desc.TargetNodeClass, NodeClass::METHOD);
+  ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
 
   ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
@@ -427,7 +427,7 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
   desc.DisplayName.Locale = "loc";
   desc.DisplayName.Text = "text";
 
-  desc.TargetNodeClass = NodeClass::METHOD;
+  desc.TargetNodeClass = NodeClass::Method;
 
   desc.TypeDefinition.Encoding = EV_TWO_BYTE;
   desc.TypeDefinition.TwoByteData.Identifier = 5;
@@ -509,7 +509,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseResult)
   ASSERT_EQ(desc.DisplayName.Encoding, HAS_LOCALE | HAS_TEXT);
   ASSERT_EQ(desc.DisplayName.Locale, "loc");
   ASSERT_EQ(desc.DisplayName.Text, "text");
-  ASSERT_EQ(desc.TargetNodeClass, NodeClass::METHOD);
+  ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
   ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
 }

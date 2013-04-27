@@ -174,8 +174,9 @@ namespace OpcUa
     }GuidData;
 
     NodeID();
-    NodeID(MessageID messageID);
-    NodeID(ReferenceID referenceID);
+    explicit NodeID(MessageID messageID);
+    explicit NodeID(ReferenceID referenceID);
+    explicit NodeID(ObjectID objectID);
   };
 
   struct AdditionalHeader

@@ -16,15 +16,15 @@ namespace OpcUa
 
   enum class NodeClass : uint32_t
   {
-    ALL = 0, // uses in browse description to aquire all classes.
-    OBJECT = 1,
-    VARIABLE = 2,
-    METHOD = 4,
-    OBJECT_TYPE = 8,
-    VARIABLE_TYPE = 16,
-    REFERENCE_TYPE = 32,
-    DATA_TYPE = 64,
-    VIEW = 128
+    All = 0, // uses in browse description to aquire all classes.
+    Object = 1,
+    Variable = 2,
+    Method = 4,
+    ObjectType = 8,
+    VariableType = 16,
+    ReferenceType = 32,
+    DataType = 64,
+    View = 128
   };
 
 }

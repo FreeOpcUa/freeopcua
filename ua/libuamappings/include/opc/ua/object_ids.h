@@ -13,7 +13,7 @@
 
 namespace OpcUa
 {
-  enum class ObjectID
+  enum class ObjectID : uint32_t
   {
     RootFolder = 84,
     ObjectsFolder = 85,

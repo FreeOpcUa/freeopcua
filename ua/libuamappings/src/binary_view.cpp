@@ -44,7 +44,7 @@ namespace OpcUa
 
   ReferenceDescription::ReferenceDescription()
     : IsForward(false)
-    , TargetNodeClass(NodeClass::ALL)
+    , TargetNodeClass(NodeClass::All)
   {
   }
 

@@ -161,6 +161,13 @@ namespace OpcUa
     NumericData.Identifier = static_cast<uint32_t>(referenceID);
   }
 
+  NodeID::NodeID(ObjectID objectID)
+    : Encoding(EV_NUMERIC)
+    , ServerIndex(0)
+  {
+    NumericData.Identifier = static_cast<uint32_t>(objectID);
+  }
+
   MessageID GetMessageID(const NodeID& id)
   {
     if (id.Encoding != EV_FOUR_BYTE)
