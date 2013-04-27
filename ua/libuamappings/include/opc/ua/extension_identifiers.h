@@ -11,6 +11,8 @@
 #ifndef __OPC_UA_BINARY_EXTENSION_IDENTIFIERS
 #define __OPC_UA_BINARY_EXTENSION_IDENTIFIERS
 
+#include <stdint.h>
+
 namespace OpcUa
 {
   enum ExtensionObjectID : uint16_t
