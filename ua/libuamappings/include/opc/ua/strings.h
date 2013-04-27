@@ -16,6 +16,7 @@ namespace OpcUa
   namespace Names
   {
 
+    const char FolderType[] = "FolderType";
     const char Objects[] = "Objects";
     const char Root[]    = "Root";
     const char Types[]   = "Types";
@@ -24,4 +25,5 @@ namespace OpcUa
   }
 }
 
-#endif OPC_UA_STRINGS_H
+#endif // OPC_UA_STRINGS_H
+
