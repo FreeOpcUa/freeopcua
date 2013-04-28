@@ -48,4 +48,5 @@ ua/server/test_opcua_protocol_addon
 ua/server/test_opcuaserver
 ua/server/test_tcp_server
 ua/server/test_tcp_server_addon
+ua/server/server_unittests
 
