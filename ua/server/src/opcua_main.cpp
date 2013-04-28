@@ -328,7 +328,7 @@ namespace
   {
     OpcUa::Remote::BrowseParameters params;
     params.Description.NodeToBrowse = nodeID;
-    params.Description.Direction = OpcUa::BrowseDirection::FORWARD;
+    params.Description.Direction = OpcUa::BrowseDirection::Forward;
     params.Description.IncludeSubtypes = true;
     params.Description.NodeClasses = OpcUa::NODE_CLASS_ALL;
     params.Description.ResultMask = OpcUa::REFERENCE_ALL;

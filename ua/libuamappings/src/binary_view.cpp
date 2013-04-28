@@ -29,7 +29,7 @@ namespace OpcUa
   }
 
   BrowseDescription::BrowseDescription()
-    : Direction(BrowseDirection::FORWARD)
+    : Direction(BrowseDirection::Forward)
     , IncludeSubtypes(false)
     , NodeClasses(NODE_CLASS_ALL)
     , ResultMask(REFERENCE_ALL)

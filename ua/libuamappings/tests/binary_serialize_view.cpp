@@ -38,14 +38,14 @@ TEST_F(ViewSerialization, BrowseDirection)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  GetStream() << BrowseDirection::BOTH << flush;
+  GetStream() << BrowseDirection::Both << flush;
 
   const std::vector<char> expectedData = {
   2,0,0,0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
-  ASSERT_EQ(expectedData.size(), RawSize(BrowseDirection::BOTH));
+  ASSERT_EQ(expectedData.size(), RawSize(BrowseDirection::Both));
 }
 
 TEST_F(ViewDeserialization, BrowseDirection)
@@ -62,7 +62,7 @@ TEST_F(ViewDeserialization, BrowseDirection)
   BrowseDirection direction;
   GetStream() >> direction;
 
-  ASSERT_EQ(direction, BrowseDirection::BOTH);
+  ASSERT_EQ(direction, BrowseDirection::Both);
 }
 
 //-------------------------------------------------------
@@ -131,7 +131,7 @@ TEST_F(ViewSerialization, BrowseDescription)
 
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
   desc.NodeToBrowse.TwoByteData.Identifier = 1;
-  desc.Direction = BrowseDirection::INVERSE;
+  desc.Direction = BrowseDirection::Inverse;
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
   desc.ReferenceTypeID.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;
@@ -175,7 +175,7 @@ TEST_F(ViewDeserialization, BrowseDescription)
 
   ASSERT_EQ(desc.NodeToBrowse.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.NodeToBrowse.TwoByteData.Identifier, 1);
-  ASSERT_EQ(desc.Direction, BrowseDirection::INVERSE);
+  ASSERT_EQ(desc.Direction, BrowseDirection::Inverse);
   ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 2);
   ASSERT_EQ(desc.IncludeSubtypes, true);
@@ -194,7 +194,7 @@ OpcUa::BrowseDescription CreateBrowseDescription()
   BrowseDescription desc; 
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
   desc.NodeToBrowse.TwoByteData.Identifier = 1;
-  desc.Direction = BrowseDirection::INVERSE;
+  desc.Direction = BrowseDirection::Inverse;
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
   desc.ReferenceTypeID.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;

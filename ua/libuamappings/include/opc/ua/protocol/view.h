@@ -23,9 +23,9 @@ namespace OpcUa
 
   enum class BrowseDirection : uint32_t
   {
-    FORWARD = 0,
-    INVERSE = 1,
-    BOTH    = 2,
+    Forward = 0,
+    Inverse = 1,
+    Both    = 2,
   };
   
   const uint32_t NODE_CLASS_ALL            = 0;
