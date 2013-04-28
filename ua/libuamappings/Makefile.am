@@ -23,6 +23,8 @@ opcuainclude_HEADERS = \
   include/opc/ua/protocol/variant.h \
   include/opc/ua/protocol/secure_channel.h \
   include/opc/ua/protocol/datetime.h \
+  include/opc/ua/protocol/guid.h \
+  include/opc/ua/protocol/nodeid.h \
   include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/session.h \
   include/opc/ua/protocol/data_value.h \
@@ -48,6 +50,7 @@ libopcuabinary_a_SOURCES = \
   src/binary_raw_size.cpp \
   src/binary_stream.cpp \
   src/binary_attribute.cpp \
+  src/nodeid.cpp \
   src/binary_view.cpp \
   src/binary_session.cpp \
   src/binary_secure_channel.cpp
@@ -69,6 +72,7 @@ opc_ua_binary_test_SOURCES =  \
  tests/binary_serialize.cpp \
  tests/common.h \
  tests/message_id.cpp \
+ tests/node_id.cpp \
  tests/reference_id.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)

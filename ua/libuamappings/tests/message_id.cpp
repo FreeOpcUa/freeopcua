@@ -31,7 +31,7 @@ TEST(MessageIDFromNodeID, InvalidIfConvertedFromWrongEncodedNodeID)
 {
   NodeID id;
   id.Encoding = EV_TWO_BYTE;
-  id.TwoByteData.Identifier = static_cast<uint8_t>(OPEN_SECURE_CHANNEL_REQUEST);
+  id.TwoByteData.Identifier = 1;
   ASSERT_EQ(GetMessageID(id), INVALID);
 }
 

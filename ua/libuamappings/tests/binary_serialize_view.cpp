@@ -19,13 +19,20 @@
 #include <algorithm>
 #include <stdexcept>
 
+class ViewSerialization : public OpcUaBinarySerialization
+{
+};
+
+class ViewDeserialization : public OpcUaBinaryDeserialization
+{
+};
 
 
 //-------------------------------------------------------
 // BrowseDirection
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, BrowseDirection)
+TEST_F(ViewSerialization, BrowseDirection)
 {
 
   using namespace OpcUa;
@@ -41,7 +48,7 @@ TEST_F(OpcUaBinarySerialization, BrowseDirection)
   ASSERT_EQ(expectedData.size(), RawSize(BrowseDirection::BOTH));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseDirection)
+TEST_F(ViewDeserialization, BrowseDirection)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -62,7 +69,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseDirection)
 // ViewDescription
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, ViewDescription)
+TEST_F(ViewSerialization, ViewDescription)
 {
 
   using namespace OpcUa;
@@ -87,7 +94,7 @@ TEST_F(OpcUaBinarySerialization, ViewDescription)
   ASSERT_EQ(expectedData.size(), RawSize(desc));
 }
 
-TEST_F(OpcUaBinaryDeserialization, ViewDescription)
+TEST_F(ViewDeserialization, ViewDescription)
 {
 
   using namespace OpcUa;
@@ -114,7 +121,7 @@ TEST_F(OpcUaBinaryDeserialization, ViewDescription)
 // BrowseDescription
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, BrowseDescription)
+TEST_F(ViewSerialization, BrowseDescription)
 {
 
   using namespace OpcUa;
@@ -146,7 +153,7 @@ TEST_F(OpcUaBinarySerialization, BrowseDescription)
   ASSERT_EQ(expectedData.size(), RawSize(desc));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseDescription)
+TEST_F(ViewDeserialization, BrowseDescription)
 {
 
   using namespace OpcUa;
@@ -209,7 +216,7 @@ bool operator==(const OpcUa::BrowseDescription& lhs, const OpcUa::BrowseDescript
     rhs.ResultMask == lhs.ResultMask;
 }
 
-TEST_F(OpcUaBinarySerialization, BrowseRequest)
+TEST_F(ViewSerialization, BrowseRequest)
 {
 
   using namespace OpcUa;
@@ -240,24 +247,24 @@ TEST_F(OpcUaBinarySerialization, BrowseRequest)
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
 
-  0, 1,
-  2,0,0,0,0,0,0,0,
-  3,0,0,0,
+  0, 1,  // View.ID
+  2,0,0,0,0,0,0,0, // View.TimeStamp
+  3,0,0,0, // View.Version
 
-  4,0,0,0,
+  4,0,0,0, // MaxReferenciesPerNode
 
-  2,0,0,0,
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+  2,0,0,0, // Count of Nodes
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0, // Node 1
+  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0, // Node 2
 
 
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseRequest)
+TEST_F(ViewDeserialization, BrowseRequest)
 {
 
   using namespace OpcUa;
@@ -310,7 +317,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseRequest)
 // ReferenceDescription
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, ReferenceDescription)
+TEST_F(ViewSerialization, ReferenceDescription)
 {
 
   using namespace OpcUa;
@@ -357,7 +364,7 @@ TEST_F(OpcUaBinarySerialization, ReferenceDescription)
   ASSERT_EQ(expectedData.size(), RawSize(desc));
 }
 
-TEST_F(OpcUaBinaryDeserialization, ReferenceDescription)
+TEST_F(ViewDeserialization, ReferenceDescription)
 {
 
   using namespace OpcUa;
@@ -434,7 +441,7 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
   return desc;
 }
 
-TEST_F(OpcUaBinarySerialization, BrowseResult)
+TEST_F(ViewSerialization, BrowseResult)
 {
 
   using namespace OpcUa;
@@ -467,7 +474,7 @@ TEST_F(OpcUaBinarySerialization, BrowseResult)
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseResult)
+TEST_F(ViewDeserialization, BrowseResult)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -527,7 +534,7 @@ OpcUa::BrowseResult CreateBrowseResult()
   return result;
 }
 
-TEST_F(OpcUaBinarySerialization, BrowseResponse)
+TEST_F(ViewSerialization, BrowseResponse)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -584,7 +591,7 @@ TEST_F(OpcUaBinarySerialization, BrowseResponse)
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseResponse)
+TEST_F(ViewDeserialization, BrowseResponse)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -637,7 +644,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseResponse)
 //-------------------------------------------------------
 
 
-TEST_F(OpcUaBinarySerialization, BrowseNextRequest)
+TEST_F(ViewSerialization, BrowseNextRequest)
 {
 
   using namespace OpcUa;
@@ -669,7 +676,7 @@ TEST_F(OpcUaBinarySerialization, BrowseNextRequest)
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseNextRequest)
+TEST_F(ViewDeserialization, BrowseNextRequest)
 {
 
   using namespace OpcUa;
@@ -703,7 +710,7 @@ TEST_F(OpcUaBinaryDeserialization, BrowseNextRequest)
 // BrowseNextRessponce
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, BrowseNextResponse)
+TEST_F(ViewSerialization, BrowseNextResponse)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -760,7 +767,7 @@ TEST_F(OpcUaBinarySerialization, BrowseNextResponse)
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
-TEST_F(OpcUaBinaryDeserialization, BrowseNextResponse)
+TEST_F(ViewDeserialization, BrowseNextResponse)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;

@@ -147,12 +147,6 @@ namespace OpcUa
       *this >> desc.Version;
     }
 
-      NodeID NodeToBrowse;
-      BrowseDirection Direction;
-      NodeID ReferenceTypeID;
-      bool IncludeSubtypes;
-      uint8_t NodeClasses;
-      uint8_t ResultMask;
 
     //---------------------------------------------------
     // BrowseDescription

@@ -638,20 +638,7 @@ namespace OpcUa
       *this >> header.RequestID;
     };
 
-    template<>
-    void OStream::Serialize<NodeIDEncoding>(const NodeIDEncoding& value)
-    {
-      *this << static_cast<uint8_t>(value);
-    }
- 
-    template<>
-    void IStream::Deserialize<NodeIDEncoding>(NodeIDEncoding& value)
-    {
-      uint8_t tmp = 0;
-      *this >> tmp;
-      value = static_cast<NodeIDEncoding>(tmp);
-    }
- 
+
     template<>
     void OStream::Serialize<MessageSecurityMode>(const MessageSecurityMode& value)
     {
@@ -666,123 +653,6 @@ namespace OpcUa
       value = static_cast<MessageSecurityMode>(tmp);
     }
  
-    template<>
-    void OStream::Serialize<OpcUa::NodeID>(const OpcUa::NodeID& id)
-    {
-      *this << id.Encoding;
-
-      switch (id.Encoding & 0x3f)
-      {
-        case EV_TWO_BYTE:
-        {
-          *this << id.TwoByteData.Identifier;
-          break;
-        }
-        case EV_FOUR_BYTE:
-        {
-          *this << id.FourByteData.NamespaceIndex;
-          *this << id.FourByteData.Identifier;
-          break;
-        }
-        case EV_NUMERIC:
-        {
-          *this << id.NumericData.NamespaceIndex;
-          *this << id.NumericData.Identifier;
-          break;
-        }
-        case EV_STRING:
-        {
-          *this << id.StringData.NamespaceIndex;
-          *this << id.StringData.Identifier;
-          break;
-        }
-        case EV_BYTE_STRING:
-        {
-          *this << id.BinaryData.NamespaceIndex;
-          *this << id.BinaryData.Identifier;
-          break;
-        }
-        case EV_GUID:
-        {
-          *this << id.GuidData.NamespaceIndex;
-          *this << id.GuidData.Identifier;
-          break;
-        }
-
-      default:
-        throw std::logic_error("Unable serialize NodeID. Unknown encoding type.");
-      };
-
-      if (id.Encoding & EV_NAMESPACE_URI_FLAG)
-      {
-        *this << id.NamespaceURI;
-      }
-      if (id.Encoding & EV_SERVER_INDEX_FLAG)
-      {
-        *this << id.ServerIndex;
-      }
-    }
-
-    template<>
-    void IStream::Deserialize<OpcUa::NodeID>(OpcUa::NodeID& id)
-    {
-      *this >> id.Encoding;
-
-      switch (id.Encoding & 0x3f)
-      {
-        case EV_TWO_BYTE:
-        {
-          *this >> id.TwoByteData.Identifier;
-          break;
-        }
-        case EV_FOUR_BYTE:
-        {
-          *this >> id.FourByteData.NamespaceIndex;
-          *this >> id.FourByteData.Identifier;
-          break;
-        }
-        case EV_NUMERIC:
-        {
-          *this >> id.NumericData.NamespaceIndex;
-          *this >> id.NumericData.Identifier;
-          break;
-        }
-        case EV_STRING:
-        {
-          *this >> id.StringData.NamespaceIndex;
-          *this >> id.StringData.Identifier;
-          break;
-        }
-        case EV_BYTE_STRING:
-        {
-          *this >> id.BinaryData.NamespaceIndex;
-          *this >> id.BinaryData.Identifier;
-          break;
-        }
-        case EV_GUID:
-        {
-          *this >> id.GuidData.NamespaceIndex;
-          *this >> id.GuidData.Identifier;
-          break;
-        }
-
-        default:
-        {
-          throw std::logic_error("Unable to deserialize NodeId. Unknown encoding type received.");
-        }
-      };
-
-      if (id.Encoding & EV_NAMESPACE_URI_FLAG)
-      {
-        *this >> id.NamespaceURI;
-      }
-      if (id.Encoding & EV_SERVER_INDEX_FLAG)
-      {
-        *this >> id.ServerIndex;
-      }
-    };
-
-
     template<>
     void OStream::Serialize<OpcUa::AdditionalHeader>(const OpcUa::AdditionalHeader& header)
     {

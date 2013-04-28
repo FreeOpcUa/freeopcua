@@ -14,6 +14,7 @@
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
 #include <opc/ua/object_ids.h>
+#include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/datetime.h>
 #include <opc/ua/reference_ids.h>
 
@@ -26,38 +27,6 @@ namespace OpcUa
 
   typedef uint32_t StatusCode;
 
-  struct Guid
-  {
-    uint32_t Data1;
-    uint16_t Data2;
-    uint16_t Data3;
-    uint8_t  Data4[8];
-
-    Guid()
-      : Data1(0)
-      , Data2(0)
-      , Data3(0)
-    {
-      for (unsigned i = 0; i < 8; ++i)
-      {
-        Data4[i] = 0;
-      }
-    }
-  };
-/*
-  inline bool operator== (const Guid& l, const Guid&r)
-  {
-    for (unsigned i = 0; i < 8; ++i)
-    {
-      if (l.Data4[i] != r.Data4[i])
-      {
-        return false;
-      }
-    }
-
-    return l.Data1 == r.Data1 && l.Data2 == r.Data2 && l.Data3 == r.Data3;
-  }
-*/
   struct QualifiedName
   {
     uint16_t NamespaceIndex;
@@ -78,105 +47,6 @@ namespace OpcUa
     uint8_t Encoding;
     std::string Locale;
     std::string Text; // TODO rename to Data
-  };
-
-  enum NodeIDEncoding : uint8_t
-  {
-    EV_TWO_BYTE = 0,
-    EV_FOUR_BYTE = 1,
-    EV_NUMERIC = 2,
-    EV_STRING = 3,
-    EV_GUID = 4,
-    EV_BYTE_STRING = 5,
-
-    EV_SERVER_INDEX_FLAG = 0x40,
-    EV_NAMESPACE_URI_FLAG = 0x80,
-
-    EV_VALUE_MASK = 0x3f,
-  };
-
-  struct NodeID
-  {
-    NodeIDEncoding Encoding;
-    std::string NamespaceURI;
-    uint32_t ServerIndex;
-
-    struct TwoByteDataType
-    {
-      uint8_t Identifier;
-
-      TwoByteDataType()
-        : Identifier(0)
-      {
-      }
-
-    } TwoByteData;
-
-    struct FourByteDataType
-    {
-      uint8_t NamespaceIndex;
-      uint16_t Identifier;
-
-      FourByteDataType()
-        : NamespaceIndex(0)
-        , Identifier(0)
-      {
-      }
-    }FourByteData;
-
-    struct NumericDataType
-    {
-      uint16_t NamespaceIndex;
-      uint32_t Identifier;
-
-      NumericDataType()
-        : NamespaceIndex(0)
-        , Identifier(0)
-      {
-      }
-    }NumericData;
-
-
-    struct StringDataType
-    {
-      uint16_t NamespaceIndex;
-      std::string Identifier;
-
-      StringDataType()
-        : NamespaceIndex(0)
-      {
-      }
-
-    }StringData;
-
-    struct BinaryDataType
-    {
-      uint16_t NamespaceIndex;
-      std::vector<uint8_t> Identifier;
-
-      BinaryDataType()
-        : NamespaceIndex(0)
-      {
-      }
-
-    }BinaryData;
-
-    struct GuidDataType
-    {
-      uint16_t NamespaceIndex;
-      Guid Identifier;
-
-      GuidDataType()
-        : NamespaceIndex(0)
-      {
-      }
-
-    }GuidData;
-
-    NodeID();
-    explicit NodeID(MessageID messageID);
-    explicit NodeID(ReferenceID referenceID);
-    explicit NodeID(ObjectID objectID);
   };
 
   struct AdditionalHeader

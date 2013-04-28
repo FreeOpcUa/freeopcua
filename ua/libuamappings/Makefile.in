@@ -103,6 +103,7 @@ am_libopcuabinary_a_OBJECTS =  \
 	libopcuabinary_a-binary_raw_size.$(OBJEXT) \
 	libopcuabinary_a-binary_stream.$(OBJEXT) \
 	libopcuabinary_a-binary_attribute.$(OBJEXT) \
+	libopcuabinary_a-nodeid.$(OBJEXT) \
 	libopcuabinary_a-binary_view.$(OBJEXT) \
 	libopcuabinary_a-binary_session.$(OBJEXT) \
 	libopcuabinary_a-binary_secure_channel.$(OBJEXT)
@@ -118,6 +119,7 @@ am_opc_ua_binary_test_OBJECTS =  \
 	opc_ua_binary_test-binary_serialize_view.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize.$(OBJEXT) \
 	opc_ua_binary_test-message_id.$(OBJEXT) \
+	opc_ua_binary_test-node_id.$(OBJEXT) \
 	opc_ua_binary_test-reference_id.$(OBJEXT)
 opc_ua_binary_test_OBJECTS = $(am_opc_ua_binary_test_OBJECTS)
 opc_ua_binary_test_DEPENDENCIES = libopcuabinary.a
@@ -307,6 +309,8 @@ opcuainclude_HEADERS = \
   include/opc/ua/protocol/variant.h \
   include/opc/ua/protocol/secure_channel.h \
   include/opc/ua/protocol/datetime.h \
+  include/opc/ua/protocol/guid.h \
+  include/opc/ua/protocol/nodeid.h \
   include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/session.h \
   include/opc/ua/protocol/data_value.h \
@@ -330,6 +334,7 @@ libopcuabinary_a_SOURCES = \
   src/binary_raw_size.cpp \
   src/binary_stream.cpp \
   src/binary_attribute.cpp \
+  src/nodeid.cpp \
   src/binary_view.cpp \
   src/binary_session.cpp \
   src/binary_secure_channel.cpp
@@ -346,6 +351,7 @@ opc_ua_binary_test_SOURCES = \
  tests/binary_serialize.cpp \
  tests/common.h \
  tests/message_id.cpp \
+ tests/node_id.cpp \
  tests/reference_id.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
@@ -468,6 +474,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_stream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-nodeid.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_deserialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Po@am__quote@
@@ -477,6 +484,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-message_id.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-node_id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-reference_id.Po@am__quote@
 
 .cpp.o:
@@ -597,6 +605,20 @@ libopcuabinary_a-binary_attribute.obj: src/binary_attribute.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_attribute.cpp' object='libopcuabinary_a-binary_attribute.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_attribute.obj `if test -f 'src/binary_attribute.cpp'; then $(CYGPATH_W) 'src/binary_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_attribute.cpp'; fi`
+
+libopcuabinary_a-nodeid.o: src/nodeid.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-nodeid.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-nodeid.Tpo -c -o libopcuabinary_a-nodeid.o `test -f 'src/nodeid.cpp' || echo '$(srcdir)/'`src/nodeid.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-nodeid.Tpo $(DEPDIR)/libopcuabinary_a-nodeid.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/nodeid.cpp' object='libopcuabinary_a-nodeid.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-nodeid.o `test -f 'src/nodeid.cpp' || echo '$(srcdir)/'`src/nodeid.cpp
+
+libopcuabinary_a-nodeid.obj: src/nodeid.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-nodeid.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-nodeid.Tpo -c -o libopcuabinary_a-nodeid.obj `if test -f 'src/nodeid.cpp'; then $(CYGPATH_W) 'src/nodeid.cpp'; else $(CYGPATH_W) '$(srcdir)/src/nodeid.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-nodeid.Tpo $(DEPDIR)/libopcuabinary_a-nodeid.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/nodeid.cpp' object='libopcuabinary_a-nodeid.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-nodeid.obj `if test -f 'src/nodeid.cpp'; then $(CYGPATH_W) 'src/nodeid.cpp'; else $(CYGPATH_W) '$(srcdir)/src/nodeid.cpp'; fi`
 
 libopcuabinary_a-binary_view.o: src/binary_view.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_view.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_view.Tpo -c -o libopcuabinary_a-binary_view.o `test -f 'src/binary_view.cpp' || echo '$(srcdir)/'`src/binary_view.cpp
@@ -765,6 +787,20 @@ opc_ua_binary_test-message_id.obj: tests/message_id.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/message_id.cpp' object='opc_ua_binary_test-message_id.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-message_id.obj `if test -f 'tests/message_id.cpp'; then $(CYGPATH_W) 'tests/message_id.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/message_id.cpp'; fi`
+
+opc_ua_binary_test-node_id.o: tests/node_id.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-node_id.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-node_id.Tpo -c -o opc_ua_binary_test-node_id.o `test -f 'tests/node_id.cpp' || echo '$(srcdir)/'`tests/node_id.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-node_id.Tpo $(DEPDIR)/opc_ua_binary_test-node_id.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/node_id.cpp' object='opc_ua_binary_test-node_id.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-node_id.o `test -f 'tests/node_id.cpp' || echo '$(srcdir)/'`tests/node_id.cpp
+
+opc_ua_binary_test-node_id.obj: tests/node_id.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-node_id.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-node_id.Tpo -c -o opc_ua_binary_test-node_id.obj `if test -f 'tests/node_id.cpp'; then $(CYGPATH_W) 'tests/node_id.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/node_id.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-node_id.Tpo $(DEPDIR)/opc_ua_binary_test-node_id.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/node_id.cpp' object='opc_ua_binary_test-node_id.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-node_id.obj `if test -f 'tests/node_id.cpp'; then $(CYGPATH_W) 'tests/node_id.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/node_id.cpp'; fi`
 
 opc_ua_binary_test-reference_id.o: tests/reference_id.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-reference_id.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-reference_id.Tpo -c -o opc_ua_binary_test-reference_id.o `test -f 'tests/reference_id.cpp' || echo '$(srcdir)/'`tests/reference_id.cpp
