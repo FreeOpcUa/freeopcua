@@ -26,7 +26,7 @@ protected:
   {
     Params.Description.NodeToBrowse.Encoding = EV_TWO_BYTE;
     Params.Description.NodeToBrowse.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder); // TODO automatic cast
-    Params.Description.Direction = BrowseDirection::FORWARD;
+    Params.Description.Direction = BrowseDirection::Forward;
     Params.Description.ReferenceTypeID.Encoding = EV_TWO_BYTE;
 //    Params.Description.ReferenceTypeID.TwoByteData.Identifier = 33;
     Params.Description.IncludeSubtypes = true;

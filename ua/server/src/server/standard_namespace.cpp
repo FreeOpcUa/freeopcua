@@ -21,7 +21,30 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Remote;
 
+  typedef std::multimap<ObjectID, ReferenceDescription> ReferenciesMap;
 
+  bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair)
+  {
+    const ObjectID sourceNode = refPair.first;
+    if (desc.NodeToBrowse != sourceNode)
+    {
+      return false;
+    }
+    const ReferenceDescription reference = refPair.second;
+    if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
+    { 
+      return false;
+    }
+    if (desc.ReferenceTypeID != reference.TypeID)
+    {
+      return false;
+    }
+    if ((desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
+    {
+      return false;
+    }
+    return true;
+  }
 
   class StandardNamespace : public ViewServices
   {
@@ -30,9 +53,18 @@ namespace
     {
       Fill();
     }
+
     virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params)
     {
-      return std::vector<ReferenceDescription>();
+      std::vector<ReferenceDescription> result;
+      for (auto reference : Referencies)
+      {
+        if (IsSuitableReference(params.Description, reference))
+        {
+          result.push_back(reference.second);
+        }
+      }
+      return result;
     }
 
     virtual std::vector<ReferenceDescription> BrowseNext()
@@ -41,15 +73,18 @@ namespace
     }
 
   private:
+
   void AddReference(
     ObjectID sourceNode, 
     ObjectID targetNode, 
+    ReferenceID referenceType,
     bool isForward, 
     const char* name, 
     NodeClass targetNodeClass,
     ObjectID typeDefinition)
   {
     ReferenceDescription desc;
+    desc.TypeID = referenceType;
     desc.IsForward = isForward;
     desc.TargetNodeID = NodeID(targetNode);
     desc.BrowseName.Name = name;
@@ -65,14 +100,14 @@ namespace
    const bool forward = true;
    const bool reverse = true;
 
-   AddReference(ObjectID::RootFolder, ObjectID::FolderType,    forward, Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
-   AddReference(ObjectID::RootFolder, ObjectID::ObjectsFolder, forward, Names::Objects,    NodeClass::Object,     ObjectID::ObjectsFolder);
-   AddReference(ObjectID::RootFolder, ObjectID::TypesFolder,   forward, Names::Types,      NodeClass::Object,     ObjectID::ObjectsFolder);
-   AddReference(ObjectID::RootFolder, ObjectID::ViewsFolder,   forward, Names::Views,      NodeClass::Object,     ObjectID::ObjectsFolder);
+   AddReference(ObjectID::RootFolder, ObjectID::FolderType,    ReferenceID::HasTypeDefinition, forward, Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
+   AddReference(ObjectID::RootFolder, ObjectID::ObjectsFolder, ReferenceID::Organizes,         forward, Names::Objects,    NodeClass::Object,     ObjectID::ObjectsFolder);
+   AddReference(ObjectID::RootFolder, ObjectID::TypesFolder,   ReferenceID::Organizes,         forward, Names::Types,      NodeClass::Object,     ObjectID::ObjectsFolder);
+   AddReference(ObjectID::RootFolder, ObjectID::ViewsFolder,   ReferenceID::Organizes,         forward, Names::Views,      NodeClass::Object,     ObjectID::ObjectsFolder);
   }
 
   private:
-    std::map<ObjectID, ReferenceDescription> Referencies;
+    ReferenciesMap Referencies;
   };
 
 }

@@ -100,6 +100,7 @@ libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
 libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 TESTS += test_tcp_server
 TESTS += test_tcp_server_addon
+TESTS += server_unittests
 
 
 lib_LTLIBRARIES += libopcua_protocol.la
@@ -145,7 +146,7 @@ libview_services_addon_la_SOURCES = \
   src/server/standard_namespace.cpp \
   src/server/view_services_addon.cpp
 libview_services_addon_la_CPPFLAGS = $(INCLUDES)
-libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 
 endif
@@ -190,6 +191,13 @@ test_opcuaserver_SOURCES = \
 
 test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+
+server_unittests_SOURCES = \
+  src/server/standard_namespace.cpp \
+  tests/server/standard_namespace_ut.cpp
+
+server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 test_tcp_server_SOURCES = \
   src/socket_channel.cpp \

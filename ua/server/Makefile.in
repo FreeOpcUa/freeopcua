@@ -51,7 +51,7 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_CMD_TRUE@am__append_1 = opcua
 @BUILD_UA_SERVER_TRUE@am__append_2 = opcuaserver
 @BUILD_UA_SERVER_TRUE@am__append_3 = test_opcuaserver test_tcp_server \
-@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon \
+@BUILD_UA_SERVER_TRUE@	test_tcp_server_addon server_unittests \
 @BUILD_UA_SERVER_TRUE@	test_opcua_protocol_addon
 @BUILD_UA_SERVER_TRUE@am__append_4 = libopcua_tcp_server.la \
 @BUILD_UA_SERVER_TRUE@	libopcua_protocol.la \
@@ -195,6 +195,7 @@ libview_services_addon_la_LINK = $(LIBTOOL) --tag=CXX \
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_3 = test_opcuaserver$(EXEEXT) \
 @BUILD_UA_SERVER_TRUE@	test_tcp_server$(EXEEXT) \
 @BUILD_UA_SERVER_TRUE@	test_tcp_server_addon$(EXEEXT) \
+@BUILD_UA_SERVER_TRUE@	server_unittests$(EXEEXT) \
 @BUILD_UA_SERVER_TRUE@	test_opcua_protocol_addon$(EXEEXT)
 am__EXEEXT_4 = libuaclient_test$(EXEEXT) $(am__EXEEXT_3)
 PROGRAMS = $(bin_PROGRAMS)
@@ -241,6 +242,15 @@ opcuaserver_LDADD = $(LDADD)
 opcuaserver_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(opcuaserver_LDFLAGS) $(LDFLAGS) -o $@
+am__server_unittests_SOURCES_DIST = src/server/standard_namespace.cpp \
+	tests/server/standard_namespace_ut.cpp
+@BUILD_UA_SERVER_TRUE@am_server_unittests_OBJECTS = server_unittests-standard_namespace.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@	server_unittests-standard_namespace_ut.$(OBJEXT)
+server_unittests_OBJECTS = $(am_server_unittests_OBJECTS)
+server_unittests_LDADD = $(LDADD)
+server_unittests_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(server_unittests_LDFLAGS) $(LDFLAGS) -o $@
 am__test_opcua_protocol_addon_SOURCES_DIST =  \
 	src/server/server_options.cpp \
 	tests/server/opcua_protocol_addon_test.cpp \
@@ -322,7 +332,8 @@ SOURCES = $(libbuiltin_computer_addon_la_SOURCES) \
 	$(libopcua_tcp_server_la_SOURCES) \
 	$(libview_services_addon_la_SOURCES) \
 	$(libuaclient_test_SOURCES) $(opcua_SOURCES) \
-	$(opcuaserver_SOURCES) $(test_opcua_protocol_addon_SOURCES) \
+	$(opcuaserver_SOURCES) $(server_unittests_SOURCES) \
+	$(test_opcua_protocol_addon_SOURCES) \
 	$(test_opcuaserver_SOURCES) $(test_tcp_server_SOURCES) \
 	$(test_tcp_server_addon_SOURCES)
 DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
@@ -333,6 +344,7 @@ DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
 	$(am__libview_services_addon_la_SOURCES_DIST) \
 	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
 	$(am__opcuaserver_SOURCES_DIST) \
+	$(am__server_unittests_SOURCES_DIST) \
 	$(am__test_opcua_protocol_addon_SOURCES_DIST) \
 	$(am__test_opcuaserver_SOURCES_DIST) \
 	$(am__test_tcp_server_SOURCES_DIST) \
@@ -603,7 +615,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@  src/server/view_services_addon.cpp
 
 @BUILD_UA_SERVER_TRUE@libview_services_addon_la_CPPFLAGS = $(INCLUDES)
-@BUILD_UA_SERVER_TRUE@libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 ##############################################################################
 # Tests
@@ -639,6 +651,12 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@server_unittests_SOURCES = \
+@BUILD_UA_SERVER_TRUE@  src/server/standard_namespace.cpp \
+@BUILD_UA_SERVER_TRUE@  tests/server/standard_namespace_ut.cpp
+
+@BUILD_UA_SERVER_TRUE@server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+@BUILD_UA_SERVER_TRUE@server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@test_tcp_server_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/socket_channel.cpp \
 @BUILD_UA_SERVER_TRUE@  src/computer.cpp \
@@ -821,6 +839,9 @@ opcua$(EXEEXT): $(opcua_OBJECTS) $(opcua_DEPENDENCIES) $(EXTRA_opcua_DEPENDENCIE
 opcuaserver$(EXEEXT): $(opcuaserver_OBJECTS) $(opcuaserver_DEPENDENCIES) $(EXTRA_opcuaserver_DEPENDENCIES) 
 	@rm -f opcuaserver$(EXEEXT)
 	$(opcuaserver_LINK) $(opcuaserver_OBJECTS) $(opcuaserver_LDADD) $(LIBS)
+server_unittests$(EXEEXT): $(server_unittests_OBJECTS) $(server_unittests_DEPENDENCIES) $(EXTRA_server_unittests_DEPENDENCIES) 
+	@rm -f server_unittests$(EXEEXT)
+	$(server_unittests_LINK) $(server_unittests_OBJECTS) $(server_unittests_LDADD) $(LIBS)
 test_opcua_protocol_addon$(EXEEXT): $(test_opcua_protocol_addon_OBJECTS) $(test_opcua_protocol_addon_DEPENDENCIES) $(EXTRA_test_opcua_protocol_addon_DEPENDENCIES) 
 	@rm -f test_opcua_protocol_addon$(EXEEXT)
 	$(test_opcua_protocol_addon_LINK) $(test_opcua_protocol_addon_OBJECTS) $(test_opcua_protocol_addon_LDADD) $(LIBS)
@@ -870,6 +891,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-thread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_unittests-standard_namespace.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_unittests-standard_namespace_ut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-opcua_protocol_addon_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-server_options.Po@am__quote@
@@ -1252,6 +1275,34 @@ opcuaserver-thread.obj: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='opcuaserver-thread.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcuaserver-thread.obj `if test -f 'src/thread.cpp'; then $(CYGPATH_W) 'src/thread.cpp'; else $(CYGPATH_W) '$(srcdir)/src/thread.cpp'; fi`
+
+server_unittests-standard_namespace.o: src/server/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-standard_namespace.o -MD -MP -MF $(DEPDIR)/server_unittests-standard_namespace.Tpo -c -o server_unittests-standard_namespace.o `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-standard_namespace.Tpo $(DEPDIR)/server_unittests-standard_namespace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/standard_namespace.cpp' object='server_unittests-standard_namespace.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-standard_namespace.o `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
+
+server_unittests-standard_namespace.obj: src/server/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-standard_namespace.obj -MD -MP -MF $(DEPDIR)/server_unittests-standard_namespace.Tpo -c -o server_unittests-standard_namespace.obj `if test -f 'src/server/standard_namespace.cpp'; then $(CYGPATH_W) 'src/server/standard_namespace.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/standard_namespace.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-standard_namespace.Tpo $(DEPDIR)/server_unittests-standard_namespace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/standard_namespace.cpp' object='server_unittests-standard_namespace.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-standard_namespace.obj `if test -f 'src/server/standard_namespace.cpp'; then $(CYGPATH_W) 'src/server/standard_namespace.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/standard_namespace.cpp'; fi`
+
+server_unittests-standard_namespace_ut.o: tests/server/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-standard_namespace_ut.o -MD -MP -MF $(DEPDIR)/server_unittests-standard_namespace_ut.Tpo -c -o server_unittests-standard_namespace_ut.o `test -f 'tests/server/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/server/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-standard_namespace_ut.Tpo $(DEPDIR)/server_unittests-standard_namespace_ut.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/standard_namespace_ut.cpp' object='server_unittests-standard_namespace_ut.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-standard_namespace_ut.o `test -f 'tests/server/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/server/standard_namespace_ut.cpp
+
+server_unittests-standard_namespace_ut.obj: tests/server/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-standard_namespace_ut.obj -MD -MP -MF $(DEPDIR)/server_unittests-standard_namespace_ut.Tpo -c -o server_unittests-standard_namespace_ut.obj `if test -f 'tests/server/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/server/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/standard_namespace_ut.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-standard_namespace_ut.Tpo $(DEPDIR)/server_unittests-standard_namespace_ut.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/server/standard_namespace_ut.cpp' object='server_unittests-standard_namespace_ut.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-standard_namespace_ut.obj `if test -f 'tests/server/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/server/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/server/standard_namespace_ut.cpp'; fi`
 
 test_opcua_protocol_addon-server_options.o: src/server/server_options.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-server_options.o -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-server_options.Tpo -c -o test_opcua_protocol_addon-server_options.o `test -f 'src/server/server_options.cpp' || echo '$(srcdir)/'`src/server/server_options.cpp
