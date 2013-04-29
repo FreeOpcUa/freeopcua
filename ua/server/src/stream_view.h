@@ -35,8 +35,8 @@ namespace OpcUa
       {
         BrowseRequest browse;
         browse.Header.SessionAuthenticationToken = AuthenticationToken;
-        browse.MaxReferenciesPerNode = params.MaxReferenciesCount;
-        browse.NodesToBrowse.push_back(params.Description);
+        browse.Query.MaxReferenciesPerNode = params.MaxReferenciesCount;
+        browse.Query.NodesToBrowse.push_back(params.Description);
         
         Stream << browse << OpcUa::Binary::flush;
 

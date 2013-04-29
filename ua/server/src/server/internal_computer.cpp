@@ -132,10 +132,12 @@ namespace
 
     virtual void RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
     {
+      Comp->SetViews(views);
     }
 
     virtual void UnregisterViewServices()
     {
+      Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
     }
 
   private:
