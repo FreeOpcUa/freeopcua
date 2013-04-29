@@ -21,6 +21,20 @@
 
 namespace OpcUa
 {
+  ////////////////////////////////////////////////////////////////////////////
+  // NodesDescription
+  ////////////////////////////////////////////////////////////////////////////
+
+  NodesQuery::NodesQuery()
+    : MaxReferenciesPerNode(0)
+  {
+  }
+
+
+
+  ////////////////////////////////////////////////////////////////////////////
+  // ViewDescription
+  ////////////////////////////////////////////////////////////////////////////
 
   ViewDescription::ViewDescription()
     : Timestamp(0)
@@ -38,7 +52,6 @@ namespace OpcUa
 
   BrowseRequest::BrowseRequest()
     : TypeID(BROWSE_REQUEST)
-    , MaxReferenciesPerNode(0)
   {
   }
 
@@ -185,6 +198,32 @@ namespace OpcUa
       *this >> desc.ResultMask;
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // NodesDescription
+    ////////////////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<NodesQuery>(const NodesQuery& desc)
+    {
+      return RawSize(desc.View) + RawSize(desc.MaxReferenciesPerNode) + RawSizeContainer(desc.NodesToBrowse);
+    }
+
+    template<>
+    void OStream::Serialize<NodesQuery>(const NodesQuery& desc)
+    {
+      *this << desc.View;
+      *this << desc.MaxReferenciesPerNode;
+      SerializeContainer(*this, desc.NodesToBrowse);
+    }
+
+    template<>
+    void IStream::Deserialize<NodesQuery>(NodesQuery& desc)
+    {
+      *this >> desc.View;
+      *this >> desc.MaxReferenciesPerNode;
+      DeserializeContainer(*this, desc.NodesToBrowse);
+    }
+
 
 
     //---------------------------------------------------
@@ -194,10 +233,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseRequest>(const BrowseRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
-        RawSize(request.View) +
-        RawSize(request.MaxReferenciesPerNode) +
-        RawSizeContainer(request.NodesToBrowse);
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Query);
     }
 
     template<>
@@ -205,10 +241,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-
-      *this << request.View;
-      *this << request.MaxReferenciesPerNode;
-      SerializeContainer(*this, request.NodesToBrowse);
+      *this << request.Query;
     }
 
     template<>
@@ -216,10 +249,7 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
-
-      *this >> request.View;
-      *this >> request.MaxReferenciesPerNode;
-      DeserializeContainer(*this, request.NodesToBrowse);
+      *this >> request.Query;
     }
 
     //---------------------------------------------------

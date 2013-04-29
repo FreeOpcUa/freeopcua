@@ -69,14 +69,20 @@ namespace OpcUa
     BrowseDescription();
   };
 
+  struct NodesQuery
+  {
+    ViewDescription View;
+    uint32_t MaxReferenciesPerNode;
+    std::vector<BrowseDescription> NodesToBrowse;
+
+    NodesQuery();
+  };
+
   struct BrowseRequest
   {
     NodeID TypeID;
     RequestHeader Header;
-
-    ViewDescription View;
-    uint32_t MaxReferenciesPerNode;
-    std::vector<BrowseDescription> NodesToBrowse;
+    NodesQuery Query;
 
     BrowseRequest();
   };

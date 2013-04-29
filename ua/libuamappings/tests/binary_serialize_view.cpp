@@ -230,15 +230,15 @@ TEST_F(ViewSerialization, BrowseRequest)
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  request.View.ID.Encoding = EV_TWO_BYTE;
-  request.View.ID.TwoByteData.Identifier = 1;
-  request.View.Timestamp = 2;
-  request.View.Version = 3;
+  request.Query.View.ID.Encoding = EV_TWO_BYTE;
+  request.Query.View.ID.TwoByteData.Identifier = 1;
+  request.Query.View.Timestamp = 2;
+  request.Query.View.Version = 3;
 
-  request.MaxReferenciesPerNode = 4;
+  request.Query.MaxReferenciesPerNode = 4;
 
-  request.NodesToBrowse.push_back(CreateBrowseDescription());
-  request.NodesToBrowse.push_back(CreateBrowseDescription());
+  request.Query.NodesToBrowse.push_back(CreateBrowseDescription());
+  request.Query.NodesToBrowse.push_back(CreateBrowseDescription());
 
   GetStream() << request << flush;
 
@@ -297,19 +297,19 @@ TEST_F(ViewDeserialization, BrowseRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.View.ID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(request.View.ID.TwoByteData.Identifier, 1);
-  ASSERT_EQ(request.View.Timestamp, 2);
-  ASSERT_EQ(request.View.Version, 3);
+  ASSERT_EQ(request.Query.View.ID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(request.Query.View.ID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.Query.View.Timestamp, 2);
+  ASSERT_EQ(request.Query.View.Version, 3);
 
-  ASSERT_EQ(request.MaxReferenciesPerNode, 4);
+  ASSERT_EQ(request.Query.MaxReferenciesPerNode, 4);
 
-  ASSERT_FALSE(request.NodesToBrowse.empty());
+  ASSERT_FALSE(request.Query.NodesToBrowse.empty());
 
   BrowseDescription desc = CreateBrowseDescription();
 
-  ASSERT_TRUE(request.NodesToBrowse[0] == desc);
-  ASSERT_TRUE(request.NodesToBrowse[1] == desc);
+  ASSERT_TRUE(request.Query.NodesToBrowse[0] == desc);
+  ASSERT_TRUE(request.Query.NodesToBrowse[1] == desc);
 
 }
 
