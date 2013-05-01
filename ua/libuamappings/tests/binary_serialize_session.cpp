@@ -39,15 +39,15 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  FILL_APPLICATION_DESCRIPTION(request.ClientDescription);
+  FILL_APPLICATION_DESCRIPTION(request.Parameters.ClientDescription);
 
-  request.ServerURI = "su";
-  request.EndpointURL = "eu";
-  request.SessionName = "sn";
-  request.ClientNonce =  {1,2,3,4};
-  request.ClientCertificate = {5,6,7,8};
-  request.RequestedSessionTimeout = 1;
-  request.MaxResponseMessageSize = 2;
+  request.Parameters.ServerURI = "su";
+  request.Parameters.EndpointURL = "eu";
+  request.Parameters.SessionName = "sn";
+  request.Parameters.ClientNonce =  {1,2,3,4};
+  request.Parameters.ClientCertificate = {5,6,7,8};
+  request.Parameters.RequestedSessionTimeout = 1;
+  request.Parameters.MaxResponseMessageSize = 2;
 
   GetStream() << request << flush;
 
@@ -98,17 +98,17 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
-  ASSERT_APPLICATION_DESCRIPTION_EQ(request.ClientDescription);
+  ASSERT_APPLICATION_DESCRIPTION_EQ(request.Parameters.ClientDescription);
 
-  ASSERT_EQ(request.ServerURI, "su");
-  ASSERT_EQ(request.EndpointURL, "eu");
-  ASSERT_EQ(request.SessionName, "sn");
+  ASSERT_EQ(request.Parameters.ServerURI, "su");
+  ASSERT_EQ(request.Parameters.EndpointURL, "eu");
+  ASSERT_EQ(request.Parameters.SessionName, "sn");
   std::vector<uint8_t> clientNonce = {1,2,3,4};
-  ASSERT_EQ(request.ClientNonce, clientNonce);
+  ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
   CertificateData cert = {5,6,7,8};
-  ASSERT_EQ(request.ClientCertificate, cert);
-  ASSERT_EQ(request.RequestedSessionTimeout, 1);
-  ASSERT_EQ(request.MaxResponseMessageSize, 2);
+  ASSERT_EQ(request.Parameters.ClientCertificate, cert);
+  ASSERT_EQ(request.Parameters.RequestedSessionTimeout, 1);
+  ASSERT_EQ(request.Parameters.MaxResponseMessageSize, 2);
 }
 
 
@@ -130,25 +130,25 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  response.SessionID.Encoding = EV_FOUR_BYTE;
-  response.SessionID.FourByteData.NamespaceIndex = 1;
-  response.SessionID.FourByteData.Identifier = 2;
+  response.Session.SessionID.Encoding = EV_FOUR_BYTE;
+  response.Session.SessionID.FourByteData.NamespaceIndex = 1;
+  response.Session.SessionID.FourByteData.Identifier = 2;
 
-  response.AuthenticationToken.Encoding = EV_FOUR_BYTE;
-  response.AuthenticationToken.FourByteData.NamespaceIndex = 1;
-  response.AuthenticationToken.FourByteData.Identifier = 2;
+  response.Session.AuthenticationToken.Encoding = EV_FOUR_BYTE;
+  response.Session.AuthenticationToken.FourByteData.NamespaceIndex = 1;
+  response.Session.AuthenticationToken.FourByteData.Identifier = 2;
 
-  response.RevisedSessionTimeout = 3;
-  response.ServerNonce = {1,2,3,4};
-  response.ServerCertificate = {5,6,7,8};
+  response.Session.RevisedSessionTimeout = 3;
+  response.Session.ServerNonce = {1,2,3,4};
+  response.Session.ServerCertificate = {5,6,7,8};
   EndpointDescription e;
   FILL_TEST_ENDPOINT(e);
-  response.ServerEndpoints.push_back(e);
-  response.SignedServerCertificates.push_back({4,3,2,1});
-  response.ServerSignature.Signature = {7,6,5,4};
-  response.ServerSignature.Algorithm = "aes";
+  response.Session.ServerEndpoints.push_back(e);
+  response.Session.SignedServerCertificates.push_back({4,3,2,1});
+  response.Session.ServerSignature.Signature = {7,6,5,4};
+  response.Session.ServerSignature.Algorithm = "aes";
   
-  response.MaxRequestMessageSize = 0x1000;
+  response.Session.MaxRequestMessageSize = 0x1000;
 
   GetStream() << response << flush;
 
@@ -207,33 +207,33 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.SessionID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.SessionID.FourByteData.NamespaceIndex, 1);
-  ASSERT_EQ(response.SessionID.FourByteData.Identifier, 2);
+  ASSERT_EQ(response.Session.SessionID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.Session.SessionID.FourByteData.NamespaceIndex, 1);
+  ASSERT_EQ(response.Session.SessionID.FourByteData.Identifier, 2);
 
-  ASSERT_EQ(response.AuthenticationToken.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.AuthenticationToken.FourByteData.NamespaceIndex, 1);
-  ASSERT_EQ(response.AuthenticationToken.FourByteData.Identifier, 2);
+  ASSERT_EQ(response.Session.AuthenticationToken.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.Session.AuthenticationToken.FourByteData.NamespaceIndex, 1);
+  ASSERT_EQ(response.Session.AuthenticationToken.FourByteData.Identifier, 2);
 
-  ASSERT_EQ(response.RevisedSessionTimeout, 3);
+  ASSERT_EQ(response.Session.RevisedSessionTimeout, 3);
 
   std::vector<uint8_t> serverNonce = {1,2,3,4};
-  ASSERT_EQ(response.ServerNonce, serverNonce);
+  ASSERT_EQ(response.Session.ServerNonce, serverNonce);
 
   std::vector<uint8_t> cert = {5,6,7,8};
-  ASSERT_EQ(response.ServerCertificate, cert) ;
+  ASSERT_EQ(response.Session.ServerCertificate, cert) ;
 
-  ASSERT_EQ(response.ServerEndpoints.size(), 1);
-  ASSERT_ENDPOINT_EQ(response.ServerEndpoints[0]);
+  ASSERT_EQ(response.Session.ServerEndpoints.size(), 1);
+  ASSERT_ENDPOINT_EQ(response.Session.ServerEndpoints[0]);
 
   std::vector<CertificateData> certs = {{4,3,2,1}};
-  ASSERT_EQ(response.SignedServerCertificates, certs);
+  ASSERT_EQ(response.Session.SignedServerCertificates, certs);
 
   std::vector<uint8_t> signature = {7,6,5,4};
-  ASSERT_EQ(response.ServerSignature.Signature, signature);
-  ASSERT_EQ(response.ServerSignature.Algorithm, "aes");
+  ASSERT_EQ(response.Session.ServerSignature.Signature, signature);
+  ASSERT_EQ(response.Session.ServerSignature.Algorithm, "aes");
 
-  ASSERT_EQ(response.MaxRequestMessageSize, 0x1000);
+  ASSERT_EQ(response.Session.MaxRequestMessageSize, 0x1000);
 }
 
 //-------------------------------------------------------------------

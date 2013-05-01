@@ -20,11 +20,8 @@ namespace OpcUa
   // CreateSession
   //---------------------------------------------------
 
-  struct CreateSessionRequest
+  struct SessionParameters
   {
-    NodeID TypeID;
-    RequestHeader Header;
-
     ApplicationDescription ClientDescription;
     std::string ServerURI;
     std::string EndpointURL;
@@ -34,15 +31,21 @@ namespace OpcUa
     Duration RequestedSessionTimeout;
     uint32_t MaxResponseMessageSize;
 
+    SessionParameters();
+  };
+
+  struct CreateSessionRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    SessionParameters Parameters;
+
     CreateSessionRequest();
   };
 
 
-  struct CreateSessionResponse
+  struct SessionData
   {
-    NodeID TypeID;
-    ResponseHeader Header;
-
     NodeID SessionID;
     NodeID AuthenticationToken;
     Duration RevisedSessionTimeout;
@@ -52,6 +55,15 @@ namespace OpcUa
     std::vector<CertificateData> SignedServerCertificates;
     SignatureData ServerSignature;
     uint32_t MaxRequestMessageSize;
+
+    SessionData();
+  };
+
+  struct CreateSessionResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    SessionData Session;
 
     CreateSessionResponse();
   };

@@ -21,18 +21,26 @@
 
 namespace OpcUa
 {
+  SessionParameters::SessionParameters()
+    : RequestedSessionTimeout(0)
+    , MaxResponseMessageSize(0)
+  {
+  }
+
 
   CreateSessionRequest::CreateSessionRequest()
     : TypeID(CREATE_SESSION_REQUEST)
-    , RequestedSessionTimeout(0)
-    , MaxResponseMessageSize(0)
+  {
+  }
+
+  SessionData::SessionData()
+    : RevisedSessionTimeout(0)
+    , MaxRequestMessageSize(0)
   {
   }
 
   CreateSessionResponse::CreateSessionResponse()
     : TypeID(CREATE_SESSION_RESPONSE)
-    , RevisedSessionTimeout(0)
-    , MaxRequestMessageSize(0)
   {
   }
 
@@ -68,21 +76,56 @@ namespace OpcUa
   {
 
     //---------------------------------------------------
+    // SessionParameters
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<SessionParameters>(const SessionParameters& params)
+    {
+      return RawSize(params.ClientDescription) +
+        RawSize(params.ServerURI) +
+        RawSize(params.EndpointURL) +
+        RawSize(params.SessionName) +
+        RawSize(params.ClientNonce) +
+        RawSize(params.ClientCertificate) +
+        sizeof(params.RequestedSessionTimeout) +
+        sizeof(params.MaxResponseMessageSize);
+    }
+
+    template<>
+    void OStream::Serialize<SessionParameters>(const SessionParameters& params)
+    {
+      *this << params.ClientDescription;
+      *this << params.ServerURI;
+      *this << params.EndpointURL;
+      *this << params.SessionName;
+      *this << params.ClientNonce;
+      *this << params.ClientCertificate;
+      *this << params.RequestedSessionTimeout;
+      *this << params.MaxResponseMessageSize;
+    }
+
+    template<>
+    void IStream::Deserialize<SessionParameters>(SessionParameters& params)
+    {
+      *this >> params.ClientDescription;
+      *this >> params.ServerURI;
+      *this >> params.EndpointURL;
+      *this >> params.SessionName;
+      *this >> params.ClientNonce;
+      *this >> params.ClientCertificate;
+      *this >> params.RequestedSessionTimeout;
+      *this >> params.MaxResponseMessageSize;
+    }
+
+    //---------------------------------------------------
     // CreateSessionRequest
     //---------------------------------------------------
 
     template<>
     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
-        RawSize(request.ClientDescription) +
-        RawSize(request.ServerURI) +
-        RawSize(request.EndpointURL) +
-        RawSize(request.SessionName) +
-        RawSize(request.ClientNonce) +
-        RawSize(request.ClientCertificate) +
-        sizeof(request.RequestedSessionTimeout) +
-        sizeof(request.MaxResponseMessageSize);
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
@@ -90,15 +133,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-
-      *this << request.ClientDescription;
-      *this << request.ServerURI;
-      *this << request.EndpointURL;
-      *this << request.SessionName;
-      *this << request.ClientNonce;
-      *this << request.ClientCertificate;
-      *this << request.RequestedSessionTimeout;
-      *this << request.MaxResponseMessageSize;
+      *this << request.Parameters;
     }
 
     template<>
@@ -106,15 +141,53 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
+      *this >> request.Parameters;
+    }
 
-      *this >> request.ClientDescription;
-      *this >> request.ServerURI;
-      *this >> request.EndpointURL;
-      *this >> request.SessionName;
-      *this >> request.ClientNonce;
-      *this >> request.ClientCertificate;
-      *this >> request.RequestedSessionTimeout;
-      *this >> request.MaxResponseMessageSize;
+    //---------------------------------------------------
+    // SessionData
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<SessionData>(const SessionData& data)
+    {
+      return RawSize(data.SessionID) +
+      RawSize(data.AuthenticationToken) +
+      sizeof(data.RevisedSessionTimeout) +
+      RawSize(data.ServerNonce) +
+      RawSize(data.ServerCertificate) +
+      RawSize(data.ServerEndpoints) +
+      RawSize(data.SignedServerCertificates) +
+      RawSize(data.ServerSignature) +
+      sizeof(data.MaxRequestMessageSize);
+    }
+
+    template<>
+    void OStream::Serialize<SessionData>(const SessionData& data)
+    {
+      *this << data.SessionID;
+      *this << data.AuthenticationToken;
+      *this << data.RevisedSessionTimeout;
+      *this << data.ServerNonce;
+      *this << data.ServerCertificate;
+      *this << data.ServerEndpoints;
+      *this << data.SignedServerCertificates;
+      *this << data.ServerSignature;
+      *this << data.MaxRequestMessageSize;
+    }
+
+    template<>
+    void IStream::Deserialize<SessionData>(SessionData& data)
+    {
+      *this >> data.SessionID;
+      *this >> data.AuthenticationToken;
+      *this >> data.RevisedSessionTimeout;
+      *this >> data.ServerNonce;
+      *this >> data.ServerCertificate;
+      *this >> data.ServerEndpoints;
+      *this >> data.SignedServerCertificates;
+      *this >> data.ServerSignature;
+      *this >> data.MaxRequestMessageSize;
     }
 
     //---------------------------------------------------
@@ -124,16 +197,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) +
-      RawSize(response.SessionID) +
-      RawSize(response.AuthenticationToken) +
-      sizeof(response.RevisedSessionTimeout) +
-      RawSize(response.ServerNonce) +
-      RawSize(response.ServerCertificate) +
-      RawSize(response.ServerEndpoints) +
-      RawSize(response.SignedServerCertificates) +
-      RawSize(response.ServerSignature) +
-      sizeof(response.MaxRequestMessageSize);
+      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Session);
     }
 
     template<>
@@ -141,15 +205,7 @@ namespace OpcUa
     {
       *this << response.TypeID;
       *this << response.Header;
-      *this << response.SessionID;
-      *this << response.AuthenticationToken;
-      *this << response.RevisedSessionTimeout;
-      *this << response.ServerNonce;
-      *this << response.ServerCertificate;
-      *this << response.ServerEndpoints;
-      *this << response.SignedServerCertificates;
-      *this << response.ServerSignature;
-      *this << response.MaxRequestMessageSize;
+      *this << response.Session;
     }
 
     template<>
@@ -157,15 +213,7 @@ namespace OpcUa
     {
       *this >> response.TypeID;
       *this >> response.Header;
-      *this >> response.SessionID;
-      *this >> response.AuthenticationToken;
-      *this >> response.RevisedSessionTimeout;
-      *this >> response.ServerNonce;
-      *this >> response.ServerCertificate;
-      *this >> response.ServerEndpoints;
-      *this >> response.SignedServerCertificates;
-      *this >> response.ServerSignature;
-      *this >> response.MaxRequestMessageSize;
+      *this >> response.Session;
     }
 
     //---------------------------------------------------
