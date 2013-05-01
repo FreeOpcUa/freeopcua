@@ -83,27 +83,36 @@ namespace OpcUa
     UserIdentifyToken();
   };
 
-  struct ActivateSessionRequest
+  struct UpdatedSessionParameters
   {
-    NodeID TypeID;
-    RequestHeader Header;
-
     SignatureData ClientSignature;
     std::vector<CertificateData> ClientCertificates;
     std::vector<std::string> LocaleIDs;
     UserIdentifyToken IdentifyToken;
     SignatureData UserTokenSignature;
+  };
+
+  struct ActivateSessionRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    UpdatedSessionParameters Parameters;
 
     ActivateSessionRequest();
+  };
+
+  struct UpdatedSessionData
+  {
+    std::vector<uint8_t> ServerNonce;
+    std::vector<uint32_t>StatusCodes;
+    std::vector<DiagnosticInfo> DiagnosticInfos;
   };
 
   struct ActivateSessionResponse
   {
     NodeID TypeID;
     ResponseHeader Header;
-    std::vector<uint8_t> ServerNonce;
-    std::vector<uint32_t>StatusCodes;
-    std::vector<DiagnosticInfo> DiagnosticInfos;
+    UpdatedSessionData Session;
 
     ActivateSessionResponse();
   }; 
