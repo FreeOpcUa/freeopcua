@@ -35,11 +35,11 @@ namespace
     { 
       return false;
     }
-    if (desc.ReferenceTypeID != reference.TypeID)
+    if (desc.ReferenceTypeID != ObjectID::Null && desc.ReferenceTypeID != reference.TypeID)
     {
       return false;
     }
-    if ((desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
+    if (desc.NodeClasses && (desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
     {
       return false;
     }
