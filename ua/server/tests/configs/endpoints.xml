@@ -5,6 +5,11 @@
     <module>
       <id>tcp_server</id>
       <path>./.libs/libbuiltin_computer_addon.so</path>
+<!--
+      <parameters>
+        <debug>1</debug>
+      </parameters>
+-->
     </module>
 
     <module>
@@ -38,6 +43,9 @@
         <id>endpoints_services</id>
       </depends_on>
       <parameters>
+<!--
+        <debug>1</debug>
+-->
         <application_name>Test OPC UA Server</application_name>
         <application_uri>opcua.treww.org</application_uri>
         <application_type>server</application_type>

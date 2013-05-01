@@ -88,3 +88,21 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
   computer.reset();
 }
 
+TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
+{
+  std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
+
+  OpcUa::Remote::SessionParameters session;
+  session.ClientDescription.Name.Text = "opcua client";
+  session.SessionName = "opua command line";
+  session.EndpointURL = "opc.tcp://localhost:4841";
+  session.Timeout = 1000;
+
+  ASSERT_NO_THROW(computer->CreateSession(session));
+  ASSERT_NO_THROW(computer->ActivateSession());
+  ASSERT_NO_THROW(computer->CloseSession());
+
+  computer.reset();
+}
+

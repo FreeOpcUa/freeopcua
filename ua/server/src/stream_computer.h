@@ -35,34 +35,34 @@ namespace OpcUa
       {
         CreateSessionRequest request;
 
-        request.ClientDescription.URI = parameters.ClientDescription.URI;
-        request.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
-        request.ClientDescription.Name = parameters.ClientDescription.Name;
-        request.ClientDescription.Type = parameters.ClientDescription.Type;    
-        request.ClientDescription.GatewayServerURI = parameters.ClientDescription.GatewayServerURI;
-        request.ClientDescription.DiscoveryProfileURI = parameters.ClientDescription.DiscoveryProfileURI;
-        request.ClientDescription.DiscoveryURLs = parameters.ClientDescription.DiscoveryURLs;
+        request.Parameters.ClientDescription.URI = parameters.ClientDescription.URI;
+        request.Parameters.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
+        request.Parameters.ClientDescription.Name = parameters.ClientDescription.Name;
+        request.Parameters.ClientDescription.Type = parameters.ClientDescription.Type;    
+        request.Parameters.ClientDescription.GatewayServerURI = parameters.ClientDescription.GatewayServerURI;
+        request.Parameters.ClientDescription.DiscoveryProfileURI = parameters.ClientDescription.DiscoveryProfileURI;
+        request.Parameters.ClientDescription.DiscoveryURLs = parameters.ClientDescription.DiscoveryURLs;
 
-        request.ServerURI = parameters.ServerURI;
-        request.EndpointURL = parameters.EndpointURL; // TODO make just endpoint.URL;
-        request.SessionName = parameters.SessionName;
-        request.ClientNonce = std::vector<uint8_t>(32,0);
-        request.ClientCertificate = parameters.ClientCertificate;
-        request.RequestedSessionTimeout = parameters.Timeout;
-        request.MaxResponseMessageSize = 65536;
+        request.Parameters.ServerURI = parameters.ServerURI;
+        request.Parameters.EndpointURL = parameters.EndpointURL; // TODO make just endpoint.URL;
+        request.Parameters.SessionName = parameters.SessionName;
+        request.Parameters.ClientNonce = std::vector<uint8_t>(32,0);
+        request.Parameters.ClientCertificate = parameters.ClientCertificate;
+        request.Parameters.RequestedSessionTimeout = parameters.Timeout;
+        request.Parameters.MaxResponseMessageSize = 65536;
 
         Stream << request << OpcUa::Binary::flush;
 
         CreateSessionResponse response;
         Stream >> response;
-        AuthenticationToken = response.AuthenticationToken;
+        AuthenticationToken = response.Session.AuthenticationToken;
       }
 
       virtual void ActivateSession()
       {
         ActivateSessionRequest activate;
         activate.Header.SessionAuthenticationToken = AuthenticationToken;
-        activate.LocaleIDs.push_back("en");
+        activate.Parameters.LocaleIDs.push_back("en");
         Stream << activate << OpcUa::Binary::flush;
 
         ActivateSessionResponse response;

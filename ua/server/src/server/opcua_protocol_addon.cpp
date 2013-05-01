@@ -31,6 +31,7 @@ namespace
   {
   public:
     OpcUaProtocol()
+      : Debug(false)
     {
     }
 
@@ -41,6 +42,8 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      ApplyAddonParameters(params);
+
       const std::vector<EndpointDescription> endpoints = GetEndpointDescriptions(params);
       std::shared_ptr<EndpointsServicesAddon> endpointsAddon = Common::GetAddon<EndpointsServicesAddon>(addons, EndpointsServicesAddonID);
       endpointsAddon->AddEndpoints(endpoints);
@@ -52,9 +55,10 @@ namespace
         const Internal::Uri uri(endpoint.EndpointURL);
         if (uri.Scheme() == "opc.tcp")
         {
-          std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer());
+          std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer(), Debug);
           TcpParameters tcpParams;
           tcpParams.Port = uri.Port();
+          if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
           TcpAddon->Listen(tcpParams, processor);
           Ports.push_back(tcpParams.Port);
         }
@@ -73,6 +77,17 @@ namespace
     }
 
   private:
+    void ApplyAddonParameters(const Common::AddonParameters& params)
+    {
+      for (auto parameter : params.Parameters)
+      {
+        if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
+        {
+          Debug = true;
+        }
+      }
+    }
+
     std::vector<EndpointDescription> GetEndpointDescriptions(const Common::AddonParameters& params)
     {
       EndpointDescription tmpDesc;
@@ -220,6 +235,7 @@ namespace
     std::shared_ptr<OpcUa::Server::TcpServerAddon> TcpAddon;
     std::shared_ptr<OpcUa::Server::InternalComputerAddon> InternalComputer;
     std::vector<unsigned short> Ports;
+    bool Debug;
   };
 
 }

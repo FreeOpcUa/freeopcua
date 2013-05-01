@@ -27,15 +27,17 @@ namespace
   class BufferedInput : public OpcUa::InputChannel
   {
   public:
-    BufferedInput()
+    explicit BufferedInput(bool debug)
       : Running(true)
+      , Debug(debug)
     {
       Buffer.reserve(4096);
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)
     {
-      std::clog << "Consuming " << size << " bytes of data." << std::endl;
+      if (Debug) std::clog << "Consuming " << size << " bytes of data." << std::endl;
+
       ThrowIfStopped();
 
 
@@ -45,26 +47,26 @@ namespace
         std::unique_lock<std::mutex> event(BufferMutex);
         if (Buffer.empty())
         {
-          std::clog << "Waiting data from client" << std::endl;
+          if (Debug) std::clog << "Waiting data from client" << std::endl;
           DataReady.wait(event);
         }
         else if(!event.owns_lock())
         {
           event.lock();
         }
-        std::clog << "Buffer contain data from client." << std::endl;
+        if (Debug) std::clog << "Buffer contain data from client." << std::endl;
         ThrowIfStopped();
-        std::clog << "Client sent data." << std::endl;
+        if (Debug) std::clog << "Client sent data." << std::endl;
 
         ThrowIfStopped();
         if (Buffer.empty())
         {
-          std::clog << "No data in buffer." << std::endl;
+          if (Debug) std::clog << "No data in buffer." << std::endl;
           continue;
         }
 
         const std::size_t sizeToConsume = std::min(size - totalConsumedSize, Buffer.size());
-        std::clog << "Consuming " << sizeToConsume << " bytes of data." << std::endl;
+        if (Debug) std::clog << "Consuming " << sizeToConsume << " bytes of data." << std::endl;
         auto endIt = Buffer.begin() + sizeToConsume;
         std::copy(begin(Buffer), endIt, data + totalConsumedSize);
         Buffer.erase(Buffer.begin(), endIt); // TODO make behavoior with round buffer to avoid this.
@@ -78,12 +80,12 @@ namespace
     void AddBuffer(const char* buf, std::size_t size)
     {
       ThrowIfStopped();
-      std::clog << "Client want to send " << size << " bytes of data" << std::endl;
+      if (Debug) std::clog << "Client want to send " << size << " bytes of data" << std::endl;
       std::lock_guard<std::mutex> lock(BufferMutex);
       ThrowIfStopped();
 
       Buffer.insert(Buffer.end(), buf, buf + size);
-      std::clog << "Size of buffer " << Buffer.size() << " bytes." << std::endl;
+      if (Debug) std::clog << "Size of buffer " << Buffer.size() << " bytes." << std::endl;
       DataReady.notify_all();
     }
 
@@ -107,20 +109,23 @@ namespace
     std::atomic<bool> Running;
     std::mutex BufferMutex;
     std::condition_variable DataReady;
+    bool Debug;
   };
   class BufferedIO : public OpcUa::IOChannel
   {
   public:
-    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output)
+    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output, bool debug)
       : Input(input)
       , Output(output)
       , ID(channelID)
+      , Debug(debug)
     {
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)
     {
-      std::clog << ID << ": receive data." << std::endl;
+      if (Debug) std::clog << ID << ": receive data." << std::endl;
+
       std::shared_ptr<InputChannel> input = Input.lock();
       if (input)
       {
@@ -131,7 +136,8 @@ namespace
 
     virtual void Send(const char* message, std::size_t size)
     {
-      std::clog << ID << ": send data." << std::endl;
+      if (Debug) std::clog << ID << ": send data." << std::endl;
+
       std::shared_ptr<BufferedInput> output = Output.lock();
       if (output)
       {
@@ -143,6 +149,7 @@ namespace
     std::weak_ptr<InputChannel> Input;
     std::weak_ptr<BufferedInput> Output;
     const std::string ID;
+    bool Debug;
   };
 
 
@@ -157,6 +164,11 @@ namespace
     , private OpcUa::Internal::ThreadObserver
   {
   public:
+    BuiltinComputerAddon()
+      : Debug(false)
+    {
+    }
+
     virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const
     {
       OpcUa::Binary::SecureConnectionParams params;
@@ -180,6 +192,13 @@ namespace
   public: // Common::Addon
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      for (auto parameter : params.Parameters)
+      {
+        if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
+        {
+          Debug = true;
+        }
+      }
     }
 
     virtual void Stop()
@@ -193,11 +212,11 @@ namespace
         throw std::logic_error("Unable to start second thread. Builtin computer can listen only one binary connection.");
       }
 
-      ServerInput.reset(new BufferedInput());
-      ClientInput.reset(new BufferedInput());
+      ServerInput.reset(new BufferedInput(Debug));
+      ClientInput.reset(new BufferedInput(Debug));
 
-      ClientChannel.reset(new BufferedIO("Client", ClientInput, ServerInput));
-      ServerChannel.reset(new BufferedIO("Server", ServerInput, ClientInput));
+      ClientChannel.reset(new BufferedIO("Client", ClientInput, ServerInput, Debug));
+      ServerChannel.reset(new BufferedIO("Server", ServerInput, ClientInput, Debug));
 
       Thread.reset(new OpcUa::Internal::Thread(std::bind(Process, processor, ServerChannel), this));
     }
@@ -224,13 +243,13 @@ namespace
     virtual void OnSuccess()
     {
       ClientInput->Stop();
-      std::clog  << "Server thread exited with success." << std::endl;
+      if (Debug) std::clog  << "Server thread exited with success." << std::endl;
     }
 
     virtual void OnError(const std::exception& exc)
     {
       ClientInput->Stop();
-      std::clog  << "Server thread exited with error: " << exc.what() << std::endl;
+      if (Debug) std::clog  << "Server thread exited with error: " << exc.what() << std::endl;
     }
 
 
@@ -241,6 +260,7 @@ namespace
     std::shared_ptr<OpcUa::IOChannel> ClientChannel;
     std::shared_ptr<OpcUa::IOChannel> ServerChannel;
     std::unique_ptr<OpcUa::Internal::Thread> Thread;
+    bool Debug;
   };
 
 }

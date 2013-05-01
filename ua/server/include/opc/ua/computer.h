@@ -33,8 +33,6 @@ namespace OpcUa
       Duration Timeout;
     };
 
-
-
     class Computer
     {
     public:

@@ -217,7 +217,7 @@ namespace OpcUa
     }
 
     //---------------------------------------------------
-    // ActivateSessionRequest
+    // UserIdentifyToken
     //---------------------------------------------------
 
     template<>
@@ -240,16 +240,66 @@ namespace OpcUa
       *this >> token.Anonymous.Data;
     }
 
+    //---------------------------------------------------
+    // UpdatedSessionParameters
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<UpdatedSessionParameters>(const UpdatedSessionParameters& params)
+    {
+      return RawSize(params.ClientSignature) +
+             RawSizeContainer(params.ClientCertificates) +
+             RawSizeContainer(params.LocaleIDs) +
+             RawSize(params.IdentifyToken) + 
+             RawSize(params.UserTokenSignature);
+    };
+
+    template<>
+    void OStream::Serialize<UpdatedSessionParameters>(const UpdatedSessionParameters& params)
+    {
+      *this << params.ClientSignature;
+      if (!params.ClientCertificates.empty())
+      {
+        *this << params.ClientCertificates;
+      }
+      else
+      {
+        *this << (uint32_t)0;
+      }
+      if (!params.LocaleIDs.empty())
+      {
+        *this << params.LocaleIDs;
+      }
+      else
+      {
+        *this << (uint32_t)0;
+      }
+
+      *this << params.IdentifyToken;
+      *this << params.UserTokenSignature;
+    }
+
+    template<>
+    void IStream::Deserialize<UpdatedSessionParameters>(UpdatedSessionParameters& params)
+    {
+      *this >> params.ClientSignature;
+      *this >> params.ClientCertificates;
+      *this >> params.LocaleIDs;
+      *this >> params.IdentifyToken;
+      *this >> params.UserTokenSignature;
+    }
+
+
+    //---------------------------------------------------
+    // ActivateSessionRequest
+    //---------------------------------------------------
+
     template<>
     std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& request)
     {
       return RawSize(request.TypeID) +
              RawSize(request.Header) +
-             RawSize(request.ClientSignature) +
-             RawSizeContainer(request.ClientCertificates) +
-             RawSizeContainer(request.LocaleIDs) +
-             RawSize(request.IdentifyToken) + 
-             RawSize(request.UserTokenSignature);
+             RawSize(request.Parameters);
     };
 
     template<>
@@ -257,26 +307,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-      *this << request.ClientSignature;
-      if (!request.ClientCertificates.empty())
-      {
-        *this << request.ClientCertificates;
-      }
-      else
-      {
-        *this << (uint32_t)0;
-      }
-      if (!request.LocaleIDs.empty())
-      {
-        *this << request.LocaleIDs;
-      }
-      else
-      {
-        *this << (uint32_t)0;
-      }
-
-      *this << request.IdentifyToken;
-      *this << request.UserTokenSignature;
+      *this << request.Parameters;
     }
 
     template<>
@@ -284,25 +315,63 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
-      *this >> request.ClientSignature;
-      *this >> request.ClientCertificates;
-      *this >> request.LocaleIDs;
-      *this >> request.IdentifyToken;
-      *this >> request.UserTokenSignature;
+      *this >> request.Parameters;
+    }
+
+    //---------------------------------------------------
+    // UpdatedSessionData
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<UpdatedSessionData>(const UpdatedSessionData& data)
+    {
+      return RawSize(data.ServerNonce) +
+             RawSizeContainer(data.StatusCodes) +
+             RawSizeContainer(data.DiagnosticInfos);
+    };
+
+    template<>
+    void OStream::Serialize<UpdatedSessionData>(const UpdatedSessionData& data)
+    {
+      *this << data.ServerNonce;
+      if (!data.StatusCodes.empty())
+      {
+        SerializeContainer(*this, data.StatusCodes);
+      }
+      else
+      {
+        *this << (uint32_t)0;
+      }
+
+      if (!data.DiagnosticInfos.empty())
+      {
+        SerializeContainer(*this, data.DiagnosticInfos);
+      }
+      else
+      {
+        *this << (uint32_t)0;
+      }
+    }
+
+    template<>
+    void IStream::Deserialize<UpdatedSessionData>(UpdatedSessionData& data)
+    {
+      *this >> data.ServerNonce;
+      DeserializeContainer(*this, data.StatusCodes);
+      DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
 
     //---------------------------------------------------
     // ActivateSessionResponse
     //---------------------------------------------------
+
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& response)
     {
       return RawSize(response.TypeID) +
              RawSize(response.Header) +
-             RawSize(response.ServerNonce) +
-             RawSizeContainer(response.StatusCodes) +
-             RawSizeContainer(response.DiagnosticInfos);
+             RawSize(response.Session);
     };
 
     template<>
@@ -310,24 +379,7 @@ namespace OpcUa
     {
       *this << response.TypeID;
       *this << response.Header;
-      *this << response.ServerNonce;
-      if (!response.StatusCodes.empty())
-      {
-        SerializeContainer(*this, response.StatusCodes);
-      }
-      else
-      {
-        *this << (uint32_t)0;
-      }
-
-      if (!response.DiagnosticInfos.empty())
-      {
-        SerializeContainer(*this, response.DiagnosticInfos);
-      }
-      else
-      {
-        *this << (uint32_t)0;
-      }
+      *this << response.Session;
     }
 
     template<>
@@ -335,9 +387,7 @@ namespace OpcUa
     {
       *this >> response.TypeID;
       *this >> response.Header;
-      *this >> response.ServerNonce;
-      DeserializeContainer(*this, response.StatusCodes);
-      DeserializeContainer(*this, response.DiagnosticInfos);
+      *this >> response.Session;
     }
 
     //---------------------------------------------------

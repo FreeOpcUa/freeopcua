@@ -13,6 +13,7 @@
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/secure_channel.h>
+#include <opc/ua/protocol/session.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -28,8 +29,9 @@ namespace
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
-    OpcTcp(std::shared_ptr<OpcUa::Remote::Computer> computer)
+    OpcTcp(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
       : Computer(computer)
+      , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
     {
@@ -39,11 +41,11 @@ namespace
     {
       if (!clientChannel)
       {
-        std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
+        if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
         return;
       }
 
-      std::clog << "Hello client!" << std::endl;
+      if (Debug) std::clog << "Hello client!" << std::endl;
       OpcUa::Binary::IOStream stream(clientChannel);
       while(ProcessChunk(stream));
     }
@@ -63,6 +65,7 @@ namespace
       {
         case MT_HELLO:
         {
+          if (Debug) std::clog << "Accepted hello message." << std::endl;
           HelloClient(stream);
           break;
         }
@@ -70,12 +73,14 @@ namespace
 
         case MT_SECURE_OPEN:
         {
+          if (Debug) std::clog << "Opening securechannel." << std::endl;
           OpenChannel(stream);
           break;
         }
 
         case MT_SECURE_CLOSE:
         {
+          if (Debug) std::clog << "Closing secure channel." << std::endl;
           CloseChannel(stream);
           return false;
         }
@@ -88,14 +93,17 @@ namespace
 
         case MT_ACKNOWLEDGE:
         {
+          if (Debug) std::clog << "Received acknowledge from client. He mustn't do that.." << std::endl;
           throw std::logic_error("Thank to client about acknowledge.");
         }
         case MT_ERROR:
         {
+          if (Debug) std::clog << "There is an error happend in the client!" << std::endl;
           throw std::logic_error("It is very nice get to know server about error in the client.");
         }
         default:
         {
+          if (Debug) std::clog << "Unknown message received!" << std::endl;
           throw std::logic_error("Invalid message type received.");
         }
       }
@@ -106,7 +114,7 @@ namespace
     {
       using namespace OpcUa::Binary;
 
-      std::cout << "Reading hello message." << std::endl;
+      if (Debug) std::clog << "Reading hello message." << std::endl;
       Hello hello;
       stream >> hello;
 
@@ -118,13 +126,12 @@ namespace
 
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
-      std::cout << "Sending answer to client." << std::endl;
+      if (Debug) std::clog << "Sending answer to client." << std::endl;
       stream << ackHeader << ack << flush; 
     }
 
     void OpenChannel(IOStream& stream)
     {
-      std::cout << "Creating secure channel with client." << std::endl;
       uint32_t channelID = 0;
       stream >> channelID;
       AsymmetricAlgorithmHeader algorithmHeader;
@@ -132,7 +139,7 @@ namespace
 
       if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        throw std::logic_error(std::string("Client want to create secure channel with of invalid policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+        throw std::logic_error(std::string("Client want to create secure channel with invalid policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
       }
 
       SequenceHeader sequence;
@@ -168,7 +175,6 @@ namespace
 
     void CloseChannel(IOStream& stream)
     {
-      std::cout << "Closing secure channel with client." << std::endl;
       uint32_t channelID = 0;
       stream >> channelID;
      
@@ -184,7 +190,6 @@ namespace
 
     void ProcessMessage(IOStream& stream)
     {
-      std::cout << "Closing secure channel with client." << std::endl;
       uint32_t channelID = 0;
       stream >> channelID;
      
@@ -204,6 +209,7 @@ namespace
       {
         case OpcUa::GET_ENDPOINTS_REQUEST:
         {
+          if (Debug) std::clog << "Processing get endpoints request." << std::endl;
           EndpointsFilter filter;
           stream >> filter;
 
@@ -221,6 +227,7 @@ namespace
 
         case OpcUa::BROWSE_REQUEST:
         {
+          if (Debug) std::clog << "Processing browse request." << std::endl;
           NodesQuery query;
           stream >> query;
 
@@ -237,6 +244,62 @@ namespace
             result.Referencies = Computer->Views()->Browse(browseParams);
             response.Results.push_back(result);
           }
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case CREATE_SESSION_REQUEST:
+        {
+          if (Debug) std::clog << "Processing create session request." << std::endl;
+          SessionParameters params;
+          stream >> params;
+
+          CreateSessionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          response.Session.SessionID = SessionID;
+          response.Session.AuthenticationToken = SessionID;
+          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Session.MaxRequestMessageSize = 65536;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+
+          return;
+        }
+        case ACTIVATE_SESSION_REQUEST:
+        {
+          if (Debug) std::clog << "Processing activate session request." << std::endl;
+          UpdatedSessionParameters params;
+          stream >> params;
+
+          ActivateSessionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case CLOSE_SESSION_REQUEST:
+        {
+          if (Debug) std::clog << "Processing close session request." << std::endl;
+          bool deleteSubscriptions = false;
+          stream >> deleteSubscriptions;
+
+          CloseSessionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -265,8 +328,11 @@ namespace
 
   private:
     std::shared_ptr<OpcUa::Remote::Computer> Computer;
+    bool Debug;
     uint32_t ChannelID;
     uint32_t TokenID;
+    NodeID SessionID;
+    NodeID AuthenticationToken;
   };
 
 }
@@ -276,9 +342,9 @@ namespace OpcUa
   namespace Internal
   {
 
-    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer)
+    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
     {
-      return std::unique_ptr<IncomingConnectionProcessor>(new OpcTcp(computer));
+      return std::unique_ptr<IncomingConnectionProcessor>(new OpcTcp(computer, debug));
     }
 
   }

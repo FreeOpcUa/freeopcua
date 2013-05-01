@@ -34,7 +34,7 @@ namespace
       Impl = CreateComputerByProtocol(ServerUri.Scheme(), channel);
     }
 
-    virtual void CreateSession(const SessionParameters& parameters)
+    virtual void CreateSession(const Remote::SessionParameters& parameters)
     {
       Impl->CreateSession(parameters);
     }

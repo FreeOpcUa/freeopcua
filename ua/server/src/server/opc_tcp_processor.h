@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer);
+    std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug);
 
   }
 }
