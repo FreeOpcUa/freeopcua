@@ -28,6 +28,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/session.h \
   include/opc/ua/protocol/data_value.h \
+  include/opc/ua/describe.h \
   include/opc/ua/extension_identifiers.h \
   include/opc/ua/attribute_ids.h \
   include/opc/ua/channel.h \
@@ -50,10 +51,10 @@ libopcuabinary_a_SOURCES = \
   src/binary_raw_size.cpp \
   src/binary_stream.cpp \
   src/binary_attribute.cpp \
-  src/nodeid.cpp \
   src/binary_view.cpp \
   src/binary_session.cpp \
-  src/binary_secure_channel.cpp
+  src/binary_secure_channel.cpp \
+  src/nodeid.cpp
 
 libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
 

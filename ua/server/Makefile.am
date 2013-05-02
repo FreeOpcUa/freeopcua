@@ -14,6 +14,7 @@ uaclientincludedir = $(opcuaincludedir)/client
 uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
 
+configdir = $(sysconfdir)/opcua
 
 opcuainclude_HEADERS = \
   include/opc/ua/attributes.h \
@@ -87,6 +88,8 @@ opcuaserver_SOURCES = \
 opcuaserver_CPPFLAGS = $(INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -no-undefined
 TESTS += test_opcuaserver
+
+config_DATA = $(top_srcdir)/configs/server.config
 
 lib_LTLIBRARIES += libopcua_tcp_server.la
 addonsinclude_HEADERS = \

@@ -27,6 +27,7 @@
 
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -106,7 +107,8 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(opcuaincludedir)" \
+	"$(DESTDIR)$(configdir)" "$(DESTDIR)$(addonsincludedir)" \
+	"$(DESTDIR)$(opcuaincludedir)" \
 	"$(DESTDIR)$(uaclientincludedir)" \
 	"$(DESTDIR)$(uaserverincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
@@ -349,6 +351,7 @@ DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
 	$(am__test_opcuaserver_SOURCES_DIST) \
 	$(am__test_tcp_server_SOURCES_DIST) \
 	$(am__test_tcp_server_addon_SOURCES_DIST)
+DATA = $(config_DATA)
 am__addonsinclude_HEADERS_DIST =  \
 	include/opc/ua/server/addons/tcp_server_addon.h \
 	include/opc/ua/server/addons/opcua_protocol.h \
@@ -514,6 +517,7 @@ opcuaincludedir = $(opcincludedir)/ua
 uaclientincludedir = $(opcuaincludedir)/client
 uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
+configdir = $(sysconfdir)/opcua
 opcuainclude_HEADERS = \
   include/opc/ua/attributes.h \
   include/opc/ua/computer.h \
@@ -569,6 +573,7 @@ lib_LTLIBRARIES = $(am__append_4)
 
 @BUILD_UA_SERVER_TRUE@opcuaserver_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@config_DATA = $(top_srcdir)/configs/server.config
 @BUILD_UA_SERVER_TRUE@addonsinclude_HEADERS = include/opc/ua/server/addons/tcp_server_addon.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/opcua_protocol.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/builtin_computer.h \
@@ -1547,6 +1552,24 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
+install-configDATA: $(config_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(configdir)" || $(MKDIR_P) "$(DESTDIR)$(configdir)"
+	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(configdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(configdir)" || exit $$?; \
+	done
+
+uninstall-configDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(configdir)'; $(am__uninstall_files_from_dir)
 install-addonsincludeHEADERS: $(addonsinclude_HEADERS)
 	@$(NORMAL_INSTALL)
 	test -z "$(addonsincludedir)" || $(MKDIR_P) "$(DESTDIR)$(addonsincludedir)"
@@ -1931,11 +1954,12 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
+		config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(uaclientincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(uaclientincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1992,7 +2016,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-addonsincludeHEADERS \
+install-data-am: install-addonsincludeHEADERS install-configDATA \
 	install-opcuaincludeHEADERS install-uaclientincludeHEADERS \
 	install-uaserverincludeHEADERS
 
@@ -2043,8 +2067,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-addonsincludeHEADERS uninstall-binPROGRAMS \
-	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
-	uninstall-uaclientincludeHEADERS \
+	uninstall-configDATA uninstall-libLTLIBRARIES \
+	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 
 .MAKE: all check-am install-am install-strip
@@ -2058,18 +2082,20 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-binPROGRAMS \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install \
 	install-addonsincludeHEADERS install-am install-binPROGRAMS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-opcuaincludeHEADERS install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	install-uaclientincludeHEADERS install-uaserverincludeHEADERS \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-addonsincludeHEADERS uninstall-am \
-	uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
-	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
+	install-configDATA install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-opcuaincludeHEADERS \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-uaclientincludeHEADERS \
+	install-uaserverincludeHEADERS installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonsincludeHEADERS uninstall-am \
+	uninstall-binPROGRAMS uninstall-configDATA \
+	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
+	uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 
 
