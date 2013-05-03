@@ -28,17 +28,20 @@ namespace OpcUa
       explicit Computer(std::shared_ptr<IOChannel> channel)
         : Channel(channel)
         , Stream(channel)
+        , RequestHandle(0)
       {
       }
 
       virtual void CreateSession(const Remote::SessionParameters& parameters)
       {
         CreateSessionRequest request;
+        request.Header.RequestHandle = GetRequestHandle();
+        request.Header.Timeout = 10000;
 
         request.Parameters.ClientDescription.URI = parameters.ClientDescription.URI;
         request.Parameters.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
         request.Parameters.ClientDescription.Name = parameters.ClientDescription.Name;
-        request.Parameters.ClientDescription.Type = parameters.ClientDescription.Type;    
+        request.Parameters.ClientDescription.Type = parameters.ClientDescription.Type; 
         request.Parameters.ClientDescription.GatewayServerURI = parameters.ClientDescription.GatewayServerURI;
         request.Parameters.ClientDescription.DiscoveryProfileURI = parameters.ClientDescription.DiscoveryProfileURI;
         request.Parameters.ClientDescription.DiscoveryURLs = parameters.ClientDescription.DiscoveryURLs;
@@ -62,6 +65,8 @@ namespace OpcUa
       {
         ActivateSessionRequest activate;
         activate.Header.SessionAuthenticationToken = AuthenticationToken;
+        activate.Header.RequestHandle = GetRequestHandle();
+        activate.Header.Timeout = 10000;
         activate.Parameters.LocaleIDs.push_back("en");
         Stream << activate << OpcUa::Binary::flush;
 
@@ -73,6 +78,8 @@ namespace OpcUa
       {
         CloseSessionRequest closeSession;
         closeSession.Header.SessionAuthenticationToken = AuthenticationToken;
+        closeSession.Header.RequestHandle = GetRequestHandle();
+        closeSession.Header.Timeout = 10000;
         Stream << closeSession << OpcUa::Binary::flush;
 
         CloseSessionResponse closeResponse;
@@ -94,10 +101,17 @@ namespace OpcUa
         return std::shared_ptr<Remote::AttributeServices>(new Internal::AttributeServices<StreamType>(Channel, AuthenticationToken));
       }
 
+   private:
+      unsigned GetRequestHandle()
+      {
+        return ++RequestHandle;
+      }
+
     private:
       std::shared_ptr<IOChannel> Channel;
       StreamType Stream;
       NodeID AuthenticationToken;
+      unsigned RequestHandle;
     };
 
   } // namespace Internal

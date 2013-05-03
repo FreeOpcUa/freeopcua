@@ -521,20 +521,25 @@ namespace
     const std::string serverURI = cmd.GetServerURI();
     std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverURI);
 
+    if (cmd.IsGetEndpointsOperation()) 
+    {
+      PrintEndpoints(*computer);
+      return;
+    }
+
     OpcUa::Remote::SessionParameters session;
+    session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
+    session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.Name.Text = "opcua client";
+    session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
     session.SessionName = "opua command line";
     session.EndpointURL = serverURI;
-    session.Timeout = 1000;
+    session.Timeout = 1200000;
 
     computer->CreateSession(session);
     computer->ActivateSession();
 
-    if (cmd.IsGetEndpointsOperation()) 
-    {
-      PrintEndpoints(*computer);
-    }
-    else if (cmd.IsBrowseOperation())
+    if (cmd.IsBrowseOperation())
     {
       const OpcUa::NodeID nodeID = cmd.GetNodeID();
       Print(nodeID, Tabs(0));
