@@ -279,16 +279,10 @@ namespace OpcUa
     template<>
     void OStream::Serialize<double>(const double& value)
     {
-      const uint64_t& qword = reinterpret_cast<const uint64_t&>(value);
-      const uint32_t dwords[2] = {HiDWord(qword), LoDWord(qword)};
-
-      for (unsigned i = 0; i < 2; ++i)
+      const uint8_t* data = reinterpret_cast<const uint8_t*>(&value);
+      for (int i = 0; i < 8; ++i)
       {
-        const uint32_t& tmp = dwords[i];
-        const uint16_t lo = LoWord(tmp);
-        const uint16_t hi = HiWord(tmp);
-      
-        *this << HiByte(hi) << LoByte(hi) << HiByte(lo) << LoByte(lo);
+        *this << data[i];
       }
     }
  
@@ -296,12 +290,11 @@ namespace OpcUa
     void IStream::Deserialize<double>(double& value)
     {
       uint8_t data[8] = {0};
-      for (int i = 7; i >= 0; --i)
+      for (int i = 0; i < 8; ++i)
       {
         *this >> data[i];
       }
-      const uint64_t tmp = MakeNumber<uint64_t>((char*)data);
-      value = *reinterpret_cast<const double*>(&tmp); // TODO works on Intel
+      value = *reinterpret_cast<const double*>(data); // TODO works on Intel
     }
  
     template<>

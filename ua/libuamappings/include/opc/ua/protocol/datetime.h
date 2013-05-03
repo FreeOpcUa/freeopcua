@@ -20,7 +20,7 @@ namespace OpcUa
 
   DateTime CurrentDateTime();
 
-  typedef uint64_t Duration; // Time duration in miliseconds.
+  typedef double Duration; // Time duration in miliseconds.
 
 } // OpcUa
 

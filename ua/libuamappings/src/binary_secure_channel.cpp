@@ -144,8 +144,6 @@ namespace
 
     virtual void Send(const char* message, std::size_t size)
     {
-      ++RequestNumber;
-
       // TODO add support for breaking message into multiple chunks
       SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
       const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
@@ -236,7 +234,7 @@ namespace
     {
       SequenceHeader sequence;
       sequence.SequenceNumber = ++SequenceNumber;
-      sequence.RequestID = RequestNumber;
+      sequence.RequestID = ++RequestNumber;
       return sequence;
     }
 

@@ -103,11 +103,11 @@ TEST_F(OpcUaBinaryDeserialization, Float)
 
 TEST_F(OpcUaBinaryDeserialization, Double)
 {
-  std::vector<char> serializedData = {(char)0xC0,(char)0x1A,0,0,0, 0,0,0,0};
+  std::vector<char> serializedData = {0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41};
   GetChannel().SetData(serializedData);
   double num = 0;
   GetStream() >> num;
-  ASSERT_EQ(num, -6.5);
+  ASSERT_EQ(num, 1200000);
 }
 
 //-------------------------------------------------------------

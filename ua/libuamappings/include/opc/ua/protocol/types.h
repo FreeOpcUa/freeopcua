@@ -161,6 +161,8 @@ namespace OpcUa
     std::string GatewayServerURI;
     std::string DiscoveryProfileURI;
     std::vector<std::string> DiscoveryURLs;
+
+    ApplicationDescription();
   };
 
   enum class UserIdentifyTokenType : uint32_t

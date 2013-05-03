@@ -189,7 +189,7 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  request.MaxAge = 1;
+  request.MaxAge = 1200000;
   request.TimestampsType = TimestampsToReturn::NEITHER;
 
   request.AttributesToRead.push_back(CreateAttributeValueID());
@@ -201,7 +201,7 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   3,0,0,0,
 
   1,0,0,0,
@@ -228,7 +228,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   3,0,0,0,
 
   1,0,0,0,
@@ -250,7 +250,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.MaxAge, 1);
+  ASSERT_EQ(request.MaxAge, 1200000);
   ASSERT_EQ(request.TimestampsType, TimestampsToReturn::NEITHER);
   
   ASSERT_EQ(request.AttributesToRead.size(), 1);

@@ -46,7 +46,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   request.Parameters.SessionName = "sn";
   request.Parameters.ClientNonce =  {1,2,3,4};
   request.Parameters.ClientCertificate = {5,6,7,8};
-  request.Parameters.RequestedSessionTimeout = 1;
+  request.Parameters.RequestedSessionTimeout = 1200000;
   request.Parameters.MaxResponseMessageSize = 2;
 
   GetStream() << request << flush;
@@ -61,7 +61,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   2,0,0,0, 's','n',
   4,0,0,0, 1,2,3,4,
   4,0,0,0, 5,6,7,8,
-  1,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   2,0,0,0
   };
 
@@ -84,7 +84,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   2,0,0,0, 's','n',
   4,0,0,0, 1,2,3,4,
   4,0,0,0, 5,6,7,8,
-  1,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   2,0,0,0
   };
 
@@ -107,7 +107,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
   CertificateData cert = {5,6,7,8};
   ASSERT_EQ(request.Parameters.ClientCertificate, cert);
-  ASSERT_EQ(request.Parameters.RequestedSessionTimeout, 1);
+  ASSERT_EQ(request.Parameters.RequestedSessionTimeout, 1200000);
   ASSERT_EQ(request.Parameters.MaxResponseMessageSize, 2);
 }
 
@@ -138,7 +138,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
   response.Session.AuthenticationToken.FourByteData.NamespaceIndex = 1;
   response.Session.AuthenticationToken.FourByteData.Identifier = 2;
 
-  response.Session.RevisedSessionTimeout = 3;
+  response.Session.RevisedSessionTimeout = 1200000;
   response.Session.ServerNonce = {1,2,3,4};
   response.Session.ServerCertificate = {5,6,7,8};
   EndpointDescription e;
@@ -159,7 +159,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,1,2,0,
   1,1,2,0,
-  3,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   4,0,0,0, 1,2,3,4,
   4,0,0,0, 5,6,7,8,
   1,0,0,0,
@@ -185,7 +185,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,1,2,0,
   1,1,2,0,
-  3,0,0,0,0,0,0,0,
+  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
   4,0,0,0, 1,2,3,4,
   4,0,0,0, 5,6,7,8,
   1,0,0,0,
@@ -215,7 +215,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
   ASSERT_EQ(response.Session.AuthenticationToken.FourByteData.NamespaceIndex, 1);
   ASSERT_EQ(response.Session.AuthenticationToken.FourByteData.Identifier, 2);
 
-  ASSERT_EQ(response.Session.RevisedSessionTimeout, 3);
+  ASSERT_EQ(response.Session.RevisedSessionTimeout, 1200000);
 
   std::vector<uint8_t> serverNonce = {1,2,3,4};
   ASSERT_EQ(response.Session.ServerNonce, serverNonce);

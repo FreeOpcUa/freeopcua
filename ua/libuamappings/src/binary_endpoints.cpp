@@ -20,6 +20,10 @@
 
 namespace OpcUa
 {
+  ApplicationDescription::ApplicationDescription()
+    : Type(ApplicationType::CLIENT)
+  {
+  }
 
   GetEndpointsRequest::GetEndpointsRequest()
     : TypeID(GET_ENDPOINTS_REQUEST)
