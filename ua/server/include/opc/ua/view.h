@@ -11,6 +11,7 @@
 #ifndef OPC_UA_CLIENT_VIEW_H
 #define OPC_UA_CLIENT_VIEW_H
 
+#include <opc/ua/interface.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/view.h>
 
@@ -32,7 +33,7 @@ namespace OpcUa
       }
     };
 
-    class ViewServices
+    class ViewServices : private OpcUa::Interface
     {
     public:
       virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) = 0;

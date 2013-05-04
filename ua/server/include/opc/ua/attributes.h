@@ -14,6 +14,7 @@
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/interface.h>
 
 #include <vector>
 
@@ -35,7 +36,7 @@ namespace OpcUa
       DataValue Value;
     };
 
-    class AttributeServices
+    class AttributeServices : private OpcUa::Interface
     {
     public:
       virtual DataValue Read(const ReadParameters& filter) const = 0;

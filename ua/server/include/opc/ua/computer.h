@@ -33,7 +33,7 @@ namespace OpcUa
       Duration Timeout;
     };
 
-    class Computer
+    class Computer : private OpcUa::Interface
     {
     public:
       virtual void CreateSession(const SessionParameters& parameters) = 0;
