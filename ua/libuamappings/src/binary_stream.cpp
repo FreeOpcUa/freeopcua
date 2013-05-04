@@ -111,6 +111,51 @@ namespace OpcUa
     TypeID.Encoding = EV_FOUR_BYTE;
     TypeID.FourByteData.Identifier = objectID;
   }
+  ///////////////////////////////////////////////////////
+  // IntegerID
+  ///////////////////////////////////////////////////////
+
+  IntegerID::IntegerID()
+    : Value(1)
+  {
+  }
+
+  IntegerID::IntegerID(const IntegerID& id)
+    : Value(id.Value)
+  {
+  }
+
+  IntegerID::IntegerID(uint32_t num)
+    : Value(num)
+  {
+    if (!Value)
+    {
+      throw std::invalid_argument("IntergerId cannot be zero");
+    }
+  }
+
+  IntegerID& IntegerID::operator= (const IntegerID& id)
+  {
+    Value = id.Value;
+    return *this;
+  }
+
+  IntegerID& IntegerID::operator= (uint32_t value)
+  {
+    if (!Value)
+    {
+      throw std::invalid_argument("IntergerId cannot be zero");
+    }
+    Value = value;
+    return *this;
+  }
+
+  IntegerID::operator uint32_t() const
+  {
+    return Value;
+  }
+
+  ///////////////////////////////////////////////////////
 
   namespace Binary
   {

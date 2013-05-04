@@ -106,7 +106,8 @@ am_libopcuabinary_a_OBJECTS =  \
 	libopcuabinary_a-binary_view.$(OBJEXT) \
 	libopcuabinary_a-binary_session.$(OBJEXT) \
 	libopcuabinary_a-binary_secure_channel.$(OBJEXT) \
-	libopcuabinary_a-nodeid.$(OBJEXT)
+	libopcuabinary_a-nodeid.$(OBJEXT) \
+	libopcuabinary_a-subscriptions.$(OBJEXT)
 libopcuabinary_a_OBJECTS = $(am_libopcuabinary_a_OBJECTS)
 am__EXEEXT_1 = opc_ua_binary_test$(EXEEXT)
 am_opc_ua_binary_test_OBJECTS =  \
@@ -310,6 +311,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/protocol/nodeid.h \
   include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/session.h \
+  include/opc/ua/protocol/subscriptions.h \
   include/opc/ua/protocol/data_value.h \
   include/opc/ua/describe.h \
   include/opc/ua/extension_identifiers.h \
@@ -335,7 +337,8 @@ libopcuabinary_a_SOURCES = \
   src/binary_view.cpp \
   src/binary_session.cpp \
   src/binary_secure_channel.cpp \
-  src/nodeid.cpp
+  src/nodeid.cpp \
+  src/subscriptions.cpp
 
 libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
 opc_ua_binary_test_SOURCES = \
@@ -473,6 +476,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-nodeid.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-subscriptions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_deserialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Po@am__quote@
@@ -659,6 +663,20 @@ libopcuabinary_a-nodeid.obj: src/nodeid.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/nodeid.cpp' object='libopcuabinary_a-nodeid.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-nodeid.obj `if test -f 'src/nodeid.cpp'; then $(CYGPATH_W) 'src/nodeid.cpp'; else $(CYGPATH_W) '$(srcdir)/src/nodeid.cpp'; fi`
+
+libopcuabinary_a-subscriptions.o: src/subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-subscriptions.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-subscriptions.Tpo -c -o libopcuabinary_a-subscriptions.o `test -f 'src/subscriptions.cpp' || echo '$(srcdir)/'`src/subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-subscriptions.Tpo $(DEPDIR)/libopcuabinary_a-subscriptions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/subscriptions.cpp' object='libopcuabinary_a-subscriptions.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-subscriptions.o `test -f 'src/subscriptions.cpp' || echo '$(srcdir)/'`src/subscriptions.cpp
+
+libopcuabinary_a-subscriptions.obj: src/subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-subscriptions.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-subscriptions.Tpo -c -o libopcuabinary_a-subscriptions.obj `if test -f 'src/subscriptions.cpp'; then $(CYGPATH_W) 'src/subscriptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/subscriptions.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-subscriptions.Tpo $(DEPDIR)/libopcuabinary_a-subscriptions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/subscriptions.cpp' object='libopcuabinary_a-subscriptions.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-subscriptions.obj `if test -f 'src/subscriptions.cpp'; then $(CYGPATH_W) 'src/subscriptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/subscriptions.cpp'; fi`
 
 opc_ua_binary_test-binary_deserialize.o: tests/binary_deserialize.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_deserialize.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_deserialize.Tpo -c -o opc_ua_binary_test-binary_deserialize.o `test -f 'tests/binary_deserialize.cpp' || echo '$(srcdir)/'`tests/binary_deserialize.cpp

@@ -27,6 +27,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/protocol/nodeid.h \
   include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/session.h \
+  include/opc/ua/protocol/subscriptions.h \
   include/opc/ua/protocol/data_value.h \
   include/opc/ua/describe.h \
   include/opc/ua/extension_identifiers.h \
@@ -54,7 +55,8 @@ libopcuabinary_a_SOURCES = \
   src/binary_view.cpp \
   src/binary_session.cpp \
   src/binary_secure_channel.cpp \
-  src/nodeid.cpp
+  src/nodeid.cpp \
+  src/subscriptions.cpp
 
 libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
 

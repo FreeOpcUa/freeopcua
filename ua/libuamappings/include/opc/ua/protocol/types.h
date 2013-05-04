@@ -27,6 +27,20 @@ namespace OpcUa
 
   typedef uint32_t StatusCode;
 
+  class IntegerID
+  {
+  public:
+    IntegerID();
+    explicit IntegerID(const IntegerID& id);
+    explicit IntegerID(uint32_t num);
+    IntegerID& operator= (const IntegerID& id);
+    IntegerID& operator= (uint32_t value);
+    operator uint32_t() const;
+
+  private:
+    uint32_t Value;
+  };
+
   struct QualifiedName
   {
     uint16_t NamespaceIndex;
