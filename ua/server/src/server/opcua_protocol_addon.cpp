@@ -138,6 +138,10 @@ namespace
       {
           desc.SecurityMode = GetSecurityMode(param.Value);
       }
+      else if (param.Name == "security_policy_uri")
+      {
+        desc.SecurityPolicyURI = param.Value;
+      }     
       else if (param.Name == "transport_profile_uri")
       {
         desc.TransportProfileURI = param.Value;//"http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";

@@ -165,8 +165,7 @@ namespace
       response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
       response.ChannelSecurityToken.RevisedLifetime = 3600;
 
-
-      SecureHeader responseHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+      SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
       responseHeader.AddSize(RawSize(algorithmHeader));
       responseHeader.AddSize(RawSize(sequence));
       responseHeader.AddSize(RawSize(response));
