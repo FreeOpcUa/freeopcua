@@ -200,7 +200,7 @@ server_unittests_SOURCES = \
   tests/server/standard_namespace_ut.cpp
 
 server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 test_tcp_server_SOURCES = \
   src/socket_channel.cpp \

@@ -57,6 +57,21 @@ TEST(Node, EqualIfSameType)
   ASSERT_EQ(id1, id2);
 }
 
+TEST(Node, NotEqualByReferenceID)
+{
+  NodeID id1(ReferenceID::HasChild);
+  NodeID id2(ReferenceID::Organizes);
+  ASSERT_NE(id1, id2);
+}
+
+TEST(Node, NotEqualByObjectID)
+{
+  NodeID id(ReferenceID::Organizes);
+  ASSERT_NE(id, ObjectID::RootFolder);
+}
+
+
+
 TEST(Node, EqualIfDifferentTypeButEqualIdentifier)
 {
   NodeID id1;

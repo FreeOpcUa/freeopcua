@@ -658,7 +658,7 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 @BUILD_UA_SERVER_TRUE@  tests/server/standard_namespace_ut.cpp
 
 @BUILD_UA_SERVER_TRUE@server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-@BUILD_UA_SERVER_TRUE@server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@test_tcp_server_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/socket_channel.cpp \
 @BUILD_UA_SERVER_TRUE@  src/computer.cpp \
