@@ -308,6 +308,26 @@ namespace
           return;
         }
 
+        case CREATE_SUBSCRIPTION_REQUEST:
+        {
+          if (Debug) std::clog << "Processing create subscription request." << std::endl;
+          SubscriptionParameters params;
+          stream >> params;
+
+          CreateSubscriptionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Data.ID = 2;
+          response.Data.RevisedLifetimeCount = params.RequestedLifetimeCount;
+          response.Data.RevisedPublishingInterval = params.RequestedPublishingInterval;
+          response.Data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
 
         default:
         {
