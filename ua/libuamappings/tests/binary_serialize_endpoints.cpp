@@ -296,4 +296,3 @@ TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponseReal)
   ASSERT_TRUE(Channel->IsEmpty());
 }
 
-

@@ -73,6 +73,7 @@ opc_ua_binary_test_SOURCES =  \
  tests/binary_serialize_variant.cpp \
  tests/binary_serialize_view.cpp \
  tests/binary_serialize.cpp \
+ tests/binary_subscriptions.cpp \
  tests/common.h \
  tests/message_id.cpp \
  tests/node_id.cpp \

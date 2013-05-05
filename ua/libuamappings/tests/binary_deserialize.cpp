@@ -1010,3 +1010,24 @@ TEST_F(OpcUaBinaryDeserialization, QualifiedName)
   ASSERT_EQ(name.Name, "name");
 }
 
+//-------------------------------------------------------------------
+// IntegerID
+//-------------------------------------------------------------------
+
+TEST_F(OpcUaBinaryDeserialization, IntegerID)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  5, 0, 0, 0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  IntegerID id;
+  GetStream() >> id;
+
+  ASSERT_EQ(id, 5);
+}
+

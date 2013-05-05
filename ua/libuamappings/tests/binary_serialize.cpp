@@ -943,3 +943,23 @@ TEST_F(OpcUaBinarySerialization, QualifiedName)
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
 }
 
+//-------------------------------------------------------------------
+// IntegerID
+//-------------------------------------------------------------------
+
+TEST_F(OpcUaBinarySerialization, IntegerID)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  IntegerID id(5);
+
+  GetStream() << id << flush;
+
+  const std::vector<char> expectedData = {
+  5, 0, 0, 0
+  };
+
+  ASSERT_EQ(expectedData.size(), RawSize(id));
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+}

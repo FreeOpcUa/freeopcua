@@ -40,6 +40,8 @@ namespace OpcUa
     NodeID TypeID;
     RequestHeader Header;
     SubscriptionParameters Parameters;
+
+    CreateSubscriptionRequest();
   };
 
   ////////////////////////////////////////////////////////
@@ -64,9 +66,11 @@ namespace OpcUa
   {
     NodeID TypeID;
     ResponseHeader Header;
-
     SubscriptionData Data;
+
+    CreateSubscriptionResponse();
   };
+
 } // namespace OpcUa
 
-#endif OPC_UA_PROTOCOL_SUBSCRIPTIONS_H
+#endif /// OPC_UA_PROTOCOL_SUBSCRIPTIONS_H

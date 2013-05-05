@@ -146,6 +146,7 @@ namespace OpcUa
     {
       throw std::invalid_argument("IntergerId cannot be zero");
     }
+
     Value = value;
     return *this;
   }
@@ -1008,6 +1009,20 @@ namespace OpcUa
     {
       *this >> name.NamespaceIndex;
       *this >> name.Name;
+    }
+
+    template<>
+    void OStream::Serialize<IntegerID>(const IntegerID& id)
+    {
+      *this << static_cast<uint32_t>(id);
+    }
+
+    template<>
+    void IStream::Deserialize<IntegerID>(IntegerID&  id)
+    {
+      uint32_t value = 0;
+      *this >> value;
+      id = value;
     }
 
   } // namespace Binary

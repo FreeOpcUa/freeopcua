@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Test of opc ua binary handshake.
+/// @brief View service set.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License

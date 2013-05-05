@@ -119,6 +119,7 @@ am_opc_ua_binary_test_OBJECTS =  \
 	opc_ua_binary_test-binary_serialize_variant.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_view.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize.$(OBJEXT) \
+	opc_ua_binary_test-binary_subscriptions.$(OBJEXT) \
 	opc_ua_binary_test-message_id.$(OBJEXT) \
 	opc_ua_binary_test-node_id.$(OBJEXT) \
 	opc_ua_binary_test-reference_id.$(OBJEXT)
@@ -350,6 +351,7 @@ opc_ua_binary_test_SOURCES = \
  tests/binary_serialize_variant.cpp \
  tests/binary_serialize_view.cpp \
  tests/binary_serialize.cpp \
+ tests/binary_subscriptions.cpp \
  tests/common.h \
  tests/message_id.cpp \
  tests/node_id.cpp \
@@ -485,6 +487,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-message_id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-node_id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-reference_id.Po@am__quote@
@@ -789,6 +792,20 @@ opc_ua_binary_test-binary_serialize.obj: tests/binary_serialize.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
+
+opc_ua_binary_test-binary_subscriptions.o: tests/binary_subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_subscriptions.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Tpo -c -o opc_ua_binary_test-binary_subscriptions.o `test -f 'tests/binary_subscriptions.cpp' || echo '$(srcdir)/'`tests/binary_subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Tpo $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_subscriptions.cpp' object='opc_ua_binary_test-binary_subscriptions.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_subscriptions.o `test -f 'tests/binary_subscriptions.cpp' || echo '$(srcdir)/'`tests/binary_subscriptions.cpp
+
+opc_ua_binary_test-binary_subscriptions.obj: tests/binary_subscriptions.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_subscriptions.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Tpo -c -o opc_ua_binary_test-binary_subscriptions.obj `if test -f 'tests/binary_subscriptions.cpp'; then $(CYGPATH_W) 'tests/binary_subscriptions.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_subscriptions.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Tpo $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_subscriptions.cpp' object='opc_ua_binary_test-binary_subscriptions.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_subscriptions.obj `if test -f 'tests/binary_subscriptions.cpp'; then $(CYGPATH_W) 'tests/binary_subscriptions.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_subscriptions.cpp'; fi`
 
 opc_ua_binary_test-message_id.o: tests/message_id.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-message_id.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-message_id.Tpo -c -o opc_ua_binary_test-message_id.o `test -f 'tests/message_id.cpp' || echo '$(srcdir)/'`tests/message_id.cpp

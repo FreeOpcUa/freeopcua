@@ -49,6 +49,8 @@ namespace OpcUa
     WRITE_REQUEST  = 0x2A1, //673
     WRITE_RESPONSE = 0x2A4, // 676
 
+    CREATE_SUBSCRIPTION_REQUEST = 0x313, //787
+    CREATE_SUBSCRIPTION_RESPONSE = 0x316, //790
   };
 
   struct NodeID;

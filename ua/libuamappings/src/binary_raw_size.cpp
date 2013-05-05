@@ -370,6 +370,12 @@ namespace OpcUa
     {
       return RawSize(name.NamespaceIndex) + RawSize(name.Name);
     };
+    template<>
+
+    std::size_t RawSize<IntegerID>(const IntegerID&)
+    {
+      return 4;
+    };
 
   }
 }
