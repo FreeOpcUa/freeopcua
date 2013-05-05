@@ -41,7 +41,7 @@ namespace
   public:
     void AddEndpoints(std::vector<EndpointDescription> endpoints)
     {
-      Endpoints.insert(begin(Endpoints), begin(endpoints), end(endpoints));
+      Endpoints.insert(Endpoints.begin(), endpoints.begin(), endpoints.end());
     }
 
   private:

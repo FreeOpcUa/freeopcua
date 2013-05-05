@@ -13,6 +13,7 @@
 
 #include <opc/ua/attributes.h>
 #include <opc/ua/endpoints.h>
+#include <opc/ua/subscriptions.h>
 #include <opc/ua/view.h>
 
 #include <memory>
@@ -33,6 +34,7 @@ namespace OpcUa
       Duration Timeout;
     };
 
+    // TODO rename Computer to server
     class Computer : private OpcUa::Interface
     {
     public:
@@ -43,6 +45,7 @@ namespace OpcUa
       virtual std::shared_ptr<EndpointServices> Endpoints() const = 0;
       virtual std::shared_ptr<ViewServices> Views() const = 0;
       virtual std::shared_ptr<AttributeServices> Attributes() const = 0;
+      virtual std::shared_ptr<SubscriptionServices> Subscriptions() const = 0;
     };
 
   }

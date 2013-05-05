@@ -64,6 +64,11 @@ namespace
       return Impl->Attributes();
     }
 
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
+    {
+      return Impl->Subscriptions();
+    }
+
   private:
     std::unique_ptr<OpcUa::Remote::Computer> CreateComputerByProtocol(const std::string& protocol, std::shared_ptr<IOChannel> channel) const
     {

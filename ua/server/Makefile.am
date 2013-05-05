@@ -21,6 +21,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/computer.h \
   include/opc/ua/endpoints.h \
   include/opc/ua/socket_channel.h \
+  include/opc/ua/subscriptions.h \
   include/opc/ua/view.h
 
 uaclientinclude_HEADERS = \
@@ -59,6 +60,7 @@ opcua_SOURCES = \
   src/socket_channel.cpp \
   src/stream_attribute.h \
   src/stream_computer.h \
+  src/stream_subscription.h \
   src/stream_view.h
 
 #src/thread.cpp

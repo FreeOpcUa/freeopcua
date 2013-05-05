@@ -10,6 +10,7 @@
 
 #include "endpoints.h"
 #include "stream_attribute.h"
+#include "stream_subscription.h"
 #include "stream_view.h"
 
 #include <opc/ua/channel.h>
@@ -99,6 +100,11 @@ namespace OpcUa
       virtual std::shared_ptr<Remote::AttributeServices> Attributes() const
       {
         return std::shared_ptr<Remote::AttributeServices>(new Internal::AttributeServices<StreamType>(Channel, AuthenticationToken));
+      }
+
+      virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() const
+      {
+        return std::shared_ptr<Remote::SubscriptionServices>(new Internal::SubscriptionServices<StreamType>(Channel, AuthenticationToken));
       }
 
    private:

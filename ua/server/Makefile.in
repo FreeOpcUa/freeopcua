@@ -219,7 +219,8 @@ am__opcua_SOURCES_DIST = src/binary_computer.cpp \
 	src/binary_connection.cpp src/computer.cpp src/endpoints.h \
 	src/opcua_main.cpp src/opcua_options.cpp src/opcua_options.h \
 	src/socket_channel.cpp src/stream_attribute.h \
-	src/stream_computer.h src/stream_view.h
+	src/stream_computer.h src/stream_subscription.h \
+	src/stream_view.h
 @BUILD_UA_CMD_TRUE@am_opcua_OBJECTS = opcua-binary_computer.$(OBJEXT) \
 @BUILD_UA_CMD_TRUE@	opcua-binary_connection.$(OBJEXT) \
 @BUILD_UA_CMD_TRUE@	opcua-computer.$(OBJEXT) \
@@ -523,6 +524,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/computer.h \
   include/opc/ua/endpoints.h \
   include/opc/ua/socket_channel.h \
+  include/opc/ua/subscriptions.h \
   include/opc/ua/view.h
 
 uaclientinclude_HEADERS = \
@@ -552,6 +554,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_CMD_TRUE@  src/socket_channel.cpp \
 @BUILD_UA_CMD_TRUE@  src/stream_attribute.h \
 @BUILD_UA_CMD_TRUE@  src/stream_computer.h \
+@BUILD_UA_CMD_TRUE@  src/stream_subscription.h \
 @BUILD_UA_CMD_TRUE@  src/stream_view.h
 
 

@@ -80,6 +80,11 @@ namespace
       return std::shared_ptr<AttributeServices>();
     }
 
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
+    {
+      return std::shared_ptr<SubscriptionServices>();
+    }
+
   public:
     void SetEndpoints(std::shared_ptr<EndpointServices> endpoints)
     {
