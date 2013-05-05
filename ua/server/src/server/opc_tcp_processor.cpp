@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 
 namespace
 {
@@ -204,7 +205,8 @@ namespace
       RequestHeader requestHeader;
       stream >> requestHeader;
 
-      switch (GetMessageID(typeID))
+      const OpcUa::MessageID message = GetMessageID(typeID);
+      switch (message)
       {
         case OpcUa::GET_ENDPOINTS_REQUEST:
         {
@@ -331,8 +333,9 @@ namespace
 
         default:
         {
-          // TODO add code of message ID to the text of exception
-          throw std::logic_error("Unknown message type was recieved.");
+          std::stringstream ss;
+          ss << "ERROR: Unknown message with id '" << message << "' was recieved.";
+          throw std::logic_error(ss.str());
         }
       }
     }

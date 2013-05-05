@@ -19,19 +19,4 @@ TEST(MessageIDFromNodeID, CanBeConvertedFromValidNodeID)
   ASSERT_EQ(GetMessageID(id), OPEN_SECURE_CHANNEL_REQUEST);
 }
 
-TEST(MessageIDFromNodeID, InvalidIfConvertedFromUnknownIdentifierValue)
-{
-  NodeID id;
-  id.Encoding = EV_FOUR_BYTE;
-  id.FourByteData.Identifier = 1;
-  ASSERT_EQ(GetMessageID(id), INVALID);
-}
-
-TEST(MessageIDFromNodeID, InvalidIfConvertedFromWrongEncodedNodeID)
-{
-  NodeID id;
-  id.Encoding = EV_TWO_BYTE;
-  id.TwoByteData.Identifier = 1;
-  ASSERT_EQ(GetMessageID(id), INVALID);
-}
 
