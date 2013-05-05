@@ -513,6 +513,21 @@ namespace
     std::cout << "Status code: 0x" << std::hex << attributes.Write(params) << std::endl;
   }
 
+  void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)
+  {
+    OpcUa::SubscriptionParameters params;
+    params.MaxNotificationsPerPublish = 1;
+    params.Priority = 0;
+    params.PublishingEnabled = false;
+    params.RequestedLifetimeCount = 1;
+    params.RequestedMaxKeepAliveCount = 1;
+    params.RequestedPublishingInterval = 1000;
+    const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(params);
+    std::cout << "ID: " << data.ID << std::endl;
+    std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
+    std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;
+    std::cout << "RevizedMaxKeepAliveCount: " << data.RevizedMaxKeepAliveCount << std::endl;
+  }
 
   void Process(int argc, char** argv)
   {
@@ -557,6 +572,10 @@ namespace
       const OpcUa::AttributeID attributeID = cmd.GetAttribute();
       const OpcUa::Variant value = cmd.GetValue();
       Write(*computer->Attributes(), nodeID, attributeID, value);
+    }
+    else if (cmd.IsCreateSubscriptionOperation())
+    {
+      CreateSubscription(*computer->Subscriptions());
     }
     else
     {

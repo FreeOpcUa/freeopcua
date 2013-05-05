@@ -68,6 +68,11 @@ namespace OpcUa
       return IsWrite;
     }
 
+    bool IsCreateSubscriptionOperation() const
+    {
+      return IsCreateSubscription;
+    }
+
   private:
     std::string ServerURI;
     NodeID Node;
@@ -78,6 +83,7 @@ namespace OpcUa
     bool IsBrowse;
     bool IsRead;
     bool IsWrite;
+    bool IsCreateSubscription;
   };
 
 }

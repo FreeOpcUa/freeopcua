@@ -25,7 +25,7 @@ namespace
   const char* OPTION_BROWSE = "browse";
   const char* OPTION_READ = "read";
   const char* OPTION_WRITE = "write";
-
+  const char* OPTION_CREATE_SUBSCRIPTION = "create-subscription";
   const char* OPTION_SERVER_URI = "uri";
   const char* OPTION_NAMESPACE_INDEX = "namespace-index";
   const char* OPTION_ATTRIBUTE = "attribute";
@@ -214,6 +214,7 @@ namespace OpcUa
       (OPTION_BROWSE, "browse command.")
       (OPTION_READ, "read command.")
       (OPTION_WRITE, "write command.")
+      (OPTION_CREATE_SUBSCRIPTION, "create subscription command.")
 
       (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
@@ -255,5 +256,6 @@ namespace OpcUa
     IsBrowse = vm.count(OPTION_BROWSE);
     IsRead = vm.count(OPTION_READ);
     IsWrite = vm.count(OPTION_WRITE);
+    IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION);
   }
 }
