@@ -35,7 +35,7 @@ namespace OpcUa
     };
 
     // TODO rename Computer to server
-    class Computer : private OpcUa::Interface
+    class Computer : private Common::Interface
     {
     public:
       virtual void CreateSession(const SessionParameters& parameters) = 0;

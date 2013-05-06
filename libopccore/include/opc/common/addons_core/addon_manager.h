@@ -14,7 +14,7 @@
 
 #include <opc/common/addons_core/addon_parameters.h>
 #include <opc/common/class_pointers.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <string>
 #include <vector>
 
@@ -33,7 +33,7 @@ namespace Common
     AddonParameters Parameters;
   };
 
-  class AddonsManager : private NonCopyable
+  class AddonsManager : private Interface
   {
   public: 
     DEFINE_CLASS_POINTERS(AddonsManager);

@@ -12,7 +12,7 @@
 #define __items_manager_h_edadf82b_7c5b_4be7_b45e_b10bee0c3935
 
 #include <opc/common/exception.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <opc/common/object_id.h>
 #include <opc/common/value.h>
 #include <string>
@@ -193,8 +193,7 @@ namespace OpcClient
     }
   };
 
-  class ItemsManager
-    : private Common::NonCopyable
+  class ItemsManager : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(ItemsManager);

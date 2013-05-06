@@ -14,7 +14,7 @@
 #include <opc/opc_client/group.h>
 
 #include <opc/common/exception.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <string>
 #include <time.h>
 #include <vector>
@@ -66,8 +66,7 @@ namespace OpcClient
     }
   };
 
-  class Server
-    : private Common::NonCopyable
+  class Server : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(Server);

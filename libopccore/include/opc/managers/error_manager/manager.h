@@ -13,13 +13,12 @@
 
 #include <opc/common/class_pointers.h>
 #include <opc/common/exception.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 
 namespace ErrorManager
 {
   /// @brief Manager of errors for futher processing and logging
-  class Manager 
-    : private Common::NonCopyable
+  class Manager : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(Manager);

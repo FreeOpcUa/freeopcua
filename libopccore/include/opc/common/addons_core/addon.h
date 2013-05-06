@@ -14,12 +14,12 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/addon_parameters.h>
 #include <opc/common/class_pointers.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 
 namespace Common
 {
 
-  class Addon : private Common::NonCopyable
+  class Addon : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(Addon);
@@ -36,7 +36,7 @@ namespace Common
   };
 
   // @brief factory of addon.
-  class AddonFactory : private Common::NonCopyable
+  class AddonFactory : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(AddonFactory);

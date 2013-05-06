@@ -12,25 +12,36 @@
 #define __OPC_UA_BINARY_CONNECT_H_
 
 
-#include <opc/ua/interface.h>
 #include <cstddef>
 
 namespace OpcUa
 {
-  class InputChannel : protected virtual Interface
-  {
-   public:
-     /// @brief Receive data
-     /// @param data data for send
-     /// @param size size of data
-     /// @return size of received data
-     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-  };
-
-  class OutputChannel : protected virtual Interface
+  class InputChannel
   {
   public:
-     virtual void Send(const char* message, std::size_t size) = 0;
+    /// @brief Receive data
+    /// @param data data for send
+    /// @param size size of data
+    /// @return size of received data
+    virtual std::size_t Receive(char* data, std::size_t size) = 0;
+
+    InputChannel(){};
+    virtual ~InputChannel(){}
+  private:
+    InputChannel(const InputChannel&){}
+    InputChannel& operator= (const InputChannel&){return *this;}
+  };
+
+  class OutputChannel
+  {
+  public:
+    virtual void Send(const char* message, std::size_t size) = 0;
+
+    OutputChannel(){}
+    virtual ~OutputChannel(){}
+  private:
+    OutputChannel(const OutputChannel&){}
+    OutputChannel& operator= (const OutputChannel&){return *this;}
   };
 
   class IOChannel :

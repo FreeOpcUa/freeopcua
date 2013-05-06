@@ -14,7 +14,7 @@
 #include <opc/managers/device_manager/manager.h>
 
 #include <opc/common/exception.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <opc/common/object_id.h>
 #include <opc/common/value.h>
 #include <memory>
@@ -33,7 +33,7 @@ namespace InputOutputManager
 
   /// @brief Base interface of io request
   /// @note eveery request should be synchronious
-  class IoRequest : private Common::NonCopyable
+  class IoRequest : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(IoRequest);
@@ -72,8 +72,7 @@ namespace InputOutputManager
 
   /// @brief Dispatcher of io requests.
   /// @note Returned requests should be reusable - one request cat be performed multiple trimes
-  class RequestManager
-    : private Common::NonCopyable
+  class RequestManager : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(RequestManager);

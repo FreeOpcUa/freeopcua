@@ -65,8 +65,7 @@ namespace OpcClient
   /// @brief Class that performs synchronous io operation for some group.
   /// It is create new request to IoManager when called any method.
   /// Any changes in group are not affected called method.
-  class SyncIO
-    : private Common::NonCopyable
+  class SyncIO : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(SyncIO);

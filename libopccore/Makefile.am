@@ -48,8 +48,8 @@ common_HEADERS = \
                   include/opc/common/class_pointers.h \
                   include/opc/common/errors.h \
                   include/opc/common/exception.h \
+                  include/opc/common/interface.h \
                   include/opc/common/modules.h \
-                  include/opc/common/noncopyable.h \
                   include/opc/common/object_id.h \
                   include/opc/common/value.h
 
@@ -107,8 +107,8 @@ libopccore_a_SOURCES = \
                   include/opc/common/class_pointers.h \
                   include/opc/common/errors.h \
                   include/opc/common/exception.h \
+                  include/opc/common/interface.h \
                   include/opc/common/modules.h \
-                  include/opc/common/noncopyable.h \
                   include/opc/common/object_id.h \
                   include/opc/common/value.h \
                   include/opc/managers/device_manager/errors.h \

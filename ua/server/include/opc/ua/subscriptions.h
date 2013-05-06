@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_CLIENT_SUBSCRIPTIONS_H
 #define __OPC_UA_CLIENT_SUBSCRIPTIONS_H
 
-#include <opc/ua/interface.h>
+#include <opc/common/interface.h>
 #include <opc/ua/protocol/subscriptions.h>
 
 namespace OpcUa
@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Remote
   {
 
-    class SubscriptionServices : private Interface
+    class SubscriptionServices : private Common::Interface
     {
     public:
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters) = 0;

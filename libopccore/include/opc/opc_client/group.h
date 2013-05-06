@@ -13,12 +13,11 @@
 
 #include <opc/opc_client/items_manager.h>
 #include <opc/common/class_pointers.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 
 namespace OpcClient
 {
-  class GroupProperties 
-    : private Common::NonCopyable
+  class GroupProperties : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(GroupProperties);
@@ -37,8 +36,7 @@ namespace OpcClient
     virtual void SetDeadband(float deadband) = 0; 
   };
 
-  class Group
-    : public ItemsManager
+  class Group : public ItemsManager
   {
   public:
     DEFINE_CLASS_POINTERS(Group);

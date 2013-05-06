@@ -12,7 +12,7 @@
 #define __server_browser_h_077c354b_0cf8_4fdf_9de3_f191e8a1b820
 
 #include <opc/common/class_pointers.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <opc/common/value.h>
 #include <opc/common/object_id.h>
 
@@ -45,8 +45,7 @@ namespace OpcClient
     OPC_BROWSE_FILTER_ITEMS    = 3,
   };
 
-  class ServerBrowser
-    : private Common::NonCopyable
+  class ServerBrowser : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(ServerBrowser);

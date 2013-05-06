@@ -13,7 +13,7 @@
 
 #include <opc/common/exception.h>
 #include <opc/common/class_pointers.h>
-#include <opc/common/noncopyable.h>
+#include <opc/common/interface.h>
 #include <opc/common/object_id.h>
 #include <opc/common/value.h>
 #include <map>
@@ -30,7 +30,7 @@ namespace DeviceManager
   typedef std::map<Common::ObjectID, ObjectData> ObjectDataMap;
 
   /// @brief Interface of device manager
-  class Manager : private Common::NonCopyable
+  class Manager : private Common::Interface
   {
   public:
     DEFINE_CLASS_POINTERS(Manager);

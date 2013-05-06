@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/interface.h>
+#include <opc/common/interface.h>
 
 #include <thread>
 #include <stdexcept>
@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    class ThreadObserver : private Interface
+    class ThreadObserver : private Common::Interface
     {
     public:
       /// @brief thread exited with Success.

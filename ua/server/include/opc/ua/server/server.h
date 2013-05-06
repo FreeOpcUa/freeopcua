@@ -11,6 +11,7 @@
 #ifndef _OPC_UA_BINARY_SERVER_H
 #define _OPC_UA_BINARY_SERVER_H
 
+#include <opc/common/interface.h>
 #include <opc/ua/channel.h>
 
 #include <memory>
@@ -20,14 +21,14 @@ namespace OpcUa
   namespace Server
   {
 
-    class IncomingConnectionProcessor : private Interface
+    class IncomingConnectionProcessor : private Common::Interface
     {
     public:
       virtual void Process(std::shared_ptr<IOChannel> clientChannel) = 0;
       virtual void StopProcessing(std::shared_ptr<IOChannel> clientChannel) = 0;
     };
 
-    class ConnectionListener : private Interface
+    class ConnectionListener : private Common::Interface
     {
     public:
       virtual void Start(std::shared_ptr<IncomingConnectionProcessor> connectionProcssor) = 0;

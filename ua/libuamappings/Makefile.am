@@ -33,7 +33,6 @@ opcuainclude_HEADERS = \
   include/opc/ua/extension_identifiers.h \
   include/opc/ua/attribute_ids.h \
   include/opc/ua/channel.h \
-  include/opc/ua/interface.h \
   include/opc/ua/message_identifiers.h \
   include/opc/ua/node_classes.h \
   include/opc/ua/object_ids.h \

@@ -11,7 +11,7 @@
 #ifndef __OPC_UA_INTERFACE_BASE_H__
 #define __OPC_UA_INTERFACE_BASE_H__
 
-namespace OpcUa
+namespace Common
 {
 
   class Interface

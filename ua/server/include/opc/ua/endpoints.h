@@ -11,7 +11,7 @@
 #ifndef OPC_UA_CLIENT_ENDPOINTS_H
 #define OPC_UA_CLIENT_ENDPOINTS_H
 
-#include <opc/ua/interface.h>
+#include <opc/common/interface.h>
 #include <opc/ua/protocol/endpoints.h>
 #include <vector>
 
@@ -27,7 +27,7 @@ namespace OpcUa
     {
     };
 
-    class EndpointServices : private OpcUa::Interface
+    class EndpointServices : private Common::Interface
     {
     public:
       virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
