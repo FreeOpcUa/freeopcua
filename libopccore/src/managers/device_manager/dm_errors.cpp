@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/managers/device_manager/errors.h>
-#include <opccore/common/modules.h>
+#include <opc/managers/device_manager/errors.h>
+#include <opc/common/modules.h>
 
 //TODO fix MODULE Code
 #define GPS_DEVICE_IO_MANAGER_ERROR_CODE(code) ERROR_CODE(Common::MODULE_GPS_DEVICE_IO_MANAGER, code)

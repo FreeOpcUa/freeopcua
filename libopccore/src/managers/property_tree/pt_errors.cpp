@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/managers/property_tree/errors.h>
-#include <opccore/common/modules.h>
+#include <opc/managers/property_tree/errors.h>
+#include <opc/common/modules.h>
 
 #define PROPERTY_TREE_ERROR_CODE(code) ERROR_CODE(Common::MODULE_PROPERTY_TREE, code)
 #define PROPERTY_TREE_ERROR(name, code, message) Common::ErrorData name(PROPERTY_TREE_ERROR_CODE(code), message)

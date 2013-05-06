@@ -12,7 +12,7 @@
 #ifndef CPP_UNIT_EXAMPLETESTCASE_H
 #define CPP_UNIT_EXAMPLETESTCASE_H
 
-#include <opccore/managers/property_tree/item.h>
+#include <opc/managers/property_tree/item.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <boost/shared_ptr.hpp>

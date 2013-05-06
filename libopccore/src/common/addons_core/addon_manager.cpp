@@ -8,13 +8,13 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/addons_core/errors.h>
-#include <opccore/common/exception.h>
+#include <opc/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/errors.h>
+#include <opc/common/exception.h>
 
-#include <map>
 #include <boost/thread/mutex.hpp>
+#include <map>
 
 
 namespace

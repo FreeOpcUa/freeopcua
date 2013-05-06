@@ -8,12 +8,13 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/object_id.h>
+#include <opc/common/object_id.h>
+
+#include <atomic>
 
 Common::ObjectID Common::GenerateNewID()
 {
-  // TODO thread safe
-  static Common::ObjectID objectID = 0;
+  static std::atomic<Common::ObjectID> objectID;
   return ++objectID;
 }
 

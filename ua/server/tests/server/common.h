@@ -11,7 +11,7 @@
 #ifndef opcua_tests_common_utils_h
 #define opcua_tests_common_utils_h
 
-#include <opccore/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/server.h>
 
 #include <gmock/gmock.h>

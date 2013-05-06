@@ -11,8 +11,8 @@
 #include "test_dynamic_addon_id.h"
 #include "test_dynamic_addon.h"
 
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/addons_core/dynamic_addon_factory.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
 
 #include <gtest/gtest.h>
 

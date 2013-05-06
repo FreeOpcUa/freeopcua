@@ -9,9 +9,11 @@
 
 
 #include "named_object_test.h"
+
+#include <opc/managers/property_tree/named_object.h>
+
 #include <cppunit/config/SourcePrefix.h>
 #include <memory>
-#include <opccore/managers/property_tree/named_object.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( NamedObjectTestCase );
 

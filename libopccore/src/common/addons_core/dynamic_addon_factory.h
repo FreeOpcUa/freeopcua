@@ -13,8 +13,8 @@
 
 #include "dynamic_library.h"
 
-#include <opccore/common/addons_core/dynamic_addon.h>
-#include <opccore/common/class_pointers.h>
+#include <opc/common/addons_core/dynamic_addon.h>
+#include <opc/common/class_pointers.h>
 
 namespace Common
 {

@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/opc_client/server_browser.h>
+#include <opc/opc_client/server_browser.h>
 
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/property_tree/group.h>
-#include <opccore/managers/property_tree/manager.h>
-#include <opccore/managers/property_tree/property_tree.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/property_tree/group.h>
+#include <opc/managers/property_tree/manager.h>
+#include <opc/managers/property_tree/property_tree.h>
 #include <tr1/functional>
 #include <iostream>
 

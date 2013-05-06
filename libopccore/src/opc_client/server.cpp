@@ -8,12 +8,11 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/opc_client/server.h>
-#include <opccore/opc_client/errors.h>
-
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/errors.h>
-#include <opccore/managers/error_manager/manager.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/errors.h>
+#include <opc/managers/error_manager/manager.h>
+#include <opc/opc_client/server.h>
+#include <opc/opc_client/errors.h>
 
 #include <iostream>
 #include <tr1/functional>

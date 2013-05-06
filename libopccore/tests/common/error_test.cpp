@@ -8,11 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/common/exception.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
-
-#include <opccore/common/exception.h>
-
 #include <iostream>
 
 class ErrorTestCase : public CPPUNIT_NS::TestFixture

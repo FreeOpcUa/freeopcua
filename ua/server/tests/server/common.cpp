@@ -11,7 +11,7 @@
 
 #include "common.h"
 
-#include <opccore/common/addons_core/dynamic_addon_factory.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <src/server/server_options.h>
 
 std::unique_ptr<Common::AddonsManager> OpcUa::Tests::LoadAddons(const std::string& configPath)

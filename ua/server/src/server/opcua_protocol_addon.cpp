@@ -12,11 +12,11 @@
 #include "opc_tcp_processor.h"
 
 #include <internal/uri_facade.h>
+#include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/internal_computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opccore/common/addons_core/addon_manager.h>
 
 #include <stdexcept>
 

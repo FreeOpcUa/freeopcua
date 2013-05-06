@@ -10,7 +10,7 @@
 
 #include "dynamic_addon_factory.h"
 
-#include <opccore/common/addons_core/errors.h>
+#include <opc/common/addons_core/errors.h>
 
 
 namespace Common

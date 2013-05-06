@@ -10,10 +10,10 @@
 
 #include "standard_namespace.h"
 
+#include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/view_services.h>
 #include <opc/ua/server/addons/internal_computer.h>
 #include <opc/ua/view.h>
-#include <opccore/common/addons_core/addon_manager.h>
 
 namespace
 {

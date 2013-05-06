@@ -11,14 +11,13 @@
 /// $Date: $
 /// $Revision: $
 
+#include <opc/common/exception.h>
+#include <opc/opc_client/server.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
-
-#include <opccore/common/exception.h>
-#include <opccore/opc_client/server.h>
-
-#include <tr1/functional>
 #include <iostream>
+#include <tr1/functional>
 
 class ServerTestCase : public CPPUNIT_NS::TestFixture
 {

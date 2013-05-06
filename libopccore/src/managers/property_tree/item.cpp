@@ -8,10 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/managers/property_tree/item.h>
+#include <opc/managers/property_tree/item.h>
 
-#include <opccore/managers/property_tree/errors.h>
-#include <opccore/managers/property_tree/group.h>
+#include <opc/managers/property_tree/errors.h>
+#include <opc/managers/property_tree/group.h>
 
 namespace
 {

@@ -11,16 +11,16 @@
 /// $Date: $
 /// $Revision: $
 
-#include <opccore/opc_client/errors.h>
 #include "property_tree_builder.h"
+
+#include <opc/opc_client/errors.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/errors.h>
+#include <opc/common/exception.h>
+#include <opc/opc_client/items_manager.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
-
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/errors.h>
-#include <opccore/common/exception.h>
-#include <opccore/opc_client/items_manager.h>
 
 #include <tr1/functional>
 #include <iostream>

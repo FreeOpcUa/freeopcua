@@ -11,7 +11,7 @@
 #ifndef opcua_request_processor_addon_h
 #define opcua_request_processor_addon_h
 
-#include <opccore/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/computer.h>
 
 namespace OpcUa

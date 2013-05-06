@@ -10,7 +10,8 @@
 
 #include "group_test.h"
 
-#include <opccore/managers/property_tree/group.h>
+#include <opc/managers/property_tree/group.h>
+
 #include <cppunit/config/SourcePrefix.h>
 #include <memory>
 #include <sstream>

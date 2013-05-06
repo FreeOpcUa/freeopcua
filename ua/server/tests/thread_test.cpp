@@ -10,7 +10,6 @@
 
 #include <internal/thread.h>
 
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <chrono>

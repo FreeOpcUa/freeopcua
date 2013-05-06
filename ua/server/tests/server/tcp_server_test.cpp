@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/tcp_server.h>
 
 #include <chrono>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include <thread>
 
 

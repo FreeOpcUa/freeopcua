@@ -11,20 +11,19 @@
 /// $Date: $
 /// $Revision: $
 
+#include <opc/common/exception.h>
+#include <opc/opc_client/errors.h>
+#include <opc/opc_client/server.h>
+#include <opc/opc_client/sync_io.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/io_manager/manager.h>
+#include <opc/managers/property_tree/item.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
-
-#include <opccore/common/exception.h>
-#include <opccore/opc_client/server.h>
-#include <opccore/opc_client/sync_io.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/io_manager/manager.h>
-#include <opccore/managers/property_tree/item.h>
-
-#include <tr1/functional>
 #include <iostream>
+#include <tr1/functional>
 
-#include <opccore/opc_client/errors.h>
 #include "property_tree_builder.h"
 
 class SyncIOTestCase : public CPPUNIT_NS::TestFixture

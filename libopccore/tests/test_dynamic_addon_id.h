@@ -11,7 +11,7 @@
 #ifndef TEST_DYNAMIC_ADDON_ID_H
 #define TEST_DYNAMIC_ADDON_ID_H
 
-#include <opccore/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon.h>
 
 #include <string>
 

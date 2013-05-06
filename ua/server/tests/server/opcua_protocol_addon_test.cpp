@@ -8,15 +8,15 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/addons_core/dynamic_addon_factory.h>
 
 #include <chrono>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include <iostream>
 #include <thread>
 

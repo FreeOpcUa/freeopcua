@@ -8,9 +8,9 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/opc_client/group.h>
-#include <opccore/opc_client/items_manager.h>
-#include <opccore/managers/io_manager/manager.h>
+#include <opc/opc_client/group.h>
+#include <opc/opc_client/items_manager.h>
+#include <opc/managers/io_manager/manager.h>
 
 namespace
 {

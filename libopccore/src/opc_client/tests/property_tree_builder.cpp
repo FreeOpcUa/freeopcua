@@ -12,14 +12,14 @@
 /// $Revision: $
 
 #include "property_tree_builder.h"
-#include <opccore/opc_client/server.h>
-#include <opccore/common/addons_core/addon_manager.h>
+#include <opc/opc_client/server.h>
+#include <opc/common/addons_core/addon_manager.h>
 #include "../../managers/common_managers/common_managers.h"
-#include <opccore/managers/device_manager/manager.h>
-#include <opccore/managers/io_manager/manager.h>
-#include <opccore/managers/property_tree/manager.h>
-#include <opccore/managers/property_tree/group.h>
-#include <opccore/managers/property_tree/property_tree.h>
+#include <opc/managers/device_manager/manager.h>
+#include <opc/managers/io_manager/manager.h>
+#include <opc/managers/property_tree/manager.h>
+#include <opc/managers/property_tree/group.h>
+#include <opc/managers/property_tree/property_tree.h>
 
 void BuildSubTree(Gefest::Group& group)
 {

@@ -17,10 +17,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
 
-#include <opccore/common/exception.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/opc_client/server_browser.h>
-#include <opccore/opc_client/server.h>
+#include <opc/common/exception.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/opc_client/server_browser.h>
+#include <opc/opc_client/server.h>
 
 #include <tr1/functional>
 

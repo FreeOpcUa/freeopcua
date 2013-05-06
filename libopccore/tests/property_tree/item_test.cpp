@@ -10,6 +10,7 @@
 
 
 #include "item_test.h"
+
 #include <cppunit/config/SourcePrefix.h>
 #include <memory>
 #include <sstream>

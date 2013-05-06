@@ -11,17 +11,16 @@
 
 #include "server_options.h"
 
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <opc/ua/server/tcp_server.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/addons_core/dynamic_addon_factory.h>
-
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <iostream>
+#include <signal.h>
 #include <stdexcept>
 
-#include <signal.h>
 
 namespace
 {

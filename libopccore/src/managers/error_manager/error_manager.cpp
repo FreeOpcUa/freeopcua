@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/error_manager/id.h>
-#include <opccore/managers/error_manager/manager.h>
-#include <opccore/managers/error_manager/factory.h>
-#include <opccore/managers/property_tree/property_tree.h>
+#include <opc/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/error_manager/id.h>
+#include <opc/managers/error_manager/manager.h>
+#include <opc/managers/error_manager/factory.h>
+#include <opc/managers/property_tree/property_tree.h>
 
 namespace
 {

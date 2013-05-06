@@ -9,6 +9,9 @@
 ///
 
 
+#ifndef __opc_common_dynamic_library_h
+#define __opc_common_dynamic_library_h
+
 #include <string>
 
 namespace Common
@@ -35,4 +38,6 @@ namespace Common
   };
 
 }
+
+#endif // __opc_common_dynamic_library_h
 

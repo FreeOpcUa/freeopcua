@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/exception.h>
+#include <opc/common/exception.h>
 
 Common::Error::Error()
   : LineNum(0)

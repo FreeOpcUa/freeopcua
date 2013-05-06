@@ -10,12 +10,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/errors.h>
-#include <opccore/managers/property_tree/group.h>
-#include <opccore/managers/property_tree/errors.h>
-#include <opccore/managers/property_tree/named_object.h>
-#include <opccore/managers/property_tree/tree_object.h>
-#include <opccore/managers/property_tree/item.h>
+#include <opc/common/errors.h>
+#include <opc/managers/property_tree/group.h>
+#include <opc/managers/property_tree/errors.h>
+#include <opc/managers/property_tree/named_object.h>
+#include <opc/managers/property_tree/tree_object.h>
+#include <opc/managers/property_tree/item.h>
 
 #include <iterator>
 

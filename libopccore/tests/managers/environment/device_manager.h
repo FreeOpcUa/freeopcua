@@ -1,9 +1,21 @@
+/// @author Alexander Rykovanov 2011
+/// @email rykovanov.as@gmail.com
+/// @brief
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
+
 #ifndef __device_manager_h_456bd15c_7286_44b3_ba12_fbb8490d2e16
 #define __device_manager_h_456bd15c_7286_44b3_ba12_fbb8490d2e16
 
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/device_manager/manager.h>
+
 #include <string>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/device_manager/manager.h>
 
 //register new device manager
 // Device manager builds sbtree in property tree. All names of tree items begins with propertyTreePrefix

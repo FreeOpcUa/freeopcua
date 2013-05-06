@@ -11,8 +11,8 @@
 #ifndef TEST_DYNAMIC_ADDON_H
 #define TEST_DYNAMIC_ADDON_H
 
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/common/class_pointers.h>
+#include <opc/common/addons_core/addon.h>
+#include <opc/common/class_pointers.h>
 
 #include <string>
 

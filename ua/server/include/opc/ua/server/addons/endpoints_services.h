@@ -11,8 +11,8 @@
 #ifndef opc_ua_endpoints_service_h
 #define opc_ua_endpoints_service_h
 
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/protocol/types.h>
-#include <opccore/common/addons_core/addon.h>
 
 namespace OpcUa
 {

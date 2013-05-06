@@ -11,10 +11,10 @@
 #ifndef opc_ua_builtin_addon_addon_h
 #define opc_ua_builtin_addon_addon_h
 
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
 #include <opc/ua/server/server.h>
-#include <opccore/common/addons_core/addon.h>
 
 namespace OpcUa
 {

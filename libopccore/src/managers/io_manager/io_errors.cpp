@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/managers/io_manager/errors.h>
-#include <opccore/common/modules.h>
+#include <opc/managers/io_manager/errors.h>
+#include <opc/common/modules.h>
 
 #define IO_MANAGER_ERROR_CODE(code) ERROR_CODE(Common::MODULE_IO_MANAGER, code)
 #define IO_MANAGER_ERROR(name, code, message) Common::ErrorData name(IO_MANAGER_ERROR_CODE(code), message)

@@ -9,9 +9,10 @@
 
 
 #include "tree_object_test.h"
+
+#include <opc/managers/property_tree/property_tree.h>
 #include <cppunit/config/SourcePrefix.h>
 #include <memory>
-#include <opccore/managers/property_tree/property_tree.h>
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TreeObjectTestCase );

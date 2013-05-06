@@ -16,8 +16,8 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace
 {

@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/client/binary_computer.h>
 #include <opc/ua/protocol/binary/secure_connection.h>
 #include <opc/ua/server/addons/builtin_computer.h>

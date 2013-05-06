@@ -11,7 +11,7 @@
 #ifndef opcua_server_tcp_addon_h
 #define opcua_server_tcp_addon_h
 
-#include <opccore/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/server.h>
 
 namespace OpcUa

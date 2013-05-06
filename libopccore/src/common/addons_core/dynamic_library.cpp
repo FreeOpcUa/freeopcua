@@ -10,7 +10,7 @@
 
 #include "dynamic_library.h"
 
-#include <opccore/common/addons_core/errors.h>
+#include <opc/common/addons_core/errors.h>
 
 #include <dlfcn.h>
 

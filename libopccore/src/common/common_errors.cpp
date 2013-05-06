@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/errors.h>
-#include <opccore/common/modules.h>
+#include <opc/common/errors.h>
+#include <opc/common/modules.h>
 
 #define COMMON_MODULE_ERROR_CODE(code) ERROR_CODE(Common::MODULE_COMMON, code)
 #define COMMON_ERROR(name, code, message) Common::ErrorData name(COMMON_MODULE_ERROR_CODE(code), message)

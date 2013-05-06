@@ -7,16 +7,15 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/property_tree/factory.h>
+#include <opc/managers/property_tree/id.h>
+#include <opc/managers/property_tree/manager.h>
 
 #include <cppunit/config/SourcePrefix.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
-
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/property_tree/factory.h>
-#include <opccore/managers/property_tree/id.h>
-#include <opccore/managers/property_tree/manager.h>
 
 
 class PropertyTreeManagerTestCase : public CPPUNIT_NS::TestFixture

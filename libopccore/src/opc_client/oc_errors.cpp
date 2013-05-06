@@ -8,9 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/opc_client/errors.h>
-
-#include <opccore/common/modules.h>
+#include <opc/opc_client/errors.h>
+#include <opc/common/modules.h>
 
 #define OPCCLIENT_ERROR_CODE(code) ERROR_CODE(Common::MODULE_IO_MANAGER, code)
 #define OPCCLIENT_ERROR(name, code, message) Common::ErrorData name(OPCCLIENT_ERROR_CODE(code), message)

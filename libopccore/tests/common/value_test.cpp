@@ -8,10 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/common/value.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
-
-#include <opccore/common/value.h>
 
 class ValueTestCase : public CPPUNIT_NS::TestFixture
 {

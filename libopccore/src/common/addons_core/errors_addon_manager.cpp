@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opccore/common/addons_core/errors.h>
-#include <opccore/common/modules.h>
+#include <opc/common/addons_core/errors.h>
+#include <opc/common/modules.h>
 
 #define ADDONS_MANAGER_MODULE_ERROR_CODE(code) ERROR_CODE(Common::MODULE_ADDONS_MANAGER, code)
 #define ADDONS_MANAGER_ERROR(name, code, message) Common::ErrorData name(ADDONS_MANAGER_MODULE_ERROR_CODE(code), message)

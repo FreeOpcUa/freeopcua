@@ -11,7 +11,7 @@
 #ifndef opc_ua_endpoints_addon_h
 #define opc_ua_endpoints_addon_h
 
-#include <opccore/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/server.h>
 
 namespace OpcUa

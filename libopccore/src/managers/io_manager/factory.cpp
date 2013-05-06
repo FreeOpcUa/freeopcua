@@ -10,10 +10,10 @@
 
 #include "manager_impl.h"
 
-#include <opccore/managers/io_manager/factory.h>
-#include <opccore/managers/io_manager/id.h>
-#include <opccore/managers/io_manager/manager.h>
-#include <opccore/common/addons_core/addon.h>
+#include <opc/managers/io_manager/factory.h>
+#include <opc/managers/io_manager/id.h>
+#include <opc/managers/io_manager/manager.h>
+#include <opc/common/addons_core/addon.h>
 
 namespace
 {

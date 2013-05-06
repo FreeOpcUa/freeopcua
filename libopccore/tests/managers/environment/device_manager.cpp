@@ -1,16 +1,27 @@
+/// @author Alexander Rykovanov 2011
+/// @email rykovanov.as@gmail.com
+/// @brief 
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
+
+
 #include "device_manager.h"
 
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/managers/device_manager/id.h>
-#include <opccore/managers/device_manager/manager.h>
-#include <opccore/managers/io_manager/id.h>
-#include <opccore/managers/io_manager/manager.h>
-#include <opccore/managers/property_tree/group.h>
-#include <opccore/managers/property_tree/id.h>
-#include <opccore/managers/property_tree/item.h>
-#include <opccore/managers/property_tree/manager.h>
-#include <opccore/managers/property_tree/property_tree.h>
+#include <opc/common/addons_core/addon.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/managers/device_manager/id.h>
+#include <opc/managers/device_manager/manager.h>
+#include <opc/managers/io_manager/id.h>
+#include <opc/managers/io_manager/manager.h>
+#include <opc/managers/property_tree/group.h>
+#include <opc/managers/property_tree/id.h>
+#include <opc/managers/property_tree/item.h>
+#include <opc/managers/property_tree/manager.h>
+#include <opc/managers/property_tree/property_tree.h>
 
 #include <iostream>
 #include <tr1/functional>

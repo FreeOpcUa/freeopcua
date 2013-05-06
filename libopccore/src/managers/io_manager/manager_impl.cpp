@@ -10,8 +10,8 @@
 
 #include "manager_impl.h"
 
-#include <opccore/managers/io_manager/errors.h>
-#include <opccore/managers/io_manager/manager.h>
+#include <opc/managers/io_manager/errors.h>
+#include <opc/managers/io_manager/manager.h>
 
 
 

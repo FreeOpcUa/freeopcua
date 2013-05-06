@@ -1,12 +1,22 @@
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/config/SourcePrefix.h>
+/// @author Alexander Rykovanov 2011
+/// @email rykovanov.as@gmail.com
+/// @brief
+/// @license GNU LGPL
+///
+/// Distributed under the GNU LGPL License
+/// (See accompanying file LICENSE or copy at 
+/// http://www.gnu.org/licenses/lgpl.html)
+///
 
-#include <opccore/common/exception.h>
-#include <opccore/common/addons_core/addon_manager.h>
-#include <opccore/common/addons_core/addon.h>
-#include <opccore/managers/io_manager/manager.h>
+
+#include <opc/common/exception.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/addon.h>
+#include <opc/managers/io_manager/manager.h>
 #include <src/managers/io_manager/manager_impl.h>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/config/SourcePrefix.h>
 #include <tr1/functional>
 
 class IoManagerTestCase : public CPPUNIT_NS::TestFixture
