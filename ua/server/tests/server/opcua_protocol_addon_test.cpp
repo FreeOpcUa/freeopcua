@@ -106,3 +106,23 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
   computer.reset();
 }
 
+TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
+{
+  std::shared_ptr<OpcUa::Server::BuiltinComputerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinComputerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
+  std::shared_ptr<OpcUa::Remote::SubscriptionServices> subscriptions = computer->Subscriptions();
+
+  OpcUa::SubscriptionParameters params;
+  params.MaxNotificationsPerPublish = 3;
+  params.Priority = 0;
+  params.PublishingEnabled = true;
+  params.RequestedLifetimeCount = 3;
+  params.RequestedMaxKeepAliveCount = 3;
+  params.RequestedPublishingInterval = 1000;
+
+  OpcUa::SubscriptionData data;
+  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(params));
+
+  subscriptions.reset();
+  computer.reset();
+}
