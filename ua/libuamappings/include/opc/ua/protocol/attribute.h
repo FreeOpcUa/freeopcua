@@ -18,13 +18,6 @@
 
 namespace OpcUa
 {
-  enum class TimestampsToReturn
-  {
-    SOURCE = 0,
-    SERVER = 1,
-    BOTH   = 2,
-    NEITHER = 3
-  };
 
   struct AttributeValueID
   {

@@ -24,6 +24,13 @@
 
 namespace OpcUa
 {
+  enum class TimestampsToReturn
+  {
+    SOURCE = 0,
+    SERVER = 1,
+    BOTH   = 2,
+    NEITHER = 3
+  };
 
   typedef uint32_t StatusCode;
 
@@ -50,6 +57,16 @@ namespace OpcUa
       : NamespaceIndex(0)
     {
     }
+  };
+
+
+  struct RelativePath
+  {
+    std::vector<QualifiedName> Elements;
+    NodeID TypeID;
+    bool IsInverse;
+    bool IncludeSubtypes;
+    QualifiedName TargetName;
   };
 
   // LocalizedText encoding mask
