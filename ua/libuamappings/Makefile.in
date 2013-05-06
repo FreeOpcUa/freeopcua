@@ -97,28 +97,30 @@ libopcuabinary_a_AR = $(AR) $(ARFLAGS)
 libopcuabinary_a_LIBADD =
 am_libopcuabinary_a_OBJECTS =  \
 	libopcuabinary_a-binary_variant.$(OBJEXT) \
+	libopcuabinary_a-binary_attribute.$(OBJEXT) \
 	libopcuabinary_a-binary_data_value.$(OBJEXT) \
 	libopcuabinary_a-binary_endpoints.$(OBJEXT) \
 	libopcuabinary_a-binary_messages.$(OBJEXT) \
 	libopcuabinary_a-binary_raw_size.$(OBJEXT) \
-	libopcuabinary_a-binary_stream.$(OBJEXT) \
-	libopcuabinary_a-binary_attribute.$(OBJEXT) \
-	libopcuabinary_a-binary_view.$(OBJEXT) \
-	libopcuabinary_a-binary_session.$(OBJEXT) \
 	libopcuabinary_a-binary_secure_channel.$(OBJEXT) \
+	libopcuabinary_a-binary_session.$(OBJEXT) \
+	libopcuabinary_a-binary_stream.$(OBJEXT) \
+	libopcuabinary_a-binary_view.$(OBJEXT) \
+	libopcuabinary_a-monitored_items.$(OBJEXT) \
 	libopcuabinary_a-nodeid.$(OBJEXT) \
 	libopcuabinary_a-subscriptions.$(OBJEXT)
 libopcuabinary_a_OBJECTS = $(am_libopcuabinary_a_OBJECTS)
 am__EXEEXT_1 = opc_ua_binary_test$(EXEEXT)
 am_opc_ua_binary_test_OBJECTS =  \
 	opc_ua_binary_test-binary_deserialize.$(OBJEXT) \
+	opc_ua_binary_test-binary_serialize.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_attribute.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_data_value.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_endpoints.$(OBJEXT) \
+	opc_ua_binary_test-binary_serialize_monitored_items.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_session.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_variant.$(OBJEXT) \
 	opc_ua_binary_test-binary_serialize_view.$(OBJEXT) \
-	opc_ua_binary_test-binary_serialize.$(OBJEXT) \
 	opc_ua_binary_test-binary_subscriptions.$(OBJEXT) \
 	opc_ua_binary_test-message_id.$(OBJEXT) \
 	opc_ua_binary_test-node_id.$(OBJEXT) \
@@ -300,20 +302,21 @@ opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 opcuainclude_HEADERS = \
   include/opc/ua/protocol/attribute.h \
-  include/opc/ua/protocol/endpoints.h \
-  include/opc/ua/protocol/types.h \
   include/opc/ua/protocol/binary/stream.h \
   include/opc/ua/protocol/binary/common.h \
   include/opc/ua/protocol/binary/secure_connection.h \
-  include/opc/ua/protocol/variant.h \
-  include/opc/ua/protocol/secure_channel.h \
+  include/opc/ua/protocol/data_value.h \
   include/opc/ua/protocol/datetime.h \
+  include/opc/ua/protocol/endpoints.h \
   include/opc/ua/protocol/guid.h \
+  include/opc/ua/protocol/monitored_items.h \
   include/opc/ua/protocol/nodeid.h \
-  include/opc/ua/protocol/view.h \
+  include/opc/ua/protocol/secure_channel.h \
   include/opc/ua/protocol/session.h \
   include/opc/ua/protocol/subscriptions.h \
-  include/opc/ua/protocol/data_value.h \
+  include/opc/ua/protocol/types.h \
+  include/opc/ua/protocol/variant.h \
+  include/opc/ua/protocol/view.h \
   include/opc/ua/describe.h \
   include/opc/ua/extension_identifiers.h \
   include/opc/ua/attribute_ids.h \
@@ -327,29 +330,31 @@ opcuainclude_HEADERS = \
 lib_LIBRARIES = libopcuabinary.a
 libopcuabinary_a_SOURCES = \
   src/binary_variant.cpp \
+  src/binary_attribute.cpp \
   src/binary_data_value.cpp \
   src/binary_endpoints.cpp \
   src/binary_messages.cpp \
-  src/binary_serialization.h \
   src/binary_raw_size.cpp \
-  src/binary_stream.cpp \
-  src/binary_attribute.cpp \
-  src/binary_view.cpp \
-  src/binary_session.cpp \
   src/binary_secure_channel.cpp \
+  src/binary_session.cpp \
+  src/binary_serialization.h \
+  src/binary_stream.cpp \
+  src/binary_view.cpp \
+  src/monitored_items.cpp \
   src/nodeid.cpp \
   src/subscriptions.cpp
 
 libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
 opc_ua_binary_test_SOURCES = \
  tests/binary_deserialize.cpp \
+ tests/binary_serialize.cpp \
  tests/binary_serialize_attribute.cpp \
  tests/binary_serialize_data_value.cpp \
  tests/binary_serialize_endpoints.cpp \
+ tests/binary_serialize_monitored_items.cpp \
  tests/binary_serialize_session.cpp \
  tests/binary_serialize_variant.cpp \
  tests/binary_serialize_view.cpp \
- tests/binary_serialize.cpp \
  tests/binary_subscriptions.cpp \
  tests/common.h \
  tests/message_id.cpp \
@@ -476,6 +481,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_stream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-monitored_items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-nodeid.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-subscriptions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_deserialize.Po@am__quote@
@@ -483,6 +489,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_data_value.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_endpoints.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_variant.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize_view.Po@am__quote@
@@ -525,6 +532,20 @@ libopcuabinary_a-binary_variant.obj: src/binary_variant.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_variant.cpp' object='libopcuabinary_a-binary_variant.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_variant.obj `if test -f 'src/binary_variant.cpp'; then $(CYGPATH_W) 'src/binary_variant.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_variant.cpp'; fi`
+
+libopcuabinary_a-binary_attribute.o: src/binary_attribute.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_attribute.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo -c -o libopcuabinary_a-binary_attribute.o `test -f 'src/binary_attribute.cpp' || echo '$(srcdir)/'`src/binary_attribute.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo $(DEPDIR)/libopcuabinary_a-binary_attribute.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_attribute.cpp' object='libopcuabinary_a-binary_attribute.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_attribute.o `test -f 'src/binary_attribute.cpp' || echo '$(srcdir)/'`src/binary_attribute.cpp
+
+libopcuabinary_a-binary_attribute.obj: src/binary_attribute.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_attribute.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo -c -o libopcuabinary_a-binary_attribute.obj `if test -f 'src/binary_attribute.cpp'; then $(CYGPATH_W) 'src/binary_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_attribute.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo $(DEPDIR)/libopcuabinary_a-binary_attribute.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_attribute.cpp' object='libopcuabinary_a-binary_attribute.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_attribute.obj `if test -f 'src/binary_attribute.cpp'; then $(CYGPATH_W) 'src/binary_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_attribute.cpp'; fi`
 
 libopcuabinary_a-binary_data_value.o: src/binary_data_value.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_data_value.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_data_value.Tpo -c -o libopcuabinary_a-binary_data_value.o `test -f 'src/binary_data_value.cpp' || echo '$(srcdir)/'`src/binary_data_value.cpp
@@ -582,47 +603,19 @@ libopcuabinary_a-binary_raw_size.obj: src/binary_raw_size.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_raw_size.obj `if test -f 'src/binary_raw_size.cpp'; then $(CYGPATH_W) 'src/binary_raw_size.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_raw_size.cpp'; fi`
 
-libopcuabinary_a-binary_stream.o: src/binary_stream.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_stream.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo -c -o libopcuabinary_a-binary_stream.o `test -f 'src/binary_stream.cpp' || echo '$(srcdir)/'`src/binary_stream.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo $(DEPDIR)/libopcuabinary_a-binary_stream.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_stream.cpp' object='libopcuabinary_a-binary_stream.o' libtool=no @AMDEPBACKSLASH@
+libopcuabinary_a-binary_secure_channel.o: src/binary_secure_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_secure_channel.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo -c -o libopcuabinary_a-binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='libopcuabinary_a-binary_secure_channel.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_stream.o `test -f 'src/binary_stream.cpp' || echo '$(srcdir)/'`src/binary_stream.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
 
-libopcuabinary_a-binary_stream.obj: src/binary_stream.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_stream.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo -c -o libopcuabinary_a-binary_stream.obj `if test -f 'src/binary_stream.cpp'; then $(CYGPATH_W) 'src/binary_stream.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_stream.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo $(DEPDIR)/libopcuabinary_a-binary_stream.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_stream.cpp' object='libopcuabinary_a-binary_stream.obj' libtool=no @AMDEPBACKSLASH@
+libopcuabinary_a-binary_secure_channel.obj: src/binary_secure_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_secure_channel.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo -c -o libopcuabinary_a-binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='libopcuabinary_a-binary_secure_channel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_stream.obj `if test -f 'src/binary_stream.cpp'; then $(CYGPATH_W) 'src/binary_stream.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_stream.cpp'; fi`
-
-libopcuabinary_a-binary_attribute.o: src/binary_attribute.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_attribute.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo -c -o libopcuabinary_a-binary_attribute.o `test -f 'src/binary_attribute.cpp' || echo '$(srcdir)/'`src/binary_attribute.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo $(DEPDIR)/libopcuabinary_a-binary_attribute.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_attribute.cpp' object='libopcuabinary_a-binary_attribute.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_attribute.o `test -f 'src/binary_attribute.cpp' || echo '$(srcdir)/'`src/binary_attribute.cpp
-
-libopcuabinary_a-binary_attribute.obj: src/binary_attribute.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_attribute.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo -c -o libopcuabinary_a-binary_attribute.obj `if test -f 'src/binary_attribute.cpp'; then $(CYGPATH_W) 'src/binary_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_attribute.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_attribute.Tpo $(DEPDIR)/libopcuabinary_a-binary_attribute.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_attribute.cpp' object='libopcuabinary_a-binary_attribute.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_attribute.obj `if test -f 'src/binary_attribute.cpp'; then $(CYGPATH_W) 'src/binary_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_attribute.cpp'; fi`
-
-libopcuabinary_a-binary_view.o: src/binary_view.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_view.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_view.Tpo -c -o libopcuabinary_a-binary_view.o `test -f 'src/binary_view.cpp' || echo '$(srcdir)/'`src/binary_view.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_view.Tpo $(DEPDIR)/libopcuabinary_a-binary_view.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_view.cpp' object='libopcuabinary_a-binary_view.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_view.o `test -f 'src/binary_view.cpp' || echo '$(srcdir)/'`src/binary_view.cpp
-
-libopcuabinary_a-binary_view.obj: src/binary_view.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_view.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_view.Tpo -c -o libopcuabinary_a-binary_view.obj `if test -f 'src/binary_view.cpp'; then $(CYGPATH_W) 'src/binary_view.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_view.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_view.Tpo $(DEPDIR)/libopcuabinary_a-binary_view.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_view.cpp' object='libopcuabinary_a-binary_view.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_view.obj `if test -f 'src/binary_view.cpp'; then $(CYGPATH_W) 'src/binary_view.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_view.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
 
 libopcuabinary_a-binary_session.o: src/binary_session.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_session.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_session.Tpo -c -o libopcuabinary_a-binary_session.o `test -f 'src/binary_session.cpp' || echo '$(srcdir)/'`src/binary_session.cpp
@@ -638,19 +631,47 @@ libopcuabinary_a-binary_session.obj: src/binary_session.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_session.obj `if test -f 'src/binary_session.cpp'; then $(CYGPATH_W) 'src/binary_session.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_session.cpp'; fi`
 
-libopcuabinary_a-binary_secure_channel.o: src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_secure_channel.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo -c -o libopcuabinary_a-binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='libopcuabinary_a-binary_secure_channel.o' libtool=no @AMDEPBACKSLASH@
+libopcuabinary_a-binary_stream.o: src/binary_stream.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_stream.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo -c -o libopcuabinary_a-binary_stream.o `test -f 'src/binary_stream.cpp' || echo '$(srcdir)/'`src/binary_stream.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo $(DEPDIR)/libopcuabinary_a-binary_stream.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_stream.cpp' object='libopcuabinary_a-binary_stream.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_stream.o `test -f 'src/binary_stream.cpp' || echo '$(srcdir)/'`src/binary_stream.cpp
 
-libopcuabinary_a-binary_secure_channel.obj: src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_secure_channel.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo -c -o libopcuabinary_a-binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Tpo $(DEPDIR)/libopcuabinary_a-binary_secure_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='libopcuabinary_a-binary_secure_channel.obj' libtool=no @AMDEPBACKSLASH@
+libopcuabinary_a-binary_stream.obj: src/binary_stream.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_stream.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo -c -o libopcuabinary_a-binary_stream.obj `if test -f 'src/binary_stream.cpp'; then $(CYGPATH_W) 'src/binary_stream.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_stream.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_stream.Tpo $(DEPDIR)/libopcuabinary_a-binary_stream.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_stream.cpp' object='libopcuabinary_a-binary_stream.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_stream.obj `if test -f 'src/binary_stream.cpp'; then $(CYGPATH_W) 'src/binary_stream.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_stream.cpp'; fi`
+
+libopcuabinary_a-binary_view.o: src/binary_view.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_view.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_view.Tpo -c -o libopcuabinary_a-binary_view.o `test -f 'src/binary_view.cpp' || echo '$(srcdir)/'`src/binary_view.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_view.Tpo $(DEPDIR)/libopcuabinary_a-binary_view.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_view.cpp' object='libopcuabinary_a-binary_view.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_view.o `test -f 'src/binary_view.cpp' || echo '$(srcdir)/'`src/binary_view.cpp
+
+libopcuabinary_a-binary_view.obj: src/binary_view.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-binary_view.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-binary_view.Tpo -c -o libopcuabinary_a-binary_view.obj `if test -f 'src/binary_view.cpp'; then $(CYGPATH_W) 'src/binary_view.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_view.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-binary_view.Tpo $(DEPDIR)/libopcuabinary_a-binary_view.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_view.cpp' object='libopcuabinary_a-binary_view.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-binary_view.obj `if test -f 'src/binary_view.cpp'; then $(CYGPATH_W) 'src/binary_view.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_view.cpp'; fi`
+
+libopcuabinary_a-monitored_items.o: src/monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-monitored_items.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-monitored_items.Tpo -c -o libopcuabinary_a-monitored_items.o `test -f 'src/monitored_items.cpp' || echo '$(srcdir)/'`src/monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-monitored_items.Tpo $(DEPDIR)/libopcuabinary_a-monitored_items.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/monitored_items.cpp' object='libopcuabinary_a-monitored_items.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-monitored_items.o `test -f 'src/monitored_items.cpp' || echo '$(srcdir)/'`src/monitored_items.cpp
+
+libopcuabinary_a-monitored_items.obj: src/monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-monitored_items.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-monitored_items.Tpo -c -o libopcuabinary_a-monitored_items.obj `if test -f 'src/monitored_items.cpp'; then $(CYGPATH_W) 'src/monitored_items.cpp'; else $(CYGPATH_W) '$(srcdir)/src/monitored_items.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-monitored_items.Tpo $(DEPDIR)/libopcuabinary_a-monitored_items.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/monitored_items.cpp' object='libopcuabinary_a-monitored_items.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-monitored_items.obj `if test -f 'src/monitored_items.cpp'; then $(CYGPATH_W) 'src/monitored_items.cpp'; else $(CYGPATH_W) '$(srcdir)/src/monitored_items.cpp'; fi`
 
 libopcuabinary_a-nodeid.o: src/nodeid.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-nodeid.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-nodeid.Tpo -c -o libopcuabinary_a-nodeid.o `test -f 'src/nodeid.cpp' || echo '$(srcdir)/'`src/nodeid.cpp
@@ -694,6 +715,20 @@ opc_ua_binary_test-binary_deserialize.obj: tests/binary_deserialize.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_deserialize.obj `if test -f 'tests/binary_deserialize.cpp'; then $(CYGPATH_W) 'tests/binary_deserialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_deserialize.cpp'; fi`
 
+opc_ua_binary_test-binary_serialize.o: tests/binary_serialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo -c -o opc_ua_binary_test-binary_serialize.o `test -f 'tests/binary_serialize.cpp' || echo '$(srcdir)/'`tests/binary_serialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.o `test -f 'tests/binary_serialize.cpp' || echo '$(srcdir)/'`tests/binary_serialize.cpp
+
+opc_ua_binary_test-binary_serialize.obj: tests/binary_serialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
+
 opc_ua_binary_test-binary_serialize_attribute.o: tests/binary_serialize_attribute.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize_attribute.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Tpo -c -o opc_ua_binary_test-binary_serialize_attribute.o `test -f 'tests/binary_serialize_attribute.cpp' || echo '$(srcdir)/'`tests/binary_serialize_attribute.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize_attribute.Po
@@ -736,6 +771,20 @@ opc_ua_binary_test-binary_serialize_endpoints.obj: tests/binary_serialize_endpoi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize_endpoints.obj `if test -f 'tests/binary_serialize_endpoints.cpp'; then $(CYGPATH_W) 'tests/binary_serialize_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize_endpoints.cpp'; fi`
 
+opc_ua_binary_test-binary_serialize_monitored_items.o: tests/binary_serialize_monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize_monitored_items.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Tpo -c -o opc_ua_binary_test-binary_serialize_monitored_items.o `test -f 'tests/binary_serialize_monitored_items.cpp' || echo '$(srcdir)/'`tests/binary_serialize_monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize_monitored_items.cpp' object='opc_ua_binary_test-binary_serialize_monitored_items.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize_monitored_items.o `test -f 'tests/binary_serialize_monitored_items.cpp' || echo '$(srcdir)/'`tests/binary_serialize_monitored_items.cpp
+
+opc_ua_binary_test-binary_serialize_monitored_items.obj: tests/binary_serialize_monitored_items.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize_monitored_items.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Tpo -c -o opc_ua_binary_test-binary_serialize_monitored_items.obj `if test -f 'tests/binary_serialize_monitored_items.cpp'; then $(CYGPATH_W) 'tests/binary_serialize_monitored_items.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize_monitored_items.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize_monitored_items.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize_monitored_items.cpp' object='opc_ua_binary_test-binary_serialize_monitored_items.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize_monitored_items.obj `if test -f 'tests/binary_serialize_monitored_items.cpp'; then $(CYGPATH_W) 'tests/binary_serialize_monitored_items.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize_monitored_items.cpp'; fi`
+
 opc_ua_binary_test-binary_serialize_session.o: tests/binary_serialize_session.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize_session.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Tpo -c -o opc_ua_binary_test-binary_serialize_session.o `test -f 'tests/binary_serialize_session.cpp' || echo '$(srcdir)/'`tests/binary_serialize_session.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize_session.Po
@@ -777,20 +826,6 @@ opc_ua_binary_test-binary_serialize_view.obj: tests/binary_serialize_view.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize_view.cpp' object='opc_ua_binary_test-binary_serialize_view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize_view.obj `if test -f 'tests/binary_serialize_view.cpp'; then $(CYGPATH_W) 'tests/binary_serialize_view.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize_view.cpp'; fi`
-
-opc_ua_binary_test-binary_serialize.o: tests/binary_serialize.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo -c -o opc_ua_binary_test-binary_serialize.o `test -f 'tests/binary_serialize.cpp' || echo '$(srcdir)/'`tests/binary_serialize.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.o `test -f 'tests/binary_serialize.cpp' || echo '$(srcdir)/'`tests/binary_serialize.cpp
-
-opc_ua_binary_test-binary_serialize.obj: tests/binary_serialize.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_serialize.obj -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opc_ua_binary_test-binary_serialize.Tpo $(DEPDIR)/opc_ua_binary_test-binary_serialize.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/binary_serialize.cpp' object='opc_ua_binary_test-binary_serialize.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opc_ua_binary_test-binary_serialize.obj `if test -f 'tests/binary_serialize.cpp'; then $(CYGPATH_W) 'tests/binary_serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/binary_serialize.cpp'; fi`
 
 opc_ua_binary_test-binary_subscriptions.o: tests/binary_subscriptions.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opc_ua_binary_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opc_ua_binary_test-binary_subscriptions.o -MD -MP -MF $(DEPDIR)/opc_ua_binary_test-binary_subscriptions.Tpo -c -o opc_ua_binary_test-binary_subscriptions.o `test -f 'tests/binary_subscriptions.cpp' || echo '$(srcdir)/'`tests/binary_subscriptions.cpp

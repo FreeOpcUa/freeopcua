@@ -1,6 +1,6 @@
-/// @author Alexander Rykovanov 2012
+/// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Opc Ua Binary. Secure channel service.
+/// @brief Monitored items services.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -11,7 +11,8 @@
 #ifndef OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 #define OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 
-#include <opc/ua/protocol/subscriptions.h.>
+#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/types.h>
 
 namespace OpcUa
@@ -115,7 +116,7 @@ namespace OpcUa
     DateTime StartTime;
     NodeID AggregateType;
     Duration ProcessingInterval;
-    AggregateConfiguration Configuration;
+//    AggregateConfiguration Configuration;
     bool UseServerCapabilitiesDefaults;
     bool TreatUncertainAsBad;
     uint8_t PercentDataBad;
@@ -128,7 +129,7 @@ namespace OpcUa
     ExtensionObjectHeader Header;
     DataChangeFilter DataChange;
     EventFilter Event;
-    AggregateFilyer Aggregate;
+    AggregateFilter Aggregate;
   };
 
   struct MonitoringParameters
@@ -162,6 +163,27 @@ namespace OpcUa
 
     CreateMonitoredItemsRequest();
   };
+
+  ///////////////////////////////////////////////////////////////////////
+
+  struct MonitoredItemsData
+  {
+    // TODO: place Results into a struct
+    // TODO: replace uint8_t with MonitoredItemsResult
+    // TODO: result contain a vector, I will response with empty container
+    std::vector<uint8_t> Results;
+    std::vector<DiagnosticInfo> Infos;
+  };
+
+  struct CreateMonitoredItemsResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    MonitoredItemsData Data;
+
+    CreateMonitoredItemsResponse();
+  };
+
 }
 
 #endif // OPC_UA_MAPPINGS_MONITORED_ITEMS_H_

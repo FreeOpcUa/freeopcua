@@ -65,7 +65,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   2,0,0,0
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
