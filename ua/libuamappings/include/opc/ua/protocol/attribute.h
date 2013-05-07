@@ -29,25 +29,36 @@ namespace OpcUa
     AttributeValueID();
   };
 
-  struct ReadRequest
+  struct ReadParameters
   {
-    NodeID TypeID;
-    RequestHeader Header;
-    
     Duration MaxAge;
     TimestampsToReturn TimestampsType;
     std::vector<AttributeValueID> AttributesToRead;
 
+    ReadParameters();
+  };
+
+  struct ReadRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    ReadParameters Parameters;
+
     ReadRequest();
   };
+
+  struct ReadResult
+  {
+    std::vector<DataValue> Results;
+    std::vector<DiagnosticInfo> Diagnostics;
+  };
+
 
   struct ReadResponse
   {
     NodeID TypeID;
     ResponseHeader Header;
-
-    std::vector<DataValue> Results;
-    std::vector<DiagnosticInfo> Diagnostics;
+    ReadResult Result;
 
     ReadResponse();
   };

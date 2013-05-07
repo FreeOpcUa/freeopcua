@@ -40,16 +40,16 @@ namespace OpcUa
 
         ReadRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
-        request.MaxAge = 0;
-        request.TimestampsType = TimestampsToReturn::SERVER;
-        request.AttributesToRead.push_back(value);
+        request.Parameters.MaxAge = 0;
+        request.Parameters.TimestampsType = TimestampsToReturn::SERVER;
+        request.Parameters.AttributesToRead.push_back(value);
        
         Stream << request << OpcUa::Binary::flush;
 
         ReadResponse response;
         Stream >> response;
 
-        return response.Results.empty() ? DataValue() : response.Results.at(0);
+        return response.Result.Results.empty() ? DataValue() : response.Result.Results.at(0);
       }
 
       virtual OpcUa::StatusCode Write(const Remote::WriteParameters& params)

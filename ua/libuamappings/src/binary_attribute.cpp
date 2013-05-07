@@ -27,11 +27,15 @@ namespace OpcUa
   {
   }
 
+  ReadParameters::ReadParameters()
+    : MaxAge(0)
+    , TimestampsType(TimestampsToReturn::NEITHER)
+  {
+
+  }
 
   ReadRequest::ReadRequest()
     : TypeID(READ_REQUEST)
-    , MaxAge(0)
-    , TimestampsType(TimestampsToReturn::NEITHER)
   {
   }
 
@@ -132,15 +136,41 @@ namespace OpcUa
     }
 
     //---------------------------------------------------
+    // ReadParameters
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<ReadParameters>(const ReadParameters& params)
+    {
+      return RawSize(params.MaxAge) +
+        RawSize(params.TimestampsType) +
+        RawSizeContainer(params.AttributesToRead);
+    }
+
+    template<>
+    void OStream::Serialize<ReadParameters>(const ReadParameters& params)
+    {
+      *this << params.MaxAge;
+      *this << params.TimestampsType;
+      SerializeContainer(*this, params.AttributesToRead);
+    }
+
+    template<>
+    void IStream::Deserialize<ReadParameters>(ReadParameters& params)
+    {
+      *this >> params.MaxAge;
+      *this >> params.TimestampsType;
+      DeserializeContainer(*this, params.AttributesToRead);
+    }
+
+    //---------------------------------------------------
     // ReadRequest
     //---------------------------------------------------
+
     template<>
     std::size_t RawSize<ReadRequest>(const ReadRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
-        RawSize(request.MaxAge) +
-        RawSize(request.TimestampsType) +
-        RawSizeContainer(request.AttributesToRead);
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
@@ -148,10 +178,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-
-      *this << request.MaxAge;
-      *this << request.TimestampsType;
-      SerializeContainer(*this, request.AttributesToRead);
+      *this << request.Parameters;
     }
 
     template<>
@@ -159,11 +186,33 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
-
-      *this >> request.MaxAge;
-      *this >> request.TimestampsType;
-      DeserializeContainer(*this, request.AttributesToRead);
+      *this >> request.Parameters;
     }
+
+    //---------------------------------------------------
+    // ReadResult
+    //---------------------------------------------------
+    template<>
+    std::size_t RawSize<ReadResult>(const ReadResult& result)
+    {
+      return RawSizeContainer(result.Results) +
+        RawSizeContainer(result.Diagnostics);
+    }
+
+    template<>
+    void OStream::Serialize<ReadResult>(const ReadResult& result)
+    {
+      SerializeContainer(*this, result.Results);
+      SerializeContainer(*this, result.Diagnostics);
+    }
+
+    template<>
+    void IStream::Deserialize<ReadResult>(ReadResult& result)
+    {
+      DeserializeContainer(*this, result.Results);
+      DeserializeContainer(*this, result.Diagnostics);
+    }
+
 
     //---------------------------------------------------
     // ReadResponse
@@ -171,9 +220,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ReadResponse>(const ReadResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) +
-        RawSizeContainer(resp.Results) +
-        RawSizeContainer(resp.Diagnostics);
+      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Result);
     }
 
     template<>
@@ -181,9 +228,7 @@ namespace OpcUa
     {
       *this << resp.TypeID;
       *this << resp.Header;
-
-      SerializeContainer(*this, resp.Results);
-      SerializeContainer(*this, resp.Diagnostics);
+      *this << resp.Result;
     }
 
     template<>
@@ -191,9 +236,7 @@ namespace OpcUa
     {
       *this >> resp.TypeID;
       *this >> resp.Header;
-
-      DeserializeContainer(*this, resp.Results);
-      DeserializeContainer(*this, resp.Diagnostics);
+      *this >> resp.Result;
     }
 
     //---------------------------------------------------

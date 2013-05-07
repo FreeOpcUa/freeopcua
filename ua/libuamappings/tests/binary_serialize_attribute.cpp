@@ -189,10 +189,10 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  request.MaxAge = 1200000;
-  request.TimestampsType = TimestampsToReturn::NEITHER;
+  request.Parameters.MaxAge = 1200000;
+  request.Parameters.TimestampsType = TimestampsToReturn::NEITHER;
 
-  request.AttributesToRead.push_back(CreateAttributeValueID());
+  request.Parameters.AttributesToRead.push_back(CreateAttributeValueID());
 
   GetStream() << request << flush;
 
@@ -250,18 +250,18 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.MaxAge, 1200000);
-  ASSERT_EQ(request.TimestampsType, TimestampsToReturn::NEITHER);
+  ASSERT_EQ(request.Parameters.MaxAge, 1200000);
+  ASSERT_EQ(request.Parameters.TimestampsType, TimestampsToReturn::NEITHER);
   
-  ASSERT_EQ(request.AttributesToRead.size(), 1);
+  ASSERT_EQ(request.Parameters.AttributesToRead.size(), 1);
 
   AttributeValueID attr = CreateAttributeValueID();
 
-  ASSERT_EQ(request.AttributesToRead[0].Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(request.AttributesToRead[0].Node.TwoByteData.Identifier, 1);
-  ASSERT_EQ(request.AttributesToRead[0].Attribute, OpcUa::AttributeID::VALUE);
-  ASSERT_EQ(request.AttributesToRead[0].DataEncoding.NamespaceIndex, 2);
-  ASSERT_EQ(request.AttributesToRead[0].DataEncoding.Name, "test");
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].Attribute, OpcUa::AttributeID::VALUE);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.NamespaceIndex, 2);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.Name, "test");
 
 }
 
@@ -340,7 +340,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse)
   ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
-  ASSERT_EQ(resp.Results.size(), 1);
+  ASSERT_EQ(resp.Result.Results.size(), 1);
 }
 
 //-------------------------------------------------------
