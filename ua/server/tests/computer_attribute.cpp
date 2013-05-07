@@ -91,7 +91,7 @@ TEST_F(Attribute, Write)
   params.Attribute = AttributeID::BROWSE_NAME;
 
   const StatusCode code = Service->Write(params);
-  ASSERT_NE(code, 0);
+  ASSERT_NE(code, StatusCode::Good);
 }
 
 

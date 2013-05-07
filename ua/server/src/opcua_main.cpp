@@ -484,7 +484,7 @@ namespace
     if (value.Encoding & DATA_VALUE_STATUS_CODE)
     {
       std::cout << tabs << "Status code:" << std::endl;
-      std::cout << tabs1 << "0x" << std::hex << value.Status << std::endl;
+      std::cout << tabs1 << "0x" << std::hex << static_cast<uint32_t>(value.Status) << std::endl;
     }
     if (value.Encoding & DATA_VALUE)
     {
@@ -510,7 +510,7 @@ namespace
     params.Node = nodeID;
     params.Attribute = attributeID;
     params.Value = value;
-    std::cout << "Status code: 0x" << std::hex << attributes.Write(params) << std::endl;
+    std::cout << "Status code: 0x" << std::hex << static_cast<uint32_t>(attributes.Write(params)) << std::endl;
   }
 
   void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)

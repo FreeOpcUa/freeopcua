@@ -15,6 +15,7 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/status_codes.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -252,6 +253,43 @@ namespace
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
           stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case OpcUa::READ_REQUEST:
+        {
+          if (Debug) std::clog << "Processing read request." << std::endl;
+          ReadParameters params;
+          stream >> params;
+
+          ReadResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          for (auto attribID : params.AttributesToRead)
+          {
+            OpcUa::Remote::ReadParameters attribute;
+            attribute.Node = attribID.Node;
+            attribute.Attribute = attribID.Attribute;
+
+            DataValue value;
+            if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+            {
+              value = service->Read(attribute);
+            }
+            else
+            {
+              value.Encoding = DATA_VALUE_STATUS_CODE;
+              value.Status = OpcUa::StatusCode::BadNotImplemented;
+            }
+            response.Result.Results.push_back(value);
+          }
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+
           return;
         }
 

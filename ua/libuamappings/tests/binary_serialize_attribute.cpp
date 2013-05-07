@@ -507,7 +507,7 @@ TEST_F(OpcUaBinarySerialization, WriteResponse)
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
-  resp.StatusCodes.push_back(1);
+  resp.StatusCodes.push_back(static_cast<StatusCode>(1));
  
   DiagnosticInfo info;
   info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT);
@@ -555,7 +555,7 @@ TEST_F(OpcUaBinaryDeserialization, WriteResponse)
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
 
   ASSERT_EQ(resp.StatusCodes.size(), 1);
-  ASSERT_EQ(resp.StatusCodes[0], 1);
+  ASSERT_EQ(resp.StatusCodes[0], static_cast<OpcUa::StatusCode>(1));
 
   ASSERT_EQ(resp.Diagnostics.size(), 1);
   ASSERT_EQ(resp.Diagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT));

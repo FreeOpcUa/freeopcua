@@ -87,7 +87,7 @@ namespace OpcUa
     NodeID TypeID;
     ResponseHeader Header;
 
-    std::vector<uint32_t> StatusCodes;
+    std::vector<StatusCode> StatusCodes;
     std::vector<DiagnosticInfo> Diagnostics;
 
     WriteResponse();

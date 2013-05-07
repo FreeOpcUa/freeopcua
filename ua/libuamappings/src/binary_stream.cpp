@@ -1043,6 +1043,18 @@ namespace OpcUa
       status = static_cast<StatusCode>(value);
     }
 
+    template<>
+    void OStream::Serialize<std::vector<StatusCode>>(const std::vector<StatusCode>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<StatusCode>>(std::vector<StatusCode>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
   } // namespace Binary
 } // namespace OpcUa
 
