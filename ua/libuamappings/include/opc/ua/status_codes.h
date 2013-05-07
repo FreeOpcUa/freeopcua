@@ -14,8 +14,9 @@
 
 namespace OpcUa
 {
-  enum class Error : uint32_t
+  enum class StatusCode : uint32_t
   {
+    Good = 0,
     BadNotImplemented = 0x80440000,
   };
 }

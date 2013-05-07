@@ -696,7 +696,7 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_InnerStatusCode)
 
   DiagnosticInfo info;
   info.EncodingMask = DIM_INNER_STATUS_CODE;
-  info.InnerStatusCode = 6;
+  info.InnerStatusCode = static_cast<StatusCode>(6);
 
   GetStream() << info << flush;
 

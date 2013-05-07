@@ -1029,6 +1029,20 @@ namespace OpcUa
       id = value;
     }
 
+    template<>
+    void OStream::Serialize<StatusCode>(const StatusCode& status)
+    {
+      *this << static_cast<uint32_t>(status);
+    }
+
+    template<>
+    void IStream::Deserialize<StatusCode>(StatusCode&  status)
+    {
+      uint32_t value = 0;
+      *this >> value;
+      status = static_cast<StatusCode>(value);
+    }
+
   } // namespace Binary
 } // namespace OpcUa
 

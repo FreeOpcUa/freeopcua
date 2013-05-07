@@ -201,7 +201,7 @@ protected:
 #define FILL_TEST_RESPONSE_HEADER(header) \
   header.Timestamp = 1; \
   header.RequestHandle =  2; \
-  header.ServiceResult = 3; \
+  header.ServiceResult = static_cast<StatusCode>(3); \
   DiagnosticInfo info1; \
   info1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO); \
   info1.LocalizedText = 4; \
@@ -218,7 +218,7 @@ protected:
 #define ASSERT_RESPONSE_HEADER_EQ(header) \
   ASSERT_EQ(header.Timestamp, 1); \
   ASSERT_EQ(header.RequestHandle, 2); \
-  ASSERT_EQ(header.ServiceResult, 3); \
+  ASSERT_EQ(header.ServiceResult, static_cast<StatusCode>(3)); \
   ASSERT_EQ(header.InnerDiagnostics.size(), 2); \
   ASSERT_EQ(header.InnerDiagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO)); \
   ASSERT_EQ(header.InnerDiagnostics[0].LocalizedText, 4); \

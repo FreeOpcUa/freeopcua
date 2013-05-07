@@ -165,7 +165,7 @@ namespace OpcUa
   ResponseHeader::ResponseHeader()
     : Timestamp(CurrentDateTime())
     , RequestHandle(0)
-    , ServiceResult(0)
+    , ServiceResult(StatusCode::Good)
   {
   }
 

@@ -16,6 +16,7 @@
 #include <opc/ua/object_ids.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/datetime.h>
+#include <opc/ua/status_codes.h>
 #include <opc/ua/reference_ids.h>
 
 #include <stdint.h>
@@ -31,8 +32,6 @@ namespace OpcUa
     BOTH   = 2,
     NEITHER = 3
   };
-
-  typedef uint32_t StatusCode;
 
   class IntegerID
   {
@@ -133,7 +132,7 @@ namespace OpcUa
       , NamespaceURI(0)
       , LocalizedText(0)
       , Locale(0)
-      , InnerStatusCode(0)
+      , InnerStatusCode(StatusCode::Good)
     {
     }
   };

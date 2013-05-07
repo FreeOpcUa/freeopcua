@@ -92,6 +92,11 @@ namespace OpcUa
       return 16;
     }
 
+    template<>
+    std::size_t RawSize<StatusCode>(const StatusCode&)
+    {
+      return 4;
+    }
 
    template<>
     std::size_t RawSize<std::string>(const std::string& str)

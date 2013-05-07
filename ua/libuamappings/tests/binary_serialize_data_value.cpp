@@ -87,7 +87,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
   data.Value.Type = VariantType::BOOLEAN;
   data.Value.Value.Boolean = std::vector<bool>{true};
  
-  data.Status = 1;
+  data.Status = static_cast<StatusCode>(1);
   data.SourceTimestamp = 2;
   data.SourcePicoseconds = 3;
   data.ServerTimestamp = 4;
@@ -186,7 +186,7 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
 
   ASSERT_EQ(data.Encoding, encodingMask);
   ASSERT_FALSE(data.Value.IsNul());
-  ASSERT_EQ(data.Status, 1);
+  ASSERT_EQ(data.Status, static_cast<StatusCode>(1));
   ASSERT_EQ(data.SourceTimestamp, 2);
   ASSERT_EQ(data.SourcePicoseconds, 3);
   ASSERT_EQ(data.ServerTimestamp, 4);

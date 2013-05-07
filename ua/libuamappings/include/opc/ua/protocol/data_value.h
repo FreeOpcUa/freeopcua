@@ -34,7 +34,7 @@ namespace OpcUa
 
      DataValue()
        : Encoding(0)
-       , Status(0)
+       , Status(StatusCode::Good)
        , SourceTimestamp(0)
        , SourcePicoseconds(0)
        , ServerTimestamp(0)

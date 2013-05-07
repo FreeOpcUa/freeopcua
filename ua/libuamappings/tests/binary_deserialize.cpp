@@ -791,7 +791,7 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_InnerStatusCode)
   GetStream() >> info;
  
   ASSERT_EQ(info.EncodingMask, DIM_INNER_STATUS_CODE);
-  ASSERT_EQ(info.InnerStatusCode, 6);
+  ASSERT_EQ(info.InnerStatusCode, static_cast<StatusCode>(6));
 }
 
 //-------------------------------------------------------------------
