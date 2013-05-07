@@ -14,6 +14,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
+#include <opc/ua/protocol/monitored_items.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -88,7 +89,7 @@ namespace
 
         case MT_SECURE_MESSAGE:
         {
-          ProcessMessage(stream);
+          ProcessMessage(stream, hdr.MessageSize());
           break;
         }
 
@@ -188,7 +189,7 @@ namespace
       stream >> request;
     }
 
-    void ProcessMessage(IOStream& stream)
+    void ProcessMessage(IOStream& stream, std::size_t messageSize)
     {
       uint32_t channelID = 0;
       stream >> channelID;
@@ -327,6 +328,33 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case CREATE_MONITORED_ITEMS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
+          const std::size_t receivedSize =
+            RawSize(channelID) +
+            RawSize(algorithmHeader) +
+            RawSize(sequence) + 
+            RawSize(typeID) +
+            RawSize(requestHeader);
+
+          const std::size_t restSize = messageSize - receivedSize;
+          std::vector<char> data(restSize);
+          RawBuffer buffer(&data[0], restSize);
+          stream >> buffer;
+
+          CreateMonitoredItemsResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to Create Monitored Items Request." << std::endl;
           stream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
