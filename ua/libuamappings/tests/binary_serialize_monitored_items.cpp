@@ -41,11 +41,17 @@ TEST_F(MonitoredItemsSerialization, MonitoredItemsData)
   GetStream() << data << flush;
 
   const std::vector<char> expectedData = {
-    -1, -1, -1, -1,
-    -1, -1, -1, -1
+    1,0,0,0,         // Results count
+    0,0,(char)0x44,(char)0x80,   // StatusCode
+    0,0,0,0,         // MonitoredItemID
+    0,0,0,0,0,0,0,0, // RevisedSamplingInterval
+    0,0,0,0,         // RevizedQueueSize
+    0,0,0,           // FilterResult (empty Extension object)
+
+    0,0,0,0  // Diagnostics Count
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(data));
 }
 
@@ -69,8 +75,14 @@ TEST_F(MonitoredItemsSerialization, CreateMonitoredItemsResponse)
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    -1, -1, -1, -1,
-    -1, -1, -1, -1
+    1,0,0,0,         // Results count
+    0,0,(char)0x44,(char)0x80,   // StatusCode
+    0,0,0,0,         // MonitoredItemID
+    0,0,0,0,0,0,0,0, // RevisedSamplingInterval
+    0,0,0,0,         // RevizedQueueSize
+    0,0,0,           // FilterResult (empty Extension object)
+
+    0,0,0,0  // Diagnostics Count
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);

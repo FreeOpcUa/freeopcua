@@ -165,14 +165,24 @@ namespace OpcUa
   };
 
   ///////////////////////////////////////////////////////////////////////
+  // TODO Fake
+  struct CreateMonitoredItemsResult
+  {
+    uint32_t StatusCode;
+    uint32_t MonitoredItemID;
+    Duration RevisedSamplingInterval;
+    uint32_t RevizedQueueSize;
+    ExtensionObjectHeader FilterResult;
+
+    CreateMonitoredItemsResult();
+  };
 
   struct MonitoredItemsData
   {
-    // TODO: place Results into a struct
-    // TODO: replace uint8_t with MonitoredItemsResult
-    // TODO: result contain a vector, I will response with empty container
-    std::vector<uint8_t> Results;
+    std::vector<CreateMonitoredItemsResult> Results;
     std::vector<DiagnosticInfo> Infos;
+
+    MonitoredItemsData();
   };
 
   struct CreateMonitoredItemsResponse

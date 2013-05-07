@@ -104,6 +104,10 @@ namespace
 
 namespace OpcUa
 {
+  ExtensionObjectHeader::ExtensionObjectHeader()
+  {
+  }
+
   /// TODO move to apropriate file
   ExtensionObjectHeader::ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding)
     : Encoding(encoding)

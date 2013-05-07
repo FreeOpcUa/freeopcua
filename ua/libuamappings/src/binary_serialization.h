@@ -17,11 +17,11 @@
 namespace OpcUa
 {
   template<class Stream, class Container>
-  inline void SerializeContainer(Stream& out, const Container& c)
+  inline void SerializeContainer(Stream& out, const Container& c, uint32_t emptySizeValue = ~uint32_t())
   {
     if (c.size() == 0)
     {
-      out << ~uint32_t();
+      out << emptySizeValue;
       return;
     }
     out << (uint32_t)c.size();

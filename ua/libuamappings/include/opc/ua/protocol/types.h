@@ -238,6 +238,7 @@ namespace OpcUa
     NodeID TypeID;
     ExtensionObjectEncoding Encoding;
 
+    ExtensionObjectHeader();
     ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding);
   };
 
