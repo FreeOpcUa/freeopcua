@@ -18,6 +18,7 @@ namespace OpcUa
   {
     Good = 0,
     BadNotImplemented = 0x80440000,
+    BadNotReadable    = 0x806F0000,
   };
 }
 

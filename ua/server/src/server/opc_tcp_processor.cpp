@@ -408,7 +408,7 @@ namespace
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
           BrowsePathResult path;
-          path.Status = StatusCode::BadNotImplemented;
+          path.Status = StatusCode::BadNotReadable;
           response.Result.Paths.push_back(path);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
