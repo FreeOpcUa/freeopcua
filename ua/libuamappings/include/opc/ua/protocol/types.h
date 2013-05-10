@@ -230,6 +230,7 @@ namespace OpcUa
 
   enum ExtensionObjectEncoding : uint8_t
   {
+    NONE = 0,
     HAS_BINARY_BODY = 1,
     HAS_XML_BODY    = 2,
   };

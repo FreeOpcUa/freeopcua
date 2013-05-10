@@ -105,6 +105,7 @@ namespace
 namespace OpcUa
 {
   ExtensionObjectHeader::ExtensionObjectHeader()
+    : Encoding(ExtensionObjectEncoding::NONE)
   {
   }
 
@@ -834,7 +835,7 @@ namespace OpcUa
       {
         *this << *diagIt;
       }
-      SerializeContainer(*this, header.StringTable);
+      SerializeContainer(*this, header.StringTable, 0);
       *this << header.Additional;
     }
 
