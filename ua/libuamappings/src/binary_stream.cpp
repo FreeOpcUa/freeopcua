@@ -812,6 +812,19 @@ namespace OpcUa
     };
 
     template<>
+    void OStream::Serialize<std::vector<OpcUa::DiagnosticInfo>>(const std::vector<OpcUa::DiagnosticInfo>& infos)
+    {
+      const uint32_t emptyValue = 0;
+      SerializeContainer(*this, infos, emptyValue);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<OpcUa::DiagnosticInfo>>(std::vector<OpcUa::DiagnosticInfo>& infos)
+    {
+      DeserializeContainer(*this, infos);
+    }
+
+    template<>
     void OStream::Serialize<OpcUa::ResponseHeader>(const OpcUa::ResponseHeader& header)
     {
       *this << header.Timestamp;
@@ -1015,6 +1028,10 @@ namespace OpcUa
       *this >> name.Name;
     }
 
+    ////////////////////////////////////////////////////////////////////
+    // IntegerID
+    ////////////////////////////////////////////////////////////////////
+
     template<>
     void OStream::Serialize<IntegerID>(const IntegerID& id)
     {
@@ -1028,6 +1045,10 @@ namespace OpcUa
       *this >> value;
       id = value;
     }
+
+    ////////////////////////////////////////////////////////////////////
+    // StatusCode
+    ////////////////////////////////////////////////////////////////////
 
     template<>
     void OStream::Serialize<StatusCode>(const StatusCode& status)

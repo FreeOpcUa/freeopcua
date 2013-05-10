@@ -58,14 +58,17 @@ namespace OpcUa
     }
   };
 
-
-  struct RelativePath
+  struct RelativePathElement
   {
-    std::vector<QualifiedName> Elements;
-    NodeID TypeID;
+    NodeID ReferenceTypeID;
     bool IsInverse;
     bool IncludeSubtypes;
     QualifiedName TargetName;
+  };
+
+  struct RelativePath
+  {
+    std::vector<RelativePathElement> Elements;
   };
 
   // LocalizedText encoding mask

@@ -121,6 +121,9 @@ namespace OpcUa
     BrowseResponse();
   };
 
+  //---------------------------------------------------
+  // BrowseNext
+  //---------------------------------------------------
 
   struct BrowseNextRequest
   {
@@ -142,6 +145,63 @@ namespace OpcUa
     std::vector<DiagnosticInfo> Diagnostics;
 
     BrowseNextResponse();
+  };
+
+  //---------------------------------------------------
+  // TranslateBrowsePathsToNodeIDs
+  //---------------------------------------------------
+
+  struct BrowsePath
+  {
+    NodeID StartingNode;
+    RelativePath Path;
+  };
+
+  struct TranslateBrowsePathsParameters
+  {
+    std::vector<BrowsePath> BrowsePaths;
+  };
+
+  struct TranslateBrowsePathsToNodeIDsRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    TranslateBrowsePathsParameters Parameters;
+  };
+
+  //---------------------------------------------------
+  // TranslateBrowsePathsToNodeIDs
+  //---------------------------------------------------
+
+  struct BrowsePathTarget
+  {
+    NodeID Node;
+    uint32_t RemainingPathIndex;
+
+    BrowsePathTarget();
+  };
+
+  struct BrowsePathResult
+  {
+    StatusCode Status;
+    std::vector<BrowsePathTarget> Targets;
+
+    BrowsePathResult();
+  };
+
+  struct TranslateBrowsePathsResult
+  {
+    std::vector<BrowsePathResult> Paths;
+    std::vector<DiagnosticInfo> Diagnostics;
+  };
+
+  struct TranslateBrowsePathsToNodeIDsResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    TranslateBrowsePathsResult Result;
+
+    TranslateBrowsePathsToNodeIDsResponse();
   };
 
 } // namespace OpcUa

@@ -82,6 +82,21 @@ namespace OpcUa
   {
   }
 
+  BrowsePathTarget::BrowsePathTarget()
+    : RemainingPathIndex(0)
+  {
+  }
+
+  BrowsePathResult::BrowsePathResult()
+    : Status(StatusCode::Good)
+  {
+  }
+
+  TranslateBrowsePathsToNodeIDsResponse::TranslateBrowsePathsToNodeIDsResponse()
+    : TypeID(TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE)
+  {
+  }
+
   namespace Binary
   {
     ////////////////////////////////////////////////////////////////
@@ -411,6 +426,128 @@ namespace OpcUa
 
       DeserializeContainer(*this, response.Results);
       DeserializeContainer(*this, response.Diagnostics);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // BrowsePathTarget
+    ////////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<BrowsePathTarget>(const BrowsePathTarget& target)
+    {
+      return RawSize(target.Node) + RawSize(target.RemainingPathIndex);
+    }
+
+    template<>
+    void OStream::Serialize<BrowsePathTarget>(const BrowsePathTarget& target)
+    {
+      *this << target.Node;
+      *this << target.RemainingPathIndex;
+    }
+
+    template<>
+    void IStream::Deserialize<BrowsePathTarget>(BrowsePathTarget& target)
+    {
+      *this >> target.Node;
+      *this >> target.RemainingPathIndex;
+    }
+
+    template<>
+    void OStream::Serialize<std::vector<BrowsePathTarget>>(const std::vector<BrowsePathTarget>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<BrowsePathTarget>>(std::vector<BrowsePathTarget>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // BrowsePathTarget
+    ////////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<BrowsePathResult>(const BrowsePathResult& result)
+    {
+      return RawSize(result.Status) + RawSizeContainer(result.Targets);
+    }
+
+    template<>
+    void OStream::Serialize<BrowsePathResult>(const BrowsePathResult& result)
+    {
+      *this << result.Status;
+      *this << result.Targets;
+    }
+
+    template<>
+    void IStream::Deserialize<BrowsePathResult>(BrowsePathResult& result)
+    {
+      *this >> result.Status;
+      *this >> result.Targets;
+    }
+
+    template<>
+    void OStream::Serialize<std::vector<BrowsePathResult>>(const std::vector<BrowsePathResult>& results)
+    {
+      SerializeContainer(*this, results);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<BrowsePathResult>>(std::vector<BrowsePathResult>& results)
+    {
+      DeserializeContainer(*this, results);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // TranslateBrowsePathsResult
+    ////////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<TranslateBrowsePathsResult>(const TranslateBrowsePathsResult& result)
+    {
+      return RawSizeContainer(result.Paths) + RawSizeContainer(result.Diagnostics);
+    }
+
+    template<>
+    void OStream::Serialize<TranslateBrowsePathsResult>(const TranslateBrowsePathsResult& result)
+    {
+      *this << result.Paths;
+      *this << result.Diagnostics;
+    }
+
+    template<>
+    void IStream::Deserialize<TranslateBrowsePathsResult>(TranslateBrowsePathsResult& result)
+    {
+      *this >> result.Paths;
+      *this >> result.Diagnostics;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // TranslateBrowsePathsToNodeIDsResponse
+    ////////////////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<TranslateBrowsePathsToNodeIDsResponse>(const TranslateBrowsePathsToNodeIDsResponse& response)
+    {
+      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+    }
+
+    template<>
+    void OStream::Serialize<TranslateBrowsePathsToNodeIDsResponse>(const TranslateBrowsePathsToNodeIDsResponse& response)
+    {
+      *this << response.TypeID;
+      *this << response.Header;
+      *this << response.Result;
+    }
+
+    template<>
+    void IStream::Deserialize<TranslateBrowsePathsToNodeIDsResponse>(TranslateBrowsePathsToNodeIDsResponse& response)
+    {
+      *this >> response.TypeID;
+      *this >> response.Header;
+      *this >> response.Result;
     }
 
   } // namespace Binary
