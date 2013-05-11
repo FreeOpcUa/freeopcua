@@ -98,7 +98,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   NotificationMessage::NotificationMessage()
-    : SequenceID(0)
+    : SequenceID(1)
     , PublishTime(CurrentDateTime())
   {
   }
@@ -369,7 +369,7 @@ namespace OpcUa
     {
       *this << message.SequenceID;
       *this << message.PublishTime;
-      SerializeContainer(*this, message.Data);
+      SerializeContainer(*this, message.Data, 0);
     }
 
     ////////////////////////////////////////////////////////
@@ -402,11 +402,11 @@ namespace OpcUa
     void OStream::Serialize<PublishResult>(const PublishResult& result)
     {
       *this << result.SubscriptionID;
-      SerializeContainer(*this, result.AvailableSequenceNumber);
+      SerializeContainer(*this, result.AvailableSequenceNumber, 0);
       *this << result.MoreNotifications;
       *this << result.Message;
-      SerializeContainer(*this, result.Statuses);
-      SerializeContainer(*this, result.Diagnostics);
+      SerializeContainer(*this, result.Statuses, 0);
+      SerializeContainer(*this, result.Diagnostics, 0);
     }
 
     ////////////////////////////////////////////////////////
