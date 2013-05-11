@@ -441,6 +441,25 @@ namespace
           return;
         }
 
+        case SET_PUBLISHING_MODE_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
+          SetPublishingModeRequest request;
+
+          SetPublishingModeResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Result.Statuses.resize(request.Parameters.SubscriptionIDs.size(), StatusCode::Good);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Set Publishing Mode' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
 
         default:
         {
