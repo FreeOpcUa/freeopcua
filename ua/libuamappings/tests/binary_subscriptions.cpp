@@ -57,7 +57,7 @@ TEST_F(SubscriptionSerialization, SubscriptionParameters)
     5
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(params));
 }
 
@@ -128,7 +128,7 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionRequest)
     5
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
@@ -195,7 +195,7 @@ TEST_F(SubscriptionSerialization, SubscriptionData)
     4,0,0,0,
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(data));
 }
 
@@ -257,7 +257,7 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
     4,0,0,0,
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
@@ -316,7 +316,7 @@ TEST_F(SubscriptionSerialization, SubscriptionAcknowledgement)
     2,0,0,0,
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(ack));
 }
 
@@ -363,7 +363,7 @@ TEST_F(SubscriptionSerialization, PublishParameters)
     2,0,0,0,
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(params));
 }
 
@@ -423,7 +423,7 @@ TEST_F(SubscriptionSerialization, PublishRequest)
     2,0,0,0
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
@@ -458,6 +458,54 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
   ASSERT_EQ(request.Parameters.Acknowledgements.size(), 1);
 }
 
+//-------------------------------------------------------
+// NotificationData
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, NotificationData)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  NotificationData data;
+  data.SequenceID = 1;
+  data.PublishTime = 2;
+
+  GetStream() << data << flush;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(data));
+}
+
+TEST_F(SubscriptionDeserialization, NotificationData)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+  };
+
+  GetChannel().SetData(expectedData);
+
+  NotificationData data;
+  GetStream() >> data;
+
+  ASSERT_EQ(data.SequenceID, IntegerID(1));
+  ASSERT_EQ(data.PublishTime, 2);
+}
 
 //-------------------------------------------------------
 // PublishResult
@@ -472,7 +520,10 @@ TEST_F(SubscriptionSerialization, PublishResult)
   result.SubscriptionID = 1;
   result.AvailableSequenceNumber.push_back(2);
   result.MoreNotifications = true;
-  // result.Message.Header;
+
+  result.Data.SequenceID = 1;
+  result.Data.PublishTime = 2;
+
   result.Statuses.push_back(StatusCode::Good);
 
   DiagnosticInfo diag1;
@@ -493,9 +544,14 @@ TEST_F(SubscriptionSerialization, PublishResult)
     2,0,0,0,
     // MoreNotifications
     1,
+
+    // NotificationData
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
     //Message.Header
     0,0, // TypeID
     0,   // Encoding
+
     // Statuses
     1,0,0,0,
     0,0,0,0,
@@ -505,7 +561,7 @@ TEST_F(SubscriptionSerialization, PublishResult)
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(result));
 }
 
@@ -521,9 +577,14 @@ TEST_F(SubscriptionDeserialization, PublishResult)
     2,0,0,0,
     // MoreNotifications
     1,
+
+    // NotificationData
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
     //Message.Header
     0,0, // TypeID
     0,   // Encoding
+
     // Statuses
     1,0,0,0,
     0,0,0,0,
@@ -567,7 +628,9 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   response.Result.SubscriptionID = 1;
   response.Result.AvailableSequenceNumber.push_back(2);
   response.Result.MoreNotifications = true;
-  // result.Message.Header;
+  response.Result.Data.SequenceID = 1;
+  response.Result.Data.PublishTime = 2;
+
   response.Result.Statuses.push_back(StatusCode::Good);
 
   DiagnosticInfo diag1;
@@ -593,9 +656,14 @@ TEST_F(SubscriptionSerialization, PublishResponse)
     2,0,0,0,
     // MoreNotifications
     1,
+
+    // NotificationData
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
     //Message.Header
     0,0, // TypeID
     0,   // Encoding
+
     // Statuses
     1,0,0,0,
     0,0,0,0,
@@ -605,7 +673,7 @@ TEST_F(SubscriptionSerialization, PublishResponse)
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
-  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
@@ -626,9 +694,14 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
     2,0,0,0,
     // MoreNotifications
     1,
+
+    // NotificationData
+    1,0,0,0, // SequenceID
+    2,0,0,0,0,0,0,0, // PublishTime
     //Message.Header
     0,0, // TypeID
     0,   // Encoding
+
     // Statuses
     1,0,0,0,
     0,0,0,0,

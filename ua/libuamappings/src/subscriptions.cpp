@@ -94,6 +94,16 @@ namespace OpcUa
   }
 
   ////////////////////////////////////////////////////////
+  // NotificationData
+  ////////////////////////////////////////////////////////
+
+  NotificationData::NotificationData()
+    : SequenceID(0)
+    , PublishTime(CurrentDateTime())
+  {
+  }
+
+  ////////////////////////////////////////////////////////
 
   namespace Binary
   {
@@ -313,6 +323,34 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////
+    // NotificationData
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const NotificationData& data)
+    {
+      return RawSize(data.SequenceID) +
+        RawSize(data.PublishTime) +
+        RawSize(data.Message.Header); // TODO Add serialization of NotificationMessage
+    }
+
+    template<>
+    void IStream::Deserialize<NotificationData>(NotificationData& data)
+    {
+      *this >> data.SequenceID;
+      *this >> data.PublishTime;
+      *this >> data.Message.Header; // TODO Add serialization of NotificationMessage
+    }
+
+    template<>
+    void OStream::Serialize<NotificationData>(const NotificationData& data)
+    {
+      *this << data.SequenceID;
+      *this << data.PublishTime;
+      *this << data.Message.Header; // TODO Add serialization of NotificationMessage
+    }
+
+    ////////////////////////////////////////////////////////
     // PublishResult
     ////////////////////////////////////////////////////////
 
@@ -322,7 +360,7 @@ namespace OpcUa
       return RawSize(result.SubscriptionID) +
         RawSizeContainer(result.AvailableSequenceNumber) +
         RawSize(result.MoreNotifications) +
-        RawSize(result.Message.Header) +
+        RawSize(result.Data) +
         RawSizeContainer(result.Statuses) +
         RawSizeContainer(result.Diagnostics);
     }
@@ -333,7 +371,7 @@ namespace OpcUa
       *this >> result.SubscriptionID;
       DeserializeContainer(*this, result.AvailableSequenceNumber);
       *this >> result.MoreNotifications;
-      *this >> result.Message.Header;// TODO Add serialization of Notofication message
+      *this >> result.Data;
       DeserializeContainer(*this, result.Statuses);
       DeserializeContainer(*this, result.Diagnostics);
     }
@@ -344,7 +382,7 @@ namespace OpcUa
       *this << result.SubscriptionID;
       SerializeContainer(*this, result.AvailableSequenceNumber);
       *this << result.MoreNotifications;
-      *this << result.Message.Header;// TODO Add serialization of Notofication message
+      *this << result.Data;
       SerializeContainer(*this, result.Statuses);
       SerializeContainer(*this, result.Diagnostics);
     }
