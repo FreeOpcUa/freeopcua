@@ -11,6 +11,8 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/subscriptions.h>
 
+#include "binary_serialization.h"
+
 namespace OpcUa
 {
   ////////////////////////////////////////////////////////
@@ -54,6 +56,44 @@ namespace OpcUa
     : TypeID(CREATE_SUBSCRIPTION_RESPONSE)
   {
   }
+
+  ////////////////////////////////////////////////////////
+  // SubscriptionAcknowledgement
+  ////////////////////////////////////////////////////////
+
+  SubscriptionAcknowledgement::SubscriptionAcknowledgement()
+    : SequenceNumber(0)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
+  // PublishRequest
+  ////////////////////////////////////////////////////////
+
+  PublishRequest::PublishRequest()
+    : TypeID(PUBLISH_REQUEST)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
+  // PublishResult
+  ////////////////////////////////////////////////////////
+
+  PublishResult::PublishResult()
+    : MoreNotifications(false)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
+  // PublishResponse
+  ////////////////////////////////////////////////////////
+
+  PublishResponse::PublishResponse()
+    : TypeID(PUBLISH_RESPONSE)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
 
   namespace Binary
   {
@@ -181,5 +221,159 @@ namespace OpcUa
       *this << response.Data;
     }
 
-  }
+    ////////////////////////////////////////////////////////
+    // SubscriptionAcknowledgement
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const SubscriptionAcknowledgement& ack)
+    {
+      return RawSize(ack.SubscriptionID) + RawSize(ack.SequenceNumber);
+    }
+
+    template<>
+    void IStream::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement& ack)
+    {
+      *this >> ack.SubscriptionID;
+      *this >> ack.SequenceNumber;
+    }
+
+    template<>
+    void OStream::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& ack)
+    {
+      *this << ack.SubscriptionID;
+      *this << ack.SequenceNumber;
+    }
+
+    template<>
+    std::size_t RawSize(const std::vector<SubscriptionAcknowledgement>& ack)
+    {
+      return RawSizeContainer(ack);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<SubscriptionAcknowledgement>>(std::vector<SubscriptionAcknowledgement>& ack)
+    {
+      DeserializeContainer(*this, ack);
+    }
+
+    template<>
+    void OStream::Serialize<std::vector<SubscriptionAcknowledgement>>(const std::vector<SubscriptionAcknowledgement>& ack)
+    {
+      SerializeContainer(*this, ack);
+    }
+
+
+    ////////////////////////////////////////////////////////
+    // PublishParameters
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishParameters& params)
+    {
+      return RawSize(params.Acknowledgements);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishParameters>(PublishParameters& params)
+    {
+      *this >> params.Acknowledgements;
+    }
+
+    template<>
+    void OStream::Serialize<PublishParameters>(const PublishParameters& params)
+    {
+      *this << params.Acknowledgements;
+    }
+
+    ////////////////////////////////////////////////////////
+    // PublishRequest
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishRequest& request)
+    {
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishRequest>(PublishRequest& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.Parameters;
+    }
+
+    template<>
+    void OStream::Serialize<PublishRequest>(const PublishRequest& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.Parameters;
+    }
+
+    ////////////////////////////////////////////////////////
+    // PublishResult
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishResult& result)
+    {
+      return RawSize(result.SubscriptionID) +
+        RawSizeContainer(result.AvailableSequenceNumber) +
+        RawSize(result.MoreNotifications) +
+        RawSize(result.Message.Header) +
+        RawSizeContainer(result.Statuses) +
+        RawSizeContainer(result.Diagnostics);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishResult>(PublishResult& result)
+    {
+      *this >> result.SubscriptionID;
+      DeserializeContainer(*this, result.AvailableSequenceNumber);
+      *this >> result.MoreNotifications;
+      *this >> result.Message.Header;// TODO Add serialization of Notofication message
+      DeserializeContainer(*this, result.Statuses);
+      DeserializeContainer(*this, result.Diagnostics);
+    }
+
+    template<>
+    void OStream::Serialize<PublishResult>(const PublishResult& result)
+    {
+      *this << result.SubscriptionID;
+      SerializeContainer(*this, result.AvailableSequenceNumber);
+      *this << result.MoreNotifications;
+      *this << result.Message.Header;// TODO Add serialization of Notofication message
+      SerializeContainer(*this, result.Statuses);
+      SerializeContainer(*this, result.Diagnostics);
+    }
+
+    ////////////////////////////////////////////////////////
+    // PublishResponse
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishResponse& response)
+    {
+      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishResponse>(PublishResponse& response)
+    {
+      *this >> response.TypeID;
+      *this >> response.Header;
+      *this >> response.Result;
+    }
+
+    template<>
+    void OStream::Serialize<PublishResponse>(const PublishResponse& response)
+    {
+      *this << response.TypeID;
+      *this << response.Header;
+      *this << response.Result;
+    }
+
+  } // namespace Binary
 } // namespace OpcUa

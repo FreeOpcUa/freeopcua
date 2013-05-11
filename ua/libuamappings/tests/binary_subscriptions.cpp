@@ -222,7 +222,7 @@ TEST_F(SubscriptionDeserialization, SubscriptionData)
   ASSERT_EQ(data.RevizedMaxKeepAliveCount, 4);
 }
 //-------------------------------------------------------
-// CreateSubscriptionRequest
+// CreateSubscriptionResponse
 //-------------------------------------------------------
 
 TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
@@ -293,4 +293,361 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
   ASSERT_EQ(response.Data.RevisedPublishingInterval, 1200000);
   ASSERT_EQ(response.Data.RevisedLifetimeCount, 3);
   ASSERT_EQ(response.Data.RevizedMaxKeepAliveCount, 4);
+}
+
+//-------------------------------------------------------
+// SubscriptionAcknowledgement
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, SubscriptionAcknowledgement)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  SubscriptionAcknowledgement ack;
+  ack.SubscriptionID = 1;
+  ack.SequenceNumber = 2;
+
+  GetStream() << ack << flush;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0,
+    2,0,0,0,
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(ack));
+}
+
+TEST_F(SubscriptionDeserialization, SubscriptionAcknowledgement)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0,
+    2,0,0,0,
+  };
+
+  GetChannel().SetData(expectedData);
+
+  SubscriptionAcknowledgement ack;
+  GetStream() >> ack;
+
+  ASSERT_EQ(ack.SubscriptionID, 1);
+  ASSERT_EQ(ack.SequenceNumber, 2);
+}
+
+//-------------------------------------------------------
+// PublishParameters
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, PublishParameters)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  SubscriptionAcknowledgement ack;
+  ack.SubscriptionID = 1;
+  ack.SequenceNumber = 2;
+
+  PublishParameters params;
+  params.Acknowledgements.push_back(ack);
+
+  GetStream() << params << flush;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // Count of acks
+    1,0,0,0,
+    2,0,0,0,
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(params));
+}
+
+TEST_F(SubscriptionDeserialization, PublishParameters)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // Count of acks
+    1,0,0,0,
+    2,0,0,0,
+  };
+
+  GetChannel().SetData(expectedData);
+
+  PublishParameters params;
+  GetStream() >> params;
+
+  ASSERT_EQ(params.Acknowledgements.size(), 1);
+}
+
+//-------------------------------------------------------
+// CreateSubscriptionRequest
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, PublishRequest)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  PublishRequest request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+
+  FILL_TEST_REQUEST_HEADER(request.Header);
+
+  SubscriptionAcknowledgement ack;
+  ack.SubscriptionID = 1;
+  ack.SequenceNumber = 2;
+
+  request.Parameters.Acknowledgements.push_back(ack);
+
+  GetStream() << request << flush;
+
+  const std::vector<char> expectedData = {
+    1, 0, (char)0x3A, 0x3, // TypeID
+
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+
+    // Parameters
+    1,0,0,0, // Count of acks
+    1,0,0,0,
+    2,0,0,0
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(request));
+}
+
+TEST_F(SubscriptionDeserialization, PublishRequest)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1, 0, (char)0x3A, 0x3, // TypeID
+
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+
+    // Parameters
+    1,0,0,0, // Count of acks
+    1,0,0,0,
+    2,0,0,0
+  };
+
+  GetChannel().SetData(expectedData);
+
+  PublishRequest request;
+  GetStream() >> request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+
+  ASSERT_REQUEST_HEADER_EQ(request.Header);
+
+  ASSERT_EQ(request.Parameters.Acknowledgements.size(), 1);
+}
+
+
+//-------------------------------------------------------
+// PublishResult
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, PublishResult)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  PublishResult result;
+  result.SubscriptionID = 1;
+  result.AvailableSequenceNumber.push_back(2);
+  result.MoreNotifications = true;
+  // result.Message.Header;
+  result.Statuses.push_back(StatusCode::Good);
+
+  DiagnosticInfo diag1;
+  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag1.LocalizedText = 4;
+  DiagnosticInfo diag2;
+  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
+  diag2.AdditionalInfo = "add";
+  result.Diagnostics.push_back(diag1);
+  result.Diagnostics.push_back(diag2);
+
+  GetStream() << result << flush;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // SubscriptionID
+    //AvailableSequenceNumbers
+    1,0,0,0, // count
+    2,0,0,0,
+    // MoreNotifications
+    1,
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+    // Statuses
+    1,0,0,0,
+    0,0,0,0,
+    // Diagnostics
+    2,0,0,0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(result));
+}
+
+TEST_F(SubscriptionDeserialization, PublishResult)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1,0,0,0, // SubscriptionID
+    //AvailableSequenceNumbers
+    1,0,0,0, // count
+    2,0,0,0,
+    // MoreNotifications
+    1,
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+    // Statuses
+    1,0,0,0,
+    0,0,0,0,
+    // Diagnostics
+    2,0,0,0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  GetChannel().SetData(expectedData);
+
+  PublishResult result;
+  GetStream() >> result;
+
+  ASSERT_EQ(result.SubscriptionID, 1);
+  ASSERT_EQ(result.AvailableSequenceNumber.size(), 1);
+  ASSERT_EQ(result.MoreNotifications, true);
+  //TODO check result.Message.Header;
+  ASSERT_EQ(result.Statuses.size(), 1);
+  ASSERT_EQ(result.Diagnostics.size(), 2);
+}
+
+//-------------------------------------------------------
+// PublishResponse
+//-------------------------------------------------------
+
+TEST_F(SubscriptionSerialization, PublishResponse)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  PublishResponse response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+
+  FILL_TEST_RESPONSE_HEADER(response.Header);
+
+  PublishResult result;
+  response.Result.SubscriptionID = 1;
+  response.Result.AvailableSequenceNumber.push_back(2);
+  response.Result.MoreNotifications = true;
+  // result.Message.Header;
+  response.Result.Statuses.push_back(StatusCode::Good);
+
+  DiagnosticInfo diag1;
+  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag1.LocalizedText = 4;
+  DiagnosticInfo diag2;
+  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
+  diag2.AdditionalInfo = "add";
+  response.Result.Diagnostics.push_back(diag1);
+  response.Result.Diagnostics.push_back(diag2);
+
+  GetStream() << response << flush;
+
+  const std::vector<char> expectedData = {
+    1, 0, (char)0x3D, 0x3, // TypeID
+
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
+
+    1,0,0,0, // SubscriptionID
+    //AvailableSequenceNumbers
+    1,0,0,0, // count
+    2,0,0,0,
+    // MoreNotifications
+    1,
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+    // Statuses
+    1,0,0,0,
+    0,0,0,0,
+    // Diagnostics
+    2,0,0,0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(response));
+}
+
+TEST_F(SubscriptionDeserialization, PublishResponse)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+    1, 0, (char)0x3D, 0x3, // TypeID
+
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
+
+    1,0,0,0, // SubscriptionID
+    //AvailableSequenceNumbers
+    1,0,0,0, // count
+    2,0,0,0,
+    // MoreNotifications
+    1,
+    //Message.Header
+    0,0, // TypeID
+    0,   // Encoding
+    // Statuses
+    1,0,0,0,
+    0,0,0,0,
+    // Diagnostics
+    2,0,0,0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+  };
+
+  GetChannel().SetData(expectedData);
+
+  PublishResponse response;
+  GetStream() >> response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+
+  ASSERT_RESPONSE_HEADER_EQ(response.Header);
+
+  ASSERT_EQ(response.Result.Diagnostics.size(), 2);
 }

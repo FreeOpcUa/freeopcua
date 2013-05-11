@@ -71,6 +71,79 @@ namespace OpcUa
     CreateSubscriptionResponse();
   };
 
+  ////////////////////////////////////////////////////////
+  // SubscriptionAcknowledgement
+  ////////////////////////////////////////////////////////
+
+  struct SubscriptionAcknowledgement
+  {
+    IntegerID SubscriptionID;
+    uint32_t SequenceNumber;
+
+    SubscriptionAcknowledgement();
+  };
+
+  ////////////////////////////////////////////////////////
+  // PublishParameters
+  ////////////////////////////////////////////////////////
+
+  struct PublishParameters
+  {
+    std::vector<SubscriptionAcknowledgement> Acknowledgements;
+  };
+
+  ////////////////////////////////////////////////////////
+  // PublishRequest
+  ////////////////////////////////////////////////////////
+
+  struct PublishRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    PublishParameters Parameters;
+
+    PublishRequest();
+  };
+
+  ////////////////////////////////////////////////////////
+  // NotificationMessage
+  ////////////////////////////////////////////////////////
+
+  struct NotificationMessage
+  {
+    ExtensionObjectHeader Header;
+    // TODO Notification message content.
+  };
+
+  ////////////////////////////////////////////////////////
+  // PublishResult
+  ////////////////////////////////////////////////////////
+
+  struct PublishResult
+  {
+    IntegerID SubscriptionID;
+    std::vector<uint32_t> AvailableSequenceNumber;
+    bool MoreNotifications;
+    NotificationMessage Message;
+    std::vector<StatusCode> Statuses;
+    std::vector<DiagnosticInfo> Diagnostics;
+
+    PublishResult();
+  };
+
+  ////////////////////////////////////////////////////////
+  // PublishResponse
+  ////////////////////////////////////////////////////////
+
+  struct PublishResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    PublishResult Result;
+
+    PublishResponse();
+  };
+
 } // namespace OpcUa
 
 #endif /// OPC_UA_PROTOCOL_SUBSCRIPTIONS_H
