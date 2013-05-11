@@ -109,23 +109,23 @@ namespace OpcUa
   // NotificationMessage
   ////////////////////////////////////////////////////////
 
-  struct NotificationMessage
+  struct NotificationData
   {
     ExtensionObjectHeader Header;
     // TODO Notification message content.
   };
 
   ////////////////////////////////////////////////////////
-  // NotificationData
+  // NotificationMessage
   ////////////////////////////////////////////////////////
 
-  struct NotificationData
+  struct NotificationMessage
   {
     uint32_t SequenceID;
     DateTime PublishTime;
-    NotificationMessage Message;
+    std::vector<NotificationData> Data;
 
-    NotificationData();
+    NotificationMessage();
   };
 
   ////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ namespace OpcUa
     IntegerID SubscriptionID;
     std::vector<uint32_t> AvailableSequenceNumber;
     bool MoreNotifications;
-    NotificationData Data;
+    NotificationMessage Message;
     std::vector<StatusCode> Statuses;
     std::vector<DiagnosticInfo> Diagnostics;
 

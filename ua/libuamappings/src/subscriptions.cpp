@@ -97,7 +97,7 @@ namespace OpcUa
   // NotificationData
   ////////////////////////////////////////////////////////
 
-  NotificationData::NotificationData()
+  NotificationMessage::NotificationMessage()
     : SequenceID(0)
     , PublishTime(CurrentDateTime())
   {
@@ -323,31 +323,53 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////
-    // NotificationData
+    // NotificationMessage
     ////////////////////////////////////////////////////////
 
     template<>
     std::size_t RawSize(const NotificationData& data)
     {
-      return RawSize(data.SequenceID) +
-        RawSize(data.PublishTime) +
-        RawSize(data.Message.Header); // TODO Add serialization of NotificationMessage
+      return RawSize(data.Header);
     }
 
     template<>
     void IStream::Deserialize<NotificationData>(NotificationData& data)
     {
-      *this >> data.SequenceID;
-      *this >> data.PublishTime;
-      *this >> data.Message.Header; // TODO Add serialization of NotificationMessage
+      *this >> data.Header;
     }
 
     template<>
     void OStream::Serialize<NotificationData>(const NotificationData& data)
     {
-      *this << data.SequenceID;
-      *this << data.PublishTime;
-      *this << data.Message.Header; // TODO Add serialization of NotificationMessage
+      *this << data.Header;
+    }
+
+    ////////////////////////////////////////////////////////
+    // NotificationMessage
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const NotificationMessage& message)
+    {
+      return RawSize(message.SequenceID) +
+        RawSize(message.PublishTime) +
+        RawSizeContainer(message.Data);
+    }
+
+    template<>
+    void IStream::Deserialize<NotificationMessage>(NotificationMessage& message)
+    {
+      *this >> message.SequenceID;
+      *this >> message.PublishTime;
+      DeserializeContainer(*this, message.Data);
+    }
+
+    template<>
+    void OStream::Serialize<NotificationMessage>(const NotificationMessage& message)
+    {
+      *this << message.SequenceID;
+      *this << message.PublishTime;
+      SerializeContainer(*this, message.Data);
     }
 
     ////////////////////////////////////////////////////////
@@ -360,7 +382,7 @@ namespace OpcUa
       return RawSize(result.SubscriptionID) +
         RawSizeContainer(result.AvailableSequenceNumber) +
         RawSize(result.MoreNotifications) +
-        RawSize(result.Data) +
+        RawSize(result.Message) +
         RawSizeContainer(result.Statuses) +
         RawSizeContainer(result.Diagnostics);
     }
@@ -371,7 +393,7 @@ namespace OpcUa
       *this >> result.SubscriptionID;
       DeserializeContainer(*this, result.AvailableSequenceNumber);
       *this >> result.MoreNotifications;
-      *this >> result.Data;
+      *this >> result.Message;
       DeserializeContainer(*this, result.Statuses);
       DeserializeContainer(*this, result.Diagnostics);
     }
@@ -382,7 +404,7 @@ namespace OpcUa
       *this << result.SubscriptionID;
       SerializeContainer(*this, result.AvailableSequenceNumber);
       *this << result.MoreNotifications;
-      *this << result.Data;
+      *this << result.Message;
       SerializeContainer(*this, result.Statuses);
       SerializeContainer(*this, result.Diagnostics);
     }

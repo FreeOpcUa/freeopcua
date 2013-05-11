@@ -459,23 +459,26 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
 }
 
 //-------------------------------------------------------
-// NotificationData
+// NotificationMessage
 //-------------------------------------------------------
 
-TEST_F(SubscriptionSerialization, NotificationData)
+TEST_F(SubscriptionSerialization, NotificationMessage)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  NotificationData data;
+  NotificationMessage data;
   data.SequenceID = 1;
   data.PublishTime = 2;
+  data.Data.push_back(NotificationData());
 
   GetStream() << data << flush;
 
   const std::vector<char> expectedData = {
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
+
+    1,0,0,0, // Count of data
     //Message.Header
     0,0, // TypeID
     0,   // Encoding
@@ -485,7 +488,7 @@ TEST_F(SubscriptionSerialization, NotificationData)
   ASSERT_EQ(expectedData.size(), RawSize(data));
 }
 
-TEST_F(SubscriptionDeserialization, NotificationData)
+TEST_F(SubscriptionDeserialization, NotificationMessage)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -493,18 +496,19 @@ TEST_F(SubscriptionDeserialization, NotificationData)
   const std::vector<char> expectedData = {
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
-    //Message.Header
-    0,0, // TypeID
-    0,   // Encoding
+    // Data vector
+    1,0,0,0, //Count of Data
+    0,0, // Data.Header.TypeID
+    0,   // Data.Header.Encoding
   };
 
   GetChannel().SetData(expectedData);
 
-  NotificationData data;
-  GetStream() >> data;
+  NotificationMessage message;
+  GetStream() >> message;
 
-  ASSERT_EQ(data.SequenceID, IntegerID(1));
-  ASSERT_EQ(data.PublishTime, 2);
+  ASSERT_EQ(message.SequenceID, IntegerID(1));
+  ASSERT_EQ(message.PublishTime, 2);
 }
 
 //-------------------------------------------------------
@@ -521,8 +525,9 @@ TEST_F(SubscriptionSerialization, PublishResult)
   result.AvailableSequenceNumber.push_back(2);
   result.MoreNotifications = true;
 
-  result.Data.SequenceID = 1;
-  result.Data.PublishTime = 2;
+  result.Message.SequenceID = 1;
+  result.Message.PublishTime = 2;
+  result.Message.Data.push_back(NotificationData());
 
   result.Statuses.push_back(StatusCode::Good);
 
@@ -548,9 +553,10 @@ TEST_F(SubscriptionSerialization, PublishResult)
     // NotificationData
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
-    //Message.Header
-    0,0, // TypeID
-    0,   // Encoding
+    // Data vector
+    1,0,0,0, //Count of Data
+    0,0, // Data.Header.TypeID
+    0,   // Data.Header.Encoding
 
     // Statuses
     1,0,0,0,
@@ -581,9 +587,10 @@ TEST_F(SubscriptionDeserialization, PublishResult)
     // NotificationData
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
-    //Message.Header
-    0,0, // TypeID
-    0,   // Encoding
+    // Data vector
+    1,0,0,0, //Count of Data
+    0,0, // Data.Header.TypeID
+    0,   // Data.Header.Encoding
 
     // Statuses
     1,0,0,0,
@@ -602,7 +609,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   ASSERT_EQ(result.SubscriptionID, 1);
   ASSERT_EQ(result.AvailableSequenceNumber.size(), 1);
   ASSERT_EQ(result.MoreNotifications, true);
-  //TODO check result.Message.Header;
+  ASSERT_EQ(result.Message.Data.size(), 1);
   ASSERT_EQ(result.Statuses.size(), 1);
   ASSERT_EQ(result.Diagnostics.size(), 2);
 }
@@ -628,9 +635,9 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   response.Result.SubscriptionID = 1;
   response.Result.AvailableSequenceNumber.push_back(2);
   response.Result.MoreNotifications = true;
-  response.Result.Data.SequenceID = 1;
-  response.Result.Data.PublishTime = 2;
-
+  response.Result.Message.SequenceID = 1;
+  response.Result.Message.PublishTime = 2;
+  response.Result.Message.Data.push_back(NotificationData());
   response.Result.Statuses.push_back(StatusCode::Good);
 
   DiagnosticInfo diag1;
@@ -660,9 +667,10 @@ TEST_F(SubscriptionSerialization, PublishResponse)
     // NotificationData
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
-    //Message.Header
-    0,0, // TypeID
-    0,   // Encoding
+    // Data vector
+    1,0,0,0, //Count of Data
+    0,0, // Data.Header.TypeID
+    0,   // Data.Header.Encoding
 
     // Statuses
     1,0,0,0,
@@ -698,9 +706,10 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
     // NotificationData
     1,0,0,0, // SequenceID
     2,0,0,0,0,0,0,0, // PublishTime
-    //Message.Header
-    0,0, // TypeID
-    0,   // Encoding
+    // Data vector
+    1,0,0,0, //Count of Data
+    0,0, // Data.Header.TypeID
+    0,   // Data.Header.Encoding
 
     // Statuses
     1,0,0,0,
