@@ -202,8 +202,8 @@ namespace OpcUa
     template<>
     void OStream::Serialize<ReadResult>(const ReadResult& result)
     {
-      SerializeContainer(*this, result.Results);
-      SerializeContainer(*this, result.Diagnostics);
+      SerializeContainer(*this, result.Results, 0);
+      SerializeContainer(*this, result.Diagnostics, 0);
     }
 
     template<>
@@ -316,8 +316,8 @@ namespace OpcUa
       *this << resp.TypeID;
       *this << resp.Header;
 
-      SerializeContainer(*this, resp.StatusCodes);
-      SerializeContainer(*this, resp.Diagnostics);
+      SerializeContainer(*this, resp.StatusCodes, 0);
+      SerializeContainer(*this, resp.Diagnostics, 0);
     }
 
     template<>

@@ -345,7 +345,7 @@ namespace OpcUa
 
       if (!data.DiagnosticInfos.empty())
       {
-        SerializeContainer(*this, data.DiagnosticInfos);
+        SerializeContainer(*this, data.DiagnosticInfos, 0);
       }
       else
       {

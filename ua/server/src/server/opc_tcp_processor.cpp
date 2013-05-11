@@ -421,6 +421,27 @@ namespace
           return;
         }
 
+        case PUBLISH_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
+          std::vector<char> data(restSize);
+          RawBuffer buffer(&data[0], restSize);
+          stream >> buffer;
+
+          PublishResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+
         default:
         {
           std::stringstream ss;

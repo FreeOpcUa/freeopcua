@@ -289,8 +289,8 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
   1, 0, (char)0x7A, 0x2, // TypeID
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
-  -1,-1,-1,-1,
-  -1,-1,-1,-1,
+  0,0,0,0,
+  0,0,0,0,
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(resp));
@@ -328,7 +328,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse)
   4,0,0,0,0,0,0,0,
   5,0,
 
-  -1,-1,-1,-1,
+  0,0,0,0
   };
 
   GetChannel().SetData(expectedData);

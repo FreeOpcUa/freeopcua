@@ -352,8 +352,8 @@ namespace OpcUa
       *this << response.TypeID;
       *this << response.Header;
 
-      SerializeContainer(*this, response.Results);
-      SerializeContainer(*this, response.Diagnostics);
+      SerializeContainer(*this, response.Results, 0);
+      SerializeContainer(*this, response.Diagnostics, 0);
     }
 
     template<>
@@ -414,8 +414,8 @@ namespace OpcUa
       *this << response.TypeID;
       *this << response.Header;
 
-      SerializeContainer(*this, response.Results);
-      SerializeContainer(*this, response.Diagnostics);
+      SerializeContainer(*this, response.Results, 0);
+      SerializeContainer(*this, response.Diagnostics, 0);
     }
 
     template<>
