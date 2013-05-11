@@ -60,6 +60,9 @@ namespace OpcUa
 
     PUBLISH_REQUEST = 0x33A,  // 826
     PUBLISH_RESPONSE = 0x33D, // 829
+
+    SET_PUBLISHING_MODE_REQUEST = 0x31F,  // 799
+    SET_PUBLISHING_MODE_RESPONSE = 0x322, // 802
   };
 
   struct NodeID;

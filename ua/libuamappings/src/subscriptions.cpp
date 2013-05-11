@@ -104,6 +104,33 @@ namespace OpcUa
   }
 
   ////////////////////////////////////////////////////////
+  // PublishingModeParameters
+  ////////////////////////////////////////////////////////
+
+  PublishingModeParameters::PublishingModeParameters()
+    : Enabled(false)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
+  // SetPublishingModeRequest
+  ////////////////////////////////////////////////////////
+
+  SetPublishingModeRequest::SetPublishingModeRequest()
+    : TypeID(SET_PUBLISHING_MODE_REQUEST)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
+  // SetPublishingModeResponse
+  ////////////////////////////////////////////////////////
+
+  SetPublishingModeResponse::SetPublishingModeResponse()
+    : TypeID(OpcUa::SET_PUBLISHING_MODE_RESPONSE)
+  {
+  }
+
+  ////////////////////////////////////////////////////////
 
   namespace Binary
   {
@@ -429,6 +456,106 @@ namespace OpcUa
 
     template<>
     void OStream::Serialize<PublishResponse>(const PublishResponse& response)
+    {
+      *this << response.TypeID;
+      *this << response.Header;
+      *this << response.Result;
+    }
+
+    ////////////////////////////////////////////////////////
+    // PublishingModeParameters
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishingModeParameters& params)
+    {
+      return RawSize(params.Enabled) + RawSizeContainer(params.SubscriptionIDs);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishingModeParameters>(PublishingModeParameters& params)
+    {
+      *this >> params.Enabled;
+      DeserializeContainer(*this, params.SubscriptionIDs);
+    }
+
+    template<>
+    void OStream::Serialize<PublishingModeParameters>(const PublishingModeParameters& params)
+    {
+      *this << params.Enabled;
+      SerializeContainer(*this, params.SubscriptionIDs, 0);
+    }
+
+    ////////////////////////////////////////////////////////
+    // SetPublishingModeRequest
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const SetPublishingModeRequest& request)
+    {
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+    }
+
+    template<>
+    void IStream::Deserialize<SetPublishingModeRequest>(SetPublishingModeRequest& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.Parameters;
+    }
+
+    template<>
+    void OStream::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.Parameters;
+    }
+
+    ////////////////////////////////////////////////////////
+    // SetPublishingModeResult
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const PublishingModeResult& result)
+    {
+      return RawSizeContainer(result.Statuses) + RawSizeContainer(result.Diagnostics);
+    }
+
+    template<>
+    void IStream::Deserialize<PublishingModeResult>(PublishingModeResult& result)
+    {
+      DeserializeContainer(*this, result.Statuses);
+      DeserializeContainer(*this, result.Diagnostics);
+    }
+
+    template<>
+    void OStream::Serialize<PublishingModeResult>(const PublishingModeResult& result)
+    {
+      SerializeContainer(*this, result.Statuses, 0);
+      SerializeContainer(*this, result.Diagnostics, 0);
+    }
+
+    ////////////////////////////////////////////////////////
+    // SetPublishingModeResponse
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const SetPublishingModeResponse& response)
+    {
+      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+    }
+
+    template<>
+    void IStream::Deserialize<SetPublishingModeResponse>(SetPublishingModeResponse& response)
+    {
+      *this >> response.TypeID;
+      *this >> response.Header;
+      *this >> response.Result;
+    }
+
+    template<>
+    void OStream::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse& response)
     {
       *this << response.TypeID;
       *this << response.Header;

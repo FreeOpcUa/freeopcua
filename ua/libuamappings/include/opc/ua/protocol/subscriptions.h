@@ -145,7 +145,7 @@ namespace OpcUa
   };
 
   ////////////////////////////////////////////////////////
-  // PublishResponse
+  // SetPublishingMode
   ////////////////////////////////////////////////////////
 
   struct PublishResponse
@@ -155,6 +155,38 @@ namespace OpcUa
     PublishResult Result;
 
     PublishResponse();
+  };
+
+  struct PublishingModeParameters
+  {
+    bool Enabled;
+    std::vector<IntegerID> SubscriptionIDs;
+
+    PublishingModeParameters();
+  };
+
+  struct SetPublishingModeRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    PublishingModeParameters Parameters;
+
+    SetPublishingModeRequest();
+  };
+
+  struct PublishingModeResult
+  {
+    std::vector<StatusCode> Statuses;
+    std::vector<DiagnosticInfo> Diagnostics;
+  };
+
+  struct SetPublishingModeResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    PublishingModeResult Result;
+
+    SetPublishingModeResponse();
   };
 
 } // namespace OpcUa
