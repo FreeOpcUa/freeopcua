@@ -18,6 +18,7 @@
 #include <opc/ua/status_codes.h>
 
 #include <iostream>
+#include <mutex>
 #include <stdexcept>
 #include <sstream>
 
@@ -42,6 +43,7 @@ namespace
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
+      std::unique_lock<std::mutex> lock(ProcessMutex);
       if (!clientChannel)
       {
         if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
@@ -427,7 +429,7 @@ namespace
           std::vector<char> data(restSize);
           RawBuffer buffer(&data[0], restSize);
           stream >> buffer;
-
+/*
           PublishResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
@@ -438,17 +440,19 @@ namespace
 
           if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
           stream << secureHeader << algorithmHeader << sequence << response << flush;
+*/
           return;
         }
 
         case SET_PUBLISHING_MODE_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
-          SetPublishingModeRequest request;
+          PublishingModeParameters params;
+          stream >> params;
 
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Result.Statuses.resize(request.Parameters.SubscriptionIDs.size(), StatusCode::Good);
+          response.Result.Statuses.resize(params.SubscriptionIDs.size(), StatusCode::Good);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -479,6 +483,7 @@ namespace
     }
 
   private:
+    std::mutex ProcessMutex;
     std::shared_ptr<OpcUa::Remote::Computer> Computer;
     bool Debug;
     uint32_t ChannelID;

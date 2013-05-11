@@ -835,7 +835,7 @@ namespace OpcUa
       {
         *this << *diagIt;
       }
-      SerializeContainer(*this, header.StringTable, 0);
+      SerializeContainer(*this, header.StringTable);
       *this << header.Additional;
     }
 
