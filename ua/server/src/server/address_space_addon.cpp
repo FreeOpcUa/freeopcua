@@ -11,7 +11,7 @@
 #include "standard_namespace.h"
 
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/ua/server/addons/view_services.h>
+#include <opc/ua/server/addons/address_space.h>
 #include <opc/ua/server/addons/internal_computer.h>
 #include <opc/ua/view.h>
 
@@ -23,15 +23,15 @@ namespace
   using namespace OpcUa::Remote;
 
 
-  class ViewAddon : public ViewServicesAddon
+  class AddressSpaceAddon : public Common::Addon
   {
   public:
-    ViewAddon()
+    AddressSpaceAddon()
       : Services(CreateStandardNamespace())
     {
     }
 
-    virtual ~ViewAddon()
+    virtual ~AddressSpaceAddon()
     {
     }
 
@@ -58,6 +58,6 @@ namespace
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new ViewAddon());
+  return Common::Addon::UniquePtr(new AddressSpaceAddon());
 }
 

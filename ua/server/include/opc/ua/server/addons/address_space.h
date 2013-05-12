@@ -19,11 +19,7 @@ namespace OpcUa
   namespace Server
   {
 
-    class ViewServicesAddon : public Common::Addon
-    {
-    };
-
-    const char EndpointsServicesAddonID[] = "view_services";
+    const char AddressSpaceAddonID[] = "address_space";
 
   } // namespace Server
 } // nmespace OpcUa

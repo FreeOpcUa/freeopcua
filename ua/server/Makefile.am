@@ -144,14 +144,14 @@ libendpoints_services_addon_la_SOURCES = \
 libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
 libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 
-lib_LTLIBRARIES += libview_services_addon.la
+lib_LTLIBRARIES += libaddress_space_addon.la
 addonsinclude_HEADERS += \
-  include/opc/ua/server/addons/view_services.h
-libview_services_addon_la_SOURCES = \
+  include/opc/ua/server/addons/address_space.h
+libaddress_space_addon_la_SOURCES = \
   src/server/standard_namespace.cpp \
-  src/server/view_services_addon.cpp
-libview_services_addon_la_CPPFLAGS = $(INCLUDES)
-libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+  src/server/address_space_addon.cpp
+libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
+libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 
 endif

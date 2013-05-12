@@ -59,7 +59,7 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@	libbuiltin_computer_addon.la \
 @BUILD_UA_SERVER_TRUE@	libinternal_computer_addon.la \
 @BUILD_UA_SERVER_TRUE@	libendpoints_services_addon.la \
-@BUILD_UA_SERVER_TRUE@	libview_services_addon.la
+@BUILD_UA_SERVER_TRUE@	libaddress_space_addon.la
 check_PROGRAMS = $(am__EXEEXT_4)
 subdir = .
 DIST_COMMON = README $(am__addonsinclude_HEADERS_DIST) \
@@ -112,6 +112,20 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(uaclientincludedir)" \
 	"$(DESTDIR)$(uaserverincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
+libaddress_space_addon_la_LIBADD =
+am__libaddress_space_addon_la_SOURCES_DIST =  \
+	src/server/standard_namespace.cpp \
+	src/server/address_space_addon.cpp
+@BUILD_UA_SERVER_TRUE@am_libaddress_space_addon_la_OBJECTS = libaddress_space_addon_la-standard_namespace.lo \
+@BUILD_UA_SERVER_TRUE@	libaddress_space_addon_la-address_space_addon.lo
+libaddress_space_addon_la_OBJECTS =  \
+	$(am_libaddress_space_addon_la_OBJECTS)
+libaddress_space_addon_la_LINK = $(LIBTOOL) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(libaddress_space_addon_la_LDFLAGS) $(LDFLAGS) -o $@
+@BUILD_UA_SERVER_TRUE@am_libaddress_space_addon_la_rpath = -rpath \
+@BUILD_UA_SERVER_TRUE@	$(libdir)
 libbuiltin_computer_addon_la_LIBADD =
 am__libbuiltin_computer_addon_la_SOURCES_DIST =  \
 	src/binary_computer.cpp src/server/builtin_computer_addon.cpp \
@@ -177,20 +191,6 @@ libopcua_tcp_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libopcua_tcp_server_la_LDFLAGS) $(LDFLAGS) -o $@
 @BUILD_UA_SERVER_TRUE@am_libopcua_tcp_server_la_rpath = -rpath \
-@BUILD_UA_SERVER_TRUE@	$(libdir)
-libview_services_addon_la_LIBADD =
-am__libview_services_addon_la_SOURCES_DIST =  \
-	src/server/standard_namespace.cpp \
-	src/server/view_services_addon.cpp
-@BUILD_UA_SERVER_TRUE@am_libview_services_addon_la_OBJECTS = libview_services_addon_la-standard_namespace.lo \
-@BUILD_UA_SERVER_TRUE@	libview_services_addon_la-view_services_addon.lo
-libview_services_addon_la_OBJECTS =  \
-	$(am_libview_services_addon_la_OBJECTS)
-libview_services_addon_la_LINK = $(LIBTOOL) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) \
-	$(libview_services_addon_la_LDFLAGS) $(LDFLAGS) -o $@
-@BUILD_UA_SERVER_TRUE@am_libview_services_addon_la_rpath = -rpath \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
 @BUILD_UA_CMD_TRUE@am__EXEEXT_1 = opcua$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_2 = opcuaserver$(EXEEXT)
@@ -328,23 +328,23 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libbuiltin_computer_addon_la_SOURCES) \
+SOURCES = $(libaddress_space_addon_la_SOURCES) \
+	$(libbuiltin_computer_addon_la_SOURCES) \
 	$(libendpoints_services_addon_la_SOURCES) \
 	$(libinternal_computer_addon_la_SOURCES) \
 	$(libopcua_protocol_la_SOURCES) \
-	$(libopcua_tcp_server_la_SOURCES) \
-	$(libview_services_addon_la_SOURCES) \
-	$(libuaclient_test_SOURCES) $(opcua_SOURCES) \
-	$(opcuaserver_SOURCES) $(server_unittests_SOURCES) \
+	$(libopcua_tcp_server_la_SOURCES) $(libuaclient_test_SOURCES) \
+	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
+	$(server_unittests_SOURCES) \
 	$(test_opcua_protocol_addon_SOURCES) \
 	$(test_opcuaserver_SOURCES) $(test_tcp_server_SOURCES) \
 	$(test_tcp_server_addon_SOURCES)
-DIST_SOURCES = $(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
+DIST_SOURCES = $(am__libaddress_space_addon_la_SOURCES_DIST) \
+	$(am__libbuiltin_computer_addon_la_SOURCES_DIST) \
 	$(am__libendpoints_services_addon_la_SOURCES_DIST) \
 	$(am__libinternal_computer_addon_la_SOURCES_DIST) \
 	$(am__libopcua_protocol_la_SOURCES_DIST) \
 	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
-	$(am__libview_services_addon_la_SOURCES_DIST) \
 	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
 	$(am__opcuaserver_SOURCES_DIST) \
 	$(am__server_unittests_SOURCES_DIST) \
@@ -359,7 +359,7 @@ am__addonsinclude_HEADERS_DIST =  \
 	include/opc/ua/server/addons/builtin_computer.h \
 	include/opc/ua/server/addons/internal_computer.h \
 	include/opc/ua/server/addons/endpoints_services.h \
-	include/opc/ua/server/addons/view_services.h
+	include/opc/ua/server/addons/address_space.h
 am__uaserverinclude_HEADERS_DIST = include/opc/ua/server/server.h \
 	include/opc/ua/server/tcp_server.h
 HEADERS = $(addonsinclude_HEADERS) $(opcuainclude_HEADERS) \
@@ -582,7 +582,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/builtin_computer.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/internal_computer.h \
 @BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/endpoints_services.h \
-@BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/view_services.h
+@BUILD_UA_SERVER_TRUE@	include/opc/ua/server/addons/address_space.h
 @BUILD_UA_SERVER_TRUE@libopcua_tcp_server_la_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/server/tcp_server.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/tcp_server_addon.cpp \
@@ -615,12 +615,12 @@ lib_LTLIBRARIES = $(am__append_4)
 
 @BUILD_UA_SERVER_TRUE@libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
-@BUILD_UA_SERVER_TRUE@libview_services_addon_la_SOURCES = \
+@BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/server/standard_namespace.cpp \
-@BUILD_UA_SERVER_TRUE@  src/server/view_services_addon.cpp
+@BUILD_UA_SERVER_TRUE@  src/server/address_space_addon.cpp
 
-@BUILD_UA_SERVER_TRUE@libview_services_addon_la_CPPFLAGS = $(INCLUDES)
-@BUILD_UA_SERVER_TRUE@libview_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
+@BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 ##############################################################################
 # Tests
@@ -771,6 +771,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+libaddress_space_addon.la: $(libaddress_space_addon_la_OBJECTS) $(libaddress_space_addon_la_DEPENDENCIES) $(EXTRA_libaddress_space_addon_la_DEPENDENCIES) 
+	$(libaddress_space_addon_la_LINK) $(am_libaddress_space_addon_la_rpath) $(libaddress_space_addon_la_OBJECTS) $(libaddress_space_addon_la_LIBADD) $(LIBS)
 libbuiltin_computer_addon.la: $(libbuiltin_computer_addon_la_OBJECTS) $(libbuiltin_computer_addon_la_DEPENDENCIES) $(EXTRA_libbuiltin_computer_addon_la_DEPENDENCIES) 
 	$(libbuiltin_computer_addon_la_LINK) $(am_libbuiltin_computer_addon_la_rpath) $(libbuiltin_computer_addon_la_OBJECTS) $(libbuiltin_computer_addon_la_LIBADD) $(LIBS)
 libendpoints_services_addon.la: $(libendpoints_services_addon_la_OBJECTS) $(libendpoints_services_addon_la_DEPENDENCIES) $(EXTRA_libendpoints_services_addon_la_DEPENDENCIES) 
@@ -781,8 +783,6 @@ libopcua_protocol.la: $(libopcua_protocol_la_OBJECTS) $(libopcua_protocol_la_DEP
 	$(libopcua_protocol_la_LINK) $(am_libopcua_protocol_la_rpath) $(libopcua_protocol_la_OBJECTS) $(libopcua_protocol_la_LIBADD) $(LIBS)
 libopcua_tcp_server.la: $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_DEPENDENCIES) $(EXTRA_libopcua_tcp_server_la_DEPENDENCIES) 
 	$(libopcua_tcp_server_la_LINK) $(am_libopcua_tcp_server_la_rpath) $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_LIBADD) $(LIBS)
-libview_services_addon.la: $(libview_services_addon_la_OBJECTS) $(libview_services_addon_la_DEPENDENCIES) $(EXTRA_libview_services_addon_la_DEPENDENCIES) 
-	$(libview_services_addon_la_LINK) $(am_libview_services_addon_la_rpath) $(libview_services_addon_la_OBJECTS) $(libview_services_addon_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -868,6 +868,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/builtin_computer_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaddress_space_addon_la-address_space_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaddress_space_addon_la-standard_namespace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libinternal_computer_addon_la-internal_computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_protocol_la-opc_tcp_processor.Plo@am__quote@
@@ -884,8 +886,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-socket_channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libview_services_addon_la-standard_namespace.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libview_services_addon_la-view_services_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-computer.Po@am__quote@
@@ -937,6 +937,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+libaddress_space_addon_la-standard_namespace.lo: src/server/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaddress_space_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libaddress_space_addon_la-standard_namespace.lo -MD -MP -MF $(DEPDIR)/libaddress_space_addon_la-standard_namespace.Tpo -c -o libaddress_space_addon_la-standard_namespace.lo `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libaddress_space_addon_la-standard_namespace.Tpo $(DEPDIR)/libaddress_space_addon_la-standard_namespace.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/standard_namespace.cpp' object='libaddress_space_addon_la-standard_namespace.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaddress_space_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libaddress_space_addon_la-standard_namespace.lo `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
+
+libaddress_space_addon_la-address_space_addon.lo: src/server/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaddress_space_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libaddress_space_addon_la-address_space_addon.lo -MD -MP -MF $(DEPDIR)/libaddress_space_addon_la-address_space_addon.Tpo -c -o libaddress_space_addon_la-address_space_addon.lo `test -f 'src/server/address_space_addon.cpp' || echo '$(srcdir)/'`src/server/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libaddress_space_addon_la-address_space_addon.Tpo $(DEPDIR)/libaddress_space_addon_la-address_space_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space_addon.cpp' object='libaddress_space_addon_la-address_space_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaddress_space_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libaddress_space_addon_la-address_space_addon.lo `test -f 'src/server/address_space_addon.cpp' || echo '$(srcdir)/'`src/server/address_space_addon.cpp
 
 binary_computer.lo: src/binary_computer.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer.lo -MD -MP -MF $(DEPDIR)/binary_computer.Tpo -c -o binary_computer.lo `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
@@ -1014,20 +1028,6 @@ libopcua_tcp_server_la-thread.lo: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='libopcua_tcp_server_la-thread.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_tcp_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_tcp_server_la-thread.lo `test -f 'src/thread.cpp' || echo '$(srcdir)/'`src/thread.cpp
-
-libview_services_addon_la-standard_namespace.lo: src/server/standard_namespace.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libview_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libview_services_addon_la-standard_namespace.lo -MD -MP -MF $(DEPDIR)/libview_services_addon_la-standard_namespace.Tpo -c -o libview_services_addon_la-standard_namespace.lo `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libview_services_addon_la-standard_namespace.Tpo $(DEPDIR)/libview_services_addon_la-standard_namespace.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/standard_namespace.cpp' object='libview_services_addon_la-standard_namespace.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libview_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libview_services_addon_la-standard_namespace.lo `test -f 'src/server/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/standard_namespace.cpp
-
-libview_services_addon_la-view_services_addon.lo: src/server/view_services_addon.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libview_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libview_services_addon_la-view_services_addon.lo -MD -MP -MF $(DEPDIR)/libview_services_addon_la-view_services_addon.Tpo -c -o libview_services_addon_la-view_services_addon.lo `test -f 'src/server/view_services_addon.cpp' || echo '$(srcdir)/'`src/server/view_services_addon.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libview_services_addon_la-view_services_addon.Tpo $(DEPDIR)/libview_services_addon_la-view_services_addon.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/view_services_addon.cpp' object='libview_services_addon_la-view_services_addon.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libview_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libview_services_addon_la-view_services_addon.lo `test -f 'src/server/view_services_addon.cpp' || echo '$(srcdir)/'`src/server/view_services_addon.cpp
 
 libuaclient_test-socket_channel.o: src/socket_channel.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-socket_channel.o -MD -MP -MF $(DEPDIR)/libuaclient_test-socket_channel.Tpo -c -o libuaclient_test-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
