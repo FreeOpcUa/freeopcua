@@ -342,8 +342,8 @@ TEST_F(ViewSerialization, ReferenceDescription)
 
   desc.TargetNodeClass = NodeClass::Method;
 
-  desc.TypeDefinition.Encoding = EV_TWO_BYTE;
-  desc.TypeDefinition.TwoByteData.Identifier = 5;
+  desc.TargetNodeTypeDefinition.Encoding = EV_TWO_BYTE;
+  desc.TargetNodeTypeDefinition.TwoByteData.Identifier = 5;
 
 
   GetStream() << desc << flush;
@@ -405,8 +405,8 @@ TEST_F(ViewDeserialization, ReferenceDescription)
 
   ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
 
-  ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.TwoByteData.Identifier, 5);
 }
 
 //-------------------------------------------------------
@@ -436,8 +436,8 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
 
   desc.TargetNodeClass = NodeClass::Method;
 
-  desc.TypeDefinition.Encoding = EV_TWO_BYTE;
-  desc.TypeDefinition.TwoByteData.Identifier = 5;
+  desc.TargetNodeTypeDefinition.Encoding = EV_TWO_BYTE;
+  desc.TargetNodeTypeDefinition.TwoByteData.Identifier = 5;
   return desc;
 }
 
@@ -517,8 +517,8 @@ TEST_F(ViewDeserialization, BrowseResult)
   ASSERT_EQ(desc.DisplayName.Locale, "loc");
   ASSERT_EQ(desc.DisplayName.Text, "text");
   ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
-  ASSERT_EQ(desc.TypeDefinition.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TypeDefinition.TwoByteData.Identifier, 5);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.TwoByteData.Identifier, 5);
 }
 
 //-------------------------------------------------------

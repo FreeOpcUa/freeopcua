@@ -21,13 +21,27 @@ TEST(StandardNamespace, CanBeCreated)
   ASSERT_TRUE(static_cast<bool>(ns));
 }
 
-TEST(StandardNamespace, CanBrowseRootFolder)
+TEST(StandardNamespace, CanBrowseRootFolder_By_Organizes_RefType)
 {
   std::unique_ptr<Remote::ViewServices> ns = CreateStandardNamespace();
   OpcUa::Remote::BrowseParameters params;
   params.Description.NodeToBrowse = ObjectID::RootFolder;
   params.Description.Direction = BrowseDirection::Forward;
   params.Description.ReferenceTypeID = ReferenceID::Organizes;
+  params.Description.IncludeSubtypes = true;
+  params.Description.NodeClasses = NODE_CLASS_OBJECT;
+  params.Description.ResultMask = REFERENCE_ALL;
+  std::vector<ReferenceDescription> referencies = ns->Browse(params);
+  ASSERT_EQ(referencies.size(), 3);
+}
+
+TEST(StandardNamespace, CanBrowseRootFolder_By_HierarchicalReferencies_Subtypes)
+{
+  std::unique_ptr<Remote::ViewServices> ns = CreateStandardNamespace();
+  OpcUa::Remote::BrowseParameters params;
+  params.Description.NodeToBrowse = ObjectID::RootFolder;
+  params.Description.Direction = BrowseDirection::Forward;
+  params.Description.ReferenceTypeID = ReferenceID::HierarchicalReferences;
   params.Description.IncludeSubtypes = true;
   params.Description.NodeClasses = NODE_CLASS_OBJECT;
   params.Description.ResultMask = REFERENCE_ALL;

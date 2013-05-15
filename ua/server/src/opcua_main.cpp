@@ -321,7 +321,7 @@ namespace
     Print(desc.TypeID, tabs1);
 
     std::cout << tabs << "Type definition ID:" << std::endl;
-    Print(desc.TypeDefinition, tabs1);
+    Print(desc.TargetNodeTypeDefinition, tabs1);
   }
 
   void Browse(OpcUa::Remote::ViewServices& view, OpcUa::NodeID nodeID)

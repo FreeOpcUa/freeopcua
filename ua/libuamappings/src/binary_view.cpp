@@ -280,7 +280,7 @@ namespace OpcUa
              RawSize(desc.BrowseName) +
              RawSize(desc.DisplayName) +
              RawSize(desc.TargetNodeClass) +
-             RawSize(desc.TypeDefinition);
+             RawSize(desc.TargetNodeTypeDefinition);
     }
 
     template<>
@@ -292,7 +292,7 @@ namespace OpcUa
       *this << desc.BrowseName;
       *this << desc.DisplayName;
       *this << desc.TargetNodeClass;
-      *this << desc.TypeDefinition;
+      *this << desc.TargetNodeTypeDefinition;
     }
 
     template<>
@@ -304,7 +304,7 @@ namespace OpcUa
       *this >> desc.BrowseName;
       *this >> desc.DisplayName;
       *this >> desc.TargetNodeClass;
-      *this >> desc.TypeDefinition;
+      *this >> desc.TargetNodeTypeDefinition;
     }
 
     //---------------------------------------------------

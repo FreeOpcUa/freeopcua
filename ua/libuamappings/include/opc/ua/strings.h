@@ -16,11 +16,20 @@ namespace OpcUa
   namespace Names
   {
 
-    const char FolderType[] = "FolderType";
-    const char Objects[] = "Objects";
-    const char Root[]    = "Root";
-    const char Types[]   = "Types";
-    const char Views[]   = "Views";
+    const char Aggregates[]      = "Aggregates";
+    const char FolderType[]      = "FolderType";
+    const char Objects[]         = "Objects";
+    const char HasChild[]        = "HasChild";
+    const char HasSubtype[]      = "HasSubtype";
+    const char HasEventSource[]  = "HasEventSource";
+    const char HierarchicalReferences[] = "HierarchicalReferences";
+    const char NonHierarchicalReferences[] = "NonHierarchicalReferences";
+    const char Organizes[]       = "Organizes";
+    const char References[]      = "References";
+    const char ReferenceTypes[]  = "ReferenceTypes";
+    const char Root[]            = "Root";
+    const char Types[]           = "Types";
+    const char Views[]           = "Views";
 
   }
 }

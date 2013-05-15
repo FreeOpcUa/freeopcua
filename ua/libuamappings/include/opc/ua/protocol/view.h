@@ -96,7 +96,7 @@ namespace OpcUa
     QualifiedName BrowseName;
     LocalizedText DisplayName;
     NodeClass TargetNodeClass; 
-    NodeID TypeDefinition;
+    NodeID TargetNodeTypeDefinition;
 
     ReferenceDescription();
   };
