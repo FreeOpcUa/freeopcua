@@ -32,43 +32,32 @@ namespace OpcUa
       }
 
     public:
-      virtual DataValue Read(const Remote::ReadParameters& params) const
+      virtual std::vector<DataValue> Read(const ReadParameters& params) const
       {
-        AttributeValueID value;
-        value.Node = params.Node;
-        value.Attribute = params.Attribute;
-
         ReadRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
-        request.Parameters.MaxAge = 0;
-        request.Parameters.TimestampsType = TimestampsToReturn::SERVER;
-        request.Parameters.AttributesToRead.push_back(value);
+        request.Parameters = params;
        
         Stream << request << OpcUa::Binary::flush;
 
         ReadResponse response;
         Stream >> response;
 
-        return response.Result.Results.empty() ? DataValue() : response.Result.Results.at(0);
+        return response.Result.Results;
       }
 
-      virtual OpcUa::StatusCode Write(const Remote::WriteParameters& params)
+      virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
       {
         WriteRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
-
-        WriteValue value;
-        value.Node = params.Node;
-        value.Attribute = params.Attribute;
-        value.Data = params.Value;
-        request.NodesToWrite.push_back(value);
+        request.NodesToWrite = values;
 
         Stream << request << OpcUa::Binary::flush;
 
         WriteResponse response;
         Stream >> response;
 
-        return response.StatusCodes.at(0);
+        return response.StatusCodes;
       }
 
     private:

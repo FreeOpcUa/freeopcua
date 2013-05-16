@@ -70,13 +70,17 @@ TEST_F(Attribute, Read)
   ASSERT_TRUE(static_cast<bool>(Service));
 
 
-  Remote::ReadParameters params;
-  params.Node.Encoding = EV_TWO_BYTE;
-  params.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
-  params.Attribute = AttributeID::BROWSE_NAME;
+  AttributeValueID id;
+  id.Node.Encoding = EV_TWO_BYTE;
+  id.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
+  id.Attribute = AttributeID::BROWSE_NAME;
 
-  const DataValue value = Service->Read(params);
-  ASSERT_TRUE(value.Encoding & DATA_VALUE);
+  OpcUa::ReadParameters params;
+  params.AttributesToRead.push_back(id);
+
+  const std::vector<DataValue> values = Service->Read(params);
+  ASSERT_EQ(values.size(), 1);
+  EXPECT_TRUE(values.at(0).Encoding & DATA_VALUE);
 }
 
 TEST_F(Attribute, Write)
@@ -84,14 +88,14 @@ TEST_F(Attribute, Write)
   using namespace OpcUa;
   ASSERT_TRUE(static_cast<bool>(Service));
 
+  WriteValue value;
+  value.Node.Encoding = EV_TWO_BYTE;
+  value.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
+  value.Attribute = AttributeID::BROWSE_NAME;
 
-  Remote::WriteParameters params;
-  params.Node.Encoding = EV_TWO_BYTE;
-  params.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
-  params.Attribute = AttributeID::BROWSE_NAME;
-
-  const StatusCode code = Service->Write(params);
-  ASSERT_NE(code, StatusCode::Good);
+  const std::vector<StatusCode> codes = Service->Write(std::vector<WriteValue>(1, value));
+  ASSERT_EQ(codes.size(), 1);
+  EXPECT_NE(codes[0], StatusCode::Good);
 }
 
 

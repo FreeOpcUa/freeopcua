@@ -56,6 +56,12 @@ namespace OpcUa
       : NamespaceIndex(0)
     {
     }
+
+    QualifiedName(uint16_t nameSpace, const std::string& name)
+      : NamespaceIndex(nameSpace)
+      , Name(name)
+    {
+    }
   };
 
   struct RelativePathElement
@@ -80,6 +86,24 @@ namespace OpcUa
     uint8_t Encoding;
     std::string Locale;
     std::string Text; // TODO rename to Data
+
+    LocalizedText()
+      : Encoding(0)
+    {
+    }
+
+    explicit LocalizedText(const std::string& text)
+      : Encoding(HAS_TEXT)
+      , Text(text)
+    {
+    }
+
+    LocalizedText(const std::string& text, const std::string& locale)
+      : Encoding(HAS_TEXT | HAS_LOCALE)
+      , Locale(locale)
+      , Text(text)
+    {
+    }
   };
 
   struct AdditionalHeader

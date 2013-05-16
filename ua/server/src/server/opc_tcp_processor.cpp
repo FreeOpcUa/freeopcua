@@ -275,25 +275,22 @@ namespace
 
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
-
-          for (auto attribID : params.AttributesToRead)
+          std::vector<DataValue> values;
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
           {
-            OpcUa::Remote::ReadParameters attribute;
-            attribute.Node = attribID.Node;
-            attribute.Attribute = attribID.Attribute;
-
-            DataValue value;
-            if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+            values = service->Read(params);
+          }
+          else
+          {
+            for (auto attribID : params.AttributesToRead)
             {
-              value = service->Read(attribute);
-            }
-            else
-            {
+              DataValue value;
               value.Encoding = DATA_VALUE_STATUS_CODE;
               value.Status = OpcUa::StatusCode::BadNotImplemented;
+              values.push_back(value);
             }
-            response.Result.Results.push_back(value);
           }
+          response.Result.Results = values;
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

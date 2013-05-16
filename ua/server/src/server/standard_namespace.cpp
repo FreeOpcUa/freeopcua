@@ -28,11 +28,19 @@ namespace
 
   typedef std::multimap<ObjectID, ReferenceDescription> ReferenciesMap;
 
+  struct AttributeValue
+  {
+    NodeID Node;
+    AttributeID Attribute;
+    DataValue Value;
+  };
 
-  class StandardNamespace : public ViewServices
+
+
+  class StandardNamespaceInMemory : public OpcUa::StandardNamespace
   {
   public:
-    StandardNamespace()
+    StandardNamespaceInMemory()
     {
       Fill();
     }
@@ -55,7 +63,37 @@ namespace
       return std::vector<ReferenceDescription>();
     }
 
+    virtual std::vector<DataValue> Read(const ReadParameters& params) const
+    {
+      std::vector<DataValue> values;
+      for (auto attribute : params.AttributesToRead)
+      {
+        values.push_back(GetValue(attribute.Node, attribute.Attribute));
+      }
+      return values;
+    }
+
+    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
+    {
+      return std::vector<StatusCode>(values.size(), StatusCode::BadWriteNotSupported);
+    }
+
   private:
+    DataValue GetValue(const NodeID& node, AttributeID attribute) const
+    {
+      for (auto value : AttributeValues)
+      {
+        if (value.Node == node && value.Attribute == attribute)
+        {
+          return value.Value;
+        }
+      }
+      DataValue value;
+      value.Encoding = DATA_VALUE_STATUS_CODE;
+      value.Status = StatusCode::BadNotReadable;
+      return value;
+    }
+
     bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
     {
       const ObjectID sourceNode = refPair.first;
@@ -86,7 +124,7 @@ namespace
         return reference.TypeID == typeID;
       }
       const std::vector<NodeID> suitableTypes = SelectNodesHierarchy(std::vector<NodeID>(1, typeID));
-      return std::find(suitableTypes.begin(), suitableTypes.end(), reference.TypeID) != suitableTypes.end();
+      return std::find(suitableTypes.cbegin(), suitableTypes.cend(), reference.TypeID) != suitableTypes.end();
     }
 
     std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
@@ -94,7 +132,7 @@ namespace
       std::vector<NodeID> subNodes;
       for (ReferenciesMap::const_iterator refIt = Referencies.begin(); refIt != Referencies.end(); ++refIt)
       {
-        if (std::find(sourceNodes.begin(), sourceNodes.end(), refIt->first) != sourceNodes.end())
+        if (std::find(sourceNodes.cbegin(), sourceNodes.cend(), refIt->first) != sourceNodes.end())
         {
           subNodes.push_back(refIt->second.TargetNodeID);
         }
@@ -109,6 +147,14 @@ namespace
       return sourceNodes;
     }
 
+    void AddValue(NodeID node, AttributeID attribute, Variant value)
+    {
+      AttributeValue data;
+      data.Node = node;
+      data.Attribute = attribute;
+      data.Value.Encoding = DATA_VALUE;
+      AttributeValues.push_back(data);
+    }
 
     void AddReference(
       ObjectID sourceNode,
@@ -152,6 +198,17 @@ namespace
       AddReference(ObjectID::RootFolder,  forward, ReferenceID::Organizes, ObjectID::ViewsFolder,   Names::Views,      NodeClass::Object,     ObjectID::FolderType);
     }
 
+    void FillRootAttributes()
+    {
+      AddValue(ObjectID::RootFolder, AttributeID::NODE_ID,      NodeID(ObjectID::RootFolder));
+      AddValue(ObjectID::RootFolder, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+      AddValue(ObjectID::RootFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, "root"));
+      AddValue(ObjectID::RootFolder, AttributeID::DISPLAY_NAME, LocalizedText("root"));
+      AddValue(ObjectID::RootFolder, AttributeID::DESCRIPTION,  LocalizedText("root"));
+      AddValue(ObjectID::RootFolder, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, 0);
+    }
+
     void Types()
     {
       AddReference(ObjectID::TypesFolder, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
@@ -191,14 +248,19 @@ namespace
     {
     }
 
+    void FillAttributes()
+    {
+      FillRootAttributes();
+    }
   private:
     ReferenciesMap Referencies;
+    std::vector<AttributeValue> AttributeValues;
   };
 
 }
 
-std::unique_ptr<OpcUa::Remote::ViewServices> OpcUa::CreateStandardNamespace()
+std::unique_ptr<OpcUa::StandardNamespace> OpcUa::CreateStandardNamespace()
 {
-  return std::unique_ptr<Remote::ViewServices>(new StandardNamespace());
+  return std::unique_ptr<OpcUa::StandardNamespace>(new StandardNamespaceInMemory());
 }
 

@@ -14,7 +14,7 @@
 #include <opc/common/interface.h>
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/protocol/data_value.h>
-#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/attribute.h>
 
 #include <vector>
 
@@ -23,24 +23,11 @@ namespace OpcUa
   namespace Remote
   {
 
-    struct ReadParameters
-    {
-      NodeID Node;
-      AttributeID Attribute;
-    };
-
-    struct WriteParameters
-    {
-      NodeID Node;
-      AttributeID Attribute;
-      DataValue Value;
-    };
-
     class AttributeServices : private Common::Interface
     {
     public:
-      virtual DataValue Read(const ReadParameters& filter) const = 0;
-      virtual StatusCode Write(const WriteParameters& filter) = 0;
+      virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const = 0;
+      virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
     };
 
   } // namespace Remote

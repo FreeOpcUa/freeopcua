@@ -496,21 +496,32 @@ namespace
 
   void Read(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
   {
-    OpcUa::Remote::ReadParameters params;
-    params.Node = nodeID;
-    params.Attribute = attributeID;
-    const DataValue value = attributes.Read(params);
+    ReadParameters params;
+    AttributeValueID attribute;
+    attribute.Node = nodeID;
+    attribute.Attribute = attributeID;
+    params.AttributesToRead.push_back(attribute);
+    const std::vector<DataValue> values = attributes.Read(params);
+    if (values.size() != 1)
+    {
+      std::cout << "Server returned " << values.size() << " instead of 1." << std::endl;
+      return;
+    }
     std::cout << "data value:" << std::endl;
-    Print(value, Tabs(2));
+    Print(values.front(), Tabs(2));
   }
 
   void Write(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
   {
-    OpcUa::Remote::WriteParameters params;
-    params.Node = nodeID;
-    params.Attribute = attributeID;
-    params.Value = value;
-    std::cout << "Status code: 0x" << std::hex << static_cast<uint32_t>(attributes.Write(params)) << std::endl;
+    OpcUa::WriteValue attribute;
+    attribute.Node = nodeID;
+    attribute.Attribute = attributeID;
+    attribute.Data = value;
+    std::vector<StatusCode> statuses = attributes.Write(std::vector<OpcUa::WriteValue>(1, attribute));
+    for (OpcUa::StatusCode status : statuses)
+    {
+      std::cout << "Status code: 0x" << std::hex << static_cast<uint32_t>(status) << std::endl;
+    }
   }
 
   void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)

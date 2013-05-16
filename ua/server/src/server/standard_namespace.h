@@ -12,13 +12,20 @@
 #define OPC_UA_SERVER_STANDARD_NAME_SPACE_H
 
 #include <opc/ua/view.h>
+#include <opc/ua/attributes.h>
 
 #include <memory>
 
 namespace OpcUa
 {
 
-    std::unique_ptr<Remote::ViewServices> CreateStandardNamespace();
+    class StandardNamespace
+      : public Remote::ViewServices
+      , public Remote::AttributeServices
+    {
+    };
+
+    std::unique_ptr<StandardNamespace> CreateStandardNamespace();
 
 } // namespace OpcUa
 

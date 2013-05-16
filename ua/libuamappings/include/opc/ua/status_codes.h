@@ -16,9 +16,10 @@ namespace OpcUa
 {
   enum class StatusCode : uint32_t
   {
-    Good = 0,
-    BadNotImplemented = 0x80440000,
-    BadNotReadable    = 0x806F0000,
+    Good                 = 0,
+    BadNotImplemented    = 0x80440000,
+    BadWriteNotSupported = 0x80730000,
+    BadNotReadable       = 0x806F0000,
   };
 }
 
