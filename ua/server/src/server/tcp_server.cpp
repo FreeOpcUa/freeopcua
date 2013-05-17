@@ -17,13 +17,14 @@
 #include <errno.h>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdexcept>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-
+#include <unistd.h>
 
 namespace
 {

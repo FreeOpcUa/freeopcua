@@ -157,7 +157,7 @@ test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 
 
 libtest_dynamic_addon.so: test_dynamic_addon.o
-	$(CC) -std=c++0x -g -Wall -ldl -shared -module -o libtest_dynamic_addon.so test_dynamic_addon.o
+	$(CC) -std=c++0x -g -Wall -ldl -shared -o libtest_dynamic_addon.so test_dynamic_addon.o
 
 all-local: libtest_dynamic_addon.so
 
