@@ -17,6 +17,8 @@ namespace OpcUa
   {
 
     const char Aggregates[]      = "Aggregates";
+    const char BaseDataType[]    = "BaseDataType";
+    const char DataTypes[]       = "DataTypes";
     const char FolderType[]      = "FolderType";
     const char Objects[]         = "Objects";
     const char HasChild[]        = "HasChild";

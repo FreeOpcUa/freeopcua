@@ -16,11 +16,13 @@ namespace OpcUa
   enum class ObjectID : uint32_t
   {
     Null = 0,
+    BaseDataType = 24,
     FolderType = 61,
     RootFolder = 84,
     ObjectsFolder = 85,
     TypesFolder = 86,
     ViewsFolder = 87,
+    DataTypes = 90,
     ReferenceTypes = 91,
 
     References = 31,
