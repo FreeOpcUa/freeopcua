@@ -318,7 +318,7 @@ namespace
     Print(desc.TargetNodeID, tabs1);
 
     std::cout << tabs << "TypeID:" << std::endl;
-    Print(desc.TypeID, tabs1);
+    Print(desc.ReferenceTypeID, tabs1);
 
     std::cout << tabs << "Type definition ID:" << std::endl;
     Print(desc.TargetNodeTypeDefinition, tabs1);

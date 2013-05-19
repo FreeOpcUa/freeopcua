@@ -325,8 +325,8 @@ TEST_F(ViewSerialization, ReferenceDescription)
 
   ReferenceDescription desc;
 
-  desc.TypeID.Encoding = EV_TWO_BYTE;
-  desc.TypeID.TwoByteData.Identifier = 1;
+  desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
+  desc.ReferenceTypeID.TwoByteData.Identifier = 1;
 
   desc.IsForward = true;
 
@@ -388,8 +388,8 @@ TEST_F(ViewDeserialization, ReferenceDescription)
 
   GetStream() >> desc;
 
-  ASSERT_EQ(desc.TypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TypeID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 1);
 
   ASSERT_EQ(desc.IsForward, true);
 
@@ -419,8 +419,8 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
   using namespace OpcUa::Binary;
   ReferenceDescription desc;
 
-  desc.TypeID.Encoding = EV_TWO_BYTE;
-  desc.TypeID.TwoByteData.Identifier = 1;
+  desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
+  desc.ReferenceTypeID.TwoByteData.Identifier = 1;
 
   desc.IsForward = true;
 
@@ -506,8 +506,8 @@ TEST_F(ViewDeserialization, BrowseResult)
   ASSERT_FALSE(result.Referencies.empty());
 
   const ReferenceDescription& desc = result.Referencies[0];
-  ASSERT_EQ(desc.TypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TypeID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.IsForward, true);
   ASSERT_EQ(desc.TargetNodeID.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.TargetNodeID.TwoByteData.Identifier, 2);

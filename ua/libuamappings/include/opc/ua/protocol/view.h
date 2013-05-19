@@ -90,7 +90,7 @@ namespace OpcUa
 
   struct ReferenceDescription
   {
-    NodeID TypeID;
+    NodeID ReferenceTypeID;
     bool IsForward;
     NodeID TargetNodeID;
     QualifiedName BrowseName;

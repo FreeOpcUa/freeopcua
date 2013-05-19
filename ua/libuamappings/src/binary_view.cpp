@@ -43,7 +43,7 @@ namespace OpcUa
   }
 
   BrowseDescription::BrowseDescription()
-    : Direction(BrowseDirection::Forward)
+    : Direction(BrowseDirection::Both)
     , IncludeSubtypes(false)
     , NodeClasses(NODE_CLASS_ALL)
     , ResultMask(REFERENCE_ALL)
@@ -274,7 +274,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ReferenceDescription>(const ReferenceDescription& desc)
     {
-      return RawSize(desc.TypeID) +
+      return RawSize(desc.ReferenceTypeID) +
              RawSize(desc.IsForward) +
              RawSize(desc.TargetNodeID) +
              RawSize(desc.BrowseName) +
@@ -286,7 +286,7 @@ namespace OpcUa
     template<>
     void OStream::Serialize<ReferenceDescription>(const ReferenceDescription& desc)
     {
-      *this << desc.TypeID;
+      *this << desc.ReferenceTypeID;
       *this << desc.IsForward;
       *this << desc.TargetNodeID;
       *this << desc.BrowseName;
@@ -298,7 +298,7 @@ namespace OpcUa
     template<>
     void IStream::Deserialize<ReferenceDescription>(ReferenceDescription& desc)
     {
-      *this >> desc.TypeID;
+      *this >> desc.ReferenceTypeID;
       *this >> desc.IsForward;
       *this >> desc.TargetNodeID;
       *this >> desc.BrowseName;
