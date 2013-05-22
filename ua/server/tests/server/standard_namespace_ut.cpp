@@ -76,6 +76,18 @@ protected:
     EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
   }
 
+  void ExpectHasVariableAttributes(ObjectID id)
+  {
+    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::DATA_TYPE));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE_RANK));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ARRAY_DIMENSIONS));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ACCESS_LEVEL));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::USER_ACCESS_LEVEL));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::MINIMUM_SAMPLING_INTERVAL));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::HISTORIZING));
+  }
+
 protected:
   std::unique_ptr<OpcUa::StandardNamespace> NameSpace;
 };
@@ -315,14 +327,34 @@ TEST_F(StandardNamespaceTest, IdType)
   ExpectHasTypeAttributes(ObjectID::IdType);
 }
 
+TEST_F(StandardNamespaceTest, IdTypeEnuStrings)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::IdTypeEnumStrings);
+  EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::PropertyType));
+
+  ExpectHasBaseAttributes(ObjectID::IdTypeEnumStrings);
+  ExpectHasVariableAttributes(ObjectID::IdTypeEnumStrings);
+}
+
 TEST_F(StandardNamespaceTest, MessageSecurityMode)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::MessageSecurityMode);
   EXPECT_EQ(SizeOf(refs), 1);
-//  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::IdType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::MessageSecurityModeEnumStrings));
 
   ExpectHasBaseAttributes(ObjectID::MessageSecurityMode);
   ExpectHasTypeAttributes(ObjectID::MessageSecurityMode);
+}
+
+TEST_F(StandardNamespaceTest, MessageSecurityModeEnumStrings)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::MessageSecurityModeEnumStrings);
+  EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::PropertyType));
+
+  ExpectHasBaseAttributes(ObjectID::IdTypeEnumStrings);
+  ExpectHasVariableAttributes(ObjectID::IdTypeEnumStrings);
 }
 
 TEST_F(StandardNamespaceTest, NodeClass)
@@ -338,6 +370,7 @@ TEST_F(StandardNamespaceTest, RedundancySupport)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::RedundancySupport);
   EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::RedundancySupportEnumStrings));
 
   ExpectHasBaseAttributes(ObjectID::RedundancySupport);
   ExpectHasTypeAttributes(ObjectID::RedundancySupport);
@@ -347,6 +380,7 @@ TEST_F(StandardNamespaceTest, SecurityTokenRequestType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::SecurityTokenRequestType);
   EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::SecurityTokenRequestTypeEnumStrings));
 
   ExpectHasBaseAttributes(ObjectID::SecurityTokenRequestType);
   ExpectHasTypeAttributes(ObjectID::SecurityTokenRequestType);
@@ -356,6 +390,7 @@ TEST_F(StandardNamespaceTest, ServerState)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerState);
   EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::ServerStateEnumStrings));
 
   ExpectHasBaseAttributes(ObjectID::ServerState);
   ExpectHasTypeAttributes(ObjectID::ServerState);

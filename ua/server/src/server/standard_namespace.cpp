@@ -13,6 +13,7 @@
 #include "standard_namespace.h"
 
 #include <opc/ua/node_classes.h>
+#include <opc/ua/variable_access_level.h>
 #include <opc/ua/strings.h>
 
 #include <algorithm>
@@ -200,11 +201,16 @@ namespace
                DiagnosticInfoType();
                EnumerationType();
                  IdType();
+                   IdTypeEnumStrings();
                  MessageSecurityModeType();
+                   MessageSecurityModeTypeEnumStrings();
                  NodeClassType();
                  RedundancySupportType();
+                   RedundancySupportTypeEnumStrings();
                  SecurityTokenRequestType();
+                   SecurityTokenRequestTypeEnumStrings();
                  ServerStateType();
+                   ServerStateEnumStrings();
          ReferenceTypes();
            Refs();
              HierarchicalReferences();
@@ -515,6 +521,39 @@ namespace
       AddReference(ObjectID::IdType, forward, ReferenceID::HasProperty, ObjectID::IdTypeEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
     }
 
+    void EnumStrings(ObjectID nodeID, const std::vector<LocalizedText>& values)
+    {
+      // Base Attributes
+      AddValue(nodeID, AttributeID::NODE_ID,      NodeID(nodeID));
+      AddValue(nodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(nodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EnumStrings));
+      AddValue(nodeID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EnumStrings));
+      AddValue(nodeID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EnumStrings));
+      AddValue(nodeID, AttributeID::WRITE_MASK,   0);
+      AddValue(nodeID, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(nodeID, AttributeID::VALUE, values);
+      AddValue(nodeID, AttributeID::DATA_TYPE, NodeID(ObjectID::LocalizedText));
+      AddValue(nodeID, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>(1,0));
+      AddValue(nodeID, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(nodeID, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(nodeID, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(100));
+      AddValue(nodeID, AttributeID::HISTORIZING, false);
+      AddValue(nodeID, AttributeID::VALUE_RANK, int32_t(1));
+      // References
+      AddReference(nodeID, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void IdTypeEnumStrings()
+    {
+      std::vector<OpcUa::LocalizedText> values;
+      values.push_back(LocalizedText("Numeric"));
+      values.push_back(LocalizedText("String"));
+      values.push_back(LocalizedText("Guid"));
+      values.push_back(LocalizedText("Opaque"));
+      EnumStrings(ObjectID::IdTypeEnumStrings, values);
+    }
+
     void MessageSecurityModeType()
     {
       // Base Attributes
@@ -527,6 +566,18 @@ namespace
       AddValue(ObjectID::MessageSecurityMode, AttributeID::USER_WRITE_MASK, 0);
       // Type Attribute
       AddValue(ObjectID::MessageSecurityMode, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::MessageSecurityMode, forward, ReferenceID::HasProperty, ObjectID::MessageSecurityModeEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
+    }
+
+    void MessageSecurityModeTypeEnumStrings()
+    {
+      std::vector<OpcUa::LocalizedText> values;
+      values.push_back(LocalizedText("Invalid"));
+      values.push_back(LocalizedText("None"));
+      values.push_back(LocalizedText("Sign"));
+      values.push_back(LocalizedText("SignAndEncrypt"));
+      EnumStrings(ObjectID::MessageSecurityModeEnumStrings, values);
     }
 
     void NodeClassType()
@@ -555,6 +606,19 @@ namespace
       AddValue(ObjectID::RedundancySupport, AttributeID::USER_WRITE_MASK, 0);
       // Type Attribute
       AddValue(ObjectID::RedundancySupport, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::RedundancySupport, forward, ReferenceID::HasProperty, ObjectID::RedundancySupportEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
+    }
+
+    void RedundancySupportTypeEnumStrings()
+    {
+      std::vector<OpcUa::LocalizedText> values;
+      values.push_back(LocalizedText("None"));
+      values.push_back(LocalizedText("Cold"));
+      values.push_back(LocalizedText("Warm"));
+      values.push_back(LocalizedText("Hot"));
+      values.push_back(LocalizedText("Transparent"));
+      EnumStrings(ObjectID::RedundancySupportEnumStrings, values);
     }
 
     void SecurityTokenRequestType()
@@ -569,6 +633,16 @@ namespace
       AddValue(ObjectID::SecurityTokenRequestType, AttributeID::USER_WRITE_MASK, 0);
       // Type Attribute
       AddValue(ObjectID::SecurityTokenRequestType, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::SecurityTokenRequestType, forward, ReferenceID::HasProperty, ObjectID::SecurityTokenRequestTypeEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
+    }
+
+    void SecurityTokenRequestTypeEnumStrings()
+    {
+      std::vector<OpcUa::LocalizedText> values;
+      values.push_back(LocalizedText("Issue"));
+      values.push_back(LocalizedText("Renew"));
+      EnumStrings(ObjectID::SecurityTokenRequestTypeEnumStrings, values);
     }
 
     void ServerStateType()
@@ -583,6 +657,22 @@ namespace
       AddValue(ObjectID::ServerState, AttributeID::USER_WRITE_MASK, 0);
       // Type Attribute
       AddValue(ObjectID::ServerState, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::ServerState, forward, ReferenceID::HasProperty, ObjectID::ServerStateEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
+    }
+
+    void ServerStateEnumStrings()
+    {
+      std::vector<OpcUa::LocalizedText> values;
+      values.push_back(LocalizedText("Running"));
+      values.push_back(LocalizedText("Failed"));
+      values.push_back(LocalizedText("NoConfiguration"));
+      values.push_back(LocalizedText("Suspended"));
+      values.push_back(LocalizedText("Shutdown"));
+      values.push_back(LocalizedText("Test"));
+      values.push_back(LocalizedText("CommunicationFault"));
+      values.push_back(LocalizedText("Unknown"));
+      EnumStrings(ObjectID::ServerStateEnumStrings, values);
     }
 
     void ReferenceTypes()
