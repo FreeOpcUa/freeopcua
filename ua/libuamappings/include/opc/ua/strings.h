@@ -49,6 +49,7 @@ namespace OpcUa
     const char NonHierarchicalReferences[] = "NonHierarchicalReferences";
     const char Number[]          = "Number";
     const char Organizes[]       = "Organizes";
+    const char PropertyType[]    = "PropertyType";
     const char QualifiedName[]   = "QualifiedName";
     const char RedundancySupport[] = "RedundancySupport";
     const char References[]      = "References";

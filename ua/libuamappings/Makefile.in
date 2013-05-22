@@ -325,7 +325,8 @@ opcuainclude_HEADERS = \
   include/opc/ua/node_classes.h \
   include/opc/ua/object_ids.h \
   include/opc/ua/reference_ids.h \
-  include/opc/ua/strings.h
+  include/opc/ua/strings.h \
+  include/opc/ua/variable_access_level.h
 
 lib_LIBRARIES = libopcuabinary.a
 libopcuabinary_a_SOURCES = \

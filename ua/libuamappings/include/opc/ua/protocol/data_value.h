@@ -41,7 +41,18 @@ namespace OpcUa
        , ServerPicoseconds(0)
      {
      }
-
+/*
+     explicit DataValue(const Variant& var)
+       : Encoding(DATA_VALUE)
+       , Value(var)
+       , Status(StatusCode::Good)
+       , SourceTimestamp(0)
+       , SourcePicoseconds(0)
+       , ServerTimestamp(0)
+       , ServerPicoseconds(0)
+     {
+     }
+*/
      DataValue& operator= (const Variant& value)
      {
        Value = value;

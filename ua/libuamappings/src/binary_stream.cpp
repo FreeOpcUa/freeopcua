@@ -404,7 +404,48 @@ namespace OpcUa
       }
 */
     }
- 
+
+    template<>
+    void OStream::Serialize<ByteString>(const ByteString& value)
+    {
+      if (value.Data.empty())
+      {
+        Serialize(~uint32_t());
+        return;
+      }
+      Serialize(static_cast<uint32_t>(value.Data.size()));
+      Buffer.insert(Buffer.end(), value.Data.begin(), value.Data.end());
+    }
+
+    template<>
+    void IStream::Deserialize<ByteString>(ByteString& value)
+    {
+      uint32_t stringSize = 0;
+      Deserialize(stringSize);
+      if (stringSize != ~uint32_t())
+      {
+        value.Data.resize(stringSize);
+        GetData(*In, reinterpret_cast<char*>(&value.Data[0]), stringSize);
+        return;
+      }
+
+      value.Data.clear();
+      return;
+    }
+
+    template<>
+    void OStream::Serialize<std::vector<ByteString>>(const std::vector<ByteString>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void IStream::Deserialize<std::vector<ByteString>>(std::vector<ByteString>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+
     template<>
     void OStream::Serialize<std::vector<uint8_t>>(const std::vector<uint8_t>& value)
     {

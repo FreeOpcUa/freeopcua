@@ -33,6 +33,11 @@ namespace OpcUa
     NEITHER = 3
   };
 
+  struct ByteString
+  {
+    std::vector<int8_t> Data;
+  };
+
   class IntegerID
   {
   public:

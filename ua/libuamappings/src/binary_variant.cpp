@@ -49,11 +49,11 @@ namespace
       case VariantType::STRING:           func(var.String, secondParam); break; \
       case VariantType::DATE_TIME:        func(var.Time, secondParam); break; \
       case VariantType::GUID:             func(var.Guids, secondParam); break; \
-      case VariantType::BYTE_STRING:      func(var.ByteString, secondParam); break; \
+      case VariantType::BYTE_STRING:      func(var.ByteStrings, secondParam); break; \
       case VariantType::XML_ELEMENT:      func(var.String, secondParam); break; \
       case VariantType::NODE_ID:          func(var.Node, secondParam); break; \
       case VariantType::EXPANDED_NODE_ID: func(var.Node, secondParam); break; \
-      case VariantType::STATUS_CODE:      func(var.StatusCode, secondParam); break; \
+      case VariantType::STATUS_CODE:      func(var.Statuses, secondParam); break; \
       case VariantType::QUALIFIED_NAME:   func(var.Name, secondParam); break; \
       case VariantType::LOCALIZED_TEXT:   func(var.Text, secondParam); break; \
       case VariantType::DIAGNOSTIC_INFO:  func(var.Diagnostic, secondParam); break; \
@@ -155,11 +155,11 @@ namespace
       case VariantType::STRING:           var.String = value.String; break;
       case VariantType::DATE_TIME:        var.Time = value.Time; break;
       case VariantType::GUID:             var.Guids = value.Guids; break;
-      case VariantType::BYTE_STRING:      var.ByteString = value.ByteString; break;
+      case VariantType::BYTE_STRING:      var.ByteStrings = value.ByteStrings; break;
       case VariantType::XML_ELEMENT:      var.String = value.String; break;
       case VariantType::NODE_ID:          var.Node = value.Node; break;
       case VariantType::EXPANDED_NODE_ID: var.Node = value.Node; break;
-      case VariantType::STATUS_CODE:      var.StatusCode = value.StatusCode; break;
+      case VariantType::STATUS_CODE:      var.Statuses = value.Statuses; break;
       case VariantType::QUALIFIED_NAME:   var.Name = value.Name; break;
       case VariantType::LOCALIZED_TEXT:   var.Text = value.Text; break;
       case VariantType::DIAGNOSTIC_INFO:  var.Diagnostic = value.Diagnostic; break;
@@ -189,17 +189,294 @@ namespace OpcUa
     VariantValue::VariantValue(uint64_t val) : UInt64{val} {}
     VariantValue::VariantValue(float val) : Float{val} {}
     VariantValue::VariantValue(double val) : Double{val} {}
+    VariantValue::VariantValue(StatusCode val) : Statuses{val} {}
     VariantValue::VariantValue(const std::string& val) : String{val} {}
+    VariantValue::VariantValue(const ByteString& val) : ByteStrings{val} {}
 //    VariantValue::VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
     VariantValue::VariantValue(const Guid& val) : Guids{val} {}
-    VariantValue::VariantValue(const std::vector<uint8_t> val) : ByteString{val} {}
     VariantValue::VariantValue(const NodeID& val) : Node{val} {}
-//    VariantValue(uint32_t val) : StatusCode{val} {} // TODO create separate type for Status code
     VariantValue::VariantValue(const QualifiedName& val) : Name{val} {}
     VariantValue::VariantValue(const LocalizedText& val) : Text{val} {}
     VariantValue::VariantValue(const DataValue& val) : Value{val} {}
     VariantValue::VariantValue(const Variant& val) : Variants{val} {}
     VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{val} {}
+
+    VariantValue::VariantValue(const std::vector<bool>& val) : Boolean(val) {}
+    VariantValue::VariantValue(const std::vector<int8_t>& val) : SByte(val) {}
+    VariantValue::VariantValue(const std::vector<uint8_t>& val) :  Byte(val) {}
+    VariantValue::VariantValue(const std::vector<int16_t>& val) : Int16(val) {}
+    VariantValue::VariantValue(const std::vector<uint16_t>& val) : UInt16(val) {}
+    VariantValue::VariantValue(const std::vector<int32_t>& val) : Int32(val) {}
+    VariantValue::VariantValue(const std::vector<uint32_t>& val) : UInt32(val) {}
+    VariantValue::VariantValue(const std::vector<int64_t>& val) : Int64(val) {}
+    VariantValue::VariantValue(const std::vector<uint64_t>& val) : UInt64(val) {}
+    VariantValue::VariantValue(const std::vector<float>& val) : Float(val) {}
+    VariantValue::VariantValue(const std::vector<double>& val) : Double(val) {}
+    VariantValue::VariantValue(const std::vector<StatusCode>& val) : Statuses(val) {} // TODO create separate type for Status code
+    VariantValue::VariantValue(const std::vector<std::string>& val) : String(val) {}
+    VariantValue::VariantValue(const std::vector<ByteString>& val) : ByteStrings(val) {}
+//    VariantValue::VariantValuconst e(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue::VariantValue(const std::vector<Guid>& val) : Guids(val) {}
+    VariantValue::VariantValue(const std::vector<NodeID>& val) : Node(val) {}
+    VariantValue::VariantValue(const std::vector<QualifiedName>& val) : Name(val) {}
+    VariantValue::VariantValue(const std::vector<LocalizedText>& val) : Text(val) {}
+    VariantValue::VariantValue(const std::vector<DataValue>& val) : Value(val) {}
+    VariantValue::VariantValue(const std::vector<Variant>& val) : Variants(val) {}
+    VariantValue::VariantValue(const std::vector<DiagnosticInfo>& val) : Diagnostic(val) {}
+
+
+    VariantValue& VariantValue::operator= (bool val)
+    {
+      Boolean = std::vector<bool>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (int8_t val)
+    {
+      SByte = std::vector<int8_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (uint8_t val)
+    {
+      Byte = std::vector<uint8_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (int16_t val)
+    {
+      Int16 = std::vector<int16_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (uint16_t val)
+    {
+      UInt16 = std::vector<uint16_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (int32_t val)
+    {
+      Int32 = std::vector<int32_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (uint32_t val)
+    {
+      UInt32 = std::vector<uint32_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (int64_t val)
+    {
+      Int64 = std::vector<int64_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (uint64_t val)
+    {
+      UInt64 = std::vector<uint64_t>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (float val)
+    {
+      Float = std::vector<float>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (double val)
+    {
+      Double = std::vector<double>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (StatusCode val)
+    {
+      Statuses = std::vector<StatusCode>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::string& val)
+    {
+      String = std::vector<std::string>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const ByteString& val)
+    {
+      ByteStrings = std::vector<ByteString>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const Guid& val)
+    {
+      Guids = std::vector<Guid>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const NodeID& val)
+    {
+      Node = std::vector<NodeID>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const QualifiedName& val)
+    {
+      Name = std::vector<QualifiedName>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const LocalizedText& val)
+    {
+      Text = std::vector<LocalizedText>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const DataValue& val)
+    {
+      Value = std::vector<DataValue>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const Variant& val)
+    {
+      Variants = std::vector<Variant>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const DiagnosticInfo& val)
+    {
+      Diagnostic = std::vector<DiagnosticInfo>{val};
+      return *this;
+    }
+
+
+    VariantValue& VariantValue::operator= (const std::vector<bool>& val)
+    {
+      Boolean = std::vector<bool>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<int8_t>& val)
+    {
+      SByte = std::vector<int8_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<uint8_t>& val)
+    {
+      Byte = std::vector<uint8_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<int16_t>& val)
+    {
+      Int16 = std::vector<int16_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<uint16_t>& val)
+    {
+      UInt16 = std::vector<uint16_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<int32_t>& val)
+    {
+      Int32 = std::vector<int32_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<uint32_t>& val)
+    {
+      UInt32 = std::vector<uint32_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<int64_t>& val)
+    {
+      Int64 = std::vector<int64_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<uint64_t>& val)
+    {
+      UInt64 = std::vector<uint64_t>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<float>& val)
+    {
+      Float = std::vector<float>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<double>& val)
+    {
+      Double = std::vector<double>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<StatusCode>& val)
+    {
+      Statuses = std::vector<StatusCode>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<std::string>& val)
+    {
+      String = std::vector<std::string>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<ByteString>& val)
+    {
+      ByteStrings = std::vector<ByteString>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<Guid>& val)
+    {
+      Guids = std::vector<Guid>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<NodeID>& val)
+    {
+      Node = std::vector<NodeID>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<QualifiedName>& val)
+    {
+      Name = std::vector<QualifiedName>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<LocalizedText>& val)
+    {
+      Text = std::vector<LocalizedText>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<DataValue>& val)
+    {
+      Value = std::vector<DataValue>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<Variant>& val)
+    {
+      Variants = std::vector<Variant>(val);
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const std::vector<DiagnosticInfo>& val)
+    {
+      Diagnostic = std::vector<DiagnosticInfo>(val);
+      return *this;
+    }
 
 
   //---------------------------------------------------
@@ -211,12 +488,12 @@ namespace OpcUa
     : Type(VariantType::NUL)
   {
   }
-
+/*
   Variant::Variant(const Variant& var)
   {
     *this = var;
   }
-
+*/
   Variant& Variant::operator= (const Variant& var)
   {
     Type = var.Type;
@@ -310,7 +587,7 @@ namespace OpcUa
     {
       return VariantType::GUID;
     }
-    if (!ByteString.empty())
+    if (!ByteStrings.empty())
     {
       return VariantType::BYTE_STRING;
     }
@@ -318,7 +595,7 @@ namespace OpcUa
     {
       return VariantType::EXPANDED_NODE_ID;
     }
-    if (!StatusCode.empty())
+    if (!Statuses.empty())
     {
       return VariantType::STATUS_CODE;
     }

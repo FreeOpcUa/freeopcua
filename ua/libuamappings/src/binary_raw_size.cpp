@@ -98,11 +98,18 @@ namespace OpcUa
       return 4;
     }
 
-   template<>
+    template<>
     std::size_t RawSize<std::string>(const std::string& str)
     {
       const std::size_t headerSize = 4;
       return headerSize + str.size();
+    }
+
+    template<>
+    std::size_t RawSize<ByteString>(const ByteString& str)
+    {
+      const std::size_t headerSize = 4;
+      return headerSize + str.Data.size();
     }
 
     template<>

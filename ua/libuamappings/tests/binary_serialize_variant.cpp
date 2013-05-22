@@ -240,7 +240,6 @@ TEST(Variant, AssignBoolValue)
   ASSERT_FALSE(var.IsNul());
 }
 // TODO add tests for assign and initializing of variant with different types
-/*
 
 TEST(Variant, InitializeWithBoolVector)
 {
@@ -250,6 +249,7 @@ TEST(Variant, InitializeWithBoolVector)
   ASSERT_TRUE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
+/*
 
 TEST(Variant, InitializeWithBoolInitializerList)
 {

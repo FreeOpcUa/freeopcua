@@ -13,6 +13,7 @@
 
 #include <opc/ua/protocol/datetime.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/status_codes.h>
 #include <string>
 
 #include <boost/variant.hpp>
@@ -70,12 +71,12 @@ namespace OpcUa
     std::vector<uint64_t> UInt64;
     std::vector<float> Float;
     std::vector<double> Double;
+    std::vector<StatusCode> Statuses;
     std::vector<std::string> String;
     std::vector<DateTime> Time;
     std::vector<Guid> Guids;
-    std::vector<std::vector<uint8_t>> ByteString;
+    std::vector<ByteString> ByteStrings;
     std::vector<NodeID> Node;
-    std::vector<uint32_t> StatusCode;
     std::vector<QualifiedName> Name;
     std::vector<LocalizedText> Text;
     std::vector<DataValue> Value;
@@ -99,18 +100,86 @@ namespace OpcUa
     explicit VariantValue(uint64_t val);
     explicit VariantValue(float val);
     explicit VariantValue(double val);
+    explicit VariantValue(StatusCode val);
     explicit VariantValue(const std::string& val);
+    explicit VariantValue(const ByteString& val);
 //    VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
     explicit VariantValue(const Guid& val);
-    explicit VariantValue(const std::vector<uint8_t> val);
     explicit VariantValue(const NodeID& val);
-//    VariantValue(uint32_t val) : StatusCode{val} {} // TODO create separate type for Status code
     explicit VariantValue(const QualifiedName& val);
     explicit VariantValue(const LocalizedText& val);
     explicit VariantValue(const DataValue& val);
     explicit VariantValue(const Variant& val);
     explicit VariantValue(const DiagnosticInfo& val);
-  };
+
+    explicit VariantValue(const std::vector<bool>& val);
+    explicit VariantValue(const std::vector<int8_t>& val);
+    explicit VariantValue(const std::vector<uint8_t>& val);
+    explicit VariantValue(const std::vector<int16_t>& val);
+    explicit VariantValue(const std::vector<uint16_t>& val);
+    explicit VariantValue(const std::vector<int32_t>& val);
+    explicit VariantValue(const std::vector<uint32_t>& val);
+    explicit VariantValue(const std::vector<int64_t>& val);
+    explicit VariantValue(const std::vector<uint64_t>& val);
+    explicit VariantValue(const std::vector<float>& val);
+    explicit VariantValue(const std::vector<double>& val);
+    explicit VariantValue(const std::vector<StatusCode>& val);
+    explicit VariantValue(const std::vector<std::string>& val);
+    explicit VariantValue(const std::vector<ByteString>& val);
+//    VariantValue(DateTime val); TODO create separate type instead of typedef to uint64_t
+    explicit VariantValue(const std::vector<Guid>& val);
+    explicit VariantValue(const std::vector<NodeID>& val);
+    explicit VariantValue(const std::vector<QualifiedName>& val);
+    explicit VariantValue(const std::vector<LocalizedText>& val);
+    explicit VariantValue(const std::vector<DataValue>& val);
+    explicit VariantValue(const std::vector<Variant>& val);
+    explicit VariantValue(const std::vector<DiagnosticInfo>& val);
+
+    VariantValue& operator= (bool val);
+    VariantValue& operator= (int8_t val);
+    VariantValue& operator= (uint8_t val);
+    VariantValue& operator= (int16_t val);
+    VariantValue& operator= (uint16_t val);
+    VariantValue& operator= (int32_t val);
+    VariantValue& operator= (uint32_t val);
+    VariantValue& operator= (int64_t val);
+    VariantValue& operator= (uint64_t val);
+    VariantValue& operator= (float val);
+    VariantValue& operator= (double val);
+    VariantValue& operator= (StatusCode val);
+    VariantValue& operator= (const std::string& val);
+    VariantValue& operator= (const ByteString& val);
+//  Value(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue& operator= (const Guid& val);
+    VariantValue& operator= (const NodeID& val);
+    VariantValue& operator= (const QualifiedName& val);
+    VariantValue& operator= (const LocalizedText& val);
+    VariantValue& operator= (const DataValue& val);
+    VariantValue& operator= (const Variant& val);
+    VariantValue& operator= (const DiagnosticInfo& val);
+
+    VariantValue& operator= (const std::vector<bool>& val);
+    VariantValue& operator= (const std::vector<int8_t>& val);
+    VariantValue& operator= (const std::vector<uint8_t>& val);
+    VariantValue& operator= (const std::vector<int16_t>& val);
+    VariantValue& operator= (const std::vector<uint16_t>& val);
+    VariantValue& operator= (const std::vector<int32_t>& val);
+    VariantValue& operator= (const std::vector<uint32_t>& val);
+    VariantValue& operator= (const std::vector<int64_t>& val);
+    VariantValue& operator= (const std::vector<uint64_t>& val);
+    VariantValue& operator= (const std::vector<float>& val);
+    VariantValue& operator= (const std::vector<double>& val);
+    VariantValue& operator= (const std::vector<StatusCode>& val);
+    VariantValue& operator= (const std::vector<std::string>& val);
+    VariantValue& operator= (const std::vector<ByteString>& val);
+    VariantValue& operator= (const std::vector<Guid>& val);
+    VariantValue& operator= (const std::vector<NodeID>& val);
+    VariantValue& operator= (const std::vector<QualifiedName>& val);
+    VariantValue& operator= (const std::vector<LocalizedText>& val);
+    VariantValue& operator= (const std::vector<DataValue>& val);
+    VariantValue& operator= (const std::vector<Variant>& val);
+    VariantValue& operator= (const std::vector<DiagnosticInfo>& val);
+};
 
   struct Variant
   {
@@ -124,13 +193,12 @@ namespace OpcUa
 
     bool IsNul() const;
     Variant();
-    Variant(const Variant& var);
+//    Variant(const Variant& var);
 
     template <typename T>
     Variant(const T& value)
-      : Value(value)
-      , Type(VariantType::NUL)
     {
+      Value = value;
       Type = Value.GetType();
     }
 
