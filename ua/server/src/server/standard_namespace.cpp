@@ -211,6 +211,24 @@ namespace
                    SecurityTokenRequestTypeEnumStrings();
                  ServerStateType();
                    ServerStateEnumStrings();
+                 ExpandedNodeID();
+                 Guid();
+                 LocalizedTextType();
+                 NodeIDType();
+                 NumberType();
+                   DoubleType();
+                     DurationType();
+                   FloatType();
+                   IntegerType();
+                     Int16Type();
+                     Int32Type();
+                     Int64Type();
+                     SByteType();
+                   UIntegerType();
+                     ByteType();
+                     UInt16Type();
+                     UInt32Type();
+                     UInt64Type();
          ReferenceTypes();
            Refs();
              HierarchicalReferences();
@@ -655,7 +673,7 @@ namespace
       AddValue(ObjectID::ServerState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerState));
       AddValue(ObjectID::ServerState, AttributeID::WRITE_MASK,   0);
       AddValue(ObjectID::ServerState, AttributeID::USER_WRITE_MASK, 0);
-      // Type Attribute
+      // Type Attributes
       AddValue(ObjectID::ServerState, AttributeID::IS_ABSTRACT, false);
       // References
       AddReference(ObjectID::ServerState, forward, ReferenceID::HasProperty, ObjectID::ServerStateEnumStrings, Names::EnumStrings, NodeClass::Variable, ObjectID::PropertyType);
@@ -673,6 +691,275 @@ namespace
       values.push_back(LocalizedText("CommunicationFault"));
       values.push_back(LocalizedText("Unknown"));
       EnumStrings(ObjectID::ServerStateEnumStrings, values);
+    }
+
+    void ExpandedNodeID()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::NODE_ID,      NodeID(ObjectID::ExpandedNodeID));
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ExpandedNodeID));
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ExpandedNodeID));
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ExpandedNodeID));
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ExpandedNodeID, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void Guid()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Guid, AttributeID::NODE_ID,      NodeID(ObjectID::Guid));
+      AddValue(ObjectID::Guid, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Guid, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Guid));
+      AddValue(ObjectID::Guid, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Guid));
+      AddValue(ObjectID::Guid, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Guid));
+      AddValue(ObjectID::Guid, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Guid, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Guid, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void LocalizedTextType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::LocalizedText, AttributeID::NODE_ID,      NodeID(ObjectID::LocalizedText));
+      AddValue(ObjectID::LocalizedText, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::LocalizedText, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocalizedText));
+      AddValue(ObjectID::LocalizedText, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::LocalizedText));
+      AddValue(ObjectID::LocalizedText, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::LocalizedText));
+      AddValue(ObjectID::LocalizedText, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::LocalizedText, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::LocalizedText, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void NodeIDType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::NodeID, AttributeID::NODE_ID,      NodeID(ObjectID::NodeID));
+      AddValue(ObjectID::NodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::NodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NodeID));
+      AddValue(ObjectID::NodeID, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::NodeID));
+      AddValue(ObjectID::NodeID, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::NodeID));
+      AddValue(ObjectID::NodeID, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::NodeID, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::NodeID, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void NumberType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Number, AttributeID::NODE_ID,      NodeID(ObjectID::Number));
+      AddValue(ObjectID::Number, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Number, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Number));
+      AddValue(ObjectID::Number, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Number));
+      AddValue(ObjectID::Number, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Number));
+      AddValue(ObjectID::Number, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Number, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Number, AttributeID::IS_ABSTRACT, true);
+      // References
+      AddReference(ObjectID::Number, forward, ReferenceID::HasSubtype, ObjectID::Double,   Names::Double,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Number, forward, ReferenceID::HasSubtype, ObjectID::Float,    Names::Float,    NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Number, forward, ReferenceID::HasSubtype, ObjectID::Integer,  Names::Integer,  NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Number, forward, ReferenceID::HasSubtype, ObjectID::UInteger, Names::UInteger, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void DoubleType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Double, AttributeID::NODE_ID,      NodeID(ObjectID::Number));
+      AddValue(ObjectID::Double, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Double, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Number));
+      AddValue(ObjectID::Double, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Number));
+      AddValue(ObjectID::Double, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Number));
+      AddValue(ObjectID::Double, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Double, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Double, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::Double, forward, ReferenceID::HasSubtype, ObjectID::Duration,   Names::Duration,   NodeClass::DataType, ObjectID::Null);
+    }
+
+    void DurationType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Duration, AttributeID::NODE_ID,      NodeID(ObjectID::Duration));
+      AddValue(ObjectID::Duration, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Duration, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Duration));
+      AddValue(ObjectID::Duration, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Duration));
+      AddValue(ObjectID::Duration, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Duration));
+      AddValue(ObjectID::Duration, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Duration, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Duration, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void FloatType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Float, AttributeID::NODE_ID,      NodeID(ObjectID::Float));
+      AddValue(ObjectID::Float, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Float, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Float));
+      AddValue(ObjectID::Float, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Float));
+      AddValue(ObjectID::Float, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Float));
+      AddValue(ObjectID::Float, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Float, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Float, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void IntegerType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Integer, AttributeID::NODE_ID,      NodeID(ObjectID::Integer));
+      AddValue(ObjectID::Integer, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Integer, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Integer));
+      AddValue(ObjectID::Integer, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Integer));
+      AddValue(ObjectID::Integer, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Integer));
+      AddValue(ObjectID::Integer, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Integer, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Integer, AttributeID::IS_ABSTRACT, true);
+      // References
+      AddReference(ObjectID::Integer, forward, ReferenceID::HasSubtype, ObjectID::Int16,   Names::Int16,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Integer, forward, ReferenceID::HasSubtype, ObjectID::Int32,   Names::Int32,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Integer, forward, ReferenceID::HasSubtype, ObjectID::Int64,   Names::Int64,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Integer, forward, ReferenceID::HasSubtype, ObjectID::SByte,   Names::SByte,   NodeClass::DataType, ObjectID::Null);
+    }
+
+    void Int16Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Int16, AttributeID::NODE_ID,      NodeID(ObjectID::Int16));
+      AddValue(ObjectID::Int16, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Int16, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int16));
+      AddValue(ObjectID::Int16, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int16));
+      AddValue(ObjectID::Int16, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int16));
+      AddValue(ObjectID::Int16, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Int16, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Int16, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void Int32Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Int32, AttributeID::NODE_ID,      NodeID(ObjectID::Int32));
+      AddValue(ObjectID::Int32, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Int32, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int32));
+      AddValue(ObjectID::Int32, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int32));
+      AddValue(ObjectID::Int32, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int32));
+      AddValue(ObjectID::Int32, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Int32, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Int32, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void Int64Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Int64, AttributeID::NODE_ID,      NodeID(ObjectID::Int64));
+      AddValue(ObjectID::Int64, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Int64, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int64));
+      AddValue(ObjectID::Int64, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int64));
+      AddValue(ObjectID::Int64, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int64));
+      AddValue(ObjectID::Int64, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Int64, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Int64, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SByteType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SByte, AttributeID::NODE_ID,      NodeID(ObjectID::SByte));
+      AddValue(ObjectID::SByte, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SByte, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SByte));
+      AddValue(ObjectID::SByte, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SByte));
+      AddValue(ObjectID::SByte, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SByte));
+      AddValue(ObjectID::SByte, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SByte, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SByte, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void UIntegerType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UInteger, AttributeID::NODE_ID,      NodeID(ObjectID::UInteger));
+      AddValue(ObjectID::UInteger, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UInteger, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInteger));
+      AddValue(ObjectID::UInteger, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInteger));
+      AddValue(ObjectID::UInteger, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInteger));
+      AddValue(ObjectID::UInteger, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UInteger, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UInteger, AttributeID::IS_ABSTRACT, true);
+      // References
+      AddReference(ObjectID::UInteger, forward, ReferenceID::HasSubtype, ObjectID::Byte,     Names::SByte,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::UInteger, forward, ReferenceID::HasSubtype, ObjectID::UInt16,   Names::Int16,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::UInteger, forward, ReferenceID::HasSubtype, ObjectID::UInt32,   Names::Int32,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::UInteger, forward, ReferenceID::HasSubtype, ObjectID::UInt64,   Names::Int64,   NodeClass::DataType, ObjectID::Null);
+    }
+
+    void UInt16Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UInt16, AttributeID::NODE_ID,      NodeID(ObjectID::UInt16));
+      AddValue(ObjectID::UInt16, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UInt16, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt16));
+      AddValue(ObjectID::UInt16, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt16));
+      AddValue(ObjectID::UInt16, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt16));
+      AddValue(ObjectID::UInt16, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UInt16, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UInt16, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void UInt32Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UInt32, AttributeID::NODE_ID,      NodeID(ObjectID::UInt32));
+      AddValue(ObjectID::UInt32, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UInt32, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt32));
+      AddValue(ObjectID::UInt32, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt32));
+      AddValue(ObjectID::UInt32, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt32));
+      AddValue(ObjectID::UInt32, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UInt32, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UInt32, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void UInt64Type()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UInt64, AttributeID::NODE_ID,      NodeID(ObjectID::UInt64));
+      AddValue(ObjectID::UInt64, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UInt64, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt64));
+      AddValue(ObjectID::UInt64, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt64));
+      AddValue(ObjectID::UInt64, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt64));
+      AddValue(ObjectID::UInt64, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UInt64, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UInt64, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ByteType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Byte, AttributeID::NODE_ID,      NodeID(ObjectID::Byte));
+      AddValue(ObjectID::Byte, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Byte, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Byte));
+      AddValue(ObjectID::Byte, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Byte));
+      AddValue(ObjectID::Byte, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Byte));
+      AddValue(ObjectID::Byte, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Byte, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Byte, AttributeID::IS_ABSTRACT, false);
     }
 
     void ReferenceTypes()

@@ -395,3 +395,179 @@ TEST_F(StandardNamespaceTest, ServerState)
   ExpectHasBaseAttributes(ObjectID::ServerState);
   ExpectHasTypeAttributes(ObjectID::ServerState);
 }
+
+TEST_F(StandardNamespaceTest, ExpandedNodeID)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ExpandedNodeID);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::ExpandedNodeID);
+  ExpectHasTypeAttributes(ObjectID::ExpandedNodeID);
+}
+
+TEST_F(StandardNamespaceTest, Guid)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Guid);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Guid);
+  ExpectHasTypeAttributes(ObjectID::Guid);
+}
+
+TEST_F(StandardNamespaceTest, LocalizedText)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::LocalizedText);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::LocalizedText);
+  ExpectHasTypeAttributes(ObjectID::LocalizedText);
+}
+
+TEST_F(StandardNamespaceTest, NodeID)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::NodeID);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::NodeID);
+  ExpectHasTypeAttributes(ObjectID::NodeID);
+}
+
+TEST_F(StandardNamespaceTest, Number)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Number);
+  EXPECT_EQ(SizeOf(refs), 4);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Double));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Float));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Integer));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInteger));
+
+  ExpectHasBaseAttributes(ObjectID::Number);
+  ExpectHasTypeAttributes(ObjectID::Number);
+}
+
+TEST_F(StandardNamespaceTest, Double)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Double);
+  EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Duration));
+
+  ExpectHasBaseAttributes(ObjectID::Double);
+  ExpectHasTypeAttributes(ObjectID::Double);
+}
+
+TEST_F(StandardNamespaceTest, Duration)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Duration);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Duration);
+  ExpectHasTypeAttributes(ObjectID::Duration);
+}
+
+TEST_F(StandardNamespaceTest, Float)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Float);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Float);
+  ExpectHasTypeAttributes(ObjectID::Float);
+}
+
+TEST_F(StandardNamespaceTest, Integer)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Integer);
+  EXPECT_EQ(SizeOf(refs), 4);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Int16));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Int32));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Int64));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SByte));
+
+  ExpectHasBaseAttributes(ObjectID::Integer);
+  ExpectHasTypeAttributes(ObjectID::Integer);
+}
+
+TEST_F(StandardNamespaceTest, Int16)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Int16);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Int16);
+  ExpectHasTypeAttributes(ObjectID::Int16);
+}
+
+TEST_F(StandardNamespaceTest, Int32)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Int32);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Int32);
+  ExpectHasTypeAttributes(ObjectID::Int32);
+}
+
+TEST_F(StandardNamespaceTest, Int64)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Int64);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Int64);
+  ExpectHasTypeAttributes(ObjectID::Int64);
+}
+
+TEST_F(StandardNamespaceTest, SByte)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SByte);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::SByte);
+  ExpectHasTypeAttributes(ObjectID::SByte);
+}
+
+TEST_F(StandardNamespaceTest, UInteger)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UInteger);
+  EXPECT_EQ(SizeOf(refs), 4);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt16));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt32));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt64));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Byte));
+
+  ExpectHasBaseAttributes(ObjectID::UInteger);
+  ExpectHasTypeAttributes(ObjectID::UInteger);
+}
+
+TEST_F(StandardNamespaceTest, UInt16)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UInt16);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::UInt16);
+  ExpectHasTypeAttributes(ObjectID::UInt16);
+}
+
+TEST_F(StandardNamespaceTest, UInt32)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UInt32);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::UInt32);
+  ExpectHasTypeAttributes(ObjectID::UInt32);
+}
+
+TEST_F(StandardNamespaceTest, UInt64)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UInt64);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::UInt64);
+  ExpectHasTypeAttributes(ObjectID::UInt64);
+}
+
+TEST_F(StandardNamespaceTest, Byte)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Byte);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasBaseAttributes(ObjectID::Byte);
+  ExpectHasTypeAttributes(ObjectID::Byte);
+}
+
