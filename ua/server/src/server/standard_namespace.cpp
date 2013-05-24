@@ -182,7 +182,6 @@ namespace
 
     void Fill()
     {
-
      Root();
        Objects();
        Types();
@@ -229,6 +228,37 @@ namespace
                      UInt16Type();
                      UInt32Type();
                      UInt64Type();
+                   QualifiedNameType();
+                   StatusCodeType();
+                   StringType();
+                     LocaleIDType();
+                     NumericRangeType();
+                   StructureType();
+                     AddNodesItem();
+                     AddReferencesItem();
+                     ApplicationDescriptionType();
+                     Argument();
+                     BuildInfo();
+                     DeleteNodesItem();
+                     DeleteReferencesItem();
+                     EUInformation();
+                     ModelChangeStructureDataType();
+                     Range();
+                     SamplingIntervalDiagnosticsDataType();
+                     SemanticChangeStructureDataType();
+                     ServerDiagnosticsSummaryDataType();
+                     ServerStatusDataType();
+                     ServiceCounterDataType();
+                     SessionDiagnosticsDataType();
+                     SessionSecurityDiagnosticsDataType();
+                     SignedSoftwareCertificate();
+                     StatusResult();
+                     SubscriptionDiagnosticsDataType();
+                     UserIdentifyTokenType();
+                       AnonymousIdentifyToken();
+                       UserNameIdentifyToken();
+                       X509IdentifyToken();
+                   XmlElement();
          ReferenceTypes();
            Refs();
              HierarchicalReferences();
@@ -962,6 +992,468 @@ namespace
       AddValue(ObjectID::Byte, AttributeID::IS_ABSTRACT, false);
     }
 
+    void QualifiedNameType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::QualifiedName, AttributeID::NODE_ID,      NodeID(ObjectID::Byte));
+      AddValue(ObjectID::QualifiedName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::QualifiedName, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::QualifiedName));
+      AddValue(ObjectID::QualifiedName, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::QualifiedName));
+      AddValue(ObjectID::QualifiedName, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::QualifiedName));
+      AddValue(ObjectID::QualifiedName, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::QualifiedName, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::QualifiedName, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void StatusCodeType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::StatusCode, AttributeID::NODE_ID,      NodeID(ObjectID::StatusCode));
+      AddValue(ObjectID::StatusCode, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::StatusCode, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::StatusCode));
+      AddValue(ObjectID::StatusCode, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::StatusCode));
+      AddValue(ObjectID::StatusCode, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::StatusCode));
+      AddValue(ObjectID::StatusCode, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::StatusCode, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::StatusCode, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void StringType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::String, AttributeID::NODE_ID,      NodeID(ObjectID::String));
+      AddValue(ObjectID::String, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::String, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::String));
+      AddValue(ObjectID::String, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::String));
+      AddValue(ObjectID::String, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::String));
+      AddValue(ObjectID::String, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::String, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::String, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::String, forward, ReferenceID::HasSubtype, ObjectID::LocaleID,   Names::LocaleID,   NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::String, forward, ReferenceID::HasSubtype, ObjectID::NumericRange,   Names::NumericRange,   NodeClass::DataType, ObjectID::Null);
+    }
+
+    void LocaleIDType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::LocaleID, AttributeID::NODE_ID,      NodeID(ObjectID::LocaleID));
+      AddValue(ObjectID::LocaleID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::LocaleID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocaleID));
+      AddValue(ObjectID::LocaleID, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::LocaleID));
+      AddValue(ObjectID::LocaleID, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::LocaleID));
+      AddValue(ObjectID::LocaleID, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::LocaleID, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::LocaleID, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void NumericRangeType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::NumericRange, AttributeID::NODE_ID,      NodeID(ObjectID::NumericRange));
+      AddValue(ObjectID::NumericRange, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::NumericRange, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NumericRange));
+      AddValue(ObjectID::NumericRange, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::NumericRange));
+      AddValue(ObjectID::NumericRange, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::NumericRange));
+      AddValue(ObjectID::NumericRange, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::NumericRange, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::NumericRange, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void StructureType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Structure, AttributeID::NODE_ID,      NodeID(ObjectID::Structure));
+      AddValue(ObjectID::Structure, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Structure, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Structure));
+      AddValue(ObjectID::Structure, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Structure));
+      AddValue(ObjectID::Structure, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Structure));
+      AddValue(ObjectID::Structure, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Structure, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Structure, AttributeID::IS_ABSTRACT, true);
+      // References
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::AddNodesItem,      Names::AddNodesItem, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::AddReferencesItem, Names::AddReferencesItem, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::ApplicationDescription, Names::ApplicationDescription, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::Argument,          Names::Argument,  NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::BuildInfo,         Names::BuildInfo, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::DeleteNodesItem,   Names::DeleteNodesItem, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::DeleteReferencesItem, Names::DeleteReferencesItem, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::EUInformation,     Names::EUInformation, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::ModelChangeStructureDataType, Names::ModelChangeStructureDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::Range,             Names::Range, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsDataType, Names::SamplingIntervalDiagnosticsDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SemanticChangeStructureDataType, Names::SemanticChangeStructureDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsSummaryDataType, Names::ServerDiagnosticsSummaryDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::ServerStatusDataType, Names::ServerStatusDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::ServiceCounterDataType, Names::ServiceCounterDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SessionDiagnosticsDataType, Names::SessionDiagnosticsDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SessionSecurityDiagnosticsDataType, Names::SessionSecurityDiagnosticsDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SignedSoftwareCertificate, Names::SignedSoftwareCertificate, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::StatusResult, Names::StatusResult, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::SubscriptionDiagnosticsDataType, Names::SubscriptionDiagnosticsDataType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Structure, forward, ReferenceID::HasSubtype, ObjectID::UserIdentifyToken, Names::UserIdentifyToken, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void AddNodesItem()
+    {
+      // Base Attributes
+      AddValue(ObjectID::AddNodesItem, AttributeID::NODE_ID,      NodeID(ObjectID::AddNodesItem));
+      AddValue(ObjectID::AddNodesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::AddNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::AddNodesItem));
+      AddValue(ObjectID::AddNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AddNodesItem));
+      AddValue(ObjectID::AddNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AddNodesItem));
+      AddValue(ObjectID::AddNodesItem, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::AddNodesItem, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::AddNodesItem, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void AddReferencesItem()
+    {
+      // Base Attributes
+      AddValue(ObjectID::AddReferencesItem, AttributeID::NODE_ID,      NodeID(ObjectID::AddReferencesItem));
+      AddValue(ObjectID::AddReferencesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::AddReferencesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::AddReferencesItem));
+      AddValue(ObjectID::AddReferencesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AddReferencesItem));
+      AddValue(ObjectID::AddReferencesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AddReferencesItem));
+      AddValue(ObjectID::AddReferencesItem, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::AddReferencesItem, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::AddReferencesItem, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ApplicationDescriptionType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ApplicationDescription, AttributeID::NODE_ID,      NodeID(ObjectID::ApplicationDescription));
+      AddValue(ObjectID::ApplicationDescription, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ApplicationDescription, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ApplicationDescription));
+      AddValue(ObjectID::ApplicationDescription, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ApplicationDescription));
+      AddValue(ObjectID::ApplicationDescription, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ApplicationDescription));
+      AddValue(ObjectID::ApplicationDescription, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ApplicationDescription, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ApplicationDescription, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void Argument()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Argument, AttributeID::NODE_ID,      NodeID(ObjectID::Argument));
+      AddValue(ObjectID::Argument, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Argument, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Argument));
+      AddValue(ObjectID::Argument, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Argument));
+      AddValue(ObjectID::Argument, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Argument));
+      AddValue(ObjectID::Argument, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Argument, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Argument, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void BuildInfo()
+    {
+      // Base Attributes
+      AddValue(ObjectID::BuildInfo, AttributeID::NODE_ID,      NodeID(ObjectID::BuildInfo));
+      AddValue(ObjectID::BuildInfo, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::BuildInfo, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BuildInfo));
+      AddValue(ObjectID::BuildInfo, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::BuildInfo));
+      AddValue(ObjectID::BuildInfo, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::BuildInfo));
+      AddValue(ObjectID::BuildInfo, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::BuildInfo, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::BuildInfo, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void DeleteNodesItem()
+    {
+      // Base Attributes
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::NODE_ID,      NodeID(ObjectID::DeleteNodesItem));
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EUInformation));
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::EUInformation));
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::EUInformation));
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::DeleteNodesItem, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void DeleteReferencesItem()
+    {
+      // Base Attributes
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::NODE_ID,      NodeID(ObjectID::DeleteReferencesItem));
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DeleteReferencesItem));
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::DeleteReferencesItem));
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::DeleteReferencesItem));
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::DeleteReferencesItem, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void EUInformation()
+    {
+      // Base Attributes
+      AddValue(ObjectID::EUInformation, AttributeID::NODE_ID,      NodeID(ObjectID::EUInformation));
+      AddValue(ObjectID::EUInformation, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::EUInformation, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EUInformation));
+      AddValue(ObjectID::EUInformation, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::EUInformation));
+      AddValue(ObjectID::EUInformation, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::EUInformation));
+      AddValue(ObjectID::EUInformation, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::EUInformation, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::EUInformation, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ModelChangeStructureDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::NODE_ID,      NodeID(ObjectID::ModelChangeStructureDataType));
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ModelChangeStructureDataType));
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ModelChangeStructureDataType));
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ModelChangeStructureDataType));
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ModelChangeStructureDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void Range()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Range, AttributeID::NODE_ID,      NodeID(ObjectID::Range));
+      AddValue(ObjectID::Range, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::Range, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Range));
+      AddValue(ObjectID::Range, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Range));
+      AddValue(ObjectID::Range, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Range));
+      AddValue(ObjectID::Range, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Range, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Range, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SamplingIntervalDiagnosticsDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::SamplingIntervalDiagnosticsDataType));
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsDataType));
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsDataType));
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsDataType));
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SamplingIntervalDiagnosticsDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SemanticChangeStructureDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::NODE_ID,      NodeID(ObjectID::SemanticChangeStructureDataType));
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SemanticChangeStructureDataType));
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SemanticChangeStructureDataType));
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SemanticChangeStructureDataType));
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SemanticChangeStructureDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ServerDiagnosticsSummaryDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::NODE_ID,      NodeID(ObjectID::ServerDiagnosticsSummaryDataType));
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServerDiagnosticsSummaryDataType));
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServerDiagnosticsSummaryDataType));
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServerDiagnosticsSummaryDataType));
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ServerDiagnosticsSummaryDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ServerStatusDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::NODE_ID,      NodeID(ObjectID::ServerStatusDataType));
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServerStatusDataType));
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServerStatusDataType));
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServerStatusDataType));
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ServerStatusDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void ServiceCounterDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::NODE_ID,      NodeID(ObjectID::ServiceCounterDataType));
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServiceCounterDataType));
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServiceCounterDataType));
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServiceCounterDataType));
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ServiceCounterDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SessionDiagnosticsDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::SessionDiagnosticsDataType));
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SessionDiagnosticsDataType));
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SessionDiagnosticsDataType));
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SessionDiagnosticsDataType));
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SessionDiagnosticsDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SessionSecurityDiagnosticsDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::SessionSecurityDiagnosticsDataType));
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SessionSecurityDiagnosticsDataType));
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SessionSecurityDiagnosticsDataType));
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SessionSecurityDiagnosticsDataType));
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SessionSecurityDiagnosticsDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SignedSoftwareCertificate()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::NODE_ID,      NodeID(ObjectID::SignedSoftwareCertificate));
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SignedSoftwareCertificate));
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SignedSoftwareCertificate));
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SignedSoftwareCertificate));
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SignedSoftwareCertificate, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void StatusResult()
+    {
+      // Base Attributes
+      AddValue(ObjectID::StatusResult, AttributeID::NODE_ID,      NodeID(ObjectID::StatusResult));
+      AddValue(ObjectID::StatusResult, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::StatusResult, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::StatusResult));
+      AddValue(ObjectID::StatusResult, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::StatusResult));
+      AddValue(ObjectID::StatusResult, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::StatusResult));
+      AddValue(ObjectID::StatusResult, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::StatusResult, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::StatusResult, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SubscriptionDiagnosticsDataType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::SubscriptionDiagnosticsDataType));
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SubscriptionDiagnosticsDataType));
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SubscriptionDiagnosticsDataType));
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SubscriptionDiagnosticsDataType));
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SubscriptionDiagnosticsDataType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void UserIdentifyTokenType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::UserIdentifyToken));
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::UserIdentifyToken));
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UserIdentifyToken));
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UserIdentifyToken));
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UserIdentifyToken, AttributeID::IS_ABSTRACT, false);
+      // References
+      AddReference(ObjectID::UserIdentifyToken, forward, ReferenceID::HasSubtype, ObjectID::AnonymousIdentifyToken, Names::AnonymousIdentifyToken, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::UserIdentifyToken, forward, ReferenceID::HasSubtype, ObjectID::UserNameIdentifyToken,  Names::UserNameIdentifyToken,  NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::UserIdentifyToken, forward, ReferenceID::HasSubtype, ObjectID::X509IdentifyToken,      Names::X509IdentifyToken,      NodeClass::DataType, ObjectID::Null);
+    }
+
+    void AnonymousIdentifyToken()
+    {
+      // Base Attributes
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::AnonymousIdentifyToken));
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::AnonymousIdentifyToken));
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AnonymousIdentifyToken));
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AnonymousIdentifyToken));
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::AnonymousIdentifyToken, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void UserNameIdentifyToken()
+    {
+      // Base Attributes
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::UserNameIdentifyToken));
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::UserNameIdentifyToken));
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UserNameIdentifyToken));
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UserNameIdentifyToken));
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::UserNameIdentifyToken, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void X509IdentifyToken()
+    {
+      // Base Attributes
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::X509IdentifyToken));
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::X509IdentifyToken));
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::X509IdentifyToken));
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::X509IdentifyToken));
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::X509IdentifyToken, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void XmlElement()
+    {
+      // Base Attributes
+      AddValue(ObjectID::XmlElement, AttributeID::NODE_ID,      NodeID(ObjectID::XmlElement));
+      AddValue(ObjectID::XmlElement, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::XmlElement, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::XmlElement));
+      AddValue(ObjectID::XmlElement, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::XmlElement));
+      AddValue(ObjectID::XmlElement, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::XmlElement));
+      AddValue(ObjectID::XmlElement, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::XmlElement, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::XmlElement, AttributeID::IS_ABSTRACT, false);
+    }
     void ReferenceTypes()
     {
       // Attributes
