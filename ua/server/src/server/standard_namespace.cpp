@@ -259,6 +259,20 @@ namespace
                        UserNameIdentifyToken();
                        X509IdentifyToken();
                    XmlElement();
+         EventTypes();
+           BaseEventType();
+             BaseModelChangeEventType();
+             SemanticChangeEventType();
+             SystemEventType();
+             EventID();
+             EventType();
+             LocalTime();
+             Message();
+             ReceiveTime();
+             Severity();
+             SourceName();
+             SourceNode();
+             Time();
          ReferenceTypes();
            Refs();
              HierarchicalReferences();
@@ -1454,6 +1468,320 @@ namespace
       // Type Attributes
       AddValue(ObjectID::XmlElement, AttributeID::IS_ABSTRACT, false);
     }
+
+    void EventTypes()
+    {
+      // Base Attributes
+      AddValue(ObjectID::EventTypes, AttributeID::NODE_ID,      NodeID(ObjectID::EventTypes));
+      AddValue(ObjectID::EventTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+      AddValue(ObjectID::EventTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventTypes));
+      AddValue(ObjectID::EventTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventTypes));
+      AddValue(ObjectID::EventTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventTypes));
+      AddValue(ObjectID::EventTypes, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::EventTypes, AttributeID::USER_WRITE_MASK, 0);
+
+      // References
+      AddReference(ObjectID::EventTypes, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, Names::ReferenceTypes, NodeClass::ObjectType, ObjectID::Null);
+      AddReference(ObjectID::EventTypes, forward, ReferenceID::Organizes, ObjectID::BaseEventType, Names::BaseEventType, NodeClass::ObjectType, ObjectID::Null);
+    }
+
+    void BaseEventType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::BaseEventType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseEventType));
+      AddValue(ObjectID::BaseEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+      AddValue(ObjectID::BaseEventType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseEventType));
+      AddValue(ObjectID::BaseEventType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseEventType));
+      AddValue(ObjectID::BaseEventType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseEventType));
+      AddValue(ObjectID::BaseEventType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::BaseEventType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::BaseEventType, AttributeID::IS_ABSTRACT, true);
+
+      // References
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasSubtype, ObjectID::BaseModelChangeEventType, Names::BaseModelChangeEventType, NodeClass::ObjectType, ObjectID::Null);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasSubtype, ObjectID::SemanticChangeEventType, Names::SemanticChangeEventType, NodeClass::ObjectType, ObjectID::Null);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasSubtype, ObjectID::SystemEventType, Names::SystemEventType, NodeClass::ObjectType, ObjectID::Null);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::EventID, Names::EventID, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::EventType, Names::EventType, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::LocalTime, Names::LocalTime, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::Message, Names::Message, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::ReceiveTime, Names::ReceiveTime, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::Severity, Names::Severity, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::SourceName, Names::SourceName, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::SourceNode, Names::SourceNode, NodeClass::Variable, ObjectID::PropertyType);
+      AddReference(ObjectID::BaseEventType, forward, ReferenceID::HasProperty, ObjectID::Time, Names::Time, NodeClass::Variable, ObjectID::PropertyType);
+    }
+
+    void BaseModelChangeEventType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseModelChangeEventType));
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::BaseModelChangeEventType));
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::BaseModelChangeEventType));
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::BaseModelChangeEventType));
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::BaseModelChangeEventType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SemanticChangeEventType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::NODE_ID,      NodeID(ObjectID::SemanticChangeEventType));
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SemanticChangeEventType));
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SemanticChangeEventType));
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SemanticChangeEventType));
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SemanticChangeEventType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void SystemEventType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SystemEventType, AttributeID::NODE_ID,      NodeID(ObjectID::SystemEventType));
+      AddValue(ObjectID::SystemEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+      AddValue(ObjectID::SystemEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SystemEventType));
+      AddValue(ObjectID::SystemEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SystemEventType));
+      AddValue(ObjectID::SystemEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SystemEventType));
+      AddValue(ObjectID::SystemEventType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SystemEventType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::SystemEventType, AttributeID::IS_ABSTRACT, false);
+    }
+
+    void EventID()
+    {
+      // Base Attributes
+      AddValue(ObjectID::EventID, AttributeID::NODE_ID,      NodeID(ObjectID::EventID));
+      AddValue(ObjectID::EventID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::EventID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventID));
+      AddValue(ObjectID::EventID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventID));
+      AddValue(ObjectID::EventID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventID));
+      AddValue(ObjectID::EventID, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::EventID, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+
+      AddValue(ObjectID::EventID, AttributeID::VALUE, ByteString());
+      AddValue(ObjectID::EventID, AttributeID::DATA_TYPE, NodeID(ObjectID::ByteString));
+      AddValue(ObjectID::EventID, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::EventID, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::EventID, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::EventID, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::EventID, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::EventID, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::EventID, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::EventID, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void EventType()
+    {
+      // Base Attributes
+      AddValue(ObjectID::EventType, AttributeID::NODE_ID,      NodeID(ObjectID::EventType));
+      AddValue(ObjectID::EventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::EventType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventType));
+      AddValue(ObjectID::EventType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventType));
+      AddValue(ObjectID::EventType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventType));
+      AddValue(ObjectID::EventType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::EventType, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+
+      AddValue(ObjectID::EventType, AttributeID::VALUE, NodeID());
+      AddValue(ObjectID::EventType, AttributeID::DATA_TYPE, NodeID(ObjectID::NodeID));
+      AddValue(ObjectID::EventType, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::EventType, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::EventType, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::EventType, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::EventType, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::EventType, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::EventType, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::EventType, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+    void LocalTime()
+    {
+      // Base Attributes
+      AddValue(ObjectID::LocalTime, AttributeID::NODE_ID,      NodeID(ObjectID::LocalTime));
+      AddValue(ObjectID::LocalTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::LocalTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocalTime));
+      AddValue(ObjectID::LocalTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::LocalTime));
+      AddValue(ObjectID::LocalTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::LocalTime));
+      AddValue(ObjectID::LocalTime, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::LocalTime, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+
+      AddValue(ObjectID::LocalTime, AttributeID::VALUE, DateTime());
+      AddValue(ObjectID::LocalTime, AttributeID::DATA_TYPE, NodeID(ObjectID::DateTime));
+      AddValue(ObjectID::LocalTime, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::LocalTime, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::LocalTime, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::LocalTime, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::LocalTime, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::LocalTime, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::LocalTime, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::LocalTime, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void Message()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Message, AttributeID::NODE_ID,      NodeID(ObjectID::Message));
+      AddValue(ObjectID::Message, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::Message, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Message));
+      AddValue(ObjectID::Message, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Message));
+      AddValue(ObjectID::Message, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Message));
+      AddValue(ObjectID::Message, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Message, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::Message, AttributeID::VALUE, LocalizedText());
+      AddValue(ObjectID::Message, AttributeID::DATA_TYPE, NodeID(ObjectID::LocalizedText));
+      AddValue(ObjectID::Message, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::Message, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Message, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Message, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::Message, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::Message, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::Message, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Message, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void ReceiveTime()
+    {
+      // Base Attributes
+      AddValue(ObjectID::ReceiveTime, AttributeID::NODE_ID,      NodeID(ObjectID::ReceiveTime));
+      AddValue(ObjectID::ReceiveTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::ReceiveTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ReceiveTime));
+      AddValue(ObjectID::ReceiveTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ReceiveTime));
+      AddValue(ObjectID::ReceiveTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ReceiveTime));
+      AddValue(ObjectID::ReceiveTime, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ReceiveTime, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::ReceiveTime, AttributeID::VALUE, DateTime());
+      AddValue(ObjectID::ReceiveTime, AttributeID::DATA_TYPE, NodeID(ObjectID::DateTime));
+      AddValue(ObjectID::ReceiveTime, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::ReceiveTime, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::ReceiveTime, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::ReceiveTime, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::ReceiveTime, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::ReceiveTime, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::ReceiveTime, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::ReceiveTime, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void Severity()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Severity, AttributeID::NODE_ID,      NodeID(ObjectID::Severity));
+      AddValue(ObjectID::Severity, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::Severity, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Severity));
+      AddValue(ObjectID::Severity, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Severity));
+      AddValue(ObjectID::Severity, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Severity));
+      AddValue(ObjectID::Severity, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Severity, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::Severity, AttributeID::VALUE, uint16_t());
+      AddValue(ObjectID::Severity, AttributeID::DATA_TYPE, NodeID(ObjectID::UInt16));
+      AddValue(ObjectID::Severity, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::Severity, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Severity, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Severity, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::Severity, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::Severity, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::Severity, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Severity, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void SourceName()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SourceName, AttributeID::NODE_ID,      NodeID(ObjectID::SourceName));
+      AddValue(ObjectID::SourceName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::SourceName, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SourceName));
+      AddValue(ObjectID::SourceName, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SourceName));
+      AddValue(ObjectID::SourceName, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SourceName));
+      AddValue(ObjectID::SourceName, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SourceName, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::SourceName, AttributeID::VALUE, std::string());
+      AddValue(ObjectID::SourceName, AttributeID::DATA_TYPE, NodeID(ObjectID::String));
+      AddValue(ObjectID::SourceName, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::SourceName, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::SourceName, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::SourceName, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::SourceName, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::SourceName, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::SourceName, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::SourceName, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void SourceNode()
+    {
+      // Base Attributes
+      AddValue(ObjectID::SourceNode, AttributeID::NODE_ID,      NodeID(ObjectID::SourceNode));
+      AddValue(ObjectID::SourceNode, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::SourceNode, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SourceNode));
+      AddValue(ObjectID::SourceNode, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SourceNode));
+      AddValue(ObjectID::SourceNode, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SourceNode));
+      AddValue(ObjectID::SourceNode, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::SourceNode, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::SourceNode, AttributeID::VALUE, NodeID());
+      AddValue(ObjectID::SourceNode, AttributeID::DATA_TYPE, NodeID(ObjectID::NodeID));
+      AddValue(ObjectID::SourceNode, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::SourceNode, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::SourceNode, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::SourceNode, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::SourceNode, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::SourceNode, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::SourceNode, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::SourceNode, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
+    void Time()
+    {
+      // Base Attributes
+      AddValue(ObjectID::Time, AttributeID::NODE_ID,      NodeID(ObjectID::Time));
+      AddValue(ObjectID::Time, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+      AddValue(ObjectID::Time, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Time));
+      AddValue(ObjectID::Time, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Time));
+      AddValue(ObjectID::Time, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Time));
+      AddValue(ObjectID::Time, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Time, AttributeID::USER_WRITE_MASK, 0);
+      // Variable Attributes
+      AddValue(ObjectID::Time, AttributeID::VALUE, DateTime());
+      AddValue(ObjectID::Time, AttributeID::DATA_TYPE, NodeID(ObjectID::DateTime));
+      AddValue(ObjectID::Time, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::Time, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Time, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::Time, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::Time, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::Time, AttributeID::VALUE_RANK, int32_t(-1));
+
+      // References
+      AddReference(ObjectID::Time, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
+      AddReference(ObjectID::Time, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::Null);
+    }
+
     void ReferenceTypes()
     {
       // Attributes
