@@ -343,18 +343,35 @@ namespace
                HasEventSource();
                  HasNotifier();
                Organizes();
-               NonHierarchicalReferences();
-                 FromState();
-                 GeneratesEvent();
-                 HasCause();
-                 HasDescription();
-                 HasEffect();
-                 HasEncoding();
-                 HasModelParent();
-                 HasModellingRule();
-                 HasTypeDefinition();
-                 ToState();
-          }
+             NonHierarchicalReferences();
+               FromState();
+               GeneratesEvent();
+               HasCause();
+               HasDescription();
+               HasEffect();
+               HasEncoding();
+               HasModelParent();
+               HasModellingRule();
+               HasTypeDefinition();
+               ToState();
+         VariableTypes();
+           BaseVariableType();
+             BaseDataVariableType();
+               DataTypeDescriptionType();
+               DataTypeDictionaryType();
+               SamplingIntervalDiagnosticsArrayType();
+               SamplingIntervalDiagnosticsType();
+               ServerDiagnosticsSummaryType();
+               ServerStatusType();
+               ServerVendorCapabilityType();
+               SessionsDiagnosticsArrayType();
+               ServerDiagnosticsVariableType();
+               SessionSecurityDiagnosticsArrayType();
+               SessionSecurityDiagnosticsType();
+               SubscriptionDiagnosticsArrayType();
+               SubscriptionDiagnosticsType();
+             PropertyType();
+    }
 
     void Root()
     {
@@ -3496,11 +3513,183 @@ namespace
       AddValue(ObjectID::ToState, AttributeID::INVERSE_NAME, LocalizedText("FromTransition"));
     }
 
+    void VariableTypes()
+    {
+      // Attributes
+      AddValue(ObjectID::VariableTypes, AttributeID::NODE_ID,      NodeID(ObjectID::VariableTypes));
+      AddValue(ObjectID::VariableTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+      AddValue(ObjectID::VariableTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::VariableTypes));
+      AddValue(ObjectID::VariableTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::VariableTypes));
+      AddValue(ObjectID::VariableTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::VariableTypes));
+      AddValue(ObjectID::VariableTypes, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::VariableTypes, AttributeID::USER_WRITE_MASK, 0);
+      // References
+      AddReference(ObjectID::VariableTypes, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, Names::FolderType, NodeClass::Object, ObjectID::Null);
+      AddReference(ObjectID::VariableTypes, forward, ReferenceID::Organizes, ObjectID::BaseVariableType, Names::BaseVariableType, NodeClass::VariableType, ObjectID::Null);
+    }
+
+    void BaseVariableType()
+    {
+      // Attributes
+      AddValue(ObjectID::BaseVariableType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseVariableType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseVariableType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseVariableType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseVariableType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::BaseVariableType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::BaseVariableType, AttributeID::IS_ABSTRACT, false);
+      // Variable Attributes
+      AddValue(ObjectID::BaseVariableType, AttributeID::VALUE, NodeID());
+      AddValue(ObjectID::BaseVariableType, AttributeID::DATA_TYPE, NodeID(ObjectID::BaseDataType));
+      AddValue(ObjectID::BaseVariableType, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::BaseVariableType, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::BaseVariableType, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::BaseVariableType, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::BaseVariableType, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::BaseVariableType, AttributeID::VALUE_RANK, int32_t(0));
+      // References
+      AddReference(ObjectID::BaseVariableType, forward, ReferenceID::HasSubtype, ObjectID::BaseDataVariableType, Names::BaseDataVariableType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseVariableType, forward, ReferenceID::HasSubtype, ObjectID::PropertyType, Names::PropertyType, NodeClass::VariableType, ObjectID::Null);
+    }
+
+    void BaseDataVariableType()
+    {
+      // Attributes
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseDataVariableType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseDataVariableType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseDataVariableType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseDataVariableType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::IS_ABSTRACT, false);
+      // Variable Attributes
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::VALUE, NodeID());
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::DATA_TYPE, NodeID(ObjectID::BaseDataType));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::HISTORIZING, false);
+      AddValue(ObjectID::BaseDataVariableType, AttributeID::VALUE_RANK, int32_t(0));
+      // References
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::DataTypeDescriptionType, Names::DataTypeDescriptionType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::DataTypeDictionaryType,  Names::DataTypeDictionaryType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsArrayType, Names::SamplingIntervalDiagnosticsArrayType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsType, Names::SamplingIntervalDiagnosticsType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsSummaryType, Names::ServerDiagnosticsSummaryType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::ServerStatusType, Names::ServerStatusType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::ServerVendorCapabilityType, Names::ServerVendorCapabilityType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SessionsDiagnosticsArrayType, Names::SessionsDiagnosticsArrayType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsVariableType, Names::ServerDiagnosticsVariableType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SessionSecurityDiagnosticsArrayType, Names::SessionSecurityDiagnosticsArrayType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SessionSecurityDiagnosticsType, Names::SessionSecurityDiagnosticsType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SubscriptionDiagnosticsArrayType, Names::SubscriptionDiagnosticsArrayType, NodeClass::VariableType, ObjectID::Null);
+      AddReference(ObjectID::BaseDataVariableType, forward, ReferenceID::HasSubtype, ObjectID::SubscriptionDiagnosticsType, Names::SubscriptionDiagnosticsType, NodeClass::VariableType, ObjectID::Null);
+    }
+
+    void AddVariableType(ObjectID id, const char* name)
+    {
+      // Attributes
+      AddValue(id, AttributeID::NODE_ID,      NodeID(id));
+      AddValue(id, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+      AddValue(id, AttributeID::BROWSE_NAME,  QualifiedName(0, name));
+      AddValue(id, AttributeID::DISPLAY_NAME, LocalizedText(name));
+      AddValue(id, AttributeID::DESCRIPTION,  LocalizedText(name));
+      AddValue(id, AttributeID::WRITE_MASK,   0);
+      AddValue(id, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(id, AttributeID::IS_ABSTRACT, false);
+      // Variable Attributes
+      AddValue(id, AttributeID::VALUE, NodeID());
+      AddValue(id, AttributeID::DATA_TYPE, NodeID(ObjectID::BaseDataType));
+      AddValue(id, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+      AddValue(id, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(id, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
+      AddValue(id, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
+      AddValue(id, AttributeID::HISTORIZING, false);
+      AddValue(id, AttributeID::VALUE_RANK, int32_t(0));
+    }
+
+
+    void DataTypeDescriptionType()
+    {
+      AddVariableType(ObjectID::DataTypeDescriptionType, OpcUa::Names::DataTypeDescriptionType);
+    }
+
+    void DataTypeDictionaryType()
+    {
+      AddVariableType(ObjectID::DataTypeDictionaryType, OpcUa::Names::DataTypeDictionaryType);
+    }
+
+    void SamplingIntervalDiagnosticsArrayType()
+    {
+      AddVariableType(ObjectID::SamplingIntervalDiagnosticsArrayType, OpcUa::Names::SamplingIntervalDiagnosticsArrayType);
+    }
+
+    void SamplingIntervalDiagnosticsType()
+    {
+      AddVariableType(ObjectID::SamplingIntervalDiagnosticsType, OpcUa::Names::SamplingIntervalDiagnosticsType);
+    }
+
+    void ServerDiagnosticsSummaryType()
+    {
+      AddVariableType(ObjectID::ServerDiagnosticsSummaryType, OpcUa::Names::ServerDiagnosticsSummaryType);
+    }
+
+    void ServerStatusType()
+    {
+      AddVariableType(ObjectID::ServerStatusType, OpcUa::Names::ServerStatusType);
+    }
+
+    void ServerVendorCapabilityType()
+    {
+      AddVariableType(ObjectID::ServerVendorCapabilityType, OpcUa::Names::ServerVendorCapabilityType);
+    }
+
+
+    void SessionsDiagnosticsArrayType()
+    {
+      AddVariableType(ObjectID::SessionsDiagnosticsArrayType, OpcUa::Names::SessionsDiagnosticsArrayType);
+    }
+
+    void ServerDiagnosticsVariableType()
+    {
+      AddVariableType(ObjectID::ServerDiagnosticsVariableType, OpcUa::Names::ServerDiagnosticsVariableType);
+    }
+
+    void SessionSecurityDiagnosticsArrayType()
+    {
+      AddVariableType(ObjectID::SessionSecurityDiagnosticsArrayType, OpcUa::Names::SessionSecurityDiagnosticsArrayType);
+    }
+
+    void SessionSecurityDiagnosticsType()
+    {
+      AddVariableType(ObjectID::SessionSecurityDiagnosticsType, OpcUa::Names::SessionSecurityDiagnosticsType);
+    }
+
+    void SubscriptionDiagnosticsArrayType()
+    {
+      AddVariableType(ObjectID::SubscriptionDiagnosticsArrayType, OpcUa::Names::SubscriptionDiagnosticsArrayType);
+    }
+
+    void SubscriptionDiagnosticsType()
+    {
+      AddVariableType(ObjectID::SubscriptionDiagnosticsType, OpcUa::Names::SubscriptionDiagnosticsType);
+    }
+
+    void PropertyType()
+    {
+      AddVariableType(ObjectID::PropertyType, OpcUa::Names::PropertyType);
+    }
+
   private:
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
   };
-
 }
 
 std::unique_ptr<OpcUa::StandardNamespace> OpcUa::CreateStandardNamespace()

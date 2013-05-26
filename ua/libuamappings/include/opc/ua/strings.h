@@ -28,6 +28,7 @@ namespace OpcUa
     const char BaseEventType[]   = "BaseEventType";
     const char BaseModelChangeEventType[] = "BaseModelChangeEventType";
     const char BaseObjectType[]  = "BaseObjectType";
+    const char BaseVariableType[] = "BaseVariableType";
     const char Boolean[]         = "Boolean";
     const char BuildDate[]       = "BuildDate";
     const char BuildInfo[]       = "BuildInfo";
@@ -35,6 +36,8 @@ namespace OpcUa
     const char Byte[]            = "Byte";
     const char ByteString[]      = "ByteString";
     const char CurrentTime[]     = "CurrentTime";
+    const char DataTypeDescriptionType[] = "DataTypeDescriptionType";
+    const char DataTypeDictionaryType[] = "DataTypeDictionaryType";
     const char DataTypeEncodingType[] = "DataTypeEncodingType";
     const char DataTypes[]       = "DataTypes";
     const char DataTypeSystemType[] = "DataTypeSystemType";
@@ -131,6 +134,7 @@ namespace OpcUa
     const char Root[]            = "Root";
     const char SamplingIntervalDiagnosticsArray[] = "SamplingIntervalDiagnosticsArray";
     const char SamplingIntervalDiagnosticsArrayType[] = "SamplingIntervalDiagnosticsArrayType";
+    const char SamplingIntervalDiagnosticsType[] = "SamplingIntervalDiagnosticsType";
     const char SamplingIntervalDiagnosticsDataType[] = "SamplingIntervalDiagnosticsDataType";
     const char SByte[]           = "SByte";
     const char SecondsTillShutdown[] = "SecondsTillShutdown";
@@ -141,9 +145,11 @@ namespace OpcUa
     const char ServerCapabilities[] = "ServerCapabilities";
     const char ServerCapabilitiesType[] = "ServerCapabilitiesType";
     const char ServerDiagnostics[] = "ServerDiagnostics";
+    const char SessionsDiagnosticsArrayType[] = "SessionsDiagnosticsArrayType";
     const char ServerDiagnosticsType[] = "ServerDiagnosticsType";
     const char ServerDiagnosticsSummaryType[] = "ServerDiagnosticsSummaryType";
     const char ServerDiagnosticsSummary[] = "ServerDiagnosticsSummary";
+    const char ServerDiagnosticsVariableType[] = "ServerDiagnosticsVariableType";
     const char ServerProfileArray[] = "ServerProfileArray";
     const char ServerRedundancy[] = "ServerRedundancy";
     const char ServerRedundancyType[] = "ServerRedundancyType";
@@ -152,8 +158,11 @@ namespace OpcUa
     const char ServerStatus[] = "ServerStatus";
     const char ServerStatusType[] = "ServerStatusType";
     const char ServerType[]      = "ServerType";
+    const char ServerVendorCapabilityType[] = "ServerVendorCapabilityType";
     const char ServiceCounterDataType[] = "ServiceCounterDataType";
     const char ServiceLevel[]    = "ServiceLevel";
+    const char SessionSecurityDiagnosticsArrayType[] = "SessionSecurityDiagnosticsArrayType";
+    const char SessionSecurityDiagnosticsType[] = "SessionSecurityDiagnosticsType";
     const char SessionSecurityDiagnosticsDataType[] = "SessionSecurityDiagnosticsDataType";
     const char SessionDiagnosticsDataType[] = "SessionDiagnosticsDataType";
     const char SessionDiagnosticsObjectType[] = "SessionDiagnosticsObjectType";
@@ -168,6 +177,7 @@ namespace OpcUa
     const char SourceNode[]      = "SourceNode";
     const char SubscriptionDiagnosticsArray[] = "SubscriptionDiagnosticsArray";
     const char SubscriptionDiagnosticsArrayType[] = "SubscriptionDiagnosticsArrayType";
+    const char SubscriptionDiagnosticsType[] = "SubscriptionDiagnosticsType";
     const char SubscriptionDiagnosticsDataType[] = "SubscriptionDiagnosticsDataType";
     const char StartTime[]       = "StartTime";
     const char State[]           = "State";
