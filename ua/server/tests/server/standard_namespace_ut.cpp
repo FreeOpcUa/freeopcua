@@ -88,6 +88,13 @@ protected:
     EXPECT_TRUE(HasAttribute(id, AttributeID::HISTORIZING));
   }
 
+  void ExpectHasReferenceTypeAttributes(ObjectID id)
+  {
+    ExpectHasBaseAttributes(id);
+    ExpectHasTypeAttributes(id);
+    EXPECT_TRUE(HasAttribute(id, AttributeID::SYMMETRIC));
+  }
+
 protected:
   std::unique_ptr<OpcUa::StandardNamespace> NameSpace;
 };
@@ -1626,4 +1633,244 @@ TEST_F(StandardNamespaceStructure, VendorServerInfoType)
 
   ExpectHasBaseAttributes(ObjectID::VendorServerInfoType);
   ExpectHasTypeAttributes(ObjectID::VendorServerInfoType);
+}
+
+TEST_F(StandardNamespaceStructure, ReferenceTypes)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ReferenceTypes);
+  EXPECT_EQ(SizeOf(refs), 2);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::References));
+
+  ExpectHasBaseAttributes(ObjectID::ReferenceTypes);
+}
+
+TEST_F(StandardNamespaceStructure, References)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::References);
+  EXPECT_EQ(SizeOf(refs), 2);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HierarchicalReferences));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::NonHierarchicalReferences));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::References);
+  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HierarchicalReferences)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HierarchicalReferences);
+  EXPECT_EQ(SizeOf(refs), 3);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasChild));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasEventSource));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Organizes));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HierarchicalReferences);
+  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasChild)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasChild);
+  EXPECT_EQ(SizeOf(refs), 2);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasSubtype));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Aggregates));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasChild);
+  EXPECT_FALSE(HasAttribute(ObjectID::HasChild, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, Aggregates)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Aggregates);
+  EXPECT_EQ(SizeOf(refs), 3);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasHistoricalConfiguration));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasComponent));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasProperty));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::Aggregates);
+  EXPECT_FALSE(HasAttribute(ObjectID::Aggregates, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasComponent)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasComponent);
+  EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasOrderedComponent));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasComponent);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasComponent, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasOrderedComponent)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasOrderedComponent);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasOrderedComponent);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasOrderedComponent, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasHistoricalConfiguration)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasHistoricalConfiguration);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasHistoricalConfiguration);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasHistoricalConfiguration, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasProperty)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasProperty);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasProperty);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasProperty, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasSubtype)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasSubtype);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasSubtype);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasSubtype, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasEventSource)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasEventSource);
+  EXPECT_EQ(SizeOf(refs), 1);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasNotifier));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasEventSource);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEventSource, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasNotifier)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasNotifier);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasNotifier);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasNotifier, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, Organizes)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Organizes);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::Organizes);
+  EXPECT_TRUE(HasAttribute(ObjectID::Organizes, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, NonHierarchicalReferences)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::NonHierarchicalReferences);
+  EXPECT_EQ(SizeOf(refs), 11);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::FromState));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::GeneratesEvent));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasCause));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasCondition));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasDescription));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasEffect));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasEncoding));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasModelParent));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasModellingRule));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasTypeDefinition));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ToState));
+
+  ExpectHasReferenceTypeAttributes(ObjectID::NonHierarchicalReferences);
+  EXPECT_FALSE(HasAttribute(ObjectID::NonHierarchicalReferences, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, FromState)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::FromState);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::FromState);
+  EXPECT_TRUE(HasAttribute(ObjectID::FromState, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, GeneratesEvent)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::GeneratesEvent);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::GeneratesEvent);
+  EXPECT_TRUE(HasAttribute(ObjectID::GeneratesEvent, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasCause)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasCause);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasCause);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasCause, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasDescription)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasDescription);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasDescription);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasDescription, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasEffect)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasEffect);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasEffect);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEffect, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasEncoding)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasEncoding);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasEncoding);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEncoding, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasModelParent)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasModelParent);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasModelParent);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasModelParent, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasModellingRule)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasModellingRule);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasModellingRule);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasModellingRule, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, HasTypeDefinition)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasTypeDefinition);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::HasTypeDefinition);
+  EXPECT_TRUE(HasAttribute(ObjectID::HasTypeDefinition, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(StandardNamespaceStructure, ToState)
+{
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ToState);
+  EXPECT_EQ(SizeOf(refs), 0);
+
+  ExpectHasReferenceTypeAttributes(ObjectID::ToState);
+  EXPECT_TRUE(HasAttribute(ObjectID::ToState, AttributeID::INVERSE_NAME));
 }

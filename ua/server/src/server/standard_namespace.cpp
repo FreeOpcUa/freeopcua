@@ -333,10 +333,28 @@ namespace
          ReferenceTypes();
            Refs();
              HierarchicalReferences();
-             HasChild();
-             HasEventSource();
-             Organizes();
-    }
+               HasChild();
+                 Aggregates();
+                   HasComponent();
+                     HasOrderedComponent();
+                   HasHistoricalConfiguration();
+                   HasProperty();
+                 HasSubtype();
+               HasEventSource();
+                 HasNotifier();
+               Organizes();
+               NonHierarchicalReferences();
+                 FromState();
+                 GeneratesEvent();
+                 HasCause();
+                 HasDescription();
+                 HasEffect();
+                 HasEncoding();
+                 HasModelParent();
+                 HasModellingRule();
+                 HasTypeDefinition();
+                 ToState();
+          }
 
     void Root()
     {
@@ -3066,6 +3084,9 @@ namespace
       AddValue(ObjectID::References, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::References));
       AddValue(ObjectID::References, AttributeID::WRITE_MASK,   0);
       AddValue(ObjectID::References, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::References, AttributeID::IS_ABSTRACT, true);
+      // Reference attributes
       AddValue(ObjectID::References, AttributeID::SYMMETRIC, true);
 
       // References
@@ -3083,6 +3104,9 @@ namespace
       AddValue(ObjectID::HierarchicalReferences, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HierarchicalReferences));
       AddValue(ObjectID::HierarchicalReferences, AttributeID::WRITE_MASK,   0);
       AddValue(ObjectID::HierarchicalReferences, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HierarchicalReferences, AttributeID::IS_ABSTRACT, true);
+      // Reference attributes
       AddValue(ObjectID::HierarchicalReferences, AttributeID::SYMMETRIC, false);
 
       // References
@@ -3101,6 +3125,9 @@ namespace
       AddValue(ObjectID::HasChild, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasChild));
       AddValue(ObjectID::HasChild, AttributeID::WRITE_MASK,   0);
       AddValue(ObjectID::HasChild, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasChild, AttributeID::IS_ABSTRACT, true);
+      // Reference attributes
       AddValue(ObjectID::HasChild, AttributeID::SYMMETRIC, false);
 
       // References
@@ -3108,12 +3135,365 @@ namespace
       AddReference(ObjectID::HasChild, forward, ReferenceID::HasSubtype, ObjectID::HasSubtype, Names::HasSubtype, NodeClass::ReferenceType, ObjectID::Null);
     }
 
+    void Aggregates()
+    {
+      // Attributes
+      AddValue(ObjectID::Aggregates, AttributeID::NODE_ID,      NodeID(ObjectID::Aggregates));
+      AddValue(ObjectID::Aggregates, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::Aggregates, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Aggregates));
+      AddValue(ObjectID::Aggregates, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Aggregates));
+      AddValue(ObjectID::Aggregates, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Aggregates));
+      AddValue(ObjectID::Aggregates, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Aggregates, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Aggregates, AttributeID::IS_ABSTRACT, true);
+      // Reference attributes
+      AddValue(ObjectID::Aggregates, AttributeID::SYMMETRIC, false);
+
+      // References
+      AddReference(ObjectID::Aggregates, forward, ReferenceID::HasSubtype, ObjectID::HasHistoricalConfiguration, Names::HasHistoricalConfiguration, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::Aggregates, forward, ReferenceID::HasSubtype, ObjectID::HasComponent, Names::HasComponent, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::Aggregates, forward, ReferenceID::HasSubtype, ObjectID::HasProperty, Names::HasProperty, NodeClass::ReferenceType, ObjectID::Null);
+    }
+
+    void HasComponent()
+    {
+      // Attributes
+      AddValue(ObjectID::HasComponent, AttributeID::NODE_ID,      NodeID(ObjectID::HasComponent));
+      AddValue(ObjectID::HasComponent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasComponent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasComponent));
+      AddValue(ObjectID::HasComponent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasComponent));
+      AddValue(ObjectID::HasComponent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasComponent));
+      AddValue(ObjectID::HasComponent, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasComponent, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasComponent, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasComponent, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasComponent, AttributeID::INVERSE_NAME, LocalizedText("ComponentOf"));
+
+      // References
+      AddReference(ObjectID::HasComponent, forward, ReferenceID::HasSubtype, ObjectID::HasOrderedComponent, Names::HasOrderedComponent, NodeClass::ReferenceType, ObjectID::Null);
+    }
+
+    void HasOrderedComponent()
+    {
+      // Attributes
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::NODE_ID,      NodeID(ObjectID::HasOrderedComponent));
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasOrderedComponent));
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasOrderedComponent));
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasOrderedComponent));
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasOrderedComponent, AttributeID::INVERSE_NAME, LocalizedText("OrederedComponentOf"));
+    }
+
+    void HasHistoricalConfiguration()
+    {
+      // Attributes
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::NODE_ID,      NodeID(ObjectID::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasHistoricalConfiguration, AttributeID::INVERSE_NAME, LocalizedText("HistoricalConfigurationOf"));
+    }
+
+    void HasProperty()
+    {
+      // Attributes
+      AddValue(ObjectID::HasProperty, AttributeID::NODE_ID,      NodeID(ObjectID::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasProperty, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasProperty, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasProperty, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasProperty, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
+      AddValue(ObjectID::HasProperty, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasProperty, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasProperty, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasProperty, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasProperty, AttributeID::INVERSE_NAME, LocalizedText("PropertyOf"));
+    }
+
+    void HasSubtype()
+    {
+      // Attributes
+      AddValue(ObjectID::HasSubtype, AttributeID::NODE_ID,      NodeID(ObjectID::HasSubtype));
+      AddValue(ObjectID::HasSubtype, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasSubtype, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasSubtype));
+      AddValue(ObjectID::HasSubtype, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasSubtype));
+      AddValue(ObjectID::HasSubtype, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasSubtype));
+      AddValue(ObjectID::HasSubtype, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasSubtype, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasSubtype, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasSubtype, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasSubtype, AttributeID::INVERSE_NAME, LocalizedText("SubtypeOf"));
+    }
+
     void HasEventSource()
     {
+      // Attributes
+      AddValue(ObjectID::HasEventSource, AttributeID::NODE_ID,      NodeID(ObjectID::HasEventSource));
+      AddValue(ObjectID::HasEventSource, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasEventSource, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEventSource));
+      AddValue(ObjectID::HasEventSource, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEventSource));
+      AddValue(ObjectID::HasEventSource, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEventSource));
+      AddValue(ObjectID::HasEventSource, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasEventSource, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasEventSource, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasEventSource, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasEventSource, AttributeID::INVERSE_NAME, LocalizedText("EventSourceOf"));
+      // References
+      AddReference(ObjectID::HasEventSource, forward, ReferenceID::HasSubtype, ObjectID::HasNotifier, Names::HasNotifier, NodeClass::ReferenceType, ObjectID::Null);
+    }
+
+    void HasNotifier()
+    {
+      // Attributes
+      AddValue(ObjectID::HasNotifier, AttributeID::NODE_ID,      NodeID(ObjectID::HasNotifier));
+      AddValue(ObjectID::HasNotifier, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasNotifier, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasNotifier));
+      AddValue(ObjectID::HasNotifier, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasNotifier));
+      AddValue(ObjectID::HasNotifier, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasNotifier));
+      AddValue(ObjectID::HasNotifier, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasNotifier, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasNotifier, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasNotifier, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasNotifier, AttributeID::INVERSE_NAME, LocalizedText("NotifierOf"));
     }
 
     void Organizes()
     {
+      // Attributes
+      AddValue(ObjectID::Organizes, AttributeID::NODE_ID,      NodeID(ObjectID::Organizes));
+      AddValue(ObjectID::Organizes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::Organizes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Organizes));
+      AddValue(ObjectID::Organizes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Organizes));
+      AddValue(ObjectID::Organizes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Organizes));
+      AddValue(ObjectID::Organizes, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::Organizes, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::Organizes, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::Organizes, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::Organizes, AttributeID::INVERSE_NAME, LocalizedText("OrganizedBy"));
+    }
+
+    void NonHierarchicalReferences()
+    {
+      // Attributes
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::NODE_ID,      NodeID(ObjectID::NonHierarchicalReferences));
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NonHierarchicalReferences));
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::NonHierarchicalReferences));
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::NonHierarchicalReferences));
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::IS_ABSTRACT, true);
+      // Reference attributes
+      AddValue(ObjectID::NonHierarchicalReferences, AttributeID::SYMMETRIC, false);
+
+      // References
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::FromState, Names::FromState, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::GeneratesEvent, Names::GeneratesEvent, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasCause, Names::HasCause, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasCondition, Names::HasCondition, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasDescription, Names::HasDescription, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasEffect, Names::HasEffect, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasEncoding, Names::HasEncoding, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasModelParent, Names::HasModelParent, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasModellingRule, Names::HasModellingRule, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::HasTypeDefinition, Names::HasTypeDefinition, NodeClass::ReferenceType, ObjectID::Null);
+      AddReference(ObjectID::NonHierarchicalReferences, forward, ReferenceID::HasSubtype, ObjectID::ToState, Names::ToState, NodeClass::ReferenceType, ObjectID::Null);
+    }
+
+    void FromState()
+    {
+      // Attributes
+      AddValue(ObjectID::FromState, AttributeID::NODE_ID,      NodeID(ObjectID::FromState));
+      AddValue(ObjectID::FromState, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::FromState, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::FromState));
+      AddValue(ObjectID::FromState, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::FromState));
+      AddValue(ObjectID::FromState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::FromState));
+      AddValue(ObjectID::FromState, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::FromState, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::FromState, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::FromState, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::FromState, AttributeID::INVERSE_NAME, LocalizedText("ToTransition"));
+    }
+
+    void GeneratesEvent()
+    {
+      // Attributes
+      AddValue(ObjectID::GeneratesEvent, AttributeID::NODE_ID,      NodeID(ObjectID::GeneratesEvent));
+      AddValue(ObjectID::GeneratesEvent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::GeneratesEvent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::GeneratesEvent));
+      AddValue(ObjectID::GeneratesEvent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::GeneratesEvent));
+      AddValue(ObjectID::GeneratesEvent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::GeneratesEvent));
+      AddValue(ObjectID::GeneratesEvent, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::GeneratesEvent, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::GeneratesEvent, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::GeneratesEvent, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::GeneratesEvent, AttributeID::INVERSE_NAME, LocalizedText("GeneratesBy"));
+    }
+
+    void HasCause()
+    {
+      // Attributes
+      AddValue(ObjectID::HasCause, AttributeID::NODE_ID,      NodeID(ObjectID::HasCause));
+      AddValue(ObjectID::HasCause, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasCause, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasCause));
+      AddValue(ObjectID::HasCause, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasCause));
+      AddValue(ObjectID::HasCause, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasCause));
+      AddValue(ObjectID::HasCause, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasCause, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasCause, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasCause, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasCause, AttributeID::INVERSE_NAME, LocalizedText("MayBeCausedBy"));
+    }
+
+    void HasDescription()
+    {
+      // Attributes
+      AddValue(ObjectID::HasDescription, AttributeID::NODE_ID,      NodeID(ObjectID::HasDescription));
+      AddValue(ObjectID::HasDescription, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasDescription, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasDescription));
+      AddValue(ObjectID::HasDescription, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasDescription));
+      AddValue(ObjectID::HasDescription, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasDescription));
+      AddValue(ObjectID::HasDescription, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasDescription, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasDescription, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasDescription, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasDescription, AttributeID::INVERSE_NAME, LocalizedText("DescriptionOf"));
+    }
+
+    void HasEffect()
+    {
+      // Attributes
+      AddValue(ObjectID::HasEffect, AttributeID::NODE_ID,      NodeID(ObjectID::HasEffect));
+      AddValue(ObjectID::HasEffect, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasEffect, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEffect));
+      AddValue(ObjectID::HasEffect, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEffect));
+      AddValue(ObjectID::HasEffect, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEffect));
+      AddValue(ObjectID::HasEffect, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasEffect, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasEffect, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasEffect, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasEffect, AttributeID::INVERSE_NAME, LocalizedText("MayBeEffectedBy"));
+    }
+
+    void HasEncoding()
+    {
+      // Attributes
+      AddValue(ObjectID::HasEncoding, AttributeID::NODE_ID,      NodeID(ObjectID::HasEncoding));
+      AddValue(ObjectID::HasEncoding, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasEncoding, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEncoding));
+      AddValue(ObjectID::HasEncoding, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEncoding));
+      AddValue(ObjectID::HasEncoding, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEncoding));
+      AddValue(ObjectID::HasEncoding, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasEncoding, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasEncoding, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasEncoding, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasEncoding, AttributeID::INVERSE_NAME, LocalizedText("EncodingOf"));
+    }
+
+    void HasModelParent()
+    {
+      // Attributes
+      AddValue(ObjectID::HasModelParent, AttributeID::NODE_ID,      NodeID(ObjectID::HasModelParent));
+      AddValue(ObjectID::HasModelParent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasModelParent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasModelParent));
+      AddValue(ObjectID::HasModelParent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasModelParent));
+      AddValue(ObjectID::HasModelParent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasModelParent));
+      AddValue(ObjectID::HasModelParent, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasModelParent, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasModelParent, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasModelParent, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasModelParent, AttributeID::INVERSE_NAME, LocalizedText("ModelParentOf"));
+    }
+
+    void HasModellingRule()
+    {
+      // Attributes
+      AddValue(ObjectID::HasModellingRule, AttributeID::NODE_ID,      NodeID(ObjectID::HasModellingRule));
+      AddValue(ObjectID::HasModellingRule, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasModellingRule, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasModellingRule));
+      AddValue(ObjectID::HasModellingRule, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasModellingRule));
+      AddValue(ObjectID::HasModellingRule, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasModellingRule));
+      AddValue(ObjectID::HasModellingRule, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasModellingRule, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasModellingRule, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasModellingRule, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasModellingRule, AttributeID::INVERSE_NAME, LocalizedText("ModellingRuleOf"));
+    }
+
+    void HasTypeDefinition()
+    {
+      // Attributes
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::NODE_ID,      NodeID(ObjectID::HasTypeDefinition));
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasTypeDefinition));
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasTypeDefinition));
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasTypeDefinition));
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::HasTypeDefinition, AttributeID::INVERSE_NAME, LocalizedText("TypeDefinitionOf"));
+    }
+
+    void ToState()
+    {
+      // Attributes
+      AddValue(ObjectID::ToState, AttributeID::NODE_ID,      NodeID(ObjectID::ToState));
+      AddValue(ObjectID::ToState, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+      AddValue(ObjectID::ToState, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ToState));
+      AddValue(ObjectID::ToState, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ToState));
+      AddValue(ObjectID::ToState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ToState));
+      AddValue(ObjectID::ToState, AttributeID::WRITE_MASK,   0);
+      AddValue(ObjectID::ToState, AttributeID::USER_WRITE_MASK, 0);
+      // Type Attributes
+      AddValue(ObjectID::ToState, AttributeID::IS_ABSTRACT, false);
+      // Reference attributes
+      AddValue(ObjectID::ToState, AttributeID::SYMMETRIC, false);
+      AddValue(ObjectID::ToState, AttributeID::INVERSE_NAME, LocalizedText("FromTransition"));
     }
 
   private:
