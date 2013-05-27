@@ -31,6 +31,7 @@ namespace
   const char* OPTION_ATTRIBUTE = "attribute";
 
   const char* OPTION_NODE_ID_TWO_BYTE = "node-id-two-byte";
+  const char* OPTION_NODE_ID_NUMERIC = "node-id-numeric";
   const char* OPTION_NODE_ID_STRING = "node-id-string";
 
 
@@ -62,6 +63,12 @@ namespace
     {
       nodeID.Encoding = EV_TWO_BYTE;
       nodeID.TwoByteData.Identifier = vm[OPTION_NODE_ID_TWO_BYTE].as<unsigned>();
+    }
+    else if (vm.count(OPTION_NODE_ID_NUMERIC))
+    {
+      nodeID.Encoding = EV_NUMERIC;
+      nodeID.NumericData.NamespaceIndex = GetNamespaceIndexOptionValue(vm);
+      nodeID.NumericData.Identifier = vm[OPTION_NODE_ID_NUMERIC].as<int>();
     }
     else if (vm.count(OPTION_NODE_ID_STRING))
     {
@@ -219,6 +226,7 @@ namespace OpcUa
       (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
       (OPTION_NODE_ID_TWO_BYTE, po::value<unsigned>(), "Two byte NodeId.")
+      (OPTION_NODE_ID_NUMERIC, po::value<int>(), "numeric NodeId.")
       (OPTION_NODE_ID_STRING, po::value<std::string>(), "string NodeId.")
       (OPTION_NAMESPACE_INDEX, po::value<uint16_t>(), "Namespace index of the node.")
       (OPTION_VALUE_BYTE, po::value<uint8_t>(), "Byte value.")

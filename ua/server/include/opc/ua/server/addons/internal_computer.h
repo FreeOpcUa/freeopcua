@@ -29,6 +29,9 @@ namespace OpcUa
 
       virtual void RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views) = 0;
       virtual void UnregisterViewServices() = 0;
+
+      virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes) = 0;
+      virtual void UnregisterAttributeServices() = 0;
     };
 
     const char InternalComputerAddonID[] = "internal_computer";

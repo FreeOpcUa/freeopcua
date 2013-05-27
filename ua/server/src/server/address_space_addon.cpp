@@ -27,7 +27,7 @@ namespace
   {
   public:
     AddressSpaceAddon()
-      : Services(CreateStandardNamespace())
+      : AddressSpace(CreateStandardNamespace())
     {
     }
 
@@ -39,17 +39,19 @@ namespace
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
       InternalComputer = Common::GetAddon<InternalComputerAddon>(addons, InternalComputerAddonID);
-      InternalComputer->RegisterViewServices(Services);
+      InternalComputer->RegisterViewServices(AddressSpace);
+      InternalComputer->RegisterAttributeServices(AddressSpace);
     }
 
     virtual void Stop()
     {
       InternalComputer->UnregisterViewServices();
+      InternalComputer->UnregisterAttributeServices();
       InternalComputer.reset();
     }
 
   private:
-    std::shared_ptr<ViewServices> Services;
+    std::shared_ptr<StandardNamespace> AddressSpace;
     std::shared_ptr<InternalComputerAddon> InternalComputer;
   };
 

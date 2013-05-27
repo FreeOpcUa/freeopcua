@@ -19,6 +19,7 @@ namespace
   class DefaultServices
     : public EndpointServices
     , public ViewServices
+    , public AttributeServices
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const ApplicationFilter& filter) const
@@ -41,6 +42,19 @@ namespace
     virtual std::vector<ReferenceDescription> BrowseNext()
     {
       return std::vector<ReferenceDescription>();
+    }
+
+    virtual std::vector<OpcUa::DataValue> Read(const OpcUa::ReadParameters& filter) const
+    {
+      DataValue value;
+      value.Encoding = DATA_VALUE_STATUS_CODE;
+      value.Status = StatusCode::BadNotImplemented;
+      return std::vector<OpcUa::DataValue>(filter.AttributesToRead.size(), value);
+    }
+
+    virtual std::vector<OpcUa::StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter)
+    {
+      return std::vector<OpcUa::StatusCode>(filter.size(), StatusCode::BadNotImplemented);
     }
   };
 
@@ -96,8 +110,13 @@ namespace
       ViewsServices = views ? views : Services;
     }
 
+    void SetAttributes(std::shared_ptr<AttributeServices> attributes)
+    {
+      AttributesServices = attributes ? attributes : Services;
+    }
 
   public:
+    std::shared_ptr<AttributeServices> AttributesServices;
     std::shared_ptr<ViewServices> ViewsServices;
     std::shared_ptr<EndpointServices> EndpointsServices;
     std::shared_ptr<DefaultServices> Services;
@@ -145,6 +164,16 @@ namespace
       Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
     }
 
+    virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
+    {
+      Comp->SetAttributes(attributes);
+    }
+
+    virtual void UnregisterAttributeServices()
+    {
+      Comp->SetAttributes(std::shared_ptr<OpcUa::Remote::AttributeServices>());
+    }
+
   private:
     std::shared_ptr<InternalComputer> Comp;
   };
@@ -155,4 +184,3 @@ extern "C" Common::Addon::UniquePtr CreateAddon()
 {
   return Common::Addon::UniquePtr(new RequestProcessor());
 }
-
