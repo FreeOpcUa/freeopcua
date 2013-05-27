@@ -78,7 +78,17 @@ namespace
 
     virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
     {
-      return std::vector<StatusCode>(values.size(), StatusCode::BadWriteNotSupported);
+      std::vector<StatusCode> statuses;
+      for (auto value : values)
+      {
+        if (value.Data.Encoding & DATA_VALUE)
+        {
+          statuses.push_back(SetValue(value.Node, value.Attribute, value.Data.Value));
+          continue;
+        }
+        statuses.push_back(StatusCode::BadNotWritable);
+      }
+      return statuses;
     }
 
   private:
@@ -95,6 +105,19 @@ namespace
       value.Encoding = DATA_VALUE_STATUS_CODE;
       value.Status = StatusCode::BadNotReadable;
       return value;
+    }
+
+    StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
+    {
+      for (auto value : AttributeValues)
+      {
+        if (value.Node == node && value.Attribute == attribute)
+        {
+          value.Value = data;
+          return StatusCode::Good;
+        }
+      }
+      return StatusCode::BadAttributeIdInvalid;
     }
 
     bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
