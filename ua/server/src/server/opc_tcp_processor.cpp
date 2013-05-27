@@ -303,7 +303,7 @@ namespace
 
         case OpcUa::WRITE_REQUEST:
         {
-          if (Debug) std::clog << "Processing read request." << std::endl;
+          if (Debug) std::clog << "Processing write request." << std::endl;
           WriteParameters params;
           stream >> params;
 

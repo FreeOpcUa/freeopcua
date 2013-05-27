@@ -109,7 +109,7 @@ namespace
 
     StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
     {
-      for (auto value : AttributeValues)
+      for (AttributeValue& value : AttributeValues)
       {
         if (value.Node == node && value.Attribute == attribute)
         {
