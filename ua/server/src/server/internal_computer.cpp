@@ -91,7 +91,7 @@ namespace
 
     virtual std::shared_ptr<AttributeServices> Attributes() const
     {
-      return std::shared_ptr<AttributeServices>();
+      return AttributesServices;
     }
 
     virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
