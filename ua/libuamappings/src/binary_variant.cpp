@@ -575,13 +575,13 @@ namespace OpcUa
     {
       return VariantType::DOUBLE;
     }
+    if (!String.empty())
+    {
+      return VariantType::STRING;
+    }
     if (!Time.empty())
     {
       return VariantType::DATE_TIME;
-    }
-    if (!Guids.empty())
-    {
-      return VariantType::GUID;
     }
     if (!Guids.empty())
     {

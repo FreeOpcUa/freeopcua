@@ -249,6 +249,15 @@ TEST(Variant, InitializeWithBoolVector)
   ASSERT_TRUE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
+
+TEST(Variant, InitializeWithString)
+{
+  const OpcUa::Variant var(std::string("string"));
+  ASSERT_EQ(var.Type, OpcUa::VariantType::STRING);
+  ASSERT_FALSE(var.IsArray());
+  ASSERT_FALSE(var.IsNul());
+}
+
 /*
 
 TEST(Variant, InitializeWithBoolInitializerList)
