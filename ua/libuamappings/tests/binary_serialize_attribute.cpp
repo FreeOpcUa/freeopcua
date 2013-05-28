@@ -427,7 +427,7 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   value.Data.Value.Type = VariantType::BOOLEAN;
   value.Data.Value.Value.Boolean = std::vector<bool>{true};
 
-  request.NodesToWrite.push_back(value); 
+  request.Parameters.NodesToWrite.push_back(value);
 
   GetStream() << request << flush;
 
@@ -480,14 +480,14 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
 
-  ASSERT_EQ(request.NodesToWrite.size(), 1);
-  ASSERT_EQ(request.NodesToWrite[0].Node.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.NodesToWrite[0].Node.FourByteData.Identifier, 1);
-  ASSERT_EQ(request.NodesToWrite[0].Attribute, AttributeID::DISPLAY_NAME);
-  ASSERT_EQ(request.NodesToWrite[0].Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(request.NodesToWrite[0].Data.Value.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(request.NodesToWrite[0].Data.Value.Value.Boolean.size(), 1);
-  ASSERT_EQ(request.NodesToWrite[0].Data.Value.Value.Boolean[0], true);
+  ASSERT_EQ(request.Parameters.NodesToWrite.size(), 1);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DISPLAY_NAME);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type, VariantType::BOOLEAN);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean.size(), 1);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean[0], true);
 }
 
 //-------------------------------------------------------
@@ -507,12 +507,12 @@ TEST_F(OpcUaBinarySerialization, WriteResponse)
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
-  resp.StatusCodes.push_back(static_cast<StatusCode>(1));
+  resp.Result.StatusCodes.push_back(static_cast<StatusCode>(1));
  
   DiagnosticInfo info;
   info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT);
   info.LocalizedText = 4;
-  resp.Diagnostics.push_back(info);
+  resp.Result.Diagnostics.push_back(info);
  
   GetStream() << resp << flush;
 
@@ -554,11 +554,11 @@ TEST_F(OpcUaBinaryDeserialization, WriteResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
 
-  ASSERT_EQ(resp.StatusCodes.size(), 1);
-  ASSERT_EQ(resp.StatusCodes[0], static_cast<OpcUa::StatusCode>(1));
+  ASSERT_EQ(resp.Result.StatusCodes.size(), 1);
+  ASSERT_EQ(resp.Result.StatusCodes[0], static_cast<OpcUa::StatusCode>(1));
 
-  ASSERT_EQ(resp.Diagnostics.size(), 1);
-  ASSERT_EQ(resp.Diagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT));
-  ASSERT_EQ(resp.Diagnostics[0].LocalizedText, 4);
+  ASSERT_EQ(resp.Result.Diagnostics.size(), 1);
+  ASSERT_EQ(resp.Result.Diagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT));
+  ASSERT_EQ(resp.Result.Diagnostics[0].LocalizedText, 4);
 }
 

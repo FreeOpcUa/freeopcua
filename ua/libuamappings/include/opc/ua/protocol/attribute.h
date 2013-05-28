@@ -72,23 +72,31 @@ namespace OpcUa
     DataValue Data;
   };
 
+  struct WriteParameters
+  {
+    std::vector<WriteValue> NodesToWrite;
+  };
+
   struct WriteRequest
   {
     NodeID TypeID;
     RequestHeader Header;
-
-    std::vector<WriteValue> NodesToWrite;
+    WriteParameters Parameters;
 
     WriteRequest();
+  };
+
+  struct WriteResult
+  {
+    std::vector<StatusCode> StatusCodes;
+    std::vector<DiagnosticInfo> Diagnostics;
   };
 
   struct WriteResponse
   {
     NodeID TypeID;
     ResponseHeader Header;
-
-    std::vector<StatusCode> StatusCodes;
-    std::vector<DiagnosticInfo> Diagnostics;
+    WriteResult Result;
 
     WriteResponse();
   };

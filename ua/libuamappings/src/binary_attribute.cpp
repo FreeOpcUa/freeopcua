@@ -272,13 +272,34 @@ namespace OpcUa
 
 
     //---------------------------------------------------
+    // WriteParameters
+    //---------------------------------------------------
+    template<>
+    std::size_t RawSize<WriteParameters>(const WriteParameters& parameters)
+    {
+      return RawSizeContainer(parameters.NodesToWrite);
+    }
+
+    template<>
+    void OStream::Serialize<WriteParameters>(const WriteParameters& parameters)
+    {
+      SerializeContainer(*this, parameters.NodesToWrite);
+    }
+
+    template<>
+    void IStream::Deserialize<WriteParameters>(WriteParameters& parameters)
+    {
+      DeserializeContainer(*this, parameters.NodesToWrite);
+    }
+
+
+    //---------------------------------------------------
     // WriteRequest
     //---------------------------------------------------
     template<>
     std::size_t RawSize<WriteRequest>(const WriteRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
-        RawSizeContainer(request.NodesToWrite);
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
@@ -286,8 +307,7 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-
-      SerializeContainer(*this, request.NodesToWrite);
+      *this << request.Parameters;
     }
 
     template<>
@@ -295,8 +315,30 @@ namespace OpcUa
     {
       *this >> request.TypeID;
       *this >> request.Header;
+      *this >> request.Parameters;
+    }
 
-      DeserializeContainer(*this, request.NodesToWrite);
+    //---------------------------------------------------
+    // WriteResult
+    //---------------------------------------------------
+    template<>
+    std::size_t RawSize<WriteResult>(const WriteResult& result)
+    {
+      return RawSizeContainer(result.StatusCodes) + RawSizeContainer(result.Diagnostics);
+    }
+
+    template<>
+    void OStream::Serialize<WriteResult>(const WriteResult& result)
+    {
+      SerializeContainer(*this, result.StatusCodes, 0);
+      SerializeContainer(*this, result.Diagnostics, 0);
+    }
+
+    template<>
+    void IStream::Deserialize<WriteResult>(WriteResult& result)
+    {
+      DeserializeContainer(*this, result.StatusCodes);
+      DeserializeContainer(*this, result.Diagnostics);
     }
 
     //---------------------------------------------------
@@ -305,9 +347,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<WriteResponse>(const WriteResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) +
-        RawSizeContainer(resp.StatusCodes) +
-        RawSizeContainer(resp.Diagnostics);
+      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Result);
     }
 
     template<>
@@ -315,9 +355,7 @@ namespace OpcUa
     {
       *this << resp.TypeID;
       *this << resp.Header;
-
-      SerializeContainer(*this, resp.StatusCodes, 0);
-      SerializeContainer(*this, resp.Diagnostics, 0);
+      *this << resp.Result;
     }
 
     template<>
@@ -325,9 +363,7 @@ namespace OpcUa
     {
       *this >> resp.TypeID;
       *this >> resp.Header;
-
-      DeserializeContainer(*this, resp.StatusCodes);
-      DeserializeContainer(*this, resp.Diagnostics);
+      *this >> resp.Result;
     }
 
   } // namespace Binary
