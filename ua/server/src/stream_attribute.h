@@ -50,14 +50,14 @@ namespace OpcUa
       {
         WriteRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
-        request.NodesToWrite = values;
+        request.Parameters.NodesToWrite = values;
 
         Stream << request << OpcUa::Binary::flush;
 
         WriteResponse response;
         Stream >> response;
 
-        return response.StatusCodes;
+        return response.Result.StatusCodes;
       }
 
     private:

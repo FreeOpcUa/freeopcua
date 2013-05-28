@@ -301,6 +301,33 @@ namespace
           return;
         }
 
+        case OpcUa::WRITE_REQUEST:
+        {
+          if (Debug) std::clog << "Processing read request." << std::endl;
+          WriteParameters params;
+          stream >> params;
+
+          WriteResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          std::vector<DataValue> values;
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+          {
+            response.Result.StatusCodes = service->Write(params.NodesToWrite);
+          }
+          else
+          {
+            response.Result.StatusCodes = std::vector<StatusCode>(params.NodesToWrite.size(), OpcUa::StatusCode::BadNotImplemented);
+          }
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+
+          return;
+        }
+
         case CREATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "Processing create session request." << std::endl;
