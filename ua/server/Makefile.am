@@ -146,12 +146,22 @@ libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-un
 
 lib_LTLIBRARIES += libaddress_space_addon.la
 addonsinclude_HEADERS += \
-  include/opc/ua/server/addons/address_space.h
+  include/opc/ua/server/addons/address_space_registry.h
 libaddress_space_addon_la_SOURCES = \
-  src/server/standard_namespace.cpp \
-  src/server/address_space_addon.cpp
+   src/server/address_space/address_space_internal.cpp \
+   src/server/address_space/address_space_internal.h \
+   src/server/address_space/address_space_addon.cpp
 libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
 libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+
+lib_LTLIBRARIES += libstandard_ns_addon.la
+libstandard_ns_addon_la_SOURCES = \
+   src/server/address_space/standard_namespace_addon.cpp \
+   src/server/address_space/standard_namespace.cpp \
+   src/server/address_space/standard_namespace.h
+
+libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
+libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 
 endif
@@ -198,7 +208,7 @@ test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 server_unittests_SOURCES = \
-  src/server/standard_namespace.cpp \
+  src/server/address_space/standard_namespace.cpp \
   tests/server/standard_namespace_ut.cpp
 
 server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -31,13 +31,13 @@ namespace OpcUa
       {
       }
 
-      virtual std::vector<ReferenceDescription> Browse(const Remote::BrowseParameters& params)
+      virtual std::vector<ReferenceDescription> Browse(const Remote::BrowseParameters& params) const
       {
         BrowseRequest browse;
         browse.Header.SessionAuthenticationToken = AuthenticationToken;
         browse.Query.MaxReferenciesPerNode = params.MaxReferenciesCount;
         browse.Query.NodesToBrowse.push_back(params.Description);
-        
+
         Stream << browse << OpcUa::Binary::flush;
 
         BrowseResponse response;
@@ -53,7 +53,7 @@ namespace OpcUa
         return  std::vector<ReferenceDescription>();
       }
 
-      virtual std::vector<ReferenceDescription> BrowseNext()
+      virtual std::vector<ReferenceDescription> BrowseNext() const
       {
         if (ContinuationPoint.empty())
         {
@@ -69,22 +69,22 @@ namespace OpcUa
       }
 
     private:
-      std::vector<ReferenceDescription> Next()
+      std::vector<ReferenceDescription> Next() const
       {
         return SendBrowseNext(false);
       }
 
-      void Release() 
+      void Release() const
       {
         SendBrowseNext(true);
       }
 
-      std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint)
+      std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint) const
       {
         BrowseNextRequest browseNext;
         browseNext.Header.SessionAuthenticationToken = AuthenticationToken;
         browseNext.ReleaseContinuationPoints= false;
-        browseNext.ContinuationPoints.push_back(ContinuationPoint);  
+        browseNext.ContinuationPoints.push_back(ContinuationPoint);
 
         Stream << browseNext << OpcUa::Binary::flush;
 
@@ -96,8 +96,7 @@ namespace OpcUa
     private:
       mutable StreamType Stream;
       NodeID AuthenticationToken;
-
-      std::vector<uint8_t> ContinuationPoint;
+      mutable std::vector<uint8_t> ContinuationPoint;
     };
 
   } // namespace Internal

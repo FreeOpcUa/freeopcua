@@ -4,11 +4,11 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <src/server/standard_namespace.h>
+#include <src/server/address_space/standard_namespace.h>
 
 #include <functional>
 
@@ -22,7 +22,7 @@ class StandardNamespaceStructure : public testing::Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = CreateStandardNamespace();
+    NameSpace = Internal::CreateStandardNamespace();
   }
 
   virtual void TearDown()
@@ -39,7 +39,7 @@ protected:
 
   bool HasReference(std::vector<ReferenceDescription> refs, ReferenceID referenceID,  NodeID targetNode) const
   {
-    for (auto ref : refs)
+    for (const ReferenceDescription ref : refs)
     {
       if (ref.TargetNodeID == targetNode && ref.ReferenceTypeID == referenceID)
       {
@@ -96,7 +96,7 @@ protected:
   }
 
 protected:
-  std::unique_ptr<OpcUa::StandardNamespace> NameSpace;
+  std::unique_ptr<Internal::AddressSpace> NameSpace;
 };
 
 template <typename T>
@@ -111,9 +111,9 @@ inline NodeID Node(T value)
   return NodeID(value);
 }
 
-TEST(StandardNamespace, CanBeCreated)
+TEST(AddressSpace, CanBeCreated)
 {
-  std::unique_ptr<Remote::ViewServices> ns = CreateStandardNamespace();
+  std::unique_ptr<Internal::AddressSpace> ns = Internal::CreateStandardNamespace();
   ASSERT_TRUE(static_cast<bool>(ns));
 }
 
@@ -132,7 +132,7 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_Organizes_RefType)
 
 TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_HierarchicalReferencies_Subtypes)
 {
-  std::unique_ptr<Remote::ViewServices> ns = CreateStandardNamespace();
+  std::unique_ptr<Internal::AddressSpace> ns = Internal::CreateStandardNamespace();
   OpcUa::Remote::BrowseParameters params;
   params.Description.NodeToBrowse = ObjectID::RootFolder;
   params.Description.Direction = BrowseDirection::Forward;

@@ -4,29 +4,26 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
 #ifndef OPC_UA_SERVER_STANDARD_NAME_SPACE_H
 #define OPC_UA_SERVER_STANDARD_NAME_SPACE_H
 
-#include <opc/ua/view.h>
-#include <opc/ua/attributes.h>
+#include "address_space_internal.h"
 
 #include <memory>
 
+
 namespace OpcUa
 {
+  namespace Internal
+  {
 
-    class StandardNamespace
-      : public Remote::ViewServices
-      , public Remote::AttributeServices
-    {
-    };
+    std::unique_ptr<Internal::AddressSpace> CreateStandardNamespace();
 
-    std::unique_ptr<StandardNamespace> CreateStandardNamespace();
-
+  } // namespace Internal
 } // namespace OpcUa
 
 #endif // OPC_UA_SERVER_STANDARD_NAME_SPACE_H

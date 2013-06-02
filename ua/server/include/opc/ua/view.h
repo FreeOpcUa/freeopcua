@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -12,6 +12,7 @@
 #define OPC_UA_CLIENT_VIEW_H
 
 #include <opc/common/interface.h>
+#include <opc/common/class_pointers.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/view.h>
 
@@ -36,8 +37,11 @@ namespace OpcUa
     class ViewServices : private Common::Interface
     {
     public:
-      virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) = 0;
-      virtual std::vector<ReferenceDescription> BrowseNext() = 0;
+      DEFINE_CLASS_POINTERS(ViewServices);
+
+    public:
+      virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const = 0;
+      virtual std::vector<ReferenceDescription> BrowseNext() const = 0;
     };
 
 

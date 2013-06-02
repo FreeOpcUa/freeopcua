@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -34,12 +34,12 @@ namespace
     {
     }
 
-    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params)
+    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
     {
       return std::vector<ReferenceDescription>();
     }
 
-    virtual std::vector<ReferenceDescription> BrowseNext()
+    virtual std::vector<ReferenceDescription> BrowseNext() const
     {
       return std::vector<ReferenceDescription>();
     }
@@ -177,7 +177,7 @@ namespace
   private:
     std::shared_ptr<InternalComputer> Comp;
   };
- 
+
 }
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
