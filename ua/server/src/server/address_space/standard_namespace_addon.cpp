@@ -10,6 +10,8 @@
 
 #include "standard_namespace.h"
 
+#include "address_space_internal.h"
+
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/server/addons/internal_computer.h>
@@ -61,4 +63,3 @@ extern "C" Common::Addon::UniquePtr CreateAddon()
 {
   return Common::Addon::UniquePtr(new StandardAddressSpaceAddon());
 }
-

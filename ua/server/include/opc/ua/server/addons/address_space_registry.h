@@ -28,11 +28,8 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(AddressSpaceRegistry);
 
     public:
-      virtual void Register(Remote::ViewServices::SharedPtr views) = 0;
-      virtual void Unregister(Remote::ViewServices::SharedPtr views) = 0;
-
-      virtual void Register(uint16_t namespaceIndex, Remote::AttributeServices::SharedPtr attributes) = 0;
-      virtual void Unregister(uint16_t namespaceIndex) = 0;
+      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value) = 0;
+      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference) = 0;
     };
 
     const char AddressSpaceRegistryAddonID[] = "address_space_registry";

@@ -156,7 +156,6 @@ libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPIN
 
 lib_LTLIBRARIES += libstandard_ns_addon.la
 libstandard_ns_addon_la_SOURCES = \
-   src/server/address_space/standard_namespace_addon.cpp \
    src/server/address_space/standard_namespace.cpp \
    src/server/address_space/standard_namespace.h
 

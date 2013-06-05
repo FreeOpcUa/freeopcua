@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -45,6 +45,55 @@ namespace OpcUa
 
       return Data1 == r.Data1 && Data2 == r.Data2 && Data3 == r.Data3;
     }
+
+    inline bool operator< (const Guid& r)
+    {
+      if (Data1 > r.Data1)
+      {
+        return false;
+      }
+
+      if (Data1 < r.Data1)
+      {
+        return true;
+      }
+
+      if (Data2 > r.Data2)
+      {
+        return false;
+      }
+
+      if (Data2 < r.Data2)
+      {
+        return true;
+      }
+
+      if (Data3 > r.Data3)
+      {
+        return false;
+      }
+
+      if (Data3 < r.Data3)
+      {
+        return true;
+      }
+
+      for (unsigned i = 0; i < 8; ++i)
+      {
+        if (Data4[i] > r.Data4[i])
+        {
+          return false;
+        }
+
+        if (Data4[i] < r.Data4[i])
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
   };
 } // namespace OpcUa
 

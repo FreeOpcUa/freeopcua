@@ -11,20 +11,14 @@
 #ifndef OPC_UA_SERVER_STANDARD_NAME_SPACE_H
 #define OPC_UA_SERVER_STANDARD_NAME_SPACE_H
 
-#include "address_space_internal.h"
-
-#include <memory>
-
-
 namespace OpcUa
 {
   namespace Internal
   {
 
-    std::unique_ptr<Internal::AddressSpace> CreateStandardNamespace();
+    const char StandardNamespaceAddonID[] = "standard_namespace";
 
   } // namespace Internal
 } // namespace OpcUa
 
 #endif // OPC_UA_SERVER_STANDARD_NAME_SPACE_H
-

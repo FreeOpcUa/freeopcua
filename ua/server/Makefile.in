@@ -213,11 +213,9 @@ libopcua_tcp_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
 libstandard_ns_addon_la_LIBADD =
 am__libstandard_ns_addon_la_SOURCES_DIST =  \
-	src/server/address_space/standard_namespace_addon.cpp \
 	src/server/address_space/standard_namespace.cpp \
 	src/server/address_space/standard_namespace.h
-@BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_OBJECTS = libstandard_ns_addon_la-standard_namespace_addon.lo \
-@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon_la-standard_namespace.lo
+@BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_OBJECTS = libstandard_ns_addon_la-standard_namespace.lo
 libstandard_ns_addon_la_OBJECTS =  \
 	$(am_libstandard_ns_addon_la_OBJECTS)
 libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -665,7 +663,6 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_SOURCES = \
-@BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace_addon.cpp \
 @BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace.cpp \
 @BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace.h
 
@@ -935,7 +932,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_tcp_server_la-thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_attribute.Po@am__quote@
@@ -1086,13 +1082,6 @@ libopcua_tcp_server_la-thread.lo: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='libopcua_tcp_server_la-thread.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_tcp_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_tcp_server_la-thread.lo `test -f 'src/thread.cpp' || echo '$(srcdir)/'`src/thread.cpp
-
-libstandard_ns_addon_la-standard_namespace_addon.lo: src/server/address_space/standard_namespace_addon.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace_addon.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/server/address_space/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace_addon.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/standard_namespace_addon.cpp' object='libstandard_ns_addon_la-standard_namespace_addon.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/server/address_space/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace_addon.cpp
 
 libstandard_ns_addon_la-standard_namespace.lo: src/server/address_space/standard_namespace.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Tpo -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/server/address_space/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace.cpp

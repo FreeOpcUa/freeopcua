@@ -10,8 +10,8 @@
 
 // TODO Add EventNotifier Attribute to all requred nodes.
 
-#include "standard_namespace.h"
-
+#include <opc/common/addons_core/addon.h>
+#include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/node_classes.h>
 #include <opc/ua/variable_access_level.h>
 #include <opc/ua/strings.h>
@@ -29,170 +29,29 @@ namespace
   const bool reverse = true;
 
 
-  typedef std::multimap<ObjectID, ReferenceDescription> ReferenciesMap;
-
-  struct AttributeValue
-  {
-    NodeID Node;
-    AttributeID Attribute;
-    DataValue Value;
-  };
-
-
-
-  class StandardNamespaceInMemory : public Internal::AddressSpace
+  class StandardNamespaceInMemory : public Common::Addon
   {
   public:
-    StandardNamespaceInMemory()
+    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      Registry = Common::GetAddon<Server::AddressSpaceRegistry>(addons, Server::AddressSpaceRegistryAddonID);
       Fill();
     }
 
-    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    virtual void Stop()
     {
-      std::vector<ReferenceDescription> result;
-      for (auto reference : Referencies)
-      {
-        if (IsSuitableReference(params.Description, reference))
-        {
-          result.push_back(reference.second);
-        }
-      }
-      return result;
+      Registry.reset();
     }
 
-    virtual std::vector<ReferenceDescription> BrowseNext() const
-    {
-      return std::vector<ReferenceDescription>();
-    }
-
-    virtual std::vector<DataValue> Read(const ReadParameters& params) const
-    {
-      std::vector<DataValue> values;
-      for (auto attribute : params.AttributesToRead)
-      {
-        values.push_back(GetValue(attribute.Node, attribute.Attribute));
-      }
-      return values;
-    }
-
-    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
-    {
-      std::vector<StatusCode> statuses;
-      for (auto value : values)
-      {
-        if (value.Data.Encoding & DATA_VALUE)
-        {
-          statuses.push_back(SetValue(value.Node, value.Attribute, value.Data.Value));
-          continue;
-        }
-        statuses.push_back(StatusCode::BadNotWritable);
-      }
-      return statuses;
-    }
-
+  private:
     virtual void NewValue(NodeID node, AttributeID attribute, Variant value)
     {
-      AttributeValue data;
-      data.Node = node;
-      data.Attribute = attribute;
-      data.Value.Encoding = DATA_VALUE;
-      AttributeValues.push_back(data);
+      Registry->AddAttribute(node, attribute, value);
     }
 
-    /*
-    virtual void NewReference(ObjectID sourceNode, ReferenceDescription reference)
+    virtual void NewValue(ObjectID node, AttributeID attribute, Variant value)
     {
-      AddReference(
-        sourceNode,
-        reference.IsForward,
-        reference.ReferenceTypeID,
-        reference.TargetNodeID,
-        reference.BrowseName.Name.c_str(),
-        reference.TargetNodeClass,
-        reference.TargetNodeTypeDefinition);
-    }
-*/
-  private:
-    DataValue GetValue(const NodeID& node, AttributeID attribute) const
-    {
-      for (const AttributeValue& value : AttributeValues)
-      {
-        if (value.Node == node && value.Attribute == attribute)
-        {
-          return value.Value;
-        }
-      }
-      DataValue value;
-      value.Encoding = DATA_VALUE_STATUS_CODE;
-      value.Status = StatusCode::BadNotReadable;
-      return value;
-    }
-
-    StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
-    {
-      for (AttributeValue& value : AttributeValues)
-      {
-        if (value.Node == node && value.Attribute == attribute)
-        {
-          value.Value = data;
-          return StatusCode::Good;
-        }
-      }
-      return StatusCode::BadAttributeIdInvalid;
-    }
-
-    bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
-    {
-      const NodeID sourceNode = refPair.first;
-      if (desc.NodeToBrowse != sourceNode)
-      {
-        return false;
-      }
-      const ReferenceDescription reference = refPair.second;
-      if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
-      {
-        return false;
-      }
-      if (desc.ReferenceTypeID != ObjectID::Null && !IsSuitableReferenceType(reference, desc.ReferenceTypeID, desc.IncludeSubtypes))
-      {
-        return false;
-      }
-      if (desc.NodeClasses && (desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
-      {
-        return false;
-      }
-      return true;
-    }
-
-    bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const
-    {
-      if (!includeSubtypes)
-      {
-        return reference.ReferenceTypeID == typeID;
-      }
-      const std::vector<NodeID> suitableTypes = SelectNodesHierarchy(std::vector<NodeID>(1, typeID));
-      return std::find(suitableTypes.cbegin(), suitableTypes.cend(), reference.ReferenceTypeID) != suitableTypes.end();
-    }
-
-    std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
-    {
-      std::vector<NodeID> subNodes;
-      for (ReferenciesMap::const_iterator refIt = Referencies.begin(); refIt != Referencies.end(); ++refIt)
-      {
-        if (std::find(sourceNodes.cbegin(), sourceNodes.cend(), refIt->first) != sourceNodes.end())
-        {
-          subNodes.push_back(refIt->second.TargetNodeID);
-        }
-      }
-      if (subNodes.empty())
-      {
-        return sourceNodes;
-      }
-
-      const std::vector<NodeID> allChilds = SelectNodesHierarchy(subNodes);
-      sourceNodes.insert(sourceNodes.end(), allChilds.begin(), allChilds.end());
-      return sourceNodes;
+      NewValue(NodeID(node), attribute, value);
     }
 
     void AddReference(
@@ -213,7 +72,7 @@ namespace
       desc.TargetNodeClass = targetNodeClass;
       desc.TargetNodeTypeDefinition = targetNodeTypeDefinition;
 
-      Referencies.insert({sourceNode, desc});
+      Registry->AddReference(NodeID(sourceNode), desc);
     }
 
     void Fill()
@@ -3723,12 +3582,11 @@ namespace
     }
 
   private:
-    ReferenciesMap Referencies;
-    std::vector<AttributeValue> AttributeValues;
+    std::shared_ptr<Server::AddressSpaceRegistry> Registry;
   };
 }
 
-std::unique_ptr<OpcUa::Internal::AddressSpace> OpcUa::Internal::CreateStandardNamespace()
+extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return std::unique_ptr<AddressSpace>(new StandardNamespaceInMemory());
+  return Common::Addon::UniquePtr(new StandardNamespaceInMemory());
 }

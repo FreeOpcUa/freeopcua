@@ -54,24 +54,14 @@ namespace
     }
 
   public: // AddressSpaceRegistry
-    virtual void Register(Remote::ViewServices::SharedPtr views)
+    virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
-      Registry->Register(views);
+      Registry->AddAttribute(node, attribute, value);
     }
 
-    virtual void Unregister(Remote::ViewServices::SharedPtr views)
+    virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
-      Registry->Unregister(views);
-    }
-
-    virtual void Register(uint16_t namespaceIndex, Remote::AttributeServices::SharedPtr attributes)
-    {
-      Registry->Register(namespaceIndex, attributes);
-    }
-
-    virtual void Unregister(uint16_t namespaceIndex)
-    {
-      Registry->Unregister(namespaceIndex);
+      Registry->AddReference(sourceNode, reference);
     }
 
   private:
@@ -86,4 +76,3 @@ extern "C" Common::Addon::UniquePtr CreateAddon()
 {
   return Common::Addon::UniquePtr(new AddressSpaceAddon());
 }
-

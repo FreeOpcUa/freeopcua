@@ -118,25 +118,97 @@ namespace OpcUa
 
     NodeID();
     NodeID(const NodeID& node);
-    NodeID(MessageID messageID);
-    NodeID(ReferenceID referenceID);
-    NodeID(ObjectID objectID);
+    explicit NodeID(MessageID messageID);
+    explicit NodeID(ReferenceID referenceID);
+    explicit NodeID(ObjectID objectID);
+
+    NodeID& operator= (MessageID messageID)
+    {
+      *this = NodeID(messageID);
+      return *this;
+    }
+
+    NodeID& operator= (ReferenceID referenceID)
+    {
+      *this = NodeID(referenceID);
+      return *this;
+    }
+
+    NodeID& operator= (ObjectID objectID)
+    {
+      *this = NodeID(objectID);
+      return *this;
+    }
 
     bool operator== (const NodeID& node) const;
     bool operator== (MessageID messageID) const;
-    bool operator== (ReferenceID messageID) const;
-    bool operator== (ObjectID messageID) const;
+    bool operator== (ReferenceID referenceID) const;
+    bool operator== (ObjectID objectID) const;
 
     bool operator!= (const NodeID& node) const;
     bool operator!= (MessageID messageID) const;
-    bool operator!= (ReferenceID messageID) const;
-    bool operator!= (ObjectID messageID) const;
+    bool operator!= (ReferenceID referenceID) const;
+    bool operator!= (ObjectID objectID) const;
 
+    bool operator< (const NodeID& node) const;
 
     NodeIDEncoding GetEncodingValue() const;
     bool HasNamespaceURI() const;
     bool HasServerIndex() const;
   };
+
+  inline NodeID TwoByteNodeID(uint8_t value)
+  {
+    NodeID id;
+    id.Encoding = EV_TWO_BYTE;
+    id.TwoByteData.Identifier = value;
+    return id;
+  }
+
+  inline NodeID FourByteNodeID(uint16_t value, uint8_t namespaceIndex = 0)
+  {
+    NodeID id;
+    id.Encoding = EV_FOUR_BYTE;
+    id.FourByteData.Identifier = value;
+    id.FourByteData.NamespaceIndex = namespaceIndex;
+    return id;
+  }
+
+  inline NodeID NumericNodeID(uint32_t value, uint16_t namespaceIndex = 0)
+  {
+    NodeID id;
+    id.Encoding = EV_NUMERIC;
+    id.NumericData.Identifier = value;
+    id.NumericData.NamespaceIndex = namespaceIndex;
+    return id;
+  }
+
+  inline NodeID StringNodeID(std::string value, uint16_t namespaceIndex = 0)
+  {
+    NodeID id;
+    id.Encoding = EV_STRING;
+    id.StringData.Identifier = value;
+    id.StringData.NamespaceIndex = namespaceIndex;
+    return id;
+  }
+
+  inline NodeID BinaryNodeID(std::vector<uint8_t> value, uint16_t namespaceIndex = 0)
+  {
+    NodeID id;
+    id.Encoding = EV_BYTE_STRING;
+    id.BinaryData.Identifier = value;
+    id.BinaryData.NamespaceIndex = namespaceIndex;
+    return id;
+  }
+
+  inline NodeID GuidNodeID(Guid value, uint16_t namespaceIndex = 0)
+  {
+    NodeID id;
+    id.Encoding = EV_GUID;
+    id.GuidData.Identifier = value;
+    id.GuidData.NamespaceIndex = namespaceIndex;
+    return id;
+  }
 
 } // namespace OpcUa
 

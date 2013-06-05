@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -21,6 +21,9 @@ class NodeSerialization : public OpcUaBinarySerialization
 {
 };
 
+class NodeComparing : public OpcUaBinarySerialization
+{
+};
 
 
 TEST(Node, DefaultConstructor)
@@ -77,7 +80,7 @@ TEST(Node, EqualIfDifferentTypeButEqualIdentifier)
   NodeID id1;
   id1.Encoding = EV_TWO_BYTE;
   id1.TwoByteData.Identifier = 1;
- 
+
   NodeID id2;
   id2.Encoding = EV_FOUR_BYTE;
   id2.FourByteData.Identifier = 1;
@@ -116,7 +119,7 @@ TEST_F(NodeDeserialization, TwoByte)
 
   NodeID id;
   GetStream() >> id;
- 
+
   ASSERT_EQ(id.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(id.TwoByteData.Identifier, 0x1);
 }
@@ -213,7 +216,7 @@ TEST_F(NodeDeserialization, ByteString)
     1, 0,
     4, 3, 2, 1,
     6, 5,
-    8, 7, 
+    8, 7,
     1, 2, 3, 4, 5, 6, 7, 8
   };
 
@@ -443,7 +446,7 @@ TEST_F(NodeSerialization, Guid)
     1, 0,
     4, 3, 2, 1,
     6, 5,
-    8, 7, 
+    8, 7,
     1, 2, 3, 4, 5, 6, 7, 8
   };
 
@@ -529,3 +532,108 @@ TEST_F(NodeSerialization, NamespaceUriAndServerIndex)
   ASSERT_EQ(expectedData.size(), RawSize(id));
 }
 
+//-----------------------------------------------------------------
+// Comparing for less
+//-----------------------------------------------------------------
+
+TEST_F(NodeComparing, TwoByteForLess)
+{
+  EXPECT_TRUE(TwoByteNodeID(1) < TwoByteNodeID(2));
+}
+
+TEST_F(NodeComparing, TwoByteForNotLess)
+{
+  EXPECT_FALSE(TwoByteNodeID(2) < TwoByteNodeID(2));
+}
+
+TEST_F(NodeComparing, TwoByteForEqual)
+{
+  EXPECT_TRUE(TwoByteNodeID(2) == TwoByteNodeID(2));
+}
+
+TEST_F(NodeComparing, FourByteForLess)
+{
+  EXPECT_TRUE(FourByteNodeID(1) < FourByteNodeID(2));
+}
+
+TEST_F(NodeComparing, FourByteForNotLess)
+{
+  EXPECT_FALSE(FourByteNodeID(2) < FourByteNodeID(2));
+}
+
+TEST_F(NodeComparing, FourByteForEqual)
+{
+  EXPECT_TRUE(FourByteNodeID(2) == FourByteNodeID(2));
+}
+
+TEST_F(NodeComparing, NumericForLess)
+{
+  EXPECT_TRUE(NumericNodeID(1) < NumericNodeID(2));
+}
+
+TEST_F(NodeComparing, NumericNotLess)
+{
+  EXPECT_FALSE(NumericNodeID(2) < NumericNodeID(2));
+}
+
+TEST_F(NodeComparing, NumericEqual)
+{
+  EXPECT_TRUE(NumericNodeID(2) == NumericNodeID(2));
+}
+
+TEST_F(NodeComparing, StringForLess)
+{
+  EXPECT_TRUE(StringNodeID("1") < StringNodeID("2"));
+}
+
+TEST_F(NodeComparing, StringNotLess)
+{
+  EXPECT_FALSE(StringNodeID("2") < StringNodeID("2"));
+}
+
+TEST_F(NodeComparing, StringEqual)
+{
+  EXPECT_TRUE(StringNodeID("2") == StringNodeID("2"));
+}
+
+TEST_F(NodeComparing, BinaryForLess)
+{
+  EXPECT_TRUE(BinaryNodeID({1, 1}) < BinaryNodeID({2, 2}));
+}
+
+TEST_F(NodeComparing, BinaryNotLess)
+{
+  EXPECT_FALSE(BinaryNodeID({2, 3}) < BinaryNodeID({2, 3}));
+}
+
+TEST_F(NodeComparing, BinaryEqual)
+{
+  EXPECT_TRUE(BinaryNodeID({2, 2}) == BinaryNodeID({2,2}));
+}
+
+TEST_F(NodeComparing, GuidForLess)
+{
+  Guid l;
+  l.Data1 = 1;
+  Guid r;
+  r.Data1 = 2;
+  EXPECT_TRUE(GuidNodeID(l) < GuidNodeID(r));
+}
+
+TEST_F(NodeComparing, GuidNotLess)
+{
+  Guid l;
+  l.Data1 = 1;
+  Guid r;
+  r.Data1 = 1;
+  EXPECT_FALSE(GuidNodeID(l) < GuidNodeID(r));
+}
+
+TEST_F(NodeComparing, GuidEqual)
+{
+  Guid l;
+  l.Data1 = 1;
+  Guid r;
+  r.Data1 = 1;
+  EXPECT_TRUE(GuidNodeID(l) == GuidNodeID(r));
+}

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -76,7 +76,7 @@ namespace
       case EV_TWO_BYTE:
       {
         return id.TwoByteData.Identifier;
-      } 
+      }
       case EV_FOUR_BYTE:
       {
         return id.FourByteData.Identifier;
@@ -211,23 +211,51 @@ namespace OpcUa
     {
       return false;
     }
-    if (IsInteger(*this) && IsInteger(node) && GetIntegerIdentifier(*this) == GetIntegerIdentifier(node))
+    if (IsInteger(*this) && IsInteger(node))
+    {
+      return GetIntegerIdentifier(*this) == GetIntegerIdentifier(node);
+    }
+    if (IsString(*this) && IsString(node))
+    {
+      return GetStringIdentifier(*this) == GetStringIdentifier(node);
+    }
+    if (IsBinary(*this) && IsBinary(node))
+    {
+      return GetBinaryIdentifier(*this) == GetBinaryIdentifier(node);
+    }
+    if (IsGuid(*this) && IsGuid(node))
+    {
+      return GetGuidIdentifier(*this) == GetGuidIdentifier(node);
+    }
+    return false;
+  }
+
+  bool NodeID::operator < (const NodeID& node) const
+  {
+    if (GetNamespaceIndex(*this) < GetNamespaceIndex(node))
     {
       return true;
     }
-    if (IsString(*this) && IsString(node) && GetStringIdentifier(*this) == GetStringIdentifier(node))
+    if (IsInteger(*this) && IsInteger(node))
     {
-      return true;
+      return GetIntegerIdentifier(*this) < GetIntegerIdentifier(node);
     }
-    if (IsBinary(*this) && IsBinary(node) && GetBinaryIdentifier(*this) == GetBinaryIdentifier(node))
+    if (IsString(*this) && IsString(node))
     {
-      return true;
+      return GetStringIdentifier(*this) < GetStringIdentifier(node);
     }
-    if (IsGuid(*this) && IsGuid(node) && GetGuidIdentifier(*this) == GetGuidIdentifier(node))
+    if (IsBinary(*this) && IsBinary(node))
     {
-      return true;
+      const std::vector<uint8_t>& l = GetBinaryIdentifier(*this);
+      const std::vector<uint8_t>& r = GetBinaryIdentifier(node);
+      return std::lexicographical_compare(l.cbegin(), l.cend(), r.cbegin(), r.cend());
     }
-    return false;    
+    if (IsGuid(*this) && IsGuid(node))
+    {
+      return GetGuidIdentifier(*this) < GetGuidIdentifier(node);
+    }
+
+    return Encoding < node.Encoding;
   }
 
   NodeIDEncoding NodeID::GetEncodingValue() const
