@@ -26,10 +26,18 @@
     </module>
 
     <module>
-      <id>address_space</id>
+      <id>address_space_registry</id>
       <path>./.libs/libaddress_space_addon.so</path>
       <depends_on>
         <id>internal_computer</id>
+      </depends_on>
+    </module>
+
+    <module>
+      <id>standard_namespace</id>
+      <path>./.libs/libstandard_ns_addon.so</path>
+      <depends_on>
+        <id>address_space_registry</id>
       </depends_on>
     </module>
 

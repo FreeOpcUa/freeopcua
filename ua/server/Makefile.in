@@ -213,9 +213,11 @@ libopcua_tcp_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
 libstandard_ns_addon_la_LIBADD =
 am__libstandard_ns_addon_la_SOURCES_DIST =  \
+	src/server/address_space/standard_namespace_addon.cpp \
 	src/server/address_space/standard_namespace.cpp \
 	src/server/address_space/standard_namespace.h
-@BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_OBJECTS = libstandard_ns_addon_la-standard_namespace.lo
+@BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_OBJECTS = libstandard_ns_addon_la-standard_namespace_addon.lo \
+@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon_la-standard_namespace.lo
 libstandard_ns_addon_la_OBJECTS =  \
 	$(am_libstandard_ns_addon_la_OBJECTS)
 libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -278,9 +280,11 @@ opcuaserver_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(opcuaserver_LDFLAGS) $(LDFLAGS) -o $@
 am__server_unittests_SOURCES_DIST =  \
+	src/server/address_space/address_space_internal.cpp \
 	src/server/address_space/standard_namespace.cpp \
 	tests/server/standard_namespace_ut.cpp
-@BUILD_UA_SERVER_TRUE@am_server_unittests_OBJECTS = server_unittests-standard_namespace.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@am_server_unittests_OBJECTS = server_unittests-address_space_internal.$(OBJEXT) \
+@BUILD_UA_SERVER_TRUE@	server_unittests-standard_namespace.$(OBJEXT) \
 @BUILD_UA_SERVER_TRUE@	server_unittests-standard_namespace_ut.$(OBJEXT)
 server_unittests_OBJECTS = $(am_server_unittests_OBJECTS)
 server_unittests_LDADD = $(LDADD)
@@ -663,6 +667,7 @@ lib_LTLIBRARIES = $(am__append_4)
 @BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_SOURCES = \
+@BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace_addon.cpp \
 @BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace.cpp \
 @BUILD_UA_SERVER_TRUE@   src/server/address_space/standard_namespace.h
 
@@ -704,6 +709,7 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 @BUILD_UA_SERVER_TRUE@test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@server_unittests_SOURCES = \
+@BUILD_UA_SERVER_TRUE@  src/server/address_space/address_space_internal.cpp \
 @BUILD_UA_SERVER_TRUE@  src/server/address_space/standard_namespace.cpp \
 @BUILD_UA_SERVER_TRUE@  tests/server/standard_namespace_ut.cpp
 
@@ -932,6 +938,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_tcp_server_la-tcp_server_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_tcp_server_la-thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_attribute.Po@am__quote@
@@ -950,6 +957,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-thread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_unittests-address_space_internal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_unittests-standard_namespace.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_unittests-standard_namespace_ut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-common.Po@am__quote@
@@ -1082,6 +1090,13 @@ libopcua_tcp_server_la-thread.lo: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='libopcua_tcp_server_la-thread.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_tcp_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_tcp_server_la-thread.lo `test -f 'src/thread.cpp' || echo '$(srcdir)/'`src/thread.cpp
+
+libstandard_ns_addon_la-standard_namespace_addon.lo: src/server/address_space/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace_addon.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/server/address_space/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/standard_namespace_addon.cpp' object='libstandard_ns_addon_la-standard_namespace_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/server/address_space/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace_addon.cpp
 
 libstandard_ns_addon_la-standard_namespace.lo: src/server/address_space/standard_namespace.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Tpo -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/server/address_space/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace.cpp
@@ -1341,6 +1356,20 @@ opcuaserver-thread.obj: src/thread.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/thread.cpp' object='opcuaserver-thread.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcuaserver-thread.obj `if test -f 'src/thread.cpp'; then $(CYGPATH_W) 'src/thread.cpp'; else $(CYGPATH_W) '$(srcdir)/src/thread.cpp'; fi`
+
+server_unittests-address_space_internal.o: src/server/address_space/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-address_space_internal.o -MD -MP -MF $(DEPDIR)/server_unittests-address_space_internal.Tpo -c -o server_unittests-address_space_internal.o `test -f 'src/server/address_space/address_space_internal.cpp' || echo '$(srcdir)/'`src/server/address_space/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-address_space_internal.Tpo $(DEPDIR)/server_unittests-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/address_space_internal.cpp' object='server_unittests-address_space_internal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-address_space_internal.o `test -f 'src/server/address_space/address_space_internal.cpp' || echo '$(srcdir)/'`src/server/address_space/address_space_internal.cpp
+
+server_unittests-address_space_internal.obj: src/server/address_space/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-address_space_internal.obj -MD -MP -MF $(DEPDIR)/server_unittests-address_space_internal.Tpo -c -o server_unittests-address_space_internal.obj `if test -f 'src/server/address_space/address_space_internal.cpp'; then $(CYGPATH_W) 'src/server/address_space/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/address_space/address_space_internal.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/server_unittests-address_space_internal.Tpo $(DEPDIR)/server_unittests-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/address_space_internal.cpp' object='server_unittests-address_space_internal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o server_unittests-address_space_internal.obj `if test -f 'src/server/address_space/address_space_internal.cpp'; then $(CYGPATH_W) 'src/server/address_space/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/src/server/address_space/address_space_internal.cpp'; fi`
 
 server_unittests-standard_namespace.o: src/server/address_space/standard_namespace.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(server_unittests_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT server_unittests-standard_namespace.o -MD -MP -MF $(DEPDIR)/server_unittests-standard_namespace.Tpo -c -o server_unittests-standard_namespace.o `test -f 'src/server/address_space/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace.cpp

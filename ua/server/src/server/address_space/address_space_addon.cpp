@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include "address_space_addon.h"
+
 #include "address_space_internal.h"
 
 #include <opc/common/addons_core/addon_manager.h>
@@ -23,10 +25,7 @@ namespace
   using namespace OpcUa::Remote;
 
 
-
-  class AddressSpaceAddon
-    : public Common::Addon
-    , public AddressSpaceRegistry
+  class AddressSpaceAddon : public OpcUa::Internal::AddressSpaceAddon
   {
   public:
     AddressSpaceAddon()
@@ -64,15 +63,41 @@ namespace
       Registry->AddReference(sourceNode, reference);
     }
 
+  public:
+    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    {
+      return Registry->Browse(params);
+    }
+    virtual std::vector<ReferenceDescription> BrowseNext() const
+    {
+      return Registry->BrowseNext();
+    }
+
+  public:
+    virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const
+    {
+      return Registry->Read(filter);
+    }
+
+    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter)
+    {
+      return Registry->Write(filter);
+    }
+
   private:
-    std::shared_ptr<OpcUa::Internal::AddressSpaceMultiplexor> Registry;
+    OpcUa::Internal::AddressSpaceMultiplexor::SharedPtr Registry;
     std::shared_ptr<InternalComputerAddon> InternalComputer;
+
   };
 
-}
-
+} // namespace
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new AddressSpaceAddon());
+  return Common::Addon::UniquePtr(new ::AddressSpaceAddon());
+}
+
+Common::Addon::UniquePtr OpcUa::Internal::AddressSpaceAddonFactory::CreateAddon()
+{
+  return Common::Addon::UniquePtr(new ::AddressSpaceAddon());
 }

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -22,6 +22,9 @@ namespace OpcUa
     class InternalComputerAddon : public Common::Addon
     {
     public:
+      DEFINE_CLASS_POINTERS(InternalComputerAddon);
+
+    public:
       virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const = 0;
 
       virtual void RegisterEndpointsServices(std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints) = 0;
@@ -35,7 +38,7 @@ namespace OpcUa
     };
 
     const char InternalComputerAddonID[] = "internal_computer";
- 
+
   }
 }
 

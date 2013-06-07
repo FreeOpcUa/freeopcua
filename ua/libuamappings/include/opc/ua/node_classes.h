@@ -4,12 +4,14 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
 #ifndef OPC_UA_NODE_CLASSES_H
 #define OPC_UA_NODE_CLASSES_H
+
+#include <stdint.h>
 
 namespace OpcUa
 {

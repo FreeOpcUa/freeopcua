@@ -11,6 +11,8 @@
 #ifndef OPC_UA_VARIABLE_ACCESS_LEVEL_H_
 #define OPC_UA_VARIABLE_ACCESS_LEVEL_H_
 
+#include <stdint.h>
+
 namespace OpcUa
 {
   enum class VariableAccessLevel : uint8_t

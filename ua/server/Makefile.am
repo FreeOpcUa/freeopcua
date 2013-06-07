@@ -156,6 +156,7 @@ libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPIN
 
 lib_LTLIBRARIES += libstandard_ns_addon.la
 libstandard_ns_addon_la_SOURCES = \
+   src/server/address_space/standard_namespace_addon.cpp \
    src/server/address_space/standard_namespace.cpp \
    src/server/address_space/standard_namespace.h
 
@@ -207,6 +208,7 @@ test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 server_unittests_SOURCES = \
+  src/server/address_space/address_space_internal.cpp \
   src/server/address_space/standard_namespace.cpp \
   tests/server/standard_namespace_ut.cpp
 

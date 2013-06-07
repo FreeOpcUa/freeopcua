@@ -118,9 +118,9 @@ namespace OpcUa
 
     NodeID();
     NodeID(const NodeID& node);
-    explicit NodeID(MessageID messageID);
-    explicit NodeID(ReferenceID referenceID);
-    explicit NodeID(ObjectID objectID);
+    NodeID(MessageID messageID);
+    NodeID(ReferenceID referenceID);
+    NodeID(ObjectID objectID);
 
     NodeID& operator= (MessageID messageID)
     {

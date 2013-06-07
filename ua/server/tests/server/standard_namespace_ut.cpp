@@ -8,7 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/ua/object_ids.h>
+#include <opc/ua/attribute_ids.h>
+#include <opc/ua/status_codes.h>
+
 #include <src/server/address_space/standard_namespace.h>
+#include <src/server/address_space/address_space_internal.h>
 
 #include <functional>
 
@@ -22,13 +27,15 @@ class StandardNamespaceStructure : public testing::Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = Internal::CreateStandardNamespace();
+    NameSpace = OpcUa::Internal::CreateAddressSpaceMultiplexor();
+    OpcUa::Internal::FillStandardNamespace(*NameSpace);
   }
 
   virtual void TearDown()
   {
     NameSpace.reset();
   }
+
 protected:
   std::vector<ReferenceDescription> Browse(const NodeID& id) const
   {
@@ -49,7 +56,7 @@ protected:
     return false;
   }
 
-  bool HasAttribute(ObjectID object, AttributeID attribute)
+  bool HasAttribute(OpcUa::ObjectID object, OpcUa::AttributeID attribute)
   {
     ReadParameters params;
     AttributeValueID id;
@@ -96,7 +103,7 @@ protected:
   }
 
 protected:
-  std::unique_ptr<Internal::AddressSpace> NameSpace;
+  Internal::AddressSpaceMultiplexor::UniquePtr NameSpace;
 };
 
 template <typename T>
@@ -110,13 +117,6 @@ inline NodeID Node(T value)
 {
   return NodeID(value);
 }
-
-TEST(AddressSpace, CanBeCreated)
-{
-  std::unique_ptr<Internal::AddressSpace> ns = Internal::CreateStandardNamespace();
-  ASSERT_TRUE(static_cast<bool>(ns));
-}
-
 TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_Organizes_RefType)
 {
   OpcUa::Remote::BrowseParameters params;
@@ -132,7 +132,6 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_Organizes_RefType)
 
 TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_HierarchicalReferencies_Subtypes)
 {
-  std::unique_ptr<Internal::AddressSpace> ns = Internal::CreateStandardNamespace();
   OpcUa::Remote::BrowseParameters params;
   params.Description.NodeToBrowse = ObjectID::RootFolder;
   params.Description.Direction = BrowseDirection::Forward;
