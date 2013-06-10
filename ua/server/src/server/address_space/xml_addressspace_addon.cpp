@@ -8,27 +8,29 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "standard_namespace.h"
+#include "xml_addressspace_loader.h"
 
 namespace OpcUa
 {
   namespace Internal
   {
 
-    void StandardNamespaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
+    void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
       Server::AddressSpaceRegistry::SharedPtr registry = Common::GetAddon<Server::AddressSpaceRegistry>(addons, Server::AddressSpaceRegistryAddonID);
-      FillStandardNamespace(*registry);
+      XmlAddressSpaceLoader xml(*registry);
+      xml.Load("todo.xml");
     }
 
-    void StandardNamespaceAddon::Stop()
+    void XmlAddressSpaceAddon::Stop()
     {
     }
 
   } // namespace Internal
 } // namespace OpcUa
 
+
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Internal::StandardNamespaceAddon());
+  return Common::Addon::UniquePtr(new OpcUa::Internal::XmlAddressSpaceAddon());
 }

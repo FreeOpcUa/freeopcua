@@ -378,7 +378,7 @@ namespace
       void ByteStringType()
       {
         // Base Attributes
-        NewValue(ObjectID::ByteString, AttributeID::NODE_ID,      NodeID(ObjectID::Boolean));
+        NewValue(ObjectID::ByteString, AttributeID::NODE_ID,      NodeID(ObjectID::ByteString));
         NewValue(ObjectID::ByteString, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
         NewValue(ObjectID::ByteString, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ByteString));
         NewValue(ObjectID::ByteString, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ByteString));
@@ -797,11 +797,11 @@ namespace
       void DoubleType()
       {
         // Base Attributes
-        NewValue(ObjectID::Double, AttributeID::NODE_ID,      NodeID(ObjectID::Number));
+        NewValue(ObjectID::Double, AttributeID::NODE_ID,      NodeID(ObjectID::Double));
         NewValue(ObjectID::Double, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
-        NewValue(ObjectID::Double, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Number));
-        NewValue(ObjectID::Double, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Number));
-        NewValue(ObjectID::Double, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Number));
+        NewValue(ObjectID::Double, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Double));
+        NewValue(ObjectID::Double, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Double));
+        NewValue(ObjectID::Double, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Double));
         NewValue(ObjectID::Double, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::Double, AttributeID::USER_WRITE_MASK, 0);
         // Type Attributes
@@ -991,7 +991,7 @@ namespace
       void QualifiedNameType()
       {
         // Base Attributes
-        NewValue(ObjectID::QualifiedName, AttributeID::NODE_ID,      NodeID(ObjectID::Byte));
+        NewValue(ObjectID::QualifiedName, AttributeID::NODE_ID,      NodeID(ObjectID::QualifiedName));
         NewValue(ObjectID::QualifiedName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
         NewValue(ObjectID::QualifiedName, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::QualifiedName));
         NewValue(ObjectID::QualifiedName, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::QualifiedName));
@@ -1172,9 +1172,9 @@ namespace
         // Base Attributes
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::NODE_ID,      NodeID(ObjectID::StructureDeleteNodesItem));
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
-        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EUInformation));
-        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::EUInformation));
-        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::EUInformation));
+        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DeleteNodesItem));
+        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::DeleteNodesItem));
+        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::DeleteNodesItem));
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::USER_WRITE_MASK, 0);
         // Type Attributes
@@ -3590,16 +3590,6 @@ namespace OpcUa
     {
       StandardNamespace ns(registry);
       ns.Fill();
-    }
-
-    void StandardNamespaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
-    {
-      Server::AddressSpaceRegistry::SharedPtr registry = Common::GetAddon<Server::AddressSpaceRegistry>(addons, Server::AddressSpaceRegistryAddonID);
-      FillStandardNamespace(*registry);
-    }
-
-    void StandardNamespaceAddon::Stop()
-    {
     }
 
   } // namespace Internal

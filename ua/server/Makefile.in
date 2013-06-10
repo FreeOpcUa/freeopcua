@@ -77,7 +77,8 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@	libinternal_computer_addon.la \
 @BUILD_UA_SERVER_TRUE@	libendpoints_services_addon.la \
 @BUILD_UA_SERVER_TRUE@	libaddress_space_addon.la \
-@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon.la
+@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon.la \
+@BUILD_UA_SERVER_TRUE@	libxml_ns_addon.la
 check_PROGRAMS = $(am__EXEEXT_4)
 subdir = .
 DIST_COMMON = README $(am__addonsinclude_HEADERS_DIST) \
@@ -226,6 +227,18 @@ libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$@
 @BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_rpath = -rpath \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
+libxml_ns_addon_la_LIBADD =
+am__libxml_ns_addon_la_SOURCES_DIST =  \
+	src/server/address_space/xml_addressspace_addon.cpp \
+	src/server/address_space/xml_addressspace_loader.cpp \
+	src/server/address_space/xml_addressspace_loader.h
+@BUILD_UA_SERVER_TRUE@am_libxml_ns_addon_la_OBJECTS = libxml_ns_addon_la-xml_addressspace_addon.lo \
+@BUILD_UA_SERVER_TRUE@	libxml_ns_addon_la-xml_addressspace_loader.lo
+libxml_ns_addon_la_OBJECTS = $(am_libxml_ns_addon_la_OBJECTS)
+libxml_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libxml_ns_addon_la_LDFLAGS) $(LDFLAGS) -o $@
+@BUILD_UA_SERVER_TRUE@am_libxml_ns_addon_la_rpath = -rpath $(libdir)
 @BUILD_UA_CMD_TRUE@am__EXEEXT_1 = opcua$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_2 = opcuaserver$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_3 = test_opcuaserver$(EXEEXT) \
@@ -371,7 +384,8 @@ SOURCES = $(libaddress_space_addon_la_SOURCES) \
 	$(libinternal_computer_addon_la_SOURCES) \
 	$(libopcua_protocol_la_SOURCES) \
 	$(libopcua_tcp_server_la_SOURCES) \
-	$(libstandard_ns_addon_la_SOURCES) $(libuaclient_test_SOURCES) \
+	$(libstandard_ns_addon_la_SOURCES) \
+	$(libxml_ns_addon_la_SOURCES) $(libuaclient_test_SOURCES) \
 	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
 	$(server_unittests_SOURCES) \
 	$(test_opcua_protocol_addon_SOURCES) \
@@ -384,6 +398,7 @@ DIST_SOURCES = $(am__libaddress_space_addon_la_SOURCES_DIST) \
 	$(am__libopcua_protocol_la_SOURCES_DIST) \
 	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
 	$(am__libstandard_ns_addon_la_SOURCES_DIST) \
+	$(am__libxml_ns_addon_la_SOURCES_DIST) \
 	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
 	$(am__opcuaserver_SOURCES_DIST) \
 	$(am__server_unittests_SOURCES_DIST) \
@@ -673,6 +688,13 @@ lib_LTLIBRARIES = $(am__append_4)
 
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_SOURCES = \
+@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_addon.cpp \
+@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_loader.cpp \
+@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_loader.h
+
+@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_CPPFLAGS = $(INCLUDES)
+@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 ##############################################################################
 # Tests
@@ -839,6 +861,8 @@ libopcua_tcp_server.la: $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_
 	$(libopcua_tcp_server_la_LINK) $(am_libopcua_tcp_server_la_rpath) $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_LIBADD) $(LIBS)
 libstandard_ns_addon.la: $(libstandard_ns_addon_la_OBJECTS) $(libstandard_ns_addon_la_DEPENDENCIES) $(EXTRA_libstandard_ns_addon_la_DEPENDENCIES) 
 	$(libstandard_ns_addon_la_LINK) $(am_libstandard_ns_addon_la_rpath) $(libstandard_ns_addon_la_OBJECTS) $(libstandard_ns_addon_la_LIBADD) $(LIBS)
+libxml_ns_addon.la: $(libxml_ns_addon_la_OBJECTS) $(libxml_ns_addon_la_DEPENDENCIES) $(EXTRA_libxml_ns_addon_la_DEPENDENCIES) 
+	$(libxml_ns_addon_la_LINK) $(am_libxml_ns_addon_la_rpath) $(libxml_ns_addon_la_OBJECTS) $(libxml_ns_addon_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -947,6 +971,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-socket_channel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-computer.Po@am__quote@
@@ -1104,6 +1130,20 @@ libstandard_ns_addon_la-standard_namespace.lo: src/server/address_space/standard
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/standard_namespace.cpp' object='libstandard_ns_addon_la-standard_namespace.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/server/address_space/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace.cpp
+
+libxml_ns_addon_la-xml_addressspace_addon.lo: src/server/address_space/xml_addressspace_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libxml_ns_addon_la-xml_addressspace_addon.lo -MD -MP -MF $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Tpo -c -o libxml_ns_addon_la-xml_addressspace_addon.lo `test -f 'src/server/address_space/xml_addressspace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Tpo $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/xml_addressspace_addon.cpp' object='libxml_ns_addon_la-xml_addressspace_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_addressspace_addon.lo `test -f 'src/server/address_space/xml_addressspace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_addon.cpp
+
+libxml_ns_addon_la-xml_addressspace_loader.lo: src/server/address_space/xml_addressspace_loader.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libxml_ns_addon_la-xml_addressspace_loader.lo -MD -MP -MF $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Tpo -c -o libxml_ns_addon_la-xml_addressspace_loader.lo `test -f 'src/server/address_space/xml_addressspace_loader.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_loader.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Tpo $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/xml_addressspace_loader.cpp' object='libxml_ns_addon_la-xml_addressspace_loader.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_addressspace_loader.lo `test -f 'src/server/address_space/xml_addressspace_loader.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_loader.cpp
 
 libuaclient_test-socket_channel.o: src/socket_channel.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-socket_channel.o -MD -MP -MF $(DEPDIR)/libuaclient_test-socket_channel.Tpo -c -o libuaclient_test-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp

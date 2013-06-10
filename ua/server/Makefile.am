@@ -164,6 +164,15 @@ libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 
+lib_LTLIBRARIES += libxml_ns_addon.la
+libxml_ns_addon_la_SOURCES = \
+   src/server/address_space/xml_addressspace_addon.cpp \
+   src/server/address_space/xml_addressspace_loader.cpp \
+   src/server/address_space/xml_addressspace_loader.h
+
+libxml_ns_addon_la_CPPFLAGS = $(INCLUDES)
+libxml_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+	
 endif
 
 

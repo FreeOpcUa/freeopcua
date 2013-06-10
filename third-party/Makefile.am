@@ -37,17 +37,17 @@ check: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gmock
 	$(MAKE) -C gtest
 
-clean: gmock/Makefile gtest/Makefile
-	$(MAKE) -C gtest clean
-	$(MAKE) -C gmock clean
+clean:
+	test -e gtest/Makefile && $(MAKE) -C gtest clean
+	test -e gmock/Makefile && $(MAKE) -C gmock clean
 
 
 dist: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest distclean
 	$(MAKE) -C gmock distclean
 
-distclean: gmock/Makefile gtest/Makefile
-	$(MAKE) -C gtest distclean
-	$(MAKE) -C gmock distclean
+distclean:
+	test -e gtest/Makefile && $(MAKE) -C gtest distclean
+	test -e gmock/Makefile && $(MAKE) -C gmock distclean
 	rm -rf Makefile
 
