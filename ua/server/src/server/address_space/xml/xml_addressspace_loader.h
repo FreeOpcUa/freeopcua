@@ -13,8 +13,8 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
-
 #include <opc/ua/server/addons/address_space_registry.h>
+
 
 namespace OpcUa
 {

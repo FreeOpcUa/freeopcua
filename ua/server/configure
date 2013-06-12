@@ -15183,6 +15183,14 @@ done
 #################################################################
 ac_config_files="$ac_config_files Makefile"
 
+ac_config_files="$ac_config_files src/Makefile"
+
+ac_config_files="$ac_config_files src/server/Makefile"
+
+ac_config_files="$ac_config_files src/server/address_space/Makefile"
+
+ac_config_files="$ac_config_files src/server/address_space/xml/Makefile"
+
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16292,6 +16300,10 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "src/server/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/Makefile" ;;
+    "src/server/address_space/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/address_space/Makefile" ;;
+    "src/server/address_space/xml/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/address_space/xml/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

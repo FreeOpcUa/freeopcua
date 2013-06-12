@@ -163,17 +163,10 @@ libstandard_ns_addon_la_SOURCES = \
 libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
-
-lib_LTLIBRARIES += libxml_ns_addon.la
-libxml_ns_addon_la_SOURCES = \
-   src/server/address_space/xml_addressspace_addon.cpp \
-   src/server/address_space/xml_addressspace_loader.cpp \
-   src/server/address_space/xml_addressspace_loader.h
-
-libxml_ns_addon_la_CPPFLAGS = $(INCLUDES)
-libxml_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
-	
 endif
+
+SUBDIRS = src
+
 
 
 ##############################################################################
@@ -221,7 +214,7 @@ server_unittests_SOURCES = \
   src/server/address_space/standard_namespace.cpp \
   tests/server/standard_namespace_ut.cpp
 
-server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) -I/usr/include/libxml2
 server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
 test_tcp_server_SOURCES = \

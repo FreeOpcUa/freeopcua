@@ -19,7 +19,20 @@ namespace OpcUa
     {
       Server::AddressSpaceRegistry::SharedPtr registry = Common::GetAddon<Server::AddressSpaceRegistry>(addons, Server::AddressSpaceRegistryAddonID);
       XmlAddressSpaceLoader xml(*registry);
-      xml.Load("todo.xml");
+      for (const Common::Parameter& param : params.Parameters)
+      {
+        if (param.Name == "file_name")
+        {
+          try
+          {
+            xml.Load(param.Value.c_str());
+          }
+          catch (const std::exception& err)
+          {
+            std::cerr << "Unable to load address space from the file '" << param.Value << "'. " << err.what() << std::endl;
+          }
+        }
+      }
     }
 
     void XmlAddressSpaceAddon::Stop()

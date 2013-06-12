@@ -131,6 +131,10 @@ AC_CHECK_HEADERS([unistd.h])
 
 #################################################################
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([src/Makefile])
+AC_CONFIG_FILES([src/server/Makefile])
+AC_CONFIG_FILES([src/server/address_space/Makefile])
+AC_CONFIG_FILES([src/server/address_space/xml/Makefile])
 
 AC_OUTPUT
 

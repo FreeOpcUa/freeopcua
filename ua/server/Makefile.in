@@ -77,8 +77,7 @@ bin_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
 @BUILD_UA_SERVER_TRUE@	libinternal_computer_addon.la \
 @BUILD_UA_SERVER_TRUE@	libendpoints_services_addon.la \
 @BUILD_UA_SERVER_TRUE@	libaddress_space_addon.la \
-@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon.la \
-@BUILD_UA_SERVER_TRUE@	libxml_ns_addon.la
+@BUILD_UA_SERVER_TRUE@	libstandard_ns_addon.la
 check_PROGRAMS = $(am__EXEEXT_4)
 subdir = .
 DIST_COMMON = README $(am__addonsinclude_HEADERS_DIST) \
@@ -227,18 +226,6 @@ libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$@
 @BUILD_UA_SERVER_TRUE@am_libstandard_ns_addon_la_rpath = -rpath \
 @BUILD_UA_SERVER_TRUE@	$(libdir)
-libxml_ns_addon_la_LIBADD =
-am__libxml_ns_addon_la_SOURCES_DIST =  \
-	src/server/address_space/xml_addressspace_addon.cpp \
-	src/server/address_space/xml_addressspace_loader.cpp \
-	src/server/address_space/xml_addressspace_loader.h
-@BUILD_UA_SERVER_TRUE@am_libxml_ns_addon_la_OBJECTS = libxml_ns_addon_la-xml_addressspace_addon.lo \
-@BUILD_UA_SERVER_TRUE@	libxml_ns_addon_la-xml_addressspace_loader.lo
-libxml_ns_addon_la_OBJECTS = $(am_libxml_ns_addon_la_OBJECTS)
-libxml_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(libxml_ns_addon_la_LDFLAGS) $(LDFLAGS) -o $@
-@BUILD_UA_SERVER_TRUE@am_libxml_ns_addon_la_rpath = -rpath $(libdir)
 @BUILD_UA_CMD_TRUE@am__EXEEXT_1 = opcua$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_2 = opcuaserver$(EXEEXT)
 @BUILD_UA_SERVER_TRUE@am__EXEEXT_3 = test_opcuaserver$(EXEEXT) \
@@ -384,8 +371,7 @@ SOURCES = $(libaddress_space_addon_la_SOURCES) \
 	$(libinternal_computer_addon_la_SOURCES) \
 	$(libopcua_protocol_la_SOURCES) \
 	$(libopcua_tcp_server_la_SOURCES) \
-	$(libstandard_ns_addon_la_SOURCES) \
-	$(libxml_ns_addon_la_SOURCES) $(libuaclient_test_SOURCES) \
+	$(libstandard_ns_addon_la_SOURCES) $(libuaclient_test_SOURCES) \
 	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
 	$(server_unittests_SOURCES) \
 	$(test_opcua_protocol_addon_SOURCES) \
@@ -398,7 +384,6 @@ DIST_SOURCES = $(am__libaddress_space_addon_la_SOURCES_DIST) \
 	$(am__libopcua_protocol_la_SOURCES_DIST) \
 	$(am__libopcua_tcp_server_la_SOURCES_DIST) \
 	$(am__libstandard_ns_addon_la_SOURCES_DIST) \
-	$(am__libxml_ns_addon_la_SOURCES_DIST) \
 	$(libuaclient_test_SOURCES) $(am__opcua_SOURCES_DIST) \
 	$(am__opcuaserver_SOURCES_DIST) \
 	$(am__server_unittests_SOURCES_DIST) \
@@ -406,6 +391,13 @@ DIST_SOURCES = $(am__libaddress_space_addon_la_SOURCES_DIST) \
 	$(am__test_opcuaserver_SOURCES_DIST) \
 	$(am__test_tcp_server_SOURCES_DIST) \
 	$(am__test_tcp_server_addon_SOURCES_DIST)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-dvi-recursive install-exec-recursive \
+	install-html-recursive install-info-recursive \
+	install-pdf-recursive install-ps-recursive install-recursive \
+	installcheck-recursive installdirs-recursive pdf-recursive \
+	ps-recursive uninstall-recursive
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -423,10 +415,16 @@ am__uaserverinclude_HEADERS_DIST = include/opc/ua/server/server.h \
 	include/opc/ua/server/tcp_server.h
 HEADERS = $(addonsinclude_HEADERS) $(opcuainclude_HEADERS) \
 	$(uaclientinclude_HEADERS) $(uaserverinclude_HEADERS)
+RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+  distclean-recursive maintainer-clean-recursive
+AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+	$(RECURSIVE_CLEAN_TARGETS:-recursive=) tags TAGS ctags CTAGS \
+	distdir dist dist-all distcheck
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
 red=; grn=; lgn=; blu=; std=
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -436,6 +434,31 @@ am__remove_distdir = \
       && rm -rf "$(distdir)" \
       || { sleep 5 && rm -rf "$(distdir)"; }; \
   else :; fi
+am__relativize = \
+  dir0=`pwd`; \
+  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
+  sed_rest='s,^[^/]*/*,,'; \
+  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
+  sed_butlast='s,/*[^/]*$$,,'; \
+  while test -n "$$dir1"; do \
+    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
+    if test "$$first" != "."; then \
+      if test "$$first" = ".."; then \
+        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
+        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
+      else \
+        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
+        if test "$$first2" = "$$first"; then \
+          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
+        else \
+          dir2="../$$dir2"; \
+        fi; \
+        dir0="$$dir0"/"$$first"; \
+      fi; \
+    fi; \
+    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
+  done; \
+  reldir="$$dir2"
 DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
@@ -688,13 +711,7 @@ lib_LTLIBRARIES = $(am__append_4)
 
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 @BUILD_UA_SERVER_TRUE@libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
-@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_SOURCES = \
-@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_addon.cpp \
-@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_loader.cpp \
-@BUILD_UA_SERVER_TRUE@   src/server/address_space/xml_addressspace_loader.h
-
-@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_CPPFLAGS = $(INCLUDES)
-@BUILD_UA_SERVER_TRUE@libxml_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+SUBDIRS = src
 
 ##############################################################################
 # Tests
@@ -735,7 +752,7 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 @BUILD_UA_SERVER_TRUE@  src/server/address_space/standard_namespace.cpp \
 @BUILD_UA_SERVER_TRUE@  tests/server/standard_namespace_ut.cpp
 
-@BUILD_UA_SERVER_TRUE@server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+@BUILD_UA_SERVER_TRUE@server_unittests_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) -I/usr/include/libxml2
 @BUILD_UA_SERVER_TRUE@server_unittests_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 @BUILD_UA_SERVER_TRUE@test_tcp_server_SOURCES = \
 @BUILD_UA_SERVER_TRUE@  src/socket_channel.cpp \
@@ -762,7 +779,7 @@ libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB
 @BUILD_UA_SERVER_TRUE@test_opcua_protocol_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 @BUILD_UA_SERVER_TRUE@test_opcua_protocol_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .cpp .lo .o .obj
@@ -861,8 +878,6 @@ libopcua_tcp_server.la: $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_
 	$(libopcua_tcp_server_la_LINK) $(am_libopcua_tcp_server_la_rpath) $(libopcua_tcp_server_la_OBJECTS) $(libopcua_tcp_server_la_LIBADD) $(LIBS)
 libstandard_ns_addon.la: $(libstandard_ns_addon_la_OBJECTS) $(libstandard_ns_addon_la_DEPENDENCIES) $(EXTRA_libstandard_ns_addon_la_DEPENDENCIES) 
 	$(libstandard_ns_addon_la_LINK) $(am_libstandard_ns_addon_la_rpath) $(libstandard_ns_addon_la_OBJECTS) $(libstandard_ns_addon_la_LIBADD) $(LIBS)
-libxml_ns_addon.la: $(libxml_ns_addon_la_OBJECTS) $(libxml_ns_addon_la_DEPENDENCIES) $(EXTRA_libxml_ns_addon_la_DEPENDENCIES) 
-	$(libxml_ns_addon_la_LINK) $(am_libxml_ns_addon_la_rpath) $(libxml_ns_addon_la_OBJECTS) $(libxml_ns_addon_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -971,8 +986,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_session.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-socket_channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-computer.Po@am__quote@
@@ -1130,20 +1143,6 @@ libstandard_ns_addon_la-standard_namespace.lo: src/server/address_space/standard
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/standard_namespace.cpp' object='libstandard_ns_addon_la-standard_namespace.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/server/address_space/standard_namespace.cpp' || echo '$(srcdir)/'`src/server/address_space/standard_namespace.cpp
-
-libxml_ns_addon_la-xml_addressspace_addon.lo: src/server/address_space/xml_addressspace_addon.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libxml_ns_addon_la-xml_addressspace_addon.lo -MD -MP -MF $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Tpo -c -o libxml_ns_addon_la-xml_addressspace_addon.lo `test -f 'src/server/address_space/xml_addressspace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_addon.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Tpo $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/xml_addressspace_addon.cpp' object='libxml_ns_addon_la-xml_addressspace_addon.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_addressspace_addon.lo `test -f 'src/server/address_space/xml_addressspace_addon.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_addon.cpp
-
-libxml_ns_addon_la-xml_addressspace_loader.lo: src/server/address_space/xml_addressspace_loader.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libxml_ns_addon_la-xml_addressspace_loader.lo -MD -MP -MF $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Tpo -c -o libxml_ns_addon_la-xml_addressspace_loader.lo `test -f 'src/server/address_space/xml_addressspace_loader.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_loader.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Tpo $(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/address_space/xml_addressspace_loader.cpp' object='libxml_ns_addon_la-xml_addressspace_loader.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_addressspace_loader.lo `test -f 'src/server/address_space/xml_addressspace_loader.cpp' || echo '$(srcdir)/'`src/server/address_space/xml_addressspace_loader.cpp
 
 libuaclient_test-socket_channel.o: src/socket_channel.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-socket_channel.o -MD -MP -MF $(DEPDIR)/libuaclient_test-socket_channel.Tpo -c -o libuaclient_test-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
@@ -1791,6 +1790,76 @@ uninstall-uaserverincludeHEADERS:
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(uaserverincludedir)'; $(am__uninstall_files_from_dir)
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@fail= failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+$(RECURSIVE_CLEAN_TARGETS):
+	@fail= failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+	done
+
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -1801,10 +1870,23 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	set x; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      set "$$@" "$$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -1823,7 +1905,7 @@ TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 	  fi; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -1968,6 +2050,31 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    $(am__make_dryrun) \
+	      || test -d "$(distdir)/$$subdir" \
+	      || $(MKDIR_P) "$(distdir)/$$subdir" \
+	      || exit 1; \
+	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+	    $(am__relativize); \
+	    new_distdir=$$reldir; \
+	    dir1=$$subdir; dir2="$(top_distdir)"; \
+	    $(am__relativize); \
+	    new_top_distdir=$$reldir; \
+	    echo " (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir="$$new_top_distdir" distdir="$$new_distdir" \\"; \
+	    echo "     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)"; \
+	    ($(am__cd) $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$new_top_distdir" \
+	        distdir="$$new_distdir" \
+		am__remove_distdir=: \
+		am__skip_length_check=: \
+		am__skip_mode_fix=: \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 	-test -n "$(am__skip_mode_fix)" \
 	|| find "$(distdir)" -type d ! -perm -755 \
 		-exec chmod u+rwx,go+rx {} \; -o \
@@ -2101,24 +2208,25 @@ distcleancheck: distclean
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-check: check-am
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
 		config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(uaclientincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	if test -z '$(STRIP)'; then \
 	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
@@ -2140,27 +2248,27 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 	clean-libLTLIBRARIES clean-libtool mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
 html-am:
 
-info: info-am
+info: info-recursive
 
 info-am:
 
@@ -2168,49 +2276,49 @@ install-data-am: install-addonsincludeHEADERS install-configDATA \
 	install-opcuaincludeHEADERS install-uaclientincludeHEADERS \
 	install-uaserverincludeHEADERS
 
-install-dvi: install-dvi-am
+install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
-install-html: install-html-am
+install-html: install-html-recursive
 
 install-html-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-info-am:
 
 install-man:
 
-install-pdf: install-pdf-am
+install-pdf: install-pdf-recursive
 
 install-pdf-am:
 
-install-ps: install-ps-am
+install-ps: install-ps-recursive
 
 install-ps-am:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
@@ -2219,27 +2327,30 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-binPROGRAMS \
 	uninstall-opcuaincludeHEADERS uninstall-uaclientincludeHEADERS \
 	uninstall-uaserverincludeHEADERS
 
-.MAKE: all check-am install-am install-strip
+.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all check-am \
+	ctags-recursive install-am install-strip tags-recursive
 
-.PHONY: CTAGS GTAGS all all-am am--refresh check check-TESTS check-am \
-	clean clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
-	clean-libLTLIBRARIES clean-libtool ctags dist dist-all \
-	dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-compile \
-	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install \
-	install-addonsincludeHEADERS install-am install-binPROGRAMS \
-	install-configDATA install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-opcuaincludeHEADERS \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-uaclientincludeHEADERS \
-	install-uaserverincludeHEADERS installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+.PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
+	all all-am am--refresh check check-TESTS check-am clean \
+	clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
+	clean-libLTLIBRARIES clean-libtool ctags ctags-recursive dist \
+	dist-all dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar \
+	dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-hdr \
+	distclean-libtool distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-addonsincludeHEADERS install-am \
+	install-binPROGRAMS install-configDATA install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLTLIBRARIES install-man \
+	install-opcuaincludeHEADERS install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip \
+	install-uaclientincludeHEADERS install-uaserverincludeHEADERS \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-recursive uninstall \
 	uninstall-addonsincludeHEADERS uninstall-am \
 	uninstall-binPROGRAMS uninstall-configDATA \
 	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
