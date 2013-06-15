@@ -27,6 +27,7 @@ TESTS = xml_address_space_ut
 check_PROGRAMS = $(TESTS)
 
 xml_address_space_ut_SOURCES = \
+  ../address_space_internal.cpp \
   xml_addressspace_loader.cpp \
   tests/xml_addressspace_ut.cpp
 

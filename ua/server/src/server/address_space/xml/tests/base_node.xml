@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<address_space version="1">
+
+  <node>
+    <attributes>
+      <id type="numeric">84</id>
+      <class>object</class>
+      <browse_name>Root</browse_name>
+      <display_name>Root</display_name>
+      <description>Root</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+  </node>
+
+</address_space>

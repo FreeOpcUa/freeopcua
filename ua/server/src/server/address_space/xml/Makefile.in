@@ -112,6 +112,7 @@ libxml_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(libxml_ns_addon_la_LDFLAGS) $(LDFLAGS) -o $@
 am__EXEEXT_1 = xml_address_space_ut$(EXEEXT)
 am_xml_address_space_ut_OBJECTS =  \
+	xml_address_space_ut-address_space_internal.$(OBJEXT) \
 	xml_address_space_ut-xml_addressspace_loader.$(OBJEXT) \
 	xml_address_space_ut-xml_addressspace_ut.$(OBJEXT)
 xml_address_space_ut_OBJECTS = $(am_xml_address_space_ut_OBJECTS)
@@ -296,6 +297,7 @@ libxml_ns_addon_la_SOURCES = \
 libxml_ns_addon_la_CPPFLAGS = $(INCLUDES) -I/usr/include/libxml2
 libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 xml_address_space_ut_SOURCES = \
+  ../address_space_internal.cpp \
   xml_addressspace_loader.cpp \
   tests/xml_addressspace_ut.cpp
 
@@ -390,6 +392,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_addressspace_loader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-address_space_internal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-xml_addressspace_loader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-xml_addressspace_ut.Po@am__quote@
 
@@ -427,6 +430,20 @@ libxml_ns_addon_la-xml_addressspace_loader.lo: xml_addressspace_loader.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='xml_addressspace_loader.cpp' object='libxml_ns_addon_la-xml_addressspace_loader.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_addressspace_loader.lo `test -f 'xml_addressspace_loader.cpp' || echo '$(srcdir)/'`xml_addressspace_loader.cpp
+
+xml_address_space_ut-address_space_internal.o: ../address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_internal.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo -c -o xml_address_space_ut-address_space_internal.o `test -f '../address_space_internal.cpp' || echo '$(srcdir)/'`../address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo $(DEPDIR)/xml_address_space_ut-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space_internal.cpp' object='xml_address_space_ut-address_space_internal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_internal.o `test -f '../address_space_internal.cpp' || echo '$(srcdir)/'`../address_space_internal.cpp
+
+xml_address_space_ut-address_space_internal.obj: ../address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_internal.obj -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo -c -o xml_address_space_ut-address_space_internal.obj `if test -f '../address_space_internal.cpp'; then $(CYGPATH_W) '../address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space_internal.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo $(DEPDIR)/xml_address_space_ut-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space_internal.cpp' object='xml_address_space_ut-address_space_internal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_internal.obj `if test -f '../address_space_internal.cpp'; then $(CYGPATH_W) '../address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space_internal.cpp'; fi`
 
 xml_address_space_ut-xml_addressspace_loader.o: xml_addressspace_loader.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-xml_addressspace_loader.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-xml_addressspace_loader.Tpo -c -o xml_address_space_ut-xml_addressspace_loader.o `test -f 'xml_addressspace_loader.cpp' || echo '$(srcdir)/'`xml_addressspace_loader.cpp

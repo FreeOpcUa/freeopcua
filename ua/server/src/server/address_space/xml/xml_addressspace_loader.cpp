@@ -106,11 +106,72 @@ namespace
     std::vector<Reference> References;
   };
 
+  class NodeProcessor : private Common::Interface
+  {
+  public:
+    virtual void Process(const xmlNode& node) = 0;
+  };
+
+  struct XmlDocDeleter
+  {
+    void operator() (xmlDocPtr doc)
+    {
+      xmlFreeDoc(doc);
+    }
+  };
+
+  struct LibXmlFree
+  {
+    void operator() (void* ptr)
+    {
+      xmlFree(ptr);
+    }
+  };
+
+  class ConfigurationProcessor : private NodeProcessor
+  {
+  public:
+    std::map<NodeID, Node> Process(xmlDoc& doc)
+    {
+      xmlNodePtr rootNode = xmlDocGetRootElement(&doc);
+      EnsureRootNodeValid(*rootNode);
+
+      return std::map<NodeID, Node>();
+    }
+
+  private:
+    virtual void Process(const xmlNode& rootNode)
+    {
+    }
+
+  private:
+    void EnsureRootNodeValid(xmlNode& rootNode)
+    {
+      if (xmlStrcmp(rootNode.name, (const xmlChar*)"address_space"))
+      {
+        throw std::logic_error(std::string("Invalid root element '") + (const char*)rootNode.name + std::string("'."));
+      }
+      std::unique_ptr<xmlChar, LibXmlFree> version(xmlGetProp(&rootNode, (const xmlChar*)"version"), LibXmlFree());
+      if (!version)
+      {
+        throw std::logic_error("Address space element has no 'version' attribute.");
+      }
+      if (xmlStrcmp(version.get(), (const xmlChar*)"1"))
+      {
+        throw std::logic_error(std::string("Unknown version '") + (const char*)version.get() + std::string("'of address space."));
+      }
+    }
+  };
+
   std::map<NodeID, Node> ParseConfig(const char* configPath)
   {
-    xmlDocPtr doc = xmlParseFile(configPath);
-    std::map<NodeID, Node> nodes;
-    return nodes;
+    std::unique_ptr<xmlDoc, XmlDocDeleter> doc(xmlParseFile(configPath), XmlDocDeleter());
+    if (!doc)
+    {
+      throw std::logic_error(std::string("Cannot load file '") + std::string(configPath) + std::string("'"));
+    }
+    ConfigurationProcessor xmlConfiguration;
+    return xmlConfiguration.Process(*doc);
   }
  }
 

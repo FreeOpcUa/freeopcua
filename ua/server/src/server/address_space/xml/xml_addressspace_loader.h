@@ -31,6 +31,11 @@ namespace OpcUa
 
       void Load(const char* fileName);
 
+      void Load(const std::string& fileName)
+      {
+        Load(fileName.c_str());
+      }
+
     private:
       OpcUa::Server::AddressSpaceRegistry& Registry;
     };
