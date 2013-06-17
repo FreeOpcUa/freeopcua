@@ -184,7 +184,11 @@ namespace
         }
         else if (IsBrowseName(*subNode))
         {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::BROWSE_NAME, GetBrowseName(*subNode)));
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::BROWSE_NAME, GetText(*subNode)));
+        }
+        else if (IsDisplayName(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::DISPLAY_NAME, GetText(*subNode)));
         }
         else if (Debug)
         {
@@ -212,6 +216,11 @@ namespace
     bool IsBrowseName(const xmlNode& node) const
     {
       return IsXmlNode(node, "browse_name");
+    }
+
+    bool IsDisplayName(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "display_name");
     }
 
     NodeID GetNodeID(xmlNode& node) const
@@ -272,7 +281,7 @@ namespace
       throw std::logic_error(stream.str());
     }
 
-    std::string GetBrowseName(xmlNode& node) const
+    std::string GetText(xmlNode& node) const
     {
       std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
       if (!content)

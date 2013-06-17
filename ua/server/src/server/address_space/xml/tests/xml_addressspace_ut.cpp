@@ -151,4 +151,8 @@ TEST_F(XmlAddressSpace, NodeWithBaseAttributes)
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_ID));
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_CLASS));
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::BROWSE_NAME));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DISPLAY_NAME));
 }
+
+// TODO Add tests for several appearing nodes in xml.
+// TODO Add tests for all node classes and for invalid classe names.
