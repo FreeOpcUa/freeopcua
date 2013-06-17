@@ -99,7 +99,6 @@ namespace
   {
     AttributeID ID;
     Variant Value;
-
     Attribute(AttributeID id, Variant value)
       : ID(id)
       , Value(value)
@@ -183,6 +182,10 @@ namespace
         {
           OpcUaNode.Attributes.push_back(Attribute(AttributeID::NODE_CLASS, (uint32_t)GetNodeClass(*subNode)));
         }
+        else if (IsBrowseName(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::BROWSE_NAME, GetBrowseName(*subNode)));
+        }
         else if (Debug)
         {
           std::cerr << "Unknown attribute '" << subNode->name << "' at line " << subNode->line <<  "." << std::endl;
@@ -206,62 +209,79 @@ namespace
       return IsXmlNode(node, "class");
     }
 
+    bool IsBrowseName(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "browse_name");
+    }
+
     NodeID GetNodeID(xmlNode& node) const
     {
-      const xmlChar* content = xmlNodeGetContent(&node);
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
       if (!content)
       {
         std::stringstream stream;
         stream << "Empty node id. Line " << node.line << ".";
         throw std::logic_error(stream.str());
       }
-      return NumericNodeID(atoi((const char*)content));
+      return NumericNodeID(atoi((const char*)content.get()));
     }
 
     NodeClass GetNodeClass(xmlNode& node) const
     {
-      const xmlChar* content = xmlNodeGetContent(&node);
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
       if (!content)
       {
         std::stringstream stream;
         stream << "Empty node class. Line " << node.line << ".";
         throw std::logic_error(stream.str());
       }
-      if (!xmlStrcmp(content, "object"))
+      if (!xmlStrcmp(content.get(), "object"))
       {
         return NodeClass::Object;
       }
-      if (!xmlStrcmp(content, "variable"))
+      if (!xmlStrcmp(content.get(), "variable"))
       {
         return NodeClass::Variable;
       }
-      if (!xmlStrcmp(content, "method"))
+      if (!xmlStrcmp(content.get(), "method"))
       {
         return NodeClass::Method;
       }
-      if (!xmlStrcmp(content, "object_type"))
+      if (!xmlStrcmp(content.get(), "object_type"))
       {
         return NodeClass::ObjectType;
       }
-      if (!xmlStrcmp(content, "variable_type"))
+      if (!xmlStrcmp(content.get(), "variable_type"))
       {
         return NodeClass::VariableType;
       }
-      if (!xmlStrcmp(content, "reference_type"))
+      if (!xmlStrcmp(content.get(), "reference_type"))
       {
         return NodeClass::ReferenceType;
       }
-      if (!xmlStrcmp(content, "data_type"))
+      if (!xmlStrcmp(content.get(), "data_type"))
       {
         return NodeClass::DataType;
       }
-      if (!xmlStrcmp(content, "data_type"))
+      if (!xmlStrcmp(content.get(), "data_type"))
       {
         return NodeClass::View;
       }
       std::stringstream stream;
-      stream << "Unknown node class '" << (const char*)content << "'. Line " << node.line << ".";
+      stream << "Unknown node class '" << (const char*)content.get() << "'. Line " << node.line << ".";
       throw std::logic_error(stream.str());
+    }
+
+    std::string GetBrowseName(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+      {
+        std::stringstream stream;
+        stream << "Empty browse name. Line " << node.line << ".";
+        throw std::logic_error(stream.str());
+      }
+      return std::string((const char*)content.get());
     }
 
   private:
