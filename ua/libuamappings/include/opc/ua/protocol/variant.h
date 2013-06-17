@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -109,7 +109,7 @@ namespace OpcUa
     explicit VariantValue(const QualifiedName& val);
     explicit VariantValue(const LocalizedText& val);
     explicit VariantValue(const DataValue& val);
-    explicit VariantValue(const Variant& val);
+ //   explicit VariantValue(const Variant& val);
     explicit VariantValue(const DiagnosticInfo& val);
 
     explicit VariantValue(const std::vector<bool>& val);
@@ -193,7 +193,14 @@ namespace OpcUa
 
     bool IsNul() const;
     Variant();
-//    Variant(const Variant& var);
+
+    template <typename T>
+    Variant& operator=(const T& value)
+    {
+      Value = value;
+      Type = Value.GetType();
+      return *this;
+    }
 
     template <typename T>
     Variant(const T& value)
@@ -202,6 +209,7 @@ namespace OpcUa
       Type = Value.GetType();
     }
 
+    Variant(const Variant& var);
     Variant& operator= (const Variant& variant);
   };
 } // namespace OpcUa

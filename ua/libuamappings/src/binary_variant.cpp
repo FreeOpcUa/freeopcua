@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -198,7 +198,7 @@ namespace OpcUa
     VariantValue::VariantValue(const QualifiedName& val) : Name{val} {}
     VariantValue::VariantValue(const LocalizedText& val) : Text{val} {}
     VariantValue::VariantValue(const DataValue& val) : Value{val} {}
-    VariantValue::VariantValue(const Variant& val) : Variants{val} {}
+//    VariantValue::VariantValue(const Variant& val) : Variants{val} {}
     VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{val} {}
 
     VariantValue::VariantValue(const std::vector<bool>& val) : Boolean(val) {}
@@ -494,6 +494,14 @@ namespace OpcUa
     *this = var;
   }
 */
+
+  Variant::Variant(const Variant& var)
+  {
+    Type = var.Type;
+    Dimensions = var.Dimensions;
+    CopyValue(Type, var.Value, this->Value);
+  }
+
   Variant& Variant::operator= (const Variant& var)
   {
     Type = var.Type;
@@ -698,7 +706,7 @@ namespace OpcUa
       if (encodingMask & HAS_DIMENSIONS_MASK)
       {
         DeserializeContainer(*this, var.Dimensions);
-      }      
+      }
     }
   } // namespace Binary
 } // namespace OpcUa

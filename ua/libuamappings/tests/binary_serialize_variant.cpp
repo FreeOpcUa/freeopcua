@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -12,6 +12,7 @@
 
 #include <opc/ua/extension_identifiers.h>
 #include <opc/ua/message_identifiers.h>
+#include <opc/ua/node_classes.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/types.h>
@@ -239,6 +240,7 @@ TEST(Variant, AssignBoolValue)
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
+
 // TODO add tests for assign and initializing of variant with different types
 
 TEST(Variant, InitializeWithBoolVector)
@@ -254,6 +256,14 @@ TEST(Variant, InitializeWithString)
 {
   const OpcUa::Variant var(std::string("string"));
   ASSERT_EQ(var.Type, OpcUa::VariantType::STRING);
+  ASSERT_FALSE(var.IsArray());
+  ASSERT_FALSE(var.IsNul());
+}
+
+TEST(Variant, InitializeWithVariant)
+{
+  const OpcUa::Variant var((uint32_t)OpcUa::NodeClass::Object);
+  ASSERT_EQ(var.Type, OpcUa::VariantType::UINT32);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
