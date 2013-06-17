@@ -27,7 +27,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader);
 
     public:
-      explicit XmlAddressSpaceLoader(OpcUa::Server::AddressSpaceRegistry& registry);
+      explicit XmlAddressSpaceLoader(OpcUa::Server::AddressSpaceRegistry& registry, bool debug = false);
 
       void Load(const char* fileName);
 
@@ -38,6 +38,7 @@ namespace OpcUa
 
     private:
       OpcUa::Server::AddressSpaceRegistry& Registry;
+      const bool Debug;
     };
 
 

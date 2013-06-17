@@ -148,6 +148,9 @@ TEST_F(XmlAddressSpace, NodeWithBaseAttributes)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  std::vector<ReferenceDescription> references = Browse(NodeID());
-  ASSERT_EQ(references.size(), 1);
+//  std::vector<ReferenceDescription> references = Browse(NodeID());
+//  ASSERT_EQ(references.size(), 1);
+//  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_ID));
+//  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_CLASS));
+//  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::BROWSE_NAME));
 }
