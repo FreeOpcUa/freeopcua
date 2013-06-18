@@ -8,7 +8,7 @@
       <browse_name>Root</browse_name>
       <display_name>Root</display_name>
       <description>Root</description>
-      <write_mask>0</write_mask>
+      <write_mask>10</write_mask>
       <user_write_mask>0</user_write_mask>
     </attributes>
   </node>

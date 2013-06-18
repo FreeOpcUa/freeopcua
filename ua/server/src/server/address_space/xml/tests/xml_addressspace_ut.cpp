@@ -143,16 +143,52 @@ TEST_F(XmlAddressSpace, NoExceptionIfDocumentValid)
   ASSERT_NO_THROW(loader.Load(ConfigPath("empty.xml")));
 }
 
-TEST_F(XmlAddressSpace, NodeWithBaseAttributes)
+TEST_F(XmlAddressSpace, BaseNodeHasID)
 {
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_ID));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasClass)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::NODE_CLASS));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasBrowseName)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::BROWSE_NAME));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasDiaplayName)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DISPLAY_NAME));
 }
 
+TEST_F(XmlAddressSpace, BaseNodeHasDescription)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DESCRIPTION));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasWriteMask)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::WRITE_MASK));
+}
 // TODO Add tests for several appearing nodes in xml.
 // TODO Add tests for all node classes and for invalid classe names.

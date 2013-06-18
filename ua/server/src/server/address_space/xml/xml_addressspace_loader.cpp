@@ -190,6 +190,14 @@ namespace
         {
           OpcUaNode.Attributes.push_back(Attribute(AttributeID::DISPLAY_NAME, GetText(*subNode)));
         }
+        else if (IsDescription(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::DESCRIPTION, GetText(*subNode)));
+        }
+        else if (IsWriteMask(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::WRITE_MASK, GetInt(*subNode)));
+        }
         else if (Debug)
         {
           std::cerr << "Unknown attribute '" << subNode->name << "' at line " << subNode->line <<  "." << std::endl;
@@ -223,6 +231,16 @@ namespace
       return IsXmlNode(node, "display_name");
     }
 
+    bool IsDescription(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "description");
+    }
+
+    bool IsWriteMask(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "write_mask");
+    }
+
     NodeID GetNodeID(xmlNode& node) const
     {
       std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
@@ -233,6 +251,18 @@ namespace
         throw std::logic_error(stream.str());
       }
       return NumericNodeID(atoi((const char*)content.get()));
+    }
+
+    uint32_t GetInt(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+      {
+        std::stringstream stream;
+        stream << "Empty node id. Line " << node.line << ".";
+        throw std::logic_error(stream.str());
+      }
+      return atoi((const char*)content.get());
     }
 
     NodeClass GetNodeClass(xmlNode& node) const
