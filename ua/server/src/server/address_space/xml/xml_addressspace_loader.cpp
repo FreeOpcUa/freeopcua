@@ -198,6 +198,66 @@ namespace
         {
           OpcUaNode.Attributes.push_back(Attribute(AttributeID::WRITE_MASK, GetInt(*subNode)));
         }
+        else if (IsUserWriteMask(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_WRITE_MASK, GetInt(*subNode)));
+        }
+        else if (IsAbstract(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::IS_ABSTRACT, GetBool(*subNode)));
+        }
+        else if (IsSymmetric(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::SYMMETRIC, GetBool(*subNode)));
+        }
+        else if (IsInverseName(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::INVERSE_NAME, GetText(*subNode)));
+        }
+        else if (IsContainsNoLoops(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::CONTAINS_NO_LOOPS, GetBool(*subNode)));
+        }
+        else if (IsEventNotifier(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::EVENT_NOTIFIER, GetText(*subNode)));
+        }
+        else if (IsValue(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::VALUE, GetValue(*subNode)));
+        }
+        else if (IsValueRank(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::VALUE_RANK, GetInt(*subNode)));
+        }
+        else if (IsArrayDimensions(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::ARRAY_DIMENSIONS, GetText(*subNode)));
+        }
+        else if (IsAccessLevel(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::ACCESS_LEVEL, GetInt(*subNode)));
+        }
+        else if (IsUserAccessLevel(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_ACCESS_LEVEL, GetInt(*subNode)));
+        }
+        else if (IsMinimumSamplingInterval(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::MINIMUM_SAMPLING_INTERVAL, GetInt(*subNode)));
+        }
+        else if (IsHistorizing(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::HISTORIZING, GetBool(*subNode)));
+        }
+        else if (IsExecutable(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::EXECUTABLE, GetBool(*subNode)));
+        }
+        else if (IsUserExecutable(*subNode))
+        {
+          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_EXECUTABLE, GetBool(*subNode)));
+        }
         else if (Debug)
         {
           std::cerr << "Unknown attribute '" << subNode->name << "' at line " << subNode->line <<  "." << std::endl;
@@ -241,6 +301,81 @@ namespace
       return IsXmlNode(node, "write_mask");
     }
 
+    bool IsUserWriteMask(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "user_write_mask");
+    }
+
+    bool IsAbstract(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "is_abstract");
+    }
+
+    bool IsSymmetric(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "symmetric");
+    }
+
+    bool IsInverseName(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "inverse_name");
+    }
+
+    bool IsContainsNoLoops(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "contains_no_loops");
+    }
+
+    bool IsEventNotifier(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "event_notifier");
+    }
+
+    bool IsValue(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "value");
+    }
+
+    bool IsValueRank(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "value_rank");
+    }
+
+    bool IsArrayDimensions(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "array_dimensions");
+    }
+
+    bool IsAccessLevel(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "access_level");
+    }
+
+    bool IsUserAccessLevel(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "user_access_level");
+    }
+
+    bool IsMinimumSamplingInterval(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "minimum_sampling_interval");
+    }
+
+    bool IsHistorizing(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "historizing");
+    }
+
+    bool IsExecutable(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "executable");
+    }
+
+    bool IsUserExecutable(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "user_executable");
+    }
+
     NodeID GetNodeID(xmlNode& node) const
     {
       std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
@@ -259,10 +394,50 @@ namespace
       if (!content)
       {
         std::stringstream stream;
-        stream << "Empty node id. Line " << node.line << ".";
+        stream << "Empty opcua attribute. Line " << node.line << ".";
         throw std::logic_error(stream.str());
       }
       return atoi((const char*)content.get());
+    }
+
+    Variant GetValue(xmlNode& node) const
+    {
+/*
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+      {
+        std::stringstream stream;
+        stream << "Empty opcua attribute. Line " << node.line << ".";
+        throw std::logic_error(stream.str());
+      }
+      return atoi((const char*)content.get());
+*/
+      return Variant();
+    }
+
+    bool GetBool(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+      {
+        std::stringstream stream;
+        stream << "Empty opcua attribute. Line " << node.line << ".";
+        throw std::logic_error(stream.str());
+      }
+
+      const char* value = (const char*)content.get();
+      if (!strcmp(value, "1") || !strcmp(value, "true"))
+      {
+        return true;
+      }
+      if (!strcmp(value, "0") || !strcmp(value, "false"))
+      {
+        return false;
+      }
+
+      std::stringstream stream;
+      stream << "Empty boolean value of opcua attribute. Line " << node.line << ".";
+      throw std::logic_error(stream.str());
     }
 
     NodeClass GetNodeClass(xmlNode& node) const

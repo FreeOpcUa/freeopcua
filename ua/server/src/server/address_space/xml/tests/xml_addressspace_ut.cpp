@@ -21,6 +21,9 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+// TODO Add tests for several appearing nodes in xml.
+// TODO Add tests for all node classes and for invalid classe names.
+
 using namespace testing;
 using namespace OpcUa;
 using namespace OpcUa::Internal;
@@ -190,5 +193,132 @@ TEST_F(XmlAddressSpace, BaseNodeHasWriteMask)
 
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::WRITE_MASK));
 }
-// TODO Add tests for several appearing nodes in xml.
-// TODO Add tests for all node classes and for invalid classe names.
+
+TEST_F(XmlAddressSpace, BaseNodeHasUserWriteMask)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasIsAbstract)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::IS_ABSTRACT));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasSymmetric)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::SYMMETRIC));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasInverseName)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::INVERSE_NAME));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasContainsNoLoops)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::CONTAINS_NO_LOOPS));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasEventNotifier)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER));
+}
+
+TEST_F(XmlAddressSpace, DISABLED_BaseNodeHasValue)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE));
+}
+
+TEST_F(XmlAddressSpace, DISABLED_BaseNodeHasDataType)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DATA_TYPE));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE_RANK));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasArrayDimensions)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::ARRAY_DIMENSIONS));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasAccessLevel)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::ACCESS_LEVEL));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasUserAccessLevel)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_ACCESS_LEVEL));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasMinimumSamplingInterval)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::MINIMUM_SAMPLING_INTERVAL));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasHistorizing)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::HISTORIZING));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasExecutable)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::EXECUTABLE));
+}
+
+TEST_F(XmlAddressSpace, BaseNodeHasUserExecutable)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
+
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_EXECUTABLE));
+}
+
