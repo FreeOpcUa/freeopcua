@@ -109,7 +109,7 @@ namespace
   struct Node
   {
     NodeID ID;
-    std::vector<Attribute> Attributes;
+    std::map<AttributeID, Variant> Attributes;
     std::vector<Reference> References;
   };
 
@@ -140,6 +140,11 @@ namespace
     return ::xmlStrcmp(xmlStr, (const xmlChar*)str);
   }
 
+
+  bool IsXmlNode(const xmlNode& node)
+  {
+    return node.type == XML_ELEMENT_NODE;
+  }
 
   bool IsXmlNode(const xmlNode& node, const char* name, bool debug = false)
   {
@@ -174,94 +179,18 @@ namespace
 
       for (xmlNodePtr subNode = node.children; subNode; subNode = subNode->next)
       {
-        if (IsId(*subNode))
+        if (!IsXmlNode(*subNode))
+        {
+          continue;
+        }
+        const AttributeID id = GetAttributeID(*subNode);
+        if (id == AttributeID::NODE_ID)
         {
           OpcUaNode.ID = GetNodeID(*subNode);
+          continue;
         }
-        else if (IsClass(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::NODE_CLASS, (uint32_t)GetNodeClass(*subNode)));
-        }
-        else if (IsBrowseName(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::BROWSE_NAME, GetText(*subNode)));
-        }
-        else if (IsDisplayName(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::DISPLAY_NAME, GetText(*subNode)));
-        }
-        else if (IsDescription(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::DESCRIPTION, GetText(*subNode)));
-        }
-        else if (IsWriteMask(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::WRITE_MASK, GetInt(*subNode)));
-        }
-        else if (IsUserWriteMask(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_WRITE_MASK, GetInt(*subNode)));
-        }
-        else if (IsAbstract(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::IS_ABSTRACT, GetBool(*subNode)));
-        }
-        else if (IsSymmetric(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::SYMMETRIC, GetBool(*subNode)));
-        }
-        else if (IsInverseName(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::INVERSE_NAME, GetText(*subNode)));
-        }
-        else if (IsContainsNoLoops(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::CONTAINS_NO_LOOPS, GetBool(*subNode)));
-        }
-        else if (IsEventNotifier(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::EVENT_NOTIFIER, GetText(*subNode)));
-        }
-        else if (IsValue(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::VALUE, GetValue(*subNode)));
-        }
-        else if (IsValueRank(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::VALUE_RANK, GetInt(*subNode)));
-        }
-        else if (IsArrayDimensions(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::ARRAY_DIMENSIONS, GetText(*subNode)));
-        }
-        else if (IsAccessLevel(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::ACCESS_LEVEL, GetInt(*subNode)));
-        }
-        else if (IsUserAccessLevel(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_ACCESS_LEVEL, GetInt(*subNode)));
-        }
-        else if (IsMinimumSamplingInterval(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::MINIMUM_SAMPLING_INTERVAL, GetInt(*subNode)));
-        }
-        else if (IsHistorizing(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::HISTORIZING, GetBool(*subNode)));
-        }
-        else if (IsExecutable(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::EXECUTABLE, GetBool(*subNode)));
-        }
-        else if (IsUserExecutable(*subNode))
-        {
-          OpcUaNode.Attributes.push_back(Attribute(AttributeID::USER_EXECUTABLE, GetBool(*subNode)));
-        }
-        else if (Debug)
-        {
-          std::cerr << "Unknown attribute '" << subNode->name << "' at line " << subNode->line <<  "." << std::endl;
-        }
+        const Variant value = GetAttributeValue(id, *subNode);
+        OpcUaNode.Attributes.insert(std::make_pair(id, value));
       }
     }
 
@@ -269,6 +198,11 @@ namespace
     bool IsAttributes(const xmlNode& node) const
     {
       return IsXmlNode(node, "attributes");
+    }
+
+    bool IsAttribute(const xmlNode& node) const
+    {
+      return IsXmlNode(node, "attribute");
     }
 
     bool IsId(const xmlNode& node) const
@@ -443,46 +377,47 @@ namespace
     NodeClass GetNodeClass(xmlNode& node) const
     {
       std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      const xmlChar* xmlString = content.get();
       if (!content)
       {
         std::stringstream stream;
         stream << "Empty node class. Line " << node.line << ".";
         throw std::logic_error(stream.str());
       }
-      if (!xmlStrcmp(content.get(), "object"))
+      if (!xmlStrcmp(xmlString, "object"))
       {
         return NodeClass::Object;
       }
-      if (!xmlStrcmp(content.get(), "variable"))
+      if (!xmlStrcmp(xmlString, "variable"))
       {
         return NodeClass::Variable;
       }
-      if (!xmlStrcmp(content.get(), "method"))
+      if (!xmlStrcmp(xmlString, "method"))
       {
         return NodeClass::Method;
       }
-      if (!xmlStrcmp(content.get(), "object_type"))
+      if (!xmlStrcmp(xmlString, "object_type"))
       {
         return NodeClass::ObjectType;
       }
-      if (!xmlStrcmp(content.get(), "variable_type"))
+      if (!xmlStrcmp(xmlString, "variable_type"))
       {
         return NodeClass::VariableType;
       }
-      if (!xmlStrcmp(content.get(), "reference_type"))
+      if (!xmlStrcmp(xmlString, "reference_type"))
       {
         return NodeClass::ReferenceType;
       }
-      if (!xmlStrcmp(content.get(), "data_type"))
+      if (!xmlStrcmp(xmlString, "data_type"))
       {
         return NodeClass::DataType;
       }
-      if (!xmlStrcmp(content.get(), "data_type"))
+      if (!xmlStrcmp(xmlString, "data_type"))
       {
         return NodeClass::View;
       }
       std::stringstream stream;
-      stream << "Unknown node class '" << (const char*)content.get() << "'. Line " << node.line << ".";
+      stream << "Unknown node class '" << (const char*)xmlString << "'. Line " << node.line << ".";
       throw std::logic_error(stream.str());
     }
 
@@ -496,6 +431,98 @@ namespace
         throw std::logic_error(stream.str());
       }
       return std::string((const char*)content.get());
+    }
+
+    OpcUa::AttributeID GetAttributeID(xmlNode& node)
+    {
+      if (IsId(node))
+        return AttributeID::NODE_ID;
+      else if (IsClass(node))
+        return AttributeID::NODE_CLASS;
+      else if (IsBrowseName(node))
+        return AttributeID::BROWSE_NAME;
+      else if (IsDisplayName(node))
+        return AttributeID::DISPLAY_NAME;
+      else if (IsDescription(node))
+        return AttributeID::DESCRIPTION;
+      else if (IsWriteMask(node))
+        return AttributeID::WRITE_MASK;
+      else if (IsUserWriteMask(node))
+        return AttributeID::USER_WRITE_MASK;
+      else if (IsAbstract(node))
+        return AttributeID::IS_ABSTRACT;
+      else if (IsSymmetric(node))
+        return AttributeID::SYMMETRIC;
+      else if (IsInverseName(node))
+        return AttributeID::INVERSE_NAME;
+      else if (IsContainsNoLoops(node))
+        return AttributeID::CONTAINS_NO_LOOPS;
+      else if (IsEventNotifier(node))
+        return AttributeID::EVENT_NOTIFIER;
+      else if (IsValue(node))
+        return AttributeID::VALUE;
+      else if (IsValueRank(node))
+        return AttributeID::VALUE_RANK;
+      else if (IsArrayDimensions(node))
+        return AttributeID::ARRAY_DIMENSIONS;
+      else if (IsAccessLevel(node))
+        return AttributeID::ACCESS_LEVEL;
+      else if (IsUserAccessLevel(node))
+        return AttributeID::USER_ACCESS_LEVEL;
+      else if (IsMinimumSamplingInterval(node))
+        return AttributeID::MINIMUM_SAMPLING_INTERVAL;
+      else if (IsHistorizing(node))
+        return AttributeID::HISTORIZING;
+      else if (IsExecutable(node))
+        return AttributeID::EXECUTABLE;
+      else if (IsUserExecutable(node))
+        return AttributeID::USER_EXECUTABLE;
+
+      return AttributeID::UNKNOWN;
+    }
+
+    Variant GetAttributeValue(OpcUa::AttributeID id, xmlNode& node) const
+    {
+      switch (id)
+      {
+        case AttributeID::NODE_ID:
+          return GetNodeID(node);
+
+        case AttributeID::NODE_CLASS:
+          return (uint32_t)GetNodeClass(node);
+
+        case AttributeID::BROWSE_NAME:
+        case AttributeID::DISPLAY_NAME:
+        case AttributeID::DESCRIPTION:
+        case AttributeID::INVERSE_NAME:
+        case AttributeID::EVENT_NOTIFIER: // TODO Unknown type of attribute..
+        case AttributeID::ARRAY_DIMENSIONS:
+          return GetText(node);
+
+        case AttributeID::WRITE_MASK:
+        case AttributeID::USER_WRITE_MASK:
+        case AttributeID::VALUE_RANK:
+        case AttributeID::ACCESS_LEVEL:
+        case AttributeID::USER_ACCESS_LEVEL:
+        case AttributeID::MINIMUM_SAMPLING_INTERVAL:
+          return GetInt(node);
+
+        case AttributeID::IS_ABSTRACT:
+        case AttributeID::SYMMETRIC:
+        case AttributeID::CONTAINS_NO_LOOPS:
+        case AttributeID::HISTORIZING:
+        case AttributeID::EXECUTABLE:
+        case AttributeID::USER_EXECUTABLE:
+          return GetBool(node);
+
+        case AttributeID::VALUE:
+          break;
+
+        default:
+          std::cerr << "Unknown attribute '" << node.name << "' at line " << node.line <<  "." << std::endl;
+          break;
+      }
+      return GetValue(node);
     }
 
   private:
@@ -614,14 +641,15 @@ namespace
       {
         throw std::logic_error(std::string("Invalid root element '") + (const char*)rootNode.name + std::string("'."));
       }
-      std::unique_ptr<xmlChar, LibXmlFree> version(xmlGetProp(&rootNode, (const xmlChar*)"version"), LibXmlFree());
+      std::unique_ptr<xmlChar, LibXmlFree> versionBuf(xmlGetProp(&rootNode, (const xmlChar*)"version"), LibXmlFree());
+      const xmlChar* version = versionBuf.get();
       if (!version)
       {
         throw std::logic_error("Address space element has no 'version' attribute.");
       }
-      if (xmlStrcmp(version.get(), "1"))
+      if (xmlStrcmp(version, "1"))
       {
-        throw std::logic_error(std::string("Unknown version '") + (const char*)version.get() + std::string("'of address space."));
+        throw std::logic_error(std::string("Unknown version '") + (const char*)version + std::string("'of address space."));
       }
     }
 
@@ -663,9 +691,9 @@ namespace
     void RegisterNode(const Node& node)
     {
       Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
-      for (const Attribute& attr : node.Attributes)
+      for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
       {
-        Registry.AddAttribute(node.ID, attr.ID, attr.Value);
+        Registry.AddAttribute(node.ID, attr.first, attr.second);
       }
     }
 

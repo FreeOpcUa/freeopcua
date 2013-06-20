@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -38,7 +38,9 @@ namespace OpcUa
     MINIMUM_SAMPLING_INTERVAL = 19,
     HISTORIZING = 20,
     EXECUTABLE = 21,
-    USER_EXECUTABLE = 22
+    USER_EXECUTABLE = 22,
+
+    UNKNOWN = ~uint32_t(),
   };
 }
 
