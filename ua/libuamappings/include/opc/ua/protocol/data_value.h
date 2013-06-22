@@ -60,6 +60,12 @@ namespace OpcUa
       return *this;
     }
 
+    template <typename T>
+    bool operator== (const T& t) const
+    {
+      return (Encoding & DATA_VALUE) && Value == t;
+    }
+
     bool operator== (const DataValue& data) const
     {
       return

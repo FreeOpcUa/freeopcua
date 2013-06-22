@@ -847,7 +847,7 @@ namespace OpcUa
     }
     if (!Node.empty())
     {
-      return VariantType::EXPANDED_NODE_ID;
+      return VariantType::NODE_ID;
     }
     if (!Statuses.empty())
     {
