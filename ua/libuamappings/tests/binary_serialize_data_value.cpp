@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -53,7 +53,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Value)
   Variant var;
   data.Value.Type = VariantType::BOOLEAN;
   data.Value.Value.Boolean = std::vector<bool>{true};
- 
+
   GetStream() << data << flush;
 
   uint8_t encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
@@ -72,7 +72,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  uint8_t encodingMask = 
+  uint8_t encodingMask =
      DATA_VALUE |
      DATA_VALUE_STATUS_CODE |
      DATA_VALUE_SOURCE_TIMESTAMP |
@@ -86,7 +86,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
   Variant var;
   data.Value.Type = VariantType::BOOLEAN;
   data.Value.Value.Boolean = std::vector<bool>{true};
- 
+
   data.Status = static_cast<StatusCode>(1);
   data.SourceTimestamp = 2;
   data.SourcePicoseconds = 3;
@@ -159,7 +159,7 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  uint8_t encodingMask = 
+  uint8_t encodingMask =
      DATA_VALUE |
      DATA_VALUE_STATUS_CODE |
      DATA_VALUE_SOURCE_TIMESTAMP |
@@ -193,3 +193,18 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
   ASSERT_EQ(data.ServerPicoseconds, 5);
 }
 
+
+TEST(DataValue, ConstructivbeFromDataValue)
+{
+  using namespace OpcUa;
+  NodeID node(ObjectID::RootFolder);
+  DataValue data;
+  data = node;
+  ASSERT_TRUE(data.Encoding && DATA_VALUE);
+  ASSERT_TRUE(data.Value.Type == VariantType::NODE_ID);
+
+  DataValue newValue(data);
+  ASSERT_TRUE(newValue.Encoding && DATA_VALUE);
+  ASSERT_EQ(newValue.Value.Type, VariantType::NODE_ID);
+  ASSERT_EQ(newValue.Value.Value.Node.size(), 1);
+}

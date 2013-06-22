@@ -113,7 +113,20 @@ namespace OpcUa
     {
     }
 
+    explicit LocalizedText(const char* text)
+      : Encoding(HAS_TEXT)
+      , Text(text)
+    {
+    }
+
     LocalizedText(const std::string& text, const std::string& locale)
+      : Encoding(HAS_TEXT | HAS_LOCALE)
+      , Locale(locale)
+      , Text(text)
+    {
+    }
+
+    LocalizedText(const char* text, char* locale)
       : Encoding(HAS_TEXT | HAS_LOCALE)
       , Locale(locale)
       , Text(text)

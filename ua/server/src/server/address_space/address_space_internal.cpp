@@ -39,6 +39,7 @@ namespace
       data.Node = node;
       data.Attribute = attribute;
       data.Value.Encoding = DATA_VALUE;
+      data.Value.Value = value;
       AttributeValues.push_back(data);
     }
 

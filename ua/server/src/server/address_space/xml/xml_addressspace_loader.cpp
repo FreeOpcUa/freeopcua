@@ -322,7 +322,7 @@ namespace
       return NumericNodeID(atoi((const char*)content.get()));
     }
 
-    uint32_t GetInt(xmlNode& node) const
+    uint32_t GetUInt32(xmlNode& node) const
     {
       std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
       if (!content)
@@ -433,6 +433,18 @@ namespace
       return std::string((const char*)content.get());
     }
 
+    LocalizedText GetLocalizedText(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+      {
+        std::stringstream stream;
+        stream << "Empty browse name. Line " << node.line << ".";
+        throw std::logic_error(stream.str());
+      }
+      return LocalizedText((const char*)content.get());
+    }
+
     OpcUa::AttributeID GetAttributeID(xmlNode& node)
     {
       if (IsId(node))
@@ -491,8 +503,10 @@ namespace
         case AttributeID::NODE_CLASS:
           return (uint32_t)GetNodeClass(node);
 
-        case AttributeID::BROWSE_NAME:
         case AttributeID::DISPLAY_NAME:
+          return GetLocalizedText(node);
+
+        case AttributeID::BROWSE_NAME:
         case AttributeID::DESCRIPTION:
         case AttributeID::INVERSE_NAME:
         case AttributeID::EVENT_NOTIFIER: // TODO Unknown type of attribute..
@@ -505,7 +519,7 @@ namespace
         case AttributeID::ACCESS_LEVEL:
         case AttributeID::USER_ACCESS_LEVEL:
         case AttributeID::MINIMUM_SAMPLING_INTERVAL:
-          return GetInt(node);
+          return GetUInt32(node);
 
         case AttributeID::IS_ABSTRACT:
         case AttributeID::SYMMETRIC:

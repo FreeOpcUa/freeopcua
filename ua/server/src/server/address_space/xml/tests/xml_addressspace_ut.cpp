@@ -74,9 +74,8 @@ protected:
     {
       return false;
     }
-//    const DataValue var = values.front();
-//    return var == Variant(value);
-    return true;
+    const DataValue var = values.front();
+    return var == value;
   }
 /*
   void ExpectHasBaseAttributes(ObjectID id)
@@ -199,7 +198,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasWriteMask)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::WRITE_MASK, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::WRITE_MASK, (uint32_t)10));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasUserWriteMask)
@@ -207,7 +206,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasUserWriteMask)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasIsAbstract)
@@ -263,7 +262,7 @@ TEST_F(XmlAddressSpace, DISABLED_BaseNodeHasDataType)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DATA_TYPE, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DATA_TYPE, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
@@ -271,7 +270,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE_RANK, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE_RANK, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasArrayDimensions)
@@ -287,7 +286,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasAccessLevel)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::ACCESS_LEVEL, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::ACCESS_LEVEL, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasUserAccessLevel)
@@ -295,7 +294,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasUserAccessLevel)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_ACCESS_LEVEL, 0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::USER_ACCESS_LEVEL, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasMinimumSamplingInterval)
@@ -303,7 +302,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasMinimumSamplingInterval)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::MINIMUM_SAMPLING_INTERVAL, 100));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::MINIMUM_SAMPLING_INTERVAL, (uint32_t)100));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasHistorizing)
