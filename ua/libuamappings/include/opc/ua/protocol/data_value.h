@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -53,13 +53,25 @@ namespace OpcUa
      {
      }
 */
-     DataValue& operator= (const Variant& value)
-     {
-       Value = value;
-       Encoding |= DATA_VALUE;
-       return *this;
-     }
-   };
+    DataValue& operator= (const Variant& value)
+    {
+      Value = value;
+      Encoding |= DATA_VALUE;
+      return *this;
+    }
+
+    bool operator== (const DataValue& data) const
+    {
+      return
+        Encoding == data.Encoding &&
+        Value == data.Value &&
+        Status == data.Status &&
+        SourceTimestamp == data.SourceTimestamp &&
+        SourcePicoseconds == data.SourcePicoseconds &&
+        ServerTimestamp == data.ServerTimestamp &&
+        ServerPicoseconds == data.ServerPicoseconds;
+    }
+  };
 
 } // namespace OpcUa
 

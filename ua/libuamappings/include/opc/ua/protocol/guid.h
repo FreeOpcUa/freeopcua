@@ -33,7 +33,7 @@ namespace OpcUa
       }
     }
 
-    inline bool operator== (const Guid& r)
+    inline bool operator== (const Guid& r) const
     {
       for (unsigned i = 0; i < 8; ++i)
       {
@@ -46,7 +46,7 @@ namespace OpcUa
       return Data1 == r.Data1 && Data2 == r.Data2 && Data3 == r.Data3;
     }
 
-    inline bool operator< (const Guid& r)
+    inline bool operator< (const Guid& r) const
     {
       if (Data1 > r.Data1)
       {

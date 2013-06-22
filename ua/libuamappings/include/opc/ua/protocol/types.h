@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -36,6 +36,11 @@ namespace OpcUa
   struct ByteString
   {
     std::vector<int8_t> Data;
+
+    bool operator== (const ByteString& str) const
+    {
+      return Data == str.Data;
+    }
   };
 
   class IntegerID
@@ -66,6 +71,11 @@ namespace OpcUa
       : NamespaceIndex(nameSpace)
       , Name(name)
     {
+    }
+
+    bool operator== (const QualifiedName& name) const
+    {
+      return NamespaceIndex == name.NamespaceIndex && Name == name.Name;
     }
   };
 
@@ -108,6 +118,11 @@ namespace OpcUa
       , Locale(locale)
       , Text(text)
     {
+    }
+
+    bool operator== (const LocalizedText& text) const
+    {
+      return Encoding == text.Encoding && Locale == text.Locale && Text == text.Text;
     }
   };
 
@@ -167,6 +182,17 @@ namespace OpcUa
       , InnerStatusCode(StatusCode::Good)
     {
     }
+
+    bool operator== (const DiagnosticInfo& info) const
+    {
+      return
+        EncodingMask == info.EncodingMask &&
+        SymbolicID == info.SymbolicID &&
+        NamespaceURI == info.NamespaceURI &&
+        LocalizedText == info.LocalizedText &&
+        Locale == info.Locale &&
+        InnerStatusCode == info.InnerStatusCode;
+    }
   };
 
   typedef std::vector<DiagnosticInfo> DiagnosticInfoList;
@@ -219,7 +245,7 @@ namespace OpcUa
     std::string URI;
     std::string ProductURI;
     LocalizedText Name;
-    ApplicationType Type;    
+    ApplicationType Type;
     std::string GatewayServerURI;
     std::string DiscoveryProfileURI;
     std::vector<std::string> DiscoveryURLs;

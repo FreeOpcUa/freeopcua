@@ -305,3 +305,18 @@ TEST(Variant, InitializeWithBoolInitializerList)
       case VariantType::VARIANT:          var.Variants = value.Variants; break;
       case VariantType::DATA_VALUE:       var.Value = value.Value; break;
  */
+
+TEST(Variant, Comparable)
+{
+  ASSERT_EQ(OpcUa::Variant(), OpcUa::Variant());
+
+  ASSERT_EQ(OpcUa::Variant(1), OpcUa::Variant(1));
+  ASSERT_EQ(OpcUa::Variant(1), 1);
+  ASSERT_NE(OpcUa::Variant(1), 2);
+
+  ASSERT_EQ(OpcUa::Variant(true), OpcUa::Variant(true));
+  ASSERT_EQ(OpcUa::Variant(true), true);
+
+  ASSERT_NE(OpcUa::Variant(true), OpcUa::Variant(false));
+  ASSERT_NE(OpcUa::Variant(true), false);
+}

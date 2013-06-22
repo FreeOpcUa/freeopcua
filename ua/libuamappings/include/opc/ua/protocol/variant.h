@@ -179,7 +179,58 @@ namespace OpcUa
     VariantValue& operator= (const std::vector<DataValue>& val);
     VariantValue& operator= (const std::vector<Variant>& val);
     VariantValue& operator= (const std::vector<DiagnosticInfo>& val);
-};
+
+    bool operator== (bool val) const;
+    bool operator== (int8_t val) const;
+    bool operator== (uint8_t val) const;
+    bool operator== (int16_t val) const;
+    bool operator== (uint16_t val) const;
+    bool operator== (int32_t val) const;
+    bool operator== (uint32_t val) const;
+    bool operator== (int64_t val) const;
+    bool operator== (uint64_t val) const;
+    bool operator== (float val) const;
+    bool operator== (double val) const;
+    bool operator== (StatusCode val) const;
+    bool operator== (const std::string& val) const;
+    bool operator== (const ByteString& val) const;
+    bool operator== (const Guid& val) const;
+    bool operator== (const NodeID& val) const;
+    bool operator== (const QualifiedName& val) const;
+    bool operator== (const LocalizedText& val) const;
+    bool operator== (const DataValue& val) const;
+    bool operator== (const Variant& val) const;
+    bool operator== (const DiagnosticInfo& val) const;
+    bool operator== (const std::vector<bool>& val) const;
+    bool operator== (const std::vector<int8_t>& val) const;
+    bool operator== (const std::vector<uint8_t>& val) const;
+    bool operator== (const std::vector<int16_t>& val) const;
+    bool operator== (const std::vector<uint16_t>& val) const;
+    bool operator== (const std::vector<int32_t>& val) const;
+    bool operator== (const std::vector<uint32_t>& val) const;
+    bool operator== (const std::vector<int64_t>& val) const;
+    bool operator== (const std::vector<uint64_t>& val) const;
+    bool operator== (const std::vector<float>& val) const;
+    bool operator== (const std::vector<double>& val) const;
+    bool operator== (const std::vector<StatusCode>& val) const;
+    bool operator== (const std::vector<std::string>& val) const;
+    bool operator== (const std::vector<ByteString>& val) const;
+    bool operator== (const std::vector<Guid>& val) const;
+    bool operator== (const std::vector<NodeID>& val) const;
+    bool operator== (const std::vector<QualifiedName>& val) const;
+    bool operator== (const std::vector<LocalizedText>& val) const;
+    bool operator== (const std::vector<DataValue>& val) const;
+    bool operator== (const std::vector<Variant>& val) const;
+    bool operator== (const std::vector<DiagnosticInfo>& val) const;
+
+    bool operator== (const VariantValue& val) const;
+
+    template<typename T>
+    bool operator!= (const T& t) const
+    {
+      return !(*this == t);
+    }
+  };
 
   struct Variant
   {
@@ -211,6 +262,14 @@ namespace OpcUa
 
     Variant(const Variant& var);
     Variant& operator= (const Variant& variant);
+
+    bool operator== (const Variant& var) const;
+
+    template <typename T>
+    bool operator!= (const T& t) const
+    {
+      return !(*this == t);
+    }
   };
 } // namespace OpcUa
 

@@ -479,6 +479,258 @@ namespace OpcUa
     }
 
 
+    bool VariantValue::operator== (bool val) const
+    {
+      return Boolean.size() == 1 && Boolean.front() == val;
+    }
+
+    bool VariantValue::operator== (int8_t val) const
+    {
+      return SByte.size() == 1 && SByte.front() == val;
+    }
+
+    bool VariantValue::operator== (uint8_t val) const
+    {
+      return Byte.size() == 1 && Byte.front() == val;
+    }
+
+    bool VariantValue::operator== (int16_t val) const
+    {
+      return Int16.size() == 1 && Int16.front() == val;
+    }
+
+    bool VariantValue::operator== (uint16_t val) const
+    {
+      return UInt16.size() == 1 && UInt16.front() == val;
+    }
+
+    bool VariantValue::operator== (int32_t val) const
+    {
+      return Int32.size() == 1 && Int32.front() == val;
+    }
+
+    bool VariantValue::operator== (uint32_t val) const
+    {
+      return UInt32.size() == 1 && UInt32.front() == val;
+    }
+
+    bool VariantValue::operator== (int64_t val) const
+    {
+      return Int64.size() == 1 && Int64.front() == val;
+    }
+
+    bool VariantValue::operator== (uint64_t val) const
+    {
+      return UInt64.size() == 1 && UInt64.front() == val;
+    }
+
+    bool VariantValue::operator== (float val) const
+    {
+      return Float.size() == 1 && Float.front() == val;
+    }
+
+    bool VariantValue::operator== (double val) const
+    {
+      return Double.size() == 1 && Double.front() == val;
+    }
+
+    bool VariantValue::operator== (StatusCode val) const
+    {
+      return Statuses.size() == 1 && Statuses.front() == val;
+    }
+
+    bool VariantValue::operator== (const std::string& val) const
+    {
+      return String.size() == 1 && String.front() == val;
+    }
+
+    bool VariantValue::operator== (const ByteString& val) const
+    {
+      return ByteStrings.size() == 1 && ByteStrings.front() == val;
+    }
+
+    bool VariantValue::operator== (const Guid& val) const
+    {
+      return Guids.size() == 1 && Guids.front() == val;
+    }
+
+    bool VariantValue::operator== (const NodeID& val) const
+    {
+      return Node.size() == 1 && Node.front() == val;
+    }
+
+    bool VariantValue::operator== (const QualifiedName& val) const
+    {
+      return Name.size() == 1 && Name.front() == val;
+    }
+
+    bool VariantValue::operator== (const LocalizedText& val) const
+    {
+      return Text.size() == 1 && Text.front() == val;
+    }
+
+    bool VariantValue::operator== (const DataValue& val) const
+    {
+      return Value.size() == 1 && Value.front() == val;
+    }
+
+    bool VariantValue::operator== (const Variant& val) const
+    {
+      return Variants.size() == 1 && Variants.front() == val;
+    }
+
+    bool VariantValue::operator== (const DiagnosticInfo& val) const
+    {
+      return Diagnostic.size() == 1 && Diagnostic.front() == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<bool>& val) const
+    {
+      return Boolean == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<int8_t>& val) const
+    {
+      return SByte == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<uint8_t>& val) const
+    {
+      return Byte == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<int16_t>& val) const
+    {
+      return Int16 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<uint16_t>& val) const
+    {
+      return UInt16 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<int32_t>& val) const
+    {
+      return Int32 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<uint32_t>& val) const
+    {
+      return UInt32 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<int64_t>& val) const
+    {
+      return Int64 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<uint64_t>& val) const
+    {
+      return UInt64 == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<float>& val) const
+    {
+      return Float == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<double>& val) const
+    {
+      return Double == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<StatusCode>& val) const
+    {
+      return Statuses == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<std::string>& val) const
+    {
+      return String == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<ByteString>& val) const
+    {
+      return ByteStrings == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<Guid>& val) const
+    {
+      return Guids == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<NodeID>& val) const
+    {
+      return Node == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<QualifiedName>& val) const
+    {
+      return Name == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<LocalizedText>& val) const
+    {
+      return Text == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<DataValue>& val) const
+    {
+      return Value == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<Variant>& val) const
+    {
+      return Variants == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<DiagnosticInfo>& val) const
+    {
+      return Diagnostic == val;
+    }
+
+    bool VariantValue::operator== (const VariantValue& val) const
+    {
+      const OpcUa::VariantType type = GetType();
+      if (type != val.GetType())
+      {
+        return false;
+      }
+
+      switch (type)
+      {
+        case VariantType::BOOLEAN:          return Boolean     == val.Boolean;
+        case VariantType::SBYTE:            return SByte       == val.SByte;
+        case VariantType::BYTE:             return Byte        == val.Byte;
+        case VariantType::INT16:            return Int16       == val.Int16;
+        case VariantType::UINT16:           return UInt16      == val.UInt16;
+        case VariantType::INT32:            return Int32       == val.Int32;
+        case VariantType::UINT32:           return UInt32      == val.UInt32;
+        case VariantType::INT64:            return Int64       == val.Int64;
+        case VariantType::UINT64:           return UInt64      == val.UInt64;
+        case VariantType::FLOAT:            return Float       == val.Float;
+        case VariantType::DOUBLE:           return Double      == val.Double;
+        case VariantType::STRING:           return String      == val.String;
+        case VariantType::DATE_TIME:        return Time        == val.Time;
+        case VariantType::GUID:             return Guids       == val.Guids;
+        case VariantType::BYTE_STRING:      return ByteStrings == val.ByteStrings;
+        case VariantType::XML_ELEMENT:      return String      == val.String;
+        case VariantType::NODE_ID:          return Node        == val.Node;
+        case VariantType::EXPANDED_NODE_ID: return Node        == val.Node;
+        case VariantType::STATUS_CODE:      return Statuses    == val.Statuses;
+        case VariantType::QUALIFIED_NAME:   return Name        == val.Name;
+        case VariantType::LOCALIZED_TEXT:   return Text        == val.Text;
+        case VariantType::DIAGNOSTIC_INFO:  return Diagnostic  == val.Diagnostic;
+        case VariantType::VARIANT:          return Variants    == val.Variants;
+        case VariantType::DATA_VALUE:       return Value       == val.Value;
+        case VariantType::NUL:
+          return true;
+        case VariantType::EXTENSION_OBJECT:
+        default:
+          throw std::logic_error("Unknown variant type.");
+      }
+    }
+
   //---------------------------------------------------
   // Variant
   //---------------------------------------------------
@@ -488,12 +740,6 @@ namespace OpcUa
     : Type(VariantType::NUL)
   {
   }
-/*
-  Variant::Variant(const Variant& var)
-  {
-    *this = var;
-  }
-*/
 
   Variant::Variant(const Variant& var)
   {
@@ -630,6 +876,18 @@ namespace OpcUa
     return VariantType::NUL;
   }
 
+  bool Variant::operator== (const Variant& var) const
+  {
+    if (Type != var.Type)
+    {
+      return false;
+    }
+    if (Dimensions != var.Dimensions)
+    {
+      return false;
+    }
+    return Value == var.Value;
+  }
 
   namespace Binary
   {
