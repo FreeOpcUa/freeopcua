@@ -15,7 +15,7 @@
       <inverse_name>inverse_name</inverse_name>
       <contains_no_loops>false</contains_no_loops>
       <event_notifier>notifier</event_notifier>
-      <value>Value</value>
+      <value type="uint32">55</value>
 <!--Data type will be defined by valus attribute    <data_type>1</data_type>  -->
       <value_rank>0</value_rank>
       <array_dimensions>0</array_dimensions>

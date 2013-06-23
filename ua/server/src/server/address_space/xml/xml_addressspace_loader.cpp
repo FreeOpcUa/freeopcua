@@ -189,8 +189,13 @@ namespace
           OpcUaNode.ID = GetNodeID(*subNode);
           continue;
         }
+
         const Variant value = GetAttributeValue(id, *subNode);
         OpcUaNode.Attributes.insert(std::make_pair(id, value));
+        if (id == AttributeID::VALUE)
+        {
+          OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
+        }
       }
     }
 
@@ -198,116 +203,6 @@ namespace
     bool IsAttributes(const xmlNode& node) const
     {
       return IsXmlNode(node, "attributes");
-    }
-
-    bool IsAttribute(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "attribute");
-    }
-
-    bool IsId(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "id");
-    }
-
-    bool IsClass(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "class");
-    }
-
-    bool IsBrowseName(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "browse_name");
-    }
-
-    bool IsDisplayName(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "display_name");
-    }
-
-    bool IsDescription(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "description");
-    }
-
-    bool IsWriteMask(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "write_mask");
-    }
-
-    bool IsUserWriteMask(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "user_write_mask");
-    }
-
-    bool IsAbstract(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "is_abstract");
-    }
-
-    bool IsSymmetric(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "symmetric");
-    }
-
-    bool IsInverseName(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "inverse_name");
-    }
-
-    bool IsContainsNoLoops(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "contains_no_loops");
-    }
-
-    bool IsEventNotifier(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "event_notifier");
-    }
-
-    bool IsValue(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "value");
-    }
-
-    bool IsValueRank(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "value_rank");
-    }
-
-    bool IsArrayDimensions(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "array_dimensions");
-    }
-
-    bool IsAccessLevel(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "access_level");
-    }
-
-    bool IsUserAccessLevel(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "user_access_level");
-    }
-
-    bool IsMinimumSamplingInterval(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "minimum_sampling_interval");
-    }
-
-    bool IsHistorizing(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "historizing");
-    }
-
-    bool IsExecutable(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "executable");
-    }
-
-    bool IsUserExecutable(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "user_executable");
     }
 
     NodeID GetNodeID(xmlNode& node) const
@@ -332,21 +227,6 @@ namespace
         throw std::logic_error(stream.str());
       }
       return atoi((const char*)content.get());
-    }
-
-    Variant GetValue(xmlNode& node) const
-    {
-/*
-      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
-      if (!content)
-      {
-        std::stringstream stream;
-        stream << "Empty opcua attribute. Line " << node.line << ".";
-        throw std::logic_error(stream.str());
-      }
-      return atoi((const char*)content.get());
-*/
-      return Variant();
     }
 
     bool GetBool(xmlNode& node) const
@@ -445,49 +325,122 @@ namespace
       return LocalizedText((const char*)content.get());
     }
 
-    OpcUa::AttributeID GetAttributeID(xmlNode& node)
+
+    VariantType GetVariantType(xmlNode& node) const
     {
-      if (IsId(node))
+      std::unique_ptr<xmlChar, LibXmlFree> attrValue(xmlGetProp(&node, (const xmlChar*)"type"), LibXmlFree());
+      const xmlChar* typeName = attrValue.get();
+      if (!typeName || !typeName[0] || !xmlStrcmp(typeName, "string"))
+        return VariantType::STRING;
+      if (!xmlStrcmp(typeName, "sbyte"))
+        return VariantType::SBYTE;
+      if (!xmlStrcmp(typeName, "byte"))
+        return VariantType::BYTE;
+      if (!xmlStrcmp(typeName, "int16"))
+        return VariantType::INT16;
+      if (!xmlStrcmp(typeName, "uint16"))
+        return VariantType::UINT16;
+      if (!xmlStrcmp(typeName, "int32"))
+        return VariantType::INT32;
+      if (!xmlStrcmp(typeName, "uint32"))
+        return VariantType::UINT32;
+      if (!xmlStrcmp(typeName, "int64"))
+        return VariantType::INT64;
+      if (!xmlStrcmp(typeName, "uint64"))
+        return VariantType::UINT64;
+      if (!xmlStrcmp(typeName, "float"))
+        return VariantType::FLOAT;
+      if (!xmlStrcmp(typeName, "double"))
+        return VariantType::DOUBLE;
+
+      std::stringstream stream;
+      stream << std::string("Invalid value type '") << (const char*)typeName << std::string("'. Line ") << node.line << ".";
+      throw std::logic_error(stream.str());
+    }
+
+    Variant GetVariantValue(OpcUa::VariantType type, xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> content(xmlNodeGetContent(&node));
+      if (!content)
+        return Variant();
+
+      const char* valueText = (const char*)content.get();
+      switch (type)
+      {
+        case VariantType::SBYTE:
+          return (int8_t)strtol(valueText, nullptr, 0);
+        case VariantType::BYTE:
+          return (uint8_t)strtol(valueText, nullptr, 0);
+        case VariantType::INT16:
+          return (int16_t)strtol(valueText, nullptr, 0);
+        case VariantType::UINT16:
+          return (uint16_t)strtol(valueText, nullptr, 0);
+        case VariantType::INT32:
+          return (int32_t)strtol(valueText, nullptr, 0);
+        case VariantType::UINT32:
+          return (uint32_t)strtol(valueText, nullptr, 0);
+        case VariantType::INT64:
+          return (int64_t)strtoll(valueText, nullptr, 0);
+        case VariantType::UINT64:
+          return (int64_t)strtoll(valueText, nullptr, 0);
+        case VariantType::FLOAT:
+          return strtof(valueText, nullptr);
+        case VariantType::DOUBLE:
+          return strtod(valueText, nullptr);
+        // TODO check for other types.
+        case VariantType::NUL:
+          return Variant();
+
+        case VariantType::STRING:
+        default:
+          break;
+      }
+      return std::string(valueText);
+    }
+
+    OpcUa::AttributeID GetAttributeID(xmlNode& node) const
+    {
+      if (IsXmlNode(node, "id"))
         return AttributeID::NODE_ID;
-      else if (IsClass(node))
+      else if (IsXmlNode(node, "class"))
         return AttributeID::NODE_CLASS;
-      else if (IsBrowseName(node))
+      else if (IsXmlNode(node, "browse_name"))
         return AttributeID::BROWSE_NAME;
-      else if (IsDisplayName(node))
+      else if (IsXmlNode(node, "display_name"))
         return AttributeID::DISPLAY_NAME;
-      else if (IsDescription(node))
+      else if (IsXmlNode(node, "description"))
         return AttributeID::DESCRIPTION;
-      else if (IsWriteMask(node))
+      else if (IsXmlNode(node, "write_mask"))
         return AttributeID::WRITE_MASK;
-      else if (IsUserWriteMask(node))
+      else if (IsXmlNode(node, "user_write_mask"))
         return AttributeID::USER_WRITE_MASK;
-      else if (IsAbstract(node))
+      else if (IsXmlNode(node, "is_abstract"))
         return AttributeID::IS_ABSTRACT;
-      else if (IsSymmetric(node))
+      else if (IsXmlNode(node, "symmetric"))
         return AttributeID::SYMMETRIC;
-      else if (IsInverseName(node))
+      else if (IsXmlNode(node, "inverse_name"))
         return AttributeID::INVERSE_NAME;
-      else if (IsContainsNoLoops(node))
+      else if (IsXmlNode(node, "contains_no_loops"))
         return AttributeID::CONTAINS_NO_LOOPS;
-      else if (IsEventNotifier(node))
+      else if (IsXmlNode(node, "event_notifier"))
         return AttributeID::EVENT_NOTIFIER;
-      else if (IsValue(node))
+      else if (IsXmlNode(node, "value"))
         return AttributeID::VALUE;
-      else if (IsValueRank(node))
+      else if (IsXmlNode(node, "value_rank"))
         return AttributeID::VALUE_RANK;
-      else if (IsArrayDimensions(node))
+      else if (IsXmlNode(node, "array_dimensions"))
         return AttributeID::ARRAY_DIMENSIONS;
-      else if (IsAccessLevel(node))
+      else if (IsXmlNode(node, "access_level"))
         return AttributeID::ACCESS_LEVEL;
-      else if (IsUserAccessLevel(node))
+      else if (IsXmlNode(node, "user_access_level"))
         return AttributeID::USER_ACCESS_LEVEL;
-      else if (IsMinimumSamplingInterval(node))
+      else if (IsXmlNode(node, "minimum_sampling_interval"))
         return AttributeID::MINIMUM_SAMPLING_INTERVAL;
-      else if (IsHistorizing(node))
+      else if (IsXmlNode(node, "historizing"))
         return AttributeID::HISTORIZING;
-      else if (IsExecutable(node))
+      else if (IsXmlNode(node, "executable"))
         return AttributeID::EXECUTABLE;
-      else if (IsUserExecutable(node))
+      else if (IsXmlNode(node, "user_executable"))
         return AttributeID::USER_EXECUTABLE;
 
       return AttributeID::UNKNOWN;
@@ -534,9 +487,10 @@ namespace
 
         default:
           std::cerr << "Unknown attribute '" << node.name << "' at line " << node.line <<  "." << std::endl;
-          break;
+          return GetText(node);
       }
-      return GetValue(node);
+      const VariantType type = GetVariantType(node);
+      return GetVariantValue(type, node);
     }
 
   private:

@@ -249,20 +249,20 @@ TEST_F(XmlAddressSpace, BaseNodeHasEventNotifier)
   ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER, std::string("notifier")));
 }
 
-TEST_F(XmlAddressSpace, DISABLED_BaseNodeHasValue)
+TEST_F(XmlAddressSpace, BaseNodeHasValue)
 {
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE, Variant()));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::VALUE, (uint32_t)55));
 }
 
-TEST_F(XmlAddressSpace, DISABLED_BaseNodeHasDataType)
+TEST_F(XmlAddressSpace, BaseNodeHasDataType)
 {
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DATA_TYPE, (uint32_t)0));
+  ASSERT_TRUE(HasAttribute(ObjectID::RootFolder, AttributeID::DATA_TYPE, (uint32_t)VariantType::UINT32));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
