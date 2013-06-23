@@ -1,4 +1,4 @@
-/// @author Alexander Rykovanov 2013
+/// @author Alexander Rykovttributeanov 2013
 /// @email rykovanov.as@gmail.com
 /// @brief OPC UA Address space part.
 /// @license GNU GPL
@@ -183,16 +183,16 @@ namespace
         {
           continue;
         }
-        const AttributeID id = GetAttributeID(*subNode);
-        if (id == AttributeID::NODE_ID)
+        const AttributeID attribute = GetAttributeID(*subNode);
+        if (attribute == AttributeID::NODE_ID)
         {
           OpcUaNode.ID = GetNodeID(*subNode);
           continue;
         }
 
-        const Variant value = GetAttributeValue(id, *subNode);
-        OpcUaNode.Attributes.insert(std::make_pair(id, value));
-        if (id == AttributeID::VALUE)
+        const Variant value = GetAttributeValue(attribute, *subNode);
+        OpcUaNode.Attributes.insert(std::make_pair(attribute, value));
+        if (attribute == AttributeID::VALUE)
         {
           OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
         }
@@ -214,7 +214,14 @@ namespace
         stream << "Empty node id. Line " << node.line << ".";
         throw std::logic_error(stream.str());
       }
-      return NumericNodeID(atoi((const char*)content.get()));
+      uint32_t nsIndex = GetNamespaceIndex(node);
+
+      const char* idText = (const char*)content.get();
+      if (IsNumericNodeType(node))
+      {
+        return NumericNodeID(atoi(idText), nsIndex);
+      }
+      return StringNodeID(idText, nsIndex);
     }
 
     uint32_t GetUInt32(xmlNode& node) const
@@ -325,6 +332,24 @@ namespace
       return LocalizedText((const char*)content.get());
     }
 
+    uint32_t GetNamespaceIndex(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> attrValue(xmlGetProp(&node, (const xmlChar*)"ns"), LibXmlFree());
+      const xmlChar* nsName = attrValue.get();
+      if (!nsName)
+        return 0;
+      return atoi((const char*)nsName);
+    }
+
+    bool IsNumericNodeType(xmlNode& node) const
+    {
+      std::unique_ptr<xmlChar, LibXmlFree> attrValue(xmlGetProp(&node, (const xmlChar*)"type"), LibXmlFree());
+      const xmlChar* nsName = attrValue.get();
+      if (!nsName)
+        return 0;
+
+      return !xmlStrcmp(nsName, "numeric");
+    }
 
     VariantType GetVariantType(xmlNode& node) const
     {

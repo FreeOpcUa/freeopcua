@@ -637,3 +637,15 @@ TEST_F(NodeComparing, GuidEqual)
   r.Data1 = 1;
   EXPECT_TRUE(GuidNodeID(l) == GuidNodeID(r));
 }
+
+TEST_F(NodeComparing, NodesEqual)
+{
+  uint32_t id = 1;
+  uint32_t ns = 2;
+
+  NodeID node1 = NumericNodeID(id, ns);
+  NodeID node2;
+  node2 = node1;
+  ASSERT_EQ(node1, node2);
+  ASSERT_EQ(node1, NodeID(node1));
+}

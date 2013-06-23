@@ -178,6 +178,64 @@ namespace OpcUa
     }
   }
 
+  NodeID& NodeID::operator=(const NodeID& node)
+  {
+    Encoding = node.Encoding;
+    const NodeIDEncoding enc = node.GetEncodingValue();
+    switch (enc)
+    {
+      case EV_TWO_BYTE:
+      {
+        TwoByteData.Identifier = node.TwoByteData.Identifier;
+        break;
+      }
+      case EV_FOUR_BYTE:
+      {
+        FourByteData.NamespaceIndex = node.FourByteData.NamespaceIndex;
+        FourByteData.Identifier = node.FourByteData.Identifier;
+        break;
+      }
+      case EV_NUMERIC:
+      {
+        NumericData.NamespaceIndex = node.NumericData.NamespaceIndex;
+        NumericData.Identifier = node.NumericData.Identifier;
+        break;
+      }
+      case EV_STRING:
+      {
+        StringData.NamespaceIndex = node.StringData.NamespaceIndex;
+        StringData.Identifier = node.StringData.Identifier;
+        break;
+      }
+      case EV_GUID:
+      {
+        GuidData.NamespaceIndex = node.GuidData.NamespaceIndex;
+        GuidData.Identifier = node.GuidData.Identifier;
+        break;
+      }
+      case EV_BYTE_STRING:
+      {
+        BinaryData.NamespaceIndex = node.BinaryData.NamespaceIndex;
+        BinaryData.Identifier = node.BinaryData.Identifier;
+        break;
+      }
+      default:
+      {
+        throw std::logic_error("Invalid Node ID encoding value.");
+      }
+    }
+
+    if (node.HasServerIndex())
+    {
+      ServerIndex = node.ServerIndex;
+    }
+    if (node.HasNamespaceURI())
+    {
+      NamespaceURI = node.NamespaceURI;
+    }
+    return *this;
+  }
+
   NodeID::NodeID(MessageID messageID)
     : Encoding(EV_FOUR_BYTE)
     , ServerIndex(0)

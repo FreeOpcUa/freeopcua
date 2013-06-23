@@ -3,7 +3,7 @@
 
   <node>
     <attributes>
-      <id type="numeric">84</id> <!--  Add name space index -->
+      <id type="numeric" ns="10">84</id> <!--  Add name space index -->
       <class>object</class>
       <browse_name>Root</browse_name>
       <display_name>Root</display_name>

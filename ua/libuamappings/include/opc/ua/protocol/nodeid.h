@@ -122,6 +122,8 @@ namespace OpcUa
     NodeID(ReferenceID referenceID);
     NodeID(ObjectID objectID);
 
+    NodeID& operator= (const NodeID& node);
+
     NodeID& operator= (MessageID messageID)
     {
       *this = NodeID(messageID);

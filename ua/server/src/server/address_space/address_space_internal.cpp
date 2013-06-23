@@ -70,7 +70,7 @@ namespace
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
       std::vector<DataValue> values;
-      for (AttributeValueID attribute : params.AttributesToRead)
+      for (const AttributeValueID& attribute : params.AttributesToRead)
       {
         values.push_back(GetValue(attribute.Node, attribute.Attribute));
       }
