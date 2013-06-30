@@ -73,6 +73,12 @@ namespace OpcUa
     {
     }
 
+    explicit QualifiedName(const std::string& name)
+      : NamespaceIndex(0)
+      , Name(name)
+    {
+    }
+
     bool operator== (const QualifiedName& name) const
     {
       return NamespaceIndex == name.NamespaceIndex && Name == name.Name;

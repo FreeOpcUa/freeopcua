@@ -80,42 +80,6 @@ protected:
     EXPECT_EQ(var.Status, StatusCode::Good);
     return var == value;
   }
-/*
-  void ExpectHasBaseAttributes(ObjectID id)
-  {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::NODE_ID, id));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::NODE_CLASS, NodeClass::Object));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::BROWSE_NAME, std::string("Root")));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DISPLAY_NAME, LocalizedText("Root")));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DESCRIPTION, std::string("Root")));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::WRITE_MASK, 0));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::USER_WRITE_MASK, 0));
-  }
-
-  void ExpectHasTypeAttributes(ObjectID id)
-  {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT, ));
-  }
-
-  void ExpectHasVariableAttributes(ObjectID id)
-  {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DATA_TYPE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE_RANK));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::ARRAY_DIMENSIONS));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::ACCESS_LEVEL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::USER_ACCESS_LEVEL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::MINIMUM_SAMPLING_INTERVAL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::HISTORIZING));
-  }
-
-  void ExpectHasReferenceTypeAttributes(ObjectID id)
-  {
-    ExpectHasBaseAttributes(id);
-    ExpectHasTypeAttributes(id);
-    EXPECT_TRUE(HasAttribute(id, AttributeID::SYMMETRIC));
-  }
-*/
 
   std::string ConfigPath(const char* name)
   {
@@ -177,7 +141,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasBrowseName)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::BROWSE_NAME, std::string("Root")));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::BROWSE_NAME, QualifiedName("Root")));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasDiaplayName)
@@ -313,7 +277,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasHistorizing)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::HISTORIZING, false));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::HISTORIZING, true));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasExecutable)
@@ -330,4 +294,14 @@ TEST_F(XmlAddressSpace, BaseNodeHasUserExecutable)
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
   ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::USER_EXECUTABLE, false));
+}
+
+TEST_F(XmlAddressSpace, Reference)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("predefined_references.xml")));
+
+  const NodeID targetNode = NumericNodeID(100, 10);
+  std::vector<ReferenceDescription> references = Browse(NumericNodeID(99, 10));
+  ASSERT_TRUE(HasReference(references, ReferenceID::References, targetNode));
 }

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -48,6 +48,8 @@ namespace OpcUa
     HasTrueSubState = 9004,
     HasFalseSubState = 9005,
     HasCondition = 9006,
+
+    Unknown = ~uint32_t()
   };
 
 } // namespace OpcUa

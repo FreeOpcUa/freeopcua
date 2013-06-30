@@ -1,0 +1,301 @@
+<?xml version="1.0"?>
+<address_space version="1">
+<!--  
+  <external>
+    <node>
+      <id type="numeric">84</id>
+    </node>
+    <organizes>
+      <id type="numeric" ns="10">99</id>
+      <class>object</class>
+      <display_name>object</display_name>
+      <description>object</description>
+    </organizes>
+  </external>
+-->
+
+  <node>
+
+    <attributes>
+      <!-- 
+         Node ID value can be either read from value xml attribute of text content.
+         It will be exception thrown if content and value are not empty both. 
+      -->
+      <id type="numeric" ns="10">99</id>
+    </attributes>
+
+    <references>
+
+      <references_to>
+	    <id type="numeric" ns="10">100</id>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </references_to>
+
+      <non_hierarchical_references>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </non_hierarchical_references>
+      
+      <hierarchical_references>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </hierarchical_references>
+
+      <has_child>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_child>
+
+      <organizes>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </organizes>
+
+      <has_event_source>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_event_source>
+      
+      <has_modelling_rule>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_modelling_rule>
+
+      <has_encoding>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_encoding>
+      
+      <has_description>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_description>
+      
+      <has_type_definition>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_type_definition>
+      
+      <generates_event>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </generates_event>
+      
+      <aggregates>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </aggregates>
+      
+      <has_subtype>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_subtype>
+      
+      <has_property>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_property>
+      
+      <has_component>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_component>
+
+      <has_notifier>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_notifier>
+      
+      <has_ordered_component>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_ordered_component>
+      
+      <has_model_parent>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_model_parent>
+      
+      <from_state>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </from_state>
+      
+      <to_state>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </to_state>
+      
+      <has_cause>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_cause>
+      
+      <has_effect>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_effect>
+      
+      <has_historical_configuration>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_historical_configuration>
+      
+      <has_historical_event_configuration>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_historical_event_configuration>
+      
+      <has_sub_state_machine>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_sub_state_machine>
+      
+      <has_event_history>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_event_history>
+      
+      <always_generates_event>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </always_generates_event>
+      
+      <has_true_sub_state>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_true_sub_state>
+      
+      <has_false_sub_state>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_false_sub_state>
+
+      <has_condition>
+        <node type="numeric" ns="10">100</node>
+        <is_forward>true</is_forward>
+	    <class>object</class>
+	    <browse_name>object</browse_name>
+	    <display_name>object</display_name>
+	    <type_definition type="numeric" ns="10">2222</type_definition>
+      </has_condition>
+    </references>
+  </node>
+
+</address_space>
