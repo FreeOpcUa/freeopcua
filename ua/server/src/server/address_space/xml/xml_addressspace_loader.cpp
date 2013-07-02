@@ -143,6 +143,12 @@ namespace
     NodeID ID;
     std::map<AttributeID, Variant> Attributes;
     std::vector<Reference> References;
+    bool IsExternal;
+
+    Node()
+      : IsExternal(false)
+    {
+    }
   };
 
   struct XmlDocDeleter
@@ -573,7 +579,14 @@ namespace
           continue;
         }
 
-        AddReferenceToNode(*refNode);
+        try
+        {
+          AddReferenceToNode(*refNode);
+        }
+        catch (const std::exception& exc)
+        {
+          std::cerr << exc.what() << std::endl;
+        }
       }
     }
 
@@ -587,32 +600,56 @@ namespace
 
       for (xmlNodePtr subNode = refNode.children; subNode; subNode = subNode->next)
       {
-        if (IsXmlNode(*subNode, "id"))
+        if (!IsXmlNode(*subNode))
+        {
+          continue;
+        }
+
+        const std::string& nodeName = GetNodeName(*subNode);
+        if (nodeName == "id")
         {
           reference.TargetNode = GetNodeID(*subNode);
         }
-        else if (IsXmlNode(*subNode, "class"))
+        else if (nodeName == "class")
         {
           reference.TargetClass = GetNodeClass(*subNode);
         }
-        else if (IsXmlNode(*subNode, "browse_name"))
+        else if (nodeName == "browse_name")
         {
           reference.TargetBrowseName = GetQualifiedName(*subNode);
         }
-        else if (IsXmlNode(*subNode, "display_name"))
+        else if (nodeName == "display_name")
         {
           reference.TargetDisplayName = GetLocalizedText(*subNode);
         }
-        else if (IsXmlNode(*subNode, "is_forward"))
+        else if (nodeName == "is_forward")
         {
           reference.IsForward = GetBool(GetNodeValue(*subNode));
         }
-        else if (IsXmlNode(*subNode, "type_definition"))
+        else if (nodeName == "type_definition")
         {
           reference.TargetType = GetNodeID(*subNode);
         }
       }
+
+      EnsureValid(reference, refNode.line);
       OpcUaNode.References.push_back(reference);
+    }
+
+  private:
+    void EnsureValid(const Reference& ref, int lineNum) const
+    {
+      std::stringstream stream;
+      if (ref.ID == ReferenceID::Unknown)
+      {
+        stream << "Unknown reference type. line" << lineNum << ".";
+        throw std::logic_error(stream.str());
+      }
+      if (ref.TargetNode == NodeID())
+      {
+        stream << "Empty target node ID. line" << lineNum << ".";
+        throw std::logic_error(stream.str());
+      }
     }
 
   private:
@@ -631,12 +668,29 @@ namespace
 
     virtual void Process(xmlNode& node)
     {
-      if (!IsNodeTag(node))
+      if (!IsXmlNode(node))
       {
         return;
       }
 
       Node opcuaNode;
+      if (IsXmlNode(node, "node"))
+      {
+        opcuaNode.IsExternal = false;
+      }
+      else if (IsXmlNode(node, "external"))
+      {
+        opcuaNode.IsExternal = true;
+      }
+      else
+      {
+        if (Debug)
+        {
+          std::cerr << "Unknown node '" << node.name << "' at line " << node.line <<  "." << std::endl;
+        }
+        return;
+      }
+
       FillNode(node, opcuaNode);
       EnsureNodeIsValid(opcuaNode, node);
       Nodes.insert(std::make_pair(opcuaNode.ID, opcuaNode));
@@ -651,11 +705,6 @@ namespace
         stream << "Node at line '" << node.line << "' has no ID.";
         throw std::logic_error(stream.str());
       }
-    }
-
-    bool IsNodeTag(const xmlNode& node) const
-    {
-      return IsXmlNode(node, "node");
     }
 
     void FillNode(const xmlNode& node, Node& opcuaNode) const
@@ -705,14 +754,7 @@ namespace
       NodesCollector nodesBuilder(nodes, Debug);
       for (xmlNodePtr cur = rootNode->children; cur; cur = cur->next)
       {
-        if (IsXmlNode(*cur, "node"))
-        {
-          nodesBuilder.Process(*cur);
-        }
-        else if (Debug)
-        {
-          std::cerr << "Unknown node '" << cur->name << "' at line " << cur->line <<  "." << std::endl;
-        }
+        nodesBuilder.Process(*cur);
       }
 
       return nodes;
@@ -770,7 +812,10 @@ namespace
     {
       for (const auto& node : nodes)
       {
-        RegisterNode(node.second);
+        if (!node.second.IsExternal)
+        {
+          RegisterNode(node.second);
+        }
         AddReferences(node.second);
       }
     }

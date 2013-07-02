@@ -296,7 +296,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasUserExecutable)
   ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::USER_EXECUTABLE, false));
 }
 
-TEST_F(XmlAddressSpace, Reference)
+TEST_F(XmlAddressSpace, InternalReference)
 {
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("predefined_references.xml")));
@@ -304,4 +304,48 @@ TEST_F(XmlAddressSpace, Reference)
   const NodeID targetNode = NumericNodeID(100, 10);
   std::vector<ReferenceDescription> references = Browse(NumericNodeID(99, 10));
   ASSERT_TRUE(HasReference(references, ReferenceID::References, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::NonHierarchicalReferences, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HierarchicalReferences, targetNode));
+
+  ASSERT_TRUE(HasReference(references, ReferenceID::References, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::NonHierarchicalReferences, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HierarchicalReferences, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasChild, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::Organizes, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasEventSource, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasModellingRule, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasEncoding, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasDescription, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasTypeDefinition, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::GeneratesEvent, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::Aggregates, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasSubtype, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasProperty, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasComponent, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasNotifier, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasOrderedComponent, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasModelParent, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::FromState, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::ToState, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasCause, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasEffect, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasHistoricalConfiguration, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasHistoricalEventConfiguration, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasSubStateMachine, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasEventHistory, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::AlwaysGeneratesEvent, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasTrueSubState, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasFalseSubState, targetNode));
+  ASSERT_TRUE(HasReference(references, ReferenceID::HasCondition, targetNode));
+  ASSERT_FALSE(HasReference(references, ReferenceID::Unknown, targetNode));
+}
+
+TEST_F(XmlAddressSpace, ExternalReference)
+{
+  XmlAddressSpaceLoader loader(*NameSpace);
+  ASSERT_NO_THROW(loader.Load(ConfigPath("predefined_references.xml")));
+
+  const NodeID targetNode = NumericNodeID(99, 10);
+  std::vector<ReferenceDescription> references = Browse(NumericNodeID(84));
+  ASSERT_TRUE(HasReference(references, ReferenceID::Organizes, targetNode));
 }

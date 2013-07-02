@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <address_space version="1">
-<!--  
+
   <external>
-    <node>
+    <attributes>
       <id type="numeric">84</id>
-    </node>
-    <organizes>
-      <id type="numeric" ns="10">99</id>
-      <class>object</class>
-      <display_name>object</display_name>
-      <description>object</description>
-    </organizes>
+    </attributes>
+    <references>
+      <organizes>
+        <id type="numeric" ns="10">99</id>
+        <class>object</class>
+        <display_name>object</display_name>
+        <description>object</description>
+      </organizes>
+    </references>
   </external>
--->
 
   <node>
 
@@ -36,7 +37,7 @@
       </references_to>
 
       <non_hierarchical_references>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -45,7 +46,7 @@
       </non_hierarchical_references>
       
       <hierarchical_references>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -54,7 +55,7 @@
       </hierarchical_references>
 
       <has_child>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -63,7 +64,7 @@
       </has_child>
 
       <organizes>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -72,7 +73,7 @@
       </organizes>
 
       <has_event_source>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -81,7 +82,7 @@
       </has_event_source>
       
       <has_modelling_rule>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -90,7 +91,7 @@
       </has_modelling_rule>
 
       <has_encoding>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -99,7 +100,7 @@
       </has_encoding>
       
       <has_description>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -108,7 +109,7 @@
       </has_description>
       
       <has_type_definition>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -117,7 +118,7 @@
       </has_type_definition>
       
       <generates_event>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -126,7 +127,7 @@
       </generates_event>
       
       <aggregates>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -135,7 +136,7 @@
       </aggregates>
       
       <has_subtype>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -144,7 +145,7 @@
       </has_subtype>
       
       <has_property>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -153,7 +154,7 @@
       </has_property>
       
       <has_component>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -162,7 +163,7 @@
       </has_component>
 
       <has_notifier>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -171,7 +172,7 @@
       </has_notifier>
       
       <has_ordered_component>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -180,7 +181,7 @@
       </has_ordered_component>
       
       <has_model_parent>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -189,7 +190,7 @@
       </has_model_parent>
       
       <from_state>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -198,7 +199,7 @@
       </from_state>
       
       <to_state>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -207,7 +208,7 @@
       </to_state>
       
       <has_cause>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -216,7 +217,7 @@
       </has_cause>
       
       <has_effect>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -225,7 +226,7 @@
       </has_effect>
       
       <has_historical_configuration>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -234,7 +235,7 @@
       </has_historical_configuration>
       
       <has_historical_event_configuration>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -243,7 +244,7 @@
       </has_historical_event_configuration>
       
       <has_sub_state_machine>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -252,7 +253,7 @@
       </has_sub_state_machine>
       
       <has_event_history>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -261,7 +262,7 @@
       </has_event_history>
       
       <always_generates_event>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -270,7 +271,7 @@
       </always_generates_event>
       
       <has_true_sub_state>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -279,7 +280,7 @@
       </has_true_sub_state>
       
       <has_false_sub_state>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
@@ -288,7 +289,7 @@
       </has_false_sub_state>
 
       <has_condition>
-        <node type="numeric" ns="10">100</node>
+        <id type="numeric" ns="10">100</id>
         <is_forward>true</is_forward>
 	    <class>object</class>
 	    <browse_name>object</browse_name>
