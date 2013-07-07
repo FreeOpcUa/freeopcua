@@ -58,9 +58,10 @@ libopcuabinary_a_SOURCES = \
   src/binary_view.cpp \
   src/monitored_items.cpp \
   src/nodeid.cpp \
+  src/socket_channel.cpp \
   src/subscriptions.cpp
 
-libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
+libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include
 
 TESTS = opc_ua_binary_test
 
@@ -82,7 +83,7 @@ opc_ua_binary_test_SOURCES =  \
  tests/node_id.cpp \
  tests/reference_id.cpp
 
-opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 opc_ua_binary_test_LDADD = libopcuabinary.a
 opc_ua_binary_test_LDFLAGS = -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
 

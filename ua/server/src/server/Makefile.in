@@ -248,7 +248,16 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = address_space
+SUBDIRS = \
+  exe \
+  address_space \
+  binary_protocol \
+  builtin_server \
+  endpoint_services \
+  services_registry \
+  tcp_server \
+  xml_address_space_loader
+
 all: all-recursive
 
 .SUFFIXES:

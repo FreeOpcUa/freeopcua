@@ -4,50 +4,47 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
 #ifndef __OPC_UA_BINARY_CONNECT_H_
 #define __OPC_UA_BINARY_CONNECT_H_
 
-
 #include <cstddef>
+#include <opc/common/class_pointers.h>
+#include <opc/common/interface.h>
 
 namespace OpcUa
 {
-  class InputChannel
+  class InputChannel : protected virtual Common::Interface
   {
+  public:
+    DEFINE_CLASS_POINTERS(InputChannel);
+
   public:
     /// @brief Receive data
     /// @param data data for send
     /// @param size size of data
     /// @return size of received data
     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-
-    InputChannel(){};
-    virtual ~InputChannel(){}
-  private:
-    InputChannel(const InputChannel&){}
-    InputChannel& operator= (const InputChannel&){return *this;}
   };
 
-  class OutputChannel
+  class OutputChannel : protected virtual Common::Interface
   {
-  public:
-    virtual void Send(const char* message, std::size_t size) = 0;
+   public:
+    DEFINE_CLASS_POINTERS(OutputChannel);
 
-    OutputChannel(){}
-    virtual ~OutputChannel(){}
-  private:
-    OutputChannel(const OutputChannel&){}
-    OutputChannel& operator= (const OutputChannel&){return *this;}
+   public:
+    virtual void Send(const char* message, std::size_t size) = 0;
   };
 
   class IOChannel :
-    public virtual InputChannel,
-    public virtual OutputChannel
+    public InputChannel,
+    public OutputChannel
   {
+  public:
+    DEFINE_CLASS_POINTERS(IOChannel);
   };
 
 }

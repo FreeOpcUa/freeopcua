@@ -8,5 +8,13 @@
 # $Date: $
 # $Revision: $
 
-SUBDIRS = address_space
+SUBDIRS = \
+  exe \
+  address_space \
+  binary_protocol \
+  builtin_server \
+  endpoint_services \
+  services_registry \
+  tcp_server \
+  xml_address_space_loader
 

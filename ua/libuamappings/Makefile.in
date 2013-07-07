@@ -125,6 +125,7 @@ am_libopcuabinary_a_OBJECTS =  \
 	libopcuabinary_a-binary_view.$(OBJEXT) \
 	libopcuabinary_a-monitored_items.$(OBJEXT) \
 	libopcuabinary_a-nodeid.$(OBJEXT) \
+	libopcuabinary_a-socket_channel.$(OBJEXT) \
 	libopcuabinary_a-subscriptions.$(OBJEXT)
 libopcuabinary_a_OBJECTS = $(am_libopcuabinary_a_OBJECTS)
 am__EXEEXT_1 = opc_ua_binary_test$(EXEEXT)
@@ -365,9 +366,10 @@ libopcuabinary_a_SOURCES = \
   src/binary_view.cpp \
   src/monitored_items.cpp \
   src/nodeid.cpp \
+  src/socket_channel.cpp \
   src/subscriptions.cpp
 
-libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include 
+libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include
 opc_ua_binary_test_SOURCES = \
  tests/binary_deserialize.cpp \
  tests/binary_serialize.cpp \
@@ -384,7 +386,7 @@ opc_ua_binary_test_SOURCES = \
  tests/node_id.cpp \
  tests/reference_id.cpp
 
-opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 opc_ua_binary_test_LDADD = libopcuabinary.a
 opc_ua_binary_test_LDFLAGS = -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
 all: config.h
@@ -507,6 +509,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-binary_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-monitored_items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-nodeid.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-socket_channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuabinary_a-subscriptions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_deserialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opc_ua_binary_test-binary_serialize.Po@am__quote@
@@ -710,6 +713,20 @@ libopcuabinary_a-nodeid.obj: src/nodeid.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/nodeid.cpp' object='libopcuabinary_a-nodeid.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-nodeid.obj `if test -f 'src/nodeid.cpp'; then $(CYGPATH_W) 'src/nodeid.cpp'; else $(CYGPATH_W) '$(srcdir)/src/nodeid.cpp'; fi`
+
+libopcuabinary_a-socket_channel.o: src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-socket_channel.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-socket_channel.Tpo -c -o libopcuabinary_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-socket_channel.Tpo $(DEPDIR)/libopcuabinary_a-socket_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libopcuabinary_a-socket_channel.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
+
+libopcuabinary_a-socket_channel.obj: src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-socket_channel.obj -MD -MP -MF $(DEPDIR)/libopcuabinary_a-socket_channel.Tpo -c -o libopcuabinary_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuabinary_a-socket_channel.Tpo $(DEPDIR)/libopcuabinary_a-socket_channel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libopcuabinary_a-socket_channel.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuabinary_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
 
 libopcuabinary_a-subscriptions.o: src/subscriptions.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuabinary_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuabinary_a-subscriptions.o -MD -MP -MF $(DEPDIR)/libopcuabinary_a-subscriptions.Tpo -c -o libopcuabinary_a-subscriptions.o `test -f 'src/subscriptions.cpp' || echo '$(srcdir)/'`src/subscriptions.cpp

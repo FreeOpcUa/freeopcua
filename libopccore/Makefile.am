@@ -51,6 +51,7 @@ common_HEADERS = \
                   include/opc/common/interface.h \
                   include/opc/common/modules.h \
                   include/opc/common/object_id.h \
+                  include/opc/common/thread.h \
                   include/opc/common/value.h
 
 
@@ -128,6 +129,7 @@ libopccore_a_SOURCES = \
                   include/opc/managers/property_tree/property_tree.h \
                   include/opc/managers/property_tree/tree_object.h \
                   src/common/object_id.cpp \
+                  src/common/thread.cpp \
                   src/common/addons_core/addon_manager.cpp \
                   src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/dynamic_addon_factory.cpp \
@@ -173,19 +175,21 @@ common_test_SOURCES = \
                   tests/common/main.cpp \
                   tests/common/value_test.cpp
 
+
 common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 common_test_LDADD = libopccore.a
-common_test_LDFLAGS = -lcppunit -ldl
+common_test_LDFLAGS = -lcppunit -ldl 
 
 common_gtest_SOURCES = \
   tests/test_addon_manager.cpp \
   tests/test_dynamic_addon.cpp \
   tests/test_dynamic_addon_factory.cpp \
   tests/test_dynamic_addon.h \
-  tests/test_dynamic_addon_id.h
+  tests/test_dynamic_addon_id.h \
+  tests/common/thread_test.cpp
 
 common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lopccore,--no-whole-archive  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lopccore,--no-whole-archive  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 
 
 error_manager_test_SOURCES = \

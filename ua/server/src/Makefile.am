@@ -8,5 +8,13 @@
 # $Date: $
 # $Revision: $
 
-SUBDIRS = server
+SUBDIRS = common
+
+if BUILD_UA_CMD
+SUBDIRS += server
+endif
+
+if BUILD_UA_CMD
+SUBDIRS += client
+endif
 

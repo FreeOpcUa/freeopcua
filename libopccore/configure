@@ -15022,7 +15022,7 @@ fi
 # Check whether --with-gmock was given.
 if test "${with_gmock+set}" = set; then :
   withval=$with_gmock;
-              GMOCK_LIB=-Wl,--wholde-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive
+              GMOCK_LIB=-Wl,--whole-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive
 
               GMOCK_INCLUDES=-I$with_gmock/include
 
