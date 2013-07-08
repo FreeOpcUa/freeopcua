@@ -592,7 +592,7 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
-ac_unique_file="src/client/src/opcua_main.cpp"
+ac_unique_file="client/src/opcua_main.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -15179,31 +15179,29 @@ done
 #################################################################
 ac_config_files="$ac_config_files Makefile"
 
-ac_config_files="$ac_config_files src/Makefile"
+ac_config_files="$ac_config_files client/Makefile"
 
-ac_config_files="$ac_config_files src/client/Makefile"
+ac_config_files="$ac_config_files common/Makefile"
 
-ac_config_files="$ac_config_files src/common/Makefile"
+ac_config_files="$ac_config_files server/Makefile"
 
-ac_config_files="$ac_config_files src/server/Makefile"
+ac_config_files="$ac_config_files server/address_space/Makefile"
 
-ac_config_files="$ac_config_files src/server/address_space/Makefile"
+ac_config_files="$ac_config_files server/binary_protocol/Makefile"
 
-ac_config_files="$ac_config_files src/server/binary_protocol/Makefile"
+ac_config_files="$ac_config_files server/builtin_server/Makefile"
 
-ac_config_files="$ac_config_files src/server/builtin_server/Makefile"
+ac_config_files="$ac_config_files server/endpoint_services/Makefile"
 
-ac_config_files="$ac_config_files src/server/endpoint_services/Makefile"
+ac_config_files="$ac_config_files server/exe/Makefile"
 
-ac_config_files="$ac_config_files src/server/exe/Makefile"
+ac_config_files="$ac_config_files server/services_registry/Makefile"
 
-ac_config_files="$ac_config_files src/server/services_registry/Makefile"
+ac_config_files="$ac_config_files server/standard_namespace/Makefile"
 
-ac_config_files="$ac_config_files src/server/standard_namespace/Makefile"
+ac_config_files="$ac_config_files server/tcp_server/Makefile"
 
-ac_config_files="$ac_config_files src/server/tcp_server/Makefile"
-
-ac_config_files="$ac_config_files src/server/xml_address_space_loader/Makefile"
+ac_config_files="$ac_config_files server/xml_address_space_loader/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -16314,19 +16312,18 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-    "src/client/Makefile") CONFIG_FILES="$CONFIG_FILES src/client/Makefile" ;;
-    "src/common/Makefile") CONFIG_FILES="$CONFIG_FILES src/common/Makefile" ;;
-    "src/server/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/Makefile" ;;
-    "src/server/address_space/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/address_space/Makefile" ;;
-    "src/server/binary_protocol/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/binary_protocol/Makefile" ;;
-    "src/server/builtin_server/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/builtin_server/Makefile" ;;
-    "src/server/endpoint_services/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/endpoint_services/Makefile" ;;
-    "src/server/exe/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/exe/Makefile" ;;
-    "src/server/services_registry/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/services_registry/Makefile" ;;
-    "src/server/standard_namespace/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/standard_namespace/Makefile" ;;
-    "src/server/tcp_server/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/tcp_server/Makefile" ;;
-    "src/server/xml_address_space_loader/Makefile") CONFIG_FILES="$CONFIG_FILES src/server/xml_address_space_loader/Makefile" ;;
+    "client/Makefile") CONFIG_FILES="$CONFIG_FILES client/Makefile" ;;
+    "common/Makefile") CONFIG_FILES="$CONFIG_FILES common/Makefile" ;;
+    "server/Makefile") CONFIG_FILES="$CONFIG_FILES server/Makefile" ;;
+    "server/address_space/Makefile") CONFIG_FILES="$CONFIG_FILES server/address_space/Makefile" ;;
+    "server/binary_protocol/Makefile") CONFIG_FILES="$CONFIG_FILES server/binary_protocol/Makefile" ;;
+    "server/builtin_server/Makefile") CONFIG_FILES="$CONFIG_FILES server/builtin_server/Makefile" ;;
+    "server/endpoint_services/Makefile") CONFIG_FILES="$CONFIG_FILES server/endpoint_services/Makefile" ;;
+    "server/exe/Makefile") CONFIG_FILES="$CONFIG_FILES server/exe/Makefile" ;;
+    "server/services_registry/Makefile") CONFIG_FILES="$CONFIG_FILES server/services_registry/Makefile" ;;
+    "server/standard_namespace/Makefile") CONFIG_FILES="$CONFIG_FILES server/standard_namespace/Makefile" ;;
+    "server/tcp_server/Makefile") CONFIG_FILES="$CONFIG_FILES server/tcp_server/Makefile" ;;
+    "server/xml_address_space_loader/Makefile") CONFIG_FILES="$CONFIG_FILES server/xml_address_space_loader/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

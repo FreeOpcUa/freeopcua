@@ -8,7 +8,7 @@
 
 AC_INIT
 AC_CONFIG_AUX_DIR([.])
-AC_CONFIG_SRCDIR([src/client/src/opcua_main.cpp])
+AC_CONFIG_SRCDIR([client/src/opcua_main.cpp])
 AM_INIT_AUTOMAKE([opcua], [0.1.0], [rykovanov.as@gmail.com])
 
 CXXFLAGS="-O0 -g -Wall -std=c++0x"
@@ -127,19 +127,18 @@ AC_CHECK_HEADERS([unistd.h])
 
 #################################################################
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([src/Makefile])
-AC_CONFIG_FILES([src/client/Makefile])
-AC_CONFIG_FILES([src/common/Makefile])
-AC_CONFIG_FILES([src/server/Makefile])
-AC_CONFIG_FILES([src/server/address_space/Makefile])
-AC_CONFIG_FILES([src/server/binary_protocol/Makefile])
-AC_CONFIG_FILES([src/server/builtin_server/Makefile])
-AC_CONFIG_FILES([src/server/endpoint_services/Makefile])
-AC_CONFIG_FILES([src/server/exe/Makefile])
-AC_CONFIG_FILES([src/server/services_registry/Makefile])
-AC_CONFIG_FILES([src/server/standard_namespace/Makefile])
-AC_CONFIG_FILES([src/server/tcp_server/Makefile])
-AC_CONFIG_FILES([src/server/xml_address_space_loader/Makefile])
+AC_CONFIG_FILES([client/Makefile])
+AC_CONFIG_FILES([common/Makefile])
+AC_CONFIG_FILES([server/Makefile])
+AC_CONFIG_FILES([server/address_space/Makefile])
+AC_CONFIG_FILES([server/binary_protocol/Makefile])
+AC_CONFIG_FILES([server/builtin_server/Makefile])
+AC_CONFIG_FILES([server/endpoint_services/Makefile])
+AC_CONFIG_FILES([server/exe/Makefile])
+AC_CONFIG_FILES([server/services_registry/Makefile])
+AC_CONFIG_FILES([server/standard_namespace/Makefile])
+AC_CONFIG_FILES([server/tcp_server/Makefile])
+AC_CONFIG_FILES([server/xml_address_space_loader/Makefile])
 
 AC_OUTPUT
 
