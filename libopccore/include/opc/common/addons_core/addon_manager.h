@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -35,7 +35,7 @@ namespace Common
 
   class AddonsManager : private Interface
   {
-  public: 
+  public:
     DEFINE_CLASS_POINTERS(AddonsManager);
 
   public:
@@ -66,7 +66,7 @@ namespace Common
     virtual void Stop() = 0;
   };
 
-  
+
   /// @brief Get instance of addons core
   /// @throws in case of error
   /// @note Only one instance of addons manager can be at one time.
@@ -77,17 +77,16 @@ namespace Common
   /// @return instance od addon casted to specified type
   /// @throws if unable to cast addon, unable to find addon, or in casr of error
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, const AddonID& id)
+  typename std::shared_ptr<AddonClass> GetAddon(const AddonsManager& addons, const AddonID& id)
   {
     return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
   }
 
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(AddonsManager& addons, const char* id)
+  typename std::shared_ptr<AddonClass> GetAddon(const AddonsManager& addons, const char* id)
   {
     return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
   }
-
 
 } // namespace Common
 

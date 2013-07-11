@@ -4,7 +4,7 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
@@ -12,7 +12,7 @@
 #define _OPC_UA_SERVER_OPTIONS_H_
 
 
-#include <opc/common/addons_core/addon_parameters.h>
+#include <opc/common/addons_core/addon.h>
 
 #include <string>
 #include <vector>
@@ -22,25 +22,12 @@ namespace OpcUa
   namespace Server
   {
 
-    struct ModuleConfig
-    {
-      std::string ID;
-      std::string Path;
-      std::vector<std::string> DependsOn;
-      Common::AddonParameters Parameters;
-    };
-
-    typedef std::vector<ModuleConfig> ModulesConfiguration;
+    typedef std::vector<Common::AddonConfiguration> ModulesConfiguration;
 
     class CommandLine
     {
     public:
       CommandLine(int argc, char** argv);
-
-      int GetPort() const
-      {
-        return Port;
-      }
 
       ModulesConfiguration GetModules()
       {
@@ -48,7 +35,6 @@ namespace OpcUa
       }
 
     private:
-      int Port;
       ModulesConfiguration Modules;
     };
 

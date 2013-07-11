@@ -4,11 +4,14 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
 #include "server_options.h"
+
+#include <opc/common/addons_core/dynamic_addon_factory.h>
+
 
 #include <boost/foreach.hpp>
 #include <boost/program_options/options_description.hpp>
@@ -91,9 +94,10 @@ namespace
           continue;
         }
 
-        Server::ModuleConfig moduleConfig;
+        Common::AddonConfiguration moduleConfig;
         moduleConfig.ID = module.second.get<std::string>("id");
-        moduleConfig.Path = module.second.get<std::string>("path");
+        const std::string path = module.second.get<std::string>("path");
+        moduleConfig.Factory = Common::CreateDynamicAddonFactory(path.c_str());
         if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
         {
           BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
@@ -102,10 +106,10 @@ namespace
             {
               continue;
             }
-            moduleConfig.DependsOn.push_back(depend.second.data());
+            moduleConfig.Dependencies.push_back(depend.second.data());
           }
         }
-        
+
         if (boost::optional<const ptree&> parameters = module.second.get_child_optional("parameters"))
         {
           BOOST_FOREACH(const ptree::value_type& parameter, parameters.get())
@@ -139,9 +143,9 @@ namespace OpcUa
 
       po::variables_map vm;
       po::store(po::parse_command_line(argc, argv, desc), vm);
-      po::notify(vm);    
+      po::notify(vm);
 
-      if (vm.count(OPTION_HELP)) 
+      if (vm.count(OPTION_HELP))
       {
         desc.print(std::cout);
         return;

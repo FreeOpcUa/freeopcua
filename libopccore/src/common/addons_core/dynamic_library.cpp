@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -14,31 +14,50 @@
 
 #include <dlfcn.h>
 
-namespace Common
+namespace
 {
 
-  DynamicLibrary::DynamicLibrary(const std::string& libraryPath)
-    : Path(libraryPath)
-    , Library(dlopen(libraryPath.c_str(), RTLD_LAZY))
+  void* LoadLibrary(const char* path)
   {
-    if (!Library)
+    void* library = dlopen(path, RTLD_LAZY);
+    if (!library)
     {
       std::string msg;
       if (const char* err = dlerror())
       {
         msg = err;
       }
-      THROW_ERROR2(UnableToLoadDynamicLibrary, Path, msg);
+      THROW_ERROR2(UnableToLoadDynamicLibrary, path, msg);
     }
+    return library;
+  }
+
+}
+
+namespace Common
+{
+
+  DynamicLibrary::DynamicLibrary(const std::string& libraryPath)
+    : Path(libraryPath)
+    , Library(0)
+  {
   }
 
   DynamicLibrary::~DynamicLibrary()
   {
-    dlclose(Library);
+    if (Library)
+    {
+      dlclose(Library);
+    }
   }
 
   void* DynamicLibrary::FindSymbol(const std::string& funcName)
   {
+    if (!Library)
+    {
+      Library = LoadLibrary(Path.c_str());
+    }
+
     void* func = dlsym(Library, funcName.c_str());
     if (!func)
     {
