@@ -10,18 +10,20 @@
 
 #pragma once
 
-#include <opc/ua/computer.h>
-#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/common/addons_core/addon.h>
 
 namespace OpcUa
 {
   namespace Server
   {
 
-    class BuiltinServerAddon : public TcpServerAddon
+    class BuiltingServerFactory : public Common::AddonFactory
     {
     public:
-      virtual std::shared_ptr<Remote::Computer> GetComputer() const = 0;
+        DEFINE_CLASS_POINTERS(BuiltingServerFactory);
+
+      public:
+        virtual Common::Addon::UniquePtr CreateAddon();
     };
 
   } // namespace Server
