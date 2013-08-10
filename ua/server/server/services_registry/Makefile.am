@@ -33,11 +33,11 @@ libservices_registry_addon_la_SOURCES = \
 libservices_registry_addon_la_CPPFLAGS = $(INCLUDES)
 libservices_registry_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
-TESTS = test_services_registry
+#TESTS = test_services_registry
 
-check_PROGRAMS = $(TESTS)
+#check_PROGRAMS = $(TESTS)
 
-test_services_registry_SOURCES =
-test_services_registry_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_services_registry_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+#test_services_registry_SOURCES =
+#test_services_registry_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#test_services_registry_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 
