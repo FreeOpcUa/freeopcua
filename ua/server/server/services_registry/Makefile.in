@@ -105,7 +105,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libservices_registry_addon_la_LIBADD =
 am_libservices_registry_addon_la_OBJECTS =  \
-	libservices_registry_addon_la-services_registry.lo \
+	libservices_registry_addon_la-services_registry_factory.lo \
+	libservices_registry_addon_la-services_registry_impl.lo \
 	libservices_registry_addon_la-services_registry_module.lo
 libservices_registry_addon_la_OBJECTS =  \
 	$(am_libservices_registry_addon_la_OBJECTS)
@@ -292,8 +293,10 @@ addonsinclude_HEADERS = \
   include/opc/ua/server/addons/services_registry.h
 
 libservices_registry_addon_la_SOURCES = \
-  src/services_registry.cpp \
+  src/services_registry_factory.cpp \
   src/services_registry_factory.h \
+  src/services_registry_impl.cpp \
+  src/services_registry_impl.h \
   src/services_registry_module.cpp
 
 libservices_registry_addon_la_CPPFLAGS = $(INCLUDES)
@@ -373,7 +376,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libservices_registry_addon_la-services_registry.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libservices_registry_addon_la-services_registry_factory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libservices_registry_addon_la-services_registry_impl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libservices_registry_addon_la-services_registry_module.Plo@am__quote@
 
 .cpp.o:
@@ -397,12 +401,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libservices_registry_addon_la-services_registry.lo: src/services_registry.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libservices_registry_addon_la-services_registry.lo -MD -MP -MF $(DEPDIR)/libservices_registry_addon_la-services_registry.Tpo -c -o libservices_registry_addon_la-services_registry.lo `test -f 'src/services_registry.cpp' || echo '$(srcdir)/'`src/services_registry.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libservices_registry_addon_la-services_registry.Tpo $(DEPDIR)/libservices_registry_addon_la-services_registry.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/services_registry.cpp' object='libservices_registry_addon_la-services_registry.lo' libtool=yes @AMDEPBACKSLASH@
+libservices_registry_addon_la-services_registry_factory.lo: src/services_registry_factory.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libservices_registry_addon_la-services_registry_factory.lo -MD -MP -MF $(DEPDIR)/libservices_registry_addon_la-services_registry_factory.Tpo -c -o libservices_registry_addon_la-services_registry_factory.lo `test -f 'src/services_registry_factory.cpp' || echo '$(srcdir)/'`src/services_registry_factory.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libservices_registry_addon_la-services_registry_factory.Tpo $(DEPDIR)/libservices_registry_addon_la-services_registry_factory.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/services_registry_factory.cpp' object='libservices_registry_addon_la-services_registry_factory.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libservices_registry_addon_la-services_registry.lo `test -f 'src/services_registry.cpp' || echo '$(srcdir)/'`src/services_registry.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libservices_registry_addon_la-services_registry_factory.lo `test -f 'src/services_registry_factory.cpp' || echo '$(srcdir)/'`src/services_registry_factory.cpp
+
+libservices_registry_addon_la-services_registry_impl.lo: src/services_registry_impl.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libservices_registry_addon_la-services_registry_impl.lo -MD -MP -MF $(DEPDIR)/libservices_registry_addon_la-services_registry_impl.Tpo -c -o libservices_registry_addon_la-services_registry_impl.lo `test -f 'src/services_registry_impl.cpp' || echo '$(srcdir)/'`src/services_registry_impl.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libservices_registry_addon_la-services_registry_impl.Tpo $(DEPDIR)/libservices_registry_addon_la-services_registry_impl.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/services_registry_impl.cpp' object='libservices_registry_addon_la-services_registry_impl.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libservices_registry_addon_la-services_registry_impl.lo `test -f 'src/services_registry_impl.cpp' || echo '$(srcdir)/'`src/services_registry_impl.cpp
 
 libservices_registry_addon_la-services_registry_module.lo: src/services_registry_module.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libservices_registry_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libservices_registry_addon_la-services_registry_module.lo -MD -MP -MF $(DEPDIR)/libservices_registry_addon_la-services_registry_module.Tpo -c -o libservices_registry_addon_la-services_registry_module.lo `test -f 'src/services_registry_module.cpp' || echo '$(srcdir)/'`src/services_registry_module.cpp

@@ -26,8 +26,10 @@ lib_LTLIBRARIES = libservices_registry_addon.la
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/services_registry.h
 libservices_registry_addon_la_SOURCES = \
-  src/services_registry.cpp \
+  src/services_registry_factory.cpp \
   src/services_registry_factory.h \
+  src/services_registry_impl.cpp \
+  src/services_registry_impl.h \
   src/services_registry_module.cpp
 
 libservices_registry_addon_la_CPPFLAGS = $(INCLUDES)
