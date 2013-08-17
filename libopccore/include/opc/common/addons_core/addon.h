@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -25,7 +25,7 @@ namespace Common
     DEFINE_CLASS_POINTERS(Addon);
 
   public:
-    /// @brief initialize addon. 
+    /// @brief initialize addon.
     /// @note Calls when all addons dependencies resolved.
     /// suppose that addon fully ready for work.
     virtual void Initialize(AddonsManager& manager, const AddonParameters& parameters) = 0;

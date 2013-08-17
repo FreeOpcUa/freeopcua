@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -43,11 +43,19 @@ namespace
 
   void StopAddon(const std::pair<Common::AddonID, AddonData>& addonPair)
   {
-    if (addonPair.second.Addon)
+    if (!addonPair.second.Addon)
     {
-      std::clog << "Stopping addon '" << addonPair.second.ID << "'" <<  std::endl; 
+      return;
+    }
+    try
+    {
+      std::clog << "Stopping addon '" << addonPair.second.ID << "'" <<  std::endl;
       addonPair.second.Addon->Stop();
-      std::clog << "Addon '" << addonPair.second.ID << "' successfuly stopped." <<  std::endl; 
+      std::clog << "Addon '" << addonPair.second.ID << "' successfuly stopped." <<  std::endl;
+    }
+    catch (const std::exception& exc)
+    {
+      std::cerr << "Failed to stop addon '" << addonPair.second.ID << "': " << exc.what() <<  std::endl;
     }
   }
 
@@ -121,7 +129,11 @@ namespace
         THROW_ERROR(AddonsManagerAlreadyStarted);
       }
       // TODO lock manager
-      DoStart();
+      if (!DoStart())
+      {
+        StopAddons();
+        throw std::logic_error("Failed to start addons.");
+      }
       ManagerStarted = true;
     }
 
@@ -132,28 +144,41 @@ namespace
         THROW_ERROR(AddonsManagerAlreadyStopped);
       }
 
+      StopAddons();
+      ManagerStarted = false;
+    }
+  private:
+    void StopAddons()
+    {
       // TODO lock manager
       if (!Addons.empty())
       {
         std::for_each(Addons.begin(), Addons.end(), StopAddon);
         Addons.clear();
       }
-
-      ManagerStarted = false;
     }
-  private:
-    void DoStart()
+
+    bool DoStart()
     {
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
-        std::clog << "Creating addon '" << addonData->ID << "'" <<  std::endl; 
+        std::clog << "Creating addon '" << addonData->ID << "'" <<  std::endl;
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
+        std::clog << "Initializing addon '" << addonData->ID << "'" <<  std::endl;
+        try
+        {
+          addon->Initialize(*this, addonData->Parameters);
+          std::clog << "Addon '" << addonData->ID << "' successfully initialized." <<  std::endl;
+        }
+        catch (const std::exception& exc)
+        {
+          std::cerr << "Failed to initialize addon '" << addonData->ID << "': "<< exc.what() <<  std::endl;
+          return false;
+        }
         addonData->Addon = addon;
-        std::clog << "Initializing addon '" << addonData->ID << "'" <<  std::endl; 
-        addon->Initialize(*this, addonData->Parameters);
-        std::clog << "Addon '" << addonData->ID << "' successfuly initialized." <<  std::endl; 
       }
       EnsureAllAddonsStarted();
+      return true;
    }
 
    AddonData* GetNextAddonDataForStart()
@@ -206,7 +231,7 @@ namespace
        THROW_ERROR1(AddonNotRegistered, id);
      }
    }
-  
+
    void EnsureAddonNotRegistered(Common::AddonID id) const
    {
      if (IsAddonRegistered(id))
