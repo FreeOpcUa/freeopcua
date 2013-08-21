@@ -27,8 +27,3 @@ namespace OpcUa
 
   } // namespace Internal
 } // namespace OpcUa
-
-extern "C" Common::Addon::UniquePtr CreateAddon()
-{
-  return Common::Addon::UniquePtr(new OpcUa::Internal::StandardNamespaceAddon());
-}

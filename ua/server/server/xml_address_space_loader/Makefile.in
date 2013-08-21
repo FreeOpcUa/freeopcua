@@ -113,6 +113,10 @@ libxml_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(libxml_ns_addon_la_LDFLAGS) $(LDFLAGS) -o $@
 am__EXEEXT_1 = xml_address_space_ut$(EXEEXT)
 am_xml_address_space_ut_OBJECTS =  \
+	xml_address_space_ut-address_space_addon.$(OBJEXT) \
+	xml_address_space_ut-address_space_internal.$(OBJEXT) \
+	xml_address_space_ut-services_registry_factory.$(OBJEXT) \
+	xml_address_space_ut-services_registry_impl.$(OBJEXT) \
 	xml_address_space_ut-xml_address_space_addon.$(OBJEXT) \
 	xml_address_space_ut-xml_address_space_loader.$(OBJEXT) \
 	xml_address_space_ut-xml_addressspace_ut.$(OBJEXT) \
@@ -305,6 +309,12 @@ libxml_ns_addon_la_SOURCES = \
 libxml_ns_addon_la_CPPFLAGS = $(INCLUDES) -I/usr/include/libxml2 -I$(top_srcdir) 
 libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 xml_address_space_ut_SOURCES = \
+  ../address_space/src/address_space_addon.cpp \
+  ../address_space/src/address_space_internal.cpp \
+  ../services_registry/src/services_registry_factory.cpp \
+  ../services_registry/src/services_registry_factory.h \
+  ../services_registry/src/services_registry_impl.cpp \
+  ../services_registry/src/services_registry_impl.h \
   src/xml_address_space_addon.cpp \
   src/xml_address_space_loader.cpp \
   tests/xml_addressspace_ut.cpp \
@@ -402,6 +412,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_address_space_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_address_space_loader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxml_ns_addon_la-xml_address_space_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-address_space_addon.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-address_space_internal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-services_registry_factory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-services_registry_impl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-xml_address_space_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-xml_address_space_addon_ut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_address_space_ut-xml_address_space_loader.Po@am__quote@
@@ -448,6 +462,62 @@ libxml_ns_addon_la-xml_address_space_module.lo: src/xml_address_space_module.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/xml_address_space_module.cpp' object='libxml_ns_addon_la-xml_address_space_module.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libxml_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libxml_ns_addon_la-xml_address_space_module.lo `test -f 'src/xml_address_space_module.cpp' || echo '$(srcdir)/'`src/xml_address_space_module.cpp
+
+xml_address_space_ut-address_space_addon.o: ../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_addon.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_addon.Tpo -c -o xml_address_space_ut-address_space_addon.o `test -f '../address_space/src/address_space_addon.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_addon.Tpo $(DEPDIR)/xml_address_space_ut-address_space_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_addon.cpp' object='xml_address_space_ut-address_space_addon.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_addon.o `test -f '../address_space/src/address_space_addon.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_addon.cpp
+
+xml_address_space_ut-address_space_addon.obj: ../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_addon.obj -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_addon.Tpo -c -o xml_address_space_ut-address_space_addon.obj `if test -f '../address_space/src/address_space_addon.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_addon.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_addon.Tpo $(DEPDIR)/xml_address_space_ut-address_space_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_addon.cpp' object='xml_address_space_ut-address_space_addon.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_addon.obj `if test -f '../address_space/src/address_space_addon.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_addon.cpp'; fi`
+
+xml_address_space_ut-address_space_internal.o: ../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_internal.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo -c -o xml_address_space_ut-address_space_internal.o `test -f '../address_space/src/address_space_internal.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo $(DEPDIR)/xml_address_space_ut-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_internal.cpp' object='xml_address_space_ut-address_space_internal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_internal.o `test -f '../address_space/src/address_space_internal.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_internal.cpp
+
+xml_address_space_ut-address_space_internal.obj: ../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-address_space_internal.obj -MD -MP -MF $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo -c -o xml_address_space_ut-address_space_internal.obj `if test -f '../address_space/src/address_space_internal.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_internal.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-address_space_internal.Tpo $(DEPDIR)/xml_address_space_ut-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_internal.cpp' object='xml_address_space_ut-address_space_internal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-address_space_internal.obj `if test -f '../address_space/src/address_space_internal.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_internal.cpp'; fi`
+
+xml_address_space_ut-services_registry_factory.o: ../services_registry/src/services_registry_factory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-services_registry_factory.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-services_registry_factory.Tpo -c -o xml_address_space_ut-services_registry_factory.o `test -f '../services_registry/src/services_registry_factory.cpp' || echo '$(srcdir)/'`../services_registry/src/services_registry_factory.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-services_registry_factory.Tpo $(DEPDIR)/xml_address_space_ut-services_registry_factory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../services_registry/src/services_registry_factory.cpp' object='xml_address_space_ut-services_registry_factory.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-services_registry_factory.o `test -f '../services_registry/src/services_registry_factory.cpp' || echo '$(srcdir)/'`../services_registry/src/services_registry_factory.cpp
+
+xml_address_space_ut-services_registry_factory.obj: ../services_registry/src/services_registry_factory.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-services_registry_factory.obj -MD -MP -MF $(DEPDIR)/xml_address_space_ut-services_registry_factory.Tpo -c -o xml_address_space_ut-services_registry_factory.obj `if test -f '../services_registry/src/services_registry_factory.cpp'; then $(CYGPATH_W) '../services_registry/src/services_registry_factory.cpp'; else $(CYGPATH_W) '$(srcdir)/../services_registry/src/services_registry_factory.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-services_registry_factory.Tpo $(DEPDIR)/xml_address_space_ut-services_registry_factory.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../services_registry/src/services_registry_factory.cpp' object='xml_address_space_ut-services_registry_factory.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-services_registry_factory.obj `if test -f '../services_registry/src/services_registry_factory.cpp'; then $(CYGPATH_W) '../services_registry/src/services_registry_factory.cpp'; else $(CYGPATH_W) '$(srcdir)/../services_registry/src/services_registry_factory.cpp'; fi`
+
+xml_address_space_ut-services_registry_impl.o: ../services_registry/src/services_registry_impl.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-services_registry_impl.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-services_registry_impl.Tpo -c -o xml_address_space_ut-services_registry_impl.o `test -f '../services_registry/src/services_registry_impl.cpp' || echo '$(srcdir)/'`../services_registry/src/services_registry_impl.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-services_registry_impl.Tpo $(DEPDIR)/xml_address_space_ut-services_registry_impl.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../services_registry/src/services_registry_impl.cpp' object='xml_address_space_ut-services_registry_impl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-services_registry_impl.o `test -f '../services_registry/src/services_registry_impl.cpp' || echo '$(srcdir)/'`../services_registry/src/services_registry_impl.cpp
+
+xml_address_space_ut-services_registry_impl.obj: ../services_registry/src/services_registry_impl.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-services_registry_impl.obj -MD -MP -MF $(DEPDIR)/xml_address_space_ut-services_registry_impl.Tpo -c -o xml_address_space_ut-services_registry_impl.obj `if test -f '../services_registry/src/services_registry_impl.cpp'; then $(CYGPATH_W) '../services_registry/src/services_registry_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/../services_registry/src/services_registry_impl.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/xml_address_space_ut-services_registry_impl.Tpo $(DEPDIR)/xml_address_space_ut-services_registry_impl.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../services_registry/src/services_registry_impl.cpp' object='xml_address_space_ut-services_registry_impl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o xml_address_space_ut-services_registry_impl.obj `if test -f '../services_registry/src/services_registry_impl.cpp'; then $(CYGPATH_W) '../services_registry/src/services_registry_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/../services_registry/src/services_registry_impl.cpp'; fi`
 
 xml_address_space_ut-xml_address_space_addon.o: src/xml_address_space_addon.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(xml_address_space_ut_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT xml_address_space_ut-xml_address_space_addon.o -MD -MP -MF $(DEPDIR)/xml_address_space_ut-xml_address_space_addon.Tpo -c -o xml_address_space_ut-xml_address_space_addon.o `test -f 'src/xml_address_space_addon.cpp' || echo '$(srcdir)/'`src/xml_address_space_addon.cpp

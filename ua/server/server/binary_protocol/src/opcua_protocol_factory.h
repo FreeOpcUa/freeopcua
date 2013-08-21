@@ -10,12 +10,23 @@
 
 #pragma once
 
+#include "opcua_protocol_addon.h"
+
+#include <opc/common/addons_core/addon.h>
+
 namespace OpcUa
 {
   namespace Server
   {
 
-    const char OpcUaProtocolAddonID[] = "opcua_protocol";
+    class OpcUaProtocolFactory : public Common::AddonFactory
+    {
+    public:
+      virtual Common::Addon::UniquePtr CreateAddon()
+      {
+        return Common::Addon::UniquePtr(new Impl::OpcUaProtocol());
+      }
+    };
 
   } // namespace Server
-} // nmespace OpcUa
+} // namespace OpcUa

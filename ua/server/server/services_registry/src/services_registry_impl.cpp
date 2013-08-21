@@ -71,6 +71,9 @@ public:
   InternalComputer()
     : Services(new DefaultServices())
   {
+    SetEndpoints(Services);
+    SetViews(Services);
+    SetAttributes(Services);
   }
 
   virtual void CreateSession(const SessionParameters& parameters)

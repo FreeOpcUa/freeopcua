@@ -32,6 +32,12 @@ TESTS = xml_address_space_ut
 check_PROGRAMS = $(TESTS)
 
 xml_address_space_ut_SOURCES = \
+  ../address_space/src/address_space_addon.cpp \
+  ../address_space/src/address_space_internal.cpp \
+  ../services_registry/src/services_registry_factory.cpp \
+  ../services_registry/src/services_registry_factory.h \
+  ../services_registry/src/services_registry_impl.cpp \
+  ../services_registry/src/services_registry_impl.h \
   src/xml_address_space_addon.cpp \
   src/xml_address_space_loader.cpp \
   tests/xml_addressspace_ut.cpp \

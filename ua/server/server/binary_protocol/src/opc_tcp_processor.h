@@ -4,12 +4,11 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef opcua_server_internal_opc_tcp_processor_h
-#define opcua_server_internal_opc_tcp_processor_h
+#pragma once
 
 #include <opc/ua/computer.h>
 #include <opc/ua/connection_listener.h>
@@ -23,5 +22,3 @@ namespace OpcUa
 
   }
 }
-
-#endif // opcua_server_internal_opc_tcp_processor_h

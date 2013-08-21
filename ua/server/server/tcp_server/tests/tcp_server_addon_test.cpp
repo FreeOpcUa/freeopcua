@@ -4,30 +4,27 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <opc/ua/client/remote_connection.h>
-#include <opc/ua/server/addons/builtin_computer.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opc/ua/server/server.h>
+
+#include "../src/tcp_server_factory.h"
 
 #include <chrono>
 #include <thread>
-
-#include "common.h"
 
 using namespace testing;
 
 const unsigned short TestPort = 33449;
 
 
-namespace 
+namespace
 {
 
   class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
@@ -98,39 +95,21 @@ namespace
     return config;
   }
 
-  Common::AddonConfiguration CreateBuiltinComputerAddonConfiguration()
-  {
-    Common::AddonConfiguration config;
-    const std::string modulePath = "./.libs/libbuiltin_computer_addon.so";
-    config.ID = OpcUa::Server::TcpServerAddonID;
-    config.Factory =  Common::CreateDynamicAddonFactory(modulePath.c_str());
-    return config;
-  }
-
-
   Common::AddonConfiguration CreateTcpAddonConfig()
   {
     Common::AddonConfiguration tcpConfig;
     tcpConfig.ID = OpcUa::Server::TcpServerAddonID;
-    tcpConfig.Factory = Common::CreateDynamicAddonFactory(OpcUa::Tests::GetTcpServerAddonPath().c_str());
+    tcpConfig.Factory.reset(new OpcUa::Impl::TcpServerFactory());
     return tcpConfig;
   }
 
-  Common::AddonConfiguration CreateEndpointsAddonConfig()
-  {
-    Common::AddonConfiguration config;
-    config.ID = "echo_addon";
-    config.Factory = CreateEchoAddonFactory();
-    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
-    return config;
-  }
 }
 
-TEST(TcpServerAddon, CanBeLoadedLoaded)
+TEST(TcpServerAddon, CanBeCreated)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
   addons->Register(CreateTcpAddonConfig());
-  addons->Register(CreateEndpointsAddonConfig());
+  addons->Register(CreateEchoAddonConfiguration());
   addons->Start();
   ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
   addons->Stop();
@@ -140,7 +119,7 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
 {
   std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
   addons->Register(CreateTcpAddonConfig());
-  addons->Register(CreateEndpointsAddonConfig());
+  addons->Register(CreateEchoAddonConfiguration());
   addons->Start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -159,16 +138,3 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
   addons->Stop();
   addons.reset();
 }
-
-TEST(BuiltinComputerAddon, CanBeLoadedLoaded)
-{
-  std::shared_ptr<Common::AddonsManager> addons = Common::CreateAddonsManager();
-  addons->Register(CreateEchoAddonConfiguration());
-  addons->Register(CreateBuiltinComputerAddonConfiguration());
-  addons->Start();
-
-  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
-
-  addons->Stop();
-}
-

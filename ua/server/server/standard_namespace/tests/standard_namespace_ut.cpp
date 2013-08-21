@@ -12,17 +12,18 @@
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/status_codes.h>
 
-#include <src/server/address_space/standard_namespace.h>
-#include <src/server/address_space/address_space_internal.h>
+#include "../../standard_namespace/src/standard_namespace.h"
+#include "../../address_space/src/address_space_internal.h"
 
 #include <functional>
 
-#include "common.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using namespace testing;
 using namespace OpcUa;
 
-class StandardNamespaceStructure : public testing::Test
+class StandardNamespaceStructure : public Test
 {
 protected:
   virtual void SetUp()

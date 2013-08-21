@@ -8,14 +8,11 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#pragma once
+#include "endpoints_services_addon.h"
 
-namespace OpcUa
+
+extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  namespace Server
-  {
+  return Common::Addon::UniquePtr(new OpcUa::Impl::EndpointsAddon());
+}
 
-    const char OpcUaProtocolAddonID[] = "opcua_protocol";
-
-  } // namespace Server
-} // nmespace OpcUa

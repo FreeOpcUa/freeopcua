@@ -34,7 +34,7 @@ namespace OpcUa
     class StandardNamespaceAddonFactory : public Common::AddonFactory
     {
     public:
-      virtual Common::Addon::UniquePtr CreateAddon() const
+      virtual Common::Addon::UniquePtr CreateAddon()
       {
         return Common::Addon::UniquePtr(new StandardNamespaceAddon());
       }

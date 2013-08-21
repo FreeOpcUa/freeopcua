@@ -1,0 +1,32 @@
+/// @author Alexander Rykovanov 2013
+/// @email rykovanov.as@gmail.com
+/// @brief OPC UA Address space part.
+/// @license GNU GPL
+///
+/// Distributed under the GNU GPL License
+/// (See accompanying file LICENSE or copy at
+/// http://www.gnu.org/licenses/gpl.html)
+///
+
+#pragma once
+
+#include <opc/ua/server/addons/builtin_server_factory.h>
+#include <opc/common/addons_core/addon_manager.h>
+
+namespace OpcUa
+{
+  namespace Test
+  {
+
+    void RegisterBuiltinServerAddon(Common::AddonsManager& addons)
+    {
+      Common::AddonConfiguration config;
+      config.Factory.reset(new OpcUa::Server::BuiltingServerFactory());
+      config.ID = OpcUa::Server::TcpServerAddonID;
+      addons.Register(config);
+    }
+
+  } // namespace Test
+} // namespace OpcUa
+
+

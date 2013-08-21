@@ -15,6 +15,7 @@ SUBDIRS = \
   builtin_server \
   endpoint_services \
   services_registry \
+  standard_namespace \
   tcp_server \
   xml_address_space_loader
 

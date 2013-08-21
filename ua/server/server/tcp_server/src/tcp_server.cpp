@@ -57,23 +57,23 @@ namespace
   };
 
 
-  class ClientThread : public Common::ThreadObserver
+  class Client : public Common::ThreadObserver
   {
   public:
-    ClientThread(std::shared_ptr<IOChannel> channel, std::shared_ptr<IncomingConnectionProcessor> processor, std::function<void()> onFinish)
+    Client(std::shared_ptr<IOChannel> channel, std::shared_ptr<IncomingConnectionProcessor> processor, std::function<void()> onFinish)
       : Channel(channel)
       , Processor(processor)
       , OnFinish(onFinish)
     {
       std::clog << "Starting new client thread." << std::endl;
-      std::function<void()> func = std::bind(&ClientThread::Run, std::ref(*this));
-      ServerThread.reset(new Common::Thread(func));
+      std::function<void()> func = std::bind(&Client::Run, std::ref(*this));
+      ClientThread.reset(new Common::Thread(func));
     }
 
-    ~ClientThread()
+    ~Client()
     {
-      ServerThread->Join();
-      ServerThread.reset();
+      ClientThread->Join();
+      ClientThread.reset();
       std::clog << "Client thread stopped." << std::endl;
     }
 
@@ -107,7 +107,7 @@ namespace
     std::shared_ptr<IOChannel> Channel;
     std::shared_ptr<IncomingConnectionProcessor> Processor;
     std::function<void()> OnFinish;
-    std::unique_ptr<Common::Thread> ServerThread;
+    std::unique_ptr<Common::Thread> ClientThread;
   };
 
 
@@ -223,7 +223,7 @@ namespace
 
         std::unique_lock<std::mutex> lock(ClientsMutex);
         std::shared_ptr<IOChannel> clientChannel(new SocketChannel(clientSocket));
-        std::shared_ptr<ClientThread> clientThread(new ClientThread(clientChannel, Processor, std::bind(&TcpServer::Erase, std::ref(*this), clientSocket)));
+        std::shared_ptr<Client> clientThread(new Client(clientChannel, Processor, std::bind(&TcpServer::Erase, std::ref(*this), clientSocket)));
         ClientThreads.insert(std::make_pair(clientSocket, clientThread));
       }
 
@@ -246,7 +246,7 @@ namespace
     volatile int Socket;
     std::unique_ptr<Common::Thread> ServerThread;
     std::mutex ClientsMutex;
-    std::map<int, std::shared_ptr<ClientThread>> ClientThreads;
+    std::map<int, std::shared_ptr<Client>> ClientThreads;
   };
 }
 

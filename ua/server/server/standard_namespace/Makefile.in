@@ -105,8 +105,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(configdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libstandard_ns_addon_la_LIBADD =
 am_libstandard_ns_addon_la_OBJECTS =  \
+	libstandard_ns_addon_la-standard_namespace.lo \
 	libstandard_ns_addon_la-standard_namespace_addon.lo \
-	libstandard_ns_addon_la-standard_namespace.lo
+	libstandard_ns_addon_la-standard_namespace_module.lo
 libstandard_ns_addon_la_OBJECTS =  \
 	$(am_libstandard_ns_addon_la_OBJECTS)
 libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -115,10 +116,18 @@ libstandard_ns_addon_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$@
 am__EXEEXT_1 = test_standard_address_space$(EXEEXT)
 am_test_standard_address_space_OBJECTS =  \
-	standard_namespace_ut.$(OBJEXT)
+	test_standard_address_space-address_space_addon.$(OBJEXT) \
+	test_standard_address_space-address_space_internal.$(OBJEXT) \
+	test_standard_address_space-standard_namespace.$(OBJEXT) \
+	test_standard_address_space-standard_namespace_addon.$(OBJEXT) \
+	test_standard_address_space-standard_namespace_ut.$(OBJEXT)
 test_standard_address_space_OBJECTS =  \
 	$(am_test_standard_address_space_OBJECTS)
 test_standard_address_space_LDADD = $(LDADD)
+test_standard_address_space_LINK = $(LIBTOOL) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(test_standard_address_space_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -296,19 +305,27 @@ INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/common/include \
   -I$(top_srcdir)/server/address_space/include \
+  -I$(top_srcdir)/server/services_registry/include \
   $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 config_DATA = config/standard_address_space.xml
 lib_LTLIBRARIES = libstandard_ns_addon.la
 libstandard_ns_addon_la_SOURCES = \
-   src/standard_namespace_addon.cpp \
    src/standard_namespace.cpp \
-   src/standard_namespace.h
+   src/standard_namespace.h \
+   src/standard_namespace_addon.cpp \
+   src/standard_namespace_module.cpp
 
 libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+test_standard_address_space_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) 
+test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 test_standard_address_space_SOURCES = \
+  ../address_space/src/address_space_addon.cpp \
+  ../address_space/src/address_space_internal.cpp \
+  src/standard_namespace.cpp \
+  src/standard_namespace_addon.cpp \
   tests/standard_namespace_ut.cpp
 
 all: all-am
@@ -390,7 +407,7 @@ clean-checkPROGRAMS:
 	rm -f $$list
 test_standard_address_space$(EXEEXT): $(test_standard_address_space_OBJECTS) $(test_standard_address_space_DEPENDENCIES) $(EXTRA_test_standard_address_space_DEPENDENCIES) 
 	@rm -f test_standard_address_space$(EXEEXT)
-	$(CXXLINK) $(test_standard_address_space_OBJECTS) $(test_standard_address_space_LDADD) $(LIBS)
+	$(test_standard_address_space_LINK) $(test_standard_address_space_OBJECTS) $(test_standard_address_space_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -400,7 +417,12 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/standard_namespace_ut.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstandard_ns_addon_la-standard_namespace_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_standard_address_space-address_space_addon.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_standard_address_space-address_space_internal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_standard_address_space-standard_namespace.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_standard_address_space-standard_namespace_addon.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_standard_address_space-standard_namespace_ut.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -423,13 +445,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libstandard_ns_addon_la-standard_namespace_addon.lo: src/standard_namespace_addon.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace_addon.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace_addon.cpp' object='libstandard_ns_addon_la-standard_namespace_addon.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
-
 libstandard_ns_addon_la-standard_namespace.lo: src/standard_namespace.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Tpo -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/standard_namespace.cpp' || echo '$(srcdir)/'`src/standard_namespace.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace.Plo
@@ -437,19 +452,89 @@ libstandard_ns_addon_la-standard_namespace.lo: src/standard_namespace.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace.lo `test -f 'src/standard_namespace.cpp' || echo '$(srcdir)/'`src/standard_namespace.cpp
 
-standard_namespace_ut.o: tests/standard_namespace_ut.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT standard_namespace_ut.o -MD -MP -MF $(DEPDIR)/standard_namespace_ut.Tpo -c -o standard_namespace_ut.o `test -f 'tests/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/standard_namespace_ut.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/standard_namespace_ut.Tpo $(DEPDIR)/standard_namespace_ut.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/standard_namespace_ut.cpp' object='standard_namespace_ut.o' libtool=no @AMDEPBACKSLASH@
+libstandard_ns_addon_la-standard_namespace_addon.lo: src/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace_addon.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace_addon.cpp' object='libstandard_ns_addon_la-standard_namespace_addon.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o standard_namespace_ut.o `test -f 'tests/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/standard_namespace_ut.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace_addon.lo `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
 
-standard_namespace_ut.obj: tests/standard_namespace_ut.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT standard_namespace_ut.obj -MD -MP -MF $(DEPDIR)/standard_namespace_ut.Tpo -c -o standard_namespace_ut.obj `if test -f 'tests/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/standard_namespace_ut.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/standard_namespace_ut.Tpo $(DEPDIR)/standard_namespace_ut.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/standard_namespace_ut.cpp' object='standard_namespace_ut.obj' libtool=no @AMDEPBACKSLASH@
+libstandard_ns_addon_la-standard_namespace_module.lo: src/standard_namespace_module.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstandard_ns_addon_la-standard_namespace_module.lo -MD -MP -MF $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_module.Tpo -c -o libstandard_ns_addon_la-standard_namespace_module.lo `test -f 'src/standard_namespace_module.cpp' || echo '$(srcdir)/'`src/standard_namespace_module.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_module.Tpo $(DEPDIR)/libstandard_ns_addon_la-standard_namespace_module.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace_module.cpp' object='libstandard_ns_addon_la-standard_namespace_module.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o standard_namespace_ut.obj `if test -f 'tests/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/standard_namespace_ut.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstandard_ns_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstandard_ns_addon_la-standard_namespace_module.lo `test -f 'src/standard_namespace_module.cpp' || echo '$(srcdir)/'`src/standard_namespace_module.cpp
+
+test_standard_address_space-address_space_addon.o: ../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-address_space_addon.o -MD -MP -MF $(DEPDIR)/test_standard_address_space-address_space_addon.Tpo -c -o test_standard_address_space-address_space_addon.o `test -f '../address_space/src/address_space_addon.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-address_space_addon.Tpo $(DEPDIR)/test_standard_address_space-address_space_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_addon.cpp' object='test_standard_address_space-address_space_addon.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-address_space_addon.o `test -f '../address_space/src/address_space_addon.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_addon.cpp
+
+test_standard_address_space-address_space_addon.obj: ../address_space/src/address_space_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-address_space_addon.obj -MD -MP -MF $(DEPDIR)/test_standard_address_space-address_space_addon.Tpo -c -o test_standard_address_space-address_space_addon.obj `if test -f '../address_space/src/address_space_addon.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_addon.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-address_space_addon.Tpo $(DEPDIR)/test_standard_address_space-address_space_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_addon.cpp' object='test_standard_address_space-address_space_addon.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-address_space_addon.obj `if test -f '../address_space/src/address_space_addon.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_addon.cpp'; fi`
+
+test_standard_address_space-address_space_internal.o: ../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-address_space_internal.o -MD -MP -MF $(DEPDIR)/test_standard_address_space-address_space_internal.Tpo -c -o test_standard_address_space-address_space_internal.o `test -f '../address_space/src/address_space_internal.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-address_space_internal.Tpo $(DEPDIR)/test_standard_address_space-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_internal.cpp' object='test_standard_address_space-address_space_internal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-address_space_internal.o `test -f '../address_space/src/address_space_internal.cpp' || echo '$(srcdir)/'`../address_space/src/address_space_internal.cpp
+
+test_standard_address_space-address_space_internal.obj: ../address_space/src/address_space_internal.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-address_space_internal.obj -MD -MP -MF $(DEPDIR)/test_standard_address_space-address_space_internal.Tpo -c -o test_standard_address_space-address_space_internal.obj `if test -f '../address_space/src/address_space_internal.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_internal.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-address_space_internal.Tpo $(DEPDIR)/test_standard_address_space-address_space_internal.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../address_space/src/address_space_internal.cpp' object='test_standard_address_space-address_space_internal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-address_space_internal.obj `if test -f '../address_space/src/address_space_internal.cpp'; then $(CYGPATH_W) '../address_space/src/address_space_internal.cpp'; else $(CYGPATH_W) '$(srcdir)/../address_space/src/address_space_internal.cpp'; fi`
+
+test_standard_address_space-standard_namespace.o: src/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace.o -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace.Tpo -c -o test_standard_address_space-standard_namespace.o `test -f 'src/standard_namespace.cpp' || echo '$(srcdir)/'`src/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace.cpp' object='test_standard_address_space-standard_namespace.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace.o `test -f 'src/standard_namespace.cpp' || echo '$(srcdir)/'`src/standard_namespace.cpp
+
+test_standard_address_space-standard_namespace.obj: src/standard_namespace.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace.obj -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace.Tpo -c -o test_standard_address_space-standard_namespace.obj `if test -f 'src/standard_namespace.cpp'; then $(CYGPATH_W) 'src/standard_namespace.cpp'; else $(CYGPATH_W) '$(srcdir)/src/standard_namespace.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace.cpp' object='test_standard_address_space-standard_namespace.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace.obj `if test -f 'src/standard_namespace.cpp'; then $(CYGPATH_W) 'src/standard_namespace.cpp'; else $(CYGPATH_W) '$(srcdir)/src/standard_namespace.cpp'; fi`
+
+test_standard_address_space-standard_namespace_addon.o: src/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace_addon.o -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Tpo -c -o test_standard_address_space-standard_namespace_addon.o `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace_addon.cpp' object='test_standard_address_space-standard_namespace_addon.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace_addon.o `test -f 'src/standard_namespace_addon.cpp' || echo '$(srcdir)/'`src/standard_namespace_addon.cpp
+
+test_standard_address_space-standard_namespace_addon.obj: src/standard_namespace_addon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace_addon.obj -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Tpo -c -o test_standard_address_space-standard_namespace_addon.obj `if test -f 'src/standard_namespace_addon.cpp'; then $(CYGPATH_W) 'src/standard_namespace_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/src/standard_namespace_addon.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace_addon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/standard_namespace_addon.cpp' object='test_standard_address_space-standard_namespace_addon.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace_addon.obj `if test -f 'src/standard_namespace_addon.cpp'; then $(CYGPATH_W) 'src/standard_namespace_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/src/standard_namespace_addon.cpp'; fi`
+
+test_standard_address_space-standard_namespace_ut.o: tests/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace_ut.o -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Tpo -c -o test_standard_address_space-standard_namespace_ut.o `test -f 'tests/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/standard_namespace_ut.cpp' object='test_standard_address_space-standard_namespace_ut.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace_ut.o `test -f 'tests/standard_namespace_ut.cpp' || echo '$(srcdir)/'`tests/standard_namespace_ut.cpp
+
+test_standard_address_space-standard_namespace_ut.obj: tests/standard_namespace_ut.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_standard_address_space-standard_namespace_ut.obj -MD -MP -MF $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Tpo -c -o test_standard_address_space-standard_namespace_ut.obj `if test -f 'tests/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/standard_namespace_ut.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Tpo $(DEPDIR)/test_standard_address_space-standard_namespace_ut.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/standard_namespace_ut.cpp' object='test_standard_address_space-standard_namespace_ut.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_standard_address_space_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_standard_address_space-standard_namespace_ut.obj `if test -f 'tests/standard_namespace_ut.cpp'; then $(CYGPATH_W) 'tests/standard_namespace_ut.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/standard_namespace_ut.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

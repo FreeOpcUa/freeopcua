@@ -9,12 +9,12 @@
 ///
 
 #include "../src/xml_address_space_loader.h"
+#include "../../address_space/src/address_space_internal.h"
+
 
 #include <opc/ua/object_ids.h>
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/status_codes.h>
-
-#include <src/server/address_space/src/address_space_internal.h>
 
 #include <functional>
 

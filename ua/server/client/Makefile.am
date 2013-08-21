@@ -17,24 +17,28 @@ uaclientinclude_HEADERS = \
   include/opc/ua/client/remote_computer.h \
   include/opc/ua/client/remote_connection.h
 
-bin_PROGRAMS = opcua
-
-opcua_SOURCES = \
+lib_LIBRARIES = libopcua_client.a
+libopcua_client_a_SOURCES = \
   src/binary_computer.cpp \
   src/binary_connection.cpp \
   src/computer.cpp \
   src/endpoints.h \
-  src/opcua_main.cpp \
-  src/opcua_options.cpp \
-  src/opcua_options.h \
   src/stream_attribute.h \
   src/stream_computer.h \
   src/stream_subscription.h \
   src/stream_view.h
 
+bin_PROGRAMS = opcua
+
+opcua_SOURCES = \
+  src/opcua_main.cpp \
+  src/opcua_options.cpp \
+  src/opcua_options.h
+
 INCLUDES= -I$(top_srcdir) -Iinclude -I$(top_srcdir)/common/include $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/client/tests
 
+opcua_LDADD = libopcua_client.a
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
 

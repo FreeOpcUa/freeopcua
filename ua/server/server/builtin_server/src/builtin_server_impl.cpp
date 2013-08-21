@@ -147,6 +147,11 @@ BuiltinComputerAddon::BuiltinComputerAddon()
 
 std::shared_ptr<OpcUa::Remote::Computer> BuiltinComputerAddon::GetComputer() const
 {
+  if (!ClientChannel)
+  {
+    throw std::logic_error("Cannot access builtin computer. No endpoints was created. You have to configure endpoints.");
+  }
+
   OpcUa::Binary::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
@@ -178,6 +183,20 @@ void BuiltinComputerAddon::Initialize(Common::AddonsManager& addons, const Commo
 
 void BuiltinComputerAddon::Stop()
 {
+  if (ClientInput)
+  {
+    ClientInput->Stop();
+    ServerInput->Stop();
+  }
+
+  if (Thread.get())
+  {
+    Thread->Join();
+    Thread.reset();
+  }
+
+  ClientInput.reset();
+  ServerInput.reset();
 }
 
 void BuiltinComputerAddon::Listen(const OpcUa::Server::TcpParameters&, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
@@ -198,20 +217,7 @@ void BuiltinComputerAddon::Listen(const OpcUa::Server::TcpParameters&, std::shar
 
 void BuiltinComputerAddon::StopListen(const OpcUa::Server::TcpParameters&)
 {
-  if (ClientInput)
-  {
-    ClientInput->Stop();
-    ServerInput->Stop();
-  }
-
-  if (Thread.get())
-  {
-    Thread->Join();
-    Thread.reset();
-  }
-
-  ClientInput.reset();
-  ServerInput.reset();
+  Stop();
 }
 
 void BuiltinComputerAddon::OnSuccess()

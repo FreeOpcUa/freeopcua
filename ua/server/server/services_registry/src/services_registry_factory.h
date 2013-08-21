@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Server
   {
 
-    class ServicesRegistryFactory : private Common::AddonFactory
+    class ServicesRegistryFactory : public Common::AddonFactory
     {
     public:
       DEFINE_CLASS_POINTERS(ServicesRegistryFactory);
