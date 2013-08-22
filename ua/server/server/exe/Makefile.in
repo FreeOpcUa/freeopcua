@@ -298,6 +298,7 @@ opcuaserver_CPPFLAGS = $(INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -no-undefined
 configdir = $(sysconfdir)/opcua
 config_DATA = configs/server.config
+TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/server/exe
 test_opcuaserver_SOURCES = \
   src/server.cpp \
   src/server_options.cpp \

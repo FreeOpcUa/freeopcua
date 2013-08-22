@@ -26,6 +26,7 @@ configdir=$(sysconfdir)/opcua
 
 config_DATA = configs/server.config
 
+TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/server/exe
 TESTS=test_opcuaserver
 
 check_PROGRAMS=$(TESTS)

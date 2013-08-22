@@ -64,8 +64,6 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = opcua$(EXEEXT)
-TESTS = libuaclient_test$(EXEEXT)
-check_PROGRAMS = $(am__EXEEXT_1)
 subdir = client
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(uaclientinclude_HEADERS)
@@ -113,20 +111,7 @@ libopcua_client_a_LIBADD =
 am_libopcua_client_a_OBJECTS = binary_computer.$(OBJEXT) \
 	binary_connection.$(OBJEXT) computer.$(OBJEXT)
 libopcua_client_a_OBJECTS = $(am_libopcua_client_a_OBJECTS)
-am__EXEEXT_1 = libuaclient_test$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
-am_libuaclient_test_OBJECTS = libuaclient_test-computer.$(OBJEXT) \
-	libuaclient_test-binary_connection.$(OBJEXT) \
-	libuaclient_test-computer_attribute.$(OBJEXT) \
-	libuaclient_test-computer_connect.$(OBJEXT) \
-	libuaclient_test-computer_endpoints.$(OBJEXT) \
-	libuaclient_test-computer_session.$(OBJEXT) \
-	libuaclient_test-computer_view.$(OBJEXT)
-libuaclient_test_OBJECTS = $(am_libuaclient_test_OBJECTS)
-libuaclient_test_LDADD = $(LDADD)
-libuaclient_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(libuaclient_test_LDFLAGS) $(LDFLAGS) -o $@
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
 opcua_OBJECTS = $(am_opcua_OBJECTS)
@@ -156,10 +141,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopcua_client_a_SOURCES) $(libuaclient_test_SOURCES) \
-	$(opcua_SOURCES)
-DIST_SOURCES = $(libopcua_client_a_SOURCES) \
-	$(libuaclient_test_SOURCES) $(opcua_SOURCES)
+SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
+DIST_SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -168,8 +151,6 @@ am__can_run_installinfo = \
 HEADERS = $(uaclientinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
-am__tty_colors = \
-red=; grn=; lgn=; blu=; std=
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -330,18 +311,6 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/client/tests
 opcua_LDADD = libopcua_client.a
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
-libuaclient_test_SOURCES = \
-  src/computer.cpp \
-  src/binary_connection.cpp \
-  tests/common.h \
-  tests/computer_attribute.cpp \
-  tests/computer_connect.cpp \
-  tests/computer_endpoints.cpp \
-  tests/computer_session.cpp \
-  tests/computer_view.cpp
-
-libuaclient_test_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) -no-undefined
 all: all-am
 
 .SUFFIXES:
@@ -457,18 +426,6 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-
-clean-checkPROGRAMS:
-	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
-	echo " rm -f" $$list; \
-	rm -f $$list || exit $$?; \
-	test -n "$(EXEEXT)" || exit 0; \
-	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
-	echo " rm -f" $$list; \
-	rm -f $$list
-libuaclient_test$(EXEEXT): $(libuaclient_test_OBJECTS) $(libuaclient_test_DEPENDENCIES) $(EXTRA_libuaclient_test_DEPENDENCIES) 
-	@rm -f libuaclient_test$(EXEEXT)
-	$(libuaclient_test_LINK) $(libuaclient_test_OBJECTS) $(libuaclient_test_LDADD) $(LIBS)
 opcua$(EXEEXT): $(opcua_OBJECTS) $(opcua_DEPENDENCIES) $(EXTRA_opcua_DEPENDENCIES) 
 	@rm -f opcua$(EXEEXT)
 	$(opcua_LINK) $(opcua_OBJECTS) $(opcua_LDADD) $(LIBS)
@@ -482,13 +439,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-binary_connection.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_attribute.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_connect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_endpoints.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_session.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libuaclient_test-computer_view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_options.Po@am__quote@
 
@@ -554,104 +504,6 @@ computer.obj: src/computer.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
-
-libuaclient_test-computer.o: src/computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer.Tpo -c -o libuaclient_test-computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer.Tpo $(DEPDIR)/libuaclient_test-computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='libuaclient_test-computer.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
-
-libuaclient_test-computer.obj: src/computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer.Tpo -c -o libuaclient_test-computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer.Tpo $(DEPDIR)/libuaclient_test-computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='libuaclient_test-computer.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
-
-libuaclient_test-binary_connection.o: src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-binary_connection.o -MD -MP -MF $(DEPDIR)/libuaclient_test-binary_connection.Tpo -c -o libuaclient_test-binary_connection.o `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-binary_connection.Tpo $(DEPDIR)/libuaclient_test-binary_connection.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='libuaclient_test-binary_connection.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-binary_connection.o `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
-
-libuaclient_test-binary_connection.obj: src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-binary_connection.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-binary_connection.Tpo -c -o libuaclient_test-binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-binary_connection.Tpo $(DEPDIR)/libuaclient_test-binary_connection.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='libuaclient_test-binary_connection.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
-
-libuaclient_test-computer_attribute.o: tests/computer_attribute.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_attribute.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_attribute.Tpo -c -o libuaclient_test-computer_attribute.o `test -f 'tests/computer_attribute.cpp' || echo '$(srcdir)/'`tests/computer_attribute.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_attribute.Tpo $(DEPDIR)/libuaclient_test-computer_attribute.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_attribute.cpp' object='libuaclient_test-computer_attribute.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_attribute.o `test -f 'tests/computer_attribute.cpp' || echo '$(srcdir)/'`tests/computer_attribute.cpp
-
-libuaclient_test-computer_attribute.obj: tests/computer_attribute.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_attribute.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_attribute.Tpo -c -o libuaclient_test-computer_attribute.obj `if test -f 'tests/computer_attribute.cpp'; then $(CYGPATH_W) 'tests/computer_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_attribute.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_attribute.Tpo $(DEPDIR)/libuaclient_test-computer_attribute.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_attribute.cpp' object='libuaclient_test-computer_attribute.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_attribute.obj `if test -f 'tests/computer_attribute.cpp'; then $(CYGPATH_W) 'tests/computer_attribute.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_attribute.cpp'; fi`
-
-libuaclient_test-computer_connect.o: tests/computer_connect.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_connect.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_connect.Tpo -c -o libuaclient_test-computer_connect.o `test -f 'tests/computer_connect.cpp' || echo '$(srcdir)/'`tests/computer_connect.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_connect.Tpo $(DEPDIR)/libuaclient_test-computer_connect.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_connect.cpp' object='libuaclient_test-computer_connect.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_connect.o `test -f 'tests/computer_connect.cpp' || echo '$(srcdir)/'`tests/computer_connect.cpp
-
-libuaclient_test-computer_connect.obj: tests/computer_connect.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_connect.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_connect.Tpo -c -o libuaclient_test-computer_connect.obj `if test -f 'tests/computer_connect.cpp'; then $(CYGPATH_W) 'tests/computer_connect.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_connect.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_connect.Tpo $(DEPDIR)/libuaclient_test-computer_connect.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_connect.cpp' object='libuaclient_test-computer_connect.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_connect.obj `if test -f 'tests/computer_connect.cpp'; then $(CYGPATH_W) 'tests/computer_connect.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_connect.cpp'; fi`
-
-libuaclient_test-computer_endpoints.o: tests/computer_endpoints.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_endpoints.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_endpoints.Tpo -c -o libuaclient_test-computer_endpoints.o `test -f 'tests/computer_endpoints.cpp' || echo '$(srcdir)/'`tests/computer_endpoints.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_endpoints.Tpo $(DEPDIR)/libuaclient_test-computer_endpoints.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_endpoints.cpp' object='libuaclient_test-computer_endpoints.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_endpoints.o `test -f 'tests/computer_endpoints.cpp' || echo '$(srcdir)/'`tests/computer_endpoints.cpp
-
-libuaclient_test-computer_endpoints.obj: tests/computer_endpoints.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_endpoints.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_endpoints.Tpo -c -o libuaclient_test-computer_endpoints.obj `if test -f 'tests/computer_endpoints.cpp'; then $(CYGPATH_W) 'tests/computer_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_endpoints.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_endpoints.Tpo $(DEPDIR)/libuaclient_test-computer_endpoints.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_endpoints.cpp' object='libuaclient_test-computer_endpoints.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_endpoints.obj `if test -f 'tests/computer_endpoints.cpp'; then $(CYGPATH_W) 'tests/computer_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_endpoints.cpp'; fi`
-
-libuaclient_test-computer_session.o: tests/computer_session.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_session.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_session.Tpo -c -o libuaclient_test-computer_session.o `test -f 'tests/computer_session.cpp' || echo '$(srcdir)/'`tests/computer_session.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_session.Tpo $(DEPDIR)/libuaclient_test-computer_session.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_session.cpp' object='libuaclient_test-computer_session.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_session.o `test -f 'tests/computer_session.cpp' || echo '$(srcdir)/'`tests/computer_session.cpp
-
-libuaclient_test-computer_session.obj: tests/computer_session.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_session.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_session.Tpo -c -o libuaclient_test-computer_session.obj `if test -f 'tests/computer_session.cpp'; then $(CYGPATH_W) 'tests/computer_session.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_session.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_session.Tpo $(DEPDIR)/libuaclient_test-computer_session.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_session.cpp' object='libuaclient_test-computer_session.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_session.obj `if test -f 'tests/computer_session.cpp'; then $(CYGPATH_W) 'tests/computer_session.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_session.cpp'; fi`
-
-libuaclient_test-computer_view.o: tests/computer_view.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_view.o -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_view.Tpo -c -o libuaclient_test-computer_view.o `test -f 'tests/computer_view.cpp' || echo '$(srcdir)/'`tests/computer_view.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_view.Tpo $(DEPDIR)/libuaclient_test-computer_view.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_view.cpp' object='libuaclient_test-computer_view.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_view.o `test -f 'tests/computer_view.cpp' || echo '$(srcdir)/'`tests/computer_view.cpp
-
-libuaclient_test-computer_view.obj: tests/computer_view.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libuaclient_test-computer_view.obj -MD -MP -MF $(DEPDIR)/libuaclient_test-computer_view.Tpo -c -o libuaclient_test-computer_view.obj `if test -f 'tests/computer_view.cpp'; then $(CYGPATH_W) 'tests/computer_view.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_view.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libuaclient_test-computer_view.Tpo $(DEPDIR)/libuaclient_test-computer_view.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/computer_view.cpp' object='libuaclient_test-computer_view.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libuaclient_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libuaclient_test-computer_view.obj `if test -f 'tests/computer_view.cpp'; then $(CYGPATH_W) 'tests/computer_view.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/computer_view.cpp'; fi`
 
 opcua-opcua_main.o: src/opcua_main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-opcua_main.o -MD -MP -MF $(DEPDIR)/opcua-opcua_main.Tpo -c -o opcua-opcua_main.o `test -f 'src/opcua_main.cpp' || echo '$(srcdir)/'`src/opcua_main.cpp
@@ -760,99 +612,6 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
-check-TESTS: $(TESTS)
-	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
-	srcdir=$(srcdir); export srcdir; \
-	list=' $(TESTS) '; \
-	$(am__tty_colors); \
-	if test -n "$$list"; then \
-	  for tst in $$list; do \
-	    if test -f ./$$tst; then dir=./; \
-	    elif test -f $$tst; then dir=; \
-	    else dir="$(srcdir)/"; fi; \
-	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *[\ \	]$$tst[\ \	]*) \
-		xpass=`expr $$xpass + 1`; \
-		failed=`expr $$failed + 1`; \
-		col=$$red; res=XPASS; \
-	      ;; \
-	      *) \
-		col=$$grn; res=PASS; \
-	      ;; \
-	      esac; \
-	    elif test $$? -ne 77; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *[\ \	]$$tst[\ \	]*) \
-		xfail=`expr $$xfail + 1`; \
-		col=$$lgn; res=XFAIL; \
-	      ;; \
-	      *) \
-		failed=`expr $$failed + 1`; \
-		col=$$red; res=FAIL; \
-	      ;; \
-	      esac; \
-	    else \
-	      skip=`expr $$skip + 1`; \
-	      col=$$blu; res=SKIP; \
-	    fi; \
-	    echo "$${col}$$res$${std}: $$tst"; \
-	  done; \
-	  if test "$$all" -eq 1; then \
-	    tests="test"; \
-	    All=""; \
-	  else \
-	    tests="tests"; \
-	    All="All "; \
-	  fi; \
-	  if test "$$failed" -eq 0; then \
-	    if test "$$xfail" -eq 0; then \
-	      banner="$$All$$all $$tests passed"; \
-	    else \
-	      if test "$$xfail" -eq 1; then failures=failure; else failures=failures; fi; \
-	      banner="$$All$$all $$tests behaved as expected ($$xfail expected $$failures)"; \
-	    fi; \
-	  else \
-	    if test "$$xpass" -eq 0; then \
-	      banner="$$failed of $$all $$tests failed"; \
-	    else \
-	      if test "$$xpass" -eq 1; then passes=pass; else passes=passes; fi; \
-	      banner="$$failed of $$all $$tests did not behave as expected ($$xpass unexpected $$passes)"; \
-	    fi; \
-	  fi; \
-	  dashes="$$banner"; \
-	  skipped=""; \
-	  if test "$$skip" -ne 0; then \
-	    if test "$$skip" -eq 1; then \
-	      skipped="($$skip test was not run)"; \
-	    else \
-	      skipped="($$skip tests were not run)"; \
-	    fi; \
-	    test `echo "$$skipped" | wc -c` -le `echo "$$banner" | wc -c` || \
-	      dashes="$$skipped"; \
-	  fi; \
-	  report=""; \
-	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
-	    report="Please report to $(PACKAGE_BUGREPORT)"; \
-	    test `echo "$$report" | wc -c` -le `echo "$$banner" | wc -c` || \
-	      dashes="$$report"; \
-	  fi; \
-	  dashes=`echo "$$dashes" | sed s/./=/g`; \
-	  if test "$$failed" -eq 0; then \
-	    col="$$grn"; \
-	  else \
-	    col="$$red"; \
-	  fi; \
-	  echo "$${col}$$dashes$${std}"; \
-	  echo "$${col}$$banner$${std}"; \
-	  test -z "$$skipped" || echo "$${col}$$skipped$${std}"; \
-	  test -z "$$report" || echo "$${col}$$report$${std}"; \
-	  echo "$${col}$$dashes$${std}"; \
-	  test "$$failed" -eq 0; \
-	else :; fi
-
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -884,8 +643,6 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
-	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
 all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS)
 installdirs:
@@ -924,8 +681,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-libtool mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
+	clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -994,11 +751,10 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
 	uninstall-uaclientincludeHEADERS
 
-.MAKE: check-am install-am install-strip
+.MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-TESTS check-am clean \
-	clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-libtool ctags distclean \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libLIBRARIES clean-libtool ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
@@ -1013,6 +769,23 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
 	uninstall-am uninstall-binPROGRAMS uninstall-libLIBRARIES \
 	uninstall-uaclientincludeHEADERS
 
+
+#TESTS = libuaclient_test
+
+#check_PROGRAMS = $(TESTS)
+
+#libuaclient_test_SOURCES =  \
+#  src/computer.cpp \
+#  src/binary_connection.cpp \
+#  tests/common.h \
+#  tests/computer_attribute.cpp \
+#  tests/computer_connect.cpp \
+#  tests/computer_endpoints.cpp \
+#  tests/computer_session.cpp \
+#  tests/computer_view.cpp
+
+#libuaclient_test_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) -no-undefined
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -60,7 +60,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@BUILD_UA_CMD_TRUE@am__append_1 = server client
+@BUILD_UA_CMD_TRUE@am__append_1 = client server
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -97,7 +97,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 	distdir dist dist-all distcheck
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = common server client
+DIST_SUBDIRS = common client server
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)

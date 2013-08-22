@@ -56,3 +56,4 @@ TEST(LoadingAddon, TestAdon)
   ASSERT_EQ(params.Parameters[0].Name, "hello");
   ASSERT_EQ(params.Parameters[0].Value, "world");
 }
+

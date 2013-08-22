@@ -43,11 +43,11 @@ opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
 
 
-TESTS = libuaclient_test
+#TESTS = libuaclient_test
 
-check_PROGRAMS = $(TESTS)
+#check_PROGRAMS = $(TESTS)
 
-libuaclient_test_SOURCES =  \
+#libuaclient_test_SOURCES =  \
   src/computer.cpp \
   src/binary_connection.cpp \
   tests/common.h \
@@ -57,6 +57,6 @@ libuaclient_test_SOURCES =  \
   tests/computer_session.cpp \
   tests/computer_view.cpp
 
-libuaclient_test_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) -no-undefined
+#libuaclient_test_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) -no-undefined
 

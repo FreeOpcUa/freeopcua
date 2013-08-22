@@ -11,10 +11,11 @@
 SUBDIRS = common
 
 if BUILD_UA_CMD
-SUBDIRS += server
+SUBDIRS += client
 endif
 
 if BUILD_UA_CMD
-SUBDIRS += client
+SUBDIRS += server
 endif
+
 
