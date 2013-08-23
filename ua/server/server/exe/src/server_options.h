@@ -29,12 +29,18 @@ namespace OpcUa
     public:
       CommandLine(int argc, char** argv);
 
+      bool NeedStartServer() const
+      {
+        return StartPossible;
+      }
+
       ModulesConfiguration GetModules()
       {
         return Modules;
       }
 
     private:
+      bool StartPossible;
       ModulesConfiguration Modules;
     };
 

@@ -133,11 +133,12 @@ namespace OpcUa
   {
 
     CommandLine::CommandLine(int argc, char** argv)
+      : StartPossible(true)
     {
       // Declare the supported options.
       po::options_description desc("Parameters");
       desc.add_options()
-        (OPTION_HELP, "produce help message")
+        (OPTION_HELP, "Print help message and exit.")
         (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
         ;
 
@@ -148,6 +149,7 @@ namespace OpcUa
       if (vm.count(OPTION_HELP))
       {
         desc.print(std::cout);
+        StartPossible = false;
         return;
       }
 
@@ -158,3 +160,4 @@ namespace OpcUa
 
   } // namespace Server
 } // namespace OpcUa
+

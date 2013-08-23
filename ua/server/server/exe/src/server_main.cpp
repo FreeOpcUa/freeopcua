@@ -19,6 +19,11 @@ int main(int argc, char** argv)
   try
   {
     OpcUa::Server::CommandLine options(argc, argv);
+    if (!options.NeedStartServer())
+    {
+      return 0;
+    }
+
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
     application->Start(options.GetModules());
     application->WaitForTerminate();
