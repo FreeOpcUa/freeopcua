@@ -39,24 +39,6 @@ void OpcUaProtocol::Initialize(Common::AddonsManager& addons, const Common::Addo
   const std::vector<EndpointDescription> endpoints = GetEndpointDescriptions(params);
   PublishEndpointsInformation(endpoints, addons);
   StartEndpoints(endpoints, addons);
-
-/*
-  InternalComputer = Common::GetAddon<OpcUa::Server::ServicesRegistryAddon>(addons, OpcUa::Server::ServicesRegistryAddonID);
-  TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
-  for (const EndpointDescription endpoint : endpoints)
-  {
-    const Internal::Uri uri(endpoint.EndpointURL);
-    if (uri.Scheme() == "opc.tcp")
-    {
-      std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer(), Debug);
-      TcpParameters tcpParams;
-      tcpParams.Port = uri.Port();
-      if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
-      TcpAddon->Listen(tcpParams, processor);
-      Ports.push_back(tcpParams.Port);
-    }
-  }
-*/
 }
 
 void OpcUaProtocol::Stop()
