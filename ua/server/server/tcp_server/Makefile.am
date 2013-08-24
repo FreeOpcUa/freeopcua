@@ -30,6 +30,7 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 lib_LTLIBRARIES = libopcua_tcp_server.la
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/tcp_server_addon.h
+
 libopcua_tcp_server_la_SOURCES = \
   src/tcp_server_addon_impl.cpp \
   src/tcp_server_addon_impl.h \
@@ -38,7 +39,7 @@ libopcua_tcp_server_la_SOURCES = \
   src/tcp_server.cpp
 
 libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
-libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 TESTS = test_tcp_server test_tcp_server_addon
 
 TESTS_ENVIRONMENT = 

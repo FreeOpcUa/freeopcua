@@ -329,7 +329,7 @@ libopcua_tcp_server_la_SOURCES = \
   src/tcp_server.cpp
 
 libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
-libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 TESTS_ENVIRONMENT = 
 test_tcp_server_SOURCES = \
   src/tcp_server.cpp \
