@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -36,6 +36,9 @@ namespace OpcUa
     CREATE_SESSION_RESPONSE = 0x1d0, // 464;
 
     // Endpoints services
+    FIND_SERVERS_REQUEST = 0x1A6, // 422
+    FIND_SERVERS_RESPONSE = 0x1A9, // 425
+
     GET_ENDPOINTS_REQUEST  = 0x1ac, // 428
     GET_ENDPOINTS_RESPONSE = 0x1af, // 431
 

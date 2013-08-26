@@ -25,6 +25,9 @@
 
 namespace OpcUa
 {
+
+  typedef std::string LocaleID;
+
   enum class TimestampsToReturn
   {
     SOURCE = 0,

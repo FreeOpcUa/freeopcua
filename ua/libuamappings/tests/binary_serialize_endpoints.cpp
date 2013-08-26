@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -21,11 +21,19 @@
 #include "common.h"
 
 
+class EndpointsSerialization : public OpcUaBinarySerialization
+{
+};
+
+class EndpointsDeserialization : public OpcUaBinaryDeserialization
+{
+};
+
 //-------------------------------------------------------
 // GetEndpointsRequest
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
+TEST_F(EndpointsSerialization, GetEndpointsRequest)
 {
 
   using namespace OpcUa;
@@ -42,7 +50,7 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
   request.Filter.LocaleIDs.push_back("RU");
   request.Filter.ProfileUries.push_back("pro");
 
- 
+
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
@@ -58,7 +66,7 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsRequest)
   ASSERT_EQ(expectedData.size(), RawSize(request));
 }
 
-TEST_F(OpcUaBinaryDeserialization, GetEndpointsRequest)
+TEST_F(EndpointsDeserialization, GetEndpointsRequest)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -92,7 +100,7 @@ TEST_F(OpcUaBinaryDeserialization, GetEndpointsRequest)
 // GetEndpointsResponse
 //----------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, GetEndpointsResponse)
+TEST_F(EndpointsSerialization, GetEndpointsResponse)
 {
 
   using namespace OpcUa;
@@ -125,7 +133,7 @@ TEST_F(OpcUaBinarySerialization, GetEndpointsResponse)
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
-TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponse)
+TEST_F(EndpointsDeserialization, GetEndpointsResponse)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -268,7 +276,7 @@ const std::vector<unsigned char> GetEndpointsResponseRealData = {
   0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,  // ................
   0xff, 0x00 };                                                                       //  ..
 
-TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponseReal)
+TEST_F(EndpointsDeserialization, GetEndpointsResponseReal)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -296,3 +304,190 @@ TEST_F(OpcUaBinaryDeserialization, GetEndpointsResponseReal)
   ASSERT_TRUE(Channel->IsEmpty());
 }
 
+
+//-------------------------------------------------------
+// FindServersParameters
+//-------------------------------------------------------
+
+TEST_F(EndpointsSerialization, FindServersParameters)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  FindServersParameters params;
+
+  params.EndpointURL = "url";
+  params.Locales.push_back("en");
+  params.ServersToReturn.push_back("server");
+
+  GetStream() << params << flush;
+
+  const std::vector<char> expectedData = {
+  3,0,0,0, 'u','r','l',
+  1,0,0,0, 2,0,0,0, 'e','n',
+  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(params));
+}
+
+TEST_F(EndpointsDeserialization, FindServersParameters)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  3,0,0,0, 'u','r','l',
+  1,0,0,0, 2,0,0,0, 'e','n',
+  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  };
+
+  GetChannel().SetData(expectedData);
+
+  FindServersParameters params;
+  GetStream() >> params;
+
+  ASSERT_EQ(params.EndpointURL, "url");
+  ASSERT_EQ(params.Locales.size(), 1);
+  ASSERT_EQ(params.Locales[0], "en");
+  ASSERT_EQ(params.ServersToReturn.size(), 1);
+  ASSERT_EQ(params.ServersToReturn[0], "server");
+}
+
+//-------------------------------------------------------
+// FindServersRequest
+//-------------------------------------------------------
+
+TEST_F(EndpointsSerialization, FindServersRequest)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  FindServersRequest request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+
+  FILL_TEST_REQUEST_HEADER(request.Header);
+  request.Parameters.EndpointURL = "url";
+  request.Parameters.Locales.push_back("en");
+  request.Parameters.ServersToReturn.push_back("server");
+
+
+  GetStream() << request << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0xa6, 0x1, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+  3,0,0,0, 'u','r','l',
+  1,0,0,0, 2,0,0,0, 'e','n',
+  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(request));
+}
+
+TEST_F(EndpointsDeserialization, FindServersRequest)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0xa6, 0x1, // TypeID
+  // RequestHeader
+  TEST_REQUEST_HEADER_BINARY_DATA,
+  3,0,0,0, 'u','r','l',
+  1,0,0,0, 2,0,0,0, 'e','n',
+  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  };
+
+  GetChannel().SetData(expectedData);
+
+  FindServersRequest request;
+  GetStream() >> request;
+
+  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+
+  ASSERT_REQUEST_HEADER_EQ(request.Header);
+
+  ASSERT_EQ(request.Parameters.EndpointURL, "url");
+  ASSERT_EQ(request.Parameters.Locales, std::vector<std::string>(1, "en"));
+  ASSERT_EQ(request.Parameters.ServersToReturn, std::vector<std::string>(1, "server"));
+}
+
+//----------------------------------------------------
+// FindServersResponse
+//----------------------------------------------------
+
+TEST_F(EndpointsSerialization, FindServersResponse)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  FindServersResponse response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+
+  FILL_TEST_RESPONSE_HEADER(response.Header);
+
+  ApplicationDescription desc;
+  FILL_APPLICATION_DESCRIPTION(desc);
+  response.Data.Descriptions.push_back(desc);
+
+  GetStream() << response << flush;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0xa9, 0x1, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  1,0,0,0,
+  TEST_APPLICATION_DESCRIPTION_BINARY_DATA
+  };
+
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+  ASSERT_EQ(expectedData.size(), RawSize(response));
+}
+
+TEST_F(EndpointsDeserialization, FindServersResponse)
+{
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  const std::vector<char> expectedData = {
+  1, 0, (char)0xa9, 0x1, // TypeID
+  // RequestHeader
+  TEST_RESPONSE_HEADER_BINARY_DATA,
+
+  1,0,0,0,
+  TEST_APPLICATION_DESCRIPTION_BINARY_DATA
+  };
+
+  GetChannel().SetData(expectedData);
+
+  FindServersResponse response;
+  GetStream() >> response;
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+
+  ASSERT_RESPONSE_HEADER_EQ(response.Header);
+
+  ASSERT_EQ(response.Data.Descriptions.size(), 1);
+  ASSERT_APPLICATION_DESCRIPTION_EQ(response.Data.Descriptions[0]);
+
+  ASSERT_TRUE(Channel->IsEmpty());
+}

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -33,6 +33,18 @@ namespace OpcUa
   GetEndpointsResponse::GetEndpointsResponse()
     : TypeID(GET_ENDPOINTS_RESPONSE)
   {
+  }
+
+  FindServersRequest::FindServersRequest()
+    : TypeID(FIND_SERVERS_REQUEST)
+  {
+
+  }
+
+  FindServersResponse::FindServersResponse()
+    : TypeID(FIND_SERVERS_RESPONSE)
+  {
+
   }
 
   namespace Binary
@@ -273,8 +285,8 @@ namespace OpcUa
     template<>
     std::size_t RawSize<EndpointDescription>(const EndpointDescription& desc)
     {
-      return RawSize(desc.EndpointURL) + 
-             RawSize(desc.ServerDescription) + 
+      return RawSize(desc.EndpointURL) +
+             RawSize(desc.ServerDescription) +
              RawSize(desc.ServerCertificate) +
              RawSize(desc.SecurityMode) +
              RawSize(desc.SecurityPolicyURI) +
@@ -355,6 +367,108 @@ namespace OpcUa
       *this >> resp.TypeID;
       *this >> resp.Header;
       *this >> resp.Endpoints;
+    }
+
+    //-----------------------------------------------------
+    // FindServersParameters
+    //-----------------------------------------------------
+
+    template<>
+    std::size_t RawSize<FindServersParameters>(const FindServersParameters& params)
+    {
+      return RawSize(params.EndpointURL) +
+             RawSizeContainer(params.Locales) +
+             RawSizeContainer(params.ServersToReturn);
+    }
+
+    template<>
+    void OStream::Serialize<FindServersParameters>(const FindServersParameters& params)
+    {
+      *this << params.EndpointURL;
+      *this << params.Locales;
+      *this << params.ServersToReturn;
+    }
+
+    template<>
+    void IStream::Deserialize<FindServersParameters>(FindServersParameters& params)
+    {
+      *this >> params.EndpointURL;
+      *this >> params.Locales;
+      *this >> params.ServersToReturn;
+    }
+
+    //---------------------------------------------------
+    // FindServersRequest
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<FindServersRequest>(const FindServersRequest& request)
+    {
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+    }
+
+    template<>
+    void OStream::Serialize<FindServersRequest>(const FindServersRequest& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.Parameters;
+    }
+
+    template<>
+    void IStream::Deserialize<FindServersRequest>(FindServersRequest& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.Parameters;
+    }
+
+    //-----------------------------------------------------
+    // FindServersData
+    //-----------------------------------------------------
+
+    template<>
+    std::size_t RawSize<FindServersData>(const FindServersData& data)
+    {
+      return RawSizeContainer(data.Descriptions);
+    }
+
+    template<>
+    void OStream::Serialize<FindServersData>(const FindServersData& data)
+    {
+      SerializeContainer(*this, data.Descriptions);
+    }
+
+    template<>
+    void IStream::Deserialize<FindServersData>(FindServersData& data)
+    {
+      DeserializeContainer(*this, data.Descriptions);
+    }
+
+    //-----------------------------------------------------
+    // FindServersResponse
+    //-----------------------------------------------------
+
+    template<>
+    std::size_t RawSize<FindServersResponse>(const FindServersResponse& resp)
+    {
+      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Data);
+    }
+
+    template<>
+    void OStream::Serialize<FindServersResponse>(const FindServersResponse& resp)
+    {
+      *this << resp.TypeID;
+      *this << resp.Header;
+      *this << resp.Data;
+    }
+
+    template<>
+    void IStream::Deserialize<FindServersResponse>(FindServersResponse& resp)
+    {
+      *this >> resp.TypeID;
+      *this >> resp.Header;
+      *this >> resp.Data;
     }
 
   }

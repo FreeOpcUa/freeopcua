@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -47,7 +47,39 @@ namespace OpcUa
     GetEndpointsResponse();
   };
 
+  ////////////////////////////////////////////////////////
+  // FindServersRequest
+  ////////////////////////////////////////////////////////
+  struct FindServersParameters
+  {
+    std::string EndpointURL;
+    std::vector<LocaleID> Locales;
+    std::vector<std::string> ServersToReturn;
+  };
+
+  struct FindServersRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    FindServersParameters Parameters;
+
+    FindServersRequest();
+  };
+
+  struct FindServersData
+  {
+    std::vector<ApplicationDescription> Descriptions;
+  };
+
+  struct FindServersResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    FindServersData Data;
+
+    FindServersResponse();
+  };
+
 } // namespace OpcUa
 
 #endif // __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
-
