@@ -107,6 +107,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libendpoints_services_addon_la_LIBADD =
 am_libendpoints_services_addon_la_OBJECTS =  \
+	libendpoints_services_addon_la-endpoints_parameters.lo \
 	libendpoints_services_addon_la-endpoints_services_addon.lo \
 	libendpoints_services_addon_la-endpoints_services_module.lo
 libendpoints_services_addon_la_OBJECTS =  \
@@ -117,6 +118,7 @@ libendpoints_services_addon_la_LINK = $(LIBTOOL) --tag=CXX \
 	$(libendpoints_services_addon_la_LDFLAGS) $(LDFLAGS) -o $@
 am__EXEEXT_1 = test_endpoints_registry$(EXEEXT)
 am_test_endpoints_registry_OBJECTS =  \
+	test_endpoints_registry-endpoints_parameters.$(OBJEXT) \
 	test_endpoints_registry-endpoints_services_addon.$(OBJEXT) \
 	test_endpoints_registry-endpoints_services_test.$(OBJEXT) \
 	test_endpoints_registry-services_registry_factory.$(OBJEXT) \
@@ -313,6 +315,8 @@ addonsinclude_HEADERS = \
   include/opc/ua/server/addons/endpoints_services.h
 
 libendpoints_services_addon_la_SOURCES = \
+  src/endpoints_parameters.cpp \
+  src/endpoints_parameters.h \
   src/endpoints_services_addon.cpp \
   src/endpoints_services_addon.h \
   src/endpoints_services_factory.h \
@@ -321,6 +325,7 @@ libendpoints_services_addon_la_SOURCES = \
 libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
 libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
 test_endpoints_registry_SOURCES = \
+  src/endpoints_parameters.cpp \
   src/endpoints_services_addon.cpp \
   src/endpoints_services_addon.h \
   src/endpoints_services_factory.h \
@@ -419,8 +424,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_parameters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_parameters.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_services_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_services_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-services_registry_factory.Po@am__quote@
@@ -447,6 +454,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
+libendpoints_services_addon_la-endpoints_parameters.lo: src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libendpoints_services_addon_la-endpoints_parameters.lo -MD -MP -MF $(DEPDIR)/libendpoints_services_addon_la-endpoints_parameters.Tpo -c -o libendpoints_services_addon_la-endpoints_parameters.lo `test -f 'src/endpoints_parameters.cpp' || echo '$(srcdir)/'`src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libendpoints_services_addon_la-endpoints_parameters.Tpo $(DEPDIR)/libendpoints_services_addon_la-endpoints_parameters.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_parameters.cpp' object='libendpoints_services_addon_la-endpoints_parameters.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libendpoints_services_addon_la-endpoints_parameters.lo `test -f 'src/endpoints_parameters.cpp' || echo '$(srcdir)/'`src/endpoints_parameters.cpp
+
 libendpoints_services_addon_la-endpoints_services_addon.lo: src/endpoints_services_addon.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libendpoints_services_addon_la-endpoints_services_addon.lo -MD -MP -MF $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Tpo -c -o libendpoints_services_addon_la-endpoints_services_addon.lo `test -f 'src/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/endpoints_services_addon.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Tpo $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo
@@ -460,6 +474,20 @@ libendpoints_services_addon_la-endpoints_services_module.lo: src/endpoints_servi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_services_module.cpp' object='libendpoints_services_addon_la-endpoints_services_module.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libendpoints_services_addon_la-endpoints_services_module.lo `test -f 'src/endpoints_services_module.cpp' || echo '$(srcdir)/'`src/endpoints_services_module.cpp
+
+test_endpoints_registry-endpoints_parameters.o: src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_parameters.o -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Tpo -c -o test_endpoints_registry-endpoints_parameters.o `test -f 'src/endpoints_parameters.cpp' || echo '$(srcdir)/'`src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Tpo $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_parameters.cpp' object='test_endpoints_registry-endpoints_parameters.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_registry-endpoints_parameters.o `test -f 'src/endpoints_parameters.cpp' || echo '$(srcdir)/'`src/endpoints_parameters.cpp
+
+test_endpoints_registry-endpoints_parameters.obj: src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_parameters.obj -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Tpo -c -o test_endpoints_registry-endpoints_parameters.obj `if test -f 'src/endpoints_parameters.cpp'; then $(CYGPATH_W) 'src/endpoints_parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/src/endpoints_parameters.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Tpo $(DEPDIR)/test_endpoints_registry-endpoints_parameters.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_parameters.cpp' object='test_endpoints_registry-endpoints_parameters.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_registry-endpoints_parameters.obj `if test -f 'src/endpoints_parameters.cpp'; then $(CYGPATH_W) 'src/endpoints_parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/src/endpoints_parameters.cpp'; fi`
 
 test_endpoints_registry-endpoints_services_addon.o: src/endpoints_services_addon.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_services_addon.o -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_services_addon.Tpo -c -o test_endpoints_registry-endpoints_services_addon.o `test -f 'src/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/endpoints_services_addon.cpp

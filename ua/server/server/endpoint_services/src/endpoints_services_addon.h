@@ -26,11 +26,16 @@ namespace OpcUa
 			virtual void Stop();
 
 			virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints);
+      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application);
+
+		private:
+      void ApplyAddonParameters(const Common::AddonParameters& addons);
 
 		private:
 			class EndpointsImpl;
 			std::shared_ptr<EndpointsImpl> Services;
 			std::shared_ptr<Server::ServicesRegistryAddon> InternalComputer;
+			bool Debug;
 		};
 
   } // namespace Impl

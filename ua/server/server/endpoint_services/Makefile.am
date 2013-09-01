@@ -29,6 +29,8 @@ lib_LTLIBRARIES = libendpoints_services_addon.la
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/endpoints_services.h
 libendpoints_services_addon_la_SOURCES = \
+  src/endpoints_parameters.cpp \
+  src/endpoints_parameters.h \
   src/endpoints_services_addon.cpp \
   src/endpoints_services_addon.h \
   src/endpoints_services_factory.h \
@@ -44,6 +46,7 @@ TESTS = test_endpoints_registry
 check_PROGRAMS = $(TESTS)
 
 test_endpoints_registry_SOURCES = \
+  src/endpoints_parameters.cpp \
   src/endpoints_services_addon.cpp \
   src/endpoints_services_addon.h \
   src/endpoints_services_factory.h \

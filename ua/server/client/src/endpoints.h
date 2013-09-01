@@ -31,9 +31,15 @@ namespace OpcUa
       {
       }
 
-      virtual std::vector<ApplicationDescription> FindServers(const Remote::ApplicationFilter& filter) const
+      virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
       {
-        return std::vector<ApplicationDescription>();
+        OpcUa::FindServersRequest request;
+        request.Parameters = params;
+        Stream << request << OpcUa::Binary::flush;
+
+        OpcUa::FindServersResponse response;
+        Stream >> response;
+        return response.Data.Descriptions;
       }
 
       virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const

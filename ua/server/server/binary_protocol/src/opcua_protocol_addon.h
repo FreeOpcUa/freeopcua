@@ -32,14 +32,9 @@ namespace OpcUa
 
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
-      std::vector<EndpointDescription> GetEndpointDescriptions(const Common::AddonParameters& params);
-      void PublishEndpointsInformation(std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
+      void PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
       void StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons);
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
-      UserTokenPolicy GetUserTokenPolicy(const std::vector<Common::Parameter>& params);
-      UserIdentifyTokenType GetTokenType(const std::string& typeName) const;
-      ApplicationType GetApplicationType(const std::string& typeName) const;
-      MessageSecurityMode GetSecurityMode(const std::string& modeName) const;
 
     private:
       std::shared_ptr<OpcUa::Server::TcpServerAddon> TcpAddon;

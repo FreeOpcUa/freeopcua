@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -30,7 +30,7 @@ namespace OpcUa
     class EndpointServices : private Common::Interface
     {
     public:
-      virtual std::vector<ApplicationDescription> FindServers(const ApplicationFilter& filter) const = 0;
+      virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const = 0;
       // TODO Here all structuresmust be in one namespace.
       virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const = 0;
       virtual void RegisterServer(const ServerParameters& parameters) = 0;

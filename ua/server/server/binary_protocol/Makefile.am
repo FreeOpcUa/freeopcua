@@ -18,6 +18,7 @@ configdir = $(sysconfdir)/opcua
 INCLUDES= \
   -Iinclude \
   -I$(top_srcdir)/common/include \
+  -I$(top_srcdir)/server \
   -I$(top_srcdir)/server/address_space/include \
   -I$(top_srcdir)/server/endpoint_services/include \
   -I$(top_srcdir)/server/services_registry/include \
@@ -32,6 +33,7 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
 lib_LTLIBRARIES = libopcua_protocol.la
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
 libopcua_protocol_la_SOURCES = \
+ ../endpoint_services/src/endpoints_parameters.cpp \
  src/opcua_protocol_addon.cpp \
  src/opcua_protocol_addon.h \
  src/opcua_protocol_module.cpp \
@@ -57,6 +59,7 @@ test_opcua_protocol_addon_SOURCES = \
   ../builtin_server/src/builtin_server_factory.cpp \
   ../builtin_server/src/builtin_server_impl.cpp \
   ../builtin_server/src/builtin_server_impl.h \
+  ../endpoint_services/src/endpoints_parameters.cpp \
   ../endpoint_services/src/endpoints_services_addon.cpp \
   ../endpoint_services/src/endpoints_services_addon.h \
   ../endpoint_services/src/endpoints_services_factory.h \

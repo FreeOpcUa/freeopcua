@@ -107,6 +107,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_protocol_la_LIBADD =
 am_libopcua_protocol_la_OBJECTS =  \
+	libopcua_protocol_la-endpoints_parameters.lo \
 	libopcua_protocol_la-opcua_protocol_addon.lo \
 	libopcua_protocol_la-opcua_protocol_module.lo \
 	libopcua_protocol_la-opc_tcp_processor.lo
@@ -124,6 +125,7 @@ am_test_opcua_protocol_addon_OBJECTS =  \
 	test_opcua_protocol_addon-address_space_internal.$(OBJEXT) \
 	test_opcua_protocol_addon-builtin_server_factory.$(OBJEXT) \
 	test_opcua_protocol_addon-builtin_server_impl.$(OBJEXT) \
+	test_opcua_protocol_addon-endpoints_parameters.$(OBJEXT) \
 	test_opcua_protocol_addon-endpoints_services_addon.$(OBJEXT) \
 	test_opcua_protocol_addon-services_registry_factory.$(OBJEXT) \
 	test_opcua_protocol_addon-services_registry_impl.$(OBJEXT) \
@@ -312,6 +314,7 @@ configdir = $(sysconfdir)/opcua
 INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/common/include \
+  -I$(top_srcdir)/server \
   -I$(top_srcdir)/server/address_space/include \
   -I$(top_srcdir)/server/endpoint_services/include \
   -I$(top_srcdir)/server/services_registry/include \
@@ -326,6 +329,7 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
 lib_LTLIBRARIES = libopcua_protocol.la
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
 libopcua_protocol_la_SOURCES = \
+ ../endpoint_services/src/endpoints_parameters.cpp \
  src/opcua_protocol_addon.cpp \
  src/opcua_protocol_addon.h \
  src/opcua_protocol_module.cpp \
@@ -347,6 +351,7 @@ test_opcua_protocol_addon_SOURCES = \
   ../builtin_server/src/builtin_server_factory.cpp \
   ../builtin_server/src/builtin_server_impl.cpp \
   ../builtin_server/src/builtin_server_impl.h \
+  ../endpoint_services/src/endpoints_parameters.cpp \
   ../endpoint_services/src/endpoints_services_addon.cpp \
   ../endpoint_services/src/endpoints_services_addon.h \
   ../endpoint_services/src/endpoints_services_factory.h \
@@ -447,6 +452,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_protocol_la-endpoints_parameters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_protocol_la-opc_tcp_processor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_protocol_la-opcua_protocol_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_protocol_la-opcua_protocol_module.Plo@am__quote@
@@ -454,6 +460,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-address_space_internal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-builtin_server_factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-builtin_server_impl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-endpoints_services_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-opc_tcp_processor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-opcua_protocol_addon.Po@am__quote@
@@ -484,6 +491,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+libopcua_protocol_la-endpoints_parameters.lo: ../endpoint_services/src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_protocol_la-endpoints_parameters.lo -MD -MP -MF $(DEPDIR)/libopcua_protocol_la-endpoints_parameters.Tpo -c -o libopcua_protocol_la-endpoints_parameters.lo `test -f '../endpoint_services/src/endpoints_parameters.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_protocol_la-endpoints_parameters.Tpo $(DEPDIR)/libopcua_protocol_la-endpoints_parameters.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../endpoint_services/src/endpoints_parameters.cpp' object='libopcua_protocol_la-endpoints_parameters.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_protocol_la-endpoints_parameters.lo `test -f '../endpoint_services/src/endpoints_parameters.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_parameters.cpp
 
 libopcua_protocol_la-opcua_protocol_addon.lo: src/opcua_protocol_addon.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_protocol_la-opcua_protocol_addon.lo -MD -MP -MF $(DEPDIR)/libopcua_protocol_la-opcua_protocol_addon.Tpo -c -o libopcua_protocol_la-opcua_protocol_addon.lo `test -f 'src/opcua_protocol_addon.cpp' || echo '$(srcdir)/'`src/opcua_protocol_addon.cpp
@@ -617,6 +631,20 @@ test_opcua_protocol_addon-builtin_server_impl.obj: ../builtin_server/src/builtin
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../builtin_server/src/builtin_server_impl.cpp' object='test_opcua_protocol_addon-builtin_server_impl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-builtin_server_impl.obj `if test -f '../builtin_server/src/builtin_server_impl.cpp'; then $(CYGPATH_W) '../builtin_server/src/builtin_server_impl.cpp'; else $(CYGPATH_W) '$(srcdir)/../builtin_server/src/builtin_server_impl.cpp'; fi`
+
+test_opcua_protocol_addon-endpoints_parameters.o: ../endpoint_services/src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-endpoints_parameters.o -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Tpo -c -o test_opcua_protocol_addon-endpoints_parameters.o `test -f '../endpoint_services/src/endpoints_parameters.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Tpo $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../endpoint_services/src/endpoints_parameters.cpp' object='test_opcua_protocol_addon-endpoints_parameters.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-endpoints_parameters.o `test -f '../endpoint_services/src/endpoints_parameters.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_parameters.cpp
+
+test_opcua_protocol_addon-endpoints_parameters.obj: ../endpoint_services/src/endpoints_parameters.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-endpoints_parameters.obj -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Tpo -c -o test_opcua_protocol_addon-endpoints_parameters.obj `if test -f '../endpoint_services/src/endpoints_parameters.cpp'; then $(CYGPATH_W) '../endpoint_services/src/endpoints_parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/../endpoint_services/src/endpoints_parameters.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Tpo $(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../endpoint_services/src/endpoints_parameters.cpp' object='test_opcua_protocol_addon-endpoints_parameters.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-endpoints_parameters.obj `if test -f '../endpoint_services/src/endpoints_parameters.cpp'; then $(CYGPATH_W) '../endpoint_services/src/endpoints_parameters.cpp'; else $(CYGPATH_W) '$(srcdir)/../endpoint_services/src/endpoints_parameters.cpp'; fi`
 
 test_opcua_protocol_addon-endpoints_services_addon.o: ../endpoint_services/src/endpoints_services_addon.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-endpoints_services_addon.o -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-endpoints_services_addon.Tpo -c -o test_opcua_protocol_addon-endpoints_services_addon.o `test -f '../endpoint_services/src/endpoints_services_addon.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_services_addon.cpp

@@ -27,6 +27,7 @@ namespace OpcUa
 
     public:
       virtual void AddEndpoints(const std::vector<OpcUa::EndpointDescription>& endpoints) = 0;
+      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application) = 0;
     };
 
     const char EndpointsServicesAddonID[] = "endpoints_services";

@@ -24,7 +24,7 @@ namespace
     , public AttributeServices
   {
   public:
-    virtual std::vector<OpcUa::ApplicationDescription> FindServers(const ApplicationFilter& filter) const
+    virtual std::vector<OpcUa::ApplicationDescription> FindServers(const FindServersParameters& params) const
     {
       return std::vector<OpcUa::ApplicationDescription>();
     }

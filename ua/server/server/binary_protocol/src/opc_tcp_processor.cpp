@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -132,7 +132,7 @@ namespace
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
       if (Debug) std::clog << "Sending answer to client." << std::endl;
-      stream << ackHeader << ack << flush; 
+      stream << ackHeader << ack << flush;
     }
 
     void OpenChannel(IOStream& stream)
@@ -181,7 +181,7 @@ namespace
     {
       uint32_t channelID = 0;
       stream >> channelID;
-     
+
       SymmetricAlgorithmHeader algorithmHeader;
       stream >> algorithmHeader;
 
@@ -196,7 +196,7 @@ namespace
     {
       uint32_t channelID = 0;
       stream >> channelID;
-     
+
       SymmetricAlgorithmHeader algorithmHeader;
       stream >> algorithmHeader;
 
@@ -230,6 +230,24 @@ namespace
           GetEndpointsResponse response;
           FillResponseHeader(requestHeader, response.Header);
           response.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case OpcUa::FIND_SERVERS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Find Servers' request." << std::endl;
+          FindServersParameters params;
+          stream >> params;
+
+          FindServersResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Data.Descriptions = Computer->Endpoints()->FindServers(params);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

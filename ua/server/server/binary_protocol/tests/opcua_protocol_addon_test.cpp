@@ -82,6 +82,18 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
   computer.reset();
 }
 
+TEST_F(OpcUaProtocolAddonTest, CanFindServers)
+{
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
+  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::vector<OpcUa::ApplicationDescription> servers;
+  ASSERT_NO_THROW(servers = endpoints->FindServers(OpcUa::FindServersParameters()));
+  ASSERT_EQ(servers.size(), 1);
+  endpoints.reset();
+  computer.reset();
+}
+
 TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
