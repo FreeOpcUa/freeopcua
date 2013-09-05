@@ -107,6 +107,7 @@ namespace
 
     UserTokenPolicy GetUserTokenPolicy(const std::vector<Common::Parameter>& params)
     {
+      Log("Parsing user token policy.");
       UserTokenPolicy tokenPolicy;
       for (const Common::Parameter& param : params)
       {
@@ -132,6 +133,7 @@ namespace
 
     EndpointDescription GetEndpointDescription(const Common::ParametersGroup& group)
     {
+      Log("Parsing endpoint parameters.");
       EndpointDescription endpoint;
       for (const Common::Parameter param : group.Parameters)
       {
@@ -149,7 +151,7 @@ namespace
         }
         else if (param.Name == "url")
         {
-          endpoint.EndpointURL = param.Value;//"opc.tcp://localhost:4841";
+          endpoint.EndpointURL = param.Value;
         }
         else
         {
@@ -178,17 +180,17 @@ namespace
       ApplicationData data;
       for (const Common::Parameter param : applicationGroup.Parameters)
       {
-        if (param.Name == "application_uri")
+        if (param.Name == "uri")
         {
           data.Application.URI = param.Value;
           data.Application.ProductURI = param.Value;
         }
-        else if (param.Name == "application_name")
+        else if (param.Name == "name")
         {
           data.Application.Name.Encoding = HAS_TEXT;
           data.Application.Name.Text = param.Value;
         }
-        else if (param.Value == "application_type")
+        else if (param.Name == "type")
         {
           data.Application.Type = GetApplicationType(param.Value);
         }
@@ -203,17 +205,13 @@ namespace
         if (group.Name == "endpoint")
         {
           EndpointDescription endpoint = GetEndpointDescription(group);
+          data.Application.DiscoveryURLs.push_back(endpoint.EndpointURL);
           data.Endpoints.push_back(endpoint);
         }
         else
         {
           Log("Unknown group in the applications parameters: ", group.Name);
         }
-      }
-
-      for (EndpointDescription& endpoint : data.Endpoints)
-      {
-        data.Application.DiscoveryURLs.push_back(endpoint.EndpointURL);
       }
 
       for (EndpointDescription& endpoint : data.Endpoints)
