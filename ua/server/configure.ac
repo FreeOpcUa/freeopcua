@@ -56,7 +56,7 @@ AC_ARG_WITH([uri-library],
 AC_ARG_WITH([ua-mappings], 
             [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
             [ 
-              AC_SUBST([UA_MAPPING_LIBS], [-Wl,-L$with_ua_mappings,--whole-archive,-lopcuabinary,--no-whole-archive ])
+              AC_SUBST([UA_MAPPING_LIBS], [-Wl,--whole-archive,$with_ua_mappings/libopcuabinary.a,--no-whole-archive ])
               AC_SUBST([UA_MAPPING_INCLUDES], [-I$with_ua_mappings/include])
               AC_MSG_NOTICE([ua mappings path: $with_ua_mappings]) 
             ], 
@@ -66,7 +66,7 @@ AC_ARG_WITH([ua-mappings],
 AC_ARG_WITH([libopccore], 
             [AS_HELP_STRING([--with-libopccore=DIR], [defines path to the root directory of libopccore library.])],
             [ 
-              AC_SUBST([OPC_CORE_LIBS], [-Wl,-L$with_libopccore,--whole-archive,-lopccore,--no-whole-archive])
+              AC_SUBST([OPC_CORE_LIBS], [-Wl,--whole-archive,$with_libopccore/libopccore.a,--no-whole-archive])
               AC_SUBST([OPC_CORE_INCLUDES], [-I$with_libopccore/include])
               AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
             ], 

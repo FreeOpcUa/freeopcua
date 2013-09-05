@@ -37,7 +37,7 @@ libendpoints_services_addon_la_SOURCES = \
   src/endpoints_services_module.cpp
   
 libendpoints_services_addon_la_CPPFLAGS = $(INCLUDES)
-libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -no-undefined
+libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 ##############################################################################
 # Tests

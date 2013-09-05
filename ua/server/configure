@@ -15058,7 +15058,7 @@ fi
 # Check whether --with-ua-mappings was given.
 if test "${with_ua_mappings+set}" = set; then :
   withval=$with_ua_mappings;
-              UA_MAPPING_LIBS=-Wl,-L$with_ua_mappings,--whole-archive,-lopcuabinary,--no-whole-archive
+              UA_MAPPING_LIBS=-Wl,--whole-archive,$with_ua_mappings/libopcuabinary.a,--no-whole-archive
 
               UA_MAPPING_INCLUDES=-I$with_ua_mappings/include
 
@@ -15072,7 +15072,7 @@ fi
 # Check whether --with-libopccore was given.
 if test "${with_libopccore+set}" = set; then :
   withval=$with_libopccore;
-              OPC_CORE_LIBS=-Wl,-L$with_libopccore,--whole-archive,-lopccore,--no-whole-archive
+              OPC_CORE_LIBS=-Wl,--whole-archive,$with_libopccore/libopccore.a,--no-whole-archive
 
               OPC_CORE_INCLUDES=-I$with_libopccore/include
 
