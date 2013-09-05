@@ -73,6 +73,11 @@ namespace OpcUa
       return IsCreateSubscription;
     }
 
+    bool IsFindServersOperation() const
+    {
+      return IsFindServers;
+    }
+
   private:
     std::string ServerURI;
     NodeID Node;
@@ -84,6 +89,7 @@ namespace OpcUa
     bool IsRead;
     bool IsWrite;
     bool IsCreateSubscription;
+    bool IsFindServers;
   };
 
 }

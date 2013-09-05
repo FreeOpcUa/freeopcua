@@ -43,6 +43,12 @@ opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
 
 
+lib_LTLIBRARIES = libpyopcua.la
+libpyopcua_la_SOURCES = src/py_module.cpp
+libpyopcua_la_CPPFLAGS = $(INCLUDES) -I/usr/include/python2.7
+libpyopcua_la_LDFLAGS = libopcua_client.a -lboost_python
+
+
 #TESTS = libuaclient_test
 
 #check_PROGRAMS = $(TESTS)

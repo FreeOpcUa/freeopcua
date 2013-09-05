@@ -33,7 +33,10 @@ namespace OpcUa
       {
         return StartPossible;
       }
-
+      bool IsDaemonMode() const
+      {
+        return IsDaemon;
+      }
       ModulesConfiguration GetModules()
       {
         return Modules;
@@ -41,6 +44,7 @@ namespace OpcUa
 
     private:
       bool StartPossible;
+      bool IsDaemon;
       ModulesConfiguration Modules;
     };
 

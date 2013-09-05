@@ -4,7 +4,7 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
@@ -24,7 +24,7 @@ namespace
   {
     Tabs(unsigned num = 0)
       : Num(num)
-    { 
+    {
     }
     unsigned Num;
   };
@@ -169,7 +169,7 @@ namespace
   void Print(const OpcUa::NodeID& nodeID, const Tabs& tabs)
   {
     OpcUa::NodeIDEncoding encoding = static_cast<OpcUa::NodeIDEncoding>(nodeID.Encoding & OpcUa::NodeIDEncoding::EV_VALUE_MASK);
-    
+
     const Tabs dataTabs(tabs.Num + 2);
     switch (encoding)
     {
@@ -234,7 +234,7 @@ namespace
     {
       std::cout << tabs << "Namespace URI: " << nodeID.NamespaceURI << std::endl;
     }
- 
+
     if (nodeID.Encoding & OpcUa::NodeIDEncoding::EV_SERVER_INDEX_FLAG)
     {
       std::cout << tabs << "Server index: " << nodeID.ServerIndex << std::endl;
@@ -264,7 +264,7 @@ namespace
       std::cout << tab << "DiscoveryProfileURLs: ";
       for (auto it = desc.DiscoveryURLs.begin(); it != desc.DiscoveryURLs.end(); ++it)
       {
-        std::cout << "'" << desc.DiscoveryProfileURI << "' ";
+        std::cout << "'" << *it << "' ";
       }
       std::cout << std::endl;
     }
@@ -306,13 +306,25 @@ namespace
     }
   }
 
+  void PrintServers(const OpcUa::Remote::Computer& computer)
+  {
+    std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
+    OpcUa::FindServersParameters filter;
+    std::vector<OpcUa::ApplicationDescription> applications = service->FindServers(filter);
+    for(const OpcUa::ApplicationDescription& desc : applications)
+    {
+      std::cout << "Application:" << std::endl;
+      Print(desc, Tabs(2));
+    }
+  }
+
   inline void PrintReference(const OpcUa::ReferenceDescription& desc, const Tabs& tabs)
   {
     const Tabs tabs1(tabs.Num + 2);
     std::cout << tabs << "DisplayName: " << desc.DisplayName.Text << std::endl;
     std::cout << tabs << "Browse Name: " << desc.BrowseName.NamespaceIndex << ":" << desc.BrowseName.Name << std::endl;
     std::cout << tabs << "Is Forward: " << desc.IsForward << std::endl;
- 
+
     std::cout << tabs << "Target Node class: " << GetNodeClassName(static_cast<unsigned>(desc.TargetNodeClass))  << std::endl;
     std::cout << tabs << "Target NodeID:" << std::endl;
     Print(desc.TargetNodeID, tabs1);
@@ -358,50 +370,50 @@ namespace
       case VariantType::BOOLEAN:
       {
         std::cout << tabs << "boolean: ";
-        for (auto val : var.Value.Boolean) std::cout << val << " "; 
+        for (auto val : var.Value.Boolean) std::cout << val << " ";
         break;
       }
       case VariantType::SBYTE:
       {
         std::cout << tabs << "signed byte: ";
-        for (auto val : var.Value.SByte) std::cout << (int)val << " "; 
+        for (auto val : var.Value.SByte) std::cout << (int)val << " ";
         break;
       }
       case VariantType::BYTE:
       {
         std::cout << tabs << "byte: ";
-        for (auto val : var.Value.Byte) std::cout << (unsigned)val << " "; 
+        for (auto val : var.Value.Byte) std::cout << (unsigned)val << " ";
         break;
       }
       case VariantType::INT16:
       {
         std::cout << tabs << "int16: ";
-        for (auto val : var.Value.Int16) std::cout << val << " "; 
+        for (auto val : var.Value.Int16) std::cout << val << " ";
         break;
       }
       case VariantType::UINT16:
       {
         std::cout << tabs << "unsigned int16: ";
-        for (auto val : var.Value.UInt16) std::cout << val << " "; 
+        for (auto val : var.Value.UInt16) std::cout << val << " ";
         break;
       }
       case VariantType::INT32:
       {
         std::cout << tabs << "int32: ";
-        for (auto val : var.Value.Int32) std::cout << val << " "; 
+        for (auto val : var.Value.Int32) std::cout << val << " ";
         break;
       }
       case VariantType::UINT32:
       {
         std::cout << tabs << "unsigned int32: ";
-        for (auto val : var.Value.UInt32) std::cout << val << " "; 
+        for (auto val : var.Value.UInt32) std::cout << val << " ";
         break;
       }
 
       case VariantType::INT64:
       {
         std::cout << tabs << "int64: ";
-        for (auto val : var.Value.Int64) std::cout << val << " "; 
+        for (auto val : var.Value.Int64) std::cout << val << " ";
         break;
       }
 
@@ -409,7 +421,7 @@ namespace
       case VariantType::UINT64:
       {
         std::cout << tabs << "unsigned int64: ";
-        for (auto val : var.Value.UInt64) std::cout << val << " "; 
+        for (auto val : var.Value.UInt64) std::cout << val << " ";
         break;
       }
 
@@ -417,7 +429,7 @@ namespace
       case VariantType::FLOAT:
       {
         std::cout << tabs << "float: ";
-        for (auto val : var.Value.Float) std::cout << val << " "; 
+        for (auto val : var.Value.Float) std::cout << val << " ";
         break;
       }
 
@@ -425,7 +437,7 @@ namespace
       case VariantType::DOUBLE:
       {
         std::cout << tabs << "double: ";
-        for (auto val : var.Value.Double) std::cout << val << " "; 
+        for (auto val : var.Value.Double) std::cout << val << " ";
         break;
       }
 
@@ -433,16 +445,16 @@ namespace
       case VariantType::STRING:
       {
         std::cout << tabs << "string: ";
-        for (auto val : var.Value.String) std::cout << val << " "; 
+        for (auto val : var.Value.String) std::cout << val << " ";
         break;
       }
 
 
-      case VariantType::EXPANDED_NODE_ID: 
+      case VariantType::EXPANDED_NODE_ID:
       case VariantType::NODE_ID:
       {
         std::cout << tabs << "NodeID: " << std::endl;
-        for (auto val : var.Value.Node) Print(val, Tabs(tabs.Num + 2)); 
+        for (auto val : var.Value.Node) Print(val, Tabs(tabs.Num + 2));
         break;
       }
 
@@ -453,7 +465,7 @@ namespace
         break;
       }
 
-      case VariantType::LOCALIZED_TEXT:   
+      case VariantType::LOCALIZED_TEXT:
       {
         std::cout << tabs << "Text: ";
         for (auto val : var.Value.Text) std::cout << val.Locale << ":" << val.Text << " ";
@@ -462,13 +474,13 @@ namespace
 
 
       case VariantType::DATE_TIME:
-      case VariantType::GUID:            
-      case VariantType::BYTE_STRING:    
-      case VariantType::XML_ELEMENT:     
-      case VariantType::STATUS_CODE:     
-      case VariantType::DIAGNOSTIC_INFO: 
-      case VariantType::VARIANT:         
-      case VariantType::DATA_VALUE:       
+      case VariantType::GUID:
+      case VariantType::BYTE_STRING:
+      case VariantType::XML_ELEMENT:
+      case VariantType::STATUS_CODE:
+      case VariantType::DIAGNOSTIC_INFO:
+      case VariantType::VARIANT:
+      case VariantType::DATA_VALUE:
       case VariantType::NUL:
       case VariantType::EXTENSION_OBJECT:
         break;
@@ -547,10 +559,14 @@ namespace
     const std::string serverURI = cmd.GetServerURI();
     std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverURI);
 
-    if (cmd.IsGetEndpointsOperation()) 
+    if (cmd.IsGetEndpointsOperation())
     {
       PrintEndpoints(*computer);
       return;
+    }
+    else if (cmd.IsFindServersOperation())
+    {
+      PrintServers(*computer);
     }
 
     OpcUa::Remote::SessionParameters session;

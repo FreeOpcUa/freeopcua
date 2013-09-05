@@ -30,6 +30,7 @@ namespace
 
   const char* OPTION_HELP = "help";
   const char* OPTION_CONFIG = "config";
+  const char* OPTION_DAEMON = "daemon";
 
   std::string GetConfigOptionValue(const po::variables_map& vm)
   {
@@ -124,6 +125,10 @@ namespace
     return configuration;
   }
 
+  bool GetDaemonMode(const po::variables_map& vm)
+  {
+    return vm.count(OPTION_DAEMON) != 0;
+  }
 }
 
 
@@ -134,12 +139,14 @@ namespace OpcUa
 
     CommandLine::CommandLine(int argc, char** argv)
       : StartPossible(true)
+      , IsDaemon(false)
     {
       // Declare the supported options.
       po::options_description desc("Parameters");
       desc.add_options()
         (OPTION_HELP, "Print help message and exit.")
         (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
+        (OPTION_DAEMON, "Start in daemon mode.")
         ;
 
       po::variables_map vm;
@@ -153,6 +160,7 @@ namespace OpcUa
         return;
       }
 
+      IsDaemon = GetDaemonMode(vm);
       std::string configFile = GetConfigOptionValue(vm);
       Configuration configuration = ParseConfigurationFile(configFile);
       Modules = configuration.Modules;

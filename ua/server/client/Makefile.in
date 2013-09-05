@@ -27,6 +27,7 @@
 
 
 
+
 VPATH = @srcdir@
 am__make_dryrun = \
   { \
@@ -102,8 +103,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(uaclientincludedir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(uaclientincludedir)"
 LIBRARIES = $(lib_LIBRARIES)
 ARFLAGS = cru
 libopcua_client_a_AR = $(AR) $(ARFLAGS)
@@ -111,6 +112,13 @@ libopcua_client_a_LIBADD =
 am_libopcua_client_a_OBJECTS = binary_computer.$(OBJEXT) \
 	binary_connection.$(OBJEXT) computer.$(OBJEXT)
 libopcua_client_a_OBJECTS = $(am_libopcua_client_a_OBJECTS)
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libpyopcua_la_LIBADD =
+am_libpyopcua_la_OBJECTS = libpyopcua_la-py_module.lo
+libpyopcua_la_OBJECTS = $(am_libpyopcua_la_OBJECTS)
+libpyopcua_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libpyopcua_la_LDFLAGS) $(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
@@ -141,8 +149,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
-DIST_SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
+SOURCES = $(libopcua_client_a_SOURCES) $(libpyopcua_la_SOURCES) \
+	$(opcua_SOURCES)
+DIST_SOURCES = $(libopcua_client_a_SOURCES) $(libpyopcua_la_SOURCES) \
+	$(opcua_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -311,6 +321,10 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/client/tests
 opcua_LDADD = libopcua_client.a
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread -Wl,-z,defs -no-undefined
+lib_LTLIBRARIES = libpyopcua.la
+libpyopcua_la_SOURCES = src/py_module.cpp
+libpyopcua_la_CPPFLAGS = $(INCLUDES) -I/usr/include/python2.7
+libpyopcua_la_LDFLAGS = libopcua_client.a -lboost_python
 all: all-am
 
 .SUFFIXES:
@@ -380,6 +394,40 @@ libopcua_client.a: $(libopcua_client_a_OBJECTS) $(libopcua_client_a_DEPENDENCIES
 	-rm -f libopcua_client.a
 	$(libopcua_client_a_AR) libopcua_client.a $(libopcua_client_a_OBJECTS) $(libopcua_client_a_LIBADD)
 	$(RANLIB) libopcua_client.a
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+	}
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+	for p in $$list; do \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
+	done
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libpyopcua.la: $(libpyopcua_la_OBJECTS) $(libpyopcua_la_DEPENDENCIES) $(EXTRA_libpyopcua_la_DEPENDENCIES) 
+	$(libpyopcua_la_LINK) -rpath $(libdir) $(libpyopcua_la_OBJECTS) $(libpyopcua_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -439,6 +487,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libpyopcua_la-py_module.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_options.Po@am__quote@
 
@@ -504,6 +553,13 @@ computer.obj: src/computer.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
+
+libpyopcua_la-py_module.lo: src/py_module.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libpyopcua_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libpyopcua_la-py_module.lo -MD -MP -MF $(DEPDIR)/libpyopcua_la-py_module.Tpo -c -o libpyopcua_la-py_module.lo `test -f 'src/py_module.cpp' || echo '$(srcdir)/'`src/py_module.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libpyopcua_la-py_module.Tpo $(DEPDIR)/libpyopcua_la-py_module.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/py_module.cpp' object='libpyopcua_la-py_module.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libpyopcua_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libpyopcua_la-py_module.lo `test -f 'src/py_module.cpp' || echo '$(srcdir)/'`src/py_module.cpp
 
 opcua-opcua_main.o: src/opcua_main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-opcua_main.o -MD -MP -MF $(DEPDIR)/opcua-opcua_main.Tpo -c -o opcua-opcua_main.o `test -f 'src/opcua_main.cpp' || echo '$(srcdir)/'`src/opcua_main.cpp
@@ -644,9 +700,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS)
+all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(PROGRAMS) $(HEADERS)
+install-binPROGRAMS: install-libLTLIBRARIES
+
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(uaclientincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(uaclientincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -682,7 +740,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
-	clean-libtool mostlyclean-am
+	clean-libLTLIBRARIES clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -708,7 +766,8 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS install-libLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLIBRARIES \
+	install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -749,24 +808,26 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
-	uninstall-uaclientincludeHEADERS
+	uninstall-libLTLIBRARIES uninstall-uaclientincludeHEADERS
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic clean-libLIBRARIES clean-libtool ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	install-uaclientincludeHEADERS installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-libLIBRARIES \
+	clean-generic clean-libLIBRARIES clean-libLTLIBRARIES \
+	clean-libtool ctags distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLIBRARIES install-libLTLIBRARIES install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-uaclientincludeHEADERS installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-libLIBRARIES uninstall-libLTLIBRARIES \
 	uninstall-uaclientincludeHEADERS
 
 

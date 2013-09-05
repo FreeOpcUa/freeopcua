@@ -14,6 +14,11 @@
 
 #include <iostream>
 
+void Daemonize()
+{
+
+}
+
 int main(int argc, char** argv)
 {
   try
@@ -22,6 +27,11 @@ int main(int argc, char** argv)
     if (!options.NeedStartServer())
     {
       return 0;
+    }
+
+    if (options.IsDaemonMode())
+    {
+      Daemonize();
     }
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
