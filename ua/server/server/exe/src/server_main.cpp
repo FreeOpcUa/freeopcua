@@ -9,15 +9,12 @@
 ///
 
 
+#include "daemon.h"
 #include "server_options.h"
 #include "server.h"
 
 #include <iostream>
 
-void Daemonize()
-{
-
-}
 
 int main(int argc, char** argv)
 {
@@ -29,9 +26,11 @@ int main(int argc, char** argv)
       return 0;
     }
 
+    OpcUa::Daemon::UniquePtr daemon;
+
     if (options.IsDaemonMode())
     {
-      Daemonize();
+      daemon.reset(new OpcUa::Daemon("/var/log/opcua/log.txt"));
     }
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();

@@ -71,6 +71,10 @@ namespace
       {
         std::cout << "unable to set SIGINT handler" << std::endl;
       }
+      if (signal(SIGSTOP, TerminateSignal) == SIG_ERR)
+      {
+        std::cout << "unable to set SIGSTOP handler" << std::endl;
+      }
       ExitEvent.wait(lock);
     }
 

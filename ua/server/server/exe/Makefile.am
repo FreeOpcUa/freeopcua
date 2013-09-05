@@ -14,6 +14,8 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) tests
 
 bin_PROGRAMS = opcuaserver
 opcuaserver_SOURCES = \
+  src/daemon.cpp \
+  src/daemon.h \
   src/server.cpp \
   src/server_main.cpp \
   src/server_options.cpp \
@@ -23,8 +25,22 @@ opcuaserver_CPPFLAGS = $(INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -no-undefined
 
 configdir=$(sysconfdir)/opcua
-
 config_DATA = configs/server.config
+
+#upstartdir=$(sysconfdir)/init
+#upstart_DATA=configs/opcuaserver.conf
+
+sysvdir=$(sysconfdir)/init.d
+sysv_DATA=configs/opcuaserver
+
+install-data-hook:
+	install -d $(localstatedir)/log/opcua
+	chmod 744 $(sysvdir)/opcuaserver
+	update-rc.d opcuaserver defaults
+
+uninstall-hook:
+	update-rc.d opcuaserver remove
+
 
 TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/server/exe
 TESTS=test_opcuaserver

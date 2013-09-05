@@ -75,11 +75,12 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)"
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" \
+	"$(DESTDIR)$(sysvdir)"
 am__EXEEXT_1 = test_opcuaserver$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
-am_opcuaserver_OBJECTS = opcuaserver-server.$(OBJEXT) \
-	opcuaserver-server_main.$(OBJEXT) \
+am_opcuaserver_OBJECTS = opcuaserver-daemon.$(OBJEXT) \
+	opcuaserver-server.$(OBJEXT) opcuaserver-server_main.$(OBJEXT) \
 	opcuaserver-server_options.$(OBJEXT)
 opcuaserver_OBJECTS = $(am_opcuaserver_OBJECTS)
 opcuaserver_LDADD = $(LDADD)
@@ -150,7 +151,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-DATA = $(config_DATA)
+DATA = $(config_DATA) $(sysv_DATA)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -289,6 +290,8 @@ top_srcdir = @top_srcdir@
 INCLUDES = $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) tests
 opcuaserver_SOURCES = \
+  src/daemon.cpp \
+  src/daemon.h \
   src/server.cpp \
   src/server_main.cpp \
   src/server_options.cpp \
@@ -298,6 +301,11 @@ opcuaserver_CPPFLAGS = $(INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -no-undefined
 configdir = $(sysconfdir)/opcua
 config_DATA = configs/server.config
+
+#upstartdir=$(sysconfdir)/init
+#upstart_DATA=configs/opcuaserver.conf
+sysvdir = $(sysconfdir)/init.d
+sysv_DATA = configs/opcuaserver
 TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/server/exe
 test_opcuaserver_SOURCES = \
   src/server.cpp \
@@ -410,6 +418,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-daemon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcuaserver-server_options.Po@am__quote@
@@ -437,6 +446,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+opcuaserver-daemon.o: src/daemon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcuaserver-daemon.o -MD -MP -MF $(DEPDIR)/opcuaserver-daemon.Tpo -c -o opcuaserver-daemon.o `test -f 'src/daemon.cpp' || echo '$(srcdir)/'`src/daemon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opcuaserver-daemon.Tpo $(DEPDIR)/opcuaserver-daemon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/daemon.cpp' object='opcuaserver-daemon.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcuaserver-daemon.o `test -f 'src/daemon.cpp' || echo '$(srcdir)/'`src/daemon.cpp
+
+opcuaserver-daemon.obj: src/daemon.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcuaserver-daemon.obj -MD -MP -MF $(DEPDIR)/opcuaserver-daemon.Tpo -c -o opcuaserver-daemon.obj `if test -f 'src/daemon.cpp'; then $(CYGPATH_W) 'src/daemon.cpp'; else $(CYGPATH_W) '$(srcdir)/src/daemon.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/opcuaserver-daemon.Tpo $(DEPDIR)/opcuaserver-daemon.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/daemon.cpp' object='opcuaserver-daemon.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o opcuaserver-daemon.obj `if test -f 'src/daemon.cpp'; then $(CYGPATH_W) 'src/daemon.cpp'; else $(CYGPATH_W) '$(srcdir)/src/daemon.cpp'; fi`
 
 opcuaserver-server.o: src/server.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcuaserver_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcuaserver-server.o -MD -MP -MF $(DEPDIR)/opcuaserver-server.Tpo -c -o opcuaserver-server.o `test -f 'src/server.cpp' || echo '$(srcdir)/'`src/server.cpp
@@ -548,6 +571,27 @@ uninstall-configDATA:
 	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(configdir)'; $(am__uninstall_files_from_dir)
+install-sysvDATA: $(sysv_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(sysv_DATA)'; test -n "$(sysvdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(sysvdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(sysvdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(sysvdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(sysvdir)" || exit $$?; \
+	done
+
+uninstall-sysvDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(sysv_DATA)'; test -n "$(sysvdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(sysvdir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -730,7 +774,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" "$(DESTDIR)$(sysvdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -787,8 +831,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-configDATA
-
+install-data-am: install-configDATA install-sysvDATA
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
 
 install-dvi-am:
@@ -833,9 +878,11 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-configDATA
-
-.MAKE: check-am install-am install-strip
+uninstall-am: uninstall-binPROGRAMS uninstall-configDATA \
+	uninstall-sysvDATA
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
+.MAKE: check-am install-am install-data-am install-strip uninstall-am
 
 .PHONY: CTAGS GTAGS all all-am check check-TESTS check-am clean \
 	clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
@@ -843,16 +890,25 @@ uninstall-am: uninstall-binPROGRAMS uninstall-configDATA
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-binPROGRAMS install-configDATA install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-configDATA
+	install-data-am install-data-hook install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	install-sysvDATA installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-configDATA uninstall-hook \
+	uninstall-sysvDATA
 
+
+install-data-hook:
+	install -d $(localstatedir)/log/opcua
+	chmod 744 $(sysvdir)/opcuaserver
+	update-rc.d opcuaserver defaults
+
+uninstall-hook:
+	update-rc.d opcuaserver remove
 
 check : test_addon.so
 
