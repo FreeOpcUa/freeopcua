@@ -51,6 +51,7 @@ test_endpoints_registry_SOURCES = \
   src/endpoints_services_addon.h \
   src/endpoints_services_factory.h \
   tests/endpoints_services_test.cpp \
+  tests/endpoints_services_test.h \
   ../services_registry/src/services_registry_factory.cpp \
   ../services_registry/src/services_registry_factory.h \
   ../services_registry/src/services_registry_impl.cpp \

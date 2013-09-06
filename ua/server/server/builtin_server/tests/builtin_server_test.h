@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <opc/ua/server/addons/builtin_server_factory.h>
+#include <opc/ua/server/addons/builtin_server.h>
 #include <opc/common/addons_core/addon_manager.h>
 
 namespace OpcUa

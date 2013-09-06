@@ -34,6 +34,8 @@ libstandard_ns_addon_la_SOURCES = \
    src/standard_namespace.h \
    src/standard_namespace_addon.cpp \
    src/standard_namespace_module.cpp
+
+EXTRA_DIST = config/standard_address_space.xml
  
 libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
 libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
@@ -48,4 +50,5 @@ test_standard_address_space_SOURCES=\
   ../address_space/src/address_space_internal.cpp \
   src/standard_namespace.cpp \
   src/standard_namespace_addon.cpp \
-  tests/standard_namespace_ut.cpp
+  tests/standard_namespace_ut.cpp \
+  tests/standard_namespace_test.h

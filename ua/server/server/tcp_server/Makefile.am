@@ -29,7 +29,8 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 lib_LTLIBRARIES = libopcua_tcp_server.la
 addonsinclude_HEADERS = \
-  include/opc/ua/server/addons/tcp_server_addon.h
+  include/opc/ua/server/addons/tcp_server_addon.h \
+  include/opc/ua/server/tcp_server.h
 
 libopcua_tcp_server_la_SOURCES = \
   src/tcp_server_addon_impl.cpp \

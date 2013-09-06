@@ -14,7 +14,7 @@
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/server/addons/xml_address_space_loader.h>
+#include <opc/ua/server/addons/xml_ns.h>
 
 
 namespace OpcUa

@@ -52,6 +52,7 @@ common_HEADERS = \
                   include/opc/common/modules.h \
                   include/opc/common/object_id.h \
                   include/opc/common/thread.h \
+                  include/opc/common/uri_facade.h \
                   include/opc/common/value.h
 
 

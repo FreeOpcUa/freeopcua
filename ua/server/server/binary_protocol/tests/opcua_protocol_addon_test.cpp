@@ -18,7 +18,7 @@
 #include "../../address_space/tests/address_space_registry_test.h"
 #include "../../endpoint_services/tests/endpoints_services_test.h"
 #include "../../services_registry/tests/services_registry_test.h"
-#include "../../standard_namespace/tests/standard_namspace_test.h"
+#include "../../standard_namespace/tests/standard_namespace_test.h"
 #include "../../builtin_server/tests/builtin_server_test.h"
 
 #include <chrono>
