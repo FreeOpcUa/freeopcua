@@ -8,6 +8,13 @@
 # $Date: $
 # $Revision: $
 
+opcincludedir = $(includedir)/opc
+opcuaincludedir = $(opcincludedir)/ua
+uaclientincludedir = $(opcuaincludedir)/client
+uaserverincludedir = $(opcuaincludedir)/server
+addonsincludedir = $(uaserverincludedir)/addons
+
+
 INCLUDES= \
   -Iinclude \
   -I$(top_srcdir)/common/include \
@@ -17,15 +24,27 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) -I.
 
 
 lib_LTLIBRARIES = libxml_ns_addon.la
+
+addonsinclude_HEADERS = \
+  include/opc/ua/server/addons/xml_ns.h
+
 libxml_ns_addon_la_SOURCES = \
   src/xml_address_space_addon.cpp \
   src/xml_address_space_loader.cpp \
   src/xml_address_space_loader.h \
-  src/xml_address_space_module.cpp
+  src/xml_address_space_module.cpp \
+  src/xml_processor.h
 
 libxml_ns_addon_la_CPPFLAGS = $(INCLUDES) -I/usr/include/libxml2 -I$(top_srcdir) 
 libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
+EXTRA_DIST = \
+  tests/base_node.xml \
+  tests/empty.xml \
+  tests/invalid_root.xml \
+  tests/invalid_version.xml \
+  tests/no_version.xml \
+  tests/predefined_references.xml
 
 TESTS = xml_address_space_ut
 

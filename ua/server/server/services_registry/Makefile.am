@@ -30,7 +30,8 @@ libservices_registry_addon_la_SOURCES = \
   src/services_registry_factory.h \
   src/services_registry_impl.cpp \
   src/services_registry_impl.h \
-  src/services_registry_module.cpp
+  src/services_registry_module.cpp \
+  tests/services_registry_test.h
 
 libservices_registry_addon_la_CPPFLAGS = $(INCLUDES)
 libservices_registry_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined

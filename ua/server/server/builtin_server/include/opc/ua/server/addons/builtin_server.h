@@ -24,5 +24,15 @@ namespace OpcUa
       virtual std::shared_ptr<Remote::Computer> GetComputer() const = 0;
     };
 
+    class BuiltingServerFactory : public Common::AddonFactory
+    {
+    public:
+        DEFINE_CLASS_POINTERS(BuiltingServerFactory);
+
+      public:
+        virtual Common::Addon::UniquePtr CreateAddon();
+    };
+
+
   } // namespace Server
 } // namespace OpcUa

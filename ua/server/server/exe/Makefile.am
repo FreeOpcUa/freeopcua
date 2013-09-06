@@ -17,6 +17,7 @@ opcuaserver_SOURCES = \
   src/daemon.cpp \
   src/daemon.h \
   src/server.cpp \
+  src/server.h \
   src/server_main.cpp \
   src/server_options.cpp \
   src/server_options.h
@@ -32,6 +33,20 @@ config_DATA = configs/server.config
 
 sysvdir=$(sysconfdir)/init.d
 sysv_DATA=configs/opcuaserver
+
+EXTRA_DIST = \
+  configs/opcuaserver \
+  configs/server.config \
+  configs/opcuaserver.conf \
+  tests/configs/endpoints.xml \
+  tests/configs/test.xml \
+  tests/configs/test_addon.config \
+  tests/configs/test_tcp_server.xml \
+  tests/common.cpp \
+  tests/common.h \
+  tests/test_addon.cpp \
+  tests/test_addon.h
+
 
 install-data-hook:
 	install -d $(localstatedir)/log/opcua

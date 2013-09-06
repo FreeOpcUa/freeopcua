@@ -332,6 +332,7 @@ libopcua_protocol_la_SOURCES = \
  ../endpoint_services/src/endpoints_parameters.cpp \
  src/opcua_protocol_addon.cpp \
  src/opcua_protocol_addon.h \
+ src/opcua_protocol_factory.h \
  src/opcua_protocol_module.cpp \
  src/opc_tcp_processor.cpp \
  src/opc_tcp_processor.h
@@ -345,6 +346,7 @@ test_opcua_protocol_addon_SOURCES = \
   src/opc_tcp_processor.cpp \
   src/opc_tcp_processor.h \
   tests/opcua_protocol_addon_test.cpp \
+  tests/opcua_protocol_addon_test.h \
   ../address_space/src/address_space_addon.cpp \
   ../address_space/src/address_space_internal.cpp \
   ../address_space/src/address_space_internal.h \
