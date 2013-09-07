@@ -11,7 +11,7 @@
 AC_INIT
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([Makefile.am])
-AM_INIT_AUTOMAKE([opcuaserver], [0.1], [rykovanov.as@gmail.com])
+AM_INIT_AUTOMAKE([opcuaserver], [0.1.1], [rykovanov.as@gmail.com])
 AC_CONFIG_MACRO_DIR([m4])
 
 #################################################################

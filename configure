@@ -2162,7 +2162,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=opcuaserver
- VERSION=0.1
+ VERSION=0.1.1
 
 
 # Some tools Automake needs.
