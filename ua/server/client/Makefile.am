@@ -44,10 +44,23 @@ opcua_LDFLAGS = $(UA_MAPPING_LIBS) $(URI_LIBS) -lboost_program_options -lpthread
 
 
 lib_LTLIBRARIES = libpyopcua.la
-libpyopcua_la_SOURCES = src/py_module.cpp
-libpyopcua_la_CPPFLAGS = $(INCLUDES) -I/usr/include/python2.7
-libpyopcua_la_LDFLAGS = libopcua_client.a -lboost_python
+libpyopcua_la_SOURCES = src/python/module.cpp
 
+libpyopcua_la_CPPFLAGS = $(INCLUDES) -I/usr/include/python2.7 -DMODULE_NAME=opcua
+libpyopcua_la_LIBDADD = libopcua_client.a
+libpyopcua_la_LDFLAGS = libopcua_client.a $(UA_MAPPING_LIBS) $(URI_LIBS) -lpthread -lpython2.7 -lboost_python -Wl,-z,defs,-no-undefined
+
+test_opcua.so: tests/test_computer.cpp src/python/module.cpp
+	g++ -o0 -g -Wall -std=c++0x -fPIC -DPIC -DMODULE_NAME=test_opcua $(INCLUDES) -I/usr/include/python2.7 -c src/python/module.cpp -o py_test_module.o
+	g++ -o0 -g -Wall -std=c++0x -fPIC -DPIC -DMODULE_NAME=test_opcua $(INCLUDES) -I/usr/include/python2.7 -c tests/test_computer.cpp -o test_computer.o -lpython2.7 -lboost_python 
+	g++ -o0 -g -Wall -std=c++0x -shared  py_test_module.o  test_computer.o $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread -lpython2.7 -lboost_python  -o test_opcua.so -Wl,-z,defs,-no-undefined
+
+tests/test.py: test_opcua.so
+
+CLEANFILES = test_computer.o py_test_module.o test_opcua.so
+
+TESTS_ENVIRONMENT = PYTHONPATH=.
+TESTS = tests/test.py
 
 #TESTS = libuaclient_test
 
