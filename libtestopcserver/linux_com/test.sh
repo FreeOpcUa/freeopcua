@@ -1,2 +1,0 @@
-$OPCTEST_PATH
-

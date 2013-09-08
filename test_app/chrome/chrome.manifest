@@ -1,6 +1,0 @@
-content mozopc                   file:content/mozopc/
-skin 	mozopc       classic/1.0 file:skin/
-skin 	mozopc       modern/1.0  file:skin/
-locale  mozopc       en-US       file:locale/en-US/
-locale  mozopc       ru          file:locale/ru/
-

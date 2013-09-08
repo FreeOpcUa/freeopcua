@@ -1,3 +1,0 @@
-interfaces mozopc.xpt
-binary-component libgpsopcserver.so ABI=Linux_x86-gcc3
-binary-component libtestopcserver.so ABI=Linux_x86-gcc3

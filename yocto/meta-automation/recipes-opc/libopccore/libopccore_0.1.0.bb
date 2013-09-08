@@ -1,8 +1,0 @@
-PR = "r5"
-
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
-SRC_URI[md5sum] = "54c7555953dbed84b638a03124b6c2e5"
-SRC_URI[sha256sum] = "b2ded52a55a55f060c5446a3ebc71364f3e354201370d7c943e6948e0a048f52"
-
-require libopccore.inc
-
