@@ -16,74 +16,74 @@
 #include <algorithm>
 #include <stdexcept>
 
-namespace
+namespace OpcUa
 {
-  using namespace OpcUa;
-
-  inline bool IsInteger(const NodeID& id)
+  bool NodeID::IsInteger() const
   {
-    const NodeIDEncoding enc = id.GetEncodingValue();
+    const NodeIDEncoding enc = GetEncodingValue();
     return enc == EV_TWO_BYTE || enc == EV_FOUR_BYTE || enc == EV_NUMERIC;
   }
-  inline bool IsString(const NodeID& id)
+
+  bool NodeID::IsString() const
   {
-    const NodeIDEncoding enc = id.GetEncodingValue();
+    const NodeIDEncoding enc = GetEncodingValue();
     return enc == EV_STRING;
   }
-  inline bool IsBinary(const NodeID& id)
+
+  bool NodeID::IsBinary() const
   {
-    const NodeIDEncoding enc = id.GetEncodingValue();
+    const NodeIDEncoding enc = GetEncodingValue();
     return enc == EV_BYTE_STRING;
   }
-  inline bool IsGuid(const NodeID& id)
+
+  bool NodeID::IsGuid() const
   {
-    const NodeIDEncoding enc = id.GetEncodingValue();
+    const NodeIDEncoding enc = GetEncodingValue();
     return enc == EV_GUID;
   }
 
-
-  inline std::string GetStringIdentifier(const NodeID& id)
+  std::string NodeID::GetStringIdentifier() const
   {
-    if (IsString(id))
+    if (IsString())
     {
-      return id.StringData.Identifier;
+      return StringData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
 
-  inline std::vector<uint8_t> GetBinaryIdentifier(const NodeID& id)
+  std::vector<uint8_t> NodeID::GetBinaryIdentifier() const
   {
-    if (IsBinary(id))
+    if (IsBinary())
     {
-      return id.BinaryData.Identifier;
+      return BinaryData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
 
-  inline Guid GetGuidIdentifier(const NodeID& id)
+  Guid NodeID::GetGuidIdentifier() const
   {
-    if (IsGuid(id))
+    if (IsGuid())
     {
-      return id.GuidData.Identifier;
+      return GuidData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
 
-  inline uint32_t GetIntegerIdentifier(const NodeID& id)
+  uint32_t NodeID::GetIntegerIdentifier() const
   {
-    switch (id.GetEncodingValue())
+    switch (GetEncodingValue())
     {
       case EV_TWO_BYTE:
       {
-        return id.TwoByteData.Identifier;
+        return TwoByteData.Identifier;
       }
       case EV_FOUR_BYTE:
       {
-        return id.FourByteData.Identifier;
+        return FourByteData.Identifier;
       }
       case EV_NUMERIC:
       {
-        return id.NumericData.Identifier;
+        return NumericData.Identifier;
       }
       default:
       {
@@ -92,28 +92,24 @@ namespace
     }
   }
 
-  inline uint32_t GetNamespaceIndex(const NodeID& id)
+  uint32_t NodeID::GetNamespaceIndex() const
   {
-    switch (id.GetEncodingValue())
+    switch (GetEncodingValue())
     {
       case EV_FOUR_BYTE:
-        return id.FourByteData.NamespaceIndex;
+        return FourByteData.NamespaceIndex;
       case EV_NUMERIC:
-        return id.NumericData.NamespaceIndex;
+        return NumericData.NamespaceIndex;
       case EV_STRING:
-        return id.StringData.NamespaceIndex;
+        return StringData.NamespaceIndex;
       case EV_GUID:
-        return id.GuidData.NamespaceIndex;
+        return GuidData.NamespaceIndex;
       case EV_BYTE_STRING:
-        return id.BinaryData.NamespaceIndex;
+        return BinaryData.NamespaceIndex;
       default:
         return 0;
     }
   }
-}
-
-namespace OpcUa
-{
 
   NodeID::NodeID()
     : Encoding(EV_TWO_BYTE)
@@ -259,58 +255,58 @@ namespace OpcUa
 
   MessageID GetMessageID(const NodeID& id)
   {
-    return static_cast<MessageID>(GetIntegerIdentifier(id));
+    return static_cast<MessageID>(id.GetIntegerIdentifier());
   }
 
 
   bool NodeID::operator== (const NodeID& node) const
   {
-    if (GetNamespaceIndex(*this) != GetNamespaceIndex(node))
+    if (GetNamespaceIndex() != node.GetNamespaceIndex())
     {
       return false;
     }
-    if (IsInteger(*this) && IsInteger(node))
+    if (IsInteger() && node.IsInteger())
     {
-      return GetIntegerIdentifier(*this) == GetIntegerIdentifier(node);
+      return GetIntegerIdentifier() == node.GetIntegerIdentifier();
     }
-    if (IsString(*this) && IsString(node))
+    if (IsString() && node.IsString())
     {
-      return GetStringIdentifier(*this) == GetStringIdentifier(node);
+      return GetStringIdentifier() == node.GetStringIdentifier();
     }
-    if (IsBinary(*this) && IsBinary(node))
+    if (IsBinary() && node.IsBinary())
     {
-      return GetBinaryIdentifier(*this) == GetBinaryIdentifier(node);
+      return GetBinaryIdentifier() == node.GetBinaryIdentifier();
     }
-    if (IsGuid(*this) && IsGuid(node))
+    if (IsGuid() && node.IsGuid())
     {
-      return GetGuidIdentifier(*this) == GetGuidIdentifier(node);
+      return GetGuidIdentifier() == node.GetGuidIdentifier();
     }
     return false;
   }
 
   bool NodeID::operator < (const NodeID& node) const
   {
-    if (GetNamespaceIndex(*this) < GetNamespaceIndex(node))
+    if (GetNamespaceIndex() < node.GetNamespaceIndex())
     {
       return true;
     }
-    if (IsInteger(*this) && IsInteger(node))
+    if (IsInteger() && node.IsInteger())
     {
-      return GetIntegerIdentifier(*this) < GetIntegerIdentifier(node);
+      return GetIntegerIdentifier() < node.GetIntegerIdentifier();
     }
-    if (IsString(*this) && IsString(node))
+    if (IsString() && node.IsString())
     {
-      return GetStringIdentifier(*this) < GetStringIdentifier(node);
+      return GetStringIdentifier() < node.GetStringIdentifier();
     }
-    if (IsBinary(*this) && IsBinary(node))
+    if (IsBinary() && node.IsBinary())
     {
-      const std::vector<uint8_t>& l = GetBinaryIdentifier(*this);
-      const std::vector<uint8_t>& r = GetBinaryIdentifier(node);
+      const std::vector<uint8_t>& l = GetBinaryIdentifier();
+      const std::vector<uint8_t>& r = node.GetBinaryIdentifier();
       return std::lexicographical_compare(l.cbegin(), l.cend(), r.cbegin(), r.cend());
     }
-    if (IsGuid(*this) && IsGuid(node))
+    if (IsGuid() && node.IsGuid())
     {
-      return GetGuidIdentifier(*this) < GetGuidIdentifier(node);
+      return GetGuidIdentifier() < node.GetGuidIdentifier();
     }
 
     return Encoding < node.Encoding;

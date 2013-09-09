@@ -34,6 +34,37 @@ namespace OpcUa
     return result;
   }
 
+  struct PyNodeID
+  {
+    unsigned NamespaceIndex;
+    python::object Identifier;
+
+    PyNodeID()
+      : NamespaceIndex(0)
+    {
+    }
+
+    PyNodeID(const OpcUa::NodeID& node)
+      : NamespaceIndex(node.GetNamespaceIndex())
+    {
+      if (node.IsString())
+      {
+        Identifier = python::str(node.GetStringIdentifier());
+      }
+      else if (node.IsInteger())
+      {
+        Identifier = python::long_(node.GetIntegerIdentifier());
+      }
+      else
+      {
+        std::stringstream stream;
+        stream << "Unsupported or not implemented node type: " << node.Encoding;
+        throw std::logic_error(stream.str());
+      }
+    }
+
+  };
+
   struct PyApplicationDescription
   {
     std::string URI;
@@ -156,6 +187,77 @@ namespace OpcUa
     return resultApps;
   }
 
+  struct PyBrowseParameters
+  {
+    unsigned MaxReferenciesCount;
+    PyNodeID NodeToBrowse;
+    unsigned Direction;
+    PyNodeID ReferenceTypeID;
+    bool IncludeSubtypes;
+    unsigned NodeClasses;
+    unsigned ResultMask;
+
+    PyBrowseParameters()
+      : MaxReferenciesCount(0)
+      , Direction(0)
+      , IncludeSubtypes(false)
+      , NodeClasses(0)
+      , ResultMask(0)
+    {
+    }
+  };
+
+
+  typedef OpcUa::QualifiedName PyQualifiedName;
+
+  struct PyReferenceDescription
+  {
+    PyNodeID ReferenceTypeID;
+    bool IsForward;
+    PyNodeID TargetNodeID;
+    PyQualifiedName BrowseName;
+    std::string DisplayName;
+    unsigned TargetNodeClass;
+    PyNodeID TargetNodeTypeDefinition;
+
+    PyReferenceDescription()
+      : IsForward(false)
+      , TargetNodeClass(0)
+    {
+    }
+
+    PyReferenceDescription(const OpcUa::ReferenceDescription& desc)
+      : ReferenceTypeID(desc.ReferenceTypeID)
+      , IsForward(desc.IsForward)
+      , TargetNodeID(desc.TargetNodeID)
+      , BrowseName(desc.BrowseName)
+      , DisplayName(desc.DisplayName.Text)
+      , TargetNodeClass(static_cast<unsigned>(desc.TargetNodeClass))
+      , TargetNodeTypeDefinition(desc.TargetNodeTypeDefinition)
+    {
+    }
+  };
+
+  boost::python::list ToList(const std::vector<ReferenceDescription> descs)
+  {
+    boost::python::list result;
+    std::for_each(
+      descs.begin(),
+      descs.end(),
+      [&result](const ReferenceDescription& desc)
+      {
+        result.append(PyReferenceDescription(desc));
+      });
+
+    return result;
+  }
+
+  OpcUa::NodeID GetNode(const PyNodeID& object)
+  {
+    // TODO
+    return OpcUa::NodeID();
+  }
+
   class PyComputer
   {
   public:
@@ -178,10 +280,241 @@ namespace OpcUa
       return ToList(endpoints);
     }
 
+    python::list Browse(const PyBrowseParameters& p) const
+    {
+      OpcUa::Remote::BrowseParameters params;
+      params.Description.NodeToBrowse = GetNode(p.NodeToBrowse);
+      params.Description.ReferenceTypeID = GetNode(p.ReferenceTypeID);
+      params.Description.Direction = static_cast<OpcUa::BrowseDirection>(p.Direction);
+      params.Description.IncludeSubtypes = p.IncludeSubtypes;
+      params.Description.NodeClasses = p.NodeClasses;
+      params.Description.ResultMask = p.ResultMask;
+      params.MaxReferenciesCount = p.MaxReferenciesCount;
+
+      const std::vector<ReferenceDescription> references = Impl->Views()->Browse(params);
+      return ToList(references);
+    }
+
   private:
     OpcUa::Remote::Computer::SharedPtr Impl;
   };
 
+  void RegisterCommonObjectIDs()
+  {
+    python::enum_<OpcUa::ObjectID>("ObjectID")
+      .value("NULL", OpcUa::ObjectID::Null)
+      .value("BOOLEAN", OpcUa::ObjectID::Boolean)
+      .value("SBYTE", OpcUa::ObjectID::SByte)
+      .value("BYTE", OpcUa::ObjectID::Byte)
+      .value("INT16", OpcUa::ObjectID::Int16)
+      .value("UINT16", OpcUa::ObjectID::UInt16)
+      .value("INT32", OpcUa::ObjectID::Int32)
+      .value("UINT32", OpcUa::ObjectID::UInt32)
+      .value("INT64", OpcUa::ObjectID::Int64)
+      .value("UINT64", OpcUa::ObjectID::UInt64)
+      .value("FLOAT", OpcUa::ObjectID::Float)
+      .value("DOUBLE", OpcUa::ObjectID::Double)
+      .value("STRING", OpcUa::ObjectID::String)
+      .value("DATE_TIME", OpcUa::ObjectID::DateTime)
+      .value("GUID", OpcUa::ObjectID::Guid)
+      .value("BYTE_STRING", OpcUa::ObjectID::ByteString)
+      .value("XML_ELEMENT", OpcUa::ObjectID::XmlElement)
+      .value("NODE_ID", OpcUa::ObjectID::NodeID)
+      .value("EXPANDED_NODE_ID", OpcUa::ObjectID::ExpandedNodeID)
+      .value("STATUS_CODE", OpcUa::ObjectID::StatusCode)
+      .value("QUALIFIED_NAME", OpcUa::ObjectID::QualifiedName)
+      .value("QUALIFIED_NAME", OpcUa::ObjectID::QualifiedName)
+      .value("LOCALIZED_TEXT", OpcUa::ObjectID::LocalizedText)
+      .value("STRUCTURE", OpcUa::ObjectID::Structure)
+      .value("DATA_VALUE", OpcUa::ObjectID::DataValue)
+      .value("BASE_DATA_TYPE", OpcUa::ObjectID::BaseDataType)
+      .value("DIAGNOSTIC_INFO", OpcUa::ObjectID::DiagnosticInfo)
+      .value("NUMBER", OpcUa::ObjectID::Number)
+      .value("INTEGER", OpcUa::ObjectID::Integer)
+      .value("UINTEGER", OpcUa::ObjectID::UInteger)
+      .value("ENUMERATION", OpcUa::ObjectID::Enumeration)
+      .value("IMAGE", OpcUa::ObjectID::Image)
+      .value("REFERENCES", OpcUa::ObjectID::References)
+      .value("NON_HIERARCHAL_REFERENCES", OpcUa::ObjectID::NonHierarchicalReferences)
+      .value("HAS_CHILD", OpcUa::ObjectID::HasChild)
+      .value("ORGANIZES", OpcUa::ObjectID::Organizes)
+      .value("HAS_EVENT_SOURCE", OpcUa::ObjectID::HasEventSource)
+      .value("HAS_MODELLING_RULE", OpcUa::ObjectID::HasModellingRule)
+      .value("HAS_ENCODING", OpcUa::ObjectID::HasEncoding)
+      .value("HAS_DESCRIPTION", OpcUa::ObjectID::HasDescription)
+      .value("HAS_TYPE_DEFINITION", OpcUa::ObjectID::HasTypeDefinition)
+      .value("GENERATES_EVENT", OpcUa::ObjectID::GeneratesEvent)
+      .value("AGGREGATES", OpcUa::ObjectID::Aggregates)
+      .value("HAS_SUBTYPE", OpcUa::ObjectID::HasSubtype)
+      .value("HAS_PROPERTY", OpcUa::ObjectID::HasProperty)
+      .value("HAS_COMPONENT", OpcUa::ObjectID::HasComponent)
+      .value("HAS_NOTIFIER", OpcUa::ObjectID::HasNotifier)
+      .value("HAS_ORDERED_COMPONENT", OpcUa::ObjectID::HasOrderedComponent)
+      .value("HAS_MODEL_PARENT", OpcUa::ObjectID::HasModelParent)
+      .value("FROM_STATE", OpcUa::ObjectID::FromState)
+      .value("TO_STATE", OpcUa::ObjectID::ToState)
+      .value("HAS_CAUSE", OpcUa::ObjectID::HasCause)
+      .value("HAS_EFFECT", OpcUa::ObjectID::HasEffect)
+      .value("HAS_HISTORICAL_CONFIGURATION", OpcUa::ObjectID::HasHistoricalConfiguration)
+      .value("HAS_HISTORICAL_EVENT_CONFIGURATION", OpcUa::ObjectID::HasHistoricalEventConfiguration)
+      .value("BASE_OBJECT_TYPE", OpcUa::ObjectID::BaseObjectType)
+      .value("FOLDER_TYPE", OpcUa::ObjectID::FolderType)
+      .value("BASE_VARIABLE_TYPE", OpcUa::ObjectID::BaseVariableType)
+      .value("BASE_DATA_VARIABLE_TYPE", OpcUa::ObjectID::BaseDataVariableType)
+      .value("PROPERTY_TYPE", OpcUa::ObjectID::PropertyType)
+      .value("DATA_TYPE_DESCRIPTION_TYPE", OpcUa::ObjectID::DataTypeDescriptionType)
+      .value("DATA_TYPE_DICTIONARY_TYPE", OpcUa::ObjectID::DataTypeDictionaryType)
+      .value("DATA_TYPE_SYSTEM_TYPE", OpcUa::ObjectID::DataTypeSystemType)
+      .value("DATA_TYPE_ENCODING_TYPE", OpcUa::ObjectID::DataTypeEncodingType)
+      .value("MODELLING_RULE_TYPE", OpcUa::ObjectID::ModellingRuleType)
+      .value("MODELLING_RULE_MANDATORY", OpcUa::ObjectID::ModellingRuleMandatory)
+      .value("MODELLING_RULE_MANDATORY_SHARED", OpcUa::ObjectID::ModellingRuleMandatoryShared)
+      .value("MODELLING_RULE_OPTIONAL", OpcUa::ObjectID::ModellingRuleOptional)
+      .value("MODELLING_RULE_CARDINALITY_RESTRICTION", OpcUa::ObjectID::ModellingRuleCardinalityRestriction)
+      .value("MODELLING_RULE_EXPOSES_ITS_ARRAY", OpcUa::ObjectID::ModellingRuleExposesItsArray)
+      .value("ROOT_FOLDER", OpcUa::ObjectID::RootFolder)
+      .value("OBJECTS_FOLDER", OpcUa::ObjectID::ObjectsFolder)
+      .value("TYPES_FOLDER", OpcUa::ObjectID::TypesFolder)
+      .value("VIEWS_FOLDER", OpcUa::ObjectID::ViewsFolder)
+      .value("OBJECT_TYPES", OpcUa::ObjectID::ObjectTypes)
+      .value("VARIABLE_TYPES", OpcUa::ObjectID::VariableTypes)
+      .value("DATA_TYPES", OpcUa::ObjectID::DataTypes)
+      .value("REFERENCE_TYPES", OpcUa::ObjectID::ReferenceTypes)
+      .value("NAMING_RULE", OpcUa::ObjectID::NamingRule)
+      .value("HAS_SUBSTATE_MACHINE", OpcUa::ObjectID::HasSubStateMachine)
+      .value("HAS_EVENT_HISTORY", OpcUa::ObjectID::HasEventHistory)
+      .value("ID_TYPE", OpcUa::ObjectID::IdType)
+      .value("NODE_CLASS", OpcUa::ObjectID::NodeClass)
+      .value("DURATION", OpcUa::ObjectID::Duration)
+      .value("NUMERIC_RANGE", OpcUa::ObjectID::NumericRange)
+      .value("UTC_TIME", OpcUa::ObjectID::UtcTime)
+      .value("LOCALE_ID", OpcUa::ObjectID::LocaleID)
+      .value("STRUCTURE_ARGUMENT", OpcUa::ObjectID::StructureArgument)
+;
+/*
+
+
+
+
+      StructureStatusResult
+      MessageSecurityMode
+      StructureApplicationDescription
+      SecurityTokenRequestType
+      StructureUserIdentifyToken
+      AnonymousIdentifyToken
+      UserNameIdentifyToken
+      X509IdentifyToken
+      StructureBuildInfo
+      SoftwareCertificate
+      StructureSignedSoftwareCertificate
+      StructureAddNodesItem
+      StructureAddReferencesItem
+      StructureDeleteNodesItem
+      StructureDeleteReferencesItem
+      RedundancySupport
+      ServerState
+      StructureSamplingIntervalDiagnosticsDataType
+      StructureServerDiagnosticsSummaryType
+      StructureServerStatusDataType
+      StructureSessionDiagnosticsDataType
+      StructureSessionSecurityDiagnosticsDataType
+      StructureServiceCounterDataType
+      StructureSubscriptionDiagnosticsDataType
+      StructureModelChangeStructureDataType
+      StructureRange
+      StructureEUInformation
+      StructureSemanticChangeStructureDataType
+      ImageBmp
+      ImageGif
+      ImageJpg
+      ImagePng
+      ServerType
+      ServerArray
+      NamespaceArray
+      ServerStatus
+      ServiceLevel
+      ServerCapabilities
+      ServerDiagnostics
+      VendorServerInfo
+      ServerRedundancy
+      ServerCapabilitiesType
+      ServerProfileArray
+      LocaleIDArray
+      MinSupportedSampleRate
+      ModellingRules
+      ServerDiagnosticsType
+      ServerDiagnosticsSummary
+      SamplingIntervalDiagnosticsArray
+      SubscriptionDiagnosticsArray
+      EnableFlag
+      SessionDiagnosticsSummaryType
+      SessionDiagnosticsObjectType
+      VendorServerInfoType
+      ServerRedundancyType
+      RedundancySupportTypeRedundancySupport
+      BaseEventType
+      EventID
+      EventType
+      SourceNode
+      SourceName
+      Time
+      ReceiveTime
+      Message
+      Severity
+      SystemEventType
+      DeviceFailureEventType
+      BaseModelChangeEventType
+      ServerVendorCapabilityType
+      ServerStatusType
+      ServerDiagnosticsSummaryType
+      SamplingIntervalDiagnosticsArrayType
+      SamplingIntervalDiagnosticsType
+      SubscriptionDiagnosticsArrayType
+      SubscriptionDiagnosticsType
+      SessionsDiagnosticsArrayType
+      ServerDiagnosticsVariableType
+      SessionSecurityDiagnosticsArrayType
+      SessionSecurityDiagnosticsType
+      StateType
+      StateNumber
+      TransitionType
+      HistoricalEventConfigurationType
+      MaxBrowseContinuationPoints
+      MaxHistoryContinuationPoints
+      SemanticChangeEventType
+      Auditing
+      SessionsDiagnosticsSummary
+      AggregateFunctions
+      RefreshStartEventType
+      RefreshEndEventType
+      RefreshRequiredEventType
+      EventTypes
+      SoftwareCertificates
+      AlwaysGeneratesEvent
+      StartTime
+      CurrentTime
+      State
+      BuildInfo
+      ProductURI
+      ManufacturerName
+      ProductName
+      SoftwareVersion
+      BuildNumber
+      BuildDate
+      SecondsTillShutdown
+      ShutdownReason
+      LocalTime
+      IdTypeEnumStrings
+      MessageSecurityModeEnumStrings
+      SecurityTokenRequestTypeEnumStrings
+      RedundancySupportEnumStrings
+      ServerStateEnumStrings
+      HasTrueSubState
+      HasFalseSubState
+      HasCondition
+*/
+    ;
+  }
 }
 
 
@@ -189,6 +522,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 {
   using namespace boost::python;
   using namespace OpcUa;
+
+  RegisterCommonObjectIDs();
 
   enum_<OpcUa::ApplicationType>("ApplicationType")
     .value("CLIENT", OpcUa::ApplicationType::CLIENT)
@@ -207,6 +542,26 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("CERTIFICATE", OpcUa::UserIdentifyTokenType::CERTIFICATE)
     .value("ISSUED_TOKEN", OpcUa::UserIdentifyTokenType::ISSUED_TOKEN);
 
+  enum_<OpcUa::BrowseDirection>("BrowseDirection")
+    .value("BOTH", OpcUa::BrowseDirection::Both)
+    .value("FORWARD", OpcUa::BrowseDirection::Forward)
+    .value("INVERSE", OpcUa::BrowseDirection::Inverse);
+
+  enum_<OpcUa::NodeClass>("NodeClass")
+    .value("ALL", OpcUa::NodeClass::All)
+    .value("OBJECT", OpcUa::NodeClass::Object)
+    .value("VARIABLE", OpcUa::NodeClass::Variable)
+    .value("METHOD", OpcUa::NodeClass::Method)
+    .value("OBJECT_TYPE", OpcUa::NodeClass::ObjectType)
+    .value("VARIABLE_TYPE", OpcUa::NodeClass::VariableType)
+    .value("REFERENCE_TYPE", OpcUa::NodeClass::ReferenceType)
+    .value("DATA_TYPE", OpcUa::NodeClass::DataType)
+    .value("VIEW", OpcUa::NodeClass::View);
+
+  class_<PyNodeID>("NodeID")
+    .def_readwrite("namespace_index", &PyNodeID::NamespaceIndex)
+    .def_readwrite("identifier", &PyNodeID::Identifier);
+
   class_<PyApplicationDescription>("ApplicationDescription")
     .def_readwrite("uri", &PyApplicationDescription::URI)
     .def_readwrite("product_uri", &PyApplicationDescription::ProductURI)
@@ -215,7 +570,6 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("gateway_server_uri", &PyApplicationDescription::GatewayServerURI)
     .def_readwrite("discovery_profile_uri", &PyApplicationDescription::DiscoveryProfileURI)
     .def_readwrite("discovery_urls", &PyApplicationDescription::DiscoveryURLs);
-
 
   class_<PyEndpointDescription>("EndpointDescription")
     .def_readwrite("url", &PyEndpointDescription::EndpointURL)
@@ -234,7 +588,30 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("issuer_endpoint_url", &PyUserTokenPolicy::IssuerEndpointURL)
     .def_readwrite("security_policy_uri", &PyUserTokenPolicy::SecurityPolicyURI);
 
+  class_<PyBrowseParameters>("BrowseParameters")
+    .def_readwrite("max_referencies_count", &PyBrowseParameters::MaxReferenciesCount)
+    .def_readwrite("node_to_browse", &PyBrowseParameters::NodeToBrowse)
+    .def_readwrite("direction", &PyBrowseParameters::Direction)
+    .def_readwrite("reference_type_id", &PyBrowseParameters::ReferenceTypeID)
+    .def_readwrite("include_subtypes", &PyBrowseParameters::IncludeSubtypes)
+    .def_readwrite("node_classes", &PyBrowseParameters::NodeClasses)
+    .def_readwrite("result_mask", &PyBrowseParameters::ResultMask);
+
+  class_<PyReferenceDescription>("ReferenceDescription")
+    .def_readwrite("reference_type_id", &PyReferenceDescription::ReferenceTypeID)
+    .def_readwrite("is_forward", &PyReferenceDescription::IsForward)
+    .def_readwrite("target_node_id", &PyReferenceDescription::TargetNodeID)
+    .def_readwrite("browse_name", &PyReferenceDescription::BrowseName)
+    .def_readwrite("display_name", &PyReferenceDescription::DisplayName)
+    .def_readwrite("target_node_class", &PyReferenceDescription::TargetNodeClass)
+    .def_readwrite("target_node_type_definition", &PyReferenceDescription::TargetNodeTypeDefinition);
+
+  class_<PyQualifiedName>("QualifiedName")
+    .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
+    .def_readwrite("name", &PyQualifiedName::Name);
+
   class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
     .def("find_servers", &PyComputer::FindServers)
-    .def("get_endpoints", &PyComputer::GetEndpoints);
+    .def("get_endpoints", &PyComputer::GetEndpoints)
+    .def("browse", &PyComputer::Browse);
 }

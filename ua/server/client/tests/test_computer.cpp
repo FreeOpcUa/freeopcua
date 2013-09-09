@@ -85,14 +85,42 @@ namespace
     std::vector<EndpointDescription> Endpoints;
   };
 
+  class TestViewServices : public OpcUa::Remote::ViewServices
+  {
+  public:
+    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    {
+      ReferenceDescription ref;
+      ref.BrowseName.Name = "Name";
+      ref.BrowseName.NamespaceIndex = 1;
+      ref.DisplayName.Text = "Text";
+      ref.IsForward = true;
+      ref.ReferenceTypeID.Encoding = OpcUa::NodeIDEncoding::EV_STRING;
+      ref.ReferenceTypeID.StringData.NamespaceIndex = 2;
+      ref.ReferenceTypeID.StringData.Identifier = "Identifier";
+      ref.TargetNodeClass = OpcUa::NodeClass::Variable;
+      ref.TargetNodeID.Encoding = OpcUa::NodeIDEncoding::EV_FOUR_BYTE;
+      ref.TargetNodeID.FourByteData.NamespaceIndex = 3;
+      ref.TargetNodeID.FourByteData.Identifier = 4;
+      ref.TargetNodeTypeDefinition.Encoding = OpcUa::NodeIDEncoding::EV_NUMERIC;
+      ref.TargetNodeTypeDefinition.NumericData.NamespaceIndex = 5;
+      ref.TargetNodeTypeDefinition.NumericData.Identifier = 6;
+      return std::vector<ReferenceDescription>(1, ref);
+    }
+
+    virtual std::vector<ReferenceDescription> BrowseNext() const
+    {
+      return std::vector<ReferenceDescription>();
+    }
+  };
 
   class TestComputer : public Computer
   {
   public:
     TestComputer(const std::string& url)
       : EndpointsImpl(new TestEndpoints(url))
+      , ViewsImpl(new TestViewServices())
     {
-
     }
 
     virtual void CreateSession(const Remote::SessionParameters& parameters)
@@ -117,7 +145,7 @@ namespace
 
     virtual std::shared_ptr<ViewServices> Views() const
     {
-      throw std::logic_error("not implemented.");
+      return ViewsImpl;
     }
 
     virtual std::shared_ptr<AttributeServices> Attributes() const
@@ -132,6 +160,7 @@ namespace
 
   private:
     std::shared_ptr<EndpointServices> EndpointsImpl;
+    std::shared_ptr<ViewServices> ViewsImpl;
   };
 
 }

@@ -157,6 +157,18 @@ namespace OpcUa
     NodeIDEncoding GetEncodingValue() const;
     bool HasNamespaceURI() const;
     bool HasServerIndex() const;
+
+    bool IsInteger() const;
+    bool IsString() const;
+    bool IsBinary() const;
+    bool IsGuid() const;
+
+    uint32_t GetNamespaceIndex() const;
+
+    uint32_t GetIntegerIdentifier() const;
+    std::string GetStringIdentifier() const;
+    std::vector<uint8_t> GetBinaryIdentifier() const;
+    Guid GetGuidIdentifier() const;
   };
 
   inline NodeID TwoByteNodeID(uint8_t value)
