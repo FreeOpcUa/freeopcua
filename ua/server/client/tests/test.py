@@ -85,6 +85,23 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(data.source_picoseconds, 3, "Invalid source_picoseconds:" + str(data.source_picoseconds))
         self.assertEqual(data.source_timestamp, 4, "Invalid source_timestamp:" + str(data.source_timestamp))
 
+    def test_write(self):
+        value = opcua.WriteValue()
+        value.attribute = opcua.AttributeID.VALUE
+        value.node.namespace_index = 1
+        value.node.identifier = "node"
+        value.numeric_range = "1:2"
+        value.data.value = "value"
+        value.data.status = 0x806F0000
+        value.data.server_picoseconds = 1
+        value.data.server_timestamp = 2
+        value.data.source_picoseconds = 3
+        value.data.source_timestamp = 4
+        
+        statuses = computer.write([value]);
+        self.assertEqual(len(statuses), 1, "Invalid number of statuses.")
+        self.assertEqual(statuses[0], 0x806F0000, "Invalid status.")
+
     def _check_application(self, app):
         self.assertEqual(app.name, "Name", "Application has invalid name.")
         self.assertEqual(app.uri, "URI", "Application has invalid uri.")

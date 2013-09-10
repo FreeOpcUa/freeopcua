@@ -129,9 +129,36 @@ namespace
       return std::vector<DataValue>(1, data);
     }
 
-    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter)
+    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& data)
     {
-      throw std::logic_error("Write not implemented.");
+      Assert(data.size() == 1, "Invalid number od data for write.");
+      const OpcUa::WriteValue& value = data[0];
+      Assert(value.Attribute == OpcUa::AttributeID::VALUE, "Invalid id of attribute.");
+      Assert(value.Node.Encoding == NodeIDEncoding::EV_STRING, "Invalid encoding of node.");
+      Assert(value.Node.StringData.NamespaceIndex == 1, "Invalid namespace of node.");
+      Assert(value.Node.StringData.Identifier == "node", "Invalid identifier of node.");
+      Assert(value.NumericRange == "1:2", "Invalid numeric range.");
+      Assert(value.Data.ServerPicoseconds == 1, "Invalid ServerPicoseconds.");
+      Assert(value.Data.ServerTimestamp == 2, "Invalid ServerTimeStamp.");
+      Assert(value.Data.SourcePicoseconds == 3, "Invalid SourcePicoseconds.");
+      Assert(value.Data.SourceTimestamp == 4, "Invalid SourceTimeStamp.");
+      Assert(value.Data.Status == StatusCode::BadNotReadable, "Invalid data status.");
+      Assert(value.Data.Value.Type == VariantType::STRING, "Invalid data type.");
+      std::cout << "Number of strings" << value.Data.Value.Value.String.size() << std::endl;
+      Assert(value.Data.Value.Value.String.size() == 1, "Invalid number of strings in variant.");
+      Assert(value.Data.Value == std::vector<std::string>(1, "value"), "Invalid data value.");
+
+      const uint8_t encoding =
+          DATA_VALUE |
+          DATA_VALUE_STATUS_CODE |
+          DATA_VALUE_SOURCE_TIMESTAMP |
+          DATA_VALUE_SERVER_TIMESTAMP |
+          DATA_VALUE_SOURCE_PICOSECONDS |
+          DATA_VALUE_SERVER_PICOSECONDS;
+
+      Assert(value.Data.Encoding == encoding, "Invalid encoding mask.");
+
+      return std::vector<StatusCode>(1, StatusCode::BadNotReadable);
     }
   };
 

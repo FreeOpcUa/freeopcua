@@ -21,6 +21,7 @@ namespace OpcUa
    const uint8_t DATA_VALUE_SERVER_TIMESTAMP = 8;
    const uint8_t DATA_VALUE_SOURCE_PICOSECONDS = 16;
    const uint8_t DATA_VALUE_SERVER_PICOSECONDS = 32;
+   const uint8_t DATA_VALUE_ALL = ~uint8_t();
 
    struct DataValue
    {

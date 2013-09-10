@@ -48,7 +48,7 @@ namespace OpcUa
   }
 
   template <typename T>
-  std::vector<T> FromList(const python::list& list)
+  std::vector<T> FromList(const python::object& list)
   {
     std::vector<T> result;
     std::size_t listSize = python::len(list);
@@ -331,6 +331,70 @@ namespace OpcUa
     OpcUa::ApplyVisitor(var, convertor);
     return convertor.Result;
   }
+  OpcUa::NodeID GetNode(const PyNodeID& object)
+  {
+    OpcUa::NodeID id;
+    unsigned encoding = 0;
+    if (!object.NamespaceURI.empty())
+    {
+      id.NamespaceURI = object.NamespaceURI;
+      encoding |= NodeIDEncoding::EV_NAMESPACE_URI_FLAG;
+    }
+
+    if (object.ServerIndex)
+    {
+      id.ServerIndex = object.ServerIndex;
+      encoding |= NodeIDEncoding::EV_SERVER_INDEX_FLAG;
+    }
+
+    if (python::extract<std::string>(object.Identifier).check())
+    {
+      id.StringData.Identifier = python::extract<std::string>(object.Identifier);
+      id.StringData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_STRING;
+    }
+    if (python::extract<unsigned>(object.Identifier).check())
+    {
+      id.NumericData.Identifier = python::extract<unsigned>(object.Identifier);
+      id.NumericData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_NUMERIC;
+    }
+    id.Encoding = static_cast<OpcUa::NodeIDEncoding>(encoding);
+    return id;
+  }
+
+  Variant FromObject(const python::object object)
+  {
+    Variant var;
+    if (python::extract<std::string>(object).check())
+    {
+      var = python::extract<std::string>(object)();
+    }
+    else if (python::extract<uint64_t>(object).check())
+    {
+      var = FromList<uint64_t>(object);
+    }
+    else if (python::extract<float>(object).check())
+    {
+      var = FromList<float>(object);
+    }
+    else if (python::extract<double>(object).check())
+    {
+      var = FromList<double>(object);
+    }
+    else if (python::extract<PyNodeID>(object).check())
+    {
+      std::vector<PyNodeID> ids = FromList<PyNodeID>(object);
+      std::vector<NodeID> result(ids.size());
+      std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
+      var = result;
+    }
+    else
+    {
+      throw std::logic_error("Cannot create variant from python object. Unsupported typa.");
+    }
+    return var;
+  }
 
   struct PyDataValue
   {
@@ -379,36 +443,64 @@ namespace OpcUa
     }
   };
 
-  OpcUa::NodeID GetNode(const PyNodeID& object)
+  struct PyWriteValue
   {
-    OpcUa::NodeID id;
-    unsigned encoding = 0;
-    if (!object.NamespaceURI.empty())
+    PyNodeID Node;
+    unsigned Attribute;
+    std::string NumericRange;
+    PyDataValue Data;
+
+    PyWriteValue()
+      : Attribute(0)
     {
-      id.NamespaceURI = object.NamespaceURI;
-      encoding |= NodeIDEncoding::EV_NAMESPACE_URI_FLAG;
     }
 
-    if (object.ServerIndex)
+    explicit PyWriteValue(const OpcUa::WriteValue& value)
+      : Node(value.Node)
+      , Attribute(static_cast<unsigned>(value.Attribute))
+      , NumericRange(value.NumericRange)
+      , Data(value.Data)
     {
-      id.ServerIndex = object.ServerIndex;
-      encoding |= NodeIDEncoding::EV_SERVER_INDEX_FLAG;
     }
+  };
 
-    if (python::extract<std::string>(object.Identifier).check())
+  WriteValue GetWriteValue(const PyWriteValue& pyValue)
+  {
+    WriteValue result;
+    result.Attribute = static_cast<AttributeID>(pyValue.Attribute);
+    result.Node = GetNode(pyValue.Node);
+    result.NumericRange = pyValue.NumericRange;
+    if (pyValue.Data.Status)
     {
-      id.StringData.Identifier = python::extract<std::string>(object.Identifier);
-      id.StringData.NamespaceIndex = object.NamespaceIndex;
-      encoding |= NodeIDEncoding::EV_STRING;
+      result.Data.Status = static_cast<StatusCode>(pyValue.Data.Status);
+      result.Data.Encoding |= DATA_VALUE_STATUS_CODE;
     }
-    if (python::extract<unsigned>(object.Identifier).check())
+    if (pyValue.Data.ServerPicoseconds)
     {
-      id.NumericData.Identifier = python::extract<unsigned>(object.Identifier);
-      id.NumericData.NamespaceIndex = object.NamespaceIndex;
-      encoding |= NodeIDEncoding::EV_NUMERIC;
+      result.Data.ServerPicoseconds = pyValue.Data.ServerPicoseconds;
+      result.Data.Encoding |= DATA_VALUE_SERVER_PICOSECONDS;
     }
-    id.Encoding = static_cast<OpcUa::NodeIDEncoding>(encoding);
-    return id;
+    if (pyValue.Data.SourcePicoseconds)
+    {
+      result.Data.SourcePicoseconds = pyValue.Data.SourcePicoseconds;
+      result.Data.Encoding |= DATA_VALUE_SOURCE_PICOSECONDS;
+    }
+    if (pyValue.Data.ServerTimestamp)
+    {
+      result.Data.ServerTimestamp = pyValue.Data.ServerTimestamp;
+      result.Data.Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
+    }
+    if (pyValue.Data.SourceTimestamp)
+    {
+      result.Data.SourceTimestamp = pyValue.Data.SourceTimestamp;
+      result.Data.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
+    }
+    if (pyValue.Data.Value)
+    {
+      result.Data.Value = FromObject(pyValue.Data.Value);
+      result.Data.Encoding |= DATA_VALUE;
+    }
+    return result;
   }
 
   class PyComputer
@@ -472,9 +564,17 @@ namespace OpcUa
     }
 
     //    std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
-    python::list Write(const python::list& filter)
+    python::list Write(const python::list& in)
     {
-      python::list result;
+      const std::vector<PyWriteValue>& pyValues = FromList<PyWriteValue>(in);
+      std::vector<WriteValue> values;
+      for (std::vector<PyWriteValue>::const_iterator valueIt = pyValues.begin(); valueIt != pyValues.end(); ++valueIt)
+      {
+        const PyWriteValue& pyValue = *valueIt;
+        const WriteValue& value = GetWriteValue(pyValue);
+        values.push_back(value);
+      }
+      const python::list& result = ToList<unsigned, StatusCode>(Impl->Attributes()->Write(values));
       return result;
     }
 
@@ -836,7 +936,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
     .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
 
-  class_<PyDataValue>("DataValue", "Parameters od read data.")
+  class_<PyDataValue>("DataValue", "Parameters of read data.")
     .def_readwrite("value", &PyDataValue::Value)
     .def_readwrite("status", &PyDataValue::Status)
     .def_readwrite("source_timestamp", &PyDataValue::SourceTimestamp)
@@ -844,7 +944,13 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("server_timestamp", &PyDataValue::ServerTimestamp)
     .def_readwrite("server_picoseconds", &PyDataValue::ServerPicoseconds);
 
-  class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
+  class_<PyWriteValue>("WriteValue", "Parameters data for writing.")
+    .def_readwrite("node", &PyWriteValue::Node)
+    .def_readwrite("attribute", &PyWriteValue::Attribute)
+    .def_readwrite("numeric_range", &PyWriteValue::NumericRange)
+    .def_readwrite("data", &PyWriteValue::Data);
+
+    class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
     .def("find_servers", &PyComputer::FindServers)
     .def("get_endpoints", &PyComputer::GetEndpoints)
     .def("browse", &PyComputer::Browse)

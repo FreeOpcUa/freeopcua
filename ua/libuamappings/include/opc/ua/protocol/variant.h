@@ -256,6 +256,12 @@ namespace OpcUa
     }
 
     template <typename T>
+    bool operator==(const T& value) const
+    {
+      return Value == value;
+    }
+
+    template <typename T>
     Variant(const T& value)
     {
       Value = value;
