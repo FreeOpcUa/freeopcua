@@ -9,6 +9,7 @@
 ///
 
 #include <boost/python.hpp>
+#include <boost/python/type_id.hpp>
 
 #include <opc/ua/client/remote_computer.h>
 #include <opc/ua/computer.h>
@@ -30,7 +31,33 @@ namespace OpcUa
         result.append(obj);
       }
     );
+    return result;
+  }
 
+  template <typename ResultType, typename SourceType>
+  python::list ToList(const std::vector<SourceType> objects)
+  {
+    python::list result;
+    std::for_each(objects.begin(), objects.end(),
+      [&result](const SourceType& obj)
+      {
+        result.append(ResultType(obj));
+      }
+    );
+    return result;
+  }
+
+  template <typename T>
+  std::vector<T> FromList(const python::list& list)
+  {
+    std::vector<T> result;
+    std::size_t listSize = python::len(list);
+    for (std::size_t i = 0; i < listSize; ++i)
+    {
+      python::object element = list[i];
+      const T value = python::extract<T>(element);
+      result.push_back(value);
+    }
     return result;
   }
 
@@ -38,14 +65,19 @@ namespace OpcUa
   {
     unsigned NamespaceIndex;
     python::object Identifier;
+    unsigned ServerIndex;
+    std::string NamespaceURI;
 
     PyNodeID()
       : NamespaceIndex(0)
+      , ServerIndex(0)
     {
     }
 
     PyNodeID(const OpcUa::NodeID& node)
       : NamespaceIndex(node.GetNamespaceIndex())
+      , ServerIndex(node.ServerIndex)
+      , NamespaceURI(node.NamespaceURI)
     {
       if (node.IsString())
       {
@@ -226,7 +258,7 @@ namespace OpcUa
     {
     }
 
-    PyReferenceDescription(const OpcUa::ReferenceDescription& desc)
+    explicit PyReferenceDescription(const OpcUa::ReferenceDescription& desc)
       : ReferenceTypeID(desc.ReferenceTypeID)
       , IsForward(desc.IsForward)
       , TargetNodeID(desc.TargetNodeID)
@@ -252,10 +284,131 @@ namespace OpcUa
     return result;
   }
 
+  struct PyAttributeValueID
+  {
+    PyNodeID Node;
+    unsigned Attribute; // type AttributeID
+    std::string IndexRange;
+    PyQualifiedName DataEncoding;
+  };
+
+  struct PyReadParameters
+  {
+    double MaxAge;
+    TimestampsToReturn TimestampsType;
+    python::list AttributesToRead; // type of elmnts is AttributeValueID
+  };
+
+  struct VariantToObjectConverter
+  {
+    python::object Result;
+
+    template <typename T>
+    void Visit(const std::vector<T>& values)
+    {
+      if (values.empty())
+      {
+        return;
+      }
+
+      if (values.size() == 1)
+      {
+        Result = python::object(values[0]);
+        return;
+      }
+
+      Result = ToList(values);
+    }
+  };
+
+  python::object ToObject(const OpcUa::Variant& var)
+  {
+    if (var.IsNul())
+    {
+      return python::object();
+    }
+    VariantToObjectConverter convertor;
+    OpcUa::ApplyVisitor(var, convertor);
+    return convertor.Result;
+  }
+
+  struct PyDataValue
+  {
+    python::object Value;
+    unsigned Status;
+    DateTime SourceTimestamp;
+    uint16_t SourcePicoseconds;
+    DateTime ServerTimestamp;
+    uint16_t ServerPicoseconds;
+
+    PyDataValue()
+      : Status(0)
+      , SourceTimestamp(0)
+      , SourcePicoseconds(0)
+      , ServerTimestamp(0)
+      , ServerPicoseconds(0)
+    {
+    }
+
+    explicit PyDataValue(const OpcUa::DataValue& value)
+    {
+      if (value.Encoding & DATA_VALUE)
+      {
+        Value = ToObject(value.Value);
+      }
+      if (value.Encoding & DATA_VALUE_STATUS_CODE)
+      {
+        Status = static_cast<unsigned>(value.Status);
+      }
+      if (value.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
+      {
+        SourceTimestamp = value.SourceTimestamp;
+      }
+      if (value.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
+      {
+        ServerTimestamp = value.ServerTimestamp;
+      }
+      if (value.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
+      {
+        SourcePicoseconds = value.SourcePicoseconds;
+      }
+      if (value.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
+      {
+        ServerPicoseconds = value.ServerPicoseconds;
+      }
+    }
+  };
+
   OpcUa::NodeID GetNode(const PyNodeID& object)
   {
-    // TODO
-    return OpcUa::NodeID();
+    OpcUa::NodeID id;
+    unsigned encoding = 0;
+    if (!object.NamespaceURI.empty())
+    {
+      id.NamespaceURI = object.NamespaceURI;
+      encoding |= NodeIDEncoding::EV_NAMESPACE_URI_FLAG;
+    }
+
+    if (object.ServerIndex)
+    {
+      id.ServerIndex = object.ServerIndex;
+      encoding |= NodeIDEncoding::EV_SERVER_INDEX_FLAG;
+    }
+
+    if (python::extract<std::string>(object.Identifier).check())
+    {
+      id.StringData.Identifier = python::extract<std::string>(object.Identifier);
+      id.StringData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_STRING;
+    }
+    if (python::extract<unsigned>(object.Identifier).check())
+    {
+      id.NumericData.Identifier = python::extract<unsigned>(object.Identifier);
+      id.NumericData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_NUMERIC;
+    }
+    id.Encoding = static_cast<OpcUa::NodeIDEncoding>(encoding);
+    return id;
   }
 
   class PyComputer
@@ -293,6 +446,36 @@ namespace OpcUa
 
       const std::vector<ReferenceDescription> references = Impl->Views()->Browse(params);
       return ToList(references);
+    }
+
+    python::list Read(const PyReadParameters& in)
+    {
+      OpcUa::ReadParameters params;
+      params.MaxAge = in.MaxAge;
+      params.TimestampsType = static_cast<TimestampsToReturn>(in.TimestampsType);
+
+      std::size_t listSize = python::len(in.AttributesToRead);
+      for (std::size_t i = 0; i < listSize; ++i)
+      {
+        const PyAttributeValueID& value = python::extract<PyAttributeValueID>(in.AttributesToRead[i]);
+        OpcUa::AttributeValueID attr;
+        attr.Attribute = static_cast<OpcUa::AttributeID>(value.Attribute);
+        attr.DataEncoding.NamespaceIndex = value.DataEncoding.NamespaceIndex;
+        attr.DataEncoding.Name = value.DataEncoding.Name;
+        attr.IndexRange = value.IndexRange;
+        attr.Node = GetNode(value.Node);
+        params.AttributesToRead.push_back(attr);
+      }
+
+      std::vector<DataValue> data = Impl->Attributes()->Read(params);
+      return ToList<PyDataValue, DataValue>(data);
+    }
+
+    //    std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
+    python::list Write(const python::list& filter)
+    {
+      python::list result;
+      return result;
     }
 
   private:
@@ -558,9 +741,41 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("DATA_TYPE", OpcUa::NodeClass::DataType)
     .value("VIEW", OpcUa::NodeClass::View);
 
+  enum_<OpcUa::TimestampsToReturn>("TimestampsToReturn")
+    .value("SOURCE", OpcUa::TimestampsToReturn::SOURCE)
+    .value("SERVER", OpcUa::TimestampsToReturn::SERVER)
+    .value("BOTH",   OpcUa::TimestampsToReturn::BOTH)
+    .value("SERVER", OpcUa::TimestampsToReturn::NEITHER);
+
+  enum_<OpcUa::AttributeID>("AttributeID")
+    .value("ACCESS_LEVEL", OpcUa::AttributeID::ACCESS_LEVEL)
+    .value("ARRAY_DIMENSIONS", OpcUa::AttributeID::ARRAY_DIMENSIONS)
+    .value("BROWSE_NAME", OpcUa::AttributeID::BROWSE_NAME)
+    .value("CONTAINS_NO_LOOPS", OpcUa::AttributeID::CONTAINS_NO_LOOPS)
+    .value("DATA_TYPE", OpcUa::AttributeID::DATA_TYPE)
+    .value("DESCRIPTION", OpcUa::AttributeID::DESCRIPTION)
+    .value("DISPLAY_NAME", OpcUa::AttributeID::DISPLAY_NAME)
+    .value("EVENT_NOTIFIER", OpcUa::AttributeID::EVENT_NOTIFIER)
+    .value("EXECUTABLE", OpcUa::AttributeID::EXECUTABLE)
+    .value("HISTORIZING", OpcUa::AttributeID::HISTORIZING)
+    .value("INVERSE_NAME", OpcUa::AttributeID::INVERSE_NAME)
+    .value("IS_ABSTRACT", OpcUa::AttributeID::IS_ABSTRACT)
+    .value("MINIMUM_SAMPLING_INTERVAL", OpcUa::AttributeID::MINIMUM_SAMPLING_INTERVAL)
+    .value("NODE_CLASS", OpcUa::AttributeID::NODE_CLASS)
+    .value("NODE_ID", OpcUa::AttributeID::NODE_ID)
+    .value("SYMMETRIC", OpcUa::AttributeID::SYMMETRIC)
+    .value("UNKNOWN", OpcUa::AttributeID::UNKNOWN)
+    .value("USER_ACCESS_LEVEL", OpcUa::AttributeID::USER_ACCESS_LEVEL)
+    .value("USER_EXECUTABLE", OpcUa::AttributeID::USER_EXECUTABLE)
+    .value("VALUE", OpcUa::AttributeID::VALUE)
+    .value("VALUE_RANK", OpcUa::AttributeID::VALUE_RANK)
+    .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
+
   class_<PyNodeID>("NodeID")
     .def_readwrite("namespace_index", &PyNodeID::NamespaceIndex)
-    .def_readwrite("identifier", &PyNodeID::Identifier);
+    .def_readwrite("identifier", &PyNodeID::Identifier)
+    .def_readwrite("server_index", &PyNodeID::ServerIndex)
+    .def_readwrite("namespace_uri", &PyNodeID::NamespaceURI);
 
   class_<PyApplicationDescription>("ApplicationDescription")
     .def_readwrite("uri", &PyApplicationDescription::URI)
@@ -610,8 +825,29 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
     .def_readwrite("name", &PyQualifiedName::Name);
 
+  class_<PyReadParameters>("ReadParameters")
+    .def_readwrite("max_age", &PyReadParameters::MaxAge)
+    .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
+    .def_readwrite("attributes_to_read", &PyReadParameters::AttributesToRead);
+
+  class_<PyAttributeValueID>("AttributeValueID", "Description of attribute value to read.")
+    .def_readwrite("node", &PyAttributeValueID::Node)
+    .def_readwrite("attribute", &PyAttributeValueID::Attribute)
+    .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
+    .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
+
+  class_<PyDataValue>("DataValue", "Parameters od read data.")
+    .def_readwrite("value", &PyDataValue::Value)
+    .def_readwrite("status", &PyDataValue::Status)
+    .def_readwrite("source_timestamp", &PyDataValue::SourceTimestamp)
+    .def_readwrite("source_picoseconds", &PyDataValue::SourcePicoseconds)
+    .def_readwrite("server_timestamp", &PyDataValue::ServerTimestamp)
+    .def_readwrite("server_picoseconds", &PyDataValue::ServerPicoseconds);
+
   class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
     .def("find_servers", &PyComputer::FindServers)
     .def("get_endpoints", &PyComputer::GetEndpoints)
-    .def("browse", &PyComputer::Browse);
+    .def("browse", &PyComputer::Browse)
+    .def("read", &PyComputer::Read)
+    .def("write", &PyComputer::Write);
 }

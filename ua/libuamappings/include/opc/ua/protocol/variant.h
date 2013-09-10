@@ -18,6 +18,8 @@
 
 #include <boost/variant.hpp>
 
+#include <stdexcept>
+
 namespace OpcUa
 {
   enum class VariantType : uint8_t
@@ -271,6 +273,96 @@ namespace OpcUa
       return !(*this == t);
     }
   };
+
+
+  class VariantVisitor
+  {
+  public:
+    template <typename T>
+    void Visit(std::vector<T>& values)
+    {
+    }
+
+    template <typename T>
+    void Visit(const std::vector<T>& values)
+    {
+    }
+  };
+
+  template <typename VisitorType>
+  void ApplyVisitor(Variant& var, VisitorType& visitor)
+  {
+    switch (var.Type)
+    {
+      case VariantType::BOOLEAN:          visitor.Visit(var.Value.Boolean); break;
+      case VariantType::SBYTE:            visitor.Visit(var.Value.SByte); break;
+      case VariantType::BYTE:             visitor.Visit(var.Value.Byte); break;
+      case VariantType::INT16:            visitor.Visit(var.Value.Int16); break;
+      case VariantType::UINT16:           visitor.Visit(var.Value.UInt16); break;
+      case VariantType::INT32:            visitor.Visit(var.Value.Int32); break;
+      case VariantType::UINT32:           visitor.Visit(var.Value.UInt32); break;
+      case VariantType::INT64:            visitor.Visit(var.Value.Int64); break;
+      case VariantType::UINT64:           visitor.Visit(var.Value.UInt64); break;
+      case VariantType::FLOAT:            visitor.Visit(var.Value.Float); break;
+      case VariantType::DOUBLE:           visitor.Visit(var.Value.Double); break;
+      case VariantType::STRING:           visitor.Visit(var.Value.String); break;
+      case VariantType::DATE_TIME:        visitor.Visit(var.Value.Time); break;
+      case VariantType::GUID:             visitor.Visit(var.Value.Guids); break;
+      case VariantType::BYTE_STRING:      visitor.Visit(var.Value.ByteStrings); break;
+      case VariantType::XML_ELEMENT:      visitor.Visit(var.Value.String); break;
+      case VariantType::NODE_ID:          visitor.Visit(var.Value.Node); break;
+      case VariantType::EXPANDED_NODE_ID: visitor.Visit(var.Value.Node); break;
+      case VariantType::STATUS_CODE:      visitor.Visit(var.Value.Statuses); break;
+      case VariantType::QUALIFIED_NAME:   visitor.Visit(var.Value.Name); break;
+      case VariantType::LOCALIZED_TEXT:   visitor.Visit(var.Value.Text); break;
+      case VariantType::DIAGNOSTIC_INFO:  visitor.Visit(var.Value.Diagnostic); break;
+      case VariantType::VARIANT:          visitor.Visit(var.Value.Variants); break;
+      case VariantType::DATA_VALUE:       visitor.Visit(var.Value.Value); break;
+      case VariantType::NUL:
+      case VariantType::EXTENSION_OBJECT:
+        break;
+      default:
+        throw std::logic_error("Unknown variant type.");
+    }
+  }
+
+  template <typename VisitorType>
+  void ApplyVisitor(const Variant& var, VisitorType& visitor)
+  {
+    switch (var.Type)
+    {
+      case VariantType::BOOLEAN:          visitor.Visit(var.Value.Boolean); break;
+      case VariantType::SBYTE:            visitor.Visit(var.Value.SByte); break;
+      case VariantType::BYTE:             visitor.Visit(var.Value.Byte); break;
+      case VariantType::INT16:            visitor.Visit(var.Value.Int16); break;
+      case VariantType::UINT16:           visitor.Visit(var.Value.UInt16); break;
+      case VariantType::INT32:            visitor.Visit(var.Value.Int32); break;
+      case VariantType::UINT32:           visitor.Visit(var.Value.UInt32); break;
+      case VariantType::INT64:            visitor.Visit(var.Value.Int64); break;
+      case VariantType::UINT64:           visitor.Visit(var.Value.UInt64); break;
+      case VariantType::FLOAT:            visitor.Visit(var.Value.Float); break;
+      case VariantType::DOUBLE:           visitor.Visit(var.Value.Double); break;
+      case VariantType::STRING:           visitor.Visit(var.Value.String); break;
+      case VariantType::DATE_TIME:        visitor.Visit(var.Value.Time); break;
+      case VariantType::GUID:             visitor.Visit(var.Value.Guids); break;
+      case VariantType::BYTE_STRING:      visitor.Visit(var.Value.ByteStrings); break;
+      case VariantType::XML_ELEMENT:      visitor.Visit(var.Value.String); break;
+      case VariantType::NODE_ID:          visitor.Visit(var.Value.Node); break;
+      case VariantType::EXPANDED_NODE_ID: visitor.Visit(var.Value.Node); break;
+      case VariantType::STATUS_CODE:      visitor.Visit(var.Value.Statuses); break;
+      case VariantType::QUALIFIED_NAME:   visitor.Visit(var.Value.Name); break;
+      case VariantType::LOCALIZED_TEXT:   visitor.Visit(var.Value.Text); break;
+      case VariantType::DIAGNOSTIC_INFO:  visitor.Visit(var.Value.Diagnostic); break;
+      case VariantType::VARIANT:          visitor.Visit(var.Value.Variants); break;
+      case VariantType::DATA_VALUE:       visitor.Visit(var.Value.Value); break;
+      case VariantType::NUL:
+      case VariantType::EXTENSION_OBJECT:
+        break;
+      default:
+        throw std::logic_error("Unknown variant type.");
+    }
+  }
+
 } // namespace OpcUa
 
 #endif //  __OPC_UA_VARIANT_H__

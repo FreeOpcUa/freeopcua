@@ -12,6 +12,7 @@
 #define OPC_UA_CLIENT_ENDPOINTS_H
 
 #include <opc/common/interface.h>
+#include <opc/common/class_pointers.h>
 #include <opc/ua/protocol/endpoints.h>
 #include <vector>
 
@@ -29,6 +30,9 @@ namespace OpcUa
 
     class EndpointServices : private Common::Interface
     {
+    public:
+      DEFINE_CLASS_POINTERS(EndpointServices);
+
     public:
       virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const = 0;
       // TODO Here all structuresmust be in one namespace.

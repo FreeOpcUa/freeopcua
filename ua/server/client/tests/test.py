@@ -60,6 +60,31 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(ref.target_node_type_definition.namespace_index, 5, "Unexpected target_node_type_definitions.namespace_index: " + str(ref.target_node_type_definition.namespace_index))
         self.assertEqual(ref.target_node_type_definition.identifier, 6, "Unexpected target_node_type_definition.identifier: " + str(ref.target_node_type_definition.identifier))
 
+    def test_read(self):
+        attributeParams = opcua.AttributeValueID()
+        attributeParams.node.namespace_index = 1
+        attributeParams.node.identifier = 2
+        attributeParams.attribute = opcua.AttributeID.VALUE
+        attributeParams.index_range = "1:2"
+        attributeParams.data_encoding.namespace_index = 3
+        attributeParams.data_encoding.name = "binary"
+        
+        params = opcua.ReadParameters()
+        params.max_age = 1;
+        params.timestamps_to_return = opcua.TimestampsToReturn.BOTH
+        params.attributes_to_read.append(attributeParams);
+
+        values = computer.read(params)
+        self.assertEqual(len(values), 1, "Invalid number of read parameters: " + str(len(values)))
+        
+        data = values[0]
+        self.assertEqual(data.value, "value", "Invalid value was read:" + str(data.value))
+        self.assertEqual(data.status, 0x806F0000, "Invalid status:" + str(data.status))
+        self.assertEqual(data.server_picoseconds, 1, "Invalid server_picoseconds:" + str(data.server_picoseconds))
+        self.assertEqual(data.server_timestamp, 2, "Invalid server_timestamp:" + str(data.server_timestamp))
+        self.assertEqual(data.source_picoseconds, 3, "Invalid source_picoseconds:" + str(data.source_picoseconds))
+        self.assertEqual(data.source_timestamp, 4, "Invalid source_timestamp:" + str(data.source_timestamp))
+
     def _check_application(self, app):
         self.assertEqual(app.name, "Name", "Application has invalid name.")
         self.assertEqual(app.uri, "URI", "Application has invalid uri.")

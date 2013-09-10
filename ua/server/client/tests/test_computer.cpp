@@ -85,6 +85,56 @@ namespace
     std::vector<EndpointDescription> Endpoints;
   };
 
+  void Assert(bool isTrue, const char* msg)
+  {
+    if (!isTrue)
+    {
+      throw std::logic_error(msg);
+    }
+  }
+
+  class TestAttributes : public OpcUa::Remote::AttributeServices
+  {
+  public:
+    virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& params) const
+    {
+      Assert(params.MaxAge == 1, "Invalid MaxAgeValue");
+      Assert(params.TimestampsType == TimestampsToReturn::BOTH, "Invalid value of TimestampsToReturn.");
+      Assert(params.AttributesToRead.size() == 1, "Invalid size of AttributesToRead.");
+
+      OpcUa::AttributeValueID id = params.AttributesToRead[0];
+      Assert(id.Attribute == AttributeID::VALUE, "Invalid value of Attribute ID.");
+      Assert(id.DataEncoding.NamespaceIndex == 3, "Invalid namespace index in DataEncoding.");
+      Assert(id.DataEncoding.Name == "binary", "Invalid name in DataEncoding.");
+      Assert(id.IndexRange == "1:2", "Invalid value of IndexRange.");
+      Assert(id.Node.IsInteger(), "Node id is not integer.");
+      Assert(id.Node.GetIntegerIdentifier() == 2, "Node id is not equal to 2.");
+      Assert(id.Node.GetNamespaceIndex() == 1, "NodeId's namespace index is not equal to 1.");
+
+      DataValue data;
+      data.Encoding =
+        DATA_VALUE |
+        DATA_VALUE_STATUS_CODE |
+        DATA_VALUE_SOURCE_TIMESTAMP |
+        DATA_VALUE_SERVER_TIMESTAMP |
+        DATA_VALUE_SOURCE_PICOSECONDS |
+        DATA_VALUE_SERVER_PICOSECONDS;
+      data.ServerPicoseconds = 1;
+      data.ServerTimestamp = 2;
+      data.SourcePicoseconds = 3;
+      data.SourceTimestamp = 4;
+      data.Status = StatusCode::BadNotReadable;
+      data.Value = std::string("value");
+
+      return std::vector<DataValue>(1, data);
+    }
+
+    virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter)
+    {
+      throw std::logic_error("Write not implemented.");
+    }
+  };
+
   class TestViewServices : public OpcUa::Remote::ViewServices
   {
   public:
@@ -120,6 +170,7 @@ namespace
     TestComputer(const std::string& url)
       : EndpointsImpl(new TestEndpoints(url))
       , ViewsImpl(new TestViewServices())
+      , AttributesImpl(new TestAttributes)
     {
     }
 
@@ -150,7 +201,7 @@ namespace
 
     virtual std::shared_ptr<AttributeServices> Attributes() const
     {
-      throw std::logic_error("not implemented.");
+      return AttributesImpl;
     }
 
     virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
@@ -159,8 +210,9 @@ namespace
     }
 
   private:
-    std::shared_ptr<EndpointServices> EndpointsImpl;
-    std::shared_ptr<ViewServices> ViewsImpl;
+    EndpointServices::SharedPtr EndpointsImpl;
+    ViewServices::SharedPtr ViewsImpl;
+    AttributeServices::SharedPtr AttributesImpl;
   };
 
 }
