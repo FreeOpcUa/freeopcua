@@ -657,8 +657,10 @@ target_alias'
 ac_subdirs_all='
  third-party/uripp
  libopccore
- ua/libuamappings
- ua/server'
+ libuamappings
+ client
+ server
+ python'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2198,17 +2200,12 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 #################################################################
 #AC_CONFIG_FILES([third-party/Makefile])
 
-# libcom
-# libopc
-# libtestopcserver
-# opctestlinux
 
 
+subdirs="$subdirs third-party/uripp libopccore libuamappings client server python"
 
-subdirs="$subdirs third-party/uripp libopccore ua/libuamappings ua/server"
 
-
-ac_config_files="$ac_config_files third-party/Makefile Makefile"
+ac_config_files="$ac_config_files third-party/Makefile python/Makefile Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -2921,6 +2918,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "third-party/Makefile") CONFIG_FILES="$CONFIG_FILES third-party/Makefile" ;;
+    "python/Makefile") CONFIG_FILES="$CONFIG_FILES python/Makefile" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

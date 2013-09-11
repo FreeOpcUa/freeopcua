@@ -19,8 +19,10 @@ SUBDIRS = \
           third-party \
           third-party/uripp \
           libopccore \
-          ua/libuamappings \
-          ua/server
+          libuamappings \
+          client \
+          server \
+          python
 
 EXTRA_DIST = third-party/gmock third-party/gtest configure.main
 

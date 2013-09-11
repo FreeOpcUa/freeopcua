@@ -1,0 +1,65 @@
+# Author: Alexander Rykovanov 2012
+#
+# Distributed under the GNU LGPL License
+# (See accompanying file LICENSE or copy at 
+# http://www.gnu.org/copyleft/gpl.html)
+#
+# $Id:  $
+# $Date: $
+# $Revision: $
+
+
+INCLUDES= -I$(top_srcdir) -Iinclude -I$(top_srcdir)/common/include $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/client/tests
+
+opcincludedir = $(includedir)/opc
+opcuaincludedir = $(opcincludedir)/ua
+uaclientincludedir = $(opcuaincludedir)/client
+
+uaclientinclude_HEADERS = \
+  include/opc/ua/client/binary_computer.h \
+  include/opc/ua/client/remote_computer.h \
+  include/opc/ua/client/remote_connection.h \
+  include/opc/ua/protocol/binary/secure_connection.h
+
+lib_LIBRARIES = libopcua_client.a
+libopcua_client_a_SOURCES = \
+  src/computer.cpp \
+  src/binary_computer.cpp \
+  src/binary_connection.cpp \
+  src/binary_secure_channel.cpp \
+  src/endpoints.h \
+  src/stream_attribute.h \
+  src/stream_computer.h \
+  src/stream_subscription.h \
+  src/stream_view.h
+
+bin_PROGRAMS = opcua
+
+opcua_SOURCES = \
+  src/opcua_main.cpp \
+  src/opcua_options.cpp \
+  src/opcua_options.h
+
+opcua_LDADD = libopcua_client.a
+opcua_CPPFLAGS = $(INCLUDES)
+opcua_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -ldl -lboost_program_options -lpthread -Wl,-z,defs,-no-undefined
+
+
+#TESTS = libuaclient_test
+
+#check_PROGRAMS = $(TESTS)
+
+#libuaclient_test_SOURCES =  \
+#  src/computer.cpp \
+#  src/binary_connection.cpp \
+#  tests/common.h \
+#  tests/computer_attribute.cpp \
+#  tests/computer_connect.cpp \
+#  tests/computer_endpoints.cpp \
+#  tests/computer_session.cpp \
+#  tests/computer_view.cpp
+
+#libuaclient_test_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+#libuaclient_test_LDFLAGS = -lpthread -Wl,-z,defs $(UA_MAPPING_LIBS)  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(URI_LIBS) -no-undefined
+

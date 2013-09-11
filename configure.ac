@@ -17,18 +17,15 @@ AC_CONFIG_MACRO_DIR([m4])
 #################################################################
 #AC_CONFIG_FILES([third-party/Makefile])
 
-# libcom 
-# libopc 
-# libtestopcserver 
-# opctestlinux 
-
 AC_CONFIG_SUBDIRS([
  third-party/uripp
  libopccore
- ua/libuamappings
- ua/server])
+ libuamappings
+ client
+ server
+ python])
 
-AC_CONFIG_FILES([third-party/Makefile Makefile])
+AC_CONFIG_FILES([third-party/Makefile python/Makefile Makefile])
 
 AC_OUTPUT
 
