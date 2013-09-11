@@ -1,0 +1,9 @@
+Yet another implementation COM for linux.
+
+Environment variables:
+   COMREG_DATABASE_PATH - path to the COM registry database.
+
+
+0.9.1 (2012.10.21)
+Added tool for regestering/unregestering com servers.
+
