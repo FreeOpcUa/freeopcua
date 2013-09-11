@@ -55,12 +55,12 @@ test_opcua.so: tests/test_computer.cpp src/python/module.cpp
 	g++ -o0 -g -Wall -std=c++0x -fPIC -DPIC -DMODULE_NAME=test_opcua $(INCLUDES) -I/usr/include/python2.7 -c tests/test_computer.cpp -o test_computer.o -lpython2.7 -lboost_python 
 	g++ -o0 -g -Wall -std=c++0x -shared  py_test_module.o  test_computer.o $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread -lpython2.7 -lboost_python  -o test_opcua.so -Wl,-z,defs,-no-undefined
 
-tests/test.py: test_opcua.so
+#tests/test.py: test_opcua.so
 
 CLEANFILES = test_computer.o py_test_module.o test_opcua.so
 
-TESTS_ENVIRONMENT = PYTHONPATH=.
-TESTS = tests/test.py
+#TESTS_ENVIRONMENT = PYTHONPATH=.
+#TESTS = tests/test.py
 
 #TESTS = libuaclient_test
 
