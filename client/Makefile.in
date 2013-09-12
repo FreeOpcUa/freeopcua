@@ -109,19 +109,16 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(uaclientincludedir)"
-LIBRARIES = $(lib_LIBRARIES)
-ARFLAGS = cru
-libopcua_client_a_AR = $(AR) $(ARFLAGS)
-libopcua_client_a_LIBADD =
-am_libopcua_client_a_OBJECTS = computer.$(OBJEXT) \
-	binary_computer.$(OBJEXT) binary_connection.$(OBJEXT) \
-	binary_secure_channel.$(OBJEXT)
-libopcua_client_a_OBJECTS = $(am_libopcua_client_a_OBJECTS)
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libopcua_client_la_LIBADD =
+am_libopcua_client_la_OBJECTS = computer.lo binary_computer.lo \
+	binary_connection.lo binary_secure_channel.lo
+libopcua_client_la_OBJECTS = $(am_libopcua_client_la_OBJECTS)
 PROGRAMS = $(bin_PROGRAMS)
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
 opcua_OBJECTS = $(am_opcua_OBJECTS)
-opcua_DEPENDENCIES = libopcua_client.a
+opcua_DEPENDENCIES = libopcua_client.la
 opcua_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(opcua_LDFLAGS) $(LDFLAGS) -o $@
@@ -147,8 +144,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
-DIST_SOURCES = $(libopcua_client_a_SOURCES) $(opcua_SOURCES)
+SOURCES = $(libopcua_client_la_SOURCES) $(opcua_SOURCES)
+DIST_SOURCES = $(libopcua_client_la_SOURCES) $(opcua_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -313,8 +310,8 @@ uaclientinclude_HEADERS = \
   include/opc/ua/client/remote_connection.h \
   include/opc/ua/protocol/binary/secure_connection.h
 
-lib_LIBRARIES = libopcua_client.a
-libopcua_client_a_SOURCES = \
+lib_LTLIBRARIES = libopcua_client.la
+libopcua_client_la_SOURCES = \
   src/computer.cpp \
   src/binary_computer.cpp \
   src/binary_connection.cpp \
@@ -330,7 +327,7 @@ opcua_SOURCES = \
   src/opcua_options.cpp \
   src/opcua_options.h
 
-opcua_LDADD = libopcua_client.a
+opcua_LDADD = libopcua_client.la
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -ldl -lboost_program_options -lpthread -Wl,-z,defs,-no-undefined
 all: config.h
@@ -387,9 +384,9 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-libLIBRARIES: $(lib_LIBRARIES)
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	list2=; for p in $$list; do \
 	  if test -f $$p; then \
 	    list2="$$list2 $$p"; \
@@ -398,30 +395,29 @@ install-libLIBRARIES: $(lib_LIBRARIES)
 	test -z "$$list2" || { \
 	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
 	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
-	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
-	@$(POST_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+	}
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	for p in $$list; do \
-	  if test -f $$p; then \
-	    $(am__strip_dir) \
-	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
-	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
-	  else :; fi; \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
 	done
 
-uninstall-libLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
-
-clean-libLIBRARIES:
-	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libopcua_client.a: $(libopcua_client_a_OBJECTS) $(libopcua_client_a_DEPENDENCIES) $(EXTRA_libopcua_client_a_DEPENDENCIES) 
-	-rm -f libopcua_client.a
-	$(libopcua_client_a_AR) libopcua_client.a $(libopcua_client_a_OBJECTS) $(libopcua_client_a_LIBADD)
-	$(RANLIB) libopcua_client.a
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libopcua_client.la: $(libopcua_client_la_OBJECTS) $(libopcua_client_la_DEPENDENCIES) $(EXTRA_libopcua_client_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(libdir) $(libopcua_client_la_OBJECTS) $(libopcua_client_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -478,10 +474,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_connection.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_secure_channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_connection.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_secure_channel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/opcua-opcua_options.Po@am__quote@
 
@@ -506,61 +502,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-computer.o: src/computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT computer.o -MD -MP -MF $(DEPDIR)/computer.Tpo -c -o computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/computer.Tpo $(DEPDIR)/computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.o' libtool=no @AMDEPBACKSLASH@
+computer.lo: src/computer.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT computer.lo -MD -MP -MF $(DEPDIR)/computer.Tpo -c -o computer.lo `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/computer.Tpo $(DEPDIR)/computer.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.o `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.lo `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
 
-computer.obj: src/computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT computer.obj -MD -MP -MF $(DEPDIR)/computer.Tpo -c -o computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/computer.Tpo $(DEPDIR)/computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.obj' libtool=no @AMDEPBACKSLASH@
+binary_computer.lo: src/binary_computer.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer.lo -MD -MP -MF $(DEPDIR)/binary_computer.Tpo -c -o binary_computer.lo `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_computer.Tpo $(DEPDIR)/binary_computer.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_computer.cpp' object='binary_computer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.obj `if test -f 'src/computer.cpp'; then $(CYGPATH_W) 'src/computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/computer.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_computer.lo `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
 
-binary_computer.o: src/binary_computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer.o -MD -MP -MF $(DEPDIR)/binary_computer.Tpo -c -o binary_computer.o `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_computer.Tpo $(DEPDIR)/binary_computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_computer.cpp' object='binary_computer.o' libtool=no @AMDEPBACKSLASH@
+binary_connection.lo: src/binary_connection.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_connection.lo -MD -MP -MF $(DEPDIR)/binary_connection.Tpo -c -o binary_connection.lo `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_connection.Tpo $(DEPDIR)/binary_connection.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='binary_connection.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_computer.o `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_connection.lo `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
 
-binary_computer.obj: src/binary_computer.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer.obj -MD -MP -MF $(DEPDIR)/binary_computer.Tpo -c -o binary_computer.obj `if test -f 'src/binary_computer.cpp'; then $(CYGPATH_W) 'src/binary_computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_computer.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_computer.Tpo $(DEPDIR)/binary_computer.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_computer.cpp' object='binary_computer.obj' libtool=no @AMDEPBACKSLASH@
+binary_secure_channel.lo: src/binary_secure_channel.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_secure_channel.lo -MD -MP -MF $(DEPDIR)/binary_secure_channel.Tpo -c -o binary_secure_channel.lo `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_secure_channel.Tpo $(DEPDIR)/binary_secure_channel.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='binary_secure_channel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_computer.obj `if test -f 'src/binary_computer.cpp'; then $(CYGPATH_W) 'src/binary_computer.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_computer.cpp'; fi`
-
-binary_connection.o: src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_connection.o -MD -MP -MF $(DEPDIR)/binary_connection.Tpo -c -o binary_connection.o `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_connection.Tpo $(DEPDIR)/binary_connection.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='binary_connection.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_connection.o `test -f 'src/binary_connection.cpp' || echo '$(srcdir)/'`src/binary_connection.cpp
-
-binary_connection.obj: src/binary_connection.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_connection.obj -MD -MP -MF $(DEPDIR)/binary_connection.Tpo -c -o binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_connection.Tpo $(DEPDIR)/binary_connection.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_connection.cpp' object='binary_connection.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_connection.obj `if test -f 'src/binary_connection.cpp'; then $(CYGPATH_W) 'src/binary_connection.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_connection.cpp'; fi`
-
-binary_secure_channel.o: src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_secure_channel.o -MD -MP -MF $(DEPDIR)/binary_secure_channel.Tpo -c -o binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_secure_channel.Tpo $(DEPDIR)/binary_secure_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='binary_secure_channel.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_secure_channel.o `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
-
-binary_secure_channel.obj: src/binary_secure_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_secure_channel.obj -MD -MP -MF $(DEPDIR)/binary_secure_channel.Tpo -c -o binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_secure_channel.Tpo $(DEPDIR)/binary_secure_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_secure_channel.cpp' object='binary_secure_channel.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_secure_channel.obj `if test -f 'src/binary_secure_channel.cpp'; then $(CYGPATH_W) 'src/binary_secure_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/binary_secure_channel.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_secure_channel.lo `test -f 'src/binary_secure_channel.cpp' || echo '$(srcdir)/'`src/binary_secure_channel.cpp
 
 opcua-opcua_main.o: src/opcua_main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-opcua_main.o -MD -MP -MF $(DEPDIR)/opcua-opcua_main.Tpo -c -o opcua-opcua_main.o `test -f 'src/opcua_main.cpp' || echo '$(srcdir)/'`src/opcua_main.cpp
@@ -836,7 +804,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS) config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h
+install-binPROGRAMS: install-libLTLIBRARIES
+
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(uaclientincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -873,7 +843,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
+clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool mostlyclean-am
 
 distclean: distclean-am
@@ -901,7 +871,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS install-libLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -943,13 +913,13 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
+uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-uaclientincludeHEADERS
 
 .MAKE: all install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-binPROGRAMS clean-generic clean-libLIBRARIES \
+	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool ctags dist dist-all dist-bzip2 dist-gzip \
 	dist-lzip dist-lzma dist-shar dist-tarZ dist-xz dist-zip \
 	distcheck distclean distclean-compile distclean-generic \
@@ -958,13 +928,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLIBRARIES \
 	info-am install install-am install-binPROGRAMS install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLIBRARIES install-man install-pdf \
+	install-info-am install-libLTLIBRARIES install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
 	install-uaclientincludeHEADERS installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-libLIBRARIES \
+	uninstall-am uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-uaclientincludeHEADERS
 
 

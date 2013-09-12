@@ -9,7 +9,8 @@
 AC_INIT
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([src/opcua_main.cpp])
-AM_INIT_AUTOMAKE([opcua], [0.1.0], [rykovanov.as@gmail.com])
+AM_INIT_AUTOMAKE([opcua], [0.1.2], [rykovanov.as@gmail.com])
+LT_INIT([disable-static])
 
 CXXFLAGS="-O0 -g -Wall -std=c++0x"
 
@@ -45,33 +46,35 @@ AC_ARG_WITH([gmock],
 AC_ARG_WITH([uri-library], 
             [AS_HELP_STRING([--with-uri-library=DIR], [defines path to uri library])],
             [ 
-              AC_SUBST([URI_LIBS], [-Wl,--whole-archive,$with_uri_library/src/.libs/liburipp.a,--no-whole-archive])
+              AC_SUBST([URI_LIBS], ["-L$with_uri_library/src/.libs -luripp"])
               AC_SUBST([URI_INCLUDES], [-I$with_uri_library/src])
               AC_MSG_NOTICE([URI library path: $with_uri_library]) 
             ], 
             [ 
+              AC_SUBST([URI_LIBS], [-luripp])
             ])
 
 
 AC_ARG_WITH([ua-mappings], 
             [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
             [ 
-              AC_SUBST([UA_MAPPING_LIBS], [-Wl,--whole-archive,$with_ua_mappings/libopcuabinary.a,--no-whole-archive ])
+              AC_SUBST([UA_MAPPING_LIBS], ["-L$with_ua_mappings/.libs -lopcuabinary"])
               AC_SUBST([UA_MAPPING_INCLUDES], [-I$with_ua_mappings/include])
               AC_MSG_NOTICE([ua mappings path: $with_ua_mappings]) 
             ], 
             [ 
+              AC_SUBST([UA_MAPPING_LIBS], [-lopcuabinary])
             ])
 
 AC_ARG_WITH([libopccore], 
             [AS_HELP_STRING([--with-libopccore=DIR], [defines path to the root directory of libopccore library.])],
             [ 
-              AC_SUBST([OPC_CORE_LIBS], [-Wl,--whole-archive,$with_libopccore/libopccore.a,--no-whole-archive])
+              AC_SUBST([OPC_CORE_LIBS], ["-L$with_libopccore/.libs -lopccore"])
               AC_SUBST([OPC_CORE_INCLUDES], [-I$with_libopccore/include])
               AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
             ], 
             [ 
-              AC_SUBST([OPC_CORE_LIBS], [-Wl,--whole-archive,-lopccore,--no-whole-archive])
+              AC_SUBST([OPC_CORE_LIBS], [-lopccore])
             ])
 
 AC_ARG_WITH([testserver-uri], 

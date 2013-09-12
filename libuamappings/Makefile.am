@@ -40,9 +40,9 @@ opcuainclude_HEADERS = \
   include/opc/ua/status_codes.h \
   include/opc/ua/variable_access_level.h
 
-lib_LIBRARIES = libopcuabinary.a
+lib_LTLIBRARIES = libopcuabinary.la
 
-libopcuabinary_a_SOURCES = \
+libopcuabinary_la_SOURCES = \
   src/binary_variant.cpp \
   src/binary_stream.cpp \
   src/binary_serialization.h \
@@ -58,7 +58,7 @@ libopcuabinary_a_SOURCES = \
   src/subscriptions.cpp
 
 
-libopcuabinary_a_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include
+libopcuabinary_la_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include
 
 TESTS = opc_ua_binary_test
 
@@ -81,6 +81,6 @@ opc_ua_binary_test_SOURCES =  \
  tests/reference_id.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-opc_ua_binary_test_LDADD = libopcuabinary.a
+opc_ua_binary_test_LDADD = libopcuabinary.la
 opc_ua_binary_test_LDFLAGS = -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
 

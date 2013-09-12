@@ -22,8 +22,8 @@ uaclientinclude_HEADERS = \
   include/opc/ua/client/remote_connection.h \
   include/opc/ua/protocol/binary/secure_connection.h
 
-lib_LIBRARIES = libopcua_client.a
-libopcua_client_a_SOURCES = \
+lib_LTLIBRARIES = libopcua_client.la
+libopcua_client_la_SOURCES = \
   src/computer.cpp \
   src/binary_computer.cpp \
   src/binary_connection.cpp \
@@ -41,7 +41,7 @@ opcua_SOURCES = \
   src/opcua_options.cpp \
   src/opcua_options.h
 
-opcua_LDADD = libopcua_client.a
+opcua_LDADD = libopcua_client.la
 opcua_CPPFLAGS = $(INCLUDES)
 opcua_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -ldl -lboost_program_options -lpthread -Wl,-z,defs,-no-undefined
 

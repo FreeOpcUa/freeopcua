@@ -108,20 +108,16 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsdir)" \
 	"$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)"
-LIBRARIES = $(lib_LIBRARIES)
-ARFLAGS = cru
-libopccore_a_AR = $(AR) $(ARFLAGS)
-libopccore_a_LIBADD =
-am_libopccore_a_OBJECTS = libopccore_a-object_id.$(OBJEXT) \
-	libopccore_a-thread.$(OBJEXT) \
-	libopccore_a-addon_manager.$(OBJEXT) \
-	libopccore_a-errors_addon_manager.$(OBJEXT) \
-	libopccore_a-dynamic_addon_factory.$(OBJEXT) \
-	libopccore_a-dynamic_library.$(OBJEXT) \
-	libopccore_a-value.$(OBJEXT) libopccore_a-exception.$(OBJEXT) \
-	libopccore_a-common_errors.$(OBJEXT) \
-	libopccore_a-socket_channel.$(OBJEXT)
-libopccore_a_OBJECTS = $(am_libopccore_a_OBJECTS)
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libopccore_la_LIBADD =
+am_libopccore_la_OBJECTS = libopccore_la-object_id.lo \
+	libopccore_la-thread.lo libopccore_la-addon_manager.lo \
+	libopccore_la-errors_addon_manager.lo \
+	libopccore_la-dynamic_addon_factory.lo \
+	libopccore_la-dynamic_library.lo libopccore_la-value.lo \
+	libopccore_la-exception.lo libopccore_la-common_errors.lo \
+	libopccore_la-socket_channel.lo
+libopccore_la_OBJECTS = $(am_libopccore_la_OBJECTS)
 am__EXEEXT_1 = common_gtest$(EXEEXT) common_test$(EXEEXT)
 am_common_gtest_OBJECTS = common_gtest-test_addon_manager.$(OBJEXT) \
 	common_gtest-test_dynamic_addon.$(OBJEXT) \
@@ -135,7 +131,7 @@ common_gtest_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 am_common_test_OBJECTS = common_test-error_test.$(OBJEXT) \
 	common_test-main.$(OBJEXT) common_test-value_test.$(OBJEXT)
 common_test_OBJECTS = $(am_common_test_OBJECTS)
-common_test_DEPENDENCIES = libopccore.a
+common_test_DEPENDENCIES = libopccore.la
 common_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(common_test_LDFLAGS) $(LDFLAGS) -o $@
@@ -161,9 +157,9 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopccore_a_SOURCES) $(common_gtest_SOURCES) \
+SOURCES = $(libopccore_la_SOURCES) $(common_gtest_SOURCES) \
 	$(common_test_SOURCES)
-DIST_SOURCES = $(libopccore_a_SOURCES) $(common_gtest_SOURCES) \
+DIST_SOURCES = $(libopccore_la_SOURCES) $(common_gtest_SOURCES) \
 	$(common_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -321,6 +317,7 @@ clientinclude_HEADERS = \
   include/opc/ua/view.h \
   include/opc/ua/connection_listener.h \
   include/opc/ua/computer.h \
+  include/opc/ua/channel.h \
   include/opc/ua/attributes.h \
   include/opc/ua/endpoints.h
 
@@ -346,8 +343,8 @@ addons_HEADERS = \
                   include/opc/common/addons_core/dynamic_addon_factory.h \
                   include/opc/common/addons_core/errors.h
 
-lib_LIBRARIES = libopccore.a
-libopccore_a_SOURCES = \
+lib_LTLIBRARIES = libopccore.la
+libopccore_la_SOURCES = \
                   src/common/object_id.cpp \
                   src/common/thread.cpp \
                   src/common/addons_core/addon_manager.cpp \
@@ -361,7 +358,7 @@ libopccore_a_SOURCES = \
                   src/common/common_errors.cpp \
                   src/socket_channel.cpp
 
-libopccore_a_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
 common_test_SOURCES = \
                   tests/common/error_test.cpp \
@@ -369,7 +366,7 @@ common_test_SOURCES = \
                   tests/common/value_test.cpp
 
 common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_test_LDADD = libopccore.a
+common_test_LDADD = libopccore.la
 common_test_LDFLAGS = -lcppunit -ldl 
 common_gtest_SOURCES = \
   tests/test_addon_manager.cpp \
@@ -435,9 +432,9 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-libLIBRARIES: $(lib_LIBRARIES)
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	list2=; for p in $$list; do \
 	  if test -f $$p; then \
 	    list2="$$list2 $$p"; \
@@ -446,30 +443,29 @@ install-libLIBRARIES: $(lib_LIBRARIES)
 	test -z "$$list2" || { \
 	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
 	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
-	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
-	@$(POST_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+	}
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	for p in $$list; do \
-	  if test -f $$p; then \
-	    $(am__strip_dir) \
-	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
-	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
-	  else :; fi; \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
 	done
 
-uninstall-libLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
-
-clean-libLIBRARIES:
-	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libopccore.a: $(libopccore_a_OBJECTS) $(libopccore_a_DEPENDENCIES) $(EXTRA_libopccore_a_DEPENDENCIES) 
-	-rm -f libopccore.a
-	$(libopccore_a_AR) libopccore.a $(libopccore_a_OBJECTS) $(libopccore_a_LIBADD)
-	$(RANLIB) libopccore.a
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libopccore.la: $(libopccore_la_OBJECTS) $(libopccore_la_DEPENDENCIES) $(EXTRA_libopccore_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(libdir) $(libopccore_la_OBJECTS) $(libopccore_la_LIBADD) $(LIBS)
 
 clean-checkPROGRAMS:
 	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
@@ -499,16 +495,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-error_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-value_test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-addon_manager.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-common_errors.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-dynamic_addon_factory.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-dynamic_library.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-errors_addon_manager.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-exception.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-object_id.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-socket_channel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-thread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_a-value.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-addon_manager.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-common_errors.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-dynamic_addon_factory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-dynamic_library.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-errors_addon_manager.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-exception.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-object_id.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-socket_channel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-thread.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-value.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -531,145 +527,75 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libopccore_a-object_id.o: src/common/object_id.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-object_id.o -MD -MP -MF $(DEPDIR)/libopccore_a-object_id.Tpo -c -o libopccore_a-object_id.o `test -f 'src/common/object_id.cpp' || echo '$(srcdir)/'`src/common/object_id.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-object_id.Tpo $(DEPDIR)/libopccore_a-object_id.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/object_id.cpp' object='libopccore_a-object_id.o' libtool=no @AMDEPBACKSLASH@
+libopccore_la-object_id.lo: src/common/object_id.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-object_id.lo -MD -MP -MF $(DEPDIR)/libopccore_la-object_id.Tpo -c -o libopccore_la-object_id.lo `test -f 'src/common/object_id.cpp' || echo '$(srcdir)/'`src/common/object_id.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-object_id.Tpo $(DEPDIR)/libopccore_la-object_id.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/object_id.cpp' object='libopccore_la-object_id.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-object_id.o `test -f 'src/common/object_id.cpp' || echo '$(srcdir)/'`src/common/object_id.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-object_id.lo `test -f 'src/common/object_id.cpp' || echo '$(srcdir)/'`src/common/object_id.cpp
 
-libopccore_a-object_id.obj: src/common/object_id.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-object_id.obj -MD -MP -MF $(DEPDIR)/libopccore_a-object_id.Tpo -c -o libopccore_a-object_id.obj `if test -f 'src/common/object_id.cpp'; then $(CYGPATH_W) 'src/common/object_id.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/object_id.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-object_id.Tpo $(DEPDIR)/libopccore_a-object_id.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/object_id.cpp' object='libopccore_a-object_id.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_la-thread.lo: src/common/thread.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-thread.lo -MD -MP -MF $(DEPDIR)/libopccore_la-thread.Tpo -c -o libopccore_la-thread.lo `test -f 'src/common/thread.cpp' || echo '$(srcdir)/'`src/common/thread.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-thread.Tpo $(DEPDIR)/libopccore_la-thread.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/thread.cpp' object='libopccore_la-thread.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-object_id.obj `if test -f 'src/common/object_id.cpp'; then $(CYGPATH_W) 'src/common/object_id.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/object_id.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-thread.lo `test -f 'src/common/thread.cpp' || echo '$(srcdir)/'`src/common/thread.cpp
 
-libopccore_a-thread.o: src/common/thread.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-thread.o -MD -MP -MF $(DEPDIR)/libopccore_a-thread.Tpo -c -o libopccore_a-thread.o `test -f 'src/common/thread.cpp' || echo '$(srcdir)/'`src/common/thread.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-thread.Tpo $(DEPDIR)/libopccore_a-thread.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/thread.cpp' object='libopccore_a-thread.o' libtool=no @AMDEPBACKSLASH@
+libopccore_la-addon_manager.lo: src/common/addons_core/addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-addon_manager.lo -MD -MP -MF $(DEPDIR)/libopccore_la-addon_manager.Tpo -c -o libopccore_la-addon_manager.lo `test -f 'src/common/addons_core/addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-addon_manager.Tpo $(DEPDIR)/libopccore_la-addon_manager.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/addon_manager.cpp' object='libopccore_la-addon_manager.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-thread.o `test -f 'src/common/thread.cpp' || echo '$(srcdir)/'`src/common/thread.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-addon_manager.lo `test -f 'src/common/addons_core/addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/addon_manager.cpp
 
-libopccore_a-thread.obj: src/common/thread.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-thread.obj -MD -MP -MF $(DEPDIR)/libopccore_a-thread.Tpo -c -o libopccore_a-thread.obj `if test -f 'src/common/thread.cpp'; then $(CYGPATH_W) 'src/common/thread.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/thread.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-thread.Tpo $(DEPDIR)/libopccore_a-thread.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/thread.cpp' object='libopccore_a-thread.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_la-errors_addon_manager.lo: src/common/addons_core/errors_addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-errors_addon_manager.lo -MD -MP -MF $(DEPDIR)/libopccore_la-errors_addon_manager.Tpo -c -o libopccore_la-errors_addon_manager.lo `test -f 'src/common/addons_core/errors_addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/errors_addon_manager.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-errors_addon_manager.Tpo $(DEPDIR)/libopccore_la-errors_addon_manager.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/errors_addon_manager.cpp' object='libopccore_la-errors_addon_manager.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-thread.obj `if test -f 'src/common/thread.cpp'; then $(CYGPATH_W) 'src/common/thread.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/thread.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-errors_addon_manager.lo `test -f 'src/common/addons_core/errors_addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/errors_addon_manager.cpp
 
-libopccore_a-addon_manager.o: src/common/addons_core/addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-addon_manager.o -MD -MP -MF $(DEPDIR)/libopccore_a-addon_manager.Tpo -c -o libopccore_a-addon_manager.o `test -f 'src/common/addons_core/addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-addon_manager.Tpo $(DEPDIR)/libopccore_a-addon_manager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/addon_manager.cpp' object='libopccore_a-addon_manager.o' libtool=no @AMDEPBACKSLASH@
+libopccore_la-dynamic_addon_factory.lo: src/common/addons_core/dynamic_addon_factory.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-dynamic_addon_factory.lo -MD -MP -MF $(DEPDIR)/libopccore_la-dynamic_addon_factory.Tpo -c -o libopccore_la-dynamic_addon_factory.lo `test -f 'src/common/addons_core/dynamic_addon_factory.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_addon_factory.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-dynamic_addon_factory.Tpo $(DEPDIR)/libopccore_la-dynamic_addon_factory.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_addon_factory.cpp' object='libopccore_la-dynamic_addon_factory.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-addon_manager.o `test -f 'src/common/addons_core/addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/addon_manager.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-dynamic_addon_factory.lo `test -f 'src/common/addons_core/dynamic_addon_factory.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_addon_factory.cpp
 
-libopccore_a-addon_manager.obj: src/common/addons_core/addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-addon_manager.obj -MD -MP -MF $(DEPDIR)/libopccore_a-addon_manager.Tpo -c -o libopccore_a-addon_manager.obj `if test -f 'src/common/addons_core/addon_manager.cpp'; then $(CYGPATH_W) 'src/common/addons_core/addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/addon_manager.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-addon_manager.Tpo $(DEPDIR)/libopccore_a-addon_manager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/addon_manager.cpp' object='libopccore_a-addon_manager.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_la-dynamic_library.lo: src/common/addons_core/dynamic_library.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-dynamic_library.lo -MD -MP -MF $(DEPDIR)/libopccore_la-dynamic_library.Tpo -c -o libopccore_la-dynamic_library.lo `test -f 'src/common/addons_core/dynamic_library.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_library.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-dynamic_library.Tpo $(DEPDIR)/libopccore_la-dynamic_library.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_library.cpp' object='libopccore_la-dynamic_library.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-addon_manager.obj `if test -f 'src/common/addons_core/addon_manager.cpp'; then $(CYGPATH_W) 'src/common/addons_core/addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/addon_manager.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-dynamic_library.lo `test -f 'src/common/addons_core/dynamic_library.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_library.cpp
 
-libopccore_a-errors_addon_manager.o: src/common/addons_core/errors_addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-errors_addon_manager.o -MD -MP -MF $(DEPDIR)/libopccore_a-errors_addon_manager.Tpo -c -o libopccore_a-errors_addon_manager.o `test -f 'src/common/addons_core/errors_addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/errors_addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-errors_addon_manager.Tpo $(DEPDIR)/libopccore_a-errors_addon_manager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/errors_addon_manager.cpp' object='libopccore_a-errors_addon_manager.o' libtool=no @AMDEPBACKSLASH@
+libopccore_la-value.lo: src/common/value.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-value.lo -MD -MP -MF $(DEPDIR)/libopccore_la-value.Tpo -c -o libopccore_la-value.lo `test -f 'src/common/value.cpp' || echo '$(srcdir)/'`src/common/value.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-value.Tpo $(DEPDIR)/libopccore_la-value.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/value.cpp' object='libopccore_la-value.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-errors_addon_manager.o `test -f 'src/common/addons_core/errors_addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/errors_addon_manager.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-value.lo `test -f 'src/common/value.cpp' || echo '$(srcdir)/'`src/common/value.cpp
 
-libopccore_a-errors_addon_manager.obj: src/common/addons_core/errors_addon_manager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-errors_addon_manager.obj -MD -MP -MF $(DEPDIR)/libopccore_a-errors_addon_manager.Tpo -c -o libopccore_a-errors_addon_manager.obj `if test -f 'src/common/addons_core/errors_addon_manager.cpp'; then $(CYGPATH_W) 'src/common/addons_core/errors_addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/errors_addon_manager.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-errors_addon_manager.Tpo $(DEPDIR)/libopccore_a-errors_addon_manager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/errors_addon_manager.cpp' object='libopccore_a-errors_addon_manager.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_la-exception.lo: src/common/exception.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-exception.lo -MD -MP -MF $(DEPDIR)/libopccore_la-exception.Tpo -c -o libopccore_la-exception.lo `test -f 'src/common/exception.cpp' || echo '$(srcdir)/'`src/common/exception.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-exception.Tpo $(DEPDIR)/libopccore_la-exception.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/exception.cpp' object='libopccore_la-exception.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-errors_addon_manager.obj `if test -f 'src/common/addons_core/errors_addon_manager.cpp'; then $(CYGPATH_W) 'src/common/addons_core/errors_addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/errors_addon_manager.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-exception.lo `test -f 'src/common/exception.cpp' || echo '$(srcdir)/'`src/common/exception.cpp
 
-libopccore_a-dynamic_addon_factory.o: src/common/addons_core/dynamic_addon_factory.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-dynamic_addon_factory.o -MD -MP -MF $(DEPDIR)/libopccore_a-dynamic_addon_factory.Tpo -c -o libopccore_a-dynamic_addon_factory.o `test -f 'src/common/addons_core/dynamic_addon_factory.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_addon_factory.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-dynamic_addon_factory.Tpo $(DEPDIR)/libopccore_a-dynamic_addon_factory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_addon_factory.cpp' object='libopccore_a-dynamic_addon_factory.o' libtool=no @AMDEPBACKSLASH@
+libopccore_la-common_errors.lo: src/common/common_errors.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-common_errors.lo -MD -MP -MF $(DEPDIR)/libopccore_la-common_errors.Tpo -c -o libopccore_la-common_errors.lo `test -f 'src/common/common_errors.cpp' || echo '$(srcdir)/'`src/common/common_errors.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-common_errors.Tpo $(DEPDIR)/libopccore_la-common_errors.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/common_errors.cpp' object='libopccore_la-common_errors.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-dynamic_addon_factory.o `test -f 'src/common/addons_core/dynamic_addon_factory.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_addon_factory.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-common_errors.lo `test -f 'src/common/common_errors.cpp' || echo '$(srcdir)/'`src/common/common_errors.cpp
 
-libopccore_a-dynamic_addon_factory.obj: src/common/addons_core/dynamic_addon_factory.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-dynamic_addon_factory.obj -MD -MP -MF $(DEPDIR)/libopccore_a-dynamic_addon_factory.Tpo -c -o libopccore_a-dynamic_addon_factory.obj `if test -f 'src/common/addons_core/dynamic_addon_factory.cpp'; then $(CYGPATH_W) 'src/common/addons_core/dynamic_addon_factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/dynamic_addon_factory.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-dynamic_addon_factory.Tpo $(DEPDIR)/libopccore_a-dynamic_addon_factory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_addon_factory.cpp' object='libopccore_a-dynamic_addon_factory.obj' libtool=no @AMDEPBACKSLASH@
+libopccore_la-socket_channel.lo: src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-socket_channel.lo -MD -MP -MF $(DEPDIR)/libopccore_la-socket_channel.Tpo -c -o libopccore_la-socket_channel.lo `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-socket_channel.Tpo $(DEPDIR)/libopccore_la-socket_channel.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libopccore_la-socket_channel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-dynamic_addon_factory.obj `if test -f 'src/common/addons_core/dynamic_addon_factory.cpp'; then $(CYGPATH_W) 'src/common/addons_core/dynamic_addon_factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/dynamic_addon_factory.cpp'; fi`
-
-libopccore_a-dynamic_library.o: src/common/addons_core/dynamic_library.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-dynamic_library.o -MD -MP -MF $(DEPDIR)/libopccore_a-dynamic_library.Tpo -c -o libopccore_a-dynamic_library.o `test -f 'src/common/addons_core/dynamic_library.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_library.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-dynamic_library.Tpo $(DEPDIR)/libopccore_a-dynamic_library.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_library.cpp' object='libopccore_a-dynamic_library.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-dynamic_library.o `test -f 'src/common/addons_core/dynamic_library.cpp' || echo '$(srcdir)/'`src/common/addons_core/dynamic_library.cpp
-
-libopccore_a-dynamic_library.obj: src/common/addons_core/dynamic_library.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-dynamic_library.obj -MD -MP -MF $(DEPDIR)/libopccore_a-dynamic_library.Tpo -c -o libopccore_a-dynamic_library.obj `if test -f 'src/common/addons_core/dynamic_library.cpp'; then $(CYGPATH_W) 'src/common/addons_core/dynamic_library.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/dynamic_library.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-dynamic_library.Tpo $(DEPDIR)/libopccore_a-dynamic_library.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/dynamic_library.cpp' object='libopccore_a-dynamic_library.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-dynamic_library.obj `if test -f 'src/common/addons_core/dynamic_library.cpp'; then $(CYGPATH_W) 'src/common/addons_core/dynamic_library.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/addons_core/dynamic_library.cpp'; fi`
-
-libopccore_a-value.o: src/common/value.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-value.o -MD -MP -MF $(DEPDIR)/libopccore_a-value.Tpo -c -o libopccore_a-value.o `test -f 'src/common/value.cpp' || echo '$(srcdir)/'`src/common/value.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-value.Tpo $(DEPDIR)/libopccore_a-value.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/value.cpp' object='libopccore_a-value.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-value.o `test -f 'src/common/value.cpp' || echo '$(srcdir)/'`src/common/value.cpp
-
-libopccore_a-value.obj: src/common/value.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-value.obj -MD -MP -MF $(DEPDIR)/libopccore_a-value.Tpo -c -o libopccore_a-value.obj `if test -f 'src/common/value.cpp'; then $(CYGPATH_W) 'src/common/value.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/value.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-value.Tpo $(DEPDIR)/libopccore_a-value.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/value.cpp' object='libopccore_a-value.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-value.obj `if test -f 'src/common/value.cpp'; then $(CYGPATH_W) 'src/common/value.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/value.cpp'; fi`
-
-libopccore_a-exception.o: src/common/exception.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-exception.o -MD -MP -MF $(DEPDIR)/libopccore_a-exception.Tpo -c -o libopccore_a-exception.o `test -f 'src/common/exception.cpp' || echo '$(srcdir)/'`src/common/exception.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-exception.Tpo $(DEPDIR)/libopccore_a-exception.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/exception.cpp' object='libopccore_a-exception.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-exception.o `test -f 'src/common/exception.cpp' || echo '$(srcdir)/'`src/common/exception.cpp
-
-libopccore_a-exception.obj: src/common/exception.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-exception.obj -MD -MP -MF $(DEPDIR)/libopccore_a-exception.Tpo -c -o libopccore_a-exception.obj `if test -f 'src/common/exception.cpp'; then $(CYGPATH_W) 'src/common/exception.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/exception.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-exception.Tpo $(DEPDIR)/libopccore_a-exception.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/exception.cpp' object='libopccore_a-exception.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-exception.obj `if test -f 'src/common/exception.cpp'; then $(CYGPATH_W) 'src/common/exception.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/exception.cpp'; fi`
-
-libopccore_a-common_errors.o: src/common/common_errors.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-common_errors.o -MD -MP -MF $(DEPDIR)/libopccore_a-common_errors.Tpo -c -o libopccore_a-common_errors.o `test -f 'src/common/common_errors.cpp' || echo '$(srcdir)/'`src/common/common_errors.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-common_errors.Tpo $(DEPDIR)/libopccore_a-common_errors.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/common_errors.cpp' object='libopccore_a-common_errors.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-common_errors.o `test -f 'src/common/common_errors.cpp' || echo '$(srcdir)/'`src/common/common_errors.cpp
-
-libopccore_a-common_errors.obj: src/common/common_errors.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-common_errors.obj -MD -MP -MF $(DEPDIR)/libopccore_a-common_errors.Tpo -c -o libopccore_a-common_errors.obj `if test -f 'src/common/common_errors.cpp'; then $(CYGPATH_W) 'src/common/common_errors.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/common_errors.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-common_errors.Tpo $(DEPDIR)/libopccore_a-common_errors.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/common_errors.cpp' object='libopccore_a-common_errors.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-common_errors.obj `if test -f 'src/common/common_errors.cpp'; then $(CYGPATH_W) 'src/common/common_errors.cpp'; else $(CYGPATH_W) '$(srcdir)/src/common/common_errors.cpp'; fi`
-
-libopccore_a-socket_channel.o: src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-socket_channel.o -MD -MP -MF $(DEPDIR)/libopccore_a-socket_channel.Tpo -c -o libopccore_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-socket_channel.Tpo $(DEPDIR)/libopccore_a-socket_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libopccore_a-socket_channel.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-socket_channel.o `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
-
-libopccore_a-socket_channel.obj: src/socket_channel.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_a-socket_channel.obj -MD -MP -MF $(DEPDIR)/libopccore_a-socket_channel.Tpo -c -o libopccore_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_a-socket_channel.Tpo $(DEPDIR)/libopccore_a-socket_channel.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/socket_channel.cpp' object='libopccore_a-socket_channel.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_a-socket_channel.obj `if test -f 'src/socket_channel.cpp'; then $(CYGPATH_W) 'src/socket_channel.cpp'; else $(CYGPATH_W) '$(srcdir)/src/socket_channel.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-socket_channel.lo `test -f 'src/socket_channel.cpp' || echo '$(srcdir)/'`src/socket_channel.cpp
 
 common_gtest-test_addon_manager.o: tests/test_addon_manager.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_addon_manager.o -MD -MP -MF $(DEPDIR)/common_gtest-test_addon_manager.Tpo -c -o common_gtest-test_addon_manager.o `test -f 'tests/test_addon_manager.cpp' || echo '$(srcdir)/'`tests/test_addon_manager.cpp
@@ -1152,7 +1078,7 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(LIBRARIES) $(HEADERS) config.h all-local
+all-am: Makefile $(LTLIBRARIES) $(HEADERS) config.h all-local
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsdir)" "$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -1190,7 +1116,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-checkPROGRAMS clean-generic clean-libLIBRARIES \
+clean-am: clean-checkPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool mostlyclean-am
 
 distclean: distclean-am
@@ -1219,7 +1145,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLIBRARIES
+install-exec-am: install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -1262,13 +1188,13 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-addonsHEADERS uninstall-clientincludeHEADERS \
-	uninstall-commonHEADERS uninstall-libLIBRARIES
+	uninstall-commonHEADERS uninstall-libLTLIBRARIES
 
 .MAKE: all check-am install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am all-local am--refresh check check-TESTS \
 	check-am clean clean-checkPROGRAMS clean-generic \
-	clean-libLIBRARIES clean-libtool ctags dist dist-all \
+	clean-libLTLIBRARIES clean-libtool ctags dist dist-all \
 	dist-bzip2 dist-gzip dist-lzip dist-lzma dist-shar dist-tarZ \
 	dist-xz dist-zip distcheck distclean distclean-compile \
 	distclean-generic distclean-hdr distclean-libtool \
@@ -1277,14 +1203,15 @@ uninstall-am: uninstall-addonsHEADERS uninstall-clientincludeHEADERS \
 	install-am install-clientincludeHEADERS install-commonHEADERS \
 	install-data install-data-am install-dvi install-dvi-am \
 	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libLIBRARIES install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags uninstall uninstall-addonsHEADERS \
-	uninstall-am uninstall-clientincludeHEADERS \
-	uninstall-commonHEADERS uninstall-libLIBRARIES
+	install-info install-info-am install-libLTLIBRARIES \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonsHEADERS uninstall-am \
+	uninstall-clientincludeHEADERS uninstall-commonHEADERS \
+	uninstall-libLTLIBRARIES
 
 
 test_dynamic_addon.o: tests/test_dynamic_addon.cpp

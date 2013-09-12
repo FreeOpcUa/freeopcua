@@ -659,8 +659,7 @@ ac_subdirs_all='
  libopccore
  libuamappings
  client
- server
- python'
+ server'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2164,7 +2163,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=opcuaserver
- VERSION=0.1.1
+ VERSION=0.1.2
 
 
 # Some tools Automake needs.
@@ -2202,7 +2201,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-subdirs="$subdirs third-party/uripp libopccore libuamappings client server python"
+subdirs="$subdirs third-party/uripp libopccore libuamappings client server"
 
 
 ac_config_files="$ac_config_files third-party/Makefile python/Makefile Makefile"
