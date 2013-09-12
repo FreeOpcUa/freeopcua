@@ -11,8 +11,7 @@ includes = [
             '../libopccore/include']
 
 cpp_flags = ['-std=c++11', 
-             '-DMODULE_NAME=opcua', 
-             '-Wl,--no-undefined']
+             '-DMODULE_NAME=opcua']
 
 libs = ['opccore',
         'opcuabinary',
@@ -23,9 +22,9 @@ libs = ['opccore',
         'boost_python']
 
 ldirs = [
-            '../client',
-            '../libopccore',
-            '../libuamappings',
+            '../client/.libs',
+            '../libopccore/.libs',
+            '../libuamappings/.libs',
             '../third-party/uripp/src/.libs']
 
 opcua_client = Extension(
