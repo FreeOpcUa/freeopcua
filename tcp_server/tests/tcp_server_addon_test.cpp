@@ -54,7 +54,7 @@ namespace
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor(new EchoProcessor());
       TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
       OpcUa::Server::TcpParameters tcpParams;
-      tcpParams.Port = 4841;
+      tcpParams.Port = 12345;
 
       TcpAddon->Listen(tcpParams, processor);
     }
@@ -62,7 +62,7 @@ namespace
     virtual void Stop()
     {
       OpcUa::Server::TcpParameters params;
-      params.Port = 4841;
+      params.Port = 12345;
       TcpAddon->StopListen(params);
     }
 
