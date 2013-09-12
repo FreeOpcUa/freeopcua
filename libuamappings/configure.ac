@@ -9,7 +9,8 @@
 AC_INIT
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([src/binary_stream.cpp])
-AM_INIT_AUTOMAKE([libopcopcmappings], [0.1.0], [rykovanov.as@gmail.com])
+AM_INIT_AUTOMAKE([libopcopcmappings], [0.1.2], [rykovanov.as@gmail.com])
+LT_INIT([disable-static])
 
 CXXFLAGS="-O0 -g -Wall -std=c++0x"
 

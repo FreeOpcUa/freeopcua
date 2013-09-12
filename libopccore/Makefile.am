@@ -15,6 +15,7 @@ clientinclude_HEADERS = \
   include/opc/ua/view.h \
   include/opc/ua/connection_listener.h \
   include/opc/ua/computer.h \
+  include/opc/ua/channel.h \
   include/opc/ua/attributes.h \
   include/opc/ua/endpoints.h
 
@@ -41,8 +42,8 @@ addons_HEADERS = \
                   include/opc/common/addons_core/dynamic_addon_factory.h \
                   include/opc/common/addons_core/errors.h
 
-lib_LIBRARIES = libopccore.a
-libopccore_a_SOURCES = \
+lib_LTLIBRARIES = libopccore.la
+libopccore_la_SOURCES = \
                   src/common/object_id.cpp \
                   src/common/thread.cpp \
                   src/common/addons_core/addon_manager.cpp \
@@ -56,7 +57,7 @@ libopccore_a_SOURCES = \
                   src/common/common_errors.cpp \
                   src/socket_channel.cpp
 
-libopccore_a_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
 
 test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 	$(CC) -std=c++0x -I$(top_srcdir)/src -I$(top_srcdir)/include -fPIC -g -c -Wall tests/test_dynamic_addon.cpp 
@@ -80,7 +81,7 @@ common_test_SOURCES = \
 
 
 common_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_test_LDADD = libopccore.a
+common_test_LDADD = libopccore.la
 common_test_LDFLAGS = -lcppunit -ldl 
 
 common_gtest_SOURCES = \
