@@ -15147,6 +15147,8 @@ ac_config_files="$ac_config_files services_registry/Makefile"
 
 ac_config_files="$ac_config_files standard_namespace/Makefile"
 
+ac_config_files="$ac_config_files soap_protocol/Makefile"
+
 ac_config_files="$ac_config_files tcp_server/Makefile"
 
 ac_config_files="$ac_config_files xml_address_space_loader/Makefile"
@@ -16259,6 +16261,7 @@ do
     "exe/Makefile") CONFIG_FILES="$CONFIG_FILES exe/Makefile" ;;
     "services_registry/Makefile") CONFIG_FILES="$CONFIG_FILES services_registry/Makefile" ;;
     "standard_namespace/Makefile") CONFIG_FILES="$CONFIG_FILES standard_namespace/Makefile" ;;
+    "soap_protocol/Makefile") CONFIG_FILES="$CONFIG_FILES soap_protocol/Makefile" ;;
     "tcp_server/Makefile") CONFIG_FILES="$CONFIG_FILES tcp_server/Makefile" ;;
     "xml_address_space_loader/Makefile") CONFIG_FILES="$CONFIG_FILES xml_address_space_loader/Makefile" ;;
 
