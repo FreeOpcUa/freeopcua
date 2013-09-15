@@ -18,47 +18,44 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace OpcUa
+OpcUa::SocketChannel::SocketChannel(int sock)
+  : Socket(sock)
 {
-  SocketChannel::SocketChannel(int sock)
-    : Socket(sock)
+  if (Socket < 0)
   {
-    if (Socket < 0)
-    {
-      throw std::logic_error("Internal error: unable to create connection on invalid socket.");
-    }
+    throw std::logic_error("Internal error: unable to create connection on invalid socket.");
   }
+}
 
-  SocketChannel::~SocketChannel()
+OpcUa::SocketChannel::~SocketChannel()
+{
+  int error = close(Socket);
+  if (error < 0)
   {
-    int error = close(Socket);
-    if (error < 0)
-    {
-      std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
-    }
+    std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
   }
+}
 
-  std::size_t SocketChannel::Receive(char* data, std::size_t size)
+std::size_t OpcUa::SocketChannel::Receive(char* data, std::size_t size)
+{
+  int received = recv(Socket, data, size, MSG_WAITALL);
+  if (received < 0)
   {
-    int received = recv(Socket, data, size, MSG_WAITALL);
-    if (received < 0)
-    {
-      throw std::logic_error(std::string("Failed to receive data from host. ") + strerror(errno) + ".");
-    }
-    if (received == 0)
-    {
-      throw std::logic_error("Connection was closed by host.");
-    }
-    return (std::size_t)size;
+    throw std::logic_error(std::string("Failed to receive data from host. ") + strerror(errno) + ".");
   }
+  if (received == 0)
+  {
+    throw std::logic_error("Connection was closed by host.");
+  }
+  return (std::size_t)size;
+}
 
-  void SocketChannel::Send(const char* message, std::size_t size)
+void OpcUa::SocketChannel::Send(const char* message, std::size_t size)
+{
+  int sent = send(Socket, message, size, 0);
+  if (sent != (int)size)
   {
-    int sent = send(Socket, message, size, 0);
-    if (sent != (int)size)
-    {
-      throw std::logic_error(std::string("unable to send data to the host. ") + strerror(errno) + std::string("."));
-    }
+    throw std::logic_error(std::string("unable to send data to the host. ") + strerror(errno) + std::string("."));
   }
-} // namespace OpcUa
+}
 

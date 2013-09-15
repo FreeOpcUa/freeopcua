@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions 
+  name="UAEndpoints" 
+  targetNamespace="http://opcfoundation.org/UA/2008/02/Endpoints.wsdl" 
+  xmlns:tns="http://opcfoundation.org/UA/2008/02/Endpoints.wsdl" 
+  xmlns:s0="http://opcfoundation.org/UA/2008/02/Services.wsdl" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" 
+  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+>
+  <wsdl:import namespace="http://opcfoundation.org/UA/2008/02/Services.wsdl" location="./Services.wsdl" />
+  <wsdl:types />
+  <wsdl:binding name="BasicHttpBinding_ISessionEndpoint" type="s0:ISessionEndpoint">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="InvokeService">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Types.xsd/InvokeService" style="document"/>
+      <wsdl:input name="InvokeServiceMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="InvokeServiceResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="CreateSession">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/CreateSession" style="document"/>
+      <wsdl:input name="CreateSessionMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreateSessionResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="ActivateSession">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/ActivateSession" style="document"/>
+      <wsdl:input name="ActivateSessionMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ActivateSessionResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CloseSession">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/CloseSession" style="document"/>
+      <wsdl:input name="CloseSessionMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CloseSessionResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Cancel">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Cancel" style="document"/>
+      <wsdl:input name="CancelMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CancelResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="AddNodes">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/AddNodes" style="document"/>
+      <wsdl:input name="AddNodesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="AddNodesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="AddReferences">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/AddReferences" style="document"/>
+      <wsdl:input name="AddReferencesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="AddReferencesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteNodes">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/DeleteNodes" style="document"/>
+      <wsdl:input name="DeleteNodesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeleteNodesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteReferences">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/DeleteReferences" style="document"/>
+      <wsdl:input name="DeleteReferencesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeleteReferencesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Browse">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Browse" style="document"/>
+      <wsdl:input name="BrowseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="BrowseResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="BrowseNext">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/BrowseNext" style="document"/>
+      <wsdl:input name="BrowseNextMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="BrowseNextResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="TranslateBrowsePathsToNodeIds">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/TranslateBrowsePathsToNodeIds" style="document"/>
+      <wsdl:input name="TranslateBrowsePathsToNodeIdsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="TranslateBrowsePathsToNodeIdsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="RegisterNodes">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/RegisterNodes" style="document"/>
+      <wsdl:input name="RegisterNodesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RegisterNodesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="UnregisterNodes">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/UnregisterNodes" style="document"/>
+      <wsdl:input name="UnregisterNodesMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="UnregisterNodesResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="QueryFirst">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/QueryFirst" style="document"/>
+      <wsdl:input name="QueryFirstMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="QueryFirstResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="QueryNext">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/QueryNext" style="document"/>
+      <wsdl:input name="QueryNextMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="QueryNextResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Read">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Read" style="document"/>
+      <wsdl:input name="ReadMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ReadResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="HistoryRead">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/HistoryRead" style="document"/>
+      <wsdl:input name="HistoryReadMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="HistoryReadResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Write">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Write" style="document"/>
+      <wsdl:input name="WriteMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="WriteResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="HistoryUpdate">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/HistoryUpdate" style="document"/>
+      <wsdl:input name="HistoryUpdateMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="HistoryUpdateResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Call">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Call" style="document"/>
+      <wsdl:input name="CallMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CallResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CreateMonitoredItems">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/CreateMonitoredItems" style="document"/>
+      <wsdl:input name="CreateMonitoredItemsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreateMonitoredItemsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="ModifyMonitoredItems">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/ModifyMonitoredItems" style="document"/>
+      <wsdl:input name="ModifyMonitoredItemsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ModifyMonitoredItemsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SetMonitoringMode">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/SetMonitoringMode" style="document"/>
+      <wsdl:input name="SetMonitoringModeMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetMonitoringModeResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SetTriggering">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/SetTriggering" style="document"/>
+      <wsdl:input name="SetTriggeringMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetTriggeringResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteMonitoredItems">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/DeleteMonitoredItems" style="document"/>
+      <wsdl:input name="DeleteMonitoredItemsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeleteMonitoredItemsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CreateSubscription">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/CreateSubscription" style="document"/>
+      <wsdl:input name="CreateSubscriptionMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreateSubscriptionResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="ModifySubscription">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/ModifySubscription" style="document"/>
+      <wsdl:input name="ModifySubscriptionMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ModifySubscriptionResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SetPublishingMode">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/SetPublishingMode" style="document"/>
+      <wsdl:input name="SetPublishingModeMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetPublishingModeResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Publish">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Publish" style="document"/>
+      <wsdl:input name="PublishMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="PublishResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Republish">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/Republish" style="document"/>
+      <wsdl:input name="RepublishMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RepublishResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="TransferSubscriptions">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/TransferSubscriptions" style="document"/>
+      <wsdl:input name="TransferSubscriptionsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="TransferSubscriptionsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="DeleteSubscriptions">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/DeleteSubscriptions" style="document"/>
+      <wsdl:input name="DeleteSubscriptionsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeleteSubscriptionsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  
+  <wsdl:binding name="BasicHttpBinding_IDiscoveryEndpoint" type="s0:IDiscoveryEndpoint">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="InvokeService">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Types.xsd/InvokeService" style="document"/>
+      <wsdl:input name="InvokeServiceMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="InvokeServiceResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="FindServers">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/FindServers" style="document"/>
+      <wsdl:input name="FindServersMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="FindServersResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetEndpoints">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/GetEndpoints" style="document"/>
+      <wsdl:input name="GetEndpointsMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetEndpointsResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+  <wsdl:binding name="BasicHttpBinding_IRegistrationEndpoint" type="s0:IRegistrationEndpoint">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="InvokeService">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/InvokeService" style="document"/>
+      <wsdl:input name="InvokeServiceMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="InvokeServiceResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="RegisterServer">
+      <soap12:operation soapAction="http://opcfoundation.org/UA/2008/02/Services.wsdl/RegisterServer" style="document"/>
+      <wsdl:input name="RegisterServerMessage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RegisterServerResponseMessage">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  
+</wsdl:definitions>

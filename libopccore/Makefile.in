@@ -118,6 +118,9 @@ am_libopccore_la_OBJECTS = libopccore_la-object_id.lo \
 	libopccore_la-exception.lo libopccore_la-common_errors.lo \
 	libopccore_la-socket_channel.lo
 libopccore_la_OBJECTS = $(am_libopccore_la_OBJECTS)
+libopccore_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libopccore_la_LDFLAGS) $(LDFLAGS) -o $@
 am__EXEEXT_1 = common_gtest$(EXEEXT) common_test$(EXEEXT)
 am_common_gtest_OBJECTS = common_gtest-test_addon_manager.$(OBJEXT) \
 	common_gtest-test_dynamic_addon.$(OBJEXT) \
@@ -359,6 +362,7 @@ libopccore_la_SOURCES = \
                   src/socket_channel.cpp
 
 libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+libopccore_la_LDFLAGS = -ldl -lpthread
 CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
 common_test_SOURCES = \
                   tests/common/error_test.cpp \
@@ -465,7 +469,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libopccore.la: $(libopccore_la_OBJECTS) $(libopccore_la_DEPENDENCIES) $(EXTRA_libopccore_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(libdir) $(libopccore_la_OBJECTS) $(libopccore_la_LIBADD) $(LIBS)
+	$(libopccore_la_LINK) -rpath $(libdir) $(libopccore_la_OBJECTS) $(libopccore_la_LIBADD) $(LIBS)
 
 clean-checkPROGRAMS:
 	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \

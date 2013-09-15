@@ -34,6 +34,8 @@ libopcua_client_la_SOURCES = \
   src/stream_subscription.h \
   src/stream_view.h
 
+libopcua_client_la_LDFLAGS =  $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread
+
 bin_PROGRAMS = opcua
 
 opcua_SOURCES = \
@@ -41,10 +43,9 @@ opcua_SOURCES = \
   src/opcua_options.cpp \
   src/opcua_options.h
 
-opcua_LDADD = libopcua_client.la
+opcua_LDADD = libopcua_client.la 
 opcua_CPPFLAGS = $(INCLUDES)
-opcua_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -ldl -lboost_program_options -lpthread -Wl,-z,defs,-no-undefined
-
+opcua_LDFLAGS =  $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
 
 #TESTS = libuaclient_test
 

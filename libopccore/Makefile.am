@@ -58,6 +58,7 @@ libopccore_la_SOURCES = \
                   src/socket_channel.cpp
 
 libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
+libopccore_la_LDFLAGS = -ldl -lpthread
 
 test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 	$(CC) -std=c++0x -I$(top_srcdir)/src -I$(top_srcdir)/include -fPIC -g -c -Wall tests/test_dynamic_addon.cpp 

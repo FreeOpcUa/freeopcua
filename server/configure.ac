@@ -101,6 +101,7 @@ AC_CONFIG_FILES([endpoint_services/Makefile])
 AC_CONFIG_FILES([exe/Makefile])
 AC_CONFIG_FILES([services_registry/Makefile])
 AC_CONFIG_FILES([standard_namespace/Makefile])
+AC_CONFIG_FILES([soap_protocol/Makefile])
 AC_CONFIG_FILES([tcp_server/Makefile])
 AC_CONFIG_FILES([xml_address_space_loader/Makefile])
 

@@ -114,6 +114,9 @@ libopcua_client_la_LIBADD =
 am_libopcua_client_la_OBJECTS = computer.lo binary_computer.lo \
 	binary_connection.lo binary_secure_channel.lo
 libopcua_client_la_OBJECTS = $(am_libopcua_client_la_OBJECTS)
+libopcua_client_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libopcua_client_la_LDFLAGS) $(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
@@ -322,14 +325,15 @@ libopcua_client_la_SOURCES = \
   src/stream_subscription.h \
   src/stream_view.h
 
+libopcua_client_la_LDFLAGS = $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread
 opcua_SOURCES = \
   src/opcua_main.cpp \
   src/opcua_options.cpp \
   src/opcua_options.h
 
-opcua_LDADD = libopcua_client.la
+opcua_LDADD = libopcua_client.la 
 opcua_CPPFLAGS = $(INCLUDES)
-opcua_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS) -ldl -lboost_program_options -lpthread -Wl,-z,defs,-no-undefined
+opcua_LDFLAGS = $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -417,7 +421,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libopcua_client.la: $(libopcua_client_la_OBJECTS) $(libopcua_client_la_DEPENDENCIES) $(EXTRA_libopcua_client_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(libdir) $(libopcua_client_la_OBJECTS) $(libopcua_client_la_LIBADD) $(LIBS)
+	$(libopcua_client_la_LINK) -rpath $(libdir) $(libopcua_client_la_OBJECTS) $(libopcua_client_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
