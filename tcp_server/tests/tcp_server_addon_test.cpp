@@ -21,7 +21,7 @@
 
 using namespace testing;
 
-const unsigned short TestPort = 33449;
+unsigned short TestPort = 33449;
 
 
 namespace
@@ -54,7 +54,7 @@ namespace
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor(new EchoProcessor());
       TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
       OpcUa::Server::TcpParameters tcpParams;
-      tcpParams.Port = 12345;
+      tcpParams.Port = ++TestPort;
 
       TcpAddon->Listen(tcpParams, processor);
     }
@@ -62,7 +62,7 @@ namespace
     virtual void Stop()
     {
       OpcUa::Server::TcpParameters params;
-      params.Port = 12345;
+      params.Port = TestPort;
       TcpAddon->StopListen(params);
     }
 
@@ -124,7 +124,7 @@ TEST(TcpServerAddon, CanSendAndReceiveData)
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", 4841);
+  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", TestPort);
 
   char data[4] = {0, 1, 2, 3};
   connection->Send(data, 4);

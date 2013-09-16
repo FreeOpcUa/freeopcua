@@ -15,7 +15,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
 
-INCLUDES = -Iinclude -I$(top_srcdir)/services_registry/include $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+INCLUDES = -Iinclude -I$(top_srcdir)/services_registry/include $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
 lib_LTLIBRARIES = libaddress_space_addon.la

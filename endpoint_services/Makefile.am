@@ -19,7 +19,7 @@ configdir = $(sysconfdir)/opcua
 INCLUDES= \
   -Iinclude \
   -I$(top_srcdir)/services_registry/include \
-  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
@@ -57,5 +57,5 @@ test_endpoints_registry_SOURCES = \
   ../services_registry/src/services_registry_impl.h
   
 test_endpoints_registry_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_endpoints_registry_LDFLAGS = -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs,-no-undefined
+test_endpoints_registry_LDFLAGS = -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs,-no-undefined
 

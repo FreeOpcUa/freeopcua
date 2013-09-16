@@ -20,7 +20,7 @@ INCLUDES= \
   -Iinclude \
   -I$(top_srcdir)/address_space/include \
   -I$(top_srcdir)/services_registry/include \
-  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
@@ -43,7 +43,7 @@ TESTS = test_standard_address_space
 check_PROGRAMS = $(TESTS)
 
 test_standard_address_space_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) 
-test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 test_standard_address_space_SOURCES=\
   ../address_space/src/address_space_addon.cpp \
   ../address_space/src/address_space_internal.cpp \

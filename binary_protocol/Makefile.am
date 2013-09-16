@@ -21,7 +21,7 @@ INCLUDES= \
   -I$(top_srcdir)/endpoint_services/include \
   -I$(top_srcdir)/services_registry/include \
   -I$(top_srcdir)/tcp_server/include \
-  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
+  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
   -Itests \
@@ -38,7 +38,7 @@ libopcua_protocol_la_SOURCES = \
  src/opc_tcp_processor.cpp \
  src/opc_tcp_processor.h
 libopcua_protocol_la_CPPFLAGS = $(INCLUDES)
-libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(URI_LIBS)
+libopcua_protocol_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
 
 TESTS = test_opcua_protocol_addon
 
@@ -70,5 +70,5 @@ test_opcua_protocol_addon_SOURCES = \
   ../standard_namespace/src/standard_namespace.cpp
 
 test_opcua_protocol_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-test_opcua_protocol_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
+test_opcua_protocol_addon_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 

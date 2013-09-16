@@ -20,7 +20,7 @@ INCLUDES= \
   -Iinclude \
   -I$(top_srcdir)/builin_server/include \
   -I$(top_srcdir)/tcp_server/include \
-   $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
+   $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
