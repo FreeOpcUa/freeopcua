@@ -70,27 +70,4 @@ CLEANFILES= \
   *.xml \
   *.nsmap
 
-#TESTS = test_tcp_server test_tcp_server_addon
-
-#TESTS_ENVIRONMENT = 
-
-#check_PROGRAMS = $(TESTS)
-
-#test_tcp_server_SOURCES = \
-#  src/tcp_server.cpp \
-#  src/tcp_server_addon_impl.cpp \
-#  src/tcp_server_addon_impl.h \
-#  tests/tcp_server_test.cpp
-
-#test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-#test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
-
-#test_tcp_server_addon_SOURCES = \
-#  src/tcp_server.cpp \
-#  src/tcp_server_addon_impl.cpp \
-#  src/tcp_server_addon_impl.h \
-#  tests/tcp_server_addon_test.cpp
-
-#test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
-#test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 

@@ -9,7 +9,7 @@
 # $Revision: $
 
 
-INCLUDES= $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+INCLUDES= $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) tests
 
 bin_PROGRAMS = opcuaserver
@@ -23,7 +23,7 @@ opcuaserver_SOURCES = \
   src/server_options.h
 
 opcuaserver_CPPFLAGS = $(INCLUDES)
-opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
+opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
 
 configdir=$(sysconfdir)/opcua
 config_DATA = configs/server.config
@@ -69,7 +69,7 @@ test_opcuaserver_SOURCES = \
 
 test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDADD = test_addon.so
-test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(URI_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
+test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 
 check : test_addon.so
 

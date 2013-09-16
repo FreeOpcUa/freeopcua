@@ -638,8 +638,6 @@ OPC_CORE_INCLUDES
 OPC_CORE_LIBS
 UA_MAPPING_INCLUDES
 UA_MAPPING_LIBS
-URI_INCLUDES
-URI_LIBS
 GMOCK_INCLUDES
 GMOCK_LIBS
 GTEST_INCLUDES
@@ -773,7 +771,6 @@ with_sysroot
 enable_libtool_lock
 with_gtest
 with_gmock
-with_uri_library
 with_ua_mappings
 with_libopccore
 with_testserver_uri
@@ -1425,7 +1422,6 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-gtest=DIR        defines path to gtest root directory
   --with-gmock=DIR        defines path to gmock root directory
-  --with-uri-library=DIR  defines path to uri library
   --with-ua-mappings=DIR  defines path to ua mappings root directory
   --with-libopccore=DIR   defines path to the root directory of libopccore
                           library.
@@ -15038,26 +15034,6 @@ fi
 
 
 
-# Check whether --with-uri-library was given.
-if test "${with_uri_library+set}" = set; then :
-  withval=$with_uri_library;
-              URI_LIBS="-L$with_uri_library/src/.libs -luripp"
-
-              URI_INCLUDES=-I$with_uri_library/src
-
-              { $as_echo "$as_me:${as_lineno-$LINENO}: URI library path: $with_uri_library" >&5
-$as_echo "$as_me: URI library path: $with_uri_library" >&6;}
-
-else
-
-              URI_LIBS=-luripp
-
-
-fi
-
-
-
-
 # Check whether --with-ua-mappings was given.
 if test "${with_ua_mappings+set}" = set; then :
   withval=$with_ua_mappings;
@@ -15080,9 +15056,9 @@ fi
 # Check whether --with-libopccore was given.
 if test "${with_libopccore+set}" = set; then :
   withval=$with_libopccore;
-              OPC_CORE_LIBS="-L$with_libopccore/.libs -lopccore"
+              OPC_CORE_LIBS="-L$with_libopccore/.libs -lopccore -lxml2"
 
-              OPC_CORE_INCLUDES=-I$with_libopccore/include
+              OPC_CORE_INCLUDES="-I$with_libopccore/include -I/usr/include/libxml2"
 
               { $as_echo "$as_me:${as_lineno-$LINENO}: libopccore path: $with_libopccore" >&5
 $as_echo "$as_me: libopccore path: $with_libopccore" >&6;}

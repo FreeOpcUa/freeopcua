@@ -19,6 +19,7 @@ DEFINE_COMMON_ERROR(InvalidValueType);
 DEFINE_COMMON_ERROR(UnsupportedFeature);
 DEFINE_COMMON_ERROR(NotImplemented);
 DEFINE_COMMON_ERROR(StdException);
+DEFINE_COMMON_ERROR(CannotParseUri);
 
 
 #endif // __errors_h__63e60e1e_bdf1_41e4_a354_0c2f71af5fec

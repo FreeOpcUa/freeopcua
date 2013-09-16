@@ -8,45 +8,68 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_CLIENT_URI_FACADE
-#define OPC_UA_CLIENT_URI_FACADE
+#pragma once
 
-#include <uri.h>
+#include <libxml/uri.h>
 
-namespace OpcUa
+#include <opc/common/exception.h>
+
+namespace Common
 {
-  namespace Internal
+
+  class Uri
   {
-
-    class Uri
+  public:
+    explicit Uri(const std::string& uriString)
     {
-    public:
-      explicit Uri(const std::string& uriString)
-        : Impl(uriString)
+      Initialize(uriString.c_str());
+    }
+
+    explicit Uri(const char* uriString)
+    {
+      Initialize(uriString);
+    }
+
+    std::string Scheme() const
+    {
+      return SchemeStr;
+    }
+
+    std::string Host() const
+    {
+      return HostStr;
+    }
+
+    unsigned Port() const
+    {
+      return PortNum;
+    }
+
+  private:
+    void Initialize(const char* uriString)
+    {
+      xmlURIPtr uri = xmlParseURI(uriString);
+      if (!uri)
       {
+        THROW_ERROR1(CannotParseUri, uriString);
       }
-
-      std::string Scheme() const
+      if (uri->scheme)
       {
-        return Impl.scheme().string();
+        SchemeStr = uri->scheme;
       }
-
-      std::string Host() const
+      if (uri->server)
       {
-        return Impl.authority().host();
+        HostStr = uri->server;
       }
+      PortNum = uri->port;
+      xmlFreeURI(uri);
+    }
 
-      unsigned Port() const
-      {
-        return Impl.authority().port();
-      }
+  private:
+    std::string SchemeStr;
+    std::string HostStr;
+    unsigned PortNum;
+  };
 
-    private:
-      uripp::uri Impl;
-    };
-
-  } // namespace Internal
-} // namespace OpcUa
-
-#endif // OPC_UA_CLIENT_URI_FACADE
+} // namespace Common
 

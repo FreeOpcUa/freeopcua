@@ -1,7 +1,7 @@
-EXTRA_DIST = \
-  patch/uri/utils.h \
-  patch/uri/query.cpp \
-  patch/uri/utils.cpp
+#EXTRA_DIST = \
+#  patch/uri/utils.h \
+#  patch/uri/query.cpp \
+#  patch/uri/utils.cpp
 
 #gmock-1.6.0.zip:
 #	test -e gmock-1.6.0.zip || wget http://googlemock.googlecode.com/files/gmock-1.6.0.zip

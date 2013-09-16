@@ -43,18 +43,6 @@ AC_ARG_WITH([gmock],
             ])
 
 
-AC_ARG_WITH([uri-library], 
-            [AS_HELP_STRING([--with-uri-library=DIR], [defines path to uri library])],
-            [ 
-              AC_SUBST([URI_LIBS], ["-L$with_uri_library/src/.libs -luripp"])
-              AC_SUBST([URI_INCLUDES], [-I$with_uri_library/src])
-              AC_MSG_NOTICE([URI library path: $with_uri_library]) 
-            ], 
-            [ 
-              AC_SUBST([URI_LIBS], [-luripp])
-            ])
-
-
 AC_ARG_WITH([ua-mappings], 
             [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
             [ 
@@ -69,8 +57,8 @@ AC_ARG_WITH([ua-mappings],
 AC_ARG_WITH([libopccore], 
             [AS_HELP_STRING([--with-libopccore=DIR], [defines path to the root directory of libopccore library.])],
             [ 
-              AC_SUBST([OPC_CORE_LIBS], ["-L$with_libopccore/.libs -lopccore"])
-              AC_SUBST([OPC_CORE_INCLUDES], [-I$with_libopccore/include])
+              AC_SUBST([OPC_CORE_LIBS], ["-L$with_libopccore/.libs -lopccore -lxml2"])
+              AC_SUBST([OPC_CORE_INCLUDES], ["-I$with_libopccore/include -I/usr/include/libxml2"])
               AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
             ], 
             [ 

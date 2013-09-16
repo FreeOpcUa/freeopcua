@@ -18,3 +18,5 @@ COMMON_ERROR(InvalidValueType,   1, "Invalid value type '%1%'.");
 COMMON_ERROR(UnsupportedFeature, 2, "Unsupported.");
 COMMON_ERROR(NotImplemented,     3, "Not implemented.");
 COMMON_ERROR(StdException,       4, "Standard exception '%1%'.");
+COMMON_ERROR(CannotParseUri,     5, "Cannot parse uri '%1%'.");
+

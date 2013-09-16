@@ -125,9 +125,10 @@ am__EXEEXT_1 = common_gtest$(EXEEXT) common_test$(EXEEXT)
 am_common_gtest_OBJECTS = common_gtest-test_addon_manager.$(OBJEXT) \
 	common_gtest-test_dynamic_addon.$(OBJEXT) \
 	common_gtest-test_dynamic_addon_factory.$(OBJEXT) \
+	common_gtest-test_uri.$(OBJEXT) \
 	common_gtest-thread_test.$(OBJEXT)
 common_gtest_OBJECTS = $(am_common_gtest_OBJECTS)
-common_gtest_LDADD = $(LDADD)
+common_gtest_DEPENDENCIES = libopccore.la
 common_gtest_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(common_gtest_LDFLAGS) $(LDFLAGS) -o $@
@@ -361,8 +362,8 @@ libopccore_la_SOURCES = \
                   src/common/common_errors.cpp \
                   src/socket_channel.cpp
 
-libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
-libopccore_la_LDFLAGS = -ldl -lpthread
+libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I/usr/include/libxml2
+libopccore_la_LDFLAGS = -ldl -lpthread -lxml2
 CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
 common_test_SOURCES = \
                   tests/common/error_test.cpp \
@@ -378,10 +379,12 @@ common_gtest_SOURCES = \
   tests/test_dynamic_addon_factory.cpp \
   tests/test_dynamic_addon.h \
   tests/test_dynamic_addon_id.h \
+  tests/test_uri.cpp \
   tests/common/thread_test.cpp
 
-common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lopccore,--no-whole-archive  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
+common_gtest_CPPFLAGS = -I/usr/include/libxml2 -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+common_gtest_LDADD = libopccore.la
+common_gtest_LDFLAGS = -lxml2 -lpthread -ldl -L$(top_builddir) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -495,6 +498,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_addon_manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_dynamic_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_dynamic_addon_factory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_uri.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-thread_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-error_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-main.Po@am__quote@
@@ -642,6 +646,20 @@ common_gtest-test_dynamic_addon_factory.obj: tests/test_dynamic_addon_factory.cp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_dynamic_addon_factory.cpp' object='common_gtest-test_dynamic_addon_factory.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_dynamic_addon_factory.obj `if test -f 'tests/test_dynamic_addon_factory.cpp'; then $(CYGPATH_W) 'tests/test_dynamic_addon_factory.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_dynamic_addon_factory.cpp'; fi`
+
+common_gtest-test_uri.o: tests/test_uri.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_uri.o -MD -MP -MF $(DEPDIR)/common_gtest-test_uri.Tpo -c -o common_gtest-test_uri.o `test -f 'tests/test_uri.cpp' || echo '$(srcdir)/'`tests/test_uri.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_uri.Tpo $(DEPDIR)/common_gtest-test_uri.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_uri.cpp' object='common_gtest-test_uri.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_uri.o `test -f 'tests/test_uri.cpp' || echo '$(srcdir)/'`tests/test_uri.cpp
+
+common_gtest-test_uri.obj: tests/test_uri.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_uri.obj -MD -MP -MF $(DEPDIR)/common_gtest-test_uri.Tpo -c -o common_gtest-test_uri.obj `if test -f 'tests/test_uri.cpp'; then $(CYGPATH_W) 'tests/test_uri.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_uri.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_uri.Tpo $(DEPDIR)/common_gtest-test_uri.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_uri.cpp' object='common_gtest-test_uri.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_uri.obj `if test -f 'tests/test_uri.cpp'; then $(CYGPATH_W) 'tests/test_uri.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_uri.cpp'; fi`
 
 common_gtest-thread_test.o: tests/common/thread_test.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-thread_test.o -MD -MP -MF $(DEPDIR)/common_gtest-thread_test.Tpo -c -o common_gtest-thread_test.o `test -f 'tests/common/thread_test.cpp' || echo '$(srcdir)/'`tests/common/thread_test.cpp

@@ -78,7 +78,7 @@ void OpcUaProtocol::StartEndpoints(std::vector<EndpointDescription> endpoints, C
   TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
   for (const EndpointDescription endpoint : endpoints)
   {
-    const Internal::Uri uri(endpoint.EndpointURL);
+    const Common::Uri uri(endpoint.EndpointURL);
     if (uri.Scheme() == "opc.tcp")
     {
       std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer(), Debug);

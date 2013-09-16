@@ -11,6 +11,5 @@ $ROOT_DIRECTORY/configure \
   --with-ua-mappings=$ROOT_DIRECTORY/libuamappings \
   --with-gtest=$ROOT_DIRECTORY/third-party/gtest \
   --with-gmock=$ROOT_DIRECTORY/third-party/gmock \
-  --with-uri-library=$ROOT_DIRECTORY/third-party/uripp \
   $@
 

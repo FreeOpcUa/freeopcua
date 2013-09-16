@@ -57,8 +57,8 @@ libopccore_la_SOURCES = \
                   src/common/common_errors.cpp \
                   src/socket_channel.cpp
 
-libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include
-libopccore_la_LDFLAGS = -ldl -lpthread
+libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I/usr/include/libxml2
+libopccore_la_LDFLAGS = -ldl -lpthread -lxml2
 
 test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 	$(CC) -std=c++0x -I$(top_srcdir)/src -I$(top_srcdir)/include -fPIC -g -c -Wall tests/test_dynamic_addon.cpp 
@@ -91,8 +91,10 @@ common_gtest_SOURCES = \
   tests/test_dynamic_addon_factory.cpp \
   tests/test_dynamic_addon.h \
   tests/test_dynamic_addon_id.h \
+  tests/test_uri.cpp \
   tests/common/thread_test.cpp
 
-common_gtest_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_gtest_LDFLAGS = -lpthread -ldl -L$(top_builddir) -Wl,--whole-archive,-lopccore,--no-whole-archive  $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
+common_gtest_CPPFLAGS =  -I/usr/include/libxml2 -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+common_gtest_LDADD = libopccore.la
+common_gtest_LDFLAGS = -lxml2 -lpthread -ldl -L$(top_builddir) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 

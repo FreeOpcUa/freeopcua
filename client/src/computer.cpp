@@ -88,7 +88,7 @@ namespace
     }
 
   private:
-    const Internal::Uri ServerUri;
+    const Common::Uri ServerUri;
     std::unique_ptr<OpcUa::Remote::Computer> Impl;
   };
 
