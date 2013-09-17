@@ -16,7 +16,27 @@ namespace OpcUa
   {
     class SoapDiscoveryService : public BasicHttpBinding_USCOREIDiscoveryEndpointService
     {
+      typedef BasicHttpBinding_USCOREIDiscoveryEndpointService ParentType;
     public:
+      SoapDiscoveryService()
+      {
+      }
+
+      SoapDiscoveryService(struct soap* s)
+        : ParentType(s)
+      {
+      }
+
+      SoapDiscoveryService(soap_mode iomode)
+        : ParentType(iomode)
+      {
+      }
+
+      SoapDiscoveryService(soap_mode imode, soap_mode omode)
+        : ParentType(imode, omode)
+      {
+      }
+
       virtual BasicHttpBinding_USCOREIDiscoveryEndpointService *copy();
       virtual int FindServers(ns3__FindServersRequest *ns3__FindServersRequest_, ns3__FindServersResponse *ns3__FindServersResponse_);
       virtual int GetEndpoints(ns3__GetEndpointsRequest *ns3__GetEndpointsRequest_, ns3__GetEndpointsResponse *ns3__GetEndpointsResponse_);
