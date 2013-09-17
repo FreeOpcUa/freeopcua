@@ -46,12 +46,12 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="opc_layer.org.eclipse.linuxtools.cdt.autotools.core.projectType.977338372" name="GNU Autotools" projectType="org.eclipse.linuxtools.cdt.autotools.core.projectType"/>
+		<project id="opc_layer_soap_suport.org.eclipse.linuxtools.cdt.autotools.core.projectType.977338372" name="GNU Autotools" projectType="org.eclipse.linuxtools.cdt.autotools.core.projectType"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Build (GNU)">
-			<resource resourceType="PROJECT" workspacePath="/opc_layer"/>
+			<resource resourceType="PROJECT" workspacePath="/opc_layer_soap_suport"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">

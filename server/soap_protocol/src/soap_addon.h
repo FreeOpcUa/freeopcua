@@ -15,6 +15,7 @@
 #include <opc/ua/server/addons/services_registry.h>
 
 #include "discovery_service.h"
+#include "soap_service.h"
 
 namespace OpcUa
 {
@@ -37,7 +38,7 @@ namespace OpcUa
 
     private:
       bool Debug;
-      SoapDiscoveryService DiscoveryService;
+      SoapService<SoapDiscoveryService> DiscoveryService;
     };
 
   } // namespace Impl

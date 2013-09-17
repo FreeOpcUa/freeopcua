@@ -51,10 +51,10 @@ EXTRA_DIST = \
 install-data-hook:
 	install -d $(localstatedir)/log/opcua
 	chmod 744 $(sysvdir)/opcuaserver
-	update-rc.d opcuaserver defaults
+	update-rc.d opcuaserver defaults || test true
 
 uninstall-hook:
-	update-rc.d opcuaserver remove
+	update-rc.d opcuaserver remove || test true
 
 
 TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/exe

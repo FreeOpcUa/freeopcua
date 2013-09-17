@@ -11,6 +11,9 @@
 
 #include "soap_addon.h"
 
+
+#include <BasicHttpBinding_USCOREIDiscoveryEndpoint.nsmap>
+
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/services_registry.h>
@@ -26,6 +29,7 @@ using namespace OpcUa::Server;
 
 SoapAddon::SoapAddon()
   : Debug(false)
+  , DiscoveryService(8888)
 {
 }
 
@@ -45,6 +49,7 @@ void SoapAddon::Initialize(Common::AddonsManager& addons, const Common::AddonPar
   PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
   StartEndpoints(endpointDescriptions, addons);
 */
+  DiscoveryService.Start();
 }
 
 void SoapAddon::Stop()
@@ -58,6 +63,7 @@ void SoapAddon::Stop()
   }
   TcpAddon.reset();
 */
+  DiscoveryService.Stop();
 }
 
 void SoapAddon::ApplyAddonParameters(const Common::AddonParameters& params)
