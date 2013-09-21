@@ -13,25 +13,12 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
 
-#include <mutex>
-#include <condition_variable>
-#include <iostream>
-#include <signal.h>
 #include <stdexcept>
 
 namespace
 {
 
   using namespace OpcUa;
-
-  std::mutex ExitMutex;
-  std::condition_variable ExitEvent;
-
-  void TerminateSignal(int signum)
-  {
-    std::cout << "terminating.." << std::endl;
-    ExitEvent.notify_all();
-  }
 
   class OpcUaServer : public OpcUa::Application
   {
@@ -58,24 +45,6 @@ namespace
         throw std::logic_error("Cannot return addons manager. Application wasn't started.");
       }
       return *Addons;
-    }
-
-    virtual void WaitForTerminate()
-    {
-      std::unique_lock<std::mutex> lock(ExitMutex);
-      if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
-      {
-        std::cout << "unable to set SIGTERM handler" << std::endl;
-      }
-      if (signal(SIGINT, TerminateSignal) == SIG_ERR)
-      {
-        std::cout << "unable to set SIGINT handler" << std::endl;
-      }
-      if (signal(SIGSTOP, TerminateSignal) == SIG_ERR)
-      {
-        std::cout << "unable to set SIGSTOP handler" << std::endl;
-      }
-      ExitEvent.wait(lock);
     }
 
     virtual void Stop()

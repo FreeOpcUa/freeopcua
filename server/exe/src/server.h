@@ -26,7 +26,6 @@ namespace OpcUa
     virtual void Start(const std::vector<Common::AddonConfiguration>& configuration) = 0;
     virtual Common::AddonsManager& GetAddonsManager() = 0;
 
-    virtual void WaitForTerminate() = 0;
     virtual void Stop() = 0;
   };
 

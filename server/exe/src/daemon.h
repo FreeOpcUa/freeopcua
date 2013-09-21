@@ -19,8 +19,11 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(Daemon);
 
   public:
-    Daemon(const char* logFile);
+    Daemon();
     ~Daemon();
+
+    void Daemonize(const char* logFile);
+    void WaitForTerminate();
   };
 
 } // namespace OpcUa
