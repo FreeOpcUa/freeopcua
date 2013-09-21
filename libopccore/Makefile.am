@@ -21,6 +21,7 @@ clientinclude_HEADERS = \
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \
+                  include/opc/common/application.h \
                   include/opc/common/class_pointers.h \
                   include/opc/common/errors.h \
                   include/opc/common/exception.h \
@@ -38,15 +39,18 @@ addons_HEADERS = \
                   include/opc/common/addons_core/addon.h \
                   include/opc/common/addons_core/addon_manager.h \
                   include/opc/common/addons_core/addon_parameters.h \
+                  include/opc/common/addons_core/config_file.h \
                   include/opc/common/addons_core/dynamic_addon.h \
                   include/opc/common/addons_core/dynamic_addon_factory.h \
                   include/opc/common/addons_core/errors.h
 
 lib_LTLIBRARIES = libopccore.la
 libopccore_la_SOURCES = \
+                  src/common/application.cpp \
                   src/common/object_id.cpp \
                   src/common/thread.cpp \
                   src/common/addons_core/addon_manager.cpp \
+                  src/common/addons_core/config_file.cpp \
                   src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/dynamic_addon_factory.cpp \
                   src/common/addons_core/dynamic_addon_factory.h \
@@ -87,6 +91,7 @@ common_test_LDFLAGS = -lcppunit -ldl
 
 common_gtest_SOURCES = \
   tests/test_addon_manager.cpp \
+  tests/test_config_file.cpp \
   tests/test_dynamic_addon.cpp \
   tests/test_dynamic_addon_factory.cpp \
   tests/test_dynamic_addon.h \
@@ -97,4 +102,7 @@ common_gtest_SOURCES = \
 common_gtest_CPPFLAGS =  -I/usr/include/libxml2 -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 common_gtest_LDADD = libopccore.la
 common_gtest_LDFLAGS = -lxml2 -lpthread -ldl -L$(top_builddir) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
+
+EXTRA_DIST = \
+  tests/configs/test.xml
 

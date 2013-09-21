@@ -110,8 +110,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsdir)" \
 	"$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopccore_la_LIBADD =
-am_libopccore_la_OBJECTS = libopccore_la-object_id.lo \
-	libopccore_la-thread.lo libopccore_la-addon_manager.lo \
+am_libopccore_la_OBJECTS = libopccore_la-application.lo \
+	libopccore_la-object_id.lo libopccore_la-thread.lo \
+	libopccore_la-addon_manager.lo libopccore_la-config_file.lo \
 	libopccore_la-errors_addon_manager.lo \
 	libopccore_la-dynamic_addon_factory.lo \
 	libopccore_la-dynamic_library.lo libopccore_la-value.lo \
@@ -123,6 +124,7 @@ libopccore_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(libopccore_la_LDFLAGS) $(LDFLAGS) -o $@
 am__EXEEXT_1 = common_gtest$(EXEEXT) common_test$(EXEEXT)
 am_common_gtest_OBJECTS = common_gtest-test_addon_manager.$(OBJEXT) \
+	common_gtest-test_config_file.$(OBJEXT) \
 	common_gtest-test_dynamic_addon.$(OBJEXT) \
 	common_gtest-test_dynamic_addon_factory.$(OBJEXT) \
 	common_gtest-test_uri.$(OBJEXT) \
@@ -327,6 +329,7 @@ clientinclude_HEADERS = \
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \
+                  include/opc/common/application.h \
                   include/opc/common/class_pointers.h \
                   include/opc/common/errors.h \
                   include/opc/common/exception.h \
@@ -343,15 +346,18 @@ addons_HEADERS = \
                   include/opc/common/addons_core/addon.h \
                   include/opc/common/addons_core/addon_manager.h \
                   include/opc/common/addons_core/addon_parameters.h \
+                  include/opc/common/addons_core/config_file.h \
                   include/opc/common/addons_core/dynamic_addon.h \
                   include/opc/common/addons_core/dynamic_addon_factory.h \
                   include/opc/common/addons_core/errors.h
 
 lib_LTLIBRARIES = libopccore.la
 libopccore_la_SOURCES = \
+                  src/common/application.cpp \
                   src/common/object_id.cpp \
                   src/common/thread.cpp \
                   src/common/addons_core/addon_manager.cpp \
+                  src/common/addons_core/config_file.cpp \
                   src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/dynamic_addon_factory.cpp \
                   src/common/addons_core/dynamic_addon_factory.h \
@@ -375,6 +381,7 @@ common_test_LDADD = libopccore.la
 common_test_LDFLAGS = -lcppunit -ldl 
 common_gtest_SOURCES = \
   tests/test_addon_manager.cpp \
+  tests/test_config_file.cpp \
   tests/test_dynamic_addon.cpp \
   tests/test_dynamic_addon_factory.cpp \
   tests/test_dynamic_addon.h \
@@ -385,6 +392,9 @@ common_gtest_SOURCES = \
 common_gtest_CPPFLAGS = -I/usr/include/libxml2 -I$(top_srcdir) -I$(top_srcdir)/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 common_gtest_LDADD = libopccore.la
 common_gtest_LDFLAGS = -lxml2 -lpthread -ldl -L$(top_builddir) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
+EXTRA_DIST = \
+  tests/configs/test.xml
+
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -496,6 +506,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_addon_manager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_config_file.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_dynamic_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_dynamic_addon_factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_gtest-test_uri.Po@am__quote@
@@ -504,7 +515,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-value_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-addon_manager.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-application.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-common_errors.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-config_file.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-dynamic_addon_factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-dynamic_library.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopccore_la-errors_addon_manager.Plo@am__quote@
@@ -535,6 +548,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
+libopccore_la-application.lo: src/common/application.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-application.lo -MD -MP -MF $(DEPDIR)/libopccore_la-application.Tpo -c -o libopccore_la-application.lo `test -f 'src/common/application.cpp' || echo '$(srcdir)/'`src/common/application.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-application.Tpo $(DEPDIR)/libopccore_la-application.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/application.cpp' object='libopccore_la-application.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-application.lo `test -f 'src/common/application.cpp' || echo '$(srcdir)/'`src/common/application.cpp
+
 libopccore_la-object_id.lo: src/common/object_id.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-object_id.lo -MD -MP -MF $(DEPDIR)/libopccore_la-object_id.Tpo -c -o libopccore_la-object_id.lo `test -f 'src/common/object_id.cpp' || echo '$(srcdir)/'`src/common/object_id.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-object_id.Tpo $(DEPDIR)/libopccore_la-object_id.Plo
@@ -555,6 +575,13 @@ libopccore_la-addon_manager.lo: src/common/addons_core/addon_manager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/addon_manager.cpp' object='libopccore_la-addon_manager.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-addon_manager.lo `test -f 'src/common/addons_core/addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/addon_manager.cpp
+
+libopccore_la-config_file.lo: src/common/addons_core/config_file.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-config_file.lo -MD -MP -MF $(DEPDIR)/libopccore_la-config_file.Tpo -c -o libopccore_la-config_file.lo `test -f 'src/common/addons_core/config_file.cpp' || echo '$(srcdir)/'`src/common/addons_core/config_file.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopccore_la-config_file.Tpo $(DEPDIR)/libopccore_la-config_file.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/common/addons_core/config_file.cpp' object='libopccore_la-config_file.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopccore_la-config_file.lo `test -f 'src/common/addons_core/config_file.cpp' || echo '$(srcdir)/'`src/common/addons_core/config_file.cpp
 
 libopccore_la-errors_addon_manager.lo: src/common/addons_core/errors_addon_manager.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopccore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopccore_la-errors_addon_manager.lo -MD -MP -MF $(DEPDIR)/libopccore_la-errors_addon_manager.Tpo -c -o libopccore_la-errors_addon_manager.lo `test -f 'src/common/addons_core/errors_addon_manager.cpp' || echo '$(srcdir)/'`src/common/addons_core/errors_addon_manager.cpp
@@ -618,6 +645,20 @@ common_gtest-test_addon_manager.obj: tests/test_addon_manager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_addon_manager.cpp' object='common_gtest-test_addon_manager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_addon_manager.obj `if test -f 'tests/test_addon_manager.cpp'; then $(CYGPATH_W) 'tests/test_addon_manager.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_addon_manager.cpp'; fi`
+
+common_gtest-test_config_file.o: tests/test_config_file.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_config_file.o -MD -MP -MF $(DEPDIR)/common_gtest-test_config_file.Tpo -c -o common_gtest-test_config_file.o `test -f 'tests/test_config_file.cpp' || echo '$(srcdir)/'`tests/test_config_file.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_config_file.Tpo $(DEPDIR)/common_gtest-test_config_file.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_config_file.cpp' object='common_gtest-test_config_file.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_config_file.o `test -f 'tests/test_config_file.cpp' || echo '$(srcdir)/'`tests/test_config_file.cpp
+
+common_gtest-test_config_file.obj: tests/test_config_file.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_config_file.obj -MD -MP -MF $(DEPDIR)/common_gtest-test_config_file.Tpo -c -o common_gtest-test_config_file.obj `if test -f 'tests/test_config_file.cpp'; then $(CYGPATH_W) 'tests/test_config_file.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_config_file.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/common_gtest-test_config_file.Tpo $(DEPDIR)/common_gtest-test_config_file.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/test_config_file.cpp' object='common_gtest-test_config_file.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_gtest-test_config_file.obj `if test -f 'tests/test_config_file.cpp'; then $(CYGPATH_W) 'tests/test_config_file.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/test_config_file.cpp'; fi`
 
 common_gtest-test_dynamic_addon.o: tests/test_dynamic_addon.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_gtest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT common_gtest-test_dynamic_addon.o -MD -MP -MF $(DEPDIR)/common_gtest-test_dynamic_addon.Tpo -c -o common_gtest-test_dynamic_addon.o `test -f 'tests/test_dynamic_addon.cpp' || echo '$(srcdir)/'`tests/test_dynamic_addon.cpp

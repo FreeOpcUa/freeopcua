@@ -33,6 +33,8 @@ namespace Common
     AddonParameters Parameters;
   };
 
+  typedef std::vector<Common::AddonConfiguration> ModulesConfiguration;
+
   class AddonsManager : private Interface
   {
   public:

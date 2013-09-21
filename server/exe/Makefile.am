@@ -16,8 +16,6 @@ bin_PROGRAMS = opcuaserver
 opcuaserver_SOURCES = \
   src/daemon.cpp \
   src/daemon.h \
-  src/server.cpp \
-  src/server.h \
   src/server_main.cpp \
   src/server_options.cpp \
   src/server_options.h
@@ -39,7 +37,6 @@ EXTRA_DIST = \
   configs/server.config \
   configs/opcuaserver.conf \
   tests/configs/endpoints.xml \
-  tests/configs/test.xml \
   tests/configs/test_addon.config \
   tests/configs/test_tcp_server.xml \
   tests/common.cpp \
@@ -63,7 +60,6 @@ TESTS=test_opcuaserver
 check_PROGRAMS=$(TESTS)
 
 test_opcuaserver_SOURCES = \
-  src/server.cpp \
   src/server_options.cpp \
   tests/test_server_options.cpp
 

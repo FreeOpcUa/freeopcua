@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "server.h"
+#include <opc/common/application.h>
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
