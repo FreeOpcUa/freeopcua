@@ -20,12 +20,43 @@
 #include <syslog.h>
 #include <string.h>
 
+#include <mutex>
+#include <condition_variable>
+#include <iostream>
+#include <signal.h>
+
+namespace
+{
+
+  std::mutex ExitMutex;
+  std::condition_variable ExitEvent;
+
+  void TerminateSignal(int signum)
+  {
+    std::cout << "terminating.." << std::endl;
+    ExitEvent.notify_all();
+  }
+
+}
 
 namespace OpcUa
 {
-
-  Daemon::Daemon(const char* logFile)
+  Daemon::Daemon()
   {
+
+  }
+
+  Daemon::~Daemon()
+  {
+  }
+
+  void Daemon::Daemonize(const char* logFile)
+  {
+    if (!logFile)
+    {
+      return;
+    }
+
     pid_t pid, sid;
 
     pid = fork();
@@ -53,12 +84,25 @@ namespace OpcUa
 
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
-    close(STDERR_FILENO);    
+    close(STDERR_FILENO);
   }
 
-  Daemon::~Daemon()
+  void Daemon::WaitForTerminate()
   {
+    std::unique_lock<std::mutex> lock(ExitMutex);
+    if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
+    {
+      std::cout << "unable to set SIGTERM handler" << std::endl;
+    }
+    if (signal(SIGINT, TerminateSignal) == SIG_ERR)
+    {
+      std::cout << "unable to set SIGINT handler" << std::endl;
+    }
+    if (signal(SIGSTOP, TerminateSignal) == SIG_ERR)
+    {
+      std::cout << "unable to set SIGSTOP handler" << std::endl;
+    }
+    ExitEvent.wait(lock);
   }
-
 }
 
