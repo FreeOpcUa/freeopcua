@@ -22,8 +22,6 @@ namespace OpcUa
   namespace Server
   {
 
-    typedef std::vector<Common::AddonConfiguration> ModulesConfiguration;
-
     class CommandLine
     {
     public:
@@ -33,11 +31,13 @@ namespace OpcUa
       {
         return StartPossible;
       }
+
       bool IsDaemonMode() const
       {
         return IsDaemon;
       }
-      ModulesConfiguration GetModules()
+
+      Common::ModulesConfiguration GetModules()
       {
         return Modules;
       }
@@ -45,7 +45,7 @@ namespace OpcUa
     private:
       bool StartPossible;
       bool IsDaemon;
-      ModulesConfiguration Modules;
+      Common::ModulesConfiguration Modules;
     };
 
   }
