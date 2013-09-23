@@ -27,6 +27,7 @@
 
 
 
+
 VPATH = @srcdir@
 am__make_dryrun = \
   { \
@@ -108,11 +109,12 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(uaclientincludedir)"
+	"$(DESTDIR)$(configdir)" "$(DESTDIR)$(uaclientincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_client_la_LIBADD =
-am_libopcua_client_la_OBJECTS = computer.lo binary_computer.lo \
-	binary_connection.lo binary_secure_channel.lo
+am_libopcua_client_la_OBJECTS = computer.lo binary_computer_addon.lo \
+	binary_computer.lo binary_connection.lo \
+	binary_secure_channel.lo
 libopcua_client_la_OBJECTS = $(am_libopcua_client_la_OBJECTS)
 libopcua_client_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -121,7 +123,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
 opcua_OBJECTS = $(am_opcua_OBJECTS)
-opcua_DEPENDENCIES = libopcua_client.la
+opcua_LDADD = $(LDADD)
 opcua_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(opcua_LDFLAGS) $(LDFLAGS) -o $@
@@ -154,6 +156,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+DATA = $(config_DATA)
 HEADERS = $(uaclientinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -182,6 +185,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CLIENT_CONFIG_PATH = @CLIENT_CONFIG_PATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -302,6 +306,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_srcdir) -Iinclude -I$(top_srcdir)/common/include $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/client/tests
+configdir = $(sysconfdir)/opcua
+config_DATA = configs/client.modules
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 uaclientincludedir = $(opcuaincludedir)/client
@@ -314,6 +320,7 @@ uaclientinclude_HEADERS = \
 lib_LTLIBRARIES = libopcua_client.la
 libopcua_client_la_SOURCES = \
   src/computer.cpp \
+  src/binary_computer_addon.cpp \
   src/binary_computer.cpp \
   src/binary_connection.cpp \
   src/binary_secure_channel.cpp \
@@ -329,8 +336,7 @@ opcua_SOURCES = \
   src/opcua_options.cpp \
   src/opcua_options.h
 
-opcua_LDADD = libopcua_client.la 
-opcua_CPPFLAGS = $(INCLUDES)
+opcua_CPPFLAGS = $(INCLUDES) $(CLIENT_CONFIG_PATH)
 opcua_LDFLAGS = $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -477,6 +483,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_computer_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_connection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binary_secure_channel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computer.Plo@am__quote@
@@ -510,6 +517,13 @@ computer.lo: src/computer.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/computer.cpp' object='computer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o computer.lo `test -f 'src/computer.cpp' || echo '$(srcdir)/'`src/computer.cpp
+
+binary_computer_addon.lo: src/binary_computer_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer_addon.lo -MD -MP -MF $(DEPDIR)/binary_computer_addon.Tpo -c -o binary_computer_addon.lo `test -f 'src/binary_computer_addon.cpp' || echo '$(srcdir)/'`src/binary_computer_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/binary_computer_addon.Tpo $(DEPDIR)/binary_computer_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/binary_computer_addon.cpp' object='binary_computer_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o binary_computer_addon.lo `test -f 'src/binary_computer_addon.cpp' || echo '$(srcdir)/'`src/binary_computer_addon.cpp
 
 binary_computer.lo: src/binary_computer.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT binary_computer.lo -MD -MP -MF $(DEPDIR)/binary_computer.Tpo -c -o binary_computer.lo `test -f 'src/binary_computer.cpp' || echo '$(srcdir)/'`src/binary_computer.cpp
@@ -568,6 +582,27 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
+install-configDATA: $(config_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(configdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(configdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(configdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(configdir)" || exit $$?; \
+	done
+
+uninstall-configDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(configdir)'; $(am__uninstall_files_from_dir)
 install-uaclientincludeHEADERS: $(uaclientinclude_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(uaclientinclude_HEADERS)'; test -n "$(uaclientincludedir)" || list=; \
@@ -806,11 +841,12 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
+		config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(uaclientincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" "$(DESTDIR)$(uaclientincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -867,7 +903,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-uaclientincludeHEADERS
+install-data-am: install-configDATA install-uaclientincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -915,8 +951,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
-	uninstall-uaclientincludeHEADERS
+uninstall-am: uninstall-binPROGRAMS uninstall-configDATA \
+	uninstall-libLTLIBRARIES uninstall-uaclientincludeHEADERS
 
 .MAKE: all install-am install-strip
 
@@ -927,17 +963,18 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	distcheck distclean distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
+	info-am install install-am install-binPROGRAMS \
+	install-configDATA install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip \
 	install-uaclientincludeHEADERS installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
-	uninstall-uaclientincludeHEADERS
+	uninstall-am uninstall-binPROGRAMS uninstall-configDATA \
+	uninstall-libLTLIBRARIES uninstall-uaclientincludeHEADERS
 
 
 #TESTS = libuaclient_test

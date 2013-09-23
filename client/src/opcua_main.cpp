@@ -11,9 +11,17 @@
 
 #include "opcua_options.h"
 
-#include <opc/ua/client/remote_computer.h>
+#include <opc/ua/client/addon.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/config_file.h>
+#include <opc/common/application.h>
+#include <opc/common/uri_facade.h>
 
 #include <stdexcept>
+
+#ifndef CLIENT_CONFIG_PATH
+#define CLIENT_CONFIG_PATH "/etc/opcua/client.modules"
+#endif
 
 namespace
 {
@@ -552,12 +560,12 @@ namespace
     std::cout << "RevizedMaxKeepAliveCount: " << data.RevizedMaxKeepAliveCount << std::endl;
   }
 
-  void Process(int argc, char** argv)
+  void Process(OpcUa::CommandLine& cmd, const Common::AddonsManager& addons)
   {
-    OpcUa::CommandLine cmd(argc, argv);
-
     const std::string serverURI = cmd.GetServerURI();
-    std::shared_ptr<OpcUa::Remote::Computer> computer = OpcUa::Remote::Connect(serverURI);
+    const Common::Uri uri(serverURI);
+    OpcUa::Client::Addon::SharedPtr addon = addons.GetAddon<OpcUa::Client::Addon>(uri.Scheme());
+    std::shared_ptr<OpcUa::Remote::Computer> computer = addon->Connect(serverURI);
 
     if (cmd.IsGetEndpointsOperation())
     {
@@ -618,7 +626,16 @@ int main(int argc, char** argv)
 {
   try
   {
-    Process(argc, argv);
+    OpcUa::CommandLine cmd(argc, argv);
+
+    OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
+    const Common::ModulesConfiguration& modules = Common::ParseConfigurationFile(CLIENT_CONFIG_PATH);
+    application->Start(modules);
+    const Common::AddonsManager& addons = application->GetAddonsManager();
+
+    Process(cmd, addons);
+
+    application->Stop();
     return 0;
   }
   catch (const std::exception& exc)

@@ -633,6 +633,7 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+CLIENT_CONFIG_PATH
 TEST_SERVER_URI
 OPC_CORE_INCLUDES
 OPC_CORE_LIBS
@@ -774,6 +775,7 @@ with_gmock
 with_ua_mappings
 with_libopccore
 with_testserver_uri
+with_config_path
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1428,6 +1430,8 @@ Optional Packages:
   --with-testserver-uri=uri
                           defines uri of the server for performing testing of
                           client.
+  --with-config-path      path to the modules configuration file. By default
+                          $sysconfdir/opcua/client.modules
 
 Some influential environment variables:
   CC          C compiler command
@@ -15084,6 +15088,21 @@ fi
 
 
 
+# Check whether --with-config-path was given.
+if test "${with_config_path+set}" = set; then :
+  withval=$with_config_path;
+
+              CLIENT_CONFIG_PATH="-DCLIENT_CONFIG_PATH=\"\\\"$with_config_path\\\"\""
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: Modules configuration file: $CLIENT_CONFIG_PATH" >&5
+$as_echo "$as_me: Modules configuration file: $CLIENT_CONFIG_PATH" >&6;}
+
+else
+
+              CLIENT_CONFIG_PATH="-DCLIENT_CONFIG_PATH=\"\\\"$sysconfdir/opcua/client.modules\\\"\""
+
+
+fi
 
 
 #check headers

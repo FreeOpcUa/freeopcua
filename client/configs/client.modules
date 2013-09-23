@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+
+    <module>
+      <id>opc.tcp</id>
+      <path>libopcua_client.so</path>
+    </module>
+
+  </modules>
+</config>
+

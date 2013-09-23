@@ -74,8 +74,16 @@ AC_ARG_WITH([testserver-uri],
             [ 
             ])
 
-
-
+AC_ARG_WITH([config-path], 
+            [AS_HELP_STRING([--with-config-path], [path to the modules configuration file. By default $sysconfdir/opcua/client.modules])],
+            [ 
+              AC_SUBST(CLIENT_CONFIG_PATH)
+              AC_SUBST([CLIENT_CONFIG_PATH], ["-DCLIENT_CONFIG_PATH=\"\\\"$with_config_path]\\\"\"")
+              AC_MSG_NOTICE([Modules configuration file: $CLIENT_CONFIG_PATH]) 
+            ], 
+            [ 
+              AC_SUBST([CLIENT_CONFIG_PATH], ["-DCLIENT_CONFIG_PATH=\"\\\"$sysconfdir/opcua/client.modules\\\"\""])
+            ])
 
 #check headers
 AC_CHECK_HEADERS([unistd.h])

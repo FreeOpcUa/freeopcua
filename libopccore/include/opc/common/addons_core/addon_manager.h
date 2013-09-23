@@ -59,6 +59,15 @@ namespace Common
     /// @throws if addon is not registered or not initialized yet.
     virtual std::shared_ptr<Addon> GetAddon(const AddonID& id) const = 0;
 
+    /// @brief Get instance of addon
+    /// @return instance of addon casted to specified type
+    /// @throws if unable to cast addon, unable to find addon, or in casr of error
+    template <class AddonClass>
+    typename std::shared_ptr<AddonClass> GetAddon(const AddonID& id) const;
+
+    template <class AddonClass>
+    typename std::shared_ptr<AddonClass> GetAddon(const char* id) const;
+
     /// @brief starting work.
     /// creates all addons and initializes them.
     /// @throws if not all addons dependencies can be resolved.
@@ -75,19 +84,16 @@ namespace Common
   /// When all smart pointers are gone addons manager deletes.
   AddonsManager::UniquePtr CreateAddonsManager();
 
-  /// @brief Get instance of addon
-  /// @return instance od addon casted to specified type
-  /// @throws if unable to cast addon, unable to find addon, or in casr of error
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(const AddonsManager& addons, const AddonID& id)
+  typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const AddonID& id) const
   {
-    return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
+    return std::dynamic_pointer_cast<AddonClass>(GetAddon(id));
   }
 
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> GetAddon(const AddonsManager& addons, const char* id)
+  typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const char* id) const
   {
-    return std::dynamic_pointer_cast<AddonClass>(addons.GetAddon(id));
+    return std::dynamic_pointer_cast<AddonClass>(GetAddon(id));
   }
 
 } // namespace Common

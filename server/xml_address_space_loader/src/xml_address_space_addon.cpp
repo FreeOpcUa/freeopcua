@@ -20,7 +20,7 @@ namespace OpcUa
 
     void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      Registry = Common::GetAddon<Server::AddressSpaceRegistry>(addons, Server::AddressSpaceRegistryAddonID);
+      Registry = addons.GetAddon<Server::AddressSpaceRegistry>(Server::AddressSpaceRegistryAddonID);
       if (!Registry)
       {
         std::stringstream stream;
