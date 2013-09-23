@@ -63,7 +63,7 @@ TEST_F(OpcUaProtocolAddonTest, Loads)
 
 TEST_F(OpcUaProtocolAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   ASSERT_TRUE(static_cast<bool>(computer));
@@ -72,7 +72,7 @@ TEST_F(OpcUaProtocolAddonTest, CanGetComputerWhichOpensAndClosesSecureChannel)
 
 TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
@@ -84,7 +84,7 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 
 TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::ApplicationDescription> servers;
@@ -96,7 +96,7 @@ TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 
 TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::ViewServices> views = computer->Views();
 
@@ -116,7 +116,7 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 
 TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
 
   OpcUa::Remote::SessionParameters session;
@@ -134,7 +134,7 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 
 TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
 {
-  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Common::GetAddon<OpcUa::Server::BuiltinServerAddon>(*Addons, OpcUa::Server::TcpServerAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServerAddon> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServerAddon>(OpcUa::Server::TcpServerAddonID);
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::SubscriptionServices> subscriptions = computer->Subscriptions();
 

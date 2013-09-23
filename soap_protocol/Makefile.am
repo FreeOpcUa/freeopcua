@@ -11,7 +11,7 @@
 
 Bindings.h:
 	wsdl2h Bindings.wsdl -o Bindings.h || test true
-	soapcpp2 -2 -j -S -w -x Bindings.h || test true
+	soapcpp2 -2 -j -w -x Bindings.h || test true
 
 soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp: Bindings.h
 soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp: Bindings.h

@@ -50,7 +50,7 @@ namespace OpcUa
       {
         if (Thread)
         {
-          Service.soap_close_socket();
+          soap_force_closesock(Service.soap);
           Thread->Join();
           Thread.reset();
         }

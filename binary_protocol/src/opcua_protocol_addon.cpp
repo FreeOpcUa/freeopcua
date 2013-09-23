@@ -74,8 +74,8 @@ void OpcUaProtocol::ApplyAddonParameters(const Common::AddonParameters& params)
 
 void OpcUaProtocol::StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons)
 {
-  InternalComputer = Common::GetAddon<OpcUa::Server::ServicesRegistryAddon>(addons, OpcUa::Server::ServicesRegistryAddonID);
-  TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
+  InternalComputer = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
+  TcpAddon = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
   for (const EndpointDescription endpoint : endpoints)
   {
     const Common::Uri uri(endpoint.EndpointURL);
@@ -93,7 +93,7 @@ void OpcUaProtocol::StartEndpoints(std::vector<EndpointDescription> endpoints, C
 
 void OpcUaProtocol::PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const
 {
-  std::shared_ptr<EndpointsServicesAddon> endpointsAddon = Common::GetAddon<EndpointsServicesAddon>(addons, EndpointsServicesAddonID);
+  std::shared_ptr<EndpointsServicesAddon> endpointsAddon = addons.GetAddon<EndpointsServicesAddon>(EndpointsServicesAddonID);
   if (!endpointsAddon)
   {
     std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;

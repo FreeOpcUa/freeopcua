@@ -61,7 +61,7 @@ void EndpointsAddon::Initialize(Common::AddonsManager& addons, const Common::Add
   ApplyAddonParameters(params);
 
   Services.reset(new EndpointsImpl());
-  InternalComputer = Common::GetAddon<ServicesRegistryAddon>(addons, ServicesRegistryAddonID);
+  InternalComputer = addons.GetAddon<ServicesRegistryAddon>(ServicesRegistryAddonID);
   InternalComputer->RegisterEndpointsServices(Services);
 
   const std::vector<OpcUa::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);

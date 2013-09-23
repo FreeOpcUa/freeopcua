@@ -52,7 +52,7 @@ namespace
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
       std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor(new EchoProcessor());
-      TcpAddon = Common::GetAddon<OpcUa::Server::TcpServerAddon>(addons, OpcUa::Server::TcpServerAddonID);
+      TcpAddon = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
       OpcUa::Server::TcpParameters tcpParams;
       tcpParams.Port = ++TestPort;
 

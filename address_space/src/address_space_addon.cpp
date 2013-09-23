@@ -29,7 +29,7 @@ namespace OpcUa
 
     void AddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      InternalComputer = Common::GetAddon<OpcUa::Server::ServicesRegistryAddon>(addons, OpcUa::Server::ServicesRegistryAddonID);
+      InternalComputer = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
       InternalComputer->RegisterViewServices(Registry);
       InternalComputer->RegisterAttributeServices(Registry);
     }

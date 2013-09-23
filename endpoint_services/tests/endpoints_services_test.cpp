@@ -43,7 +43,7 @@ TEST_F(EndpointsRegistry, CanBeCreated)
 {
   OpcUa::Server::EndpointsServicesAddon::SharedPtr endpoints;
 
-  ASSERT_NO_THROW(endpoints = Common::GetAddon<OpcUa::Server::EndpointsServicesAddon>(*Addons, OpcUa::Server::EndpointsServicesAddonID));
+  ASSERT_NO_THROW(endpoints = Addons->GetAddon<OpcUa::Server::EndpointsServicesAddon>(OpcUa::Server::EndpointsServicesAddonID));
   ASSERT_TRUE(static_cast<bool>(endpoints));
 }
 
@@ -52,10 +52,10 @@ TEST_F(EndpointsRegistry, RegisterEndpoints)
   OpcUa::EndpointDescription desc;
   desc.EndpointURL = "url";
 
-  OpcUa::Server::EndpointsServicesAddon::SharedPtr endpoints = Common::GetAddon<OpcUa::Server::EndpointsServicesAddon>(*Addons, OpcUa::Server::EndpointsServicesAddonID);
+  OpcUa::Server::EndpointsServicesAddon::SharedPtr endpoints = Addons->GetAddon<OpcUa::Server::EndpointsServicesAddon>(OpcUa::Server::EndpointsServicesAddonID);
   endpoints->AddEndpoints(std::vector<OpcUa::EndpointDescription>(1, desc));
 
-  OpcUa::Server::ServicesRegistryAddon::SharedPtr services = Common::GetAddon<OpcUa::Server::ServicesRegistryAddon>(*Addons, OpcUa::Server::ServicesRegistryAddonID);
+  OpcUa::Server::ServicesRegistryAddon::SharedPtr services = Addons->GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
   OpcUa::Remote::Computer::SharedPtr computer = services->GetComputer();
   std::vector<OpcUa::EndpointDescription> descriptions;
   ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::EndpointsFilter()));

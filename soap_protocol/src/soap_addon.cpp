@@ -100,7 +100,7 @@ void SoapAddon::StartEndpoints(std::vector<EndpointDescription> endpoints, Commo
 
 void SoapAddon::PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const
 {
-  std::shared_ptr<EndpointsServicesAddon> endpointsAddon = Common::GetAddon<EndpointsServicesAddon>(addons, EndpointsServicesAddonID);
+  std::shared_ptr<EndpointsServicesAddon> endpointsAddon = addons.GetAddon<EndpointsServicesAddon>(EndpointsServicesAddonID);
   if (!endpointsAddon)
   {
     std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
