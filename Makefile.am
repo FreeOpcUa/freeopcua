@@ -8,6 +8,10 @@ EXTRA_DIST = \
   Makefile.in \
   setup.py
 
+
+all:
+	python setup.py build
+
 check:
 	$(MAKE) -C tests check
 	
