@@ -100,6 +100,14 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
+libopcua_soap_client_la_LIBADD =
+am_libopcua_soap_client_la_OBJECTS = soap_client_addon.lo
+libopcua_soap_client_la_OBJECTS =  \
+	$(am_libopcua_soap_client_la_OBJECTS)
+libopcua_soap_client_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libopcua_soap_client_la_LDFLAGS) $(LDFLAGS) -o \
+	$@
 libopcua_soap_server_la_LIBADD =
 am_libopcua_soap_server_la_OBJECTS =  \
 	libopcua_soap_server_la-discovery_service.lo \
@@ -139,8 +147,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libopcua_soap_server_la_SOURCES)
-DIST_SOURCES = $(libopcua_soap_server_la_SOURCES)
+SOURCES = $(libopcua_soap_client_la_SOURCES) \
+	$(libopcua_soap_server_la_SOURCES)
+DIST_SOURCES = $(libopcua_soap_client_la_SOURCES) \
+	$(libopcua_soap_server_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -291,7 +301,7 @@ INCLUDES = \
   $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-lib_LTLIBRARIES = libopcua_soap_server.la
+lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 libopcua_soap_server_la_SOURCES = \
   src/discovery_service.cpp \
   src/discovery_service.h \
@@ -309,15 +319,23 @@ libopcua_soap_server_la_SOURCES = \
   soapC.cpp
 
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL
-libopcua_soap_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -lgsoap -lgsoap++ -Wl,--no-undefined
+libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
+libopcua_soap_client_la_SOURCES = src/soap_client_addon.cpp
+libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
 CLEANFILES = \
   Bindings.h \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.h \
+  soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.h \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.h \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.h \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.h \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.h \
   soapC.cpp \
   soapH.h \
   soapStub.h \
@@ -390,6 +408,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+libopcua_soap_client.la: $(libopcua_soap_client_la_OBJECTS) $(libopcua_soap_client_la_DEPENDENCIES) $(EXTRA_libopcua_soap_client_la_DEPENDENCIES) 
+	$(libopcua_soap_client_la_LINK) -rpath $(libdir) $(libopcua_soap_client_la_OBJECTS) $(libopcua_soap_client_la_LIBADD) $(LIBS)
 libopcua_soap_server.la: $(libopcua_soap_server_la_OBJECTS) $(libopcua_soap_server_la_DEPENDENCIES) $(EXTRA_libopcua_soap_server_la_DEPENDENCIES) 
 	$(libopcua_soap_server_la_LINK) -rpath $(libdir) $(libopcua_soap_server_la_OBJECTS) $(libopcua_soap_server_la_LIBADD) $(LIBS)
 
@@ -408,6 +428,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soap_client_addon.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -429,6 +450,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+soap_client_addon.lo: src/soap_client_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soap_client_addon.lo -MD -MP -MF $(DEPDIR)/soap_client_addon.Tpo -c -o soap_client_addon.lo `test -f 'src/soap_client_addon.cpp' || echo '$(srcdir)/'`src/soap_client_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soap_client_addon.Tpo $(DEPDIR)/soap_client_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/soap_client_addon.cpp' object='soap_client_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soap_client_addon.lo `test -f 'src/soap_client_addon.cpp' || echo '$(srcdir)/'`src/soap_client_addon.cpp
 
 libopcua_soap_server_la-discovery_service.lo: src/discovery_service.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-discovery_service.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-discovery_service.Tpo -c -o libopcua_soap_server_la-discovery_service.lo `test -f 'src/discovery_service.cpp' || echo '$(srcdir)/'`src/discovery_service.cpp
@@ -711,10 +739,13 @@ Bindings.h:
 	wsdl2h Bindings.wsdl -o Bindings.h || test true
 	soapcpp2 -2 -j -w -x Bindings.h || test true
 
-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp: Bindings.h
-soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp: Bindings.h
-soapBasicHttpBinding_USCOREISessionEndpointService.cpp: Bindings.h
-soapC.cpp: Bindings.h
+soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp,\
+soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp,\
+soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp,\
+soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
+soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
+soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
+soapC.cpp,\
 src/discovery_service.cpp: Bindings.h
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

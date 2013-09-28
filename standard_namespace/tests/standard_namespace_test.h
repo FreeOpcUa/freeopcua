@@ -22,7 +22,7 @@ namespace OpcUa
 
     void RegisterStandardNamespace(Common::AddonsManager& addons)
     {
-      Common::AddonConfiguration config;
+      Common::AddonInformation config;
       config.Factory.reset(new OpcUa::Internal::StandardNamespaceAddonFactory());
       config.ID = OpcUa::Internal::StandardNamespaceAddonID;
       config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonID);

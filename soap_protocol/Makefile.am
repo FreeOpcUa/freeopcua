@@ -13,10 +13,13 @@ Bindings.h:
 	wsdl2h Bindings.wsdl -o Bindings.h || test true
 	soapcpp2 -2 -j -w -x Bindings.h || test true
 
-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp: Bindings.h
-soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp: Bindings.h
-soapBasicHttpBinding_USCOREISessionEndpointService.cpp: Bindings.h
-soapC.cpp: Bindings.h
+soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp,\
+soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp,\
+soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp,\
+soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
+soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
+soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
+soapC.cpp,\
 src/discovery_service.cpp: Bindings.h
 
 opcincludedir = $(includedir)/opc
@@ -35,7 +38,7 @@ INCLUDES= \
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
-lib_LTLIBRARIES = libopcua_soap_server.la
+lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 
 libopcua_soap_server_la_SOURCES = \
   src/discovery_service.cpp \
@@ -54,16 +57,26 @@ libopcua_soap_server_la_SOURCES = \
   soapC.cpp
 
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL
-libopcua_soap_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) -lgsoap -lgsoap++ -Wl,--no-undefined
+libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
+
+
+libopcua_soap_client_la_SOURCES = src/soap_client_addon.cpp
+libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
 
 CLEANFILES= \
   Bindings.h \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.h \
+  soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.h \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.h \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.h \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.h \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.h \
   soapC.cpp \
   soapH.h \
   soapStub.h \

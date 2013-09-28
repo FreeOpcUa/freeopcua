@@ -72,7 +72,8 @@ namespace OpcUa
 
       IsDaemon = GetDaemonMode(vm);
       std::string configFile = GetConfigOptionValue(vm);
-      Modules = Common::ParseConfigurationFile(configFile);
+      const Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
+      std::transform(modules.begin(), modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
     }
 
   } // namespace Server
