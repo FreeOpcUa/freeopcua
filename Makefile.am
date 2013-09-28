@@ -20,6 +20,7 @@ SUBDIRS = \
           libopccore \
           libuamappings \
           client \
+          python \
           server
 
 EXTRA_DIST = third-party/gmock third-party/gtest configure.main

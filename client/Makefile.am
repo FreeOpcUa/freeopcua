@@ -20,6 +20,7 @@ opcuaincludedir = $(opcincludedir)/ua
 uaclientincludedir = $(opcuaincludedir)/client
 
 uaclientinclude_HEADERS = \
+  include/opc/ua/client/addon.h \
   include/opc/ua/client/binary_computer.h \
   include/opc/ua/client/remote_computer.h \
   include/opc/ua/client/remote_connection.h \
@@ -38,7 +39,7 @@ libopcua_client_la_SOURCES = \
   src/stream_subscription.h \
   src/stream_view.h
 
-libopcua_client_la_LDFLAGS =  $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread
+libopcua_client_la_LDFLAGS =  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lpthread
 
 bin_PROGRAMS = opcua
 
@@ -48,7 +49,7 @@ opcua_SOURCES = \
   src/opcua_options.h
 
 opcua_CPPFLAGS = $(INCLUDES) $(CLIENT_CONFIG_PATH)
-opcua_LDFLAGS =  $(URI_LIBS) $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
+opcua_LDFLAGS =  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
 
 #TESTS = libuaclient_test
 

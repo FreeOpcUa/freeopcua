@@ -23,7 +23,7 @@ TEST(LoadingAddon, TestAdon)
   ASSERT_NO_THROW(server->GetAddonsManager());
 
   OpcUa::Test::TestAddon::SharedPtr testAddon;
-  ASSERT_NO_THROW(testAddon = Common::GetAddon<OpcUa::Test::TestAddon>(server->GetAddonsManager(), OpcUa::Test::TestAddonID));
+  ASSERT_NO_THROW(testAddon = server->GetAddonsManager().GetAddon<OpcUa::Test::TestAddon>(OpcUa::Test::TestAddonID));
   ASSERT_NE(testAddon, OpcUa::Test::TestAddon::SharedPtr());
   const Common::AddonParameters params = testAddon->GetParameters();
   ASSERT_EQ(params.Parameters.size(), 1);

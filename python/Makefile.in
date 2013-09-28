@@ -326,6 +326,9 @@ uninstall-am:
 	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am
 
 
+all:
+	python setup.py build
+
 check:
 	$(MAKE) -C tests check
 

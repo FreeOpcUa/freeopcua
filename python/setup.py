@@ -16,7 +16,6 @@ cpp_flags = ['-std=c++11',
 libs = ['opccore',
         'opcuabinary',
         'opcua_client',
-        'uripp',
         'stdc++',
         'pthread',
         'boost_python']
@@ -24,8 +23,7 @@ libs = ['opccore',
 ldirs = [
             '../client/.libs',
             '../libopccore/.libs',
-            '../libuamappings/.libs',
-            '../third-party/uripp/src/.libs']
+            '../libuamappings/.libs']
 
 opcua_client = Extension(
     'opcua', 
