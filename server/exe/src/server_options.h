@@ -37,7 +37,7 @@ namespace OpcUa
         return IsDaemon;
       }
 
-      Common::ModulesConfiguration GetModules()
+      std::vector<Common::AddonInformation> GetModules()
       {
         return Modules;
       }
@@ -45,7 +45,7 @@ namespace OpcUa
     private:
       bool StartPossible;
       bool IsDaemon;
-      Common::ModulesConfiguration Modules;
+      std::vector<Common::AddonInformation> Modules;
     };
 
   }

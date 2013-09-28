@@ -27,7 +27,7 @@ namespace
     Common::AddonParameters Parameters;
     Common::Addon::SharedPtr Addon;
 
-    AddonData(const Common::AddonConfiguration& configuration)
+    AddonData(const Common::AddonInformation& configuration)
       : ID(configuration.ID)
       , Factory(configuration.Factory)
       , Dependencies(configuration.Dependencies)
@@ -86,7 +86,7 @@ namespace
       }
     }
 
-    virtual void Register(const Common::AddonConfiguration& addonConfiguration)
+    virtual void Register(const Common::AddonInformation& addonConfiguration)
     {
       // TODO lock manager
       if (ManagerStarted && !addonConfiguration.Dependencies.empty())

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -26,7 +26,7 @@ namespace
 TEST(AddonManager, CanCreateDynamicAddons)
 {
   AddonsManager::UniquePtr addonsManager = CreateAddonsManager();
-  AddonConfiguration config;
+  AddonInformation config;
   config.ID = OpcCoreTests::TestDynamicAddonID;
   config.Factory = Common::CreateDynamicAddonFactory(modulePath);
   Common::Parameter param;
@@ -39,7 +39,7 @@ TEST(AddonManager, CanCreateDynamicAddons)
   Addon::SharedPtr addon = addonsManager->GetAddon(OpcCoreTests::TestDynamicAddonID);
   ASSERT_TRUE(static_cast<bool>(addon));
 
-  OpcCoreTests::TestDynamicAddon::SharedPtr test = GetAddon<OpcCoreTests::TestDynamicAddon>(*addonsManager, OpcCoreTests::TestDynamicAddonID);
+  OpcCoreTests::TestDynamicAddon::SharedPtr test = addonsManager->GetAddon<OpcCoreTests::TestDynamicAddon>(OpcCoreTests::TestDynamicAddonID);
   ASSERT_TRUE(static_cast<bool>(test));
   ASSERT_EQ(test->GetStringWithHello(), "hello");
   Common::AddonParameters params = test->GetParameters();

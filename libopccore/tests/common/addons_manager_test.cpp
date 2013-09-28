@@ -141,13 +141,13 @@ void AddonsManagerTestCase::TestOneManager()
 {
   InitializedAddonsCount = 0;
 
-  Common::AddonConfiguration dmConfig;
+  Common::AddonInformation dmConfig;
   dmConfig.ID = DeviceManager::ManagerID;
   dmConfig.Factory = Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory);
   dmConfig.Dependencies = std::vector<Common::AddonID>(1, PropertyTree::ManagerID);
   CPPUNIT_ASSERT_NO_THROW(Addons->Register(dmConfig));
 
-  Common::AddonConfiguration ptConfig;
+  Common::AddonInformation ptConfig;
   ptConfig.ID = PropertyTree::ManagerID;
   ptConfig.Factory = Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory);
   CPPUNIT_ASSERT_NO_THROW(Addons->Register(ptConfig));
@@ -170,7 +170,7 @@ void AddonsManagerTestCase::TestTwoManagers()
 {
   InitializedAddonsCount = 0;
 
-  Common::AddonConfiguration dmConfig;
+  Common::AddonInformation dmConfig;
   dmConfig.ID = DeviceManager::ManagerID;
   dmConfig.Factory = Common::AddonFactory::UniquePtr(new DeviceIOManagerFactory);
   dmConfig.Dependencies = std::vector<Common::AddonID>(1, PropertyTree::ManagerID);
@@ -178,7 +178,7 @@ void AddonsManagerTestCase::TestTwoManagers()
   CPPUNIT_ASSERT_THROW(Addons->Register(dmConfig), Common::Error);
   CPPUNIT_ASSERT_THROW(Addons->GetAddon(DeviceManager::ManagerID), Common::Error);
 
-  Common::AddonConfiguration ptConfig;
+  Common::AddonInformation ptConfig;
   ptConfig.ID = PropertyTree::ManagerID;
   ptConfig.Factory = Common::AddonFactory::UniquePtr(new PropertyTreeAddonFactory);
   CPPUNIT_ASSERT_NO_THROW(Addons->Register(ptConfig));

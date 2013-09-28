@@ -23,7 +23,7 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(Application);
 
   public:
-    virtual void Start(const std::vector<Common::AddonConfiguration>& configuration) = 0;
+    virtual void Start(const std::vector<Common::AddonInformation>& configuration) = 0;
     virtual Common::AddonsManager& GetAddonsManager() = 0;
 
     virtual void Stop() = 0;

@@ -12,6 +12,7 @@
 #define __OPC_UA_CLIENT_SUBSCRIPTIONS_H
 
 #include <opc/common/interface.h>
+#include <opc/common/class_pointers.h>
 #include <opc/ua/protocol/subscriptions.h>
 
 namespace OpcUa
@@ -21,6 +22,9 @@ namespace OpcUa
 
     class SubscriptionServices : private Common::Interface
     {
+    public:
+      DEFINE_CLASS_POINTERS(SubscriptionServices);
+
     public:
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters) = 0;
     };

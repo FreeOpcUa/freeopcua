@@ -48,9 +48,9 @@ protected:
   }
 
 protected:
-  Common::AddonConfiguration CreateXmlAddressSpaceAddonConfig()
+  Common::AddonInformation CreateXmlAddressSpaceAddonConfig()
   {
-    Common::AddonConfiguration config;
+    Common::AddonInformation config;
     config.ID = OpcUa::Server::XmlAddressSpaceAddonID;
     config.Factory.reset(new OpcUa::Internal::XmlAddressSpaceAddonFactory());
     config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonID);

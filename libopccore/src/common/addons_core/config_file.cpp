@@ -57,7 +57,7 @@ namespace
 } // namespace
 
 
-Common::ModulesConfiguration Common::ParseConfigurationFile(const std::string& configPath)
+Common::ModulesConfiguration Common::ParseConfiguration(const std::string& configPath)
 {
   ptree pt;
   read_xml(configPath, pt);
@@ -72,10 +72,9 @@ Common::ModulesConfiguration Common::ParseConfigurationFile(const std::string& c
         continue;
       }
 
-      Common::AddonConfiguration moduleConfig;
+      Common::ModuleConfiguration moduleConfig;
       moduleConfig.ID = module.second.get<std::string>("id");
-      const std::string path = module.second.get<std::string>("path");
-      moduleConfig.Factory = Common::CreateDynamicAddonFactory(path.c_str());
+      moduleConfig.Path = module.second.get<std::string>("path");
       if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
       {
         BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
@@ -100,4 +99,30 @@ Common::ModulesConfiguration Common::ParseConfigurationFile(const std::string& c
     }
   }
   return configuration;
+}
+
+
+void Common::SaveConfiguration(const Common::ModulesConfiguration& configuration, const std::string& configPath)
+{
+  ptree pt;
+  pt.put("config.modules", "");
+/*
+  for (const auto configIt = configuration.begin(); configIt != configuration.end(); ++configIt)
+  {
+    const Common::AddonConfiguration& config = *configIt;
+
+    config.
+  }
+*/
+  write_xml(configPath, pt);
+}
+
+Common::AddonInformation Common::GetAddonInfomation(const Common::ModuleConfiguration& config)
+{
+  Common::AddonInformation info;
+  info.ID = config.ID;
+  info.Dependencies = config.Dependencies;
+  info.Parameters = config.Parameters;
+  info.Factory = Common::CreateDynamicAddonFactory(config.Path);
+  return info;
 }

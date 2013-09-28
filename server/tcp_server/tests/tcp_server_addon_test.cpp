@@ -86,18 +86,18 @@ namespace
   }
 
 
-  Common::AddonConfiguration CreateEchoAddonConfiguration()
+  Common::AddonInformation CreateEchoAddonConfiguration()
   {
-    Common::AddonConfiguration config;
+    Common::AddonInformation config;
     config.ID = "echo_addon";
     config.Factory =  CreateEchoAddonFactory();
     config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
     return config;
   }
 
-  Common::AddonConfiguration CreateTcpAddonConfig()
+  Common::AddonInformation CreateTcpAddonConfig()
   {
-    Common::AddonConfiguration tcpConfig;
+    Common::AddonInformation tcpConfig;
     tcpConfig.ID = OpcUa::Server::TcpServerAddonID;
     tcpConfig.Factory.reset(new OpcUa::Impl::TcpServerFactory());
     return tcpConfig;

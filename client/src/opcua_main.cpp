@@ -629,8 +629,10 @@ int main(int argc, char** argv)
     OpcUa::CommandLine cmd(argc, argv);
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
-    const Common::ModulesConfiguration& modules = Common::ParseConfigurationFile(CLIENT_CONFIG_PATH);
-    application->Start(modules);
+    const Common::ModulesConfiguration& modules = Common::ParseConfiguration(CLIENT_CONFIG_PATH);
+    std::vector<Common::AddonInformation> infos(modules.size());
+    std::transform(modules.begin(), modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
+    application->Start(infos);
     const Common::AddonsManager& addons = application->GetAddonsManager();
 
     Process(cmd, addons);

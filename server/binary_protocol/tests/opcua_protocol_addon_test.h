@@ -51,7 +51,7 @@ namespace OpcUa
 
     void RegisterOpcTcpAddon(Common::AddonsManager& addons)
     {
-      Common::AddonConfiguration opcTcp;
+      Common::AddonInformation opcTcp;
       opcTcp.Factory.reset(new OpcUa::Server::OpcUaProtocolFactory());
       opcTcp.ID = OpcUa::Server::OpcUaProtocolAddonID;
       opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsServicesAddonID);

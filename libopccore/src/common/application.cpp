@@ -23,7 +23,7 @@ namespace
   class OpcUaServer : public OpcUa::Application
   {
   public:
-    void Start(const std::vector<Common::AddonConfiguration>& addonConfigurations)
+    void Start(const std::vector<Common::AddonInformation>& addonInformation)
     {
       if (Addons.get())
       {
@@ -31,7 +31,7 @@ namespace
       }
 
       Addons = Common::CreateAddonsManager();
-      for (const Common::AddonConfiguration& config : addonConfigurations)
+      for (const Common::AddonInformation& config : addonInformation)
       {
         Addons->Register(config);
       }

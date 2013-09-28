@@ -25,15 +25,13 @@ namespace Common
   class Addon;
   class AddonFactory;
 
-  struct AddonConfiguration
+  struct AddonInformation
   {
     AddonID ID;
     std::shared_ptr<AddonFactory> Factory;
     std::vector<AddonID> Dependencies;
     AddonParameters Parameters;
   };
-
-  typedef std::vector<Common::AddonConfiguration> ModulesConfiguration;
 
   class AddonsManager : private Interface
   {
@@ -45,7 +43,7 @@ namespace Common
     /// @param addonConfiguration configuration of new addon.
     /// @throws if addon already redistered. If manager started thows if not all dependencies resolved.
     /// If manager already started addon will be immediately created and initialized.
-    virtual void Register(const AddonConfiguration& caddonConfiguration) = 0;
+    virtual void Register(const AddonInformation& caddonConfiguration) = 0;
 
     /// @brief unregister addon
     /// @param id id of unregistering addon

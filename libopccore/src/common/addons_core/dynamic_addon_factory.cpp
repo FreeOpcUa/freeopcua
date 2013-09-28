@@ -8,13 +8,31 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "dynamic_addon_factory.h"
+#include "dynamic_library.h"
 
 #include <opc/common/addons_core/errors.h>
+#include <opc/common/addons_core/dynamic_addon.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
+#include <opc/common/class_pointers.h>
 
 
-namespace Common
+namespace
 {
+  using namespace Common;
+
+  class DynamicAddonFactory : public AddonFactory
+  {
+  public:
+    DEFINE_CLASS_POINTERS(DynamicAddonFactory);
+
+  public:
+    DynamicAddonFactory(const std::string& modulePath);
+
+    virtual Addon::UniquePtr CreateAddon();
+
+  private:
+    DynamicLibrary Library;
+  };
 
   DynamicAddonFactory::DynamicAddonFactory(const std::string& modulePath)
     : Library(modulePath)
@@ -25,14 +43,9 @@ namespace Common
   {
     return Library.Find<CreateAddonFunc>("CreateAddon")();
   }
+}
 
-  Common::AddonFactory::UniquePtr CreateDynamicAddonFactory(const char* modulePath)
-  {
-    return Common::AddonFactory::UniquePtr(new DynamicAddonFactory(modulePath));
-  }
-
-  Common::AddonFactory::UniquePtr CreateDynamicAddonFactory(const std::string& modulePath)
-  {
-    return Common::AddonFactory::UniquePtr(new DynamicAddonFactory(modulePath));
-  }
+Common::AddonFactory::UniquePtr Common::CreateDynamicAddonFactory(const char* modulePath)
+{
+  return Common::AddonFactory::UniquePtr(new DynamicAddonFactory(modulePath));
 }
