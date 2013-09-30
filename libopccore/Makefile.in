@@ -370,7 +370,7 @@ libopccore_la_SOURCES = \
 
 libopccore_la_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I/usr/include/libxml2
 libopccore_la_LDFLAGS = -ldl -lpthread -lxml2
-CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
+CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o test_config.xml
 common_test_SOURCES = \
                   tests/common/error_test.cpp \
                   tests/common/main.cpp \

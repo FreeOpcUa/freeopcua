@@ -73,7 +73,7 @@ libtest_dynamic_addon.so: test_dynamic_addon.o
 
 all-local: libtest_dynamic_addon.so
 
-CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o
+CLEANFILES = libtest_dynamic_addon.so test_dynamic_addon.o test_config.xml
 
 TESTS = common_gtest common_test  
 

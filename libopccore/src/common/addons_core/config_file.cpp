@@ -102,18 +102,69 @@ Common::ModulesConfiguration Common::ParseConfiguration(const std::string& confi
 }
 
 
-void Common::SaveConfiguration(const Common::ModulesConfiguration& configuration, const std::string& configPath)
+namespace
+{
+  void AddDependencies(ptree& moduleTree, const std::vector<Common::AddonID>& ids)
+  {
+    if (ids.empty())
+    {
+      return;
+    }
+
+    ptree& deps = moduleTree.add("depends_on", "");
+    for (auto idIt = ids.begin(); idIt != ids.end(); ++idIt)
+    {
+      deps.add("id", *idIt);
+    }
+  }
+
+  void AddGroup(ptree& moduleTree, const Common::ParametersGroup& group)
+  {
+    ptree& groupTree = moduleTree.add(group.Name, "");
+    for (auto paramIt = group.Parameters.begin(); paramIt != group.Parameters.end(); ++paramIt)
+    {
+      groupTree.add(paramIt->Name, paramIt->Value);
+    }
+    for (auto groupIt = group.Groups.begin(); groupIt != group.Groups.end(); ++groupIt)
+    {
+      AddGroup(groupTree, *groupIt);
+    }
+  }
+
+  void AddParameters(ptree& moduleTree, const Common::AddonParameters& params, const char* groupName)
+  {
+    if (params.Parameters.empty() && params.Groups.empty())
+    {
+      return;
+    }
+
+    ptree& paramsTree = moduleTree.add(groupName, "");
+    for (auto paramIt = params.Parameters.begin(); paramIt != params.Parameters.end(); ++paramIt)
+    {
+      paramsTree.add(paramIt->Name, paramIt->Value);
+    }
+    for (auto groupIt = params.Groups.begin(); groupIt != params.Groups.end(); ++groupIt)
+    {
+      AddGroup(paramsTree, *groupIt);
+    }
+  }
+}
+
+void Common::SaveConfiguration(const Common::ModulesConfiguration& modules, const std::string& configPath)
 {
   ptree pt;
-  pt.put("config.modules", "");
-/*
-  for (const auto configIt = configuration.begin(); configIt != configuration.end(); ++configIt)
-  {
-    const Common::AddonConfiguration& config = *configIt;
+  ptree& modulesPt = pt.put("config.modules", "");
 
-    config.
+  for (auto configIt = modules.begin(); configIt != modules.end(); ++configIt)
+  {
+    ptree& moduleTree = modulesPt.add("module", "");
+    const Common::ModuleConfiguration& config = *configIt;
+    moduleTree.add("id", config.ID);
+    moduleTree.add("path", config.Path);
+    AddDependencies(moduleTree, config.Dependencies);
+    AddParameters(moduleTree, config.Parameters, "parameters");
   }
-*/
+
   write_xml(configPath, pt);
 }
 

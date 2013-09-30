@@ -52,9 +52,24 @@ TEST(ModulesConfiguration, SavesConfigurationFile)
   Common::ParametersGroup group;
   group.Name = "group";
   group.Parameters.push_back(Common::Parameter("parameter", "value"));
+  addon.Parameters.Parameters.push_back(Common::Parameter("parameter", "value"));
   addon.Parameters.Groups.push_back(group);
 
   Common::SaveConfiguration(Common::ModulesConfiguration({addon}), "test_config.xml");
-  const Common::ModulesConfiguration& config = Common::ParseConfiguration("test_config.xml");
-  //ASSERT_EQ(config.size(), 1);
+  const Common::ModulesConfiguration& modules = Common::ParseConfiguration("test_config.xml");
+  ASSERT_EQ(modules.size(), 1);
+  const Common::ModuleConfiguration& config = modules[0];
+  ASSERT_EQ(config.ID, "test_addon");
+  ASSERT_EQ(config.Path, "path");
+  ASSERT_EQ(config.Dependencies.size(), 2);
+  ASSERT_EQ(config.Dependencies[0], "id1");
+  ASSERT_EQ(config.Dependencies[1], "id2");
+  ASSERT_EQ(config.Parameters.Parameters.size(), 1);
+  ASSERT_EQ(config.Parameters.Parameters[0].Name, "parameter");
+  ASSERT_EQ(config.Parameters.Parameters[0].Value, "value");
+  ASSERT_EQ(config.Parameters.Groups.size(), 1);
+  ASSERT_EQ(config.Parameters.Groups[0].Name, "group");
+  ASSERT_EQ(config.Parameters.Groups[0].Parameters.size(), 1);
+  ASSERT_EQ(config.Parameters.Groups[0].Parameters[0].Name, "parameter");
+  ASSERT_EQ(config.Parameters.Groups[0].Parameters[0].Value, "value");
 }
