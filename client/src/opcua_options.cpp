@@ -4,7 +4,7 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
@@ -14,6 +14,9 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
+#ifndef CLIENT_CONFIG_PATH
+#define CLIENT_CONFIG_PATH "/etc/opcua/client.modules"
+#endif
 
 namespace
 {
@@ -27,6 +30,13 @@ namespace
   const char* OPTION_WRITE = "write";
   const char* OPTION_CREATE_SUBSCRIPTION = "create-subscription";
   const char* OPTION_FIND_SERVERS = "find-servers";
+  const char* OPTION_REGISTER_MODULE = "register-module";
+  const char* OPTION_UNREGISTER_MODULE = "unregister-module";
+
+  const char* OPTION_MODULE_ID = "id";
+  const char* OPTION_MODULE_PATH = "path";
+  const char* OPTION_CONFIG_FILE = "config-file";
+
   const char* OPTION_SERVER_URI = "uri";
   const char* OPTION_NAMESPACE_INDEX = "namespace-index";
   const char* OPTION_ATTRIBUTE = "attribute";
@@ -36,7 +46,7 @@ namespace
   const char* OPTION_NODE_ID_STRING = "node-id-string";
 
 
-  const char* OPTION_VALUE_BYTE  = "value-byte"; 
+  const char* OPTION_VALUE_BYTE  = "value-byte";
   const char* OPTION_VALUE_SBYTE = "value-sbyte";
   const char* OPTION_VALUE_UINT16 = "value-uint16";
   const char* OPTION_VALUE_INT16 = "value-int16";
@@ -203,16 +213,26 @@ namespace
       return vm[OPTION_VALUE_STRING].as<std::string>();
     }
     return Variant();
-  } 
+  }
 
-
- 
 }
 
 
 namespace OpcUa
 {
+
   CommandLine::CommandLine(int argc, char** argv)
+    : NamespaceIndex(0)
+    , Attribute(AttributeID::UNKNOWN)
+    , IsHelp(false)
+    , IsGetEndpoints(false)
+    , IsBrowse(false)
+    , IsRead(false)
+    , IsWrite(false)
+    , IsCreateSubscription(false)
+    , IsFindServers(false)
+    , IsAddModule(false)
+    , IsRemoveModule(false)
   {
     // Declare the supported options.
     po::options_description desc("Parameters");
@@ -224,6 +244,8 @@ namespace OpcUa
       (OPTION_WRITE, "write command.")
       (OPTION_CREATE_SUBSCRIPTION, "create subscription command.")
       (OPTION_FIND_SERVERS, "find servers command.")
+      (OPTION_REGISTER_MODULE, "Register new module.")
+      (OPTION_UNREGISTER_MODULE, "Unregister module.")
 
       (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
@@ -241,20 +263,27 @@ namespace OpcUa
       (OPTION_VALUE_INT64, po::value<int64_t>(), "Int64 value.")
       (OPTION_VALUE_FLOAT, po::value<float>(), "Float value.")
       (OPTION_VALUE_DOUBLE, po::value<double>(), "Double value.")
-      (OPTION_VALUE_STRING, po::value<std::string>(), "String value.");
-;
+      (OPTION_VALUE_STRING, po::value<std::string>(), "String value.")
+      (OPTION_MODULE_ID, po::value<std::string>(), "ID of the new module.")
+      (OPTION_MODULE_PATH, po::value<std::string>(), "Path to the new module shared library.")
+      (OPTION_CONFIG_FILE, po::value<std::string>(), "Path to the modules configuration file. By default '" CLIENT_CONFIG_PATH "'.");
+
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);    
+    po::notify(vm);
 
-    if (vm.count(OPTION_HELP)) 
+    if (vm.count(OPTION_HELP))
     {
+      IsHelp = true;
       desc.print(std::cout);
       return;
     }
 
-    ServerURI = vm[OPTION_SERVER_URI].as<std::string>();
+    if (vm.count(OPTION_SERVER_URI))
+    {
+      ServerURI = vm[OPTION_SERVER_URI].as<std::string>();
+    }
     Node = GetNodeIDOptionValue(vm);
     NamespaceIndex = GetNamespaceIndexOptionValue(vm);
     if (vm.count(OPTION_ATTRIBUTE))
@@ -268,5 +297,26 @@ namespace OpcUa
     IsWrite = vm.count(OPTION_WRITE);
     IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION);
     IsFindServers = vm.count(OPTION_FIND_SERVERS);
+    if (vm.count(OPTION_REGISTER_MODULE))
+    {
+      IsAddModule = true;
+      ModulePath = vm[OPTION_MODULE_PATH].as<std::string>();
+      ModuleID = vm[OPTION_MODULE_ID].as<std::string>();
+    }
+
+    if (vm.count(OPTION_UNREGISTER_MODULE))
+    {
+      IsRemoveModule = true;
+      ModuleID = vm[OPTION_MODULE_ID].as<std::string>();
+    }
+
+    if (vm.count(OPTION_CONFIG_FILE))
+    {
+      ConfigFile = vm[OPTION_CONFIG_FILE].as<std::string>();
+    }
+    else
+    {
+      ConfigFile = CLIENT_CONFIG_PATH;
+    }
   }
 }

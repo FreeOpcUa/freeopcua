@@ -19,10 +19,6 @@
 
 #include <stdexcept>
 
-#ifndef CLIENT_CONFIG_PATH
-#define CLIENT_CONFIG_PATH "/etc/opcua/client.modules"
-#endif
-
 namespace
 {
 
@@ -620,6 +616,54 @@ namespace
 
     computer->CloseSession();
   }
+
+  int RegisterNewModule(const OpcUa::CommandLine& cmd)
+  {
+    std::cout << "Registering new module." << std::endl;
+    const std::string& configFile = cmd.GetConfigFile();
+    Common::ModuleConfiguration config;
+    config.ID = cmd.GetModuleID();
+    config.Path = cmd.GetModulePath();
+
+    std::cout << "ID: " << config.ID << std::endl;
+    std::cout << "Path: " << config.Path << std::endl;
+    std::cout << "Configuration file: " << configFile << std::endl;
+
+    Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
+    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&config](const Common::ModuleConfiguration& config){return config.ID == config.ID;});
+    if (moduleIt != modules.end())
+    {
+      std::cerr << "Module already registered." << std::endl;
+      return -1;
+    }
+
+    modules.push_back(config);
+    Common::SaveConfiguration(modules, configFile);
+    std::cout << "Successfully registered." << std::endl;
+    return 0;
+  }
+
+  int UnregisterModule(const OpcUa::CommandLine& cmd)
+  {
+    const Common::AddonID addonID = cmd.GetModuleID();
+    const std::string& configFile = cmd.GetConfigFile();
+    std::cout << "Unregistering module." << std::endl;
+    std::cout << "ID: " << addonID << std::endl;
+    std::cout << "Configuration file: " << configFile << std::endl;
+
+    Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
+    Common::ModulesConfiguration::iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
+    if (moduleIt == modules.end())
+    {
+      std::cerr << "Module not found" << std::endl;
+      return -1;
+    }
+    modules.erase(moduleIt);
+    Common::SaveConfiguration(modules, configFile);
+
+    std::cout << "Successfully unregistered." << std::endl;
+    return 0;
+  }
 }
 
 int main(int argc, char** argv)
@@ -627,9 +671,25 @@ int main(int argc, char** argv)
   try
   {
     OpcUa::CommandLine cmd(argc, argv);
+    if (cmd.IsHelpOperation())
+    {
+      return 0;
+    }
+
+    if (cmd.IsRegisterModuleOperation())
+    {
+      return RegisterNewModule(cmd);
+    }
+
+    if (cmd.IsUnregisterModuleOperation())
+    {
+      return UnregisterModule(cmd);
+    }
+
+    const std::string configFile = cmd.GetConfigFile();
+    const Common::ModulesConfiguration& modules = Common::ParseConfiguration(configFile);
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
-    const Common::ModulesConfiguration& modules = Common::ParseConfiguration(CLIENT_CONFIG_PATH);
     std::vector<Common::AddonInformation> infos(modules.size());
     std::transform(modules.begin(), modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
     application->Start(infos);

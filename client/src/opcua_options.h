@@ -4,7 +4,7 @@
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
@@ -48,6 +48,21 @@ namespace OpcUa
       return Attribute;
     }
 
+    std::string GetModuleID() const
+    {
+      return ModuleID;
+    }
+
+    std::string GetModulePath() const
+    {
+      return ModulePath;
+    }
+
+    std::string GetConfigFile() const
+    {
+      return ConfigFile;
+    }
+
     bool IsGetEndpointsOperation() const
     {
       return IsGetEndpoints;
@@ -78,18 +93,40 @@ namespace OpcUa
       return IsFindServers;
     }
 
+    bool IsRegisterModuleOperation() const
+    {
+      return IsAddModule;
+    }
+
+    bool IsUnregisterModuleOperation() const
+    {
+      return IsRemoveModule;
+    }
+
+    bool IsHelpOperation() const
+    {
+      return IsHelp;
+    }
+
   private:
     std::string ServerURI;
     NodeID Node;
     uint16_t NamespaceIndex;
     Variant Value;
     AttributeID Attribute;
+    std::string ModuleID;
+    std::string ModulePath;
+    std::string ConfigFile;
+
+    bool IsHelp;
     bool IsGetEndpoints;
     bool IsBrowse;
     bool IsRead;
     bool IsWrite;
     bool IsCreateSubscription;
     bool IsFindServers;
+    bool IsAddModule;
+    bool IsRemoveModule;
   };
 
 }
