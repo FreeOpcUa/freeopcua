@@ -51,6 +51,7 @@ libopcua_soap_server_la_SOURCES = \
   src/soap_addon.h \
   src/soap_addon_factory.h \
   src/soap_module.cpp \
+  src/soap_service.h \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
@@ -62,6 +63,16 @@ libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoa
 
 libopcua_soap_client_la_SOURCES = src/soap_client_addon.cpp
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
+
+EXTRA_DIST = \
+  Bindings.wsdl \
+  Endpoints.wsdl \
+  PortTypes.wsdl \
+  Services.wsdl \
+  stlvector.h \
+  typemap.dat \
+  Types.bsd \
+  Types.xsd
 
 CLEANFILES= \
   Bindings.h \
