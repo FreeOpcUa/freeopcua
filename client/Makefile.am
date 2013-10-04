@@ -51,6 +51,8 @@ opcua_SOURCES = \
 opcua_CPPFLAGS = $(INCLUDES) $(CLIENT_CONFIG_PATH)
 opcua_LDFLAGS =  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -ldl -lboost_program_options -lpthread
 
+EXTRA_DIST = configs/client.modules
+
 #TESTS = libuaclient_test
 
 #check_PROGRAMS = $(TESTS)

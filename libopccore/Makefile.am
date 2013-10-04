@@ -53,7 +53,6 @@ libopccore_la_SOURCES = \
                   src/common/addons_core/config_file.cpp \
                   src/common/addons_core/errors_addon_manager.cpp \
                   src/common/addons_core/dynamic_addon_factory.cpp \
-                  src/common/addons_core/dynamic_addon_factory.h \
                   src/common/addons_core/dynamic_library.cpp \
                   src/common/addons_core/dynamic_library.h \
                   src/common/value.cpp \
