@@ -64,6 +64,10 @@ libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoa
 libopcua_soap_client_la_SOURCES = src/soap_client_addon.cpp
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
 
+install-exec-hook:
+	$(bindir)/opcua --register-module --id=http --path=libopcua_soap_client.so
+
+
 EXTRA_DIST = \
   Bindings.wsdl \
   Endpoints.wsdl \
