@@ -621,21 +621,24 @@ namespace
   {
     std::cout << "Registering new module." << std::endl;
     const std::string& configFile = cmd.GetConfigFile();
-    Common::ModuleConfiguration config;
-    config.ID = cmd.GetModuleID();
-    config.Path = cmd.GetModulePath();
+    const std::string& addonID = cmd.GetModuleID();
+    const std::string& modulePath = cmd.GetModulePath();
 
-    std::cout << "ID: " << config.ID << std::endl;
-    std::cout << "Path: " << config.Path << std::endl;
+    std::cout << "ID: " << addonID << std::endl;
+    std::cout << "Path: " << modulePath << std::endl;
     std::cout << "Configuration file: " << configFile << std::endl;
 
     Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
-    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&config](const Common::ModuleConfiguration& config){return config.ID == config.ID;});
+    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
     if (moduleIt != modules.end())
     {
       std::cerr << "Module already registered." << std::endl;
       return -1;
     }
+
+    Common::ModuleConfiguration config;
+    config.ID = addonID;
+    config.Path = modulePath;
 
     modules.push_back(config);
     Common::SaveConfiguration(modules, configFile);
