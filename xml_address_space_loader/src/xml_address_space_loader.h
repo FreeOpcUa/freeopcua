@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef OPC_UA_SERVER_XML_ADDRESS_SPACE_H
-#define OPC_UA_SERVER_XML_ADDRESS_SPACE_H
+#pragma once
+
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
@@ -79,4 +79,3 @@ namespace OpcUa
   } // namespace Internal
 } // namespace OpcUa
 
-#endif // OPC_UA_SERVER_XML_ADDRESS_SPACE_H

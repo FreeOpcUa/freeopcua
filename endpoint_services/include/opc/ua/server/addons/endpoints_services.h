@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef opc_ua_endpoints_service_h
-#define opc_ua_endpoints_service_h
+#pragma once
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/class_pointers.h>
@@ -34,6 +33,4 @@ namespace OpcUa
 
   } // namespace Server
 } // nmespace OpcUa
-
-#endif // opc_ua_get_endpoints_service_h
 

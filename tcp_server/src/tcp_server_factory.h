@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#pragma once
+
 #include "tcp_server_addon_impl.h"
 
 namespace OpcUa
@@ -26,3 +28,4 @@ namespace OpcUa
 
   }
 }
+
