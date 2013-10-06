@@ -44,7 +44,7 @@ namespace Common
   public:
     Error();
     explicit Error(unsigned lineNum, const char* fileName, unsigned errorCode, const char* msg);
-    ~Error() throw();
+    virtual ~Error() throw();
 
     unsigned GetLineNum() const;
     std::string GetFileName() const;

@@ -20,9 +20,8 @@ namespace Common
     Interface(){}
     virtual ~Interface(){}
 
-  private:
-    Interface(const Interface&);
-    const Interface& operator=(const Interface&);
+    Interface(const Interface&) = delete;
+    const Interface& operator=(const Interface&) = delete;
   };
 
 }
