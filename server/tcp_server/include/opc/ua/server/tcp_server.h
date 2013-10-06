@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef _OPC_UA_TCP_SERVER_H
-#define _OPC_UA_TCP_SERVER_H
+#pragma once
 
 #include <opc/ua/connection_listener.h>
 
@@ -21,6 +20,4 @@ namespace OpcUa
   std::unique_ptr<Server::ConnectionListener> CreateTcpServer(unsigned short port);
 
 }
-
-#endif // _OPC_UA_TCP_SERVER_H
 

@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef opcua_request_processor_addon_h
-#define opcua_request_processor_addon_h
+#pragma once
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/computer.h>
@@ -41,6 +40,4 @@ namespace OpcUa
 
   }
 }
-
-#endif //  opcua_request_processor_addon_h
 

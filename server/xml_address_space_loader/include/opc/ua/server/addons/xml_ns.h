@@ -9,8 +9,7 @@
 ///
 
 
-#ifndef OPCUA_XML_ADDRESS_SPACE_LOADER_H_
-#define OPCUA_XML_ADDRESS_SPACE_LOADER_H_
+#pragma once
 
 #include <opc/common/addons_core/addon.h>
 
@@ -30,5 +29,3 @@ namespace OpcUa
   }
 }
 
-
-#endif /* OPCUA_XML_ADDRESS_SPACE_LOADER_H_ */

@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef opcua_server_tcp_addon_h
-#define opcua_server_tcp_addon_h
+#pragma once
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/connection_listener.h>
@@ -40,6 +39,4 @@ namespace OpcUa
 
   }
 }
-
-#endif // opcua_server_tcp_addon_h
 
