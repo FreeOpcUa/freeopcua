@@ -28,12 +28,12 @@ namespace OpcUa
       const unsigned Timeout = 24 * 60 * 60;
 
     public:
-      SoapService(int port)
-        : Service(SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT)
+      SoapService(int port, std::unique_ptr<ServiceType> service)
+        : Service(std::move(service))
         , Port(port)
       {
-        Service.soap->accept_timeout = Timeout;
-        Service.soap->bind_flags |= SO_REUSEADDR;
+        Service->accept_timeout = Timeout;
+        Service->bind_flags |= SO_REUSEADDR;
       }
 
       void Start()
@@ -50,7 +50,7 @@ namespace OpcUa
       {
         if (Thread)
         {
-          Service.destroy();
+          Service->destroy();
           Thread->Join();
           Thread.reset();
         }
@@ -59,7 +59,7 @@ namespace OpcUa
     private:
       void Run()
       {
-        Service.run(Port);
+        Service->run(Port);
       }
 
       static void ServiceProc(SelfType* service)
@@ -68,7 +68,7 @@ namespace OpcUa
       }
 
     private:
-      ServiceType Service;
+      std::unique_ptr<ServiceType> Service;
       const int Port;
       Common::Thread::UniquePtr Thread;
     };

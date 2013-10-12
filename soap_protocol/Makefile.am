@@ -10,8 +10,10 @@
 
 
 Bindings.h:
-	wsdl2h Bindings.wsdl -o Bindings.h || test true
-	soapcpp2 -2 -j -w -x Bindings.h || test true
+	wsdl2h -g -p -z1 Bindings.wsdl -o Bindings.h || test true
+	soapcpp2 -L -i Bindings.h || test true
+	
+#soapcpp2 -2 -j -w -x Bindings.h || test true
 
 soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp,\
 soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp,\
@@ -37,6 +39,8 @@ INCLUDES= \
   $(OPC_CORE_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+TESTLIBS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
+
 
 lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 
@@ -45,6 +49,8 @@ libopcua_soap_server_la_SOURCES = \
   src/discovery_service.h \
   src/endpoint_service.cpp \
   src/endpoint_service.h \
+  src/factory.cpp \
+  src/namespaces.cpp \
   src/registration_service.cpp \
   src/registration_service.h \
   src/soap_addon.cpp \
@@ -57,15 +63,34 @@ libopcua_soap_server_la_SOURCES = \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
   soapC.cpp
 
-libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL
-libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
+libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
+libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 
 
-libopcua_soap_client_la_SOURCES = src/soap_client_addon.cpp
-libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) -ldl -lpthread -lgsoap -lgsoap++ -Wl,--no-undefined
+libopcua_soap_client_la_SOURCES = \
+  src/factory.cpp \
+  src/namespaces.cpp \
+  src/soap_client_addon.cpp \
+  soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
+  soapC.cpp
+
+libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) 
+libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
+
+TESTS = test_soap
+check_PROGRAMS = test_soap
+
+test_soap_SOURCES = \
+  src/factory.cpp \
+  src/namespaces.cpp \
+  tests/get_endpoints.cpp \
+  soapC.cpp
+
+test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
+test_soap_LDFLAGS = $(TESTLIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 
 install-exec-hook:
-	$(bindir)/opcua --register-module --id=http --path=libopcua_soap_client.so
+	$(bindir)/opcua --register-module --id=http --path=libopcua_soap_client.so || test true
 
 
 EXTRA_DIST = \
@@ -97,5 +122,4 @@ CLEANFILES= \
   soapStub.h \
   *.xml \
   *.nsmap
-
 

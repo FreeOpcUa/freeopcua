@@ -9,14 +9,16 @@
 ///
 
 #include "discovery_service.h"
+#include "factory.h"
 
 namespace OpcUa
 {
   namespace Impl
   {
+
     BasicHttpBinding_USCOREIDiscoveryEndpointService *SoapDiscoveryService::copy()
     {
-      return new SoapDiscoveryService();
+      return new SoapDiscoveryService(Computer);
     }
 
     int SoapDiscoveryService::FindServers(ns3__FindServersRequest *ns3__FindServersRequest_, ns3__FindServersResponse *ns3__FindServersResponse_)
@@ -24,9 +26,18 @@ namespace OpcUa
       return SOAP_OK;
     }
 
-    int SoapDiscoveryService::GetEndpoints(ns3__GetEndpointsRequest *ns3__GetEndpointsRequest_, ns3__GetEndpointsResponse *ns3__GetEndpointsResponse_)
+    int SoapDiscoveryService::GetEndpoints(ns3__GetEndpointsRequest* request, ns3__GetEndpointsResponse* response)
     {
-      return SOAP_OK;
+      OpcUa::EndpointsFilter filter;
+      if (request->EndpointUrl)
+      {
+        filter.EndpointURL = *request->EndpointUrl;
+      }
+
+      OpcUa::GetEndpointsResponse resp;
+      resp.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+
+      return SOAP_ERR;
     }
 
   } // namespace Impl

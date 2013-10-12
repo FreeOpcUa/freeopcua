@@ -33,12 +33,12 @@ namespace OpcUa
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
       void PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
-      void StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons);
+      void StartEndpoints(OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry);
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
     private:
       bool Debug;
-      SoapService<SoapDiscoveryService> DiscoveryService;
+      std::unique_ptr<SoapService<SoapDiscoveryService>> DiscoveryService;
     };
 
   } // namespace Impl

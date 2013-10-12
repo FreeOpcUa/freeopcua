@@ -8,7 +8,13 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
+#include "factory.h"
+
 #include <opc/ua/client/addon.h>
+
+#include <soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.h>
+
+#include <sstream>
 
 namespace
 {
@@ -16,6 +22,11 @@ namespace
   class SoapEndpoints : public OpcUa::Remote::EndpointServices
   {
   public:
+    SoapEndpoints(const std::string& url)
+      : Url(url)
+    {
+    }
+
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const OpcUa::FindServersParameters& params) const
     {
       return std::vector<OpcUa::ApplicationDescription>();
@@ -23,13 +34,44 @@ namespace
 
     virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const OpcUa::EndpointsFilter& filter) const
     {
-      return std::vector<OpcUa::EndpointDescription>();
+      BasicHttpBinding_USCOREIDiscoveryEndpointProxy service(filter.EndpointURL.c_str());
+      OpcUa::GetEndpointsRequest request;
+      request.Filter = filter;
+      ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::BuildEndpointsRequest(&service, request);
+      ns3__GetEndpointsResponse* soapResponse = soap_new_ns3__GetEndpointsResponse(&service, 1);
+
+      const int soapError = service.GetEndpoints(Url.c_str(), 0, soapRequest, soapResponse);
+      if (soapError != SOAP_OK)
+      {
+        std::stringstream stream;
+        service.soap_stream_fault(stream);
+        throw std::logic_error(stream.str());
+      }
+
+      std::vector<OpcUa::EndpointDescription> endpoints;
+      if (!soapResponse->Endpoints)
+      {
+        return endpoints;
+      }
+
+      return endpoints;
     }
 
     virtual void RegisterServer(const OpcUa::Remote::ServerParameters& parameters)
     {
 
     }
+
+  private:
+    ns3__GetEndpointsRequest* GetEndpointsRequest(soap* service, const OpcUa::EndpointsFilter& filter) const
+    {
+      ns3__GetEndpointsRequest* request = soap_new_ns3__GetEndpointsRequest(service, 1);
+      return request;
+    }
+
+
+  public:
+    std::string Url;
   };
 
   class SoapViews : public OpcUa::Remote::ViewServices
@@ -72,6 +114,12 @@ namespace
   class SoapComputer : public OpcUa::Remote::Computer
   {
   public:
+    SoapComputer(const std::string& url)
+      : Url(url)
+    {
+
+    }
+
     virtual void CreateSession(const OpcUa::Remote::SessionParameters& parameters)
     {
 
@@ -89,7 +137,7 @@ namespace
 
     virtual OpcUa::Remote::EndpointServices::SharedPtr Endpoints() const
     {
-      return OpcUa::Remote::EndpointServices::SharedPtr();
+      return OpcUa::Remote::EndpointServices::SharedPtr(new SoapEndpoints(Url));
     }
 
     virtual OpcUa::Remote::ViewServices::SharedPtr Views() const
@@ -106,6 +154,9 @@ namespace
     {
       return OpcUa::Remote::SubscriptionServices::SharedPtr();
     }
+
+  public:
+    std::string Url;
   };
 
 
@@ -130,7 +181,7 @@ namespace
 
     virtual OpcUa::Remote::Computer::SharedPtr Connect(const std::string& url)
     {
-      return OpcUa::Remote::Computer::SharedPtr();
+      return OpcUa::Remote::Computer::SharedPtr(new SoapComputer(url));
     }
   };
 }
@@ -139,3 +190,4 @@ extern "C" Common::Addon::UniquePtr CreateAddon()
 {
   return Common::Addon::UniquePtr(new SoapClientAddon());
 }
+

@@ -16,6 +16,7 @@ CXXFLAGS="-O0 -g -Wall -std=c++0x"
 
 AC_PROG_CXX
 AC_PROG_LIBTOOL
+PKG_PROG_PKG_CONFIG
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
@@ -79,6 +80,9 @@ AC_ARG_WITH([libopcuaclient],
 
 #check headers
 AC_CHECK_HEADERS([unistd.h])
+
+PKG_CHECK_MODULES([GSOAP], ["gsoapssl++"])
+
 
 #################################################################
 AC_CONFIG_FILES([Makefile])
