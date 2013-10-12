@@ -1,0 +1,63 @@
+/// @author Alexander Rykovanov 2013
+/// @email rykovanov.as@gmail.com
+/// @brief OPC UA Address space part.
+/// @license GNU GPL
+///
+/// Distributed under the GNU GPL License
+/// (See accompanying file LICENSE or copy at
+/// http://www.gnu.org/licenses/gpl.html)
+///
+
+
+#pragma once
+
+#include <soapH.h>
+#include <opc/ua/types.h>
+#include <opc/ua/protocol/endpoints.h>
+
+namespace OpcUa
+{
+  namespace Soap
+  {
+/*
+    class SoapDeleter
+    {
+    public:
+      SoapDeleter(soap* s)
+        : Owner(s)
+      {
+      }
+
+      SoapDeleter() = default;
+      SoapDeleter(const SoapDeleter&) = default;
+      SoapDeleter(SoapDeleter&&) = default;
+      SoapDeleter& operator=(SoapDeleter&) = default;
+      SoapDeleter& operator=(SoapDeleter&&) = default;
+
+      void operator() (void* ptr)
+      {
+        soap_delete(Owner, ptr);
+      }
+
+    private:
+      soap* Owner;
+    };
+
+    template <typename T>
+    class SoapPtr : public std::unique_ptr<T, SoapDeleter>
+    {
+    public:
+      typedef std::unique_ptr<T, SoapDeleter> Parent;
+
+    public:
+      SoapPtr(T* ptr, soap*)
+        : Parent(ptr, SoapDeleter(soap))
+      {
+      }
+    };
+*/
+    ns3__GetEndpointsRequest* BuildEndpointsRequest(soap* s, const OpcUa::GetEndpointsRequest& request);
+    ns3__GetEndpointsResponse* BuildEndpointsResponse(soap* s, const OpcUa::GetEndpointsResponse& response);
+
+  }
+}

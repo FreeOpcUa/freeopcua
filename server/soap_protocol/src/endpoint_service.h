@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#pragma once
+
 #include <soapBasicHttpBinding_USCOREISessionEndpointService.h>
 
 namespace OpcUa

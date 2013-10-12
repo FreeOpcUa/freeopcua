@@ -11,9 +11,6 @@
 
 #include "soap_addon.h"
 
-
-#include <BasicHttpBinding_USCOREIDiscoveryEndpoint.nsmap>
-
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/services_registry.h>
@@ -24,17 +21,16 @@
 
 using namespace OpcUa;
 using namespace OpcUa::Impl;
-using namespace OpcUa::Server;
 
 
 SoapAddon::SoapAddon()
   : Debug(false)
-  , DiscoveryService(8888)
 {
 }
 
 void SoapAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
 {
+  OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
 /*
   ApplyAddonParameters(params);
   const std::vector<ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
@@ -49,7 +45,9 @@ void SoapAddon::Initialize(Common::AddonsManager& addons, const Common::AddonPar
   PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
   StartEndpoints(endpointDescriptions, addons);
 */
-  DiscoveryService.Start();
+  std::unique_ptr<SoapDiscoveryService> discoveryService(new SoapDiscoveryService(servicesRegistry->GetComputer(), SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT));
+  DiscoveryService.reset(new SoapService<SoapDiscoveryService>(8888, std::move(discoveryService)));
+  DiscoveryService->Start();
 }
 
 void SoapAddon::Stop()
@@ -63,7 +61,7 @@ void SoapAddon::Stop()
   }
   TcpAddon.reset();
 */
-  DiscoveryService.Stop();
+  DiscoveryService->Stop();
 }
 
 void SoapAddon::ApplyAddonParameters(const Common::AddonParameters& params)
@@ -77,7 +75,7 @@ void SoapAddon::ApplyAddonParameters(const Common::AddonParameters& params)
   }
 }
 
-void SoapAddon::StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons)
+void SoapAddon::StartEndpoints(OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry)
 {
 /*
   InternalComputer = Common::GetAddon<OpcUa::Server::ServicesRegistryAddon>(addons, OpcUa::Server::ServicesRegistryAddonID);
@@ -100,7 +98,7 @@ void SoapAddon::StartEndpoints(std::vector<EndpointDescription> endpoints, Commo
 
 void SoapAddon::PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const
 {
-  std::shared_ptr<EndpointsServicesAddon> endpointsAddon = addons.GetAddon<EndpointsServicesAddon>(EndpointsServicesAddonID);
+  std::shared_ptr<OpcUa::Server::EndpointsServicesAddon> endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsServicesAddon>(OpcUa::Server::EndpointsServicesAddonID);
   if (!endpointsAddon)
   {
     std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
