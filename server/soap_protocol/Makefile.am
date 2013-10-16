@@ -22,7 +22,9 @@ soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
 soapC.cpp,\
-src/discovery_service.cpp: Bindings.h
+src/discovery_service.cpp\
+src/serialize.cpp\
+src/deserialize.cpp: Bindings.h
 
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
@@ -45,14 +47,15 @@ TESTLIBS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 
 libopcua_soap_server_la_SOURCES = \
+  src/deserialize.cpp \
   src/discovery_service.cpp \
   src/discovery_service.h \
   src/endpoint_service.cpp \
   src/endpoint_service.h \
-  src/factory.cpp \
   src/namespaces.cpp \
   src/registration_service.cpp \
   src/registration_service.h \
+  src/serialize.cpp \
   src/soap_addon.cpp \
   src/soap_addon.h \
   src/soap_addon_factory.h \
@@ -68,7 +71,8 @@ libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LI
 
 
 libopcua_soap_client_la_SOURCES = \
-  src/factory.cpp \
+  src/deserialize.cpp \
+  src/serialize.cpp \
   src/namespaces.cpp \
   src/soap_client_addon.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
@@ -81,7 +85,8 @@ TESTS = test_soap
 check_PROGRAMS = test_soap
 
 test_soap_SOURCES = \
-  src/factory.cpp \
+  src/serialize.cpp \
+  src/deserialize.cpp \
   src/namespaces.cpp \
   tests/get_endpoints.cpp \
   soapC.cpp

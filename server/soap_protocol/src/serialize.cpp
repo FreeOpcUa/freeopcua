@@ -8,9 +8,9 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "factory.h"
+#include "serialize.h"
 
-#include <opc/ua/types.h>
+#include <opc/ua/protocol/types.h>
 
 #include <sstream>
 
@@ -40,17 +40,18 @@ namespace
   std::string GetNodeIDString(const OpcUa::NodeID& id)
   {
     std::stringstream stream;
-    stream << "ns:" << id.GetNamespaceIndex() << ";";
+    stream << "ns=" << id.GetNamespaceIndex() << ";";
     if (id.IsInteger())
     {
-      stream << "i:" << id.GetIntegerIdentifier() << ";";
+      stream << "i=" << id.GetIntegerIdentifier() << ";";
     }
     else if(id.IsString())
     {
-      stream << "s" << id.GetStringIdentifier() << ";";
+      stream << "s=" << id.GetStringIdentifier() << ";";
     }
     else if (id.IsGuid())
     {
+      stream << "g=";
       const OpcUa::Guid& guid = id.GetGuidIdentifier();
       stream << std::hex << guid.Data1 << "-";
       stream << std::hex << guid.Data2 << "-";
@@ -147,6 +148,9 @@ namespace
     desc->SecurityPolicyUri = CreateString(s, opcua.SecurityPolicyURI);
     desc->Server = CreateApplicationDescription(s, opcua.ServerDescription);
     desc->ServerCertificate = soap_new_xsd__base64Binary(s, 1); // TODO fill
+    desc->ServerCertificate->__ptr = (unsigned char*)soap_malloc(s, opcua.ServerCertificate.size());
+    desc->ServerCertificate->__size = opcua.ServerCertificate.size();
+    std::copy(opcua.ServerCertificate.begin(), opcua.ServerCertificate.end(), desc->ServerCertificate->__ptr);
     desc->TransportProfileUri = CreateString(s, opcua.TransportProfileURI);
     desc->Server = CreateApplicationDescription(s, opcua.ServerDescription);
     desc->UserIdentityTokens = CreateUserTokenPolicies(s, opcua.UserIdentifyTokens);
@@ -236,7 +240,7 @@ namespace
 namespace OpcUa
 {
 
-  ns3__GetEndpointsRequest* Soap::BuildEndpointsRequest(soap* s, const OpcUa::GetEndpointsRequest& opcua)
+  ns3__GetEndpointsRequest* Soap::Serialize(soap* s, const OpcUa::GetEndpointsRequest& opcua)
   {
     ns3__GetEndpointsRequest* request = soap_new_ns3__GetEndpointsRequest(s, 1);
     request->RequestHeader = CreateRequestHeader(s, opcua.Header);
@@ -246,7 +250,7 @@ namespace OpcUa
     return request;
   }
 
-  ns3__GetEndpointsResponse* Soap::BuildEndpointsResponse(soap* s, const OpcUa::GetEndpointsResponse& opcua)
+  ns3__GetEndpointsResponse* Soap::Serialize(soap* s, const OpcUa::GetEndpointsResponse& opcua)
   {
     ns3__GetEndpointsResponse* resp = soap_new_ns3__GetEndpointsResponse(s, 1);
     resp->ResponseHeader = CreateResponseHeader(s, opcua.Header);

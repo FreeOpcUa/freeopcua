@@ -12,7 +12,6 @@
 #pragma once
 
 #include <soapH.h>
-#include <opc/ua/types.h>
 #include <opc/ua/protocol/endpoints.h>
 
 namespace OpcUa
@@ -56,8 +55,8 @@ namespace OpcUa
       }
     };
 */
-    ns3__GetEndpointsRequest* BuildEndpointsRequest(soap* s, const OpcUa::GetEndpointsRequest& request);
-    ns3__GetEndpointsResponse* BuildEndpointsResponse(soap* s, const OpcUa::GetEndpointsResponse& response);
+    ns3__GetEndpointsRequest* Serialize(soap* s, const OpcUa::GetEndpointsRequest& request);
+    ns3__GetEndpointsResponse* Serialize(soap* s, const OpcUa::GetEndpointsResponse& response);
 
   }
 }

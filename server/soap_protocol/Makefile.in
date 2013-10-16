@@ -104,7 +104,8 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_soap_client_la_LIBADD =
 am_libopcua_soap_client_la_OBJECTS =  \
-	libopcua_soap_client_la-factory.lo \
+	libopcua_soap_client_la-deserialize.lo \
+	libopcua_soap_client_la-serialize.lo \
 	libopcua_soap_client_la-namespaces.lo \
 	libopcua_soap_client_la-soap_client_addon.lo \
 	libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.lo \
@@ -117,11 +118,12 @@ libopcua_soap_client_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$@
 libopcua_soap_server_la_LIBADD =
 am_libopcua_soap_server_la_OBJECTS =  \
+	libopcua_soap_server_la-deserialize.lo \
 	libopcua_soap_server_la-discovery_service.lo \
 	libopcua_soap_server_la-endpoint_service.lo \
-	libopcua_soap_server_la-factory.lo \
 	libopcua_soap_server_la-namespaces.lo \
 	libopcua_soap_server_la-registration_service.lo \
+	libopcua_soap_server_la-serialize.lo \
 	libopcua_soap_server_la-soap_addon.lo \
 	libopcua_soap_server_la-soap_module.lo \
 	libopcua_soap_server_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.lo \
@@ -134,8 +136,8 @@ libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libopcua_soap_server_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
-am_test_soap_OBJECTS = test_soap-factory.$(OBJEXT) \
-	test_soap-namespaces.$(OBJEXT) \
+am_test_soap_OBJECTS = test_soap-serialize.$(OBJEXT) \
+	test_soap-deserialize.$(OBJEXT) test_soap-namespaces.$(OBJEXT) \
 	test_soap-get_endpoints.$(OBJEXT) test_soap-soapC.$(OBJEXT)
 test_soap_OBJECTS = $(am_test_soap_OBJECTS)
 test_soap_LDADD = $(LDADD)
@@ -328,14 +330,15 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 TESTLIBS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 libopcua_soap_server_la_SOURCES = \
+  src/deserialize.cpp \
   src/discovery_service.cpp \
   src/discovery_service.h \
   src/endpoint_service.cpp \
   src/endpoint_service.h \
-  src/factory.cpp \
   src/namespaces.cpp \
   src/registration_service.cpp \
   src/registration_service.h \
+  src/serialize.cpp \
   src/soap_addon.cpp \
   src/soap_addon.h \
   src/soap_addon_factory.h \
@@ -349,7 +352,8 @@ libopcua_soap_server_la_SOURCES = \
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
 libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 libopcua_soap_client_la_SOURCES = \
-  src/factory.cpp \
+  src/deserialize.cpp \
+  src/serialize.cpp \
   src/namespaces.cpp \
   src/soap_client_addon.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
@@ -358,7 +362,8 @@ libopcua_soap_client_la_SOURCES = \
 libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) 
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 test_soap_SOURCES = \
-  src/factory.cpp \
+  src/serialize.cpp \
+  src/deserialize.cpp \
   src/namespaces.cpp \
   tests/get_endpoints.cpp \
   soapC.cpp
@@ -484,25 +489,28 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-factory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-deserialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-namespaces.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-serialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soap_client_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-deserialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-discovery_service.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-endpoint_service.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-namespaces.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-registration_service.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-serialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREISessionEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-factory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-deserialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-namespaces.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-serialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC.Po@am__quote@
 
 .cpp.o:
@@ -526,12 +534,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libopcua_soap_client_la-factory.lo: src/factory.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-factory.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-factory.Tpo -c -o libopcua_soap_client_la-factory.lo `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-factory.Tpo $(DEPDIR)/libopcua_soap_client_la-factory.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/factory.cpp' object='libopcua_soap_client_la-factory.lo' libtool=yes @AMDEPBACKSLASH@
+libopcua_soap_client_la-deserialize.lo: src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-deserialize.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-deserialize.Tpo -c -o libopcua_soap_client_la-deserialize.lo `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-deserialize.Tpo $(DEPDIR)/libopcua_soap_client_la-deserialize.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/deserialize.cpp' object='libopcua_soap_client_la-deserialize.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-factory.lo `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-deserialize.lo `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+
+libopcua_soap_client_la-serialize.lo: src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-serialize.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-serialize.Tpo -c -o libopcua_soap_client_la-serialize.lo `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-serialize.Tpo $(DEPDIR)/libopcua_soap_client_la-serialize.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/serialize.cpp' object='libopcua_soap_client_la-serialize.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-serialize.lo `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
 
 libopcua_soap_client_la-namespaces.lo: src/namespaces.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-namespaces.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-namespaces.Tpo -c -o libopcua_soap_client_la-namespaces.lo `test -f 'src/namespaces.cpp' || echo '$(srcdir)/'`src/namespaces.cpp
@@ -561,6 +576,13 @@ libopcua_soap_client_la-soapC.lo: soapC.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
 
+libopcua_soap_server_la-deserialize.lo: src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-deserialize.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-deserialize.Tpo -c -o libopcua_soap_server_la-deserialize.lo `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-deserialize.Tpo $(DEPDIR)/libopcua_soap_server_la-deserialize.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/deserialize.cpp' object='libopcua_soap_server_la-deserialize.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-deserialize.lo `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+
 libopcua_soap_server_la-discovery_service.lo: src/discovery_service.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-discovery_service.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-discovery_service.Tpo -c -o libopcua_soap_server_la-discovery_service.lo `test -f 'src/discovery_service.cpp' || echo '$(srcdir)/'`src/discovery_service.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-discovery_service.Tpo $(DEPDIR)/libopcua_soap_server_la-discovery_service.Plo
@@ -575,13 +597,6 @@ libopcua_soap_server_la-endpoint_service.lo: src/endpoint_service.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-endpoint_service.lo `test -f 'src/endpoint_service.cpp' || echo '$(srcdir)/'`src/endpoint_service.cpp
 
-libopcua_soap_server_la-factory.lo: src/factory.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-factory.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-factory.Tpo -c -o libopcua_soap_server_la-factory.lo `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-factory.Tpo $(DEPDIR)/libopcua_soap_server_la-factory.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/factory.cpp' object='libopcua_soap_server_la-factory.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-factory.lo `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
-
 libopcua_soap_server_la-namespaces.lo: src/namespaces.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-namespaces.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-namespaces.Tpo -c -o libopcua_soap_server_la-namespaces.lo `test -f 'src/namespaces.cpp' || echo '$(srcdir)/'`src/namespaces.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-namespaces.Tpo $(DEPDIR)/libopcua_soap_server_la-namespaces.Plo
@@ -595,6 +610,13 @@ libopcua_soap_server_la-registration_service.lo: src/registration_service.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/registration_service.cpp' object='libopcua_soap_server_la-registration_service.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-registration_service.lo `test -f 'src/registration_service.cpp' || echo '$(srcdir)/'`src/registration_service.cpp
+
+libopcua_soap_server_la-serialize.lo: src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-serialize.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-serialize.Tpo -c -o libopcua_soap_server_la-serialize.lo `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-serialize.Tpo $(DEPDIR)/libopcua_soap_server_la-serialize.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/serialize.cpp' object='libopcua_soap_server_la-serialize.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-serialize.lo `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
 
 libopcua_soap_server_la-soap_addon.lo: src/soap_addon.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soap_addon.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soap_addon.Tpo -c -o libopcua_soap_server_la-soap_addon.lo `test -f 'src/soap_addon.cpp' || echo '$(srcdir)/'`src/soap_addon.cpp
@@ -638,19 +660,33 @@ libopcua_soap_server_la-soapC.lo: soapC.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
 
-test_soap-factory.o: src/factory.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-factory.o -MD -MP -MF $(DEPDIR)/test_soap-factory.Tpo -c -o test_soap-factory.o `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-factory.Tpo $(DEPDIR)/test_soap-factory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/factory.cpp' object='test_soap-factory.o' libtool=no @AMDEPBACKSLASH@
+test_soap-serialize.o: src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-serialize.o -MD -MP -MF $(DEPDIR)/test_soap-serialize.Tpo -c -o test_soap-serialize.o `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-serialize.Tpo $(DEPDIR)/test_soap-serialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/serialize.cpp' object='test_soap-serialize.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-factory.o `test -f 'src/factory.cpp' || echo '$(srcdir)/'`src/factory.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-serialize.o `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
 
-test_soap-factory.obj: src/factory.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-factory.obj -MD -MP -MF $(DEPDIR)/test_soap-factory.Tpo -c -o test_soap-factory.obj `if test -f 'src/factory.cpp'; then $(CYGPATH_W) 'src/factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/factory.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-factory.Tpo $(DEPDIR)/test_soap-factory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/factory.cpp' object='test_soap-factory.obj' libtool=no @AMDEPBACKSLASH@
+test_soap-serialize.obj: src/serialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-serialize.obj -MD -MP -MF $(DEPDIR)/test_soap-serialize.Tpo -c -o test_soap-serialize.obj `if test -f 'src/serialize.cpp'; then $(CYGPATH_W) 'src/serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/src/serialize.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-serialize.Tpo $(DEPDIR)/test_soap-serialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/serialize.cpp' object='test_soap-serialize.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-factory.obj `if test -f 'src/factory.cpp'; then $(CYGPATH_W) 'src/factory.cpp'; else $(CYGPATH_W) '$(srcdir)/src/factory.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-serialize.obj `if test -f 'src/serialize.cpp'; then $(CYGPATH_W) 'src/serialize.cpp'; else $(CYGPATH_W) '$(srcdir)/src/serialize.cpp'; fi`
+
+test_soap-deserialize.o: src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-deserialize.o -MD -MP -MF $(DEPDIR)/test_soap-deserialize.Tpo -c -o test_soap-deserialize.o `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-deserialize.Tpo $(DEPDIR)/test_soap-deserialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/deserialize.cpp' object='test_soap-deserialize.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-deserialize.o `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
+
+test_soap-deserialize.obj: src/deserialize.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-deserialize.obj -MD -MP -MF $(DEPDIR)/test_soap-deserialize.Tpo -c -o test_soap-deserialize.obj `if test -f 'src/deserialize.cpp'; then $(CYGPATH_W) 'src/deserialize.cpp'; else $(CYGPATH_W) '$(srcdir)/src/deserialize.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-deserialize.Tpo $(DEPDIR)/test_soap-deserialize.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/deserialize.cpp' object='test_soap-deserialize.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-deserialize.obj `if test -f 'src/deserialize.cpp'; then $(CYGPATH_W) 'src/deserialize.cpp'; else $(CYGPATH_W) '$(srcdir)/src/deserialize.cpp'; fi`
 
 test_soap-namespaces.o: src/namespaces.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-namespaces.o -MD -MP -MF $(DEPDIR)/test_soap-namespaces.Tpo -c -o test_soap-namespaces.o `test -f 'src/namespaces.cpp' || echo '$(srcdir)/'`src/namespaces.cpp
@@ -1018,7 +1054,9 @@ soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
 soapC.cpp,\
-src/discovery_service.cpp: Bindings.h
+src/discovery_service.cpp\
+src/serialize.cpp\
+src/deserialize.cpp: Bindings.h
 
 install-exec-hook:
 	$(bindir)/opcua --register-module --id=http --path=libopcua_soap_client.so || test true
