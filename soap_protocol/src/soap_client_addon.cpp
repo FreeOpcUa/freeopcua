@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "factory.h"
+#include "serialize.h"
 
 #include <opc/ua/client/addon.h>
 
@@ -37,7 +37,7 @@ namespace
       BasicHttpBinding_USCOREIDiscoveryEndpointProxy service(filter.EndpointURL.c_str());
       OpcUa::GetEndpointsRequest request;
       request.Filter = filter;
-      ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::BuildEndpointsRequest(&service, request);
+      ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::Serialize(&service, request);
       ns3__GetEndpointsResponse* soapResponse = soap_new_ns3__GetEndpointsResponse(&service, 1);
 
       const int soapError = service.GetEndpoints(Url.c_str(), 0, soapRequest, soapResponse);

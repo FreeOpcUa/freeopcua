@@ -9,12 +9,10 @@
 ///
 
 #include <gtest/gtest.h>
-#include "../src/factory.h"
+#include "../src/serialize.h"
+#include "../src/deserialize.h"
 
-class SoapSerialization : public testing::Test
-{
 
-};
 
 TEST(GetEndpoints, Request)
 {
@@ -32,13 +30,13 @@ TEST(GetEndpoints, Request)
   opcua.Filter.ProfileUries.push_back("profile");
 
   soap service;
-  ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::BuildEndpointsRequest(&service, opcua);
+  ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::Serialize(&service, opcua);
   ASSERT_NE(soapRequest, nullptr);
 
   ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader, nullptr);
   ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader->Body, nullptr);
   ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader->TypeId, nullptr);
-  ASSERT_EQ(*soapRequest->RequestHeader->AdditionalHeader->TypeId->Identifier, "ns:0;i:2;");
+  ASSERT_EQ(*soapRequest->RequestHeader->AdditionalHeader->TypeId->Identifier, "ns=0;i=2;");
 
   ASSERT_NE(soapRequest->RequestHeader, nullptr);
   ASSERT_NE(soapRequest->RequestHeader->AuditEntryId, nullptr);
@@ -49,7 +47,7 @@ TEST(GetEndpoints, Request)
 
   ASSERT_NE(soapRequest->RequestHeader->AuthenticationToken, nullptr);
   ASSERT_NE(soapRequest->RequestHeader->AuthenticationToken->Identifier, nullptr);
-  ASSERT_EQ(*soapRequest->RequestHeader->AuthenticationToken->Identifier, "ns:0;i:3;");
+  ASSERT_EQ(*soapRequest->RequestHeader->AuthenticationToken->Identifier, "ns=0;i=3;");
 
   ASSERT_EQ(soapRequest->RequestHeader->TimeoutHint, 5);
   ASSERT_EQ(soapRequest->RequestHeader->Timestamp, 6);
@@ -62,6 +60,20 @@ TEST(GetEndpoints, Request)
 
   ASSERT_NE(soapRequest->ProfileUris, nullptr);
   ASSERT_EQ(soapRequest->ProfileUris->String, opcua.Filter.ProfileUries);
+
+  OpcUa::GetEndpointsRequest deserialized = OpcUa::Soap::Deserialize(soapRequest);
+//TODO  ASSERT_EQ(deserialized.Header.Additional.Encoding, opcua.Header.Additional.Encoding);
+  ASSERT_EQ(deserialized.Header.Additional.TypeID, opcua.Header.Additional.TypeID);
+  ASSERT_EQ(deserialized.Header.SessionAuthenticationToken, opcua.Header.SessionAuthenticationToken);
+  ASSERT_EQ(deserialized.Header.AuditEntryID, opcua.Header.AuditEntryID);
+  ASSERT_EQ(deserialized.Header.RequestHandle, opcua.Header.RequestHandle);
+  ASSERT_EQ(deserialized.Header.ReturnDiagnostics, opcua.Header.ReturnDiagnostics);
+  ASSERT_EQ(deserialized.Header.Timeout, opcua.Header.Timeout);
+  ASSERT_EQ(deserialized.Header.UtcTime, opcua.Header.UtcTime);
+
+  ASSERT_EQ(deserialized.Filter.EndpointURL, opcua.Filter.EndpointURL);
+  ASSERT_EQ(deserialized.Filter.LocaleIDs, opcua.Filter.LocaleIDs);
+  ASSERT_EQ(deserialized.Filter.ProfileUries, opcua.Filter.ProfileUries);
 }
 
 TEST(GetEndpoints, Response)
@@ -120,14 +132,14 @@ TEST(GetEndpoints, Response)
   response.Endpoints.push_back(endpoint);
 
   soap service;
-  ns3__GetEndpointsResponse* soapResponse = OpcUa::Soap::BuildEndpointsResponse(&service, response);
+  ns3__GetEndpointsResponse* soapResponse = OpcUa::Soap::Serialize(&service, response);
 
   ASSERT_NE(soapResponse, nullptr);
   ASSERT_NE(soapResponse->ResponseHeader, nullptr);
   ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader, nullptr);
   ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader->Body, nullptr);
   ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader->TypeId, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->AdditionalHeader->TypeId->Identifier, "ns:0;i:2;");
+  ASSERT_EQ(*soapResponse->ResponseHeader->AdditionalHeader->TypeId->Identifier, "ns=0;i=2;");
 
   ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics, nullptr);
   ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->AdditionalInfo, nullptr);
@@ -211,4 +223,44 @@ TEST(GetEndpoints, Response)
   ASSERT_NE(soapPolicy->SecurityPolicyUri, nullptr);
   ASSERT_EQ(*soapPolicy->SecurityPolicyUri, "security_policy");
   ASSERT_EQ(soapPolicy->TokenType, ns3__UserTokenType::ns3__UserTokenType__IssuedToken_USCORE3);
+
+  OpcUa::GetEndpointsResponse deserialized = OpcUa::Soap::Deserialize(soapResponse);
+  ASSERT_EQ(deserialized.TypeID, response.TypeID);
+  // TODO ASSERT_EQ(deserialized.Header.Additional.Encoding, response.Header.Additional.Encoding);
+  ASSERT_EQ(deserialized.Header.Additional.TypeID, response.Header.Additional.TypeID);
+  ASSERT_EQ(deserialized.Header.RequestHandle, response.Header.RequestHandle);
+  ASSERT_EQ(deserialized.Header.ServiceResult, response.Header.ServiceResult);
+  ASSERT_EQ(deserialized.Header.StringTable, response.Header.StringTable);
+  ASSERT_EQ(deserialized.Header.Timestamp, response.Header.Timestamp);
+
+  ASSERT_EQ(deserialized.Header.InnerDiagnostics.size(), 2);
+  const OpcUa::DiagnosticInfo& diag1 = deserialized.Header.InnerDiagnostics[0];
+  ASSERT_EQ(diag1.EncodingMask, mask);
+  ASSERT_EQ(diag1.AdditionalInfo, response.Header.InnerDiagnostics[0].AdditionalInfo);
+  ASSERT_EQ(diag1.InnerStatusCode, response.Header.InnerDiagnostics[0].InnerStatusCode);
+  ASSERT_EQ(diag1.Locale, response.Header.InnerDiagnostics[0].Locale);
+  ASSERT_EQ(diag1.LocalizedText, response.Header.InnerDiagnostics[0].LocalizedText);
+  ASSERT_EQ(diag1.NamespaceURI, response.Header.InnerDiagnostics[0].NamespaceURI);
+  ASSERT_EQ(diag1.SymbolicID, response.Header.InnerDiagnostics[0].SymbolicID);
+  ASSERT_EQ(deserialized.Header.InnerDiagnostics[1].EncodingMask, OpcUa::DiagnosticInfoMask::DIM_NONE);
+
+  ASSERT_EQ(deserialized.Endpoints.size(), 1);
+  const OpcUa::EndpointDescription& d = deserialized.Endpoints[0];
+  const OpcUa::EndpointDescription& sd = response.Endpoints[0];
+  ASSERT_EQ(d.EndpointURL, sd.EndpointURL);
+  ASSERT_EQ(d.SecurityLevel, sd.SecurityLevel);
+  ASSERT_EQ(d.SecurityMode, sd.SecurityMode);
+  ASSERT_EQ(d.SecurityPolicyURI, sd.SecurityPolicyURI);
+  ASSERT_EQ(d.TransportProfileURI, sd.TransportProfileURI);
+  ASSERT_EQ(d.ServerCertificate, sd.ServerCertificate);
+
+  ASSERT_EQ(d.ServerDescription.Name.Encoding, sd.ServerDescription.Name.Encoding);
+  ASSERT_EQ(d.ServerDescription.Name.Locale, sd.ServerDescription.Name.Locale);
+  ASSERT_EQ(d.ServerDescription.Name.Text, sd.ServerDescription.Name.Text);
+  ASSERT_EQ(d.ServerDescription.DiscoveryProfileURI, sd.ServerDescription.DiscoveryProfileURI);
+  ASSERT_EQ(d.ServerDescription.DiscoveryURLs, sd.ServerDescription.DiscoveryURLs);
+  ASSERT_EQ(d.ServerDescription.GatewayServerURI, sd.ServerDescription.GatewayServerURI);
+  ASSERT_EQ(d.ServerDescription.ProductURI, sd.ServerDescription.ProductURI);
+  ASSERT_EQ(d.ServerDescription.Type, sd.ServerDescription.Type);
+  ASSERT_EQ(d.ServerDescription.URI, sd.ServerDescription.URI);
 }

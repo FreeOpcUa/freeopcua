@@ -9,7 +9,7 @@
 ///
 
 #include "discovery_service.h"
-#include "factory.h"
+#include "serialize.h"
 
 namespace OpcUa
 {
@@ -42,3 +42,4 @@ namespace OpcUa
 
   } // namespace Impl
 } // namespace OpcUa
+
