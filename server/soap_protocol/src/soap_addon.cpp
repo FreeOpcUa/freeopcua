@@ -45,7 +45,7 @@ void SoapAddon::Initialize(Common::AddonsManager& addons, const Common::AddonPar
   PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
   StartEndpoints(endpointDescriptions, addons);
 */
-  std::unique_ptr<SoapDiscoveryService> discoveryService(new SoapDiscoveryService(servicesRegistry->GetComputer(), SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT));
+  std::unique_ptr<SoapDiscoveryService> discoveryService(new SoapDiscoveryService(servicesRegistry->GetComputer(), true, SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT));
   DiscoveryService.reset(new SoapService<SoapDiscoveryService>(8888, std::move(discoveryService)));
   DiscoveryService->Start();
 }

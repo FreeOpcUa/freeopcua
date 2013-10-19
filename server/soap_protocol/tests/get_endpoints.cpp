@@ -235,14 +235,15 @@ TEST(GetEndpoints, Response)
 
   ASSERT_EQ(deserialized.Header.InnerDiagnostics.size(), 2);
   const OpcUa::DiagnosticInfo& diag1 = deserialized.Header.InnerDiagnostics[0];
+  const OpcUa::DiagnosticInfo& srcDiag = response.Header.InnerDiagnostics[0];
   ASSERT_EQ(diag1.EncodingMask, mask);
-  ASSERT_EQ(diag1.AdditionalInfo, response.Header.InnerDiagnostics[0].AdditionalInfo);
-  ASSERT_EQ(diag1.InnerStatusCode, response.Header.InnerDiagnostics[0].InnerStatusCode);
-  ASSERT_EQ(diag1.Locale, response.Header.InnerDiagnostics[0].Locale);
-  ASSERT_EQ(diag1.LocalizedText, response.Header.InnerDiagnostics[0].LocalizedText);
-  ASSERT_EQ(diag1.NamespaceURI, response.Header.InnerDiagnostics[0].NamespaceURI);
-  ASSERT_EQ(diag1.SymbolicID, response.Header.InnerDiagnostics[0].SymbolicID);
-  ASSERT_EQ(deserialized.Header.InnerDiagnostics[1].EncodingMask, OpcUa::DiagnosticInfoMask::DIM_NONE);
+  ASSERT_EQ(diag1.AdditionalInfo, srcDiag.AdditionalInfo);
+  ASSERT_EQ(diag1.InnerStatusCode, srcDiag.InnerStatusCode);
+  ASSERT_EQ(diag1.Locale, srcDiag.Locale);
+  ASSERT_EQ(diag1.LocalizedText, srcDiag.LocalizedText);
+  ASSERT_EQ(diag1.NamespaceURI, srcDiag.NamespaceURI);
+  ASSERT_EQ(diag1.SymbolicID, srcDiag.SymbolicID);
+  ASSERT_EQ(diag1.EncodingMask, mask);
 
   ASSERT_EQ(deserialized.Endpoints.size(), 1);
   const OpcUa::EndpointDescription& d = deserialized.Endpoints[0];
