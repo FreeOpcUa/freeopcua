@@ -11,6 +11,8 @@
 #include "discovery_service.h"
 #include "serialize.h"
 
+#include <iostream>
+
 namespace OpcUa
 {
   namespace Impl
@@ -18,7 +20,7 @@ namespace OpcUa
 
     BasicHttpBinding_USCOREIDiscoveryEndpointService *SoapDiscoveryService::copy()
     {
-      return new SoapDiscoveryService(Computer);
+      return new SoapDiscoveryService(Computer, Debug);
     }
 
     int SoapDiscoveryService::FindServers(ns3__FindServersRequest *ns3__FindServersRequest_, ns3__FindServersResponse *ns3__FindServersResponse_)
@@ -28,6 +30,7 @@ namespace OpcUa
 
     int SoapDiscoveryService::GetEndpoints(ns3__GetEndpointsRequest* request, ns3__GetEndpointsResponse* response)
     {
+      if (Debug) std::clog << "soap: GetEndpoints received." << std::endl;
       OpcUa::EndpointsFilter filter;
       if (request->EndpointUrl)
       {
@@ -36,8 +39,15 @@ namespace OpcUa
 
       OpcUa::GetEndpointsResponse resp;
       resp.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+      if (Debug) std::clog << "Found " << resp.Endpoints.size() << " endpoints." << std::endl;
 
-      return SOAP_ERR;
+      if (Debug) std::clog << "Serializing response." << std::endl;
+      ns3__GetEndpointsResponse* r = Soap::Serialize(this, resp);
+      response->Endpoints = r->Endpoints;
+      response->ResponseHeader = r->ResponseHeader;
+
+      if (Debug) std::clog << "soap: GetEndpoints processed." << std::endl;
+      return SOAP_OK;
     }
 
   } // namespace Impl

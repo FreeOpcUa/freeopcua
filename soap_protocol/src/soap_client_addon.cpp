@@ -8,7 +8,9 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
+#include "deserialize.h"
 #include "serialize.h"
+
 
 #include <opc/ua/client/addon.h>
 
@@ -48,13 +50,9 @@ namespace
         throw std::logic_error(stream.str());
       }
 
-      std::vector<OpcUa::EndpointDescription> endpoints;
-      if (!soapResponse->Endpoints)
-      {
-        return endpoints;
-      }
+      OpcUa::GetEndpointsResponse resp = OpcUa::Soap::Deserialize(soapResponse);
 
-      return endpoints;
+      return resp.Endpoints;
     }
 
     virtual void RegisterServer(const OpcUa::Remote::ServerParameters& parameters)
