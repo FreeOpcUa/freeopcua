@@ -327,8 +327,8 @@ check: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest
 
 clean:
-	test -e gtest/Makefile && $(MAKE) -C gtest clean
-	test -e gmock/Makefile && $(MAKE) -C gmock clean
+	test -e gtest/Makefile && $(MAKE) -C gtest clean || true
+	test -e gmock/Makefile && $(MAKE) -C gmock clean || true
 
 dist: gmock/Makefile gtest/Makefile
 	$(MAKE) -C gtest dist
