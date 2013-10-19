@@ -48,6 +48,7 @@ lib_LTLIBRARIES = libopcua_soap_server.la libopcua_soap_client.la
 
 libopcua_soap_server_la_SOURCES = \
   src/deserialize.cpp \
+  src/deserialize.h \
   src/discovery_service.cpp \
   src/discovery_service.h \
   src/endpoint_service.cpp \
@@ -56,6 +57,7 @@ libopcua_soap_server_la_SOURCES = \
   src/registration_service.cpp \
   src/registration_service.h \
   src/serialize.cpp \
+  src/serialize.h \
   src/soap_addon.cpp \
   src/soap_addon.h \
   src/soap_addon_factory.h \
