@@ -25,7 +25,7 @@ python-dist:
 dist:
 
 distclean: clean
-	rm -rvf Makefile
+	rm -vf Makefile
 
 install: python-dist
 	python setup.py install --prefix=$(prefix)
