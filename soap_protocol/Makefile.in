@@ -109,7 +109,40 @@ am_libopcua_soap_client_la_OBJECTS =  \
 	libopcua_soap_client_la-namespaces.lo \
 	libopcua_soap_client_la-soap_client_addon.lo \
 	libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.lo \
-	libopcua_soap_client_la-soapC.lo
+	libopcua_soap_client_la-soapC_001.lo \
+	libopcua_soap_client_la-soapC_002.lo \
+	libopcua_soap_client_la-soapC_003.lo \
+	libopcua_soap_client_la-soapC_004.lo \
+	libopcua_soap_client_la-soapC_005.lo \
+	libopcua_soap_client_la-soapC_006.lo \
+	libopcua_soap_client_la-soapC_007.lo \
+	libopcua_soap_client_la-soapC_008.lo \
+	libopcua_soap_client_la-soapC_009.lo \
+	libopcua_soap_client_la-soapC_010.lo \
+	libopcua_soap_client_la-soapC_011.lo \
+	libopcua_soap_client_la-soapC_012.lo \
+	libopcua_soap_client_la-soapC_013.lo \
+	libopcua_soap_client_la-soapC_014.lo \
+	libopcua_soap_client_la-soapC_015.lo \
+	libopcua_soap_client_la-soapC_016.lo \
+	libopcua_soap_client_la-soapC_017.lo \
+	libopcua_soap_client_la-soapC_018.lo \
+	libopcua_soap_client_la-soapC_019.lo \
+	libopcua_soap_client_la-soapC_020.lo \
+	libopcua_soap_client_la-soapC_021.lo \
+	libopcua_soap_client_la-soapC_022.lo \
+	libopcua_soap_client_la-soapC_023.lo \
+	libopcua_soap_client_la-soapC_024.lo \
+	libopcua_soap_client_la-soapC_025.lo \
+	libopcua_soap_client_la-soapC_026.lo \
+	libopcua_soap_client_la-soapC_027.lo \
+	libopcua_soap_client_la-soapC_028.lo \
+	libopcua_soap_client_la-soapC_029.lo \
+	libopcua_soap_client_la-soapC_030.lo \
+	libopcua_soap_client_la-soapC_031.lo \
+	libopcua_soap_client_la-soapC_032.lo \
+	libopcua_soap_client_la-soapC_033.lo \
+	libopcua_soap_client_la-soapC_034.lo
 libopcua_soap_client_la_OBJECTS =  \
 	$(am_libopcua_soap_client_la_OBJECTS)
 libopcua_soap_client_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -129,7 +162,40 @@ am_libopcua_soap_server_la_OBJECTS =  \
 	libopcua_soap_server_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.lo \
 	libopcua_soap_server_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo \
 	libopcua_soap_server_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo \
-	libopcua_soap_server_la-soapC.lo
+	libopcua_soap_server_la-soapC_001.lo \
+	libopcua_soap_server_la-soapC_002.lo \
+	libopcua_soap_server_la-soapC_003.lo \
+	libopcua_soap_server_la-soapC_004.lo \
+	libopcua_soap_server_la-soapC_005.lo \
+	libopcua_soap_server_la-soapC_006.lo \
+	libopcua_soap_server_la-soapC_007.lo \
+	libopcua_soap_server_la-soapC_008.lo \
+	libopcua_soap_server_la-soapC_009.lo \
+	libopcua_soap_server_la-soapC_010.lo \
+	libopcua_soap_server_la-soapC_011.lo \
+	libopcua_soap_server_la-soapC_012.lo \
+	libopcua_soap_server_la-soapC_013.lo \
+	libopcua_soap_server_la-soapC_014.lo \
+	libopcua_soap_server_la-soapC_015.lo \
+	libopcua_soap_server_la-soapC_016.lo \
+	libopcua_soap_server_la-soapC_017.lo \
+	libopcua_soap_server_la-soapC_018.lo \
+	libopcua_soap_server_la-soapC_019.lo \
+	libopcua_soap_server_la-soapC_020.lo \
+	libopcua_soap_server_la-soapC_021.lo \
+	libopcua_soap_server_la-soapC_022.lo \
+	libopcua_soap_server_la-soapC_023.lo \
+	libopcua_soap_server_la-soapC_024.lo \
+	libopcua_soap_server_la-soapC_025.lo \
+	libopcua_soap_server_la-soapC_026.lo \
+	libopcua_soap_server_la-soapC_027.lo \
+	libopcua_soap_server_la-soapC_028.lo \
+	libopcua_soap_server_la-soapC_029.lo \
+	libopcua_soap_server_la-soapC_030.lo \
+	libopcua_soap_server_la-soapC_031.lo \
+	libopcua_soap_server_la-soapC_032.lo \
+	libopcua_soap_server_la-soapC_033.lo \
+	libopcua_soap_server_la-soapC_034.lo
 libopcua_soap_server_la_OBJECTS =  \
 	$(am_libopcua_soap_server_la_OBJECTS)
 libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -138,7 +204,24 @@ libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$@
 am_test_soap_OBJECTS = test_soap-serialize.$(OBJEXT) \
 	test_soap-deserialize.$(OBJEXT) test_soap-namespaces.$(OBJEXT) \
-	test_soap-get_endpoints.$(OBJEXT) test_soap-soapC.$(OBJEXT)
+	test_soap-get_endpoints.$(OBJEXT) \
+	test_soap-soapC_001.$(OBJEXT) test_soap-soapC_002.$(OBJEXT) \
+	test_soap-soapC_003.$(OBJEXT) test_soap-soapC_004.$(OBJEXT) \
+	test_soap-soapC_005.$(OBJEXT) test_soap-soapC_006.$(OBJEXT) \
+	test_soap-soapC_007.$(OBJEXT) test_soap-soapC_008.$(OBJEXT) \
+	test_soap-soapC_009.$(OBJEXT) test_soap-soapC_010.$(OBJEXT) \
+	test_soap-soapC_011.$(OBJEXT) test_soap-soapC_012.$(OBJEXT) \
+	test_soap-soapC_013.$(OBJEXT) test_soap-soapC_014.$(OBJEXT) \
+	test_soap-soapC_015.$(OBJEXT) test_soap-soapC_016.$(OBJEXT) \
+	test_soap-soapC_017.$(OBJEXT) test_soap-soapC_018.$(OBJEXT) \
+	test_soap-soapC_019.$(OBJEXT) test_soap-soapC_020.$(OBJEXT) \
+	test_soap-soapC_021.$(OBJEXT) test_soap-soapC_022.$(OBJEXT) \
+	test_soap-soapC_023.$(OBJEXT) test_soap-soapC_024.$(OBJEXT) \
+	test_soap-soapC_025.$(OBJEXT) test_soap-soapC_026.$(OBJEXT) \
+	test_soap-soapC_027.$(OBJEXT) test_soap-soapC_028.$(OBJEXT) \
+	test_soap-soapC_029.$(OBJEXT) test_soap-soapC_030.$(OBJEXT) \
+	test_soap-soapC_031.$(OBJEXT) test_soap-soapC_032.$(OBJEXT) \
+	test_soap-soapC_033.$(OBJEXT) test_soap-soapC_034.$(OBJEXT)
 test_soap_OBJECTS = $(am_test_soap_OBJECTS)
 test_soap_LDADD = $(LDADD)
 test_soap_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -349,7 +432,40 @@ libopcua_soap_server_la_SOURCES = \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
-  soapC.cpp
+  soapC_001.cpp \
+  soapC_002.cpp \
+  soapC_003.cpp \
+  soapC_004.cpp \
+  soapC_005.cpp \
+  soapC_006.cpp \
+  soapC_007.cpp \
+  soapC_008.cpp \
+  soapC_009.cpp \
+  soapC_010.cpp \
+  soapC_011.cpp \
+  soapC_012.cpp \
+  soapC_013.cpp \
+  soapC_014.cpp \
+  soapC_015.cpp \
+  soapC_016.cpp \
+  soapC_017.cpp \
+  soapC_018.cpp \
+  soapC_019.cpp \
+  soapC_020.cpp \
+  soapC_021.cpp \
+  soapC_022.cpp \
+  soapC_023.cpp \
+  soapC_024.cpp \
+  soapC_025.cpp \
+  soapC_026.cpp \
+  soapC_027.cpp \
+  soapC_028.cpp \
+  soapC_029.cpp \
+  soapC_030.cpp \
+  soapC_031.cpp \
+  soapC_032.cpp \
+  soapC_033.cpp \
+  soapC_034.cpp
 
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
 libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
@@ -359,7 +475,40 @@ libopcua_soap_client_la_SOURCES = \
   src/namespaces.cpp \
   src/soap_client_addon.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
-  soapC.cpp
+  soapC_001.cpp \
+  soapC_002.cpp \
+  soapC_003.cpp \
+  soapC_004.cpp \
+  soapC_005.cpp \
+  soapC_006.cpp \
+  soapC_007.cpp \
+  soapC_008.cpp \
+  soapC_009.cpp \
+  soapC_010.cpp \
+  soapC_011.cpp \
+  soapC_012.cpp \
+  soapC_013.cpp \
+  soapC_014.cpp \
+  soapC_015.cpp \
+  soapC_016.cpp \
+  soapC_017.cpp \
+  soapC_018.cpp \
+  soapC_019.cpp \
+  soapC_020.cpp \
+  soapC_021.cpp \
+  soapC_022.cpp \
+  soapC_023.cpp \
+  soapC_024.cpp \
+  soapC_025.cpp \
+  soapC_026.cpp \
+  soapC_027.cpp \
+  soapC_028.cpp \
+  soapC_029.cpp \
+  soapC_030.cpp \
+  soapC_031.cpp \
+  soapC_032.cpp \
+  soapC_033.cpp \
+  soapC_034.cpp
 
 libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) 
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
@@ -368,7 +517,40 @@ test_soap_SOURCES = \
   src/deserialize.cpp \
   src/namespaces.cpp \
   tests/get_endpoints.cpp \
-  soapC.cpp
+  soapC_001.cpp \
+  soapC_002.cpp \
+  soapC_003.cpp \
+  soapC_004.cpp \
+  soapC_005.cpp \
+  soapC_006.cpp \
+  soapC_007.cpp \
+  soapC_008.cpp \
+  soapC_009.cpp \
+  soapC_010.cpp \
+  soapC_011.cpp \
+  soapC_012.cpp \
+  soapC_013.cpp \
+  soapC_014.cpp \
+  soapC_015.cpp \
+  soapC_016.cpp \
+  soapC_017.cpp \
+  soapC_018.cpp \
+  soapC_019.cpp \
+  soapC_020.cpp \
+  soapC_021.cpp \
+  soapC_022.cpp \
+  soapC_023.cpp \
+  soapC_024.cpp \
+  soapC_025.cpp \
+  soapC_026.cpp \
+  soapC_027.cpp \
+  soapC_028.cpp \
+  soapC_029.cpp \
+  soapC_030.cpp \
+  soapC_031.cpp \
+  soapC_032.cpp \
+  soapC_033.cpp \
+  soapC_034.cpp
 
 test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
 test_soap_LDFLAGS = $(TESTLIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
@@ -396,7 +578,7 @@ CLEANFILES = \
   soapBasicHttpBinding_USCOREISessionEndpointService.h \
   soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointProxy.h \
-  soapC.cpp \
+  soapC_*.cpp \
   soapH.h \
   soapStub.h \
   *.xml \
@@ -495,7 +677,40 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-namespaces.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-serialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_001.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_002.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_003.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_004.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_005.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_006.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_007.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_008.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_009.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_010.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_011.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_012.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_013.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_014.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_015.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_016.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_017.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_018.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_019.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_020.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_021.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_022.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_023.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_024.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_025.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_026.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_027.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_028.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_029.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_030.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_031.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_032.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_033.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soapC_034.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_client_la-soap_client_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-deserialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-discovery_service.Plo@am__quote@
@@ -506,14 +721,80 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapBasicHttpBinding_USCOREISessionEndpointService.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_001.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_002.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_003.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_004.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_005.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_006.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_007.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_008.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_009.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_010.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_011.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_012.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_013.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_014.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_015.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_016.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_017.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_018.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_019.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_020.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_021.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_022.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_023.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_024.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_025.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_026.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_027.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_028.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_029.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_030.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_031.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_032.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_033.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soapC_034.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-deserialize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-namespaces.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-serialize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_001.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_002.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_003.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_004.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_005.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_006.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_007.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_008.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_009.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_010.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_011.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_012.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_013.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_014.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_015.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_016.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_017.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_018.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_019.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_020.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_021.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_022.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_023.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_024.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_025.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_026.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_027.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_028.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_029.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_030.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_031.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_032.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_033.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-soapC_034.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -571,12 +852,243 @@ libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.lo: s
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.lo `test -f 'soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp
 
-libopcua_soap_client_la-soapC.lo: soapC.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC.Tpo -c -o libopcua_soap_client_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC.cpp' object='libopcua_soap_client_la-soapC.lo' libtool=yes @AMDEPBACKSLASH@
+libopcua_soap_client_la-soapC_001.lo: soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_001.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_001.Tpo -c -o libopcua_soap_client_la-soapC_001.lo `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_001.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_001.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_001.cpp' object='libopcua_soap_client_la-soapC_001.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_001.lo `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
+
+libopcua_soap_client_la-soapC_002.lo: soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_002.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_002.Tpo -c -o libopcua_soap_client_la-soapC_002.lo `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_002.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_002.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_002.cpp' object='libopcua_soap_client_la-soapC_002.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_002.lo `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+
+libopcua_soap_client_la-soapC_003.lo: soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_003.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_003.Tpo -c -o libopcua_soap_client_la-soapC_003.lo `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_003.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_003.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_003.cpp' object='libopcua_soap_client_la-soapC_003.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_003.lo `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+
+libopcua_soap_client_la-soapC_004.lo: soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_004.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_004.Tpo -c -o libopcua_soap_client_la-soapC_004.lo `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_004.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_004.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_004.cpp' object='libopcua_soap_client_la-soapC_004.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_004.lo `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+
+libopcua_soap_client_la-soapC_005.lo: soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_005.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_005.Tpo -c -o libopcua_soap_client_la-soapC_005.lo `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_005.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_005.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_005.cpp' object='libopcua_soap_client_la-soapC_005.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_005.lo `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+
+libopcua_soap_client_la-soapC_006.lo: soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_006.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_006.Tpo -c -o libopcua_soap_client_la-soapC_006.lo `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_006.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_006.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_006.cpp' object='libopcua_soap_client_la-soapC_006.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_006.lo `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+
+libopcua_soap_client_la-soapC_007.lo: soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_007.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_007.Tpo -c -o libopcua_soap_client_la-soapC_007.lo `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_007.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_007.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_007.cpp' object='libopcua_soap_client_la-soapC_007.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_007.lo `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+
+libopcua_soap_client_la-soapC_008.lo: soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_008.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_008.Tpo -c -o libopcua_soap_client_la-soapC_008.lo `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_008.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_008.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_008.cpp' object='libopcua_soap_client_la-soapC_008.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_008.lo `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+
+libopcua_soap_client_la-soapC_009.lo: soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_009.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_009.Tpo -c -o libopcua_soap_client_la-soapC_009.lo `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_009.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_009.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_009.cpp' object='libopcua_soap_client_la-soapC_009.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_009.lo `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+
+libopcua_soap_client_la-soapC_010.lo: soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_010.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_010.Tpo -c -o libopcua_soap_client_la-soapC_010.lo `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_010.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_010.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_010.cpp' object='libopcua_soap_client_la-soapC_010.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_010.lo `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+
+libopcua_soap_client_la-soapC_011.lo: soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_011.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_011.Tpo -c -o libopcua_soap_client_la-soapC_011.lo `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_011.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_011.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_011.cpp' object='libopcua_soap_client_la-soapC_011.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_011.lo `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+
+libopcua_soap_client_la-soapC_012.lo: soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_012.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_012.Tpo -c -o libopcua_soap_client_la-soapC_012.lo `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_012.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_012.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_012.cpp' object='libopcua_soap_client_la-soapC_012.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_012.lo `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+
+libopcua_soap_client_la-soapC_013.lo: soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_013.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_013.Tpo -c -o libopcua_soap_client_la-soapC_013.lo `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_013.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_013.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_013.cpp' object='libopcua_soap_client_la-soapC_013.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_013.lo `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+
+libopcua_soap_client_la-soapC_014.lo: soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_014.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_014.Tpo -c -o libopcua_soap_client_la-soapC_014.lo `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_014.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_014.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_014.cpp' object='libopcua_soap_client_la-soapC_014.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_014.lo `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+
+libopcua_soap_client_la-soapC_015.lo: soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_015.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_015.Tpo -c -o libopcua_soap_client_la-soapC_015.lo `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_015.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_015.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_015.cpp' object='libopcua_soap_client_la-soapC_015.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_015.lo `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+
+libopcua_soap_client_la-soapC_016.lo: soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_016.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_016.Tpo -c -o libopcua_soap_client_la-soapC_016.lo `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_016.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_016.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_016.cpp' object='libopcua_soap_client_la-soapC_016.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_016.lo `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+
+libopcua_soap_client_la-soapC_017.lo: soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_017.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_017.Tpo -c -o libopcua_soap_client_la-soapC_017.lo `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_017.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_017.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_017.cpp' object='libopcua_soap_client_la-soapC_017.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_017.lo `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+
+libopcua_soap_client_la-soapC_018.lo: soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_018.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_018.Tpo -c -o libopcua_soap_client_la-soapC_018.lo `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_018.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_018.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_018.cpp' object='libopcua_soap_client_la-soapC_018.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_018.lo `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+
+libopcua_soap_client_la-soapC_019.lo: soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_019.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_019.Tpo -c -o libopcua_soap_client_la-soapC_019.lo `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_019.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_019.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_019.cpp' object='libopcua_soap_client_la-soapC_019.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_019.lo `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+
+libopcua_soap_client_la-soapC_020.lo: soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_020.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_020.Tpo -c -o libopcua_soap_client_la-soapC_020.lo `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_020.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_020.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_020.cpp' object='libopcua_soap_client_la-soapC_020.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_020.lo `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+
+libopcua_soap_client_la-soapC_021.lo: soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_021.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_021.Tpo -c -o libopcua_soap_client_la-soapC_021.lo `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_021.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_021.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_021.cpp' object='libopcua_soap_client_la-soapC_021.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_021.lo `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+
+libopcua_soap_client_la-soapC_022.lo: soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_022.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_022.Tpo -c -o libopcua_soap_client_la-soapC_022.lo `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_022.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_022.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_022.cpp' object='libopcua_soap_client_la-soapC_022.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_022.lo `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+
+libopcua_soap_client_la-soapC_023.lo: soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_023.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_023.Tpo -c -o libopcua_soap_client_la-soapC_023.lo `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_023.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_023.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_023.cpp' object='libopcua_soap_client_la-soapC_023.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_023.lo `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+
+libopcua_soap_client_la-soapC_024.lo: soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_024.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_024.Tpo -c -o libopcua_soap_client_la-soapC_024.lo `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_024.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_024.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_024.cpp' object='libopcua_soap_client_la-soapC_024.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_024.lo `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+
+libopcua_soap_client_la-soapC_025.lo: soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_025.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_025.Tpo -c -o libopcua_soap_client_la-soapC_025.lo `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_025.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_025.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_025.cpp' object='libopcua_soap_client_la-soapC_025.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_025.lo `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+
+libopcua_soap_client_la-soapC_026.lo: soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_026.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_026.Tpo -c -o libopcua_soap_client_la-soapC_026.lo `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_026.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_026.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_026.cpp' object='libopcua_soap_client_la-soapC_026.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_026.lo `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+
+libopcua_soap_client_la-soapC_027.lo: soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_027.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_027.Tpo -c -o libopcua_soap_client_la-soapC_027.lo `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_027.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_027.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_027.cpp' object='libopcua_soap_client_la-soapC_027.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_027.lo `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+
+libopcua_soap_client_la-soapC_028.lo: soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_028.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_028.Tpo -c -o libopcua_soap_client_la-soapC_028.lo `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_028.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_028.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_028.cpp' object='libopcua_soap_client_la-soapC_028.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_028.lo `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+
+libopcua_soap_client_la-soapC_029.lo: soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_029.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_029.Tpo -c -o libopcua_soap_client_la-soapC_029.lo `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_029.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_029.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_029.cpp' object='libopcua_soap_client_la-soapC_029.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_029.lo `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+
+libopcua_soap_client_la-soapC_030.lo: soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_030.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_030.Tpo -c -o libopcua_soap_client_la-soapC_030.lo `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_030.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_030.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_030.cpp' object='libopcua_soap_client_la-soapC_030.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_030.lo `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+
+libopcua_soap_client_la-soapC_031.lo: soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_031.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_031.Tpo -c -o libopcua_soap_client_la-soapC_031.lo `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_031.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_031.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_031.cpp' object='libopcua_soap_client_la-soapC_031.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_031.lo `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+
+libopcua_soap_client_la-soapC_032.lo: soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_032.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_032.Tpo -c -o libopcua_soap_client_la-soapC_032.lo `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_032.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_032.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_032.cpp' object='libopcua_soap_client_la-soapC_032.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_032.lo `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+
+libopcua_soap_client_la-soapC_033.lo: soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_033.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_033.Tpo -c -o libopcua_soap_client_la-soapC_033.lo `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_033.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_033.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_033.cpp' object='libopcua_soap_client_la-soapC_033.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_033.lo `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+
+libopcua_soap_client_la-soapC_034.lo: soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_client_la-soapC_034.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_client_la-soapC_034.Tpo -c -o libopcua_soap_client_la-soapC_034.lo `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_client_la-soapC_034.Tpo $(DEPDIR)/libopcua_soap_client_la-soapC_034.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_034.cpp' object='libopcua_soap_client_la-soapC_034.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_client_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_client_la-soapC_034.lo `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
 
 libopcua_soap_server_la-deserialize.lo: src/deserialize.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-deserialize.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-deserialize.Tpo -c -o libopcua_soap_server_la-deserialize.lo `test -f 'src/deserialize.cpp' || echo '$(srcdir)/'`src/deserialize.cpp
@@ -655,12 +1167,243 @@ libopcua_soap_server_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo: s
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo `test -f 'soapBasicHttpBinding_USCOREISessionEndpointService.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREISessionEndpointService.cpp
 
-libopcua_soap_server_la-soapC.lo: soapC.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC.Tpo -c -o libopcua_soap_server_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC.cpp' object='libopcua_soap_server_la-soapC.lo' libtool=yes @AMDEPBACKSLASH@
+libopcua_soap_server_la-soapC_001.lo: soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_001.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_001.Tpo -c -o libopcua_soap_server_la-soapC_001.lo `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_001.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_001.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_001.cpp' object='libopcua_soap_server_la-soapC_001.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC.lo `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_001.lo `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
+
+libopcua_soap_server_la-soapC_002.lo: soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_002.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_002.Tpo -c -o libopcua_soap_server_la-soapC_002.lo `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_002.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_002.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_002.cpp' object='libopcua_soap_server_la-soapC_002.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_002.lo `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+
+libopcua_soap_server_la-soapC_003.lo: soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_003.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_003.Tpo -c -o libopcua_soap_server_la-soapC_003.lo `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_003.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_003.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_003.cpp' object='libopcua_soap_server_la-soapC_003.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_003.lo `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+
+libopcua_soap_server_la-soapC_004.lo: soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_004.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_004.Tpo -c -o libopcua_soap_server_la-soapC_004.lo `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_004.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_004.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_004.cpp' object='libopcua_soap_server_la-soapC_004.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_004.lo `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+
+libopcua_soap_server_la-soapC_005.lo: soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_005.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_005.Tpo -c -o libopcua_soap_server_la-soapC_005.lo `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_005.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_005.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_005.cpp' object='libopcua_soap_server_la-soapC_005.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_005.lo `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+
+libopcua_soap_server_la-soapC_006.lo: soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_006.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_006.Tpo -c -o libopcua_soap_server_la-soapC_006.lo `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_006.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_006.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_006.cpp' object='libopcua_soap_server_la-soapC_006.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_006.lo `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+
+libopcua_soap_server_la-soapC_007.lo: soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_007.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_007.Tpo -c -o libopcua_soap_server_la-soapC_007.lo `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_007.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_007.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_007.cpp' object='libopcua_soap_server_la-soapC_007.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_007.lo `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+
+libopcua_soap_server_la-soapC_008.lo: soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_008.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_008.Tpo -c -o libopcua_soap_server_la-soapC_008.lo `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_008.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_008.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_008.cpp' object='libopcua_soap_server_la-soapC_008.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_008.lo `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+
+libopcua_soap_server_la-soapC_009.lo: soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_009.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_009.Tpo -c -o libopcua_soap_server_la-soapC_009.lo `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_009.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_009.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_009.cpp' object='libopcua_soap_server_la-soapC_009.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_009.lo `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+
+libopcua_soap_server_la-soapC_010.lo: soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_010.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_010.Tpo -c -o libopcua_soap_server_la-soapC_010.lo `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_010.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_010.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_010.cpp' object='libopcua_soap_server_la-soapC_010.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_010.lo `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+
+libopcua_soap_server_la-soapC_011.lo: soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_011.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_011.Tpo -c -o libopcua_soap_server_la-soapC_011.lo `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_011.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_011.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_011.cpp' object='libopcua_soap_server_la-soapC_011.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_011.lo `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+
+libopcua_soap_server_la-soapC_012.lo: soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_012.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_012.Tpo -c -o libopcua_soap_server_la-soapC_012.lo `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_012.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_012.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_012.cpp' object='libopcua_soap_server_la-soapC_012.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_012.lo `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+
+libopcua_soap_server_la-soapC_013.lo: soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_013.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_013.Tpo -c -o libopcua_soap_server_la-soapC_013.lo `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_013.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_013.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_013.cpp' object='libopcua_soap_server_la-soapC_013.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_013.lo `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+
+libopcua_soap_server_la-soapC_014.lo: soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_014.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_014.Tpo -c -o libopcua_soap_server_la-soapC_014.lo `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_014.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_014.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_014.cpp' object='libopcua_soap_server_la-soapC_014.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_014.lo `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+
+libopcua_soap_server_la-soapC_015.lo: soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_015.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_015.Tpo -c -o libopcua_soap_server_la-soapC_015.lo `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_015.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_015.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_015.cpp' object='libopcua_soap_server_la-soapC_015.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_015.lo `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+
+libopcua_soap_server_la-soapC_016.lo: soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_016.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_016.Tpo -c -o libopcua_soap_server_la-soapC_016.lo `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_016.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_016.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_016.cpp' object='libopcua_soap_server_la-soapC_016.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_016.lo `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+
+libopcua_soap_server_la-soapC_017.lo: soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_017.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_017.Tpo -c -o libopcua_soap_server_la-soapC_017.lo `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_017.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_017.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_017.cpp' object='libopcua_soap_server_la-soapC_017.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_017.lo `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+
+libopcua_soap_server_la-soapC_018.lo: soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_018.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_018.Tpo -c -o libopcua_soap_server_la-soapC_018.lo `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_018.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_018.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_018.cpp' object='libopcua_soap_server_la-soapC_018.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_018.lo `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+
+libopcua_soap_server_la-soapC_019.lo: soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_019.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_019.Tpo -c -o libopcua_soap_server_la-soapC_019.lo `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_019.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_019.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_019.cpp' object='libopcua_soap_server_la-soapC_019.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_019.lo `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+
+libopcua_soap_server_la-soapC_020.lo: soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_020.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_020.Tpo -c -o libopcua_soap_server_la-soapC_020.lo `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_020.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_020.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_020.cpp' object='libopcua_soap_server_la-soapC_020.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_020.lo `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+
+libopcua_soap_server_la-soapC_021.lo: soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_021.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_021.Tpo -c -o libopcua_soap_server_la-soapC_021.lo `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_021.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_021.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_021.cpp' object='libopcua_soap_server_la-soapC_021.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_021.lo `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+
+libopcua_soap_server_la-soapC_022.lo: soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_022.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_022.Tpo -c -o libopcua_soap_server_la-soapC_022.lo `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_022.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_022.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_022.cpp' object='libopcua_soap_server_la-soapC_022.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_022.lo `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+
+libopcua_soap_server_la-soapC_023.lo: soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_023.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_023.Tpo -c -o libopcua_soap_server_la-soapC_023.lo `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_023.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_023.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_023.cpp' object='libopcua_soap_server_la-soapC_023.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_023.lo `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+
+libopcua_soap_server_la-soapC_024.lo: soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_024.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_024.Tpo -c -o libopcua_soap_server_la-soapC_024.lo `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_024.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_024.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_024.cpp' object='libopcua_soap_server_la-soapC_024.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_024.lo `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+
+libopcua_soap_server_la-soapC_025.lo: soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_025.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_025.Tpo -c -o libopcua_soap_server_la-soapC_025.lo `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_025.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_025.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_025.cpp' object='libopcua_soap_server_la-soapC_025.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_025.lo `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+
+libopcua_soap_server_la-soapC_026.lo: soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_026.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_026.Tpo -c -o libopcua_soap_server_la-soapC_026.lo `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_026.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_026.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_026.cpp' object='libopcua_soap_server_la-soapC_026.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_026.lo `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+
+libopcua_soap_server_la-soapC_027.lo: soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_027.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_027.Tpo -c -o libopcua_soap_server_la-soapC_027.lo `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_027.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_027.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_027.cpp' object='libopcua_soap_server_la-soapC_027.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_027.lo `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+
+libopcua_soap_server_la-soapC_028.lo: soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_028.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_028.Tpo -c -o libopcua_soap_server_la-soapC_028.lo `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_028.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_028.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_028.cpp' object='libopcua_soap_server_la-soapC_028.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_028.lo `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+
+libopcua_soap_server_la-soapC_029.lo: soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_029.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_029.Tpo -c -o libopcua_soap_server_la-soapC_029.lo `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_029.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_029.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_029.cpp' object='libopcua_soap_server_la-soapC_029.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_029.lo `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+
+libopcua_soap_server_la-soapC_030.lo: soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_030.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_030.Tpo -c -o libopcua_soap_server_la-soapC_030.lo `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_030.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_030.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_030.cpp' object='libopcua_soap_server_la-soapC_030.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_030.lo `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+
+libopcua_soap_server_la-soapC_031.lo: soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_031.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_031.Tpo -c -o libopcua_soap_server_la-soapC_031.lo `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_031.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_031.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_031.cpp' object='libopcua_soap_server_la-soapC_031.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_031.lo `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+
+libopcua_soap_server_la-soapC_032.lo: soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_032.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_032.Tpo -c -o libopcua_soap_server_la-soapC_032.lo `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_032.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_032.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_032.cpp' object='libopcua_soap_server_la-soapC_032.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_032.lo `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+
+libopcua_soap_server_la-soapC_033.lo: soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_033.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_033.Tpo -c -o libopcua_soap_server_la-soapC_033.lo `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_033.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_033.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_033.cpp' object='libopcua_soap_server_la-soapC_033.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_033.lo `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+
+libopcua_soap_server_la-soapC_034.lo: soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soapC_034.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soapC_034.Tpo -c -o libopcua_soap_server_la-soapC_034.lo `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soapC_034.Tpo $(DEPDIR)/libopcua_soap_server_la-soapC_034.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_034.cpp' object='libopcua_soap_server_la-soapC_034.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soapC_034.lo `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
 
 test_soap-serialize.o: src/serialize.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-serialize.o -MD -MP -MF $(DEPDIR)/test_soap-serialize.Tpo -c -o test_soap-serialize.o `test -f 'src/serialize.cpp' || echo '$(srcdir)/'`src/serialize.cpp
@@ -718,19 +1461,481 @@ test_soap-get_endpoints.obj: tests/get_endpoints.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-get_endpoints.obj `if test -f 'tests/get_endpoints.cpp'; then $(CYGPATH_W) 'tests/get_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/get_endpoints.cpp'; fi`
 
-test_soap-soapC.o: soapC.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC.o -MD -MP -MF $(DEPDIR)/test_soap-soapC.Tpo -c -o test_soap-soapC.o `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC.Tpo $(DEPDIR)/test_soap-soapC.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC.cpp' object='test_soap-soapC.o' libtool=no @AMDEPBACKSLASH@
+test_soap-soapC_001.o: soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_001.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_001.Tpo -c -o test_soap-soapC_001.o `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_001.Tpo $(DEPDIR)/test_soap-soapC_001.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_001.cpp' object='test_soap-soapC_001.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC.o `test -f 'soapC.cpp' || echo '$(srcdir)/'`soapC.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_001.o `test -f 'soapC_001.cpp' || echo '$(srcdir)/'`soapC_001.cpp
 
-test_soap-soapC.obj: soapC.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC.Tpo -c -o test_soap-soapC.obj `if test -f 'soapC.cpp'; then $(CYGPATH_W) 'soapC.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC.Tpo $(DEPDIR)/test_soap-soapC.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC.cpp' object='test_soap-soapC.obj' libtool=no @AMDEPBACKSLASH@
+test_soap-soapC_001.obj: soapC_001.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_001.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_001.Tpo -c -o test_soap-soapC_001.obj `if test -f 'soapC_001.cpp'; then $(CYGPATH_W) 'soapC_001.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_001.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_001.Tpo $(DEPDIR)/test_soap-soapC_001.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_001.cpp' object='test_soap-soapC_001.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC.obj `if test -f 'soapC.cpp'; then $(CYGPATH_W) 'soapC.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_001.obj `if test -f 'soapC_001.cpp'; then $(CYGPATH_W) 'soapC_001.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_001.cpp'; fi`
+
+test_soap-soapC_002.o: soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_002.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_002.Tpo -c -o test_soap-soapC_002.o `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_002.Tpo $(DEPDIR)/test_soap-soapC_002.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_002.cpp' object='test_soap-soapC_002.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_002.o `test -f 'soapC_002.cpp' || echo '$(srcdir)/'`soapC_002.cpp
+
+test_soap-soapC_002.obj: soapC_002.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_002.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_002.Tpo -c -o test_soap-soapC_002.obj `if test -f 'soapC_002.cpp'; then $(CYGPATH_W) 'soapC_002.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_002.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_002.Tpo $(DEPDIR)/test_soap-soapC_002.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_002.cpp' object='test_soap-soapC_002.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_002.obj `if test -f 'soapC_002.cpp'; then $(CYGPATH_W) 'soapC_002.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_002.cpp'; fi`
+
+test_soap-soapC_003.o: soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_003.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_003.Tpo -c -o test_soap-soapC_003.o `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_003.Tpo $(DEPDIR)/test_soap-soapC_003.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_003.cpp' object='test_soap-soapC_003.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_003.o `test -f 'soapC_003.cpp' || echo '$(srcdir)/'`soapC_003.cpp
+
+test_soap-soapC_003.obj: soapC_003.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_003.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_003.Tpo -c -o test_soap-soapC_003.obj `if test -f 'soapC_003.cpp'; then $(CYGPATH_W) 'soapC_003.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_003.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_003.Tpo $(DEPDIR)/test_soap-soapC_003.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_003.cpp' object='test_soap-soapC_003.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_003.obj `if test -f 'soapC_003.cpp'; then $(CYGPATH_W) 'soapC_003.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_003.cpp'; fi`
+
+test_soap-soapC_004.o: soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_004.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_004.Tpo -c -o test_soap-soapC_004.o `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_004.Tpo $(DEPDIR)/test_soap-soapC_004.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_004.cpp' object='test_soap-soapC_004.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_004.o `test -f 'soapC_004.cpp' || echo '$(srcdir)/'`soapC_004.cpp
+
+test_soap-soapC_004.obj: soapC_004.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_004.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_004.Tpo -c -o test_soap-soapC_004.obj `if test -f 'soapC_004.cpp'; then $(CYGPATH_W) 'soapC_004.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_004.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_004.Tpo $(DEPDIR)/test_soap-soapC_004.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_004.cpp' object='test_soap-soapC_004.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_004.obj `if test -f 'soapC_004.cpp'; then $(CYGPATH_W) 'soapC_004.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_004.cpp'; fi`
+
+test_soap-soapC_005.o: soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_005.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_005.Tpo -c -o test_soap-soapC_005.o `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_005.Tpo $(DEPDIR)/test_soap-soapC_005.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_005.cpp' object='test_soap-soapC_005.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_005.o `test -f 'soapC_005.cpp' || echo '$(srcdir)/'`soapC_005.cpp
+
+test_soap-soapC_005.obj: soapC_005.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_005.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_005.Tpo -c -o test_soap-soapC_005.obj `if test -f 'soapC_005.cpp'; then $(CYGPATH_W) 'soapC_005.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_005.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_005.Tpo $(DEPDIR)/test_soap-soapC_005.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_005.cpp' object='test_soap-soapC_005.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_005.obj `if test -f 'soapC_005.cpp'; then $(CYGPATH_W) 'soapC_005.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_005.cpp'; fi`
+
+test_soap-soapC_006.o: soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_006.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_006.Tpo -c -o test_soap-soapC_006.o `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_006.Tpo $(DEPDIR)/test_soap-soapC_006.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_006.cpp' object='test_soap-soapC_006.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_006.o `test -f 'soapC_006.cpp' || echo '$(srcdir)/'`soapC_006.cpp
+
+test_soap-soapC_006.obj: soapC_006.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_006.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_006.Tpo -c -o test_soap-soapC_006.obj `if test -f 'soapC_006.cpp'; then $(CYGPATH_W) 'soapC_006.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_006.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_006.Tpo $(DEPDIR)/test_soap-soapC_006.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_006.cpp' object='test_soap-soapC_006.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_006.obj `if test -f 'soapC_006.cpp'; then $(CYGPATH_W) 'soapC_006.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_006.cpp'; fi`
+
+test_soap-soapC_007.o: soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_007.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_007.Tpo -c -o test_soap-soapC_007.o `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_007.Tpo $(DEPDIR)/test_soap-soapC_007.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_007.cpp' object='test_soap-soapC_007.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_007.o `test -f 'soapC_007.cpp' || echo '$(srcdir)/'`soapC_007.cpp
+
+test_soap-soapC_007.obj: soapC_007.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_007.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_007.Tpo -c -o test_soap-soapC_007.obj `if test -f 'soapC_007.cpp'; then $(CYGPATH_W) 'soapC_007.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_007.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_007.Tpo $(DEPDIR)/test_soap-soapC_007.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_007.cpp' object='test_soap-soapC_007.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_007.obj `if test -f 'soapC_007.cpp'; then $(CYGPATH_W) 'soapC_007.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_007.cpp'; fi`
+
+test_soap-soapC_008.o: soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_008.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_008.Tpo -c -o test_soap-soapC_008.o `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_008.Tpo $(DEPDIR)/test_soap-soapC_008.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_008.cpp' object='test_soap-soapC_008.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_008.o `test -f 'soapC_008.cpp' || echo '$(srcdir)/'`soapC_008.cpp
+
+test_soap-soapC_008.obj: soapC_008.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_008.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_008.Tpo -c -o test_soap-soapC_008.obj `if test -f 'soapC_008.cpp'; then $(CYGPATH_W) 'soapC_008.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_008.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_008.Tpo $(DEPDIR)/test_soap-soapC_008.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_008.cpp' object='test_soap-soapC_008.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_008.obj `if test -f 'soapC_008.cpp'; then $(CYGPATH_W) 'soapC_008.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_008.cpp'; fi`
+
+test_soap-soapC_009.o: soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_009.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_009.Tpo -c -o test_soap-soapC_009.o `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_009.Tpo $(DEPDIR)/test_soap-soapC_009.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_009.cpp' object='test_soap-soapC_009.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_009.o `test -f 'soapC_009.cpp' || echo '$(srcdir)/'`soapC_009.cpp
+
+test_soap-soapC_009.obj: soapC_009.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_009.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_009.Tpo -c -o test_soap-soapC_009.obj `if test -f 'soapC_009.cpp'; then $(CYGPATH_W) 'soapC_009.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_009.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_009.Tpo $(DEPDIR)/test_soap-soapC_009.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_009.cpp' object='test_soap-soapC_009.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_009.obj `if test -f 'soapC_009.cpp'; then $(CYGPATH_W) 'soapC_009.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_009.cpp'; fi`
+
+test_soap-soapC_010.o: soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_010.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_010.Tpo -c -o test_soap-soapC_010.o `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_010.Tpo $(DEPDIR)/test_soap-soapC_010.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_010.cpp' object='test_soap-soapC_010.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_010.o `test -f 'soapC_010.cpp' || echo '$(srcdir)/'`soapC_010.cpp
+
+test_soap-soapC_010.obj: soapC_010.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_010.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_010.Tpo -c -o test_soap-soapC_010.obj `if test -f 'soapC_010.cpp'; then $(CYGPATH_W) 'soapC_010.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_010.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_010.Tpo $(DEPDIR)/test_soap-soapC_010.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_010.cpp' object='test_soap-soapC_010.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_010.obj `if test -f 'soapC_010.cpp'; then $(CYGPATH_W) 'soapC_010.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_010.cpp'; fi`
+
+test_soap-soapC_011.o: soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_011.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_011.Tpo -c -o test_soap-soapC_011.o `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_011.Tpo $(DEPDIR)/test_soap-soapC_011.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_011.cpp' object='test_soap-soapC_011.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_011.o `test -f 'soapC_011.cpp' || echo '$(srcdir)/'`soapC_011.cpp
+
+test_soap-soapC_011.obj: soapC_011.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_011.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_011.Tpo -c -o test_soap-soapC_011.obj `if test -f 'soapC_011.cpp'; then $(CYGPATH_W) 'soapC_011.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_011.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_011.Tpo $(DEPDIR)/test_soap-soapC_011.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_011.cpp' object='test_soap-soapC_011.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_011.obj `if test -f 'soapC_011.cpp'; then $(CYGPATH_W) 'soapC_011.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_011.cpp'; fi`
+
+test_soap-soapC_012.o: soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_012.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_012.Tpo -c -o test_soap-soapC_012.o `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_012.Tpo $(DEPDIR)/test_soap-soapC_012.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_012.cpp' object='test_soap-soapC_012.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_012.o `test -f 'soapC_012.cpp' || echo '$(srcdir)/'`soapC_012.cpp
+
+test_soap-soapC_012.obj: soapC_012.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_012.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_012.Tpo -c -o test_soap-soapC_012.obj `if test -f 'soapC_012.cpp'; then $(CYGPATH_W) 'soapC_012.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_012.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_012.Tpo $(DEPDIR)/test_soap-soapC_012.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_012.cpp' object='test_soap-soapC_012.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_012.obj `if test -f 'soapC_012.cpp'; then $(CYGPATH_W) 'soapC_012.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_012.cpp'; fi`
+
+test_soap-soapC_013.o: soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_013.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_013.Tpo -c -o test_soap-soapC_013.o `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_013.Tpo $(DEPDIR)/test_soap-soapC_013.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_013.cpp' object='test_soap-soapC_013.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_013.o `test -f 'soapC_013.cpp' || echo '$(srcdir)/'`soapC_013.cpp
+
+test_soap-soapC_013.obj: soapC_013.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_013.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_013.Tpo -c -o test_soap-soapC_013.obj `if test -f 'soapC_013.cpp'; then $(CYGPATH_W) 'soapC_013.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_013.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_013.Tpo $(DEPDIR)/test_soap-soapC_013.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_013.cpp' object='test_soap-soapC_013.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_013.obj `if test -f 'soapC_013.cpp'; then $(CYGPATH_W) 'soapC_013.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_013.cpp'; fi`
+
+test_soap-soapC_014.o: soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_014.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_014.Tpo -c -o test_soap-soapC_014.o `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_014.Tpo $(DEPDIR)/test_soap-soapC_014.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_014.cpp' object='test_soap-soapC_014.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_014.o `test -f 'soapC_014.cpp' || echo '$(srcdir)/'`soapC_014.cpp
+
+test_soap-soapC_014.obj: soapC_014.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_014.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_014.Tpo -c -o test_soap-soapC_014.obj `if test -f 'soapC_014.cpp'; then $(CYGPATH_W) 'soapC_014.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_014.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_014.Tpo $(DEPDIR)/test_soap-soapC_014.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_014.cpp' object='test_soap-soapC_014.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_014.obj `if test -f 'soapC_014.cpp'; then $(CYGPATH_W) 'soapC_014.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_014.cpp'; fi`
+
+test_soap-soapC_015.o: soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_015.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_015.Tpo -c -o test_soap-soapC_015.o `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_015.Tpo $(DEPDIR)/test_soap-soapC_015.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_015.cpp' object='test_soap-soapC_015.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_015.o `test -f 'soapC_015.cpp' || echo '$(srcdir)/'`soapC_015.cpp
+
+test_soap-soapC_015.obj: soapC_015.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_015.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_015.Tpo -c -o test_soap-soapC_015.obj `if test -f 'soapC_015.cpp'; then $(CYGPATH_W) 'soapC_015.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_015.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_015.Tpo $(DEPDIR)/test_soap-soapC_015.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_015.cpp' object='test_soap-soapC_015.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_015.obj `if test -f 'soapC_015.cpp'; then $(CYGPATH_W) 'soapC_015.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_015.cpp'; fi`
+
+test_soap-soapC_016.o: soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_016.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_016.Tpo -c -o test_soap-soapC_016.o `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_016.Tpo $(DEPDIR)/test_soap-soapC_016.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_016.cpp' object='test_soap-soapC_016.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_016.o `test -f 'soapC_016.cpp' || echo '$(srcdir)/'`soapC_016.cpp
+
+test_soap-soapC_016.obj: soapC_016.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_016.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_016.Tpo -c -o test_soap-soapC_016.obj `if test -f 'soapC_016.cpp'; then $(CYGPATH_W) 'soapC_016.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_016.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_016.Tpo $(DEPDIR)/test_soap-soapC_016.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_016.cpp' object='test_soap-soapC_016.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_016.obj `if test -f 'soapC_016.cpp'; then $(CYGPATH_W) 'soapC_016.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_016.cpp'; fi`
+
+test_soap-soapC_017.o: soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_017.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_017.Tpo -c -o test_soap-soapC_017.o `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_017.Tpo $(DEPDIR)/test_soap-soapC_017.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_017.cpp' object='test_soap-soapC_017.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_017.o `test -f 'soapC_017.cpp' || echo '$(srcdir)/'`soapC_017.cpp
+
+test_soap-soapC_017.obj: soapC_017.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_017.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_017.Tpo -c -o test_soap-soapC_017.obj `if test -f 'soapC_017.cpp'; then $(CYGPATH_W) 'soapC_017.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_017.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_017.Tpo $(DEPDIR)/test_soap-soapC_017.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_017.cpp' object='test_soap-soapC_017.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_017.obj `if test -f 'soapC_017.cpp'; then $(CYGPATH_W) 'soapC_017.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_017.cpp'; fi`
+
+test_soap-soapC_018.o: soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_018.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_018.Tpo -c -o test_soap-soapC_018.o `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_018.Tpo $(DEPDIR)/test_soap-soapC_018.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_018.cpp' object='test_soap-soapC_018.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_018.o `test -f 'soapC_018.cpp' || echo '$(srcdir)/'`soapC_018.cpp
+
+test_soap-soapC_018.obj: soapC_018.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_018.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_018.Tpo -c -o test_soap-soapC_018.obj `if test -f 'soapC_018.cpp'; then $(CYGPATH_W) 'soapC_018.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_018.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_018.Tpo $(DEPDIR)/test_soap-soapC_018.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_018.cpp' object='test_soap-soapC_018.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_018.obj `if test -f 'soapC_018.cpp'; then $(CYGPATH_W) 'soapC_018.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_018.cpp'; fi`
+
+test_soap-soapC_019.o: soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_019.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_019.Tpo -c -o test_soap-soapC_019.o `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_019.Tpo $(DEPDIR)/test_soap-soapC_019.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_019.cpp' object='test_soap-soapC_019.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_019.o `test -f 'soapC_019.cpp' || echo '$(srcdir)/'`soapC_019.cpp
+
+test_soap-soapC_019.obj: soapC_019.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_019.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_019.Tpo -c -o test_soap-soapC_019.obj `if test -f 'soapC_019.cpp'; then $(CYGPATH_W) 'soapC_019.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_019.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_019.Tpo $(DEPDIR)/test_soap-soapC_019.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_019.cpp' object='test_soap-soapC_019.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_019.obj `if test -f 'soapC_019.cpp'; then $(CYGPATH_W) 'soapC_019.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_019.cpp'; fi`
+
+test_soap-soapC_020.o: soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_020.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_020.Tpo -c -o test_soap-soapC_020.o `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_020.Tpo $(DEPDIR)/test_soap-soapC_020.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_020.cpp' object='test_soap-soapC_020.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_020.o `test -f 'soapC_020.cpp' || echo '$(srcdir)/'`soapC_020.cpp
+
+test_soap-soapC_020.obj: soapC_020.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_020.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_020.Tpo -c -o test_soap-soapC_020.obj `if test -f 'soapC_020.cpp'; then $(CYGPATH_W) 'soapC_020.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_020.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_020.Tpo $(DEPDIR)/test_soap-soapC_020.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_020.cpp' object='test_soap-soapC_020.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_020.obj `if test -f 'soapC_020.cpp'; then $(CYGPATH_W) 'soapC_020.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_020.cpp'; fi`
+
+test_soap-soapC_021.o: soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_021.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_021.Tpo -c -o test_soap-soapC_021.o `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_021.Tpo $(DEPDIR)/test_soap-soapC_021.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_021.cpp' object='test_soap-soapC_021.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_021.o `test -f 'soapC_021.cpp' || echo '$(srcdir)/'`soapC_021.cpp
+
+test_soap-soapC_021.obj: soapC_021.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_021.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_021.Tpo -c -o test_soap-soapC_021.obj `if test -f 'soapC_021.cpp'; then $(CYGPATH_W) 'soapC_021.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_021.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_021.Tpo $(DEPDIR)/test_soap-soapC_021.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_021.cpp' object='test_soap-soapC_021.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_021.obj `if test -f 'soapC_021.cpp'; then $(CYGPATH_W) 'soapC_021.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_021.cpp'; fi`
+
+test_soap-soapC_022.o: soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_022.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_022.Tpo -c -o test_soap-soapC_022.o `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_022.Tpo $(DEPDIR)/test_soap-soapC_022.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_022.cpp' object='test_soap-soapC_022.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_022.o `test -f 'soapC_022.cpp' || echo '$(srcdir)/'`soapC_022.cpp
+
+test_soap-soapC_022.obj: soapC_022.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_022.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_022.Tpo -c -o test_soap-soapC_022.obj `if test -f 'soapC_022.cpp'; then $(CYGPATH_W) 'soapC_022.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_022.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_022.Tpo $(DEPDIR)/test_soap-soapC_022.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_022.cpp' object='test_soap-soapC_022.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_022.obj `if test -f 'soapC_022.cpp'; then $(CYGPATH_W) 'soapC_022.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_022.cpp'; fi`
+
+test_soap-soapC_023.o: soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_023.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_023.Tpo -c -o test_soap-soapC_023.o `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_023.Tpo $(DEPDIR)/test_soap-soapC_023.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_023.cpp' object='test_soap-soapC_023.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_023.o `test -f 'soapC_023.cpp' || echo '$(srcdir)/'`soapC_023.cpp
+
+test_soap-soapC_023.obj: soapC_023.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_023.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_023.Tpo -c -o test_soap-soapC_023.obj `if test -f 'soapC_023.cpp'; then $(CYGPATH_W) 'soapC_023.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_023.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_023.Tpo $(DEPDIR)/test_soap-soapC_023.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_023.cpp' object='test_soap-soapC_023.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_023.obj `if test -f 'soapC_023.cpp'; then $(CYGPATH_W) 'soapC_023.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_023.cpp'; fi`
+
+test_soap-soapC_024.o: soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_024.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_024.Tpo -c -o test_soap-soapC_024.o `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_024.Tpo $(DEPDIR)/test_soap-soapC_024.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_024.cpp' object='test_soap-soapC_024.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_024.o `test -f 'soapC_024.cpp' || echo '$(srcdir)/'`soapC_024.cpp
+
+test_soap-soapC_024.obj: soapC_024.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_024.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_024.Tpo -c -o test_soap-soapC_024.obj `if test -f 'soapC_024.cpp'; then $(CYGPATH_W) 'soapC_024.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_024.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_024.Tpo $(DEPDIR)/test_soap-soapC_024.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_024.cpp' object='test_soap-soapC_024.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_024.obj `if test -f 'soapC_024.cpp'; then $(CYGPATH_W) 'soapC_024.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_024.cpp'; fi`
+
+test_soap-soapC_025.o: soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_025.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_025.Tpo -c -o test_soap-soapC_025.o `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_025.Tpo $(DEPDIR)/test_soap-soapC_025.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_025.cpp' object='test_soap-soapC_025.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_025.o `test -f 'soapC_025.cpp' || echo '$(srcdir)/'`soapC_025.cpp
+
+test_soap-soapC_025.obj: soapC_025.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_025.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_025.Tpo -c -o test_soap-soapC_025.obj `if test -f 'soapC_025.cpp'; then $(CYGPATH_W) 'soapC_025.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_025.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_025.Tpo $(DEPDIR)/test_soap-soapC_025.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_025.cpp' object='test_soap-soapC_025.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_025.obj `if test -f 'soapC_025.cpp'; then $(CYGPATH_W) 'soapC_025.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_025.cpp'; fi`
+
+test_soap-soapC_026.o: soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_026.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_026.Tpo -c -o test_soap-soapC_026.o `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_026.Tpo $(DEPDIR)/test_soap-soapC_026.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_026.cpp' object='test_soap-soapC_026.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_026.o `test -f 'soapC_026.cpp' || echo '$(srcdir)/'`soapC_026.cpp
+
+test_soap-soapC_026.obj: soapC_026.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_026.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_026.Tpo -c -o test_soap-soapC_026.obj `if test -f 'soapC_026.cpp'; then $(CYGPATH_W) 'soapC_026.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_026.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_026.Tpo $(DEPDIR)/test_soap-soapC_026.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_026.cpp' object='test_soap-soapC_026.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_026.obj `if test -f 'soapC_026.cpp'; then $(CYGPATH_W) 'soapC_026.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_026.cpp'; fi`
+
+test_soap-soapC_027.o: soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_027.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_027.Tpo -c -o test_soap-soapC_027.o `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_027.Tpo $(DEPDIR)/test_soap-soapC_027.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_027.cpp' object='test_soap-soapC_027.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_027.o `test -f 'soapC_027.cpp' || echo '$(srcdir)/'`soapC_027.cpp
+
+test_soap-soapC_027.obj: soapC_027.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_027.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_027.Tpo -c -o test_soap-soapC_027.obj `if test -f 'soapC_027.cpp'; then $(CYGPATH_W) 'soapC_027.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_027.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_027.Tpo $(DEPDIR)/test_soap-soapC_027.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_027.cpp' object='test_soap-soapC_027.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_027.obj `if test -f 'soapC_027.cpp'; then $(CYGPATH_W) 'soapC_027.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_027.cpp'; fi`
+
+test_soap-soapC_028.o: soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_028.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_028.Tpo -c -o test_soap-soapC_028.o `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_028.Tpo $(DEPDIR)/test_soap-soapC_028.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_028.cpp' object='test_soap-soapC_028.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_028.o `test -f 'soapC_028.cpp' || echo '$(srcdir)/'`soapC_028.cpp
+
+test_soap-soapC_028.obj: soapC_028.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_028.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_028.Tpo -c -o test_soap-soapC_028.obj `if test -f 'soapC_028.cpp'; then $(CYGPATH_W) 'soapC_028.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_028.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_028.Tpo $(DEPDIR)/test_soap-soapC_028.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_028.cpp' object='test_soap-soapC_028.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_028.obj `if test -f 'soapC_028.cpp'; then $(CYGPATH_W) 'soapC_028.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_028.cpp'; fi`
+
+test_soap-soapC_029.o: soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_029.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_029.Tpo -c -o test_soap-soapC_029.o `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_029.Tpo $(DEPDIR)/test_soap-soapC_029.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_029.cpp' object='test_soap-soapC_029.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_029.o `test -f 'soapC_029.cpp' || echo '$(srcdir)/'`soapC_029.cpp
+
+test_soap-soapC_029.obj: soapC_029.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_029.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_029.Tpo -c -o test_soap-soapC_029.obj `if test -f 'soapC_029.cpp'; then $(CYGPATH_W) 'soapC_029.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_029.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_029.Tpo $(DEPDIR)/test_soap-soapC_029.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_029.cpp' object='test_soap-soapC_029.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_029.obj `if test -f 'soapC_029.cpp'; then $(CYGPATH_W) 'soapC_029.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_029.cpp'; fi`
+
+test_soap-soapC_030.o: soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_030.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_030.Tpo -c -o test_soap-soapC_030.o `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_030.Tpo $(DEPDIR)/test_soap-soapC_030.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_030.cpp' object='test_soap-soapC_030.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_030.o `test -f 'soapC_030.cpp' || echo '$(srcdir)/'`soapC_030.cpp
+
+test_soap-soapC_030.obj: soapC_030.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_030.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_030.Tpo -c -o test_soap-soapC_030.obj `if test -f 'soapC_030.cpp'; then $(CYGPATH_W) 'soapC_030.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_030.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_030.Tpo $(DEPDIR)/test_soap-soapC_030.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_030.cpp' object='test_soap-soapC_030.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_030.obj `if test -f 'soapC_030.cpp'; then $(CYGPATH_W) 'soapC_030.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_030.cpp'; fi`
+
+test_soap-soapC_031.o: soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_031.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_031.Tpo -c -o test_soap-soapC_031.o `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_031.Tpo $(DEPDIR)/test_soap-soapC_031.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_031.cpp' object='test_soap-soapC_031.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_031.o `test -f 'soapC_031.cpp' || echo '$(srcdir)/'`soapC_031.cpp
+
+test_soap-soapC_031.obj: soapC_031.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_031.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_031.Tpo -c -o test_soap-soapC_031.obj `if test -f 'soapC_031.cpp'; then $(CYGPATH_W) 'soapC_031.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_031.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_031.Tpo $(DEPDIR)/test_soap-soapC_031.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_031.cpp' object='test_soap-soapC_031.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_031.obj `if test -f 'soapC_031.cpp'; then $(CYGPATH_W) 'soapC_031.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_031.cpp'; fi`
+
+test_soap-soapC_032.o: soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_032.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_032.Tpo -c -o test_soap-soapC_032.o `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_032.Tpo $(DEPDIR)/test_soap-soapC_032.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_032.cpp' object='test_soap-soapC_032.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_032.o `test -f 'soapC_032.cpp' || echo '$(srcdir)/'`soapC_032.cpp
+
+test_soap-soapC_032.obj: soapC_032.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_032.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_032.Tpo -c -o test_soap-soapC_032.obj `if test -f 'soapC_032.cpp'; then $(CYGPATH_W) 'soapC_032.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_032.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_032.Tpo $(DEPDIR)/test_soap-soapC_032.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_032.cpp' object='test_soap-soapC_032.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_032.obj `if test -f 'soapC_032.cpp'; then $(CYGPATH_W) 'soapC_032.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_032.cpp'; fi`
+
+test_soap-soapC_033.o: soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_033.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_033.Tpo -c -o test_soap-soapC_033.o `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_033.Tpo $(DEPDIR)/test_soap-soapC_033.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_033.cpp' object='test_soap-soapC_033.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_033.o `test -f 'soapC_033.cpp' || echo '$(srcdir)/'`soapC_033.cpp
+
+test_soap-soapC_033.obj: soapC_033.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_033.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_033.Tpo -c -o test_soap-soapC_033.obj `if test -f 'soapC_033.cpp'; then $(CYGPATH_W) 'soapC_033.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_033.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_033.Tpo $(DEPDIR)/test_soap-soapC_033.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_033.cpp' object='test_soap-soapC_033.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_033.obj `if test -f 'soapC_033.cpp'; then $(CYGPATH_W) 'soapC_033.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_033.cpp'; fi`
+
+test_soap-soapC_034.o: soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_034.o -MD -MP -MF $(DEPDIR)/test_soap-soapC_034.Tpo -c -o test_soap-soapC_034.o `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_034.Tpo $(DEPDIR)/test_soap-soapC_034.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_034.cpp' object='test_soap-soapC_034.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_034.o `test -f 'soapC_034.cpp' || echo '$(srcdir)/'`soapC_034.cpp
+
+test_soap-soapC_034.obj: soapC_034.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-soapC_034.obj -MD -MP -MF $(DEPDIR)/test_soap-soapC_034.Tpo -c -o test_soap-soapC_034.obj `if test -f 'soapC_034.cpp'; then $(CYGPATH_W) 'soapC_034.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_034.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-soapC_034.Tpo $(DEPDIR)/test_soap-soapC_034.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapC_034.cpp' object='test_soap-soapC_034.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-soapC_034.obj `if test -f 'soapC_034.cpp'; then $(CYGPATH_W) 'soapC_034.cpp'; else $(CYGPATH_W) '$(srcdir)/soapC_034.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1045,7 +2250,7 @@ uninstall-am: uninstall-libLTLIBRARIES
 
 Bindings.h:
 	wsdl2h -g -p -z1 Bindings.wsdl -o Bindings.h || test true
-	soapcpp2 -L -i Bindings.h || test true
+	soapcpp2 -f50 -L -i Bindings.h || test true
 
 #soapcpp2 -2 -j -w -x Bindings.h || test true
 
@@ -1055,7 +2260,7 @@ soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp,\
 soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
 soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
-soapC.cpp,\
+soapC_*.cpp,\
 src/discovery_service.cpp\
 src/serialize.cpp\
 src/deserialize.cpp: Bindings.h
