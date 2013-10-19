@@ -1271,6 +1271,12 @@ uninstall-am: uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 
 
+dist-deb:
+	mkdir ./debian/usr/lib -p -m 755
+	cp ./.libs/libopcuabinary.so ./debian/usr/lib
+	cp ./.libs/libopcuabinary.so.0 ./debian/usr/lib
+	cp ./.libs/libopcuabinary.so.0.0.0 ./debian/usr/lib
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

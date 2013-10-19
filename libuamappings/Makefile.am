@@ -84,3 +84,9 @@ opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_sr
 opc_ua_binary_test_LDADD = libopcuabinary.la
 opc_ua_binary_test_LDFLAGS = -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) 
 
+dist-deb:
+	mkdir ./debian/usr/lib -p -m 755
+	cp ./.libs/libopcuabinary.so ./debian/usr/lib
+	cp ./.libs/libopcuabinary.so.0 ./debian/usr/lib
+	cp ./.libs/libopcuabinary.so.0.0.0 ./debian/usr/lib
+
