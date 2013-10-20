@@ -85,6 +85,10 @@ namespace OpcUa
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
+
+    FILE* tmp = fopen(logFile, "w");
+    dup2(fileno(tmp), STDOUT_FILENO); 
+    dup2(fileno(tmp), STDERR_FILENO); 
   }
 
   void Daemon::WaitForTerminate()
