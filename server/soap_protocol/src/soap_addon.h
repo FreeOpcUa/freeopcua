@@ -32,7 +32,7 @@ namespace OpcUa
 
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
-      void PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
+      void PublishApplicationsInformation(const Common::AddonsManager& addons) const;
       void StartEndpoints(OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry);
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
