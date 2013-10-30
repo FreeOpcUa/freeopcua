@@ -68,6 +68,7 @@ void EndpointsAddon::Initialize(Common::AddonsManager& addons, const Common::Add
   for (const OpcUa::ApplicationData& application : data)
   {
     AddApplications(std::vector<OpcUa::ApplicationDescription>(1, application.Application));
+    AddEndpoints(application.Endpoints);
   }
 }
 
