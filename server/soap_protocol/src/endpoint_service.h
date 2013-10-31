@@ -10,7 +10,9 @@
 
 #pragma once
 
+#include <opc/ua/computer.h>
 #include <soapBasicHttpBinding_USCOREISessionEndpointService.h>
+
 
 namespace OpcUa
 {
@@ -18,7 +20,22 @@ namespace OpcUa
   {
     class SoapEndpointService : public BasicHttpBinding_USCOREISessionEndpointService
     {
+      typedef BasicHttpBinding_USCOREISessionEndpointService ParentType;
+
     public:
+      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug)
+        : Computer(computer)
+        , Debug(debug)
+      {
+      }
+
+      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, struct soap& s)
+        : ParentType(s)
+        , Computer(computer)
+        , Debug(debug)
+      {
+      }
+
       virtual BasicHttpBinding_USCOREISessionEndpointService *copy();
       virtual int CreateSession(ns3__CreateSessionRequest *ns3__CreateSessionRequest_, ns3__CreateSessionResponse *ns3__CreateSessionResponse_);
       virtual int ActivateSession(ns3__ActivateSessionRequest *ns3__ActivateSessionRequest_, ns3__ActivateSessionResponse *ns3__ActivateSessionResponse_);
@@ -52,6 +69,10 @@ namespace OpcUa
       virtual int Republish(ns3__RepublishRequest *ns3__RepublishRequest_, ns3__RepublishResponse *ns3__RepublishResponse_);
       virtual int TransferSubscriptions(ns3__TransferSubscriptionsRequest *ns3__TransferSubscriptionsRequest_, ns3__TransferSubscriptionsResponse *ns3__TransferSubscriptionsResponse_);
       virtual int DeleteSubscriptions(ns3__DeleteSubscriptionsRequest *ns3__DeleteSubscriptionsRequest_, ns3__DeleteSubscriptionsResponse *ns3__DeleteSubscriptionsResponse_);
+
+    private:
+      OpcUa::Remote::Computer::SharedPtr Computer;
+      bool Debug;
     };
   }
 }

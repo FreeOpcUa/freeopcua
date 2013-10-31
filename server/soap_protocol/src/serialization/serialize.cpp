@@ -12,7 +12,10 @@
 
 #include <opc/ua/protocol/types.h>
 
+#include <algorithm>
+#include <functional>
 #include <sstream>
+
 
 namespace
 {
@@ -235,12 +238,40 @@ namespace
     return result;
   }
 
+  ns3__ViewDescription* CreateViewDescription(soap* s, const OpcUa::ViewDescription& view)
+  {
+    ns3__ViewDescription* result = soap_new_ns3__ViewDescription(s, 1);
+    result->Timestamp = view.Timestamp;
+    result->ViewId = CreateNodeID(s, view.ID);
+    result->ViewVersion = view.Version;
+    return result;
+  }
+
+  ns3__BrowseDescription* CreateBrowseDescription(soap* s, const OpcUa::BrowseDescription& desc)
+  {
+    ns3__BrowseDescription* result = soap_new_ns3__BrowseDescription(s, 1);
+    result->BrowseDirection = static_cast<ns3__BrowseDirection>(desc.Direction);
+    result->IncludeSubtypes = desc.IncludeSubtypes;
+    result->NodeClassMask = desc.NodeClasses;
+    result->NodeId = CreateNodeID(s, desc.NodeToBrowse);
+    result->ReferenceTypeId = CreateNodeID(s, desc.ReferenceTypeID);
+    result->ResultMask = desc.ResultMask;
+    return result;
+  }
+
+  ns3__ListOfBrowseDescription* CreateViewDescriptionList(soap* s, const std::vector<OpcUa::BrowseDescription>& nodesToBrowse)
+  {
+    ns3__ListOfBrowseDescription* result = soap_new_ns3__ListOfBrowseDescription(s, 1);
+    result->BrowseDescription.resize(nodesToBrowse.size());
+    std::transform(nodesToBrowse.begin(), nodesToBrowse.end(), result->BrowseDescription.begin(), std::bind(CreateBrowseDescription, s, std::placeholders::_1));
+    return result;
+  }
 }
 
 namespace OpcUa
 {
 
-  ns3__GetEndpointsRequest* Soap::Serialize(soap* s, const OpcUa::GetEndpointsRequest& opcua)
+  ns3__GetEndpointsRequest* Soap::Serialize(soap* s, const GetEndpointsRequest& opcua)
   {
     ns3__GetEndpointsRequest* request = soap_new_ns3__GetEndpointsRequest(s, 1);
     request->RequestHeader = CreateRequestHeader(s, opcua.Header);
@@ -262,5 +293,16 @@ namespace OpcUa
     }
     return resp;
   }
+
+  ns3__BrowseRequest* Soap::Serialize(soap* s, const OpcUa::BrowseRequest& request)
+  {
+    ns3__BrowseRequest* req = soap_new_ns3__BrowseRequest(s, 1);
+    req->RequestHeader = CreateRequestHeader(s, request.Header);
+    req->RequestedMaxReferencesPerNode = request.Query.MaxReferenciesPerNode;
+    req->View = CreateViewDescription(s, request.Query.View);
+    req->NodesToBrowse = CreateViewDescriptionList(s, request.Query.NodesToBrowse);
+    return req;
+  }
+
 }
 
