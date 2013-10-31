@@ -173,7 +173,8 @@ libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libopcua_soap_server_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
-am_test_soap_OBJECTS = test_soap-get_endpoints.$(OBJEXT)
+am_test_soap_OBJECTS = test_soap-browse.$(OBJEXT) \
+	test_soap-get_endpoints.$(OBJEXT)
 test_soap_OBJECTS = $(am_test_soap_OBJECTS)
 test_soap_DEPENDENCIES = libopcua_soap_protocol.la
 test_soap_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -439,6 +440,7 @@ libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS)
 libopcua_soap_client_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 test_soap_SOURCES = \
+	tests/browse.cpp \
   tests/get_endpoints.cpp
 
 test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
@@ -612,6 +614,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-registration_service.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-browse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
 
 .cpp.o:
@@ -963,6 +966,20 @@ libopcua_soap_server_la-soap_module.lo: src/soap_module.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/soap_module.cpp' object='libopcua_soap_server_la-soap_module.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soap_module.lo `test -f 'src/soap_module.cpp' || echo '$(srcdir)/'`src/soap_module.cpp
+
+test_soap-browse.o: tests/browse.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-browse.o -MD -MP -MF $(DEPDIR)/test_soap-browse.Tpo -c -o test_soap-browse.o `test -f 'tests/browse.cpp' || echo '$(srcdir)/'`tests/browse.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-browse.Tpo $(DEPDIR)/test_soap-browse.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/browse.cpp' object='test_soap-browse.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-browse.o `test -f 'tests/browse.cpp' || echo '$(srcdir)/'`tests/browse.cpp
+
+test_soap-browse.obj: tests/browse.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-browse.obj -MD -MP -MF $(DEPDIR)/test_soap-browse.Tpo -c -o test_soap-browse.obj `if test -f 'tests/browse.cpp'; then $(CYGPATH_W) 'tests/browse.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/browse.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-browse.Tpo $(DEPDIR)/test_soap-browse.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/browse.cpp' object='test_soap-browse.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-browse.obj `if test -f 'tests/browse.cpp'; then $(CYGPATH_W) 'tests/browse.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/browse.cpp'; fi`
 
 test_soap-get_endpoints.o: tests/get_endpoints.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-get_endpoints.o -MD -MP -MF $(DEPDIR)/test_soap-get_endpoints.Tpo -c -o test_soap-get_endpoints.o `test -f 'tests/get_endpoints.cpp' || echo '$(srcdir)/'`tests/get_endpoints.cpp

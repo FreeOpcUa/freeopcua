@@ -157,6 +157,7 @@ TESTS = test_soap
 check_PROGRAMS = test_soap
 
 test_soap_SOURCES = \
+	tests/browse.cpp \
   tests/get_endpoints.cpp
 
 

@@ -8,7 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include <gtest/gtest.h>
+#include "common.h"
+
 #include "../src/serialization/serialize.h"
 #include "../src/serialization/deserialize.h"
 
@@ -17,14 +18,7 @@
 TEST(GetEndpoints, Request)
 {
   OpcUa::GetEndpointsRequest opcua;
-  opcua.Header.Additional.Encoding = 1;
-  opcua.Header.Additional.TypeID = OpcUa::NumericNodeID(2);
-  opcua.Header.AuditEntryID = "audit";
-  opcua.Header.RequestHandle = 3;
-  opcua.Header.ReturnDiagnostics = 4;
-  opcua.Header.SessionAuthenticationToken = OpcUa::NumericNodeID(3);
-  opcua.Header.Timeout = 5;
-  opcua.Header.UtcTime = 6;
+  opcua.Header = OpcUa::Test::CreateRequestHeader();
   opcua.Filter.EndpointURL = "url";
   opcua.Filter.LocaleIDs.push_back("ru");
   opcua.Filter.ProfileUries.push_back("profile");
@@ -33,24 +27,7 @@ TEST(GetEndpoints, Request)
   ns3__GetEndpointsRequest* soapRequest = OpcUa::Soap::Serialize(&service, opcua);
   ASSERT_NE(soapRequest, nullptr);
 
-  ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader, nullptr);
-  ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader->Body, nullptr);
-  ASSERT_NE(soapRequest->RequestHeader->AdditionalHeader->TypeId, nullptr);
-  ASSERT_EQ(*soapRequest->RequestHeader->AdditionalHeader->TypeId->Identifier, "ns=0;i=2;");
-
-  ASSERT_NE(soapRequest->RequestHeader, nullptr);
-  ASSERT_NE(soapRequest->RequestHeader->AuditEntryId, nullptr);
-  ASSERT_EQ(*soapRequest->RequestHeader->AuditEntryId, "audit");
-
-  ASSERT_EQ(soapRequest->RequestHeader->RequestHandle, 3);
-  ASSERT_EQ(soapRequest->RequestHeader->ReturnDiagnostics, 4);
-
-  ASSERT_NE(soapRequest->RequestHeader->AuthenticationToken, nullptr);
-  ASSERT_NE(soapRequest->RequestHeader->AuthenticationToken->Identifier, nullptr);
-  ASSERT_EQ(*soapRequest->RequestHeader->AuthenticationToken->Identifier, "ns=0;i=3;");
-
-  ASSERT_EQ(soapRequest->RequestHeader->TimeoutHint, 5);
-  ASSERT_EQ(soapRequest->RequestHeader->Timestamp, 6);
+  OpcUa::Test::AssertRequestHeaderValid(soapRequest->RequestHeader);
 
   ASSERT_NE(soapRequest->EndpointUrl, nullptr);
   ASSERT_EQ(*soapRequest->EndpointUrl, "url");
@@ -62,14 +39,7 @@ TEST(GetEndpoints, Request)
   ASSERT_EQ(soapRequest->ProfileUris->String, opcua.Filter.ProfileUries);
 
   OpcUa::GetEndpointsRequest deserialized = OpcUa::Soap::Deserialize(soapRequest);
-//TODO  ASSERT_EQ(deserialized.Header.Additional.Encoding, opcua.Header.Additional.Encoding);
-  ASSERT_EQ(deserialized.Header.Additional.TypeID, opcua.Header.Additional.TypeID);
-  ASSERT_EQ(deserialized.Header.SessionAuthenticationToken, opcua.Header.SessionAuthenticationToken);
-  ASSERT_EQ(deserialized.Header.AuditEntryID, opcua.Header.AuditEntryID);
-  ASSERT_EQ(deserialized.Header.RequestHandle, opcua.Header.RequestHandle);
-  ASSERT_EQ(deserialized.Header.ReturnDiagnostics, opcua.Header.ReturnDiagnostics);
-  ASSERT_EQ(deserialized.Header.Timeout, opcua.Header.Timeout);
-  ASSERT_EQ(deserialized.Header.UtcTime, opcua.Header.UtcTime);
+  OpcUa::Test::AssertRequestHeaderEq(deserialized.Header, opcua.Header);
 
   ASSERT_EQ(deserialized.Filter.EndpointURL, opcua.Filter.EndpointURL);
   ASSERT_EQ(deserialized.Filter.LocaleIDs, opcua.Filter.LocaleIDs);

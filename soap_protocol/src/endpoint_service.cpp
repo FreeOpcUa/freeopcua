@@ -16,7 +16,7 @@ namespace OpcUa
   {
     BasicHttpBinding_USCOREISessionEndpointService *SoapEndpointService::copy()
     {
-      return new SoapEndpointService();
+      return new SoapEndpointService(Computer, Debug);
     }
 
     int SoapEndpointService::CreateSession(ns3__CreateSessionRequest *ns3__CreateSessionRequest_, ns3__CreateSessionResponse *ns3__CreateSessionResponse_)
