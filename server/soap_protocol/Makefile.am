@@ -54,8 +54,8 @@ soapC_032.cpp,\
 soapC_033.cpp,\
 soapC_034.cpp,\
 src/discovery_service.cpp,\
-src/serialize.cpp,\
-src/deserialize.cpp: Bindings.h
+src/serialization/serialize.cpp,\
+src/serialization/deserialize.cpp: Bindings.h
 
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
@@ -79,8 +79,10 @@ lib_LTLIBRARIES = libopcua_soap_protocol.la libopcua_soap_server.la libopcua_soa
 
 libopcua_soap_protocol_la_SOURCES = \
   Bindings.h \
-  src/deserialize.cpp \
-  src/serialize.cpp \
+  src/serialization/deserialize.cpp \
+  src/serialization/deserialize.h \
+  src/serialization/serialize.cpp \
+  src/serialization/serialize.h \
   src/namespaces.cpp \
   soapH.h \
   soapStub.h \
@@ -134,8 +136,6 @@ libopcua_soap_server_la_SOURCES = \
   src/endpoint_service.h \
   src/registration_service.cpp \
   src/registration_service.h \
-  src/serialize.cpp \
-  src/serialize.h \
   src/soap_addon.cpp \
   src/soap_addon.h \
   src/soap_addon_factory.h \

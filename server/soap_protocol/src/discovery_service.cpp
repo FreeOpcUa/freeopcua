@@ -9,7 +9,7 @@
 ///
 
 #include "discovery_service.h"
-#include "serialize.h"
+#include "serialization/serialize.h"
 
 #include <iostream>
 
