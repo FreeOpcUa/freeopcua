@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "deserialize.h"
-#include "serialize.h"
+#include "serialization/deserialize.h"
+#include "serialization/serialize.h"
 
 
 #include <opc/ua/client/addon.h>

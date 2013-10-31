@@ -9,8 +9,8 @@
 ///
 
 #include <gtest/gtest.h>
-#include "../src/serialize.h"
-#include "../src/deserialize.h"
+#include "../src/serialization/serialize.h"
+#include "../src/serialization/deserialize.h"
 
 
 
