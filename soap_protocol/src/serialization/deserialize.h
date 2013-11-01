@@ -12,6 +12,7 @@
 
 #include <soapH.h>
 #include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/view.h>
 
 
 namespace OpcUa
@@ -19,8 +20,9 @@ namespace OpcUa
   namespace Soap
   {
 
-    OpcUa::GetEndpointsRequest Deserialize(const ns3__GetEndpointsRequest* request);
-    OpcUa::GetEndpointsResponse Deserialize(const ns3__GetEndpointsResponse* response);
+    GetEndpointsRequest Deserialize(const ns3__GetEndpointsRequest* request);
+    GetEndpointsResponse Deserialize(const ns3__GetEndpointsResponse* response);
 
+    BrowseRequest Deserialize(const ns3__BrowseRequest* request);
   }
 }

@@ -50,4 +50,18 @@ TEST(Browse, Request)
   ASSERT_EQ(deserializedDesc->NodeClassMask, desc.NodeClasses);
   ASSERT_TRUE(OpcUa::Test::IsEqualNodeID(deserializedDesc->NodeId, "ns=5;i=5;"));
   ASSERT_TRUE(OpcUa::Test::IsEqualNodeID(deserializedDesc->ReferenceTypeId, "ns=6;i=6;"));
+
+  OpcUa::BrowseRequest serialized = OpcUa::Soap::Deserialize(req);
+  OpcUa::Test::AssertRequestHeaderEq(serialized.Header, opcua.Header);
+  ASSERT_EQ(serialized.TypeID, opcua.TypeID);
+  ASSERT_EQ(serialized.Query.MaxReferenciesPerNode, opcua.Query.MaxReferenciesPerNode);
+  ASSERT_EQ(serialized.Query.NodesToBrowse.size(), 1);
+  const OpcUa::BrowseDescription& serializedDesc = serialized.Query.NodesToBrowse[0];
+  const OpcUa::BrowseDescription& sourceDesc = opcua.Query.NodesToBrowse[0];
+  ASSERT_EQ(serializedDesc.Direction, sourceDesc.Direction);
+  ASSERT_EQ(serializedDesc.IncludeSubtypes, sourceDesc.IncludeSubtypes);
+  ASSERT_EQ(serializedDesc.NodeClasses, sourceDesc.NodeClasses);
+  ASSERT_EQ(serializedDesc.NodeToBrowse, sourceDesc.NodeToBrowse);
+  ASSERT_EQ(serializedDesc.ReferenceTypeID, sourceDesc.ReferenceTypeID);
+  ASSERT_EQ(serializedDesc.ResultMask, sourceDesc.ResultMask);
 }
