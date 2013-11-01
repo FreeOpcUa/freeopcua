@@ -10,6 +10,7 @@
 
 #include "deserialize.h"
 
+#include <algorithm>
 #include <sstream>
 
 namespace
@@ -43,7 +44,7 @@ namespace
 
   OpcUa::NodeID Deserialize(const ns3__NodeId* id)
   {
-    if (!id->Identifier)
+    if (!id || !id->Identifier)
     {
       return OpcUa::NodeID();
     }
@@ -65,7 +66,7 @@ namespace
 
   OpcUa::NodeID Deserialize(const ns3__ExpandedNodeId* id)
   {
-    if (!id->Identifier)
+    if (!id || !id->Identifier)
     {
       return OpcUa::NodeID();
     }
@@ -97,7 +98,7 @@ namespace
 
   OpcUa::StatusCode Deserialize(const ns3__StatusCode* status)
   {
-    if (status->Code)
+    if (status && status->Code)
     {
       return static_cast<OpcUa::StatusCode>(std::stoul(*status->Code));
     }
@@ -117,6 +118,9 @@ namespace
   OpcUa::RequestHeader Deserialize(const ns3__RequestHeader* header)
   {
     OpcUa::RequestHeader result;
+    if (!header)
+      return result;
+
     if (header->AdditionalHeader)
       result.Additional = Deserialize(header->AdditionalHeader);
     if (header->AuditEntryId)
@@ -134,6 +138,9 @@ namespace
   OpcUa::DiagnosticInfoList Deserialize(const ns3__DiagnosticInfo* diag)
   {
     OpcUa::DiagnosticInfoList result;
+    if (!diag)
+      return result;
+
     while (diag)
     {
       OpcUa::DiagnosticInfo tmp;
@@ -182,6 +189,9 @@ namespace
   OpcUa::ResponseHeader Deserialize(const ns3__ResponseHeader* header)
   {
     OpcUa::ResponseHeader result;
+    if (!header)
+      return result;
+
     if (header->AdditionalHeader)
     {
       result.Additional = Deserialize(header->AdditionalHeader);
@@ -206,6 +216,9 @@ namespace
   OpcUa::LocalizedText Deserialize(const ns3__LocalizedText* text)
   {
     OpcUa::LocalizedText result;
+    if (!text)
+      return result;
+
     if (text->Locale)
     {
       result.Locale = *text->Locale;
@@ -222,6 +235,9 @@ namespace
   OpcUa::ApplicationDescription Deserialize(const ns3__ApplicationDescription* desc)
   {
     OpcUa::ApplicationDescription result;
+    if (!desc)
+      return result;
+
     if (desc->ApplicationName)
     {
       result.Name = Deserialize(desc->ApplicationName);
@@ -253,6 +269,9 @@ namespace
   OpcUa::EndpointDescription Deserialize(const ns3__EndpointDescription* desc)
   {
     OpcUa::EndpointDescription result;
+    if (!desc)
+      return result;
+
     if (desc->EndpointUrl)
     {
       result.EndpointURL = *desc->EndpointUrl;
@@ -287,12 +306,53 @@ namespace
   std::vector<OpcUa::EndpointDescription> Deserialize(ns3__ListOfEndpointDescription* endpoints)
   {
     std::vector<OpcUa::EndpointDescription> result;
+    if (!endpoints)
+      return result;
+
     for (auto endpointIt = endpoints->EndpointDescription.begin(); endpointIt != endpoints->EndpointDescription.end(); ++endpointIt)
     {
       ns3__EndpointDescription* tmp = *endpointIt;
       const OpcUa::EndpointDescription desc = Deserialize(tmp);
       result.push_back(desc);
     }
+    return result;
+  }
+
+  OpcUa::BrowseDescription Deserialize(const ns3__BrowseDescription* desc)
+  {
+    OpcUa::BrowseDescription result;
+    if (!desc)
+    {
+      return result;
+    }
+    result.Direction = static_cast<OpcUa::BrowseDirection>(desc->BrowseDirection);
+    result.IncludeSubtypes = desc->IncludeSubtypes;
+    result.NodeClasses = desc->NodeClassMask;
+    result.ResultMask = desc->ResultMask;
+    if (desc->NodeId)
+    {
+      result.NodeToBrowse = Deserialize(desc->NodeId);
+    }
+    if (desc->ReferenceTypeId)
+    {
+      result.ReferenceTypeID = Deserialize(desc->ReferenceTypeId);
+    }
+    return result;
+  }
+
+  std::vector<OpcUa::BrowseDescription> Deserialize(const ns3__ListOfBrowseDescription* desc)
+  {
+    std::vector<OpcUa::BrowseDescription> result;
+    if (!desc)
+      return result;
+
+    result.resize(desc->BrowseDescription.size());
+    std::transform(desc->BrowseDescription.begin(), desc->BrowseDescription.end(), result.begin(),
+        [](const ns3__BrowseDescription* value)
+        {
+          return Deserialize(value);
+        });
+
     return result;
   }
 }
@@ -303,6 +363,9 @@ namespace OpcUa
   GetEndpointsRequest Soap::Deserialize(const ns3__GetEndpointsRequest* request)
   {
     GetEndpointsRequest result;
+    if (!request)
+      return result;
+
     if (request->RequestHeader)
     {
       result.Header = ::Deserialize(request->RequestHeader);
@@ -325,6 +388,9 @@ namespace OpcUa
   GetEndpointsResponse Soap::Deserialize(const ns3__GetEndpointsResponse* response)
   {
     GetEndpointsResponse result;
+    if (!response)
+      return result;
+
     if (response->ResponseHeader)
     {
       result.Header = ::Deserialize(response->ResponseHeader);
@@ -334,6 +400,24 @@ namespace OpcUa
       result.Endpoints = ::Deserialize(response->Endpoints);
     }
     return result;
+  }
+
+  BrowseRequest Soap::Deserialize(const ns3__BrowseRequest* request)
+  {
+    BrowseRequest result;
+    if (!request)
+      return result;
+
+    if (request->RequestHeader)
+    {
+      result.Header = ::Deserialize(request->RequestHeader);
+    }
+    if (request->NodesToBrowse)
+    {
+      result.Query.NodesToBrowse = ::Deserialize(request->NodesToBrowse);
+    }
+    result.Query.MaxReferenciesPerNode = request->RequestedMaxReferencesPerNode;
+    return  result;
   }
 
 }
