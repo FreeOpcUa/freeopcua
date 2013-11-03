@@ -60,6 +60,7 @@ namespace OpcUa
     ns3__GetEndpointsResponse* Serialize(soap* s, const OpcUa::GetEndpointsResponse& response);
 
     ns3__BrowseRequest* Serialize(soap* s, const OpcUa::BrowseRequest& request);
+    ns3__BrowseResponse* Serialize(soap* s, const OpcUa::BrowseResponse& response);
 
   }
 }

@@ -39,7 +39,7 @@ TEST(Browse, Request)
   ASSERT_EQ(req->View->Timestamp, opcua.Query.View.Timestamp);
   ASSERT_EQ(req->View->ViewVersion, opcua.Query.View.Version);
 
-  ASSERT_TRUE(OpcUa::Test::IsEqualNodeID(req->View->ViewId, "ns=2;i=2;"));
+  ASSERT_NODE_ID_EQ(req->View->ViewId, "ns=2;i=2;");
 
   ASSERT_NE(req->NodesToBrowse, nullptr);
   ASSERT_EQ(req->NodesToBrowse->BrowseDescription.size(), opcua.Query.NodesToBrowse.size());
@@ -48,8 +48,8 @@ TEST(Browse, Request)
   ASSERT_EQ(static_cast<OpcUa::BrowseDirection>(deserializedDesc->BrowseDirection), desc.Direction);
   ASSERT_EQ(deserializedDesc->IncludeSubtypes, desc.IncludeSubtypes);
   ASSERT_EQ(deserializedDesc->NodeClassMask, desc.NodeClasses);
-  ASSERT_TRUE(OpcUa::Test::IsEqualNodeID(deserializedDesc->NodeId, "ns=5;i=5;"));
-  ASSERT_TRUE(OpcUa::Test::IsEqualNodeID(deserializedDesc->ReferenceTypeId, "ns=6;i=6;"));
+  ASSERT_NODE_ID_EQ(deserializedDesc->NodeId, "ns=5;i=5;");
+  ASSERT_NODE_ID_EQ(deserializedDesc->ReferenceTypeId, "ns=6;i=6;");
 
   OpcUa::BrowseRequest serialized = OpcUa::Soap::Deserialize(req);
   OpcUa::Test::AssertRequestHeaderEq(serialized.Header, opcua.Header);
@@ -64,4 +64,96 @@ TEST(Browse, Request)
   ASSERT_EQ(serializedDesc.NodeToBrowse, sourceDesc.NodeToBrowse);
   ASSERT_EQ(serializedDesc.ReferenceTypeID, sourceDesc.ReferenceTypeID);
   ASSERT_EQ(serializedDesc.ResultMask, sourceDesc.ResultMask);
+}
+
+//void
+TEST(Browse, Response)
+{
+  // Fill response
+  OpcUa::BrowseResponse opcua;
+  opcua.Header = OpcUa::Test::CreateResponseHeader();
+  opcua.Diagnostics.push_back(OpcUa::Test::CreateDiagnosticInfo());
+  OpcUa::BrowseResult browseResult;
+  browseResult.ContinuationPoint.push_back(1);
+  browseResult.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+  OpcUa::ReferenceDescription ref;
+  ref.BrowseName = OpcUa::QualifiedName(1, "name");
+  ref.DisplayName = OpcUa::LocalizedText("text", "ru");
+  ref.IsForward = true;
+  ref.ReferenceTypeID = OpcUa::NumericNodeID(1, 1);
+  ref.TargetNodeClass = OpcUa::NodeClass::Object;
+  ref.TargetNodeID = OpcUa::NumericNodeID(2, 2);
+  ref.TargetNodeTypeDefinition = OpcUa::NumericNodeID(3, 3);
+  browseResult.Referencies.push_back(ref);
+  opcua.Results.push_back(browseResult);
+
+  // serialize response
+  soap service;
+  ns3__BrowseResponse* soapResponse = OpcUa::Soap::Serialize(&service, opcua);
+  ASSERT_NE(soapResponse, nullptr);
+  OpcUa::Test::AssertResponseHeaderValid(soapResponse->ResponseHeader);
+  OpcUa::Test::AssertDiagnosticInfoListValid(soapResponse->DiagnosticInfos);
+  ASSERT_NE(soapResponse->Results, nullptr);
+  ASSERT_EQ(soapResponse->Results->BrowseResult.size(), 1);
+  const ns3__BrowseResult* serializedResult = soapResponse->Results->BrowseResult[0];
+  ASSERT_NE(serializedResult, nullptr);
+  ASSERT_NE(serializedResult->StatusCode, nullptr);
+  ASSERT_NE(serializedResult->StatusCode->Code, nullptr);
+  ASSERT_EQ(*serializedResult->StatusCode->Code, "2151219200");
+
+  ASSERT_NE(serializedResult->ContinuationPoint, nullptr);
+  ASSERT_NE(serializedResult->ContinuationPoint->__ptr, nullptr);
+  ASSERT_EQ(serializedResult->ContinuationPoint->__size, 1);
+  ASSERT_EQ(((char*)serializedResult->ContinuationPoint->__ptr)[0], 1);
+
+  ASSERT_NE(serializedResult->References, nullptr);
+  ASSERT_EQ(serializedResult->References->ReferenceDescription.size(), 1);
+  ns3__ReferenceDescription* serializedRef = serializedResult->References->ReferenceDescription[0];
+  ASSERT_NE(serializedRef, nullptr);
+  ASSERT_EQ(serializedRef->IsForward, true);
+  ASSERT_EQ(serializedRef->NodeClass, static_cast<unsigned>(OpcUa::NodeClass::Object));
+
+  ASSERT_NE(serializedRef->BrowseName, nullptr);
+  ASSERT_NE(serializedRef->BrowseName->Name, nullptr);
+  ASSERT_NE(serializedRef->BrowseName->NamespaceIndex, nullptr);
+  ASSERT_EQ(*serializedRef->BrowseName->Name, "name");
+  ASSERT_EQ(*serializedRef->BrowseName->NamespaceIndex, 1);
+
+  ASSERT_NE(serializedRef->DisplayName, nullptr);
+  ASSERT_NE(serializedRef->DisplayName->Locale, nullptr);
+  ASSERT_NE(serializedRef->DisplayName->Text, nullptr);
+  ASSERT_EQ(*serializedRef->DisplayName->Locale, "ru");
+  ASSERT_EQ(*serializedRef->DisplayName->Text, "text");
+
+  ASSERT_NODE_ID_EQ(serializedRef->NodeId, "ns=2;i=2;");
+  ASSERT_NODE_ID_EQ(serializedRef->ReferenceTypeId, "ns=1;i=1;");
+  ASSERT_NODE_ID_EQ(serializedRef->TypeDefinition, "ns=3;i=3;");
+
+  // deserialize response
+  const OpcUa::BrowseResponse deserialized = OpcUa::Soap::Deserialize(soapResponse);
+  ASSERT_EQ(deserialized.TypeID, opcua.TypeID);
+  ASSERT_RESPONSE_HEADER_EQ(deserialized.Header, opcua.Header);
+
+  OpcUa::Test::AssertDiagnosticInfoListValid(deserialized.Diagnostics);
+
+  ASSERT_EQ(deserialized.Results.size(), 1);
+  const OpcUa::BrowseResult& deserializedResult = deserialized.Results[0];
+  ASSERT_EQ(deserializedResult.ContinuationPoint.size(), 1);
+  ASSERT_EQ(deserializedResult.ContinuationPoint[0], 1);
+  ASSERT_EQ(deserializedResult.Status, OpcUa::StatusCode::BadAttributeIdInvalid);
+  ASSERT_EQ(deserializedResult.Referencies.size(), 1);
+
+  const OpcUa::ReferenceDescription& deserializedRef = deserializedResult.Referencies[0];
+  ASSERT_EQ(deserializedRef.BrowseName.Name, "name");
+  ASSERT_EQ(deserializedRef.BrowseName.NamespaceIndex, 1);
+
+  ASSERT_EQ(deserializedRef.DisplayName.Encoding, OpcUa::HAS_TEXT | OpcUa::HAS_LOCALE);
+  ASSERT_EQ(deserializedRef.DisplayName.Locale, "ru");
+  ASSERT_EQ(deserializedRef.DisplayName.Text, "text");
+
+  ASSERT_EQ(deserializedRef.IsForward, true);
+  ASSERT_EQ(deserializedRef.ReferenceTypeID, OpcUa::NumericNodeID(1, 1));
+  ASSERT_EQ(deserializedRef.TargetNodeClass, OpcUa::NodeClass::Object);
+  ASSERT_EQ(deserializedRef.TargetNodeID, OpcUa::NumericNodeID(2, 2));
+  ASSERT_EQ(deserializedRef.TargetNodeTypeDefinition, OpcUa::NumericNodeID(3, 3));
 }

@@ -189,36 +189,24 @@ namespace
     return result;
   }
 
-  ns3__DiagnosticInfo* CreateDiagnosticInfo(soap* s, const OpcUa::DiagnosticInfoList& opcua)
+  ns3__DiagnosticInfo* CreateDiagnosticInfo(soap* s, const OpcUa::DiagnosticInfo& info)
   {
-    if (opcua.empty())
-    {
-      return nullptr;
-    }
-
     ns3__DiagnosticInfo* result = soap_new_ns3__DiagnosticInfo(s, 1);
-    ns3__DiagnosticInfo* tmp = result;
-    for (OpcUa::DiagnosticInfoList::const_iterator it = opcua.begin(); it != opcua.end(); ++it)
-    {
-      if (it != opcua.begin())
-      {
-        tmp->InnerDiagnosticInfo = soap_new_ns3__DiagnosticInfo(s, 1);
-        tmp = tmp->InnerDiagnosticInfo;
-      }
-      const OpcUa::DiagnosticInfo& info = *it;
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO)
-        tmp->AdditionalInfo = CreateString(s, info.AdditionalInfo);
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE)
-        tmp->InnerStatusCode =  CreateStatusCode(s, info.InnerStatusCode);
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALE)
-        tmp->Locale = CreateInt(s, info.Locale);
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT)
-        tmp->LocalizedText = CreateInt(s, info.LocalizedText);
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_NAMESPACE)
-        tmp->NamespaceURI = CreateInt(s, info.NamespaceURI);
-      if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID)
-        tmp->SymbolicId = CreateInt(s, info.SymbolicID);
-    }
+
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO)
+      result->AdditionalInfo = CreateString(s, info.AdditionalInfo);
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE)
+      result->InnerStatusCode =  CreateStatusCode(s, info.InnerStatusCode);
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALE)
+      result->Locale = CreateInt(s, info.Locale);
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT)
+      result->LocalizedText = CreateInt(s, info.LocalizedText);
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_NAMESPACE)
+      result->NamespaceURI = CreateInt(s, info.NamespaceURI);
+    if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID)
+      result->SymbolicId = CreateInt(s, info.SymbolicID);
+    if ((info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO) && info.InnerDiagnostics)
+      result->InnerDiagnosticInfo = CreateDiagnosticInfo(s, *info.InnerDiagnostics);
 
     return result;
   }
@@ -227,10 +215,7 @@ namespace
   {
     ns3__ResponseHeader* result = soap_new_ns3__ResponseHeader(s, 1);
     result->AdditionalHeader = CreateAdditionalHeader(s, header.Additional);
-    if (!header.InnerDiagnostics.empty())
-    {
-      result->ServiceDiagnostics = CreateDiagnosticInfo(s, header.InnerDiagnostics);
-    }
+    result->ServiceDiagnostics = CreateDiagnosticInfo(s, header.InnerDiagnostics);
     result->RequestHandle = header.RequestHandle;
     result->ServiceResult = CreateStatusCode(s, header.ServiceResult);
     result->StringTable = CreateListOfStrings(s, header.StringTable);
@@ -266,6 +251,93 @@ namespace
     std::transform(nodesToBrowse.begin(), nodesToBrowse.end(), result->BrowseDescription.begin(), std::bind(CreateBrowseDescription, s, std::placeholders::_1));
     return result;
   }
+
+  ns3__ListOfDiagnosticInfo* CreateListOfDiagnosticInfo(soap* s, const OpcUa::DiagnosticInfoList& diags)
+  {
+    ns3__ListOfDiagnosticInfo* result = soap_new_ns3__ListOfDiagnosticInfo(s, 1);
+    result->DiagnosticInfo.resize(diags.size());
+    std::transform(diags.begin(), diags.end(), result->DiagnosticInfo.begin(),
+        [s](const OpcUa::DiagnosticInfo& info)
+        {
+          return CreateDiagnosticInfo(s, info);
+        });
+
+    return result;
+  }
+
+
+
+  ns3__QualifiedName* CreateQualifiedName(soap* s, const OpcUa::QualifiedName& name)
+  {
+    ns3__QualifiedName* result = soap_new_ns3__QualifiedName(s, 1);
+    result->Name = CreateString(s, name.Name);
+    result->NamespaceIndex = CreateInt(s, name.NamespaceIndex);
+    return result;
+  }
+
+  ns3__ReferenceDescription* CreateReferenceDescription(soap* s, const OpcUa::ReferenceDescription& ref)
+  {
+    ns3__ReferenceDescription* result = soap_new_ns3__ReferenceDescription(s, 1);
+    result->BrowseName = CreateQualifiedName(s, ref.BrowseName);
+    result->DisplayName = CreateLocalizedText(s, ref.DisplayName);
+    result->IsForward = ref.IsForward;
+    result->NodeClass = static_cast<ns3__NodeClass>(ref.TargetNodeClass);
+    result->NodeId = CreateExpandedNodeID(s, ref.TargetNodeID);
+    result->ReferenceTypeId = CreateNodeID(s, ref.ReferenceTypeID);
+    result->TypeDefinition = CreateExpandedNodeID(s, ref.TargetNodeTypeDefinition);
+    return result;
+  }
+
+  ns3__ListOfReferenceDescription* CreateListOfReferenceDescription(soap* s, const std::vector<OpcUa::ReferenceDescription>& referencies)
+  {
+    ns3__ListOfReferenceDescription* result = soap_new_ns3__ListOfReferenceDescription(s, 1);
+    if (!referencies.empty())
+    {
+      result->ReferenceDescription.resize(referencies.size());
+      std::transform(referencies.begin(), referencies.end(), result->ReferenceDescription.begin(), std::bind(CreateReferenceDescription, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
+  xsd__base64Binary* CreateByteString(soap* s, const std::vector<uint8_t>& bytes)
+  {
+    xsd__base64Binary* result = soap_new_xsd__base64Binary(s, 1);
+    result->__ptr = (unsigned char*)SOAP_MALLOC(s, bytes.size());
+    if (!result->__ptr)
+    {
+      throw std::bad_alloc();
+    }
+    result->__size = bytes.size();
+    std::copy(bytes.begin(), bytes.end(), result->__ptr);
+
+    return result;
+  }
+
+  ns3__BrowseResult* CreateBrowseResult(soap* s, const OpcUa::BrowseResult& browse)
+  {
+    ns3__BrowseResult* result = soap_new_ns3__BrowseResult(s, 1);
+
+    if (!browse.ContinuationPoint.empty())
+    {
+      result->ContinuationPoint = CreateByteString(s, browse.ContinuationPoint);
+    }
+    result->StatusCode = CreateStatusCode(s, static_cast<OpcUa::StatusCode>(browse.Status));
+    result->References = CreateListOfReferenceDescription(s, browse.Referencies);
+
+    return result;
+  }
+
+  ns3__ListOfBrowseResult* CreateListOfBrowseResult(soap* s, const std::vector<OpcUa::BrowseResult>& opcua)
+  {
+    ns3__ListOfBrowseResult* result = soap_new_ns3__ListOfBrowseResult(s, 1);
+    if (!opcua.empty())
+    {
+      result->BrowseResult.resize(opcua.size());
+      std::transform(opcua.begin(), opcua.end(), result->BrowseResult.begin(), std::bind(CreateBrowseResult, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
 }
 
 namespace OpcUa
@@ -275,9 +347,12 @@ namespace OpcUa
   {
     ns3__GetEndpointsRequest* request = soap_new_ns3__GetEndpointsRequest(s, 1);
     request->RequestHeader = CreateRequestHeader(s, opcua.Header);
-    request->EndpointUrl = CreateString(s, opcua.Filter.EndpointURL);
-    request->LocaleIds = CreateListOfStrings(s, opcua.Filter.LocaleIDs);
-    request->ProfileUris = CreateListOfStrings(s, opcua.Filter.ProfileUries);
+    if (!opcua.Filter.EndpointURL.empty())
+      request->EndpointUrl = CreateString(s, opcua.Filter.EndpointURL);
+    if (!opcua.Filter.LocaleIDs.empty())
+      request->LocaleIds = CreateListOfStrings(s, opcua.Filter.LocaleIDs);
+    if (!opcua.Filter.ProfileUries.empty())
+      request->ProfileUris = CreateListOfStrings(s, opcua.Filter.ProfileUries);
     return request;
   }
 
@@ -304,5 +379,16 @@ namespace OpcUa
     return req;
   }
 
+  ns3__BrowseResponse* Soap::Serialize(soap* s, const OpcUa::BrowseResponse& opcua)
+  {
+    ns3__BrowseResponse* result = soap_new_ns3__BrowseResponse(s, 1);
+    result->ResponseHeader = CreateResponseHeader(s, opcua.Header);
+    if (!opcua.Diagnostics.empty())
+    {
+      result->DiagnosticInfos = CreateListOfDiagnosticInfo(s, opcua.Diagnostics);
+    }
+    result->Results = CreateListOfBrowseResult(s, opcua.Results);
+    return result;
+  }
 }
 

@@ -135,54 +135,52 @@ namespace
     return result;
   }
 
-  OpcUa::DiagnosticInfoList Deserialize(const ns3__DiagnosticInfo* diag)
+  OpcUa::DiagnosticInfo Deserialize(const ns3__DiagnosticInfo* diag)
   {
-    OpcUa::DiagnosticInfoList result;
+    OpcUa::DiagnosticInfo result;
     if (!diag)
       return result;
 
-    while (diag)
+    unsigned mask = 0;
+    if (diag->AdditionalInfo)
     {
-      OpcUa::DiagnosticInfo tmp;
-      unsigned mask = 0;
-      if (diag->AdditionalInfo)
-      {
-        tmp.AdditionalInfo = *diag->AdditionalInfo;
-        mask |= OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO;
-      }
-      if (diag->Locale)
-      {
-        tmp.Locale = *diag->Locale;
-        mask |= OpcUa::DiagnosticInfoMask::DIM_LOCALE;
-      }
-      if (diag->LocalizedText)
-      {
-        tmp.LocalizedText = *diag->LocalizedText;
-        mask |= OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT;
-      }
-      if (diag->NamespaceURI)
-      {
-        tmp.NamespaceURI = *diag->NamespaceURI;
-        mask |= OpcUa::DiagnosticInfoMask::DIM_NAMESPACE;
-      }
-      if (diag->SymbolicId)
-      {
-        tmp.SymbolicID = *diag->SymbolicId;
-        mask |= OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID;
-      }
-      if (diag->InnerStatusCode)
-      {
-        tmp.InnerStatusCode = Deserialize(diag->InnerStatusCode);
-        mask |= OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE;
-      }
-      if (diag->InnerDiagnosticInfo)
-      {
-        mask |= OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO;
-      }
-      tmp.EncodingMask = static_cast<OpcUa::DiagnosticInfoMask>(mask);
-      result.push_back(tmp);
-      diag = diag->InnerDiagnosticInfo;
+      mask |= OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO;
+      result.AdditionalInfo = *diag->AdditionalInfo;
     }
+    if (diag->Locale)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_LOCALE;
+      result.Locale = *diag->Locale;
+    }
+    if (diag->LocalizedText)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT;
+      result.LocalizedText = *diag->LocalizedText;
+    }
+    if (diag->NamespaceURI)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_NAMESPACE;
+      result.NamespaceURI = *diag->NamespaceURI;
+    }
+    if (diag->SymbolicId)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID;
+      result.SymbolicID = *diag->SymbolicId;
+    }
+    if (diag->InnerStatusCode)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE;
+      result.InnerStatusCode = Deserialize(diag->InnerStatusCode);
+    }
+    if (diag->InnerDiagnosticInfo)
+    {
+      mask |= OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO;
+      result.InnerDiagnostics.reset(new OpcUa::DiagnosticInfo);
+      *result.InnerDiagnostics = Deserialize(diag->InnerDiagnosticInfo);
+    }
+
+    result.EncodingMask = static_cast<OpcUa::DiagnosticInfoMask>(mask);
+
     return result;
   }
 
@@ -210,6 +208,23 @@ namespace
     }
     result.RequestHandle = header->RequestHandle;
     result.Timestamp = header->Timestamp;
+    return result;
+  }
+
+  OpcUa::DiagnosticInfoList Deserialize(const ns3__ListOfDiagnosticInfo* diags)
+  {
+    OpcUa::DiagnosticInfoList result;
+    if (!diags)
+      return result;
+
+    result.resize(diags->DiagnosticInfo.size());
+    std::transform(diags->DiagnosticInfo.begin(), diags->DiagnosticInfo.end(), result.begin(),
+      [](const ns3__DiagnosticInfo* val)
+      {
+        return Deserialize(val);
+      }
+    );
+
     return result;
   }
 
@@ -303,7 +318,7 @@ namespace
     return result;
   }
 
-  std::vector<OpcUa::EndpointDescription> Deserialize(ns3__ListOfEndpointDescription* endpoints)
+  std::vector<OpcUa::EndpointDescription> Deserialize(const ns3__ListOfEndpointDescription* endpoints)
   {
     std::vector<OpcUa::EndpointDescription> result;
     if (!endpoints)
@@ -349,6 +364,96 @@ namespace
     result.resize(desc->BrowseDescription.size());
     std::transform(desc->BrowseDescription.begin(), desc->BrowseDescription.end(), result.begin(),
         [](const ns3__BrowseDescription* value)
+        {
+          return Deserialize(value);
+        });
+
+    return result;
+  }
+
+  std::vector<uint8_t> Deserialize(xsd__base64Binary* binary)
+  {
+    std::vector<uint8_t> result;
+    if (binary && binary->__ptr && binary->__size)
+    {
+      result.resize(binary->__size);
+      std::size_t size = binary->__size;
+      const char* data = (char*)binary->__ptr;
+      std::copy(data, data + size, result.begin());
+    }
+    return result;
+  }
+
+  OpcUa::QualifiedName Deserialize(ns3__QualifiedName* name)
+  {
+    OpcUa::QualifiedName result;
+    if (!name)
+      return result;
+
+    if (name->Name)
+      result.Name = *name->Name;
+    if (name->NamespaceIndex)
+      result.NamespaceIndex = *name->NamespaceIndex;
+
+    return result;
+  }
+
+  OpcUa::ReferenceDescription Deserialize(const ns3__ReferenceDescription* desc)
+  {
+    OpcUa::ReferenceDescription result;
+    if (!desc)
+      return result;
+
+    if (desc->BrowseName)
+      result.BrowseName = Deserialize(desc->BrowseName);
+    if (desc->DisplayName)
+      result.DisplayName = Deserialize(desc->DisplayName);
+    if (desc->IsForward)
+      result.IsForward = desc->IsForward;
+    if (desc->NodeClass)
+      result.TargetNodeClass = static_cast<OpcUa::NodeClass>(desc->NodeClass);
+    if (desc->NodeId)
+      result.TargetNodeID = Deserialize(desc->NodeId);
+    if (desc->ReferenceTypeId)
+      result.ReferenceTypeID = Deserialize(desc->ReferenceTypeId);
+    if (desc->TypeDefinition)
+      result.TargetNodeTypeDefinition = Deserialize(desc->TypeDefinition);
+
+    return result;
+  }
+
+  std::vector<OpcUa::ReferenceDescription> Deserialize(const ns3__ListOfReferenceDescription* refs)
+  {
+    std::vector<OpcUa::ReferenceDescription> result;
+
+    result.resize(refs->ReferenceDescription.size());
+    std::transform(refs->ReferenceDescription.begin(), refs->ReferenceDescription.end(), result.begin(),
+        [](const ns3__ReferenceDescription* value)
+        {
+          return Deserialize(value);
+        });
+
+    return result;
+  }
+
+  OpcUa::BrowseResult Deserialize(const ns3__BrowseResult* browse)
+  {
+    OpcUa::BrowseResult result;
+    result.ContinuationPoint = Deserialize(browse->ContinuationPoint);
+    result.Referencies = Deserialize(browse->References);
+    result.Status = Deserialize(browse->StatusCode);
+    return result;
+  }
+
+  std::vector<OpcUa::BrowseResult> Deserialize(const ns3__ListOfBrowseResult* browse)
+  {
+    std::vector<OpcUa::BrowseResult> result;
+    if (!browse)
+      return result;
+
+    result.resize(browse->BrowseResult.size());
+    std::transform(browse->BrowseResult.begin(), browse->BrowseResult.end(), result.begin(),
+        [](const ns3__BrowseResult* value)
         {
           return Deserialize(value);
         });
@@ -420,4 +525,12 @@ namespace OpcUa
     return  result;
   }
 
+  BrowseResponse Soap::Deserialize(const ns3__BrowseResponse* response)
+  {
+    BrowseResponse result;
+    result.Header = ::Deserialize(response->ResponseHeader);
+    result.Diagnostics = ::Deserialize(response->DiagnosticInfos);
+    result.Results = ::Deserialize(response->Results);
+    return result;
+  }
 }

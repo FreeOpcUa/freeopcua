@@ -24,5 +24,6 @@ namespace OpcUa
     GetEndpointsResponse Deserialize(const ns3__GetEndpointsResponse* response);
 
     BrowseRequest Deserialize(const ns3__BrowseRequest* request);
+    BrowseResponse Deserialize(const ns3__BrowseResponse* response);
   }
 }
