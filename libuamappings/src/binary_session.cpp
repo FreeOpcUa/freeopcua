@@ -327,7 +327,7 @@ namespace OpcUa
     {
       return RawSize(data.ServerNonce) +
              RawSizeContainer(data.StatusCodes) +
-             RawSizeContainer(data.DiagnosticInfos);
+             RawSizeContainer(data.Diagnostics);
     };
 
     template<>
@@ -343,9 +343,9 @@ namespace OpcUa
         *this << (uint32_t)0;
       }
 
-      if (!data.DiagnosticInfos.empty())
+      if (!data.Diagnostics.empty())
       {
-        SerializeContainer(*this, data.DiagnosticInfos, 0);
+        SerializeContainer(*this, data.Diagnostics, 0);
       }
       else
       {
@@ -358,7 +358,7 @@ namespace OpcUa
     {
       *this >> data.ServerNonce;
       DeserializeContainer(*this, data.StatusCodes);
-      DeserializeContainer(*this, data.DiagnosticInfos);
+      DeserializeContainer(*this, data.Diagnostics);
     }
 
 

@@ -29,7 +29,7 @@ namespace OpcUa
   }
 
   CreateMonitoredItemsResult::CreateMonitoredItemsResult()
-    : StatusCode(0x80440000)
+    : Status(StatusCode::BadNotImplemented)
     , MonitoredItemID(0)
     , RevisedSamplingInterval(0)
     , RevizedQueueSize(0)
@@ -43,7 +43,7 @@ namespace OpcUa
     template <>
     std::size_t RawSize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
     {
-      return RawSize(result.StatusCode) +
+      return RawSize(result.Status) +
         RawSize(result.MonitoredItemID) +
         RawSize(result.RevisedSamplingInterval) +
         RawSize(result.RevizedQueueSize) +
@@ -53,7 +53,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
     {
-      *this << result.StatusCode;
+      *this << result.Status;
       *this << result.MonitoredItemID;
       *this << result.RevisedSamplingInterval;
       *this << result.RevizedQueueSize;
@@ -65,14 +65,14 @@ namespace OpcUa
     template <>
     std::size_t RawSize<MonitoredItemsData>(const MonitoredItemsData& data)
     {
-      return RawSizeContainer(data.Results) + RawSizeContainer(data.Infos);
+      return RawSizeContainer(data.Results) + RawSizeContainer(data.Diagnostics);
     }
 
     template<>
     void DataSerializer::Serialize<MonitoredItemsData>(const MonitoredItemsData& data)
     {
       SerializeContainer(*this, data.Results, 0);
-      SerializeContainer(*this, data.Infos, 0);
+      SerializeContainer(*this, data.Diagnostics, 0);
     }
 
     ////////////////////////////////////////////////////////////////

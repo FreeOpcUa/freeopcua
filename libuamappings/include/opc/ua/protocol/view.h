@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -27,7 +27,7 @@ namespace OpcUa
     Inverse = 1,
     Both    = 2,
   };
-  
+
   const uint32_t NODE_CLASS_ALL            = 0;
   const uint32_t NODE_CLASS_OBJECT         = 1;
   const uint32_t NODE_CLASS_VARIABLE       = 2;
@@ -95,7 +95,7 @@ namespace OpcUa
     NodeID TargetNodeID;
     QualifiedName BrowseName;
     LocalizedText DisplayName;
-    NodeClass TargetNodeClass; 
+    NodeClass TargetNodeClass;
     NodeID TargetNodeTypeDefinition;
 
     ReferenceDescription();
@@ -103,7 +103,7 @@ namespace OpcUa
 
   struct BrowseResult
   {
-    uint32_t StatusCode;
+    OpcUa::StatusCode Status;
     std::vector<uint8_t> ContinuationPoint;
     std::vector<ReferenceDescription> Referencies;
 
@@ -116,7 +116,7 @@ namespace OpcUa
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
 
     BrowseResponse();
   };
@@ -142,7 +142,7 @@ namespace OpcUa
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
 
     BrowseNextResponse();
   };
@@ -192,7 +192,7 @@ namespace OpcUa
   struct TranslateBrowsePathsResult
   {
     std::vector<BrowsePathResult> Paths;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
   };
 
   struct TranslateBrowsePathsToNodeIDsResponse

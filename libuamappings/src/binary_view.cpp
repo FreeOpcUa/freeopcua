@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -62,7 +62,7 @@ namespace OpcUa
   }
 
   BrowseResult::BrowseResult()
-    : StatusCode(0)
+    : Status(StatusCode::Good)
   {
   }
 
@@ -314,7 +314,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseResult>(const BrowseResult& result)
     {
-      return RawSize(result.StatusCode) +
+      return RawSize(result.Status) +
              RawSizeContainer(result.ContinuationPoint) +
              RawSizeContainer(result.Referencies);
     }
@@ -322,7 +322,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<BrowseResult>(const BrowseResult& result)
     {
-      *this << result.StatusCode;
+      *this << result.Status;
       SerializeContainer(*this, result.ContinuationPoint);
       SerializeContainer(*this, result.Referencies);
     }
@@ -330,7 +330,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseResult>(BrowseResult& result)
     {
-      *this >> result.StatusCode;
+      *this >> result.Status;
       DeserializeContainer(*this, result.ContinuationPoint);
       DeserializeContainer(*this, result.Referencies);
     }

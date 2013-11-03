@@ -139,7 +139,7 @@ namespace OpcUa
     bool MoreNotifications;
     NotificationMessage Message;
     std::vector<StatusCode> Statuses;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
 
     PublishResult();
   };
@@ -177,7 +177,7 @@ namespace OpcUa
   struct PublishingModeResult
   {
     std::vector<StatusCode> Statuses;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
   };
 
   struct SetPublishingModeResponse

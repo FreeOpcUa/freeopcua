@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -110,7 +110,7 @@ TEST_F(ViewDeserialization, ViewDescription)
 
   ViewDescription desc;
   GetStream() >> desc;
-  
+
   ASSERT_EQ(desc.ID.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.ID.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.Timestamp, 2);
@@ -191,7 +191,7 @@ OpcUa::BrowseDescription CreateBrowseDescription()
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  BrowseDescription desc; 
+  BrowseDescription desc;
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
   desc.NodeToBrowse.TwoByteData.Identifier = 1;
   desc.Direction = BrowseDirection::Inverse;
@@ -448,7 +448,7 @@ TEST_F(ViewSerialization, BrowseResult)
   using namespace OpcUa::Binary;
 
   BrowseResult result;
-  result.StatusCode = 1;
+  result.Status = static_cast<OpcUa::StatusCode>(1);
   result.ContinuationPoint = {2,3,4,5};
   result.Referencies.push_back(CreateReferenceDescription());
 
@@ -500,7 +500,7 @@ TEST_F(ViewDeserialization, BrowseResult)
   BrowseResult result;
   GetStream() >> result;
 
-  ASSERT_EQ(result.StatusCode, 1);
+  ASSERT_EQ(result.Status, static_cast<OpcUa::StatusCode>(1));
   std::vector<uint8_t> cont = {2,3,4,5};
   ASSERT_EQ(result.ContinuationPoint, cont);
   ASSERT_FALSE(result.Referencies.empty());
@@ -528,7 +528,7 @@ TEST_F(ViewDeserialization, BrowseResult)
 OpcUa::BrowseResult CreateBrowseResult()
 {
   OpcUa::BrowseResult result;
-  result.StatusCode = 1;
+  result.Status = static_cast<OpcUa::StatusCode>(1);
   result.ContinuationPoint = {2,3,4,5};
   result.Referencies.push_back(CreateReferenceDescription());
   return result;
@@ -550,7 +550,7 @@ TEST_F(ViewSerialization, BrowseResponse)
   response.Results.push_back(CreateBrowseResult());
 
   DiagnosticInfo diag1;
-  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag1.EncodingMask = DIM_LOCALIZED_TEXT;
   diag1.LocalizedText = 4;
   DiagnosticInfo diag2;
   diag2.EncodingMask = DIM_ADDITIONAL_INFO;
@@ -583,7 +583,7 @@ TEST_F(ViewSerialization, BrowseResponse)
 
   2,0,0,0,
   // Diagnostics
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_LOCALIZED_TEXT, 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -619,7 +619,7 @@ TEST_F(ViewDeserialization, BrowseResponse)
 
   2,0,0,0,
   // Diagnostics
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+  DIM_LOCALIZED_TEXT, 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -628,8 +628,8 @@ TEST_F(ViewDeserialization, BrowseResponse)
 
   BrowseResponse response;
   GetStream() >> response;
- 
- ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
+
+  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
 
@@ -646,7 +646,6 @@ TEST_F(ViewDeserialization, BrowseResponse)
 
 TEST_F(ViewSerialization, BrowseNextRequest)
 {
-
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
@@ -668,7 +667,7 @@ TEST_F(ViewSerialization, BrowseNextRequest)
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1, 
+  1,
   1,0,0,0, 1,0,0,0, 1
   };
 
@@ -724,15 +723,13 @@ TEST_F(ViewSerialization, BrowseNextResponse)
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   response.Results.push_back(CreateBrowseResult());
-
-  DiagnosticInfo diag1;
-  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
-  diag1.LocalizedText = 4;
-  DiagnosticInfo diag2;
-  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
-  diag2.AdditionalInfo = "add";
-  response.Diagnostics.push_back(diag1);
-  response.Diagnostics.push_back(diag2);
+  DiagnosticInfo diag;
+  diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag.LocalizedText = 4;
+  diag.InnerDiagnostics.reset(new DiagnosticInfo());
+  diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
+  diag.InnerDiagnostics->AdditionalInfo = "add";
+  response.Diagnostics.push_back(diag);
 
   GetStream() << response << flush;
 
@@ -757,7 +754,7 @@ TEST_F(ViewSerialization, BrowseNextResponse)
   4,0,0,0,
   0, 5,
 
-  2,0,0,0,
+  1,0,0,0,
   // Diagnostics
   static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
@@ -793,7 +790,7 @@ TEST_F(ViewDeserialization, BrowseNextResponse)
   4,0,0,0,
   0, 5,
 
-  2,0,0,0,
+  1,0,0,0,
   // Diagnostics
   static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
@@ -804,7 +801,7 @@ TEST_F(ViewDeserialization, BrowseNextResponse)
 
   BrowseNextResponse response;
   GetStream() >> response;
- 
+
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
@@ -812,7 +809,7 @@ TEST_F(ViewDeserialization, BrowseNextResponse)
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
   ASSERT_EQ(response.Results.size(), 1);
-  ASSERT_EQ(response.Diagnostics.size(), 2);
+  ASSERT_EQ(response.Diagnostics.size(), 1);
 }
 
 //-------------------------------------------------------
@@ -1011,14 +1008,13 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIDsResponse)
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  DiagnosticInfo diag1;
-  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
-  diag1.LocalizedText = 4;
-  DiagnosticInfo diag2;
-  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
-  diag2.AdditionalInfo = "add";
-  response.Result.Diagnostics.push_back(diag1);
-  response.Result.Diagnostics.push_back(diag2);
+  DiagnosticInfo diag;
+  diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag.LocalizedText = 4;
+  diag.InnerDiagnostics.reset(new DiagnosticInfo());
+  diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
+  diag.InnerDiagnostics->AdditionalInfo = "add";
+  response.Result.Diagnostics.push_back(diag);
 
   GetStream() << response << flush;
 
@@ -1035,7 +1031,7 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIDsResponse)
   2,0,0,0, // Index
 
   // Diagnostics
-  2,0,0,0, // Count
+  1,0,0,0, // Count
   static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -1062,7 +1058,7 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIDsResponse)
   2,0,0,0, // Index
 
   // Diagnostics
-  2,0,0,0, // Count
+  1,0,0,0, // Count
   static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
   DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -1079,5 +1075,5 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIDsResponse)
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
   ASSERT_EQ(response.Result.Paths.size(), 1);
-  ASSERT_EQ(response.Result.Diagnostics.size(), 2);
+  ASSERT_EQ(response.Result.Diagnostics.size(), 1);
 }

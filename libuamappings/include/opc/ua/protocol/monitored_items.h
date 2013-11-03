@@ -168,7 +168,7 @@ namespace OpcUa
   // TODO Fake
   struct CreateMonitoredItemsResult
   {
-    uint32_t StatusCode;
+    OpcUa::StatusCode Status;
     uint32_t MonitoredItemID;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
@@ -180,7 +180,7 @@ namespace OpcUa
   struct MonitoredItemsData
   {
     std::vector<CreateMonitoredItemsResult> Results;
-    std::vector<DiagnosticInfo> Infos;
+    DiagnosticInfoList Diagnostics;
 
     MonitoredItemsData();
   };

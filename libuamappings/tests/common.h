@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -207,14 +207,11 @@ protected:
   header.Timestamp = 1; \
   header.RequestHandle =  2; \
   header.ServiceResult = static_cast<StatusCode>(3); \
-  DiagnosticInfo info1; \
-  info1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO); \
-  info1.LocalizedText = 4; \
-  DiagnosticInfo info2; \
-  info2.EncodingMask = DIM_ADDITIONAL_INFO; \
-  info2.AdditionalInfo = "add"; \
-  header.InnerDiagnostics.push_back(info1); \
-  header.InnerDiagnostics.push_back(info2); \
+  header.InnerDiagnostics.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO); \
+  header.InnerDiagnostics.LocalizedText = 4; \
+  header.InnerDiagnostics.InnerDiagnostics.reset(new DiagnosticInfo()); \
+  header.InnerDiagnostics.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO; \
+  header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo = "add"; \
   header.StringTable = std::vector<std::string>(2, std::string("str")); \
   header.Additional.TypeID.Encoding = EV_TWO_BYTE; \
   header.Additional.TypeID.TwoByteData.Identifier = 7; \
@@ -224,11 +221,11 @@ protected:
   ASSERT_EQ(header.Timestamp, 1); \
   ASSERT_EQ(header.RequestHandle, 2); \
   ASSERT_EQ(header.ServiceResult, static_cast<StatusCode>(3)); \
-  ASSERT_EQ(header.InnerDiagnostics.size(), 2); \
-  ASSERT_EQ(header.InnerDiagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO)); \
-  ASSERT_EQ(header.InnerDiagnostics[0].LocalizedText, 4); \
-  ASSERT_EQ(header.InnerDiagnostics[1].EncodingMask, DIM_ADDITIONAL_INFO); \
-  ASSERT_EQ(header.InnerDiagnostics[1].AdditionalInfo, "add"); \
+  ASSERT_EQ(header.InnerDiagnostics.EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO)); \
+  ASSERT_EQ(header.InnerDiagnostics.LocalizedText, 4); \
+  ASSERT_TRUE(static_cast<bool>(header.InnerDiagnostics.InnerDiagnostics)); \
+  ASSERT_EQ(header.InnerDiagnostics.InnerDiagnostics->EncodingMask, DIM_ADDITIONAL_INFO); \
+  ASSERT_EQ(header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo, "add"); \
   ASSERT_EQ(header.StringTable, std::vector<std::string>(2, std::string("str"))); \
   ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE); \
   ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 7); \
@@ -334,8 +331,8 @@ protected:
   3,0,0,0, 'i','e','u', \
   3,0,0,0, 's','p','u', \
   3,0,0,0, 't','p','u', \
-  3  
- 
+  3
+
 #define  ASSERT_ENDPOINT_EQ(e) \
   ASSERT_EQ(e.EndpointURL, "eu"); \
   ASSERT_APPLICATION_DESCRIPTION_EQ(e.ServerDescription); \

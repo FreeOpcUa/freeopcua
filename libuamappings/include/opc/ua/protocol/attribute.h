@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -50,7 +50,7 @@ namespace OpcUa
   struct ReadResult
   {
     std::vector<DataValue> Results;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
   };
 
 
@@ -89,7 +89,7 @@ namespace OpcUa
   struct WriteResult
   {
     std::vector<StatusCode> StatusCodes;
-    std::vector<DiagnosticInfo> Diagnostics;
+    DiagnosticInfoList Diagnostics;
   };
 
   struct WriteResponse

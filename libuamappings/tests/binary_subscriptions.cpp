@@ -531,14 +531,13 @@ TEST_F(SubscriptionSerialization, PublishResult)
 
   result.Statuses.push_back(StatusCode::Good);
 
-  DiagnosticInfo diag1;
-  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
-  diag1.LocalizedText = 4;
-  DiagnosticInfo diag2;
-  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
-  diag2.AdditionalInfo = "add";
-  result.Diagnostics.push_back(diag1);
-  result.Diagnostics.push_back(diag2);
+  DiagnosticInfo diag;
+  diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag.LocalizedText = 4;
+  diag.InnerDiagnostics.reset(new DiagnosticInfo());
+  diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
+  diag.InnerDiagnostics->AdditionalInfo = "add";
+  result.Diagnostics.push_back(diag);
 
   GetStream() << result << flush;
 
@@ -562,7 +561,7 @@ TEST_F(SubscriptionSerialization, PublishResult)
     1,0,0,0,
     0,0,0,0,
     // Diagnostics
-    2,0,0,0, // Count
+    1,0,0,0, // Count
     static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -596,7 +595,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
     1,0,0,0,
     0,0,0,0,
     // Diagnostics
-    2,0,0,0, // Count
+    1,0,0,0, // Count
     static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -611,7 +610,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   ASSERT_EQ(result.MoreNotifications, true);
   ASSERT_EQ(result.Message.Data.size(), 1);
   ASSERT_EQ(result.Statuses.size(), 1);
-  ASSERT_EQ(result.Diagnostics.size(), 2);
+  ASSERT_EQ(result.Diagnostics.size(), 1);
 }
 
 //-------------------------------------------------------
@@ -640,14 +639,13 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   response.Result.Message.Data.push_back(NotificationData());
   response.Result.Statuses.push_back(StatusCode::Good);
 
-  DiagnosticInfo diag1;
-  diag1.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
-  diag1.LocalizedText = 4;
-  DiagnosticInfo diag2;
-  diag2.EncodingMask = DIM_ADDITIONAL_INFO;
-  diag2.AdditionalInfo = "add";
-  response.Result.Diagnostics.push_back(diag1);
-  response.Result.Diagnostics.push_back(diag2);
+  DiagnosticInfo diag;
+  diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
+  diag.LocalizedText = 4;
+  diag.InnerDiagnostics.reset(new DiagnosticInfo());
+  diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
+  diag.InnerDiagnostics->AdditionalInfo = "add";
+  response.Result.Diagnostics.push_back(diag);
 
   GetStream() << response << flush;
 
@@ -676,7 +674,7 @@ TEST_F(SubscriptionSerialization, PublishResponse)
     1,0,0,0,
     0,0,0,0,
     // Diagnostics
-    2,0,0,0, // Count
+    1,0,0,0, // Count
     static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -761,7 +759,7 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
     1,0,0,0,
     0,0,0,0,
     // Diagnostics
-    2,0,0,0, // Count
+    1,0,0,0, // Count
     static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
@@ -777,7 +775,7 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Result.Diagnostics.size(), 2);
+  ASSERT_EQ(response.Result.Diagnostics.size(), 1);
 }
 
 //-------------------------------------------------------

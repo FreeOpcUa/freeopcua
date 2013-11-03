@@ -49,32 +49,7 @@ TEST(GetEndpoints, Request)
 TEST(GetEndpoints, Response)
 {
   OpcUa::GetEndpointsResponse response;
-  response.Header.Additional.Encoding = 1;
-  response.Header.Additional.TypeID = OpcUa::NumericNodeID(2);
-
-  OpcUa::DiagnosticInfo diagnostic;
-  unsigned mask =
-      OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO |
-      OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE |
-      OpcUa::DiagnosticInfoMask::DIM_LOCALE |
-      OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT |
-      OpcUa::DiagnosticInfoMask::DIM_NAMESPACE |
-      OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID |
-      OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO;
-  diagnostic.EncodingMask = static_cast<OpcUa::DiagnosticInfoMask>(mask);
-  diagnostic.AdditionalInfo = "additional";
-  diagnostic.InnerStatusCode = OpcUa::StatusCode::BadNotImplemented;
-  diagnostic.Locale = 1;
-  diagnostic.LocalizedText = 2;
-  diagnostic.NamespaceURI = 3;
-  diagnostic.SymbolicID = 4;
-  response.Header.InnerDiagnostics.push_back(diagnostic);
-  response.Header.InnerDiagnostics.push_back(OpcUa::DiagnosticInfo());
-
-  response.Header.RequestHandle = 3;
-  response.Header.ServiceResult = OpcUa::StatusCode::BadNotReadable;
-  response.Header.StringTable.push_back("table");
-  response.Header.Timestamp = 4;
+  response.Header = OpcUa::Test::CreateResponseHeader();
 
   OpcUa::EndpointDescription endpoint;
   endpoint.EndpointURL = "url";
@@ -105,48 +80,7 @@ TEST(GetEndpoints, Response)
   ns3__GetEndpointsResponse* soapResponse = OpcUa::Soap::Serialize(&service, response);
 
   ASSERT_NE(soapResponse, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader->Body, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->AdditionalHeader->TypeId, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->AdditionalHeader->TypeId->Identifier, "ns=0;i=2;");
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->AdditionalInfo, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->ServiceDiagnostics->AdditionalInfo, "additional");
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->InnerStatusCode, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->InnerStatusCode->Code, nullptr);
-  ASSERT_FALSE(soapResponse->ResponseHeader->ServiceDiagnostics->InnerStatusCode->Code->empty());
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->Locale, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->ServiceDiagnostics->Locale, 1);
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->LocalizedText, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->ServiceDiagnostics->LocalizedText, 2);
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->NamespaceURI, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->ServiceDiagnostics->NamespaceURI, 3);
-
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceDiagnostics->SymbolicId, nullptr);
-  ASSERT_EQ(*soapResponse->ResponseHeader->ServiceDiagnostics->SymbolicId, 4);
-
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->AdditionalInfo, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->InnerStatusCode, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->Locale, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->LocalizedText, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->NamespaceURI, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->SymbolicId, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->ServiceDiagnostics->InnerDiagnosticInfo->InnerDiagnosticInfo, nullptr);
-
-  ASSERT_EQ(soapResponse->ResponseHeader->RequestHandle, 3);
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceResult, nullptr);
-  ASSERT_NE(soapResponse->ResponseHeader->ServiceResult->Code, nullptr);
-  ASSERT_FALSE(soapResponse->ResponseHeader->ServiceResult->Code->empty());
-  ASSERT_NE(soapResponse->ResponseHeader->StringTable, nullptr);
-  ASSERT_EQ(soapResponse->ResponseHeader->StringTable->String.size(), 1);
-  ASSERT_EQ(soapResponse->ResponseHeader->StringTable->String[0], "table");
-  ASSERT_EQ(soapResponse->ResponseHeader->Timestamp, 4);
+  OpcUa::Test::AssertResponseHeaderValid(soapResponse->ResponseHeader);
 
   ASSERT_NE(soapResponse->Endpoints, nullptr);
   ASSERT_EQ(soapResponse->Endpoints->EndpointDescription.size(), 1);
@@ -195,25 +129,7 @@ TEST(GetEndpoints, Response)
   ASSERT_EQ(soapPolicy->TokenType, ns3__UserTokenType::ns3__UserTokenType__IssuedToken_USCORE3);
 
   OpcUa::GetEndpointsResponse deserialized = OpcUa::Soap::Deserialize(soapResponse);
-  ASSERT_EQ(deserialized.TypeID, response.TypeID);
-  // TODO ASSERT_EQ(deserialized.Header.Additional.Encoding, response.Header.Additional.Encoding);
-  ASSERT_EQ(deserialized.Header.Additional.TypeID, response.Header.Additional.TypeID);
-  ASSERT_EQ(deserialized.Header.RequestHandle, response.Header.RequestHandle);
-  ASSERT_EQ(deserialized.Header.ServiceResult, response.Header.ServiceResult);
-  ASSERT_EQ(deserialized.Header.StringTable, response.Header.StringTable);
-  ASSERT_EQ(deserialized.Header.Timestamp, response.Header.Timestamp);
-
-  ASSERT_EQ(deserialized.Header.InnerDiagnostics.size(), 2);
-  const OpcUa::DiagnosticInfo& diag1 = deserialized.Header.InnerDiagnostics[0];
-  const OpcUa::DiagnosticInfo& srcDiag = response.Header.InnerDiagnostics[0];
-  ASSERT_EQ(diag1.EncodingMask, mask);
-  ASSERT_EQ(diag1.AdditionalInfo, srcDiag.AdditionalInfo);
-  ASSERT_EQ(diag1.InnerStatusCode, srcDiag.InnerStatusCode);
-  ASSERT_EQ(diag1.Locale, srcDiag.Locale);
-  ASSERT_EQ(diag1.LocalizedText, srcDiag.LocalizedText);
-  ASSERT_EQ(diag1.NamespaceURI, srcDiag.NamespaceURI);
-  ASSERT_EQ(diag1.SymbolicID, srcDiag.SymbolicID);
-  ASSERT_EQ(diag1.EncodingMask, mask);
+  ASSERT_RESPONSE_HEADER_EQ(deserialized.Header, response.Header);
 
   ASSERT_EQ(deserialized.Endpoints.size(), 1);
   const OpcUa::EndpointDescription& d = deserialized.Endpoints[0];

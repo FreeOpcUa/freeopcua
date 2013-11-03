@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -173,13 +173,13 @@ namespace OpcUa
     {
       Buffer.push_back(value);
     }
- 
+
     template<>
     void DataSerializer::Serialize<uint8_t>(const uint8_t& value)
     {
       Buffer.push_back(value);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<uint8_t>(uint8_t& value)
     {
@@ -187,7 +187,7 @@ namespace OpcUa
       GetData(In, &data, 1);
       value = static_cast<uint8_t>(data);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<int8_t>(int8_t& value)
     {
@@ -195,21 +195,21 @@ namespace OpcUa
       GetData(In, &data, 1);
       value = data;
     }
- 
+
     template<>
     void DataSerializer::Serialize<int16_t>(const int16_t& value)
     {
       Buffer.push_back(LoByte(value));
       Buffer.push_back(HiByte(value));
     }
- 
+
     template<>
     void DataSerializer::Serialize<uint16_t>(const uint16_t& value)
     {
       Buffer.push_back(LoByte(value));
       Buffer.push_back(HiByte(value));
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<uint16_t>(uint16_t& value)
     {
@@ -217,7 +217,7 @@ namespace OpcUa
       GetData(In, data, 2);
       value = MakeWord<uint16_t>(data[0], data[1]);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<int16_t>(int16_t& value)
     {
@@ -225,14 +225,14 @@ namespace OpcUa
       GetData(In, data, 2);
       value = MakeWord<int16_t>(data[0], data[1]);
     }
- 
+
     template<>
     void DataSerializer::Serialize<int32_t>(const int32_t& value)
     {
       Serialize(LoWord(value));
       Serialize(HiWord(value));
     }
- 
+
     template<>
     void DataSerializer::Serialize<uint32_t>(const uint32_t& value)
     {
@@ -247,7 +247,7 @@ namespace OpcUa
       GetData(In, data, 4);
       value = MakeNumber<uint32_t>(data);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<int32_t>(int32_t& value)
     {
@@ -255,21 +255,21 @@ namespace OpcUa
       GetData(In, data, 4);
       value = MakeNumber<int32_t>(data);
     }
- 
+
     template<>
     void DataSerializer::Serialize<int64_t>(const int64_t& value)
     {
       Serialize(LoDWord(value));
       Serialize(HiDWord(value));
     }
- 
+
     template<>
     void DataSerializer::Serialize<uint64_t>(const uint64_t& value)
     {
       Serialize(LoDWord(value));
       Serialize(HiDWord(value));
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<uint64_t>(uint64_t& value)
     {
@@ -277,7 +277,7 @@ namespace OpcUa
       GetData(In, data, 8);
       value = MakeNumber<uint64_t>(data);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<int64_t>(int64_t& value)
     {
@@ -291,7 +291,7 @@ namespace OpcUa
     {
       Serialize(static_cast<uint8_t>(value));
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<bool>(bool& value)
     {
@@ -299,17 +299,17 @@ namespace OpcUa
       *this >> tmp;
       value = static_cast<bool>(tmp);
     }
- 
+
     template<>
     void DataSerializer::Serialize<float>(const float& value)
     {
       const uint32_t& tmp = reinterpret_cast<const uint32_t&>(value);
       const uint16_t lo = LoWord(tmp);
       const uint16_t hi = HiWord(tmp);
-      
+
       *this << HiByte(hi) << LoByte(hi) << HiByte(lo) << LoByte(lo);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<float>(float& value)
     {
@@ -321,7 +321,7 @@ namespace OpcUa
       const uint32_t tmp = MakeNumber<uint32_t>((char*)data);
       value = *reinterpret_cast<const float*>(&tmp);
     }
- 
+
     template<>
     void DataSerializer::Serialize<double>(const double& value)
     {
@@ -331,7 +331,7 @@ namespace OpcUa
         Serialize(data[i]);
       }
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<double>(double& value)
     {
@@ -342,7 +342,7 @@ namespace OpcUa
       }
       value = *reinterpret_cast<const double*>(data); // TODO works on Intel
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::Guid>(const OpcUa::Guid& value)
     {
@@ -358,7 +358,7 @@ namespace OpcUa
       GetData(In, data, 8);
       std::copy(data, data + 8, value.Data4);
     }
- 
+
     template<>
     void DataSerializer::Serialize<std::string>(const std::string& value)
     {
@@ -452,7 +452,7 @@ namespace OpcUa
     {
       DeserializeContainer(*this, value);
     }
- 
+
     template<>
     void DataSerializer::Serialize<std::vector<std::string>>(const std::vector<std::string>& value)
     {
@@ -464,7 +464,7 @@ namespace OpcUa
     {
       DeserializeContainer(*this, value);
     }
- 
+
     template<>
     void DataSerializer::Serialize<std::vector<std::vector<uint8_t>>>(const std::vector<std::vector<uint8_t>>& value)
     {
@@ -476,7 +476,7 @@ namespace OpcUa
     {
       DeserializeContainer(*this, value);
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::MessageType>(const OpcUa::Binary::MessageType& value)
     {
@@ -506,7 +506,7 @@ namespace OpcUa
       }
       Buffer.insert(Buffer.end(), typeName, typeName + MESSAGE_TYPE_SIZE);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<OpcUa::Binary::MessageType>(OpcUa::Binary::MessageType& value)
     {
@@ -541,7 +541,7 @@ namespace OpcUa
         throw std::logic_error("Unknown message type received.");
       }
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::ChunkType>(const OpcUa::Binary::ChunkType& value)
     {
@@ -575,16 +575,16 @@ namespace OpcUa
         case 'C':
           value = CHT_INTERMEDIATE;
           break;
- 
+
         case 'A':
           value = CHT_FINAL;
           break;
- 
+
         default:
           throw std::logic_error("Invalid chunk type received.");
       };
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::Header>(const OpcUa::Binary::Header& header)
     {
@@ -724,7 +724,7 @@ namespace OpcUa
     {
       *this << static_cast<uint32_t>(value);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode& value)
     {
@@ -732,7 +732,7 @@ namespace OpcUa
       *this >> tmp;
       value = static_cast<MessageSecurityMode>(tmp);
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::AdditionalHeader>(const OpcUa::AdditionalHeader& header)
     {
@@ -777,7 +777,7 @@ namespace OpcUa
     {
       *this << static_cast<uint8_t>(value);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<DiagnosticInfoMask>(DiagnosticInfoMask& value)
     {
@@ -785,7 +785,7 @@ namespace OpcUa
       *this >> tmp;
       value = static_cast<DiagnosticInfoMask>(tmp);
     }
- 
+
     template<>
     void DataSerializer::Serialize<OpcUa::DiagnosticInfo>(const OpcUa::DiagnosticInfo& info)
     {
@@ -815,7 +815,12 @@ namespace OpcUa
       {
         *this << info.InnerStatusCode;
       }
+      if ((info.EncodingMask & DIM_INNER_DIAGNOSTIC_INFO) && info.InnerDiagnostics)
+      {
+        *this << *info.InnerDiagnostics;
+      }
     }
+
 
     template<>
     void DataDeserializer::Deserialize<OpcUa::DiagnosticInfo>(OpcUa::DiagnosticInfo& info)
@@ -846,17 +851,22 @@ namespace OpcUa
       {
         *this >> info.InnerStatusCode;
       }
+      if (info.EncodingMask & DIM_INNER_DIAGNOSTIC_INFO)
+      {
+        std::shared_ptr<DiagnosticInfo> tmp(new DiagnosticInfo);
+        *this >> *tmp;
+        info.InnerDiagnostics = tmp;
+      };
     };
 
     template<>
-    void DataSerializer::Serialize<std::vector<OpcUa::DiagnosticInfo>>(const std::vector<OpcUa::DiagnosticInfo>& infos)
+    void DataSerializer::Serialize<OpcUa::DiagnosticInfoList>(const OpcUa::DiagnosticInfoList& infos)
     {
-      const uint32_t emptyValue = 0;
-      SerializeContainer(*this, infos, emptyValue);
+      SerializeContainer(*this, infos, 0);
     }
 
     template<>
-    void DataDeserializer::Deserialize<std::vector<OpcUa::DiagnosticInfo>>(std::vector<OpcUa::DiagnosticInfo>& infos)
+    void DataDeserializer::Deserialize<OpcUa::DiagnosticInfoList>(OpcUa::DiagnosticInfoList& infos)
     {
       DeserializeContainer(*this, infos);
     }
@@ -867,10 +877,7 @@ namespace OpcUa
       *this << header.Timestamp;
       *this << header.RequestHandle;
       *this << header.ServiceResult;
-      for (DiagnosticInfoList::const_iterator diagIt = header.InnerDiagnostics.begin(); diagIt != header.InnerDiagnostics.end(); ++diagIt)
-      {
-        *this << *diagIt;
-      }
+      *this << header.InnerDiagnostics;
       SerializeContainer(*this, header.StringTable);
       *this << header.Additional;
     }
@@ -881,14 +888,7 @@ namespace OpcUa
       *this >> header.Timestamp;
       *this >> header.RequestHandle;
       *this >> header.ServiceResult;
-      bool hasNextInfo = true;
-      while (hasNextInfo)
-      {
-        DiagnosticInfo info;
-        *this >> info;
-        header.InnerDiagnostics.push_back(info);
-        hasNextInfo = info.EncodingMask & DIM_INNER_DIAGNOSTIC_INFO;
-      };
+      *this >> header.InnerDiagnostics;
       DeserializeContainer(*this, header.StringTable);
       *this >> header.Additional;
     };
@@ -917,7 +917,7 @@ namespace OpcUa
       uint32_t tmp = 0;
       *this >> tmp;
       request.RequestType = static_cast<SecurityTokenRequestType>(tmp);
- 
+
       uint32_t tmp2 = 0;
       *this >> tmp2;
       request.SecurityMode = static_cast<MessageSecurityMode>(tmp2);
@@ -1027,7 +1027,7 @@ namespace OpcUa
       *this << value.Signature;
       *this << value.Algorithm;
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<SignatureData>(SignatureData& value)
     {
@@ -1041,7 +1041,7 @@ namespace OpcUa
       *this << value.TypeID;
       *this << static_cast<uint8_t>(value.Encoding);
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<ExtensionObjectHeader>(ExtensionObjectHeader& value)
     {
@@ -1057,7 +1057,7 @@ namespace OpcUa
       *this << name.NamespaceIndex;
       *this << name.Name;
     }
- 
+
     template<>
     void DataDeserializer::Deserialize<QualifiedName>(QualifiedName&  name)
     {

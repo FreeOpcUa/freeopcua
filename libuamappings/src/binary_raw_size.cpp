@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -167,11 +167,11 @@ namespace OpcUa
       const std::size_t sizeOfMaxMessageSize = 4;
       const std::size_t sizeOfMaxChunkCount = 4;
 
-      return sizeOfProtocolVersion + 
-             sizeOfReceiveBufferSize + 
-             sizeOfSendBufferSize + 
-             sizeOfMaxMessageSize + 
-             sizeOfMaxChunkCount + 
+      return sizeOfProtocolVersion +
+             sizeOfReceiveBufferSize +
+             sizeOfSendBufferSize +
+             sizeOfMaxMessageSize +
+             sizeOfMaxChunkCount +
              RawSize(hello.EndpointUrl);
     }
 
@@ -208,7 +208,7 @@ namespace OpcUa
     {
       const std::size_t sizeofSequenceNumber = 4;
       const std::size_t sizeofRequestID = 4;
- 
+
       return sizeofSequenceNumber + sizeofRequestID;
     }
 
@@ -291,7 +291,18 @@ namespace OpcUa
         const std::size_t sizeofInnerStatusCode= 4;
         size += sizeofInnerStatusCode;
       }
+      if ((info.EncodingMask & DIM_INNER_DIAGNOSTIC_INFO) && info.InnerDiagnostics)
+      {
+        size += RawSize(*info.InnerDiagnostics);
+      }
+
       return size;
+    }
+
+    template<>
+    std::size_t RawSize<DiagnosticInfoList>(const DiagnosticInfoList& infos)
+    {
+      return RawSizeContainer(infos);
     }
 
     template<>
@@ -301,9 +312,7 @@ namespace OpcUa
       const std::size_t sizeofRequestHandle = 4;
       const std::size_t sizeofServiceResult = 4;
 
-      std::size_t sizeofDiagnostics = 0;
-      std::for_each(header.InnerDiagnostics.begin(), header.InnerDiagnostics.end(), [&] (const DiagnosticInfo& info) {sizeofDiagnostics += RawSize(info);} );
-      
+      std::size_t sizeofDiagnostics = RawSize(header.InnerDiagnostics);
       std::size_t sizeofStringTable = 4;
       std::for_each(header.StringTable.begin(), header.StringTable.end(), [&] (const std::string& str) {sizeofStringTable += RawSize(str);});
 
@@ -341,7 +350,7 @@ namespace OpcUa
       const std::size_t sizeofHeader = RawSize(request.Header);
       return sizeofTypeID + sizeofHeader;
     }
- 
+
 
     template<>
     std::size_t RawSize<LocalizedText>(const LocalizedText& text)

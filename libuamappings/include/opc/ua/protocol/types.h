@@ -19,9 +19,11 @@
 #include <opc/ua/status_codes.h>
 #include <opc/ua/reference_ids.h>
 
+#include <memory>
 #include <stdint.h>
 #include <string>
 #include <vector>
+
 
 namespace OpcUa
 {
@@ -194,6 +196,7 @@ namespace OpcUa
     int32_t Locale;
     std::string AdditionalInfo;
     StatusCode InnerStatusCode;
+    std::shared_ptr<DiagnosticInfo> InnerDiagnostics;
 
     DiagnosticInfo()
       : EncodingMask(DiagnosticInfoMask::DIM_NONE)
@@ -207,13 +210,20 @@ namespace OpcUa
 
     bool operator== (const DiagnosticInfo& info) const
     {
-      return
+      if (
         EncodingMask == info.EncodingMask &&
         SymbolicID == info.SymbolicID &&
         NamespaceURI == info.NamespaceURI &&
         LocalizedText == info.LocalizedText &&
         Locale == info.Locale &&
-        InnerStatusCode == info.InnerStatusCode;
+        InnerStatusCode == info.InnerStatusCode)
+      {
+        if (InnerDiagnostics && info.InnerDiagnostics)
+          return *InnerDiagnostics == *info.InnerDiagnostics;
+
+        return !InnerDiagnostics && !info.InnerDiagnostics;
+      }
+      return false;
     }
   };
 
@@ -224,7 +234,7 @@ namespace OpcUa
     DateTime Timestamp;
     uint32_t RequestHandle;
     StatusCode ServiceResult;
-    DiagnosticInfoList InnerDiagnostics;
+    DiagnosticInfo InnerDiagnostics;
     std::vector<std::string> StringTable;
     AdditionalHeader Additional;
 

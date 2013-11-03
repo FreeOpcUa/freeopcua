@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -105,7 +105,7 @@ namespace OpcUa
   {
     std::vector<uint8_t> ServerNonce;
     std::vector<uint32_t>StatusCodes;
-    std::vector<DiagnosticInfo> DiagnosticInfos;
+    DiagnosticInfoList Diagnostics;
   };
 
   struct ActivateSessionResponse
@@ -115,7 +115,7 @@ namespace OpcUa
     UpdatedSessionData Session;
 
     ActivateSessionResponse();
-  }; 
+  };
 
   //-------------------------------------------------
   // CloseSessionRequest

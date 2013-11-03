@@ -445,7 +445,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
 
   ASSERT_EQ(response.Session.ServerNonce, std::vector<uint8_t>(1,1));
   ASSERT_EQ(response.Session.StatusCodes, std::vector<uint32_t>(2,1));
-  ASSERT_TRUE(response.Session.DiagnosticInfos.empty());
+  ASSERT_TRUE(response.Session.Diagnostics.empty());
 }
 
 //-------------------------------------------------------

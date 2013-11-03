@@ -520,7 +520,7 @@ namespace
   private:
     void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
-       responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
+       //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
        responseHeader.Timestamp = CurrentDateTime();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
