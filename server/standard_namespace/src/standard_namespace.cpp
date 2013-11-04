@@ -254,8 +254,8 @@ namespace
         desc.ReferenceTypeID = referenceType;
         desc.IsForward = isForward;
         desc.TargetNodeID = NodeID(targetNode);
-        desc.BrowseName.Name = name;
-        desc.DisplayName.Text = name;
+        desc.BrowseName = QualifiedName(name);
+        desc.DisplayName = LocalizedText(name);
         desc.TargetNodeClass = targetNodeClass;
         desc.TargetNodeTypeDefinition = targetNodeTypeDefinition;
 

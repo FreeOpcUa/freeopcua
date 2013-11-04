@@ -527,16 +527,18 @@ namespace OpcUa
 
     python::list Browse(const PyBrowseParameters& p) const
     {
-      OpcUa::Remote::BrowseParameters params;
-      params.Description.NodeToBrowse = GetNode(p.NodeToBrowse);
-      params.Description.ReferenceTypeID = GetNode(p.ReferenceTypeID);
-      params.Description.Direction = static_cast<OpcUa::BrowseDirection>(p.Direction);
-      params.Description.IncludeSubtypes = p.IncludeSubtypes;
-      params.Description.NodeClasses = p.NodeClasses;
-      params.Description.ResultMask = p.ResultMask;
-      params.MaxReferenciesCount = p.MaxReferenciesCount;
+      OpcUa::BrowseDescription description;
+      description.NodeToBrowse = GetNode(p.NodeToBrowse);
+      description.ReferenceTypeID = GetNode(p.ReferenceTypeID);
+      description.Direction = static_cast<OpcUa::BrowseDirection>(p.Direction);
+      description.IncludeSubtypes = p.IncludeSubtypes;
+      description.NodeClasses = p.NodeClasses;
+      description.ResultMask = p.ResultMask;
 
-      const std::vector<ReferenceDescription> references = Impl->Views()->Browse(params);
+      OpcUa::NodesQuery query;
+      query.NodesToBrowse.push_back(description);
+      query.MaxReferenciesPerNode = p.MaxReferenciesCount;
+      const std::vector<ReferenceDescription> references = Impl->Views()->Browse(query);
       return ToList(references);
     }
 

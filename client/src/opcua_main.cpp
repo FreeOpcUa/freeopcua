@@ -342,15 +342,18 @@ namespace
 
   void Browse(OpcUa::Remote::ViewServices& view, OpcUa::NodeID nodeID)
   {
-    OpcUa::Remote::BrowseParameters params;
-    params.Description.NodeToBrowse = nodeID;
-    params.Description.Direction = OpcUa::BrowseDirection::Forward;
-    params.Description.IncludeSubtypes = true;
-    params.Description.NodeClasses = OpcUa::NODE_CLASS_ALL;
-    params.Description.ResultMask = OpcUa::REFERENCE_ALL;
-    params.MaxReferenciesCount = 100;
+    OpcUa::BrowseDescription description;
+    description.NodeToBrowse = nodeID;
+    description.Direction = OpcUa::BrowseDirection::Forward;
+    description.IncludeSubtypes = true;
+    description.NodeClasses = OpcUa::NODE_CLASS_ALL;
+    description.ResultMask = OpcUa::REFERENCE_ALL;
 
-    std::vector<OpcUa::ReferenceDescription> refs = view.Browse(params);
+    OpcUa::NodesQuery query;
+    query.NodesToBrowse.push_back(description);
+    query.MaxReferenciesPerNode = 100;
+
+    std::vector<OpcUa::ReferenceDescription> refs = view.Browse(query);
     while(true)
     {
       if (refs.empty())

@@ -100,14 +100,17 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
   std::shared_ptr<OpcUa::Remote::Computer> computer = computerAddon->GetComputer();
   std::shared_ptr<OpcUa::Remote::ViewServices> views = computer->Views();
 
-  OpcUa::Remote::BrowseParameters params;
-  params.Description.NodeToBrowse = OpcUa::ObjectID::RootFolder;
-  params.Description.Direction = OpcUa::BrowseDirection::Forward;
-  params.Description.ReferenceTypeID = OpcUa::ReferenceID::Organizes;
-  params.Description.IncludeSubtypes = true;
-  params.Description.NodeClasses = OpcUa::NODE_CLASS_OBJECT;
-  params.Description.ResultMask = OpcUa::REFERENCE_ALL;
-  std::vector<OpcUa::ReferenceDescription> referencies = views->Browse(params);
+  OpcUa::BrowseDescription description;
+  description.NodeToBrowse = OpcUa::ObjectID::RootFolder;
+  description.Direction = OpcUa::BrowseDirection::Forward;
+  description.ReferenceTypeID = OpcUa::ReferenceID::Organizes;
+  description.IncludeSubtypes = true;
+  description.NodeClasses = OpcUa::NODE_CLASS_OBJECT;
+  description.ResultMask = OpcUa::REFERENCE_ALL;
+  OpcUa::NodesQuery query;
+  query.NodesToBrowse.push_back(description);
+
+  std::vector<OpcUa::ReferenceDescription> referencies = views->Browse(query);
   ASSERT_EQ(referencies.size(), 3);
 
   views.reset();

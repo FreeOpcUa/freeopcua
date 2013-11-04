@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -25,7 +25,7 @@ protected:
   Attribute()
   {
   }
- 
+
   virtual void SetUp()
   {
     Server = Connect(GetEndpoint());
@@ -57,7 +57,6 @@ protected:
   }
 
 protected:
-  BrowseParameters Params;
   std::unique_ptr<Computer> Server;
   std::shared_ptr<AttributeServices> Service;
 };

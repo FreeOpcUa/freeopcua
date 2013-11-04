@@ -31,12 +31,11 @@ namespace OpcUa
       {
       }
 
-      virtual std::vector<ReferenceDescription> Browse(const Remote::BrowseParameters& params) const
+      virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
       {
         BrowseRequest browse;
         browse.Header.SessionAuthenticationToken = AuthenticationToken;
-        browse.Query.MaxReferenciesPerNode = params.MaxReferenciesCount;
-        browse.Query.NodesToBrowse.push_back(params.Description);
+        browse.Query = query;
 
         Stream << browse << OpcUa::Binary::flush;
 

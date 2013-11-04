@@ -23,27 +23,15 @@ namespace OpcUa
   namespace Remote
   {
 
-    struct BrowseParameters
-    {
-      BrowseDescription Description;
-      unsigned MaxReferenciesCount;
-
-      BrowseParameters()
-        : MaxReferenciesCount(0)
-      {
-      }
-    };
-
     class ViewServices : private Common::Interface
     {
     public:
       DEFINE_CLASS_POINTERS(ViewServices);
 
     public:
-      virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const = 0;
+      virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const = 0;
       virtual std::vector<ReferenceDescription> BrowseNext() const = 0;
     };
-
 
   } // namespace Remote
 } // namespace OpcUa

@@ -118,7 +118,9 @@ am_libopcua_soap_protocol_la_OBJECTS =  \
 	libopcua_soap_protocol_la-namespaces.lo \
 	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.lo \
 	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.lo \
+	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo \
 	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo \
+	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo \
 	libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo \
 	libopcua_soap_protocol_la-soapC_001.lo \
 	libopcua_soap_protocol_la-soapC_002.lo \
@@ -378,7 +380,9 @@ libopcua_soap_protocol_la_SOURCES = \
   soapStub.h \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
   soapC_001.cpp \
   soapC_002.cpp \
@@ -573,7 +577,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-serialize.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapC_001.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_protocol_la-soapC_002.Plo@am__quote@
@@ -680,12 +686,26 @@ libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.l
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.lo `test -f 'soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp
 
+libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo: soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.Tpo -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo `test -f 'soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.Tpo $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp' object='libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.lo `test -f 'soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp
+
 libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo: soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Tpo -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo `test -f 'soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Tpo $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.Plo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp' object='libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREIRegistrationEndpointService.lo `test -f 'soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp
+
+libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo: soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.Tpo -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo `test -f 'soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.Tpo $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp' object='libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointProxy.lo `test -f 'soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp
 
 libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo: soapBasicHttpBinding_USCOREISessionEndpointService.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_protocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.Tpo -c -o libopcua_soap_protocol_la-soapBasicHttpBinding_USCOREISessionEndpointService.lo `test -f 'soapBasicHttpBinding_USCOREISessionEndpointService.cpp' || echo '$(srcdir)/'`soapBasicHttpBinding_USCOREISessionEndpointService.cpp

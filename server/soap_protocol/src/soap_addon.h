@@ -15,6 +15,7 @@
 #include <opc/ua/server/addons/services_registry.h>
 
 #include "discovery_service.h"
+#include "endpoint_service.h"
 #include "soap_service.h"
 
 namespace OpcUa
@@ -39,6 +40,7 @@ namespace OpcUa
     private:
       bool Debug;
       std::unique_ptr<SoapService<SoapDiscoveryService>> DiscoveryService;
+      std::unique_ptr<SoapService<SoapEndpointService>> EndpointService;
     };
 
   } // namespace Impl

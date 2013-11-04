@@ -44,9 +44,11 @@ protected:
 protected:
   std::vector<ReferenceDescription> Browse(const NodeID& id) const
   {
-    OpcUa::Remote::BrowseParameters params;
-    params.Description.NodeToBrowse = id;
-    return NameSpace->Browse(params);
+    OpcUa::BrowseDescription description;
+    description.NodeToBrowse = id;
+    OpcUa::NodesQuery query;
+    query.NodesToBrowse.push_back(description);
+    return NameSpace->Browse(query);
   }
 
   bool HasReference(std::vector<ReferenceDescription> refs, ReferenceID referenceID,  NodeID targetNode) const

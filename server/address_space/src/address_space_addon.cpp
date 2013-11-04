@@ -51,9 +51,9 @@ namespace OpcUa
       Registry->AddReference(sourceNode, reference);
     }
 
-    std::vector<ReferenceDescription> AddressSpaceAddon::Browse(const OpcUa::Remote::BrowseParameters& params) const
+    std::vector<ReferenceDescription> AddressSpaceAddon::Browse(const OpcUa::NodesQuery& query) const
     {
-      return Registry->Browse(params);
+      return Registry->Browse(query);
     }
 
     std::vector<ReferenceDescription> AddressSpaceAddon::BrowseNext() const
