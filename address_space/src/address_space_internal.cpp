@@ -49,14 +49,17 @@ namespace
     }
 
 
-    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
       std::vector<ReferenceDescription> result;
       for (auto reference : Referencies)
       {
-        if (IsSuitableReference(params.Description, reference))
+        for (auto browseDescription : query.NodesToBrowse)
         {
-          result.push_back(reference.second);
+          if (IsSuitableReference(browseDescription, reference))
+          {
+            result.push_back(reference.second);
+          }
         }
       }
       return result;

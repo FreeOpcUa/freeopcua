@@ -88,7 +88,9 @@ libopcua_soap_protocol_la_SOURCES = \
   soapStub.h \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp \
+  soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp \
+  soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp \
   soapBasicHttpBinding_USCOREISessionEndpointService.cpp \
   soapC_001.cpp \
   soapC_002.cpp \

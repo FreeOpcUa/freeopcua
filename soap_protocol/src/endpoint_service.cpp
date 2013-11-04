@@ -10,6 +10,9 @@
 
 #include "endpoint_service.h"
 
+#include "serialization/serialize.h"
+#include "serialization/deserialize.h"
+
 namespace OpcUa
 {
   namespace Impl
@@ -61,6 +64,17 @@ namespace OpcUa
 
     int SoapEndpointService::Browse(ns3__BrowseRequest *ns3__BrowseRequest_, ns3__BrowseResponse *ns3__BrowseResponse_)
     {
+      if (Debug) std::clog << "SOAP: Received BrowseRequest." << std::endl;
+
+      const OpcUa::BrowseRequest request = OpcUa::Soap::Deserialize(ns3__BrowseRequest_);
+      BrowseResult result;
+      result.Referencies = Computer->Views()->Browse(request.Query);
+      OpcUa::BrowseResponse response;
+      response.Results.push_back(result);
+      *ns3__BrowseResponse_ = *OpcUa::Soap::Serialize(this, response);
+
+
+      if (Debug) std::clog << "SOAP: Processed BrowseRequest." << std::endl;
       return SOAP_OK;
     }
 

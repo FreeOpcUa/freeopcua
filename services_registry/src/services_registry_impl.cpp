@@ -36,7 +36,7 @@ namespace
     {
     }
 
-    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    virtual std::vector<ReferenceDescription> Browse(const NodesQuery& query) const
     {
       return std::vector<ReferenceDescription>();
     }

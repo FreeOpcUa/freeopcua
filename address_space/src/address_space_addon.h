@@ -42,7 +42,7 @@ namespace OpcUa
       virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference);
 
     public:
-      virtual std::vector<ReferenceDescription> Browse(const OpcUa::Remote::BrowseParameters& params) const;
+      virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
       virtual std::vector<ReferenceDescription> BrowseNext() const;
 
     public:

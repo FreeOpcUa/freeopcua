@@ -36,6 +36,20 @@ namespace OpcUa
       {
       }
 
+      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode iomode)
+        : ParentType(iomode)
+        , Computer(computer)
+        , Debug(debug)
+      {
+      }
+
+      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode imode, soap_mode omode)
+        : ParentType(imode, omode)
+        , Computer(computer)
+        , Debug(debug)
+      {
+      }
+
       virtual BasicHttpBinding_USCOREISessionEndpointService *copy();
       virtual int CreateSession(ns3__CreateSessionRequest *ns3__CreateSessionRequest_, ns3__CreateSessionResponse *ns3__CreateSessionResponse_);
       virtual int ActivateSession(ns3__ActivateSessionRequest *ns3__ActivateSessionRequest_, ns3__ActivateSessionResponse *ns3__ActivateSessionResponse_);

@@ -267,16 +267,9 @@ namespace
           BrowseResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          for (auto node : query.NodesToBrowse)
-          {
-            BrowseResult result;
-            OpcUa::Remote::BrowseParameters browseParams;
-            browseParams.Description = node;
-            browseParams.MaxReferenciesCount = query.MaxReferenciesPerNode;
-
-            result.Referencies = Computer->Views()->Browse(browseParams);
-            response.Results.push_back(result);
-          }
+          OpcUa::BrowseResult result;
+          result.Referencies = Computer->Views()->Browse(query);
+          response.Results.push_back(result);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

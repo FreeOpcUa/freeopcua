@@ -15,6 +15,7 @@
 #include <opc/ua/client/addon.h>
 
 #include <soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.h>
+#include <soapBasicHttpBinding_USCOREISessionEndpointProxy.h>
 
 #include <sstream>
 
@@ -75,15 +76,41 @@ namespace
   class SoapViews : public OpcUa::Remote::ViewServices
   {
   public:
-    virtual std::vector<OpcUa::ReferenceDescription> Browse(const OpcUa::Remote::BrowseParameters& params) const
+    SoapViews(const std::string& url)
+      : Url(url)
     {
-      return std::vector<OpcUa::ReferenceDescription>();
+    }
+
+    virtual std::vector<OpcUa::ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
+    {
+      OpcUa::BrowseRequest request;
+      request.Query = query;
+      BasicHttpBinding_USCOREISessionEndpointProxy service(Url.c_str());
+      ns3__BrowseRequest* soapRequest = OpcUa::Soap::Serialize(&service, request);
+      ns3__BrowseResponse* soapResponse = soap_new_ns3__BrowseResponse(&service, 1);
+      const int soapError = service.Browse(soapRequest, soapResponse);
+      if (soapError != SOAP_OK)
+      {
+        std::stringstream stream;
+        service.soap_stream_fault(stream);
+        throw std::logic_error(stream.str());
+      }
+      const OpcUa::BrowseResponse response = OpcUa::Soap::Deserialize(soapResponse);
+      if (response.Results.empty())
+      {
+        return std::vector<OpcUa::ReferenceDescription>();
+      }
+      //TODO Must return list of BrowseResult
+      return response.Results.front().Referencies;
     }
 
     virtual std::vector<OpcUa::ReferenceDescription> BrowseNext() const
     {
       return std::vector<OpcUa::ReferenceDescription>();
     }
+
+  private:
+    std::string Url;
   };
 
   class SoapAttributes : public OpcUa::Remote::AttributeServices
@@ -140,7 +167,7 @@ namespace
 
     virtual OpcUa::Remote::ViewServices::SharedPtr Views() const
     {
-      return OpcUa::Remote::ViewServices::SharedPtr();
+      return OpcUa::Remote::ViewServices::SharedPtr(new SoapViews(Url));
     }
 
     virtual OpcUa::Remote::AttributeServices::SharedPtr Attributes() const
