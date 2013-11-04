@@ -164,7 +164,7 @@ namespace
   class TestViewServices : public OpcUa::Remote::ViewServices
   {
   public:
-    virtual std::vector<ReferenceDescription> Browse(const BrowseParameters& params) const
+    virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
       ReferenceDescription ref;
       ref.BrowseName.Name = "Name";
