@@ -28,13 +28,16 @@
 namespace
 {
 
-  std::mutex ExitMutex;
-  std::condition_variable ExitEvent;
+  std::condition_variable* ExitEvent = 0;
 
   void TerminateSignal(int signum)
   {
     std::cout << "terminating.." << std::endl;
-    ExitEvent.notify_all();
+    if (ExitEvent)
+    {
+      ExitEvent->notify_all();
+      ExitEvent = nullptr;
+    }
   }
 
 }
@@ -87,13 +90,14 @@ namespace OpcUa
     close(STDERR_FILENO);
 
     FILE* tmp = fopen(logFile, "w");
-    dup2(fileno(tmp), STDOUT_FILENO); 
-    dup2(fileno(tmp), STDERR_FILENO); 
+    dup2(fileno(tmp), STDOUT_FILENO);
+    dup2(fileno(tmp), STDERR_FILENO);
   }
 
   void Daemon::WaitForTerminate()
   {
-    std::unique_lock<std::mutex> lock(ExitMutex);
+    std::mutex mutex;
+    std::unique_lock<std::mutex> lock(mutex);
     if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
     {
       std::cout << "unable to set SIGTERM handler" << std::endl;
@@ -106,7 +110,9 @@ namespace OpcUa
     {
       std::cout << "unable to set SIGSTOP handler" << std::endl;
     }
-    ExitEvent.wait(lock);
+    std::condition_variable event;
+    ExitEvent = & event;
+    event.wait(lock);
   }
 }
 

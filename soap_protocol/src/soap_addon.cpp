@@ -20,7 +20,7 @@
 #include <stdexcept>
 
 using namespace OpcUa;
-using namespace OpcUa::Impl;
+using namespace OpcUa::Soap;
 
 
 SoapAddon::SoapAddon()
@@ -30,20 +30,20 @@ SoapAddon::SoapAddon()
 
 void SoapAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
 {
+  ApplyAddonParameters(params);
   OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
-  std::unique_ptr<SoapDiscoveryService> discoveryService(new SoapDiscoveryService(servicesRegistry->GetComputer(), true, SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT));
-  DiscoveryService.reset(new SoapService<SoapDiscoveryService>(8888, std::move(discoveryService)));
-  DiscoveryService->Start();
+  OpcUa::Remote::Computer::SharedPtr computer = servicesRegistry->GetComputer();
 
-  std::unique_ptr<SoapEndpointService> endpointService(new SoapEndpointService(servicesRegistry->GetComputer(), true, SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE | SOAP_XML_INDENT));
-  EndpointService.reset(new SoapService<SoapEndpointService>(8889, std::move(endpointService)));
-  EndpointService->Start();
+  ServerInstance.reset(new Soap::Server(8888, Debug));
+  ServerInstance->AddService(std::unique_ptr<ServiceImpl<DiscoveryService>>(new ServiceImpl<DiscoveryService>(computer, Debug)));
+  ServerInstance->AddService(std::unique_ptr<ServiceImpl<EndpointService>>(new ServiceImpl<EndpointService>(computer, Debug)));
+  ServerInstance->Run();
 }
 
 void SoapAddon::Stop()
 {
-  DiscoveryService->Stop();
-  EndpointService->Stop();
+  ServerInstance->Stop();
+  ServerInstance.reset();
 }
 
 void SoapAddon::ApplyAddonParameters(const Common::AddonParameters& params)

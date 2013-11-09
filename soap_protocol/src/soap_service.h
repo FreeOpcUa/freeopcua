@@ -10,67 +10,50 @@
 
 #pragma once
 
+
 #include "soapH.h"
+#include "soap_server.h"
 
 #include <opc/common/thread.h>
 
+#include <sstream>
+#include <stdexcept>
+
 namespace OpcUa
 {
-  namespace Impl
+  namespace Soap
   {
 
     template <typename ServiceType>
-    class SoapService
+    class ServiceImpl : public Service
     {
-    private:
-      typedef SoapService<ServiceType> SelfType;
-
-      const unsigned Timeout = 24 * 60 * 60;
-
     public:
-      SoapService(int port, std::unique_ptr<ServiceType> service)
-        : Service(std::move(service))
-        , Port(port)
+      ServiceImpl(Remote::Computer::SharedPtr computer, bool debug)
+        : Computer(computer)
+        , Debug(debug)
+        , Impl(computer, debug)
       {
-        Service->accept_timeout = Timeout;
-        Service->bind_flags |= SO_REUSEADDR;
+
       }
 
-      void Start()
+      virtual int Dispatch(soap* s)
       {
-        if (Thread)
+        soap_copy_stream(&Impl, s);
+        const int error = Impl.dispatch();
+        if (error != SOAP_NO_METHOD && error != SOAP_OK)
         {
-          return;
+          Impl.soap_stream_fault(std::cerr);
+          soap_send_fault(&Impl);
         }
-
-        Thread = Common::Thread::Create(std::bind(&ServiceProc, this));
-      }
-
-      void Stop()
-      {
-        if (Thread)
-        {
-          Service->destroy();
-          Thread->Join();
-          Thread.reset();
-        }
+        soap_free_stream(&Impl);
+        Impl.destroy();
+        return error;
       }
 
     private:
-      void Run()
-      {
-        Service->run(Port);
-      }
-
-      static void ServiceProc(SelfType* service)
-      {
-        service->Run();
-      }
-
-    private:
-      std::unique_ptr<ServiceType> Service;
-      const int Port;
-      Common::Thread::UniquePtr Thread;
+      Remote::Computer::SharedPtr Computer;
+      bool Debug;
+      ServiceType Impl;
     };
 
   } // namespace Impl

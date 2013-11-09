@@ -16,33 +16,33 @@
 
 namespace OpcUa
 {
-  namespace Impl
+  namespace Soap
   {
-    class SoapDiscoveryService : public BasicHttpBinding_USCOREIDiscoveryEndpointService
+    class DiscoveryService : public BasicHttpBinding_USCOREIDiscoveryEndpointService
     {
       typedef BasicHttpBinding_USCOREIDiscoveryEndpointService ParentType;
     public:
-      SoapDiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug)
+      DiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug)
         : Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapDiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, struct soap& s)
+      DiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, struct soap& s)
         : ParentType(s)
         , Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapDiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode iomode)
+      DiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode iomode)
         : ParentType(iomode)
         , Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapDiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode imode, soap_mode omode)
+      DiscoveryService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode imode, soap_mode omode)
         : ParentType(imode, omode)
         , Computer(computer)
         , Debug(debug)
@@ -59,4 +59,3 @@ namespace OpcUa
     };
   }
 }
-
