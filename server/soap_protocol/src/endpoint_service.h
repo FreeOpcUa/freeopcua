@@ -16,34 +16,34 @@
 
 namespace OpcUa
 {
-  namespace Impl
+  namespace Soap
   {
-    class SoapEndpointService : public BasicHttpBinding_USCOREISessionEndpointService
+    class EndpointService : public BasicHttpBinding_USCOREISessionEndpointService
     {
       typedef BasicHttpBinding_USCOREISessionEndpointService ParentType;
 
     public:
-      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug)
+      EndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug)
         : Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, struct soap& s)
+      EndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, struct soap& s)
         : ParentType(s)
         , Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode iomode)
+      EndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode iomode)
         : ParentType(iomode)
         , Computer(computer)
         , Debug(debug)
       {
       }
 
-      SoapEndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode imode, soap_mode omode)
+      EndpointService(OpcUa::Remote::Computer::SharedPtr computer, bool debug, soap_mode imode, soap_mode omode)
         : ParentType(imode, omode)
         , Computer(computer)
         , Debug(debug)

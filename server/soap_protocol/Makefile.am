@@ -142,7 +142,9 @@ libopcua_soap_server_la_SOURCES = \
   src/soap_addon.h \
   src/soap_addon_factory.h \
   src/soap_module.cpp \
-  src/soap_service.h
+  src/soap_service.h \
+  src/soap_server.cpp \
+  src/soap_server.h
 
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
 libopcua_soap_server_la_LIBADD = libopcua_soap_protocol.la

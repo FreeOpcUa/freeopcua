@@ -17,10 +17,11 @@
 #include "discovery_service.h"
 #include "endpoint_service.h"
 #include "soap_service.h"
+#include "soap_server.h"
 
 namespace OpcUa
 {
-  namespace Impl
+  namespace Soap
   {
 
     class SoapAddon : public Common::Addon
@@ -33,16 +34,12 @@ namespace OpcUa
 
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
-      void PublishApplicationsInformation(const Common::AddonsManager& addons) const;
-      void StartEndpoints(OpcUa::Server::ServicesRegistryAddon::SharedPtr servicesRegistry);
-      void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
     private:
       bool Debug;
-      std::unique_ptr<SoapService<SoapDiscoveryService>> DiscoveryService;
-      std::unique_ptr<SoapService<SoapEndpointService>> EndpointService;
+      std::unique_ptr<Server> ServerInstance;
     };
 
-  } // namespace Impl
+  } // namespace Soap
 } // namespace OpcUa
 

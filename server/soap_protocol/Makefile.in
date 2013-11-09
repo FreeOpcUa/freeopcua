@@ -168,7 +168,8 @@ am_libopcua_soap_server_la_OBJECTS =  \
 	libopcua_soap_server_la-endpoint_service.lo \
 	libopcua_soap_server_la-registration_service.lo \
 	libopcua_soap_server_la-soap_addon.lo \
-	libopcua_soap_server_la-soap_module.lo
+	libopcua_soap_server_la-soap_module.lo \
+	libopcua_soap_server_la-soap_server.lo
 libopcua_soap_server_la_OBJECTS =  \
 	$(am_libopcua_soap_server_la_OBJECTS)
 libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -432,7 +433,9 @@ libopcua_soap_server_la_SOURCES = \
   src/soap_addon.h \
   src/soap_addon_factory.h \
   src/soap_module.cpp \
-  src/soap_service.h
+  src/soap_service.h \
+  src/soap_server.cpp \
+  src/soap_server.h
 
 libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
 libopcua_soap_server_la_LIBADD = libopcua_soap_protocol.la
@@ -620,6 +623,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-registration_service.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_server.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-browse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
 
@@ -986,6 +990,13 @@ libopcua_soap_server_la-soap_module.lo: src/soap_module.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/soap_module.cpp' object='libopcua_soap_server_la-soap_module.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soap_module.lo `test -f 'src/soap_module.cpp' || echo '$(srcdir)/'`src/soap_module.cpp
+
+libopcua_soap_server_la-soap_server.lo: src/soap_server.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_soap_server_la-soap_server.lo -MD -MP -MF $(DEPDIR)/libopcua_soap_server_la-soap_server.Tpo -c -o libopcua_soap_server_la-soap_server.lo `test -f 'src/soap_server.cpp' || echo '$(srcdir)/'`src/soap_server.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_soap_server_la-soap_server.Tpo $(DEPDIR)/libopcua_soap_server_la-soap_server.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/soap_server.cpp' object='libopcua_soap_server_la-soap_server.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soap_server.lo `test -f 'src/soap_server.cpp' || echo '$(srcdir)/'`src/soap_server.cpp
 
 test_soap-browse.o: tests/browse.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-browse.o -MD -MP -MF $(DEPDIR)/test_soap-browse.Tpo -c -o test_soap-browse.o `test -f 'tests/browse.cpp' || echo '$(srcdir)/'`tests/browse.cpp

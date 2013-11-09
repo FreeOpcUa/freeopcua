@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#pragma once
+
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
 

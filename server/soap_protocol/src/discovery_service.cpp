@@ -15,20 +15,20 @@
 
 namespace OpcUa
 {
-  namespace Impl
+  namespace Soap
   {
 
-    BasicHttpBinding_USCOREIDiscoveryEndpointService *SoapDiscoveryService::copy()
+    BasicHttpBinding_USCOREIDiscoveryEndpointService *DiscoveryService::copy()
     {
-      return new SoapDiscoveryService(Computer, Debug);
+      return new DiscoveryService(Computer, Debug);
     }
 
-    int SoapDiscoveryService::FindServers(ns3__FindServersRequest *ns3__FindServersRequest_, ns3__FindServersResponse *ns3__FindServersResponse_)
+    int DiscoveryService::FindServers(ns3__FindServersRequest *ns3__FindServersRequest_, ns3__FindServersResponse *ns3__FindServersResponse_)
     {
       return SOAP_OK;
     }
 
-    int SoapDiscoveryService::GetEndpoints(ns3__GetEndpointsRequest* request, ns3__GetEndpointsResponse* response)
+    int DiscoveryService::GetEndpoints(ns3__GetEndpointsRequest* request, ns3__GetEndpointsResponse* response)
     {
       if (Debug) std::clog << "soap: GetEndpoints received." << std::endl;
       OpcUa::EndpointsFilter filter;
@@ -42,9 +42,7 @@ namespace OpcUa
       if (Debug) std::clog << "Found " << resp.Endpoints.size() << " endpoints." << std::endl;
 
       if (Debug) std::clog << "Serializing response." << std::endl;
-      ns3__GetEndpointsResponse* r = Soap::Serialize(this, resp);
-      response->Endpoints = r->Endpoints;
-      response->ResponseHeader = r->ResponseHeader;
+      *response = *Soap::Serialize(this, resp);
 
       if (Debug) std::clog << "soap: GetEndpoints processed." << std::endl;
       return SOAP_OK;
