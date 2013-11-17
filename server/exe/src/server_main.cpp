@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     OpcUa::Daemon daemon;
     if (options.IsDaemonMode())
     {
-      daemon.Daemonize("/var/log/opcua/log.txt");
+      daemon.Daemonize(options.GetLogFile());
     }
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();

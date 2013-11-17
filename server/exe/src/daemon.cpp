@@ -46,25 +46,20 @@ namespace OpcUa
 {
   Daemon::Daemon()
   {
-
   }
 
   Daemon::~Daemon()
   {
   }
 
-  void Daemon::Daemonize(const char* logFile)
+  void Daemon::Daemonize(const std::string& logFile)
   {
-    if (!logFile)
-    {
-      return;
-    }
-
     pid_t pid, sid;
 
     pid = fork();
     if (pid < 0)
     {
+      std::cout << "Failed to fork: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
     if (pid > 0)
@@ -77,21 +72,30 @@ namespace OpcUa
     sid = setsid();
     if (sid < 0)
     {
+      std::cout << "setsid() failed: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
     if ((chdir("/")) < 0)
     {
+      std:: cout << "Cannot change dir. " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+    if (!logFile.empty())
+    {
+      close(STDIN_FILENO);
+      close(STDOUT_FILENO);
+      close(STDERR_FILENO);
 
-    FILE* tmp = fopen(logFile, "w");
-    dup2(fileno(tmp), STDOUT_FILENO);
-    dup2(fileno(tmp), STDERR_FILENO);
+      FILE* tmp = fopen(logFile.c_str(), "w");
+      if (!tmp)
+      {
+        std:: cout << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
+      }
+      dup2(fileno(tmp), STDOUT_FILENO);
+      dup2(fileno(tmp), STDERR_FILENO);
+    }
   }
 
   void Daemon::WaitForTerminate()

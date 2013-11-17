@@ -22,7 +22,7 @@ namespace OpcUa
     Daemon();
     ~Daemon();
 
-    void Daemonize(const char* logFile);
+    void Daemonize(const std::string& str);
     void WaitForTerminate();
   };
 
