@@ -21,9 +21,13 @@ namespace
   namespace po = boost::program_options;
   using namespace OpcUa;
 
+  const char* DefaultLogFilePath = "/var/log/opcua/server.log";
+
+
   const char* OPTION_HELP = "help";
   const char* OPTION_CONFIG = "config";
   const char* OPTION_DAEMON = "daemon";
+  const char* OPTION_LOGFILE = "--log-file";
 
   std::string GetConfigOptionValue(const po::variables_map& vm)
   {
@@ -39,6 +43,16 @@ namespace
   {
     return vm.count(OPTION_DAEMON) != 0;
   }
+
+  std::string GetLogFile(const po::variables_map& vm)
+  {
+    if (vm.count(OPTION_LOGFILE))
+    {
+      return vm[OPTION_LOGFILE].as<std::string>();
+    }
+    return DefaultLogFilePath;
+  }
+
 }
 
 
@@ -57,6 +71,7 @@ namespace OpcUa
         (OPTION_HELP, "Print help message and exit.")
         (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
         (OPTION_DAEMON, "Start in daemon mode.")
+        (OPTION_LOGFILE, "Set path to the log file. Default 'var/log/opcua/server.log");
         ;
 
       po::variables_map vm;
@@ -74,6 +89,7 @@ namespace OpcUa
       std::string configFile = GetConfigOptionValue(vm);
       const Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
       std::transform(modules.begin(), modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
+      LogFile = ::GetLogFile(vm);
     }
 
   } // namespace Server

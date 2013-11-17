@@ -16,8 +16,10 @@
 
 TEST(LoadingAddon, TestAdon)
 {
-  char* argv[2] = { "test.exe", "--config=./tests/configs/test_addon.config" };
-  OpcUa::Server::CommandLine cmdline(2, argv);
+  char* argv[3] = { "test.exe", "--config=./tests/configs/test_addon.config", "log-file=/var/log/opcua/server.log" };
+  OpcUa::Server::CommandLine cmdline(3, argv);
+  EXPECT_EQ(cmdline.GetLogFile(), "/var/log/opcua/server.log");
+
   OpcUa::Application::UniquePtr server = OpcUa::CreateApplication();
   ASSERT_NO_THROW(server->Start(cmdline.GetModules()));
   ASSERT_NO_THROW(server->GetAddonsManager());
