@@ -27,7 +27,7 @@ namespace
   const char* OPTION_HELP = "help";
   const char* OPTION_CONFIG = "config";
   const char* OPTION_DAEMON = "daemon";
-  const char* OPTION_LOGFILE = "--log-file";
+  const char* OPTION_LOGFILE = "log-file";
 
   std::string GetConfigOptionValue(const po::variables_map& vm)
   {
@@ -70,8 +70,8 @@ namespace OpcUa
       desc.add_options()
         (OPTION_HELP, "Print help message and exit.")
         (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
+        (OPTION_LOGFILE, po::value<std::string>(), "Set path to the log file. Default 'var/log/opcua/server.log")
         (OPTION_DAEMON, "Start in daemon mode.")
-        (OPTION_LOGFILE, "Set path to the log file. Default 'var/log/opcua/server.log");
         ;
 
       po::variables_map vm;

@@ -16,9 +16,10 @@
 
 TEST(LoadingAddon, TestAdon)
 {
-  char* argv[3] = { "test.exe", "--config=./tests/configs/test_addon.config", "log-file=/var/log/opcua/server.log" };
-  OpcUa::Server::CommandLine cmdline(3, argv);
-  EXPECT_EQ(cmdline.GetLogFile(), "/var/log/opcua/server.log");
+  char* argv[4] = { "test.exe", "--config=./tests/configs/test_addon.config", "--log-file=/path/to/log/server.log", "--daemon" };
+  OpcUa::Server::CommandLine cmdline(4, argv);
+  EXPECT_EQ(cmdline.GetLogFile(), "/path/to/log/server.log");
+  EXPECT_TRUE(cmdline.IsDaemonMode());
 
   OpcUa::Application::UniquePtr server = OpcUa::CreateApplication();
   ASSERT_NO_THROW(server->Start(cmdline.GetModules()));
