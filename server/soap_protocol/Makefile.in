@@ -176,8 +176,8 @@ libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libopcua_soap_server_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
-am_test_soap_OBJECTS = test_soap-browse.$(OBJEXT) \
-	test_soap-get_endpoints.$(OBJEXT)
+am_test_soap_OBJECTS = test_soap-attributes.$(OBJEXT) \
+	test_soap-browse.$(OBJEXT) test_soap-get_endpoints.$(OBJEXT)
 test_soap_OBJECTS = $(am_test_soap_OBJECTS)
 test_soap_DEPENDENCIES = libopcua_soap_protocol.la
 test_soap_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -447,7 +447,8 @@ libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS)
 libopcua_soap_client_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 test_soap_SOURCES = \
-	tests/browse.cpp \
+  tests/attributes.cpp \
+  tests/browse.cpp \
   tests/get_endpoints.cpp
 
 test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
@@ -624,6 +625,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_module.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_soap_server_la-soap_server.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-attributes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-browse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
 
@@ -998,6 +1000,20 @@ libopcua_soap_server_la-soap_server.lo: src/soap_server.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_soap_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_soap_server_la-soap_server.lo `test -f 'src/soap_server.cpp' || echo '$(srcdir)/'`src/soap_server.cpp
 
+test_soap-attributes.o: tests/attributes.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-attributes.o -MD -MP -MF $(DEPDIR)/test_soap-attributes.Tpo -c -o test_soap-attributes.o `test -f 'tests/attributes.cpp' || echo '$(srcdir)/'`tests/attributes.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-attributes.Tpo $(DEPDIR)/test_soap-attributes.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/attributes.cpp' object='test_soap-attributes.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-attributes.o `test -f 'tests/attributes.cpp' || echo '$(srcdir)/'`tests/attributes.cpp
+
+test_soap-attributes.obj: tests/attributes.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-attributes.obj -MD -MP -MF $(DEPDIR)/test_soap-attributes.Tpo -c -o test_soap-attributes.obj `if test -f 'tests/attributes.cpp'; then $(CYGPATH_W) 'tests/attributes.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/attributes.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-attributes.Tpo $(DEPDIR)/test_soap-attributes.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/attributes.cpp' object='test_soap-attributes.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-attributes.obj `if test -f 'tests/attributes.cpp'; then $(CYGPATH_W) 'tests/attributes.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/attributes.cpp'; fi`
+
 test_soap-browse.o: tests/browse.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-browse.o -MD -MP -MF $(DEPDIR)/test_soap-browse.Tpo -c -o test_soap-browse.o `test -f 'tests/browse.cpp' || echo '$(srcdir)/'`tests/browse.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-browse.Tpo $(DEPDIR)/test_soap-browse.Po
@@ -1341,49 +1357,127 @@ Bindings.h:
 	wsdl2h -g -p -z1 Bindings.wsdl -o Bindings.h || test true
 	soapcpp2 -f50 -L -i Bindings.h || test true
 
-soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp,\
-soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp,\
-soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp,\
-soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp,\
-soapBasicHttpBinding_USCOREISessionEndpointService.cpp,\
-soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp,\
-soapC_001.cpp,\
-soapC_002.cpp, \
-soapC_003.cpp,\
-soapC_004.cpp,\
-soapC_005.cpp,\
-soapC_006.cpp,\
-soapC_007.cpp,\
-soapC_008.cpp,\
-soapC_009.cpp,\
-soapC_010.cpp,\
-soapC_011.cpp,\
-soapC_012.cpp,\
-soapC_013.cpp,\
-soapC_014.cpp,\
-soapC_015.cpp,\
-soapC_016.cpp,\
-soapC_017.cpp,\
-soapC_018.cpp,\
-soapC_019.cpp,\
-soapC_020.cpp,\
-soapC_021.cpp,\
-soapC_022.cpp,\
-soapC_023.cpp,\
-soapC_024.cpp,\
-soapC_025.cpp,\
-soapC_026.cpp,\
-soapC_027.cpp,\
-soapC_028.cpp,\
-soapC_029.cpp,\
-soapC_030.cpp,\
-soapC_031.cpp,\
-soapC_032.cpp,\
-soapC_033.cpp,\
-soapC_034.cpp,\
-src/discovery_service.cpp,\
-src/serialization/serialize.cpp,\
+src/serialization/serialize.h: Bindings.h
+
 src/serialization/deserialize.cpp: Bindings.h
+
+src/serialization/serialize.cpp: Bindings.h
+
+src/namespaces.cpp: Bindings.h
+
+soapBasicHttpBinding_USCOREIDiscoveryEndpointProxy.cpp : Bindings.h
+
+soapBasicHttpBinding_USCOREIDiscoveryEndpointService.cpp : Bindings.h
+
+soapBasicHttpBinding_USCOREIRegistrationEndpointProxy.cpp : Bindings.h
+
+soapBasicHttpBinding_USCOREIRegistrationEndpointService.cpp : Bindings.h
+
+soapBasicHttpBinding_USCOREISessionEndpointProxy.cpp : Bindings.h
+
+soapBasicHttpBinding_USCOREISessionEndpointService.cpp : Bindings.h
+
+soapC_001.cpp : Bindings.h
+
+soapC_002.cpp : Bindings.h
+
+soapC_003.cpp : Bindings.h
+
+soapC_004.cpp : Bindings.h
+
+soapC_005.cpp : Bindings.h
+
+soapC_006.cpp : Bindings.h
+
+soapC_007.cpp : Bindings.h
+
+soapC_008.cpp : Bindings.h
+
+soapC_009.cpp : Bindings.h
+
+soapC_010.cpp : Bindings.h
+
+soapC_011.cpp : Bindings.h
+
+soapC_012.cpp : Bindings.h
+
+soapC_013.cpp : Bindings.h
+
+soapC_014.cpp : Bindings.h
+
+soapC_015.cpp : Bindings.h
+
+soapC_016.cpp : Bindings.h
+
+soapC_017.cpp : Bindings.h
+
+soapC_018.cpp : Bindings.h
+
+soapC_019.cpp : Bindings.h
+
+soapC_020.cpp : Bindings.h
+
+soapC_021.cpp : Bindings.h
+
+soapC_022.cpp : Bindings.h
+
+soapC_023.cpp : Bindings.h
+
+soapC_024.cpp : Bindings.h
+
+soapC_025.cpp : Bindings.h
+
+soapC_026.cpp : Bindings.h
+
+soapC_027.cpp : Bindings.h
+
+soapC_028.cpp : Bindings.h
+
+soapC_029.cpp : Bindings.h
+
+soapC_030.cpp : Bindings.h
+
+soapC_031.cpp : Bindings.h
+
+soapC_032.cpp : Bindings.h
+
+soapC_033.cpp : Bindings.h
+
+soapC_034.cpp: Bindings.h
+
+src/discovery_service.cpp : Bindings.h
+
+src/discovery_service.h : Bindings.h
+
+src/endpoint_service.cpp : Bindings.h
+
+src/endpoint_service.h : Bindings.h
+
+src/registration_service.cpp : Bindings.h
+
+src/registration_service.h : Bindings.h
+
+src/soap_addon.cpp : Bindings.h
+
+src/soap_addon.h : Bindings.h
+
+src/soap_addon_factory.h : Bindings.h
+
+src/soap_module.cpp : Bindings.h
+
+src/soap_service.h : Bindings.h
+
+src/soap_server.cpp : Bindings.h
+
+src/soap_server.h : Bindings.h
+
+src/soap_client_addon.cpp: Bindings.h
+
+tests/attributes.cpp: Bindings.h
+
+tests/browse.cpp: Bindings.h
+
+tests/get_endpoints.cpp: Bindings.h
 
 install-exec-hook:
 	$(bindir)/opcua --register-module --id=http --path=libopcua_soap_client.so || test true

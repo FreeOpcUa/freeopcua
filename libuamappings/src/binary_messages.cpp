@@ -127,17 +127,30 @@ namespace OpcUa
 
   } // namespace Binary
 
+  DateTime ToDateTime(time_t t, unsigned usec)
+  {
+    const OpcUa::DateTime epochDiff =  11644473600LL;
+    OpcUa::DateTime dateTime = epochDiff;
+    dateTime += t;
+    dateTime *= 10000000LL;
+    dateTime += usec * 10;
+    return dateTime;
+  }
+
   // TODO move to separate file with time utils.
   DateTime CurrentDateTime()
   {
-    static const OpcUa::DateTime epochDiff =  11644473600LL;
     timeval tv;
-    OpcUa::DateTime t = epochDiff;
     gettimeofday(&tv, 0);
-    t += tv.tv_sec;
-    t *= 10000000LL;
-    t += tv.tv_usec * 10;
-    return t;
+    return ToDateTime(tv.tv_sec, tv.tv_usec);
+  }
+
+  time_t ToTimeT(DateTime dateTime)
+  {
+    static const OpcUa::DateTime epochDiff =  11644473600LL;
+    dateTime -= epochDiff;
+    const time_t result = dateTime / 10000000LL;
+    return result;
   }
 
   RequestHeader::RequestHeader()

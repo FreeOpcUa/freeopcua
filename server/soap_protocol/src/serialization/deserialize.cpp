@@ -460,6 +460,98 @@ namespace
 
     return result;
   }
+
+
+  OpcUa::AttributeValueID Deserialize(const ns3__ReadValueId* valueId)
+  {
+    OpcUa::AttributeValueID result;
+    if (!valueId)
+      return result;
+
+    result.Attribute = static_cast<OpcUa::AttributeID>(valueId->AttributeId);
+    if (valueId->DataEncoding)
+    {
+      result.DataEncoding = Deserialize(valueId->DataEncoding);
+    }
+    if (valueId->IndexRange)
+    {
+      result.IndexRange = *valueId->IndexRange;
+    }
+    if (valueId->NodeId)
+    {
+      result.Node = Deserialize(valueId->NodeId);
+    }
+    return result;
+  }
+
+  std::vector<OpcUa::AttributeValueID> Deserialize(const ns3__ListOfReadValueId *ids)
+  {
+    std::vector<OpcUa::AttributeValueID> result;
+    if (!ids)
+      return result;
+
+    result.resize(ids->ReadValueId.size());
+    std::transform(ids->ReadValueId.begin(), ids->ReadValueId.end(), result.begin(),
+        [](const ns3__ReadValueId* value)
+        {
+          return Deserialize(value);
+        });
+
+    return result;
+  }
+
+
+  OpcUa::Variant Deserialize(const ns3__Variant* variant)
+  {
+    OpcUa::Variant result;
+    return result;
+  }
+
+  OpcUa::DataValue Deserialize(const ns3__DataValue* value)
+  {
+    OpcUa::DataValue result;
+    if (!value)
+      return result;
+
+    if (value->ServerTimestamp)
+    {
+      result.Encoding |= OpcUa::DATA_VALUE_SERVER_TIMESTAMP;
+      result.ServerTimestamp = OpcUa::ToDateTime(*value->ServerTimestamp);
+    }
+    if (value->SourceTimestamp)
+    {
+      result.Encoding |= OpcUa::DATA_VALUE_SOURCE_TIMESTAMP;
+      result.SourceTimestamp = OpcUa::ToDateTime(*value->SourceTimestamp);
+    }
+    if (value->StatusCode)
+    {
+      result.Encoding |= OpcUa::DATA_VALUE_STATUS_CODE;
+      result.Status = Deserialize(value->StatusCode);
+    }
+    if (value->Value)
+    {
+      result.Encoding |= OpcUa::DATA_VALUE;
+      result.Value = Deserialize(value->Value);
+    }
+
+    return result;
+  }
+
+  std::vector<OpcUa::DataValue> Deserialize(const ns3__ListOfDataValue* values)
+  {
+    std::vector<OpcUa::DataValue> result;
+    if (!values)
+      return result;
+
+    result.resize(values->DataValue.size());
+    std::transform(values->DataValue.begin(), values->DataValue.end(), result.begin(),
+        [](const ns3__DataValue* value)
+        {
+          return Deserialize(value);
+        });
+
+    return result;
+  }
 }
 
 namespace OpcUa
@@ -531,6 +623,28 @@ namespace OpcUa
     result.Header = ::Deserialize(response->ResponseHeader);
     result.Diagnostics = ::Deserialize(response->DiagnosticInfos);
     result.Results = ::Deserialize(response->Results);
+    return result;
+  }
+
+  ReadRequest Soap::Deserialize(const ns3__ReadRequest* request)
+  {
+    ReadRequest result;
+    result.Header = ::Deserialize(request->RequestHeader);
+    result.Parameters.MaxAge = request->MaxAge;
+    result.Parameters.TimestampsType = static_cast<OpcUa::TimestampsToReturn>(request->TimestampsToReturn);
+    result.Parameters.AttributesToRead = ::Deserialize(request->NodesToRead);
+    return result;
+  }
+
+  ReadResponse Soap::Deserialize(const ns3__ReadResponse* response)
+  {
+    ReadResponse result;
+    result.Header = ::Deserialize(response->ResponseHeader);
+    result.Result.Diagnostics = ::Deserialize(response->DiagnosticInfos);
+    if (response->Results)
+    {
+      result.Result.Results = ::Deserialize(response->Results);
+    }
     return result;
   }
 }

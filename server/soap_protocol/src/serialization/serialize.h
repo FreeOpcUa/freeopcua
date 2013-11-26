@@ -12,6 +12,7 @@
 #pragma once
 
 #include <soapH.h>
+#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/endpoints.h>
 #include <opc/ua/protocol/view.h>
 
@@ -61,6 +62,9 @@ namespace OpcUa
 
     ns3__BrowseRequest* Serialize(soap* s, const OpcUa::BrowseRequest& request);
     ns3__BrowseResponse* Serialize(soap* s, const OpcUa::BrowseResponse& response);
+
+    ns3__ReadRequest* Serialize(soap* s, const OpcUa::ReadRequest& request);
+    ns3__ReadResponse* Serialize(soap* s, const OpcUa::ReadResponse& request);
 
   }
 }

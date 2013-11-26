@@ -33,6 +33,13 @@ namespace
     return result;
   }
 
+  time_t* CreateTimeT(soap* s, OpcUa::DateTime t)
+  {
+    time_t* result = (time_t*)soap_malloc(s, sizeof(time_t));
+    *result = OpcUa::ToTimeT(t);
+    return result;
+  }
+
   ns3__ListOfString* CreateListOfStrings(soap* s, const std::vector<std::string>& strings)
   {
     ns3__ListOfString* lst = soap_new_ns3__ListOfString(s, 1);
@@ -338,6 +345,60 @@ namespace
     return result;
   }
 
+  ns3__ReadValueId* CreateReadValueId(soap* s, const OpcUa::AttributeValueID& attr)
+  {
+    ns3__ReadValueId* result = soap_new_ns3__ReadValueId(s, 1);
+    result->AttributeId = static_cast<unsigned int>(attr.Attribute);
+    result->DataEncoding = CreateQualifiedName(s, attr.DataEncoding);
+    if (!attr.IndexRange.empty())
+    {
+      result->IndexRange = CreateString(s, attr.IndexRange);
+    }
+    result->NodeId = CreateNodeID(s, attr.Node);
+    return result;
+  }
+
+  ns3__ListOfReadValueId* CreateAttributesToRead(soap* s, const std::vector<OpcUa::AttributeValueID>& attrs)
+  {
+    ns3__ListOfReadValueId* result = soap_new_ns3__ListOfReadValueId(s, 1);
+    if (!attrs.empty())
+    {
+      result->ReadValueId.resize(attrs.size());
+      std::transform(attrs.begin(), attrs.end(), result->ReadValueId.begin(), std::bind(CreateReadValueId, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
+  ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var)
+  {
+    ns3__Variant* result = soap_new_ns3__Variant(s, 1);
+    return result;
+  }
+
+  ns3__DataValue* CreateDataValue(soap* s, const OpcUa::DataValue& value)
+  {
+    ns3__DataValue* result = soap_new_ns3__DataValue(s, 1);
+    if (value.Encoding & OpcUa::DATA_VALUE_SERVER_TIMESTAMP)
+      result->ServerTimestamp = CreateTimeT(s, value.ServerTimestamp);
+    if (value.Encoding & OpcUa::DATA_VALUE_SOURCE_TIMESTAMP)
+      result->SourceTimestamp = CreateTimeT(s, value.SourceTimestamp);
+    if (value.Encoding & OpcUa::DATA_VALUE_STATUS_CODE)
+      result->StatusCode = CreateStatusCode(s, value.Status);
+    if (value.Encoding & OpcUa::DATA_VALUE)
+      result->Value = CreateVariant(s, value.Value);
+    return result;
+  }
+
+  ns3__ListOfDataValue* CreateListOfDataValue(soap* s, const std::vector<OpcUa::DataValue>& values)
+  {
+    ns3__ListOfDataValue* result = soap_new_ns3__ListOfDataValue(s, 1);
+    if (!values.empty())
+    {
+      result->DataValue.resize(values.size());
+      std::transform(values.begin(), values.end(), result->DataValue.begin(), std::bind(CreateDataValue, s, std::placeholders::_1));
+    }
+    return result;
+  }
 }
 
 namespace OpcUa
@@ -388,6 +449,28 @@ namespace OpcUa
       result->DiagnosticInfos = CreateListOfDiagnosticInfo(s, opcua.Diagnostics);
     }
     result->Results = CreateListOfBrowseResult(s, opcua.Results);
+    return result;
+  }
+
+  ns3__ReadRequest* Soap::Serialize(soap* s, const OpcUa::ReadRequest& opcua)
+  {
+    ns3__ReadRequest* result = soap_new_ns3__ReadRequest(s, 1);
+    result->RequestHeader = CreateRequestHeader(s, opcua.Header);
+    result->MaxAge = opcua.Parameters.MaxAge;
+    result->TimestampsToReturn = static_cast<ns3__TimestampsToReturn>(opcua.Parameters.TimestampsType);
+    result->NodesToRead = CreateAttributesToRead(s, opcua.Parameters.AttributesToRead);
+    return result;
+  }
+
+  ns3__ReadResponse* Soap::Serialize(soap* s, const OpcUa::ReadResponse& opcua)
+  {
+    ns3__ReadResponse* result = soap_new_ns3__ReadResponse(s, 1);
+    result->ResponseHeader = CreateResponseHeader(s, opcua.Header);
+    if (!opcua.Result.Diagnostics.empty())
+    {
+      result->DiagnosticInfos = CreateListOfDiagnosticInfo(s, opcua.Result.Diagnostics);
+    }
+    result->Results = CreateListOfDataValue(s, opcua.Result.Results);
     return result;
   }
 }
