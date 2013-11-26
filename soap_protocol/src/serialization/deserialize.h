@@ -11,6 +11,7 @@
 #pragma once
 
 #include <soapH.h>
+#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/endpoints.h>
 #include <opc/ua/protocol/view.h>
 
@@ -25,5 +26,8 @@ namespace OpcUa
 
     BrowseRequest Deserialize(const ns3__BrowseRequest* request);
     BrowseResponse Deserialize(const ns3__BrowseResponse* response);
+
+    ReadRequest Deserialize(const ns3__ReadRequest* request);
+    ReadResponse Deserialize(const ns3__ReadResponse* response);
   }
 }
