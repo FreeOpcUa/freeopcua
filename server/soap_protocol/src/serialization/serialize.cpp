@@ -19,9 +19,10 @@
 
 namespace
 {
-  int* CreateInt(soap* s, int32_t i)
+  template <typename T>
+  T* CreateScalar(soap* s, T i)
   {
-    int* result = (int*)soap_malloc(s, sizeof(int));
+    T* result = (T*)soap_malloc(s, sizeof(T));
     *result = i;
     return result;
   }
@@ -44,6 +45,14 @@ namespace
   {
     ns3__ListOfString* lst = soap_new_ns3__ListOfString(s, 1);
     lst->String = strings;
+    return lst;
+  }
+
+  ns3__ListOfDateTime* CreateListOfTimeT(soap* s, const std::vector<OpcUa::DateTime>& values)
+  {
+    ns3__ListOfDateTime* lst = soap_new_ns3__ListOfDateTime(s, 1);
+    lst->DateTime.resize(values.size());
+    std::transform(values.begin(), values.end(), lst->DateTime.begin(), OpcUa::ToTimeT);
     return lst;
   }
 
@@ -192,7 +201,9 @@ namespace
   ns3__StatusCode* CreateStatusCode(soap* s, OpcUa::StatusCode code)
   {
     ns3__StatusCode* result = soap_new_ns3__StatusCode(s, 1);
-    result->Code =  CreateString(s, std::to_string(static_cast<uint32_t>(code)));
+    std::stringstream stream;
+    stream << "0x" << std::hex << static_cast<uint32_t>(code);
+    result->Code =  CreateString(s, stream.str());
     return result;
   }
 
@@ -205,13 +216,13 @@ namespace
     if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_INNER_STATUS_CODE)
       result->InnerStatusCode =  CreateStatusCode(s, info.InnerStatusCode);
     if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALE)
-      result->Locale = CreateInt(s, info.Locale);
+      result->Locale = CreateScalar(s, info.Locale);
     if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_LOCALIZED_TEXT)
-      result->LocalizedText = CreateInt(s, info.LocalizedText);
+      result->LocalizedText = CreateScalar(s, info.LocalizedText);
     if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_NAMESPACE)
-      result->NamespaceURI = CreateInt(s, info.NamespaceURI);
+      result->NamespaceURI = CreateScalar(s, info.NamespaceURI);
     if (info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID)
-      result->SymbolicId = CreateInt(s, info.SymbolicID);
+      result->SymbolicId = CreateScalar(s, info.SymbolicID);
     if ((info.EncodingMask & OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO) && info.InnerDiagnostics)
       result->InnerDiagnosticInfo = CreateDiagnosticInfo(s, *info.InnerDiagnostics);
 
@@ -278,7 +289,7 @@ namespace
   {
     ns3__QualifiedName* result = soap_new_ns3__QualifiedName(s, 1);
     result->Name = CreateString(s, name.Name);
-    result->NamespaceIndex = CreateInt(s, name.NamespaceIndex);
+    result->NamespaceIndex = CreateScalar(s, static_cast<int>(name.NamespaceIndex));
     return result;
   }
 
@@ -369,9 +380,255 @@ namespace
     return result;
   }
 
+  ns3__ListOfBoolean* CreateListOfBoolean(soap* s, const std::vector<bool>& bools)
+  {
+    ns3__ListOfBoolean* result = soap_new_ns3__ListOfBoolean(s, 1);
+    result->Boolean = bools;
+    return result;
+  }
+
+  ns3__ListOfByte* CreateListOfByte(soap* s, const std::vector<uint8_t>& bytes)
+  {
+    ns3__ListOfByte* result = soap_new_ns3__ListOfByte(s, 1);
+    result->Byte = bytes;
+    return result;
+  }
+
+  ns3__ListOfSByte* CreateListOfSByte(soap* s, const std::vector<int8_t>& bytes)
+  {
+    ns3__ListOfSByte* result = soap_new_ns3__ListOfSByte(s, 1);
+    result->SByte.assign(bytes.begin(), bytes.end());
+    return result;
+  }
+
+  ns3__ListOfInt16* CreateListOfInt16(soap* s, const std::vector<int16_t>& values)
+  {
+    ns3__ListOfInt16* result = soap_new_ns3__ListOfInt16(s, 1);
+    result->Int16.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfUInt16* CreateListOfUInt16(soap* s, const std::vector<uint16_t>& values)
+  {
+    ns3__ListOfUInt16* result = soap_new_ns3__ListOfUInt16(s, 1);
+    result->UInt16.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfInt32* CreateListOfInt32(soap* s, const std::vector<int32_t>& values)
+  {
+    ns3__ListOfInt32* result = soap_new_ns3__ListOfInt32(s, 1);
+    result->Int32.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfUInt32* CreateListOfUInt32(soap* s, const std::vector<uint32_t>& values)
+  {
+    ns3__ListOfUInt32* result = soap_new_ns3__ListOfUInt32(s, 1);
+    result->UInt32.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfInt64* CreateListOfInt64(soap* s, const std::vector<int64_t>& values)
+  {
+    ns3__ListOfInt64* result = soap_new_ns3__ListOfInt64(s, 1);
+    result->Int64.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfUInt64* CreateListOfUInt64(soap* s, const std::vector<uint64_t>& values)
+  {
+    ns3__ListOfUInt64* result = soap_new_ns3__ListOfUInt64(s, 1);
+    result->UInt64.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfFloat* CreateListOfFloat(soap* s, const std::vector<float>& values)
+  {
+    ns3__ListOfFloat* result = soap_new_ns3__ListOfFloat(s, 1);
+    result->Float.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfDouble* CreateListOfDouble(soap* s, const std::vector<double>& values)
+  {
+    ns3__ListOfDouble* result = soap_new_ns3__ListOfDouble(s, 1);
+    result->Double.assign(values.begin(), values.end());
+    return result;
+  }
+
+  ns3__ListOfString* CreateListOfString(soap* s, const std::vector<std::string>& values)
+  {
+    ns3__ListOfString* result = soap_new_ns3__ListOfString(s, 1);
+    result->String.assign(values.begin(), values.end());
+    return result;
+  }
+
   ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var)
   {
+    if (var.IsNul())
+      return nullptr;
+
     ns3__Variant* result = soap_new_ns3__Variant(s, 1);
+    switch (var.Type)
+    {
+      case OpcUa::VariantType::BOOLEAN:
+      {
+        if (var.IsArray())
+          result->ListOfBoolean = CreateListOfBoolean(s, var.Value.Boolean);
+        else
+          result->Boolean = CreateScalar(s, var.Value.Boolean[0]);
+        break;
+      }
+      case OpcUa::VariantType::SBYTE:
+      {
+        if (var.IsArray())
+          result->ListOfSByte = CreateListOfSByte(s, var.Value.SByte);
+        else
+          result->SByte = CreateScalar(s, static_cast<char>(var.Value.SByte[0]));
+        break;
+      }
+      case OpcUa::VariantType::BYTE:
+      {
+        if (var.IsArray())
+          result->ListOfByte = CreateListOfByte(s, var.Value.Byte);
+        else
+          result->Byte = CreateScalar(s, static_cast<unsigned char>(var.Value.Byte[0]));
+        break;
+      }
+      case OpcUa::VariantType::INT16:
+      {
+        if (var.IsArray())
+          result->ListOfInt16 = CreateListOfInt16(s, var.Value.Int16);
+        else
+          result->Int16 = CreateScalar(s, static_cast<short>(var.Value.Int16[0]));
+        break;
+      }
+      case OpcUa::VariantType::UINT16:
+      {
+        if (var.IsArray())
+          result->ListOfUInt16 = CreateListOfUInt16(s, var.Value.UInt16);
+        else
+          result->UInt16 = CreateScalar(s, static_cast<unsigned short>(var.Value.UInt16[0]));
+        break;
+      }
+      case OpcUa::VariantType::INT32:
+      {
+        if (var.IsArray())
+          result->ListOfInt32 = CreateListOfInt32(s, var.Value.Int32);
+        else
+          result->Int32 = CreateScalar(s, static_cast<int>(var.Value.Int32[0]));
+        break;
+      }
+      case OpcUa::VariantType::UINT32:
+      {
+        if (var.IsArray())
+          result->ListOfUInt32 = CreateListOfUInt32(s, var.Value.UInt32);
+        else
+          result->UInt32 = CreateScalar(s, static_cast<unsigned>(var.Value.UInt32[0]));
+        break;
+      }
+      case OpcUa::VariantType::INT64:
+      {
+        if (var.IsArray())
+          result->ListOfInt64 = CreateListOfInt64(s, var.Value.Int64);
+        else
+          result->Int64 = CreateScalar(s, static_cast<LONG64>(var.Value.Int64[0]));
+        break;
+      }
+      case OpcUa::VariantType::UINT64:
+      {
+        if (var.IsArray())
+          result->ListOfUInt64 = CreateListOfUInt64(s, var.Value.UInt64);
+        else
+          result->UInt64 = CreateScalar(s, static_cast<ULONG64>(var.Value.UInt64[0]));
+        break;
+      }
+      case OpcUa::VariantType::FLOAT:
+      {
+        if (var.IsArray())
+          result->ListOfFloat = CreateListOfFloat(s, var.Value.Float);
+        else
+          result->Float = CreateScalar(s, var.Value.Float[0]);
+        break;
+      }
+      case OpcUa::VariantType::DOUBLE:
+      {
+        if (var.IsArray())
+          result->ListOfDouble = CreateListOfDouble(s, var.Value.Double);
+        else
+          result->Double = CreateScalar(s, var.Value.Double[0]);
+        break;
+      }
+      case OpcUa::VariantType::STRING:
+      {
+        if (var.IsArray())
+          result->ListOfString = CreateListOfString(s, var.Value.String);
+        else
+          result->String = CreateString(s, var.Value.String[0]);
+        break;
+      }
+      case OpcUa::VariantType::DATE_TIME:
+      {
+        if (var.IsArray())
+          result->ListOfDateTime = CreateListOfTimeT(s, var.Value.Time);
+        else
+          result->DateTime = CreateTimeT(s, var.Value.Time[0]);
+        break;
+      }
+      case OpcUa::VariantType::GUID:
+      {
+        break;
+      }
+      case OpcUa::VariantType::BYTE_STRING:
+      {
+        break;
+      }
+      case OpcUa::VariantType::XML_ELEMENT:
+      {
+        break;
+      }
+      case OpcUa::VariantType::NODE_ID:
+      {
+        break;
+      }
+      case OpcUa::VariantType::EXPANDED_NODE_ID:
+      {
+        break;
+      }
+      case OpcUa::VariantType::STATUS_CODE:
+      {
+        break;
+      }
+      case OpcUa::VariantType::QUALIFIED_NAME:
+      {
+        break;
+      }
+      case OpcUa::VariantType::LOCALIZED_TEXT:
+      {
+        break;
+      }
+      case OpcUa::VariantType::EXTENSION_OBJECT:
+      {
+        break;
+      }
+      case OpcUa::VariantType::DATA_VALUE:
+      {
+        break;
+      }
+      case OpcUa::VariantType::VARIANT:
+      {
+        break;
+      }
+      case OpcUa::VariantType::DIAGNOSTIC_INFO:
+      {
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
     return result;
   }
 
@@ -472,6 +729,11 @@ namespace OpcUa
     }
     result->Results = CreateListOfDataValue(s, opcua.Result.Results);
     return result;
+  }
+
+  ns3__Variant* Soap::Serialize(soap* s, const OpcUa::Variant& var)
+  {
+    return CreateVariant(s, var);
   }
 }
 

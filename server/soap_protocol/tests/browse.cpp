@@ -99,7 +99,7 @@ TEST(Browse, Response)
   ASSERT_NE(serializedResult, nullptr);
   ASSERT_NE(serializedResult->StatusCode, nullptr);
   ASSERT_NE(serializedResult->StatusCode->Code, nullptr);
-  ASSERT_EQ(*serializedResult->StatusCode->Code, "2151219200");
+  ASSERT_EQ(*serializedResult->StatusCode->Code, "0x80390000");
 
   ASSERT_NE(serializedResult->ContinuationPoint, nullptr);
   ASSERT_NE(serializedResult->ContinuationPoint->__ptr, nullptr);

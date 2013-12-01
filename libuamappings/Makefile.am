@@ -78,7 +78,8 @@ opc_ua_binary_test_SOURCES =  \
  tests/common.h \
  tests/message_id.cpp \
  tests/node_id.cpp \
- tests/reference_id.cpp
+ tests/reference_id.cpp \
+ tests/utils.cpp
 
 opc_ua_binary_test_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/../../libopccore/include $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 opc_ua_binary_test_LDADD = libopcuabinary.la

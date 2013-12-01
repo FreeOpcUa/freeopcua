@@ -148,8 +148,8 @@ namespace OpcUa
   time_t ToTimeT(DateTime dateTime)
   {
     static const OpcUa::DateTime epochDiff =  11644473600LL;
-    dateTime -= epochDiff;
-    const time_t result = dateTime / 10000000LL;
+    dateTime = dateTime / 10000000LL - epochDiff;
+    const time_t result = dateTime;
     return result;
   }
 

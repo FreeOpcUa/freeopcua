@@ -92,10 +92,10 @@ TEST(Read, Response)
   ASSERT_NE(serializedValue->SourceTimestamp, nullptr);
   ASSERT_NE(serializedValue->StatusCode, nullptr);
   ASSERT_NE(serializedValue->Value, nullptr);
-  ASSERT_EQ(*serializedValue->ServerTimestamp, 2);
-  ASSERT_EQ(*serializedValue->SourceTimestamp, 4);
-  ASSERT_EQ(*serializedValue->StatusCode->Code, "0x80390000");
-  //ASSERT_NE(*serializedValue->Value, nullptr);
+  EXPECT_EQ(*serializedValue->ServerTimestamp, 2);
+  EXPECT_EQ(*serializedValue->SourceTimestamp, 4);
+  EXPECT_EQ(*serializedValue->StatusCode->Code, "0x80390000");
+  ASSERT_NE(serializedValue->Value, nullptr);
 
 
   // deserialize response
@@ -104,4 +104,21 @@ TEST(Read, Response)
   ASSERT_RESPONSE_HEADER_EQ(deserialized.Header, opcua.Header);
   OpcUa::Test::AssertDiagnosticInfoListValid(deserialized.Result.Diagnostics);
   ASSERT_EQ(deserialized.Result.Results.size(), 1);
+  const OpcUa::ReadResult deserializedResult = deserialized.Result;
+  OpcUa::Test::AssertDiagnosticInfoListValid(deserializedResult.Diagnostics);
+  ASSERT_EQ(deserializedResult.Results.size(), 1);
+  const OpcUa::DataValue deserializedValue = deserializedResult.Results[0];
+  const uint8_t mask =
+      OpcUa::DATA_VALUE_SERVER_TIMESTAMP |
+      OpcUa::DATA_VALUE_SOURCE_TIMESTAMP |
+      OpcUa::DATA_VALUE |
+      OpcUa::DATA_VALUE_STATUS_CODE;
+  ASSERT_EQ(deserializedValue.Encoding, mask);
+  ASSERT_EQ(deserializedValue.ServerPicoseconds, 0);
+  ASSERT_EQ(deserializedValue.ServerTimestamp, OpcUa::ToDateTime(2));
+  ASSERT_EQ(deserializedValue.SourcePicoseconds, 0);
+  ASSERT_EQ(deserializedValue.SourceTimestamp, OpcUa::ToDateTime(4));
+  ASSERT_EQ(deserializedValue.Status, OpcUa::StatusCode::BadAttributeIdInvalid);
+  // TODO
+  //ASSERT_EQ(deserializedValue.Value, (uint8_t)5);
 }

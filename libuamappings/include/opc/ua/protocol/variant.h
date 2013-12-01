@@ -250,7 +250,7 @@ namespace OpcUa
     template <typename T>
     Variant& operator=(const T& value)
     {
-      Value = value;
+      Value = VariantValue(value);
       Type = Value.GetType();
       return *this;
     }
@@ -264,7 +264,7 @@ namespace OpcUa
     template <typename T>
     Variant(const T& value)
     {
-      Value = value;
+      Value = VariantValue(value);
       Type = Value.GetType();
     }
 
