@@ -100,7 +100,7 @@ namespace
   {
     if (status && status->Code)
     {
-      return static_cast<OpcUa::StatusCode>(std::stoul(*status->Code));
+      return static_cast<OpcUa::StatusCode>(std::stoul(*status->Code, 0, 16));
     }
     return OpcUa::StatusCode::Good;
   }
@@ -647,4 +647,80 @@ namespace OpcUa
     }
     return result;
   }
+
+  template <typename Out, typename In, typename Func>
+  Out Transform(In in, Func func)
+  {
+    Out out(in.size());
+    std::transform(in.begin(), in.end(), out.begin(), func);
+    return out;
+  }
+
+
+
+  Variant Soap::Deserialize(ns3__Variant* var)
+  {
+    OpcUa::Variant result;
+    if (!var)
+      return result;
+
+    if (var->Boolean)
+      result = *var->Boolean;
+    else if (var->ListOfBoolean)
+      result = var->ListOfBoolean->Boolean;
+    else if (var->Byte)
+      result = *var->Byte;
+    else if (var->ListOfByte)
+      result = var->ListOfByte->Byte;
+    else if (var->SByte)
+      result = static_cast<int8_t>(*var->SByte);
+    else if (var->ListOfSByte)
+      result = std::vector<int8_t>(var->ListOfSByte->SByte.begin(), var->ListOfSByte->SByte.end());
+    else if (var->Int16)
+      result = static_cast<int16_t>(*var->Int16);
+    else if (var->ListOfInt16)
+      result = std::vector<int16_t>(var->ListOfInt16->Int16.begin(), var->ListOfInt16->Int16.end());
+    else if (var->UInt16)
+      result = static_cast<uint16_t>(*var->UInt16);
+    else if (var->ListOfUInt16)
+      result = std::vector<uint16_t>(var->ListOfUInt16->UInt16.begin(), var->ListOfUInt16->UInt16.end());
+    else if (var->Int32)
+      result = static_cast<int32_t>(*var->Int32);
+    else if (var->ListOfInt32)
+      result = std::vector<int32_t>(var->ListOfInt32->Int32.begin(), var->ListOfInt32->Int32.end());
+    else if (var->UInt32)
+      result = static_cast<uint32_t>(*var->UInt32);
+    else if (var->ListOfUInt32)
+      result = std::vector<uint32_t>(var->ListOfUInt32->UInt32.begin(), var->ListOfUInt32->UInt32.end());
+    else if (var->Int64)
+      result = static_cast<int64_t>(*var->Int64);
+    else if (var->ListOfInt64)
+      result = std::vector<int64_t>(var->ListOfInt64->Int64.begin(), var->ListOfInt64->Int64.end());
+    else if (var->UInt64)
+      result = static_cast<uint64_t>(*var->UInt64);
+    else if (var->ListOfUInt64)
+      result = std::vector<uint64_t>(var->ListOfUInt64->UInt64.begin(), var->ListOfUInt64->UInt64.end());
+    else if (var->Float)
+      result = *var->Float;
+    else if (var->ListOfFloat)
+      result = var->ListOfFloat->Float;
+    else if (var->Double)
+      result = *var->Double;
+    else if (var->ListOfDouble)
+      result = var->ListOfDouble->Double;
+    else if (var->String)
+      result = *var->String;
+    else if (var->ListOfString)
+      result = var->ListOfString->String;
+    else if (var->DateTime)
+      result = OpcUa::ToDateTime(*var->DateTime);
+    else if (var->ListOfDateTime)
+      result = Transform<std::vector<OpcUa::DateTime>>(var->ListOfDateTime->DateTime, 
+        [](time_t v)
+        {
+          return OpcUa::ToDateTime(v);
+        });
+    return result;
+  }
+
 }

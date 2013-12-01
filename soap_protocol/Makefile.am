@@ -25,6 +25,8 @@ INCLUDES= \
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 TESTLIBS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
 
+#-DSOAP_TYPE_ns3__Variant 
+SOAP_CPP_FLAGS = -DWITH_PURE_VIRTUAL -DLINUX
 
 lib_LTLIBRARIES = libopcua_soap_protocol.la libopcua_soap_server.la libopcua_soap_client.la 
 
@@ -170,7 +172,7 @@ libopcua_soap_protocol_la_SOURCES = \
   soapC_033.cpp \
   soapC_034.cpp
 
-libopcua_soap_protocol_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
+libopcua_soap_protocol_la_CPPFLAGS = $(INCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_protocol_la_LDFLAGS = $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 
 
@@ -216,7 +218,7 @@ libopcua_soap_server_la_SOURCES = \
   src/soap_server.cpp \
   src/soap_server.h
 
-libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
+libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_server_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 
@@ -226,7 +228,7 @@ src/soap_client_addon.cpp: Bindings.h
 libopcua_soap_client_la_SOURCES = \
  src/soap_client_addon.cpp
 
-libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) 
+libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_client_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 
@@ -243,10 +245,11 @@ tests/get_endpoints.cpp: Bindings.h
 test_soap_SOURCES = \
   tests/attributes.cpp \
   tests/browse.cpp \
-  tests/get_endpoints.cpp
+  tests/get_endpoints.cpp \
+  tests/variant.cpp
 
 
-test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
+test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 test_soap_LDADD = libopcua_soap_protocol.la
 test_soap_LDFLAGS = $(TESTLIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 

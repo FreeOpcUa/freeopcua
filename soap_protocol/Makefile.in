@@ -177,7 +177,8 @@ libopcua_soap_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(libopcua_soap_server_la_LDFLAGS) $(LDFLAGS) -o \
 	$@
 am_test_soap_OBJECTS = test_soap-attributes.$(OBJEXT) \
-	test_soap-browse.$(OBJEXT) test_soap-get_endpoints.$(OBJEXT)
+	test_soap-browse.$(OBJEXT) test_soap-get_endpoints.$(OBJEXT) \
+	test_soap-variant.$(OBJEXT)
 test_soap_OBJECTS = $(am_test_soap_OBJECTS)
 test_soap_DEPENDENCIES = libopcua_soap_protocol.la
 test_soap_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -369,6 +370,9 @@ INCLUDES = \
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 TESTLIBS = $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS)
+
+#-DSOAP_TYPE_ns3__Variant 
+SOAP_CPP_FLAGS = -DWITH_PURE_VIRTUAL -DLINUX
 lib_LTLIBRARIES = libopcua_soap_protocol.la libopcua_soap_server.la libopcua_soap_client.la 
 libopcua_soap_protocol_la_SOURCES = \
   Bindings.h \
@@ -420,7 +424,7 @@ libopcua_soap_protocol_la_SOURCES = \
   soapC_033.cpp \
   soapC_034.cpp
 
-libopcua_soap_protocol_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
+libopcua_soap_protocol_la_CPPFLAGS = $(INCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_protocol_la_LDFLAGS = $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 libopcua_soap_server_la_SOURCES = \
   src/discovery_service.cpp \
@@ -437,21 +441,22 @@ libopcua_soap_server_la_SOURCES = \
   src/soap_server.cpp \
   src/soap_server.h
 
-libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) -DWITH_PURE_VIRTUAL -DLINUX $(GSOAP_CFLAGS)
+libopcua_soap_server_la_CPPFLAGS = $(INCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_server_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_server_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread  -Wl,--no-undefined
 libopcua_soap_client_la_SOURCES = \
  src/soap_client_addon.cpp
 
-libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) 
+libopcua_soap_client_la_CPPFLAGS = $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 libopcua_soap_client_la_LIBADD = libopcua_soap_protocol.la
 libopcua_soap_client_la_LDFLAGS = $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 test_soap_SOURCES = \
   tests/attributes.cpp \
   tests/browse.cpp \
-  tests/get_endpoints.cpp
+  tests/get_endpoints.cpp \
+  tests/variant.cpp
 
-test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS)  
+test_soap_CPPFLAGS = $(TESTINCLUDES) $(GSOAP_CFLAGS) $(SOAP_CPP_FLAGS)
 test_soap_LDADD = libopcua_soap_protocol.la
 test_soap_LDFLAGS = $(TESTLIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GSOAP_LIBS) -ldl -lpthread -Wl,--no-undefined
 EXTRA_DIST = \
@@ -628,6 +633,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-attributes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-browse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-get_endpoints.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_soap-variant.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -1041,6 +1047,20 @@ test_soap-get_endpoints.obj: tests/get_endpoints.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/get_endpoints.cpp' object='test_soap-get_endpoints.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-get_endpoints.obj `if test -f 'tests/get_endpoints.cpp'; then $(CYGPATH_W) 'tests/get_endpoints.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/get_endpoints.cpp'; fi`
+
+test_soap-variant.o: tests/variant.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-variant.o -MD -MP -MF $(DEPDIR)/test_soap-variant.Tpo -c -o test_soap-variant.o `test -f 'tests/variant.cpp' || echo '$(srcdir)/'`tests/variant.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-variant.Tpo $(DEPDIR)/test_soap-variant.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/variant.cpp' object='test_soap-variant.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-variant.o `test -f 'tests/variant.cpp' || echo '$(srcdir)/'`tests/variant.cpp
+
+test_soap-variant.obj: tests/variant.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_soap-variant.obj -MD -MP -MF $(DEPDIR)/test_soap-variant.Tpo -c -o test_soap-variant.obj `if test -f 'tests/variant.cpp'; then $(CYGPATH_W) 'tests/variant.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/variant.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_soap-variant.Tpo $(DEPDIR)/test_soap-variant.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='tests/variant.cpp' object='test_soap-variant.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_soap_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_soap-variant.obj `if test -f 'tests/variant.cpp'; then $(CYGPATH_W) 'tests/variant.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/variant.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
