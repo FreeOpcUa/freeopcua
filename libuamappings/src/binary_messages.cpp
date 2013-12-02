@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -129,7 +129,7 @@ namespace OpcUa
 
   DateTime ToDateTime(time_t t, unsigned usec)
   {
-    const OpcUa::DateTime epochDiff =  11644473600LL;
+    const OpcUa::DateTime epochDiff(11644473600LL);
     OpcUa::DateTime dateTime = epochDiff;
     dateTime += t;
     dateTime *= 10000000LL;

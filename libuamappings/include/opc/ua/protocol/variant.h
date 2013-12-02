@@ -105,13 +105,12 @@ namespace OpcUa
     explicit VariantValue(StatusCode val);
     explicit VariantValue(const std::string& val);
     explicit VariantValue(const ByteString& val);
-//    VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    explicit VariantValue(const DateTime& val);
     explicit VariantValue(const Guid& val);
     explicit VariantValue(const NodeID& val);
     explicit VariantValue(const QualifiedName& val);
     explicit VariantValue(const LocalizedText& val);
     explicit VariantValue(const DataValue& val);
- //   explicit VariantValue(const Variant& val);
     explicit VariantValue(const DiagnosticInfo& val);
 
     explicit VariantValue(const std::vector<bool>& val);
@@ -128,7 +127,7 @@ namespace OpcUa
     explicit VariantValue(const std::vector<StatusCode>& val);
     explicit VariantValue(const std::vector<std::string>& val);
     explicit VariantValue(const std::vector<ByteString>& val);
-//    VariantValue(DateTime val); TODO create separate type instead of typedef to uint64_t
+    explicit VariantValue(const std::vector<DateTime>& val);
     explicit VariantValue(const std::vector<Guid>& val);
     explicit VariantValue(const std::vector<NodeID>& val);
     explicit VariantValue(const std::vector<QualifiedName>& val);
@@ -151,7 +150,7 @@ namespace OpcUa
     VariantValue& operator= (StatusCode val);
     VariantValue& operator= (const std::string& val);
     VariantValue& operator= (const ByteString& val);
-//  Value(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue& operator= (const DateTime& val);
     VariantValue& operator= (const Guid& val);
     VariantValue& operator= (const NodeID& val);
     VariantValue& operator= (const QualifiedName& val);
@@ -173,6 +172,7 @@ namespace OpcUa
     VariantValue& operator= (const std::vector<double>& val);
     VariantValue& operator= (const std::vector<StatusCode>& val);
     VariantValue& operator= (const std::vector<std::string>& val);
+    VariantValue& operator= (const std::vector<DateTime>& val);
     VariantValue& operator= (const std::vector<ByteString>& val);
     VariantValue& operator= (const std::vector<Guid>& val);
     VariantValue& operator= (const std::vector<NodeID>& val);
@@ -195,6 +195,7 @@ namespace OpcUa
     bool operator== (double val) const;
     bool operator== (StatusCode val) const;
     bool operator== (const std::string& val) const;
+    bool operator== (const DateTime& val) const;
     bool operator== (const ByteString& val) const;
     bool operator== (const Guid& val) const;
     bool operator== (const NodeID& val) const;
@@ -217,6 +218,7 @@ namespace OpcUa
     bool operator== (const std::vector<StatusCode>& val) const;
     bool operator== (const std::vector<std::string>& val) const;
     bool operator== (const std::vector<ByteString>& val) const;
+    bool operator== (const std::vector<DateTime>& val) const;
     bool operator== (const std::vector<Guid>& val) const;
     bool operator== (const std::vector<NodeID>& val) const;
     bool operator== (const std::vector<QualifiedName>& val) const;

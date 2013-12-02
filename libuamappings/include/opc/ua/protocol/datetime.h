@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -17,7 +17,23 @@
 namespace OpcUa
 {
 
-  typedef uint64_t DateTime;
+  struct DateTime
+  {
+    explicit DateTime(uint64_t value)
+      : Value(value)
+    {
+    }
+
+    DateTime(const DateTime&) = default;
+    DateTime& operator=(const DateTime&) = default;
+
+    operator uint64_t() const
+    {
+      return Value;
+    }
+
+    uint64_t Value;
+  };
 
   DateTime CurrentDateTime();
   DateTime ToDateTime(time_t t, unsigned usec = 0);

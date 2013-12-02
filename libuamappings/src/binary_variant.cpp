@@ -192,13 +192,12 @@ namespace OpcUa
     VariantValue::VariantValue(StatusCode val) : Statuses{val} {}
     VariantValue::VariantValue(const std::string& val) : String{val} {}
     VariantValue::VariantValue(const ByteString& val) : ByteStrings{val} {}
-//    VariantValue::VariantValue(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue::VariantValue(const DateTime& val) : Time{val} {}
     VariantValue::VariantValue(const Guid& val) : Guids{val} {}
     VariantValue::VariantValue(const NodeID& val) : Node{val} {}
     VariantValue::VariantValue(const QualifiedName& val) : Name{val} {}
     VariantValue::VariantValue(const LocalizedText& val) : Text{val} {}
     VariantValue::VariantValue(const DataValue& val) : Value{val} {}
-//    VariantValue::VariantValue(const Variant& val) : Variants{val} {}
     VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{val} {}
 
     VariantValue::VariantValue(const std::vector<bool>& val) : Boolean(val) {}
@@ -212,10 +211,10 @@ namespace OpcUa
     VariantValue::VariantValue(const std::vector<uint64_t>& val) : UInt64(val) {}
     VariantValue::VariantValue(const std::vector<float>& val) : Float(val) {}
     VariantValue::VariantValue(const std::vector<double>& val) : Double(val) {}
-    VariantValue::VariantValue(const std::vector<StatusCode>& val) : Statuses(val) {} // TODO create separate type for Status code
+    VariantValue::VariantValue(const std::vector<StatusCode>& val) : Statuses(val) {}
     VariantValue::VariantValue(const std::vector<std::string>& val) : String(val) {}
     VariantValue::VariantValue(const std::vector<ByteString>& val) : ByteStrings(val) {}
-//    VariantValue::VariantValuconst e(DateTime val) : Time{val} {} TODO create separate type instead of typedef to uint64_t
+    VariantValue::VariantValue(const DateTime& val) : Time{val} {}
     VariantValue::VariantValue(const std::vector<Guid>& val) : Guids(val) {}
     VariantValue::VariantValue(const std::vector<NodeID>& val) : Node(val) {}
     VariantValue::VariantValue(const std::vector<QualifiedName>& val) : Name(val) {}
@@ -306,6 +305,12 @@ namespace OpcUa
     VariantValue& VariantValue::operator= (const ByteString& val)
     {
       ByteStrings = std::vector<ByteString>{val};
+      return *this;
+    }
+
+    VariantValue& VariantValue::operator= (const DateTime& val)
+    {
+      Time = std::vector<DateTime>{val};
       return *this;
     }
 
@@ -430,6 +435,12 @@ namespace OpcUa
       return *this;
     }
 
+    VariantValue& VariantValue::operator= (const std::vector<DateTime>& val)
+    {
+      Time = std::vector<DateTime>(val);
+      return *this;
+    }
+
     VariantValue& VariantValue::operator= (const std::vector<ByteString>& val)
     {
       ByteStrings = std::vector<ByteString>(val);
@@ -549,6 +560,11 @@ namespace OpcUa
       return ByteStrings.size() == 1 && ByteStrings.front() == val;
     }
 
+    bool VariantValue::operator== (const DateTime& val) const
+    {
+      return Time.size() == 1 && Time.front() == val;
+    }
+
     bool VariantValue::operator== (const Guid& val) const
     {
       return Guids.size() == 1 && Guids.front() == val;
@@ -647,6 +663,11 @@ namespace OpcUa
     bool VariantValue::operator== (const std::vector<std::string>& val) const
     {
       return String == val;
+    }
+
+    bool VariantValue::operator== (const std::vector<DateTime>& val) const
+    {
+      return Time == val;
     }
 
     bool VariantValue::operator== (const std::vector<ByteString>& val) const
