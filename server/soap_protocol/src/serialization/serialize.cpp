@@ -194,7 +194,7 @@ namespace
     result->RequestHandle = header.RequestHandle;
     result->ReturnDiagnostics = header.ReturnDiagnostics;
     result->TimeoutHint = header.Timeout;
-    result->Timestamp = header.UtcTime;
+    result->Timestamp = OpcUa::ToTimeT(header.UtcTime);
     return result;
   }
 
@@ -237,7 +237,7 @@ namespace
     result->RequestHandle = header.RequestHandle;
     result->ServiceResult = CreateStatusCode(s, header.ServiceResult);
     result->StringTable = CreateListOfStrings(s, header.StringTable);
-    result->Timestamp = header.Timestamp;
+    result->Timestamp = OpcUa::ToTimeT(header.Timestamp);
     return result;
   }
 
@@ -290,6 +290,24 @@ namespace
     ns3__QualifiedName* result = soap_new_ns3__QualifiedName(s, 1);
     result->Name = CreateString(s, name.Name);
     result->NamespaceIndex = CreateScalar(s, static_cast<int>(name.NamespaceIndex));
+    return result;
+  }
+
+  ns3__Guid* CreateGuid(soap* s, const OpcUa::Guid& guid)
+  {
+    ns3__Guid* result = soap_new_ns3__Guid(s, 1);
+    result->String = CreateString(s, OpcUa::ToString(guid));
+    return result;
+  }
+
+  ns3__ListOfGuid* CreateListOfGuid(soap* s, const std::vector<OpcUa::Guid>& guids)
+  {
+    ns3__ListOfGuid* result = soap_new_ns3__ListOfGuid(s, 1);
+    if (!guids.empty())
+    {
+      result->Guid.resize(guids.size());
+      std::transform(guids.begin(), guids.end(), result->Guid.begin(), std::bind(CreateGuid, s, std::placeholders::_1));
+    }
     return result;
   }
 
@@ -578,6 +596,10 @@ namespace
       }
       case OpcUa::VariantType::GUID:
       {
+        if (var.IsArray())
+          result->ListOfGuid = CreateListOfGuid(s, var.Value.Guids);
+        else
+          result->Guid = CreateGuid(s, var.Value.Guids[0]);
         break;
       }
       case OpcUa::VariantType::BYTE_STRING:

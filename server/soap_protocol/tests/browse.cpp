@@ -16,7 +16,7 @@ TEST(Browse, Request)
   opcua.Header = OpcUa::Test::CreateRequestHeader();
   opcua.Query.MaxReferenciesPerNode = 1;
   opcua.Query.View.ID = OpcUa::NumericNodeID(2, 2);
-  opcua.Query.View.Timestamp = 3;
+  opcua.Query.View.Timestamp = OpcUa::ToDateTime(3);
   opcua.Query.View.Version = 4;
 
   OpcUa::BrowseDescription desc;

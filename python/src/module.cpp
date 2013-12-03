@@ -400,9 +400,9 @@ namespace OpcUa
   {
     python::object Value;
     unsigned Status;
-    DateTime SourceTimestamp;
+    uint64_t SourceTimestamp;
     uint16_t SourcePicoseconds;
-    DateTime ServerTimestamp;
+    uint64_t ServerTimestamp;
     uint16_t ServerPicoseconds;
 
     PyDataValue()
@@ -426,11 +426,11 @@ namespace OpcUa
       }
       if (value.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
       {
-        SourceTimestamp = value.SourceTimestamp;
+        SourceTimestamp = value.SourceTimestamp.Value;
       }
       if (value.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
       {
-        ServerTimestamp = value.ServerTimestamp;
+        ServerTimestamp = value.ServerTimestamp.Value;
       }
       if (value.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
       {
@@ -487,12 +487,12 @@ namespace OpcUa
     }
     if (pyValue.Data.ServerTimestamp)
     {
-      result.Data.ServerTimestamp = pyValue.Data.ServerTimestamp;
+      result.Data.ServerTimestamp.Value = pyValue.Data.ServerTimestamp;
       result.Data.Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
     }
     if (pyValue.Data.SourceTimestamp)
     {
-      result.Data.SourceTimestamp = pyValue.Data.SourceTimestamp;
+      result.Data.SourceTimestamp.Value = pyValue.Data.SourceTimestamp;
       result.Data.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
     }
     if (pyValue.Data.Value)
