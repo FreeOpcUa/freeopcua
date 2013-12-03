@@ -12,6 +12,7 @@
 #define opcua_guid_h_
 
 #include <stdint.h>
+#include <string>
 
 namespace OpcUa
 {
@@ -95,6 +96,10 @@ namespace OpcUa
     }
 
   };
+
+  std::string ToString(const Guid& guid);
+  Guid ToGuid(const std::string& str);
+
 } // namespace OpcUa
 
 #endif // opcua_guid_h_
