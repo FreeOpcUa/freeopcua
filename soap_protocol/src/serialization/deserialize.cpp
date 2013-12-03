@@ -10,6 +10,8 @@
 
 #include "deserialize.h"
 
+#include <opc/ua/protocol/datetime.h>
+
 #include <algorithm>
 #include <sstream>
 
@@ -130,7 +132,7 @@ namespace
     result.RequestHandle = header->RequestHandle;
     result.ReturnDiagnostics = header->ReturnDiagnostics;
     result.Timeout = header->TimeoutHint;
-    result.UtcTime = header->Timestamp;
+    result.UtcTime = OpcUa::ToDateTime(header->Timestamp);
 
     return result;
   }
@@ -207,7 +209,7 @@ namespace
       result.ServiceResult = Deserialize(header->ServiceResult);
     }
     result.RequestHandle = header->RequestHandle;
-    result.Timestamp = header->Timestamp;
+    result.Timestamp = OpcUa::ToDateTime(header->Timestamp);
     return result;
   }
 
@@ -309,6 +311,7 @@ namespace
     {
       result.TransportProfileURI = *desc->TransportProfileUri;
     }
+    // TODO
     /*
     if (desc->UserIdentityTokens)
     {
@@ -715,11 +718,28 @@ namespace OpcUa
     else if (var->DateTime)
       result = OpcUa::ToDateTime(*var->DateTime);
     else if (var->ListOfDateTime)
+    {
       result = Transform<std::vector<OpcUa::DateTime>>(var->ListOfDateTime->DateTime, 
         [](time_t v)
         {
           return OpcUa::ToDateTime(v);
         });
+    }
+    else if (var->Guid)
+    {
+      if (var->Guid->String)
+      {
+        result = OpcUa::ToGuid(*var->Guid->String);
+      }
+    }
+    else if (var->ListOfGuid)
+    {
+      result = Transform<std::vector<OpcUa::Guid>>(var->ListOfGuid->Guid,
+        [](ns3__Guid* v)
+        {
+          return (v->String) ? OpcUa::ToGuid(*v->String) : OpcUa::Guid();
+        });
+    }
     return result;
   }
 

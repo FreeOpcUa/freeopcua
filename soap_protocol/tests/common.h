@@ -34,7 +34,7 @@ namespace OpcUa
       header.ReturnDiagnostics = 4;
       header.SessionAuthenticationToken = OpcUa::NumericNodeID(3);
       header.Timeout = 5;
-      header.UtcTime = 6;
+      header.UtcTime = OpcUa::ToDateTime(6);
       return header;
     }
 
@@ -110,7 +110,7 @@ namespace OpcUa
       header.RequestHandle = 3;
       header.ServiceResult = OpcUa::StatusCode::BadNotReadable;
       header.StringTable.push_back("table");
-      header.Timestamp = 4;
+      header.Timestamp = OpcUa::ToDateTime(4);
 
       return header;
     }

@@ -494,11 +494,11 @@ TEST(Variant, time)
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
   ASSERT_NE(serialized->DateTime, nullptr);
-  ASSERT_EQ(*serialized->DateTime, data);
+  ASSERT_EQ(*serialized->DateTime, OpcUa::ToTimeT(data));
 
   OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
   ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DATE_TIME);
-  ASSERT_EQ(deserialize.Value, data);
+  ASSERT_EQ(OpcUa::ToTimeT(deserialize.Value.Time[0]), OpcUa::ToTimeT(data));
 }
 
 //void
@@ -514,11 +514,70 @@ TEST(Variant, time_vector)
   ASSERT_NE(serialized, nullptr);
   ASSERT_NE(serialized->ListOfDateTime, nullptr);
   ASSERT_EQ(serialized->ListOfDateTime->DateTime.size(), 2);
-  ASSERT_EQ(serialized->ListOfDateTime->DateTime[0], data[0]);
-  ASSERT_EQ(serialized->ListOfDateTime->DateTime[1], data[1]);
+  ASSERT_EQ(serialized->ListOfDateTime->DateTime[0], OpcUa::ToTimeT(data[0]));
+  ASSERT_EQ(serialized->ListOfDateTime->DateTime[1], OpcUa::ToTimeT(data[1]));
 
   OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
   ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DATE_TIME);
-  ASSERT_EQ(deserialize.Value, data);
+  ASSERT_EQ(deserialize.Value.Time.size(), 2);
+  std::vector<OpcUa::DateTime> deserialized = deserialize.Value.Time;
+  ASSERT_EQ(OpcUa::ToTimeT(deserialized[0]), OpcUa::ToTimeT(data[0]));
+  ASSERT_EQ(OpcUa::ToTimeT(deserialized[1]), OpcUa::ToTimeT(data[1]));
+}
+
+
+
+//void
+TEST(Variant, guid)
+{
+  OpcUa::Guid guid;
+  guid.Data1 = 1;
+  guid.Data2 = 2;
+  guid.Data3 = 3;
+  memset(guid.Data4, 1, 8);
+
+  OpcUa::Variant var = guid;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->Guid, nullptr);
+  ASSERT_NE(serialized->Guid->String, nullptr);
+  ASSERT_EQ(*serialized->Guid->String, OpcUa::ToString(guid));
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::GUID);
+  ASSERT_EQ(deserialize.Value.Guids.size(), 1);
+  ASSERT_EQ(deserialize.Value.Guids[0], guid);
+}
+//void
+TEST(Variant, guid_vector)
+{
+  OpcUa::Guid guid;
+  guid.Data1 = 1;
+  guid.Data2 = 2;
+  guid.Data3 = 3;
+  memset(guid.Data4, 1, 8);
+
+  std::vector<OpcUa::Guid> data{guid, guid};
+
+  OpcUa::Variant var = data;
+  ASSERT_EQ(var.Type, OpcUa::VariantType::GUID);
+
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfGuid, nullptr);
+  ASSERT_EQ(serialized->ListOfGuid->Guid.size(), 2);
+  ASSERT_NE(serialized->ListOfGuid->Guid[0]->String, nullptr);
+  ASSERT_NE(serialized->ListOfGuid->Guid[1]->String, nullptr);
+
+  ASSERT_EQ(*serialized->ListOfGuid->Guid[0]->String, OpcUa::ToString(guid));
+  ASSERT_EQ(*serialized->ListOfGuid->Guid[1]->String, OpcUa::ToString(guid));
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::GUID);
+  ASSERT_EQ(deserialize.Value.Guids.size(), 2);
+  std::vector<OpcUa::Guid> deserialized = deserialize.Value.Guids;
+  ASSERT_EQ(deserialized[0], guid);
+  ASSERT_EQ(deserialized[1], guid);
 }
 

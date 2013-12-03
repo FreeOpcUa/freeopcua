@@ -10,6 +10,7 @@
 
 #include "common.h"
 
+#include <gtest/gtest.h>
 //void
 TEST(Read, Request)
 {
