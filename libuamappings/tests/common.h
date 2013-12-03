@@ -204,7 +204,7 @@ protected:
   8
 
 #define FILL_TEST_RESPONSE_HEADER(header) \
-  header.Timestamp = 1; \
+  header.Timestamp.Value = 1; \
   header.RequestHandle =  2; \
   header.ServiceResult = static_cast<StatusCode>(3); \
   header.InnerDiagnostics.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO); \
@@ -218,7 +218,7 @@ protected:
   header.Additional.Encoding = 8;
 
 #define ASSERT_RESPONSE_HEADER_EQ(header) \
-  ASSERT_EQ(header.Timestamp, 1); \
+  ASSERT_EQ(header.Timestamp.Value, 1); \
   ASSERT_EQ(header.RequestHandle, 2); \
   ASSERT_EQ(header.ServiceResult, static_cast<StatusCode>(3)); \
   ASSERT_EQ(header.InnerDiagnostics.EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO)); \
@@ -247,7 +247,7 @@ protected:
 #define FILL_TEST_REQUEST_HEADER(header) \
   header.SessionAuthenticationToken.Encoding = EV_TWO_BYTE; \
   header.SessionAuthenticationToken.TwoByteData.Identifier = 1; \
-  header.UtcTime = 2; \
+  header.UtcTime.Value = 2; \
   header.RequestHandle = 3; \
   header.ReturnDiagnostics = 4; \
   header.AuditEntryID = "audit"; \
@@ -259,7 +259,7 @@ protected:
 #define ASSERT_REQUEST_HEADER_EQ(header) \
   ASSERT_EQ(header.SessionAuthenticationToken.Encoding, EV_TWO_BYTE); \
   ASSERT_EQ(header.SessionAuthenticationToken.TwoByteData.Identifier, 1); \
-  ASSERT_EQ(header.UtcTime, 2); \
+  ASSERT_EQ(header.UtcTime.Value, 2); \
   ASSERT_EQ(header.RequestHandle, 3); \
   ASSERT_EQ(header.ReturnDiagnostics, 4); \
   ASSERT_EQ(header.AuditEntryID, "audit"); \

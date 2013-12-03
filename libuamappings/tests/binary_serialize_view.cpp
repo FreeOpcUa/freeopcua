@@ -79,7 +79,7 @@ TEST_F(ViewSerialization, ViewDescription)
 
   desc.ID.Encoding = EV_TWO_BYTE;
   desc.ID.TwoByteData.Identifier = 1;
-  desc.Timestamp = 2;
+  desc.Timestamp.Value = 2;
   desc.Version = 3;
 
   GetStream() << desc << flush;
@@ -232,7 +232,7 @@ TEST_F(ViewSerialization, BrowseRequest)
 
   request.Query.View.ID.Encoding = EV_TWO_BYTE;
   request.Query.View.ID.TwoByteData.Identifier = 1;
-  request.Query.View.Timestamp = 2;
+  request.Query.View.Timestamp.Value = 2;
   request.Query.View.Version = 3;
 
   request.Query.MaxReferenciesPerNode = 4;

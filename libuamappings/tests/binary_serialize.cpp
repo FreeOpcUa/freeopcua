@@ -100,6 +100,14 @@ TEST_F(OpcUaBinarySerialization, Int64)
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
 }
 
+TEST_F(OpcUaBinarySerialization, DateTime)
+{
+  OpcUa::DateTime dataForSerialize(0x0102030405060708);
+  const std::vector<char> expectedData = {8, 7, 6, 5, 4, 3, 2, 1};
+  GetStream() << dataForSerialize << flush;
+  ASSERT_EQ(expectedData, GetChannel().SerializedData);
+}
+
 TEST_F(OpcUaBinarySerialization, Guid)
 {
   OpcUa::Guid dataForSerialize;
@@ -784,7 +792,7 @@ TEST_F(OpcUaBinarySerialization, SecurityToken)
 
   token.SecureChannelID = 1;
   token.TokenID = 2;
-  token.CreatedAt = 3;
+  token.CreatedAt.Value = 3;
   token.RevisedLifetime = 4;
 
   GetStream() << token << flush;
@@ -820,7 +828,7 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
   response.ServerProtocolVersion = 1;
   response.ChannelSecurityToken.SecureChannelID = 2;
   response.ChannelSecurityToken.TokenID = 3;
-  response.ChannelSecurityToken.CreatedAt = 4;
+  response.ChannelSecurityToken.CreatedAt.Value = 4;
   response.ChannelSecurityToken.RevisedLifetime = 5;
   response.ServerNonce = std::vector<uint8_t>(1, 6);
   

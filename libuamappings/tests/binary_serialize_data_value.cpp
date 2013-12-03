@@ -88,9 +88,9 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
   data.Value.Value.Boolean = std::vector<bool>{true};
 
   data.Status = static_cast<StatusCode>(1);
-  data.SourceTimestamp = 2;
+  data.SourceTimestamp.Value = 2;
   data.SourcePicoseconds = 3;
-  data.ServerTimestamp = 4;
+  data.ServerTimestamp.Value = 4;
   data.ServerPicoseconds = 5;
 
 

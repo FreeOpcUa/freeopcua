@@ -120,9 +120,9 @@ namespace
         DATA_VALUE_SOURCE_PICOSECONDS |
         DATA_VALUE_SERVER_PICOSECONDS;
       data.ServerPicoseconds = 1;
-      data.ServerTimestamp = 2;
+      data.ServerTimestamp.Value = 2;
       data.SourcePicoseconds = 3;
-      data.SourceTimestamp = 4;
+      data.SourceTimestamp.Value = 4;
       data.Status = StatusCode::BadNotReadable;
       data.Value = std::string("value");
 
@@ -139,9 +139,9 @@ namespace
       Assert(value.Node.StringData.Identifier == "node", "Invalid identifier of node.");
       Assert(value.NumericRange == "1:2", "Invalid numeric range.");
       Assert(value.Data.ServerPicoseconds == 1, "Invalid ServerPicoseconds.");
-      Assert(value.Data.ServerTimestamp == 2, "Invalid ServerTimeStamp.");
+      Assert(value.Data.ServerTimestamp.Value == 2, "Invalid ServerTimeStamp.");
       Assert(value.Data.SourcePicoseconds == 3, "Invalid SourcePicoseconds.");
-      Assert(value.Data.SourceTimestamp == 4, "Invalid SourceTimeStamp.");
+      Assert(value.Data.SourceTimestamp.Value == 4, "Invalid SourceTimeStamp.");
       Assert(value.Data.Status == StatusCode::BadNotReadable, "Invalid data status.");
       Assert(value.Data.Value.Type == VariantType::STRING, "Invalid data type.");
       Assert(value.Data.Value.Value.String.size() == 1, "Invalid number of strings in variant.");

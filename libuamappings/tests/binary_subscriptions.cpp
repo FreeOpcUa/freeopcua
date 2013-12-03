@@ -469,7 +469,7 @@ TEST_F(SubscriptionSerialization, NotificationMessage)
 
   NotificationMessage data;
   data.SequenceID = 1;
-  data.PublishTime = 2;
+  data.PublishTime.Value = 2;
   data.Data.push_back(NotificationData());
 
   GetStream() << data << flush;
@@ -526,7 +526,7 @@ TEST_F(SubscriptionSerialization, PublishResult)
   result.MoreNotifications = true;
 
   result.Message.SequenceID = 1;
-  result.Message.PublishTime = 2;
+  result.Message.PublishTime.Value = 2;
   result.Message.Data.push_back(NotificationData());
 
   result.Statuses.push_back(StatusCode::Good);
@@ -635,7 +635,7 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   response.Result.AvailableSequenceNumber.push_back(2);
   response.Result.MoreNotifications = true;
   response.Result.Message.SequenceID = 1;
-  response.Result.Message.PublishTime = 2;
+  response.Result.Message.PublishTime.Value = 2;
   response.Result.Message.Data.push_back(NotificationData());
   response.Result.Statuses.push_back(StatusCode::Good);
 
@@ -697,7 +697,7 @@ TEST_F(SubscriptionSerialization, PublishResponse_Empty)
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   PublishResult result;
-  response.Result.Message.PublishTime = 2;
+  response.Result.Message.PublishTime.Value = 2;
 
   GetStream() << response << flush;
 

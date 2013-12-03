@@ -129,12 +129,11 @@ namespace OpcUa
 
   DateTime ToDateTime(time_t t, unsigned usec)
   {
-    const OpcUa::DateTime epochDiff(11644473600LL);
-    OpcUa::DateTime dateTime = epochDiff;
-    dateTime += t;
-    dateTime *= 10000000LL;
-    dateTime += usec * 10;
-    return dateTime;
+    const int64_t secsFrom1600To1970 = 11676096000LL;
+    int64_t t1 = t + secsFrom1600To1970;
+    t1 = t1 * 10000000LL;
+    t1 += usec * 10;
+    return DateTime(t1);
   }
 
   // TODO move to separate file with time utils.
@@ -147,10 +146,9 @@ namespace OpcUa
 
   time_t ToTimeT(DateTime dateTime)
   {
-    static const OpcUa::DateTime epochDiff =  11644473600LL;
-    dateTime = dateTime / 10000000LL - epochDiff;
-    const time_t result = dateTime;
-    return result;
+    const int64_t secsFrom1600To1970 = 11676096000LL;
+    const int64_t secsFrom1970 = dateTime.Value / 10000000LL - secsFrom1600To1970;
+    return secsFrom1970;
   }
 
   RequestHeader::RequestHeader()

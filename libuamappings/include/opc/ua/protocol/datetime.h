@@ -19,20 +19,30 @@ namespace OpcUa
 
   struct DateTime
   {
-    explicit DateTime(uint64_t value)
+    DateTime()
+      : Value(0)
+    {
+    }
+
+    explicit DateTime(int64_t value)
       : Value(value)
     {
     }
 
     DateTime(const DateTime&) = default;
     DateTime& operator=(const DateTime&) = default;
+    DateTime& operator+=(const DateTime& val)
+    {
+      Value += val.Value;
+      return *this;
+    }
 
-    operator uint64_t() const
+    operator int64_t() const
     {
       return Value;
     }
 
-    uint64_t Value;
+    int64_t Value;
   };
 
   DateTime CurrentDateTime();

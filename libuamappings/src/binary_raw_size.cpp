@@ -113,6 +113,12 @@ namespace OpcUa
     }
 
     template<>
+    std::size_t RawSize<DateTime>(const DateTime& date)
+    {
+      return RawSize(date.Value);
+    }
+
+    template<>
     std::size_t RawSize<std::vector<uint8_t>>(const std::vector<uint8_t>& vec)
     {
       const std::size_t headerSize = 4;

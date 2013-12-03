@@ -214,7 +214,7 @@ namespace OpcUa
     VariantValue::VariantValue(const std::vector<StatusCode>& val) : Statuses(val) {}
     VariantValue::VariantValue(const std::vector<std::string>& val) : String(val) {}
     VariantValue::VariantValue(const std::vector<ByteString>& val) : ByteStrings(val) {}
-    VariantValue::VariantValue(const DateTime& val) : Time{val} {}
+    VariantValue::VariantValue(const std::vector<DateTime>& val) : Time{val} {}
     VariantValue::VariantValue(const std::vector<Guid>& val) : Guids(val) {}
     VariantValue::VariantValue(const std::vector<NodeID>& val) : Node(val) {}
     VariantValue::VariantValue(const std::vector<QualifiedName>& val) : Name(val) {}

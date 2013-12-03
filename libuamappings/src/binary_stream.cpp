@@ -400,6 +400,31 @@ namespace OpcUa
 */
     }
 
+
+    template<>
+    void DataSerializer::Serialize<OpcUa::DateTime>(const OpcUa::DateTime& date)
+    {
+      *this << date.Value;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<OpcUa::DateTime>(OpcUa::DateTime& date)
+    {
+      *this >> date.Value;
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<OpcUa::DateTime>>(const std::vector<OpcUa::DateTime>& date)
+    {
+      SerializeContainer(*this, date);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<OpcUa::DateTime>>(std::vector<OpcUa::DateTime>& date)
+    {
+      DeserializeContainer(*this, date);
+    }
+
     template<>
     void DataSerializer::Serialize<ByteString>(const ByteString& value)
     {
@@ -427,6 +452,7 @@ namespace OpcUa
       value.Data.clear();
       return;
     }
+
 
     template<>
     void DataSerializer::Serialize<std::vector<ByteString>>(const std::vector<ByteString>& value)
