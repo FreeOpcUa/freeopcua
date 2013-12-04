@@ -374,7 +374,7 @@ namespace
     return result;
   }
 
-  std::vector<uint8_t> Deserialize(xsd__base64Binary* binary)
+  OpcUa::ByteString Deserialize(const xsd__base64Binary* binary)
   {
     std::vector<uint8_t> result;
     if (binary && binary->__ptr && binary->__size)
@@ -384,7 +384,7 @@ namespace
       const char* data = (char*)binary->__ptr;
       std::copy(data, data + size, result.begin());
     }
-    return result;
+    return OpcUa::ByteString(result);
   }
 
   OpcUa::QualifiedName Deserialize(ns3__QualifiedName* name)
@@ -442,7 +442,7 @@ namespace
   OpcUa::BrowseResult Deserialize(const ns3__BrowseResult* browse)
   {
     OpcUa::BrowseResult result;
-    result.ContinuationPoint = Deserialize(browse->ContinuationPoint);
+    result.ContinuationPoint = Deserialize(browse->ContinuationPoint).Data;
     result.Referencies = Deserialize(browse->References);
     result.Status = Deserialize(browse->StatusCode);
     return result;
@@ -740,6 +740,20 @@ namespace OpcUa
           return (v->String) ? OpcUa::ToGuid(*v->String) : OpcUa::Guid();
         });
     }
+    else if (var->ByteString)
+    {
+      if (var->ByteString->__ptr && var->ByteString->__size)
+        result = OpcUa::ByteString(::Deserialize(var->ByteString));
+    }
+    else if (var->ListOfByteString)
+    {
+      result = Transform<std::vector<OpcUa::ByteString>>(var->ListOfByteString->ByteString,
+        [](const xsd__base64Binary& v)
+        {
+          return ::Deserialize(&v);
+        });
+    }
+
     return result;
   }
 

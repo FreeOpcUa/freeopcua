@@ -581,3 +581,51 @@ TEST(Variant, guid_vector)
   ASSERT_EQ(deserialized[1], guid);
 }
 
+
+
+
+//void
+TEST(Variant, ByteString)
+{
+  OpcUa::ByteString byteString(std::vector<uint8_t>{1, 2});
+
+  OpcUa::Variant var = byteString;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ByteString, nullptr);
+  ASSERT_NE(serialized->ByteString->__ptr, nullptr);
+  ASSERT_EQ(serialized->ByteString->__size, 2);
+  ASSERT_EQ(serialized->ByteString->__ptr[0], byteString.Data[0]);
+  ASSERT_EQ(serialized->ByteString->__ptr[1], byteString.Data[1]);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::BYTE_STRING);
+  ASSERT_EQ(deserialize.Value.ByteStrings.size(), 1);
+  ASSERT_EQ(deserialize.Value.ByteStrings[0], byteString);
+}
+
+
+TEST(Variant, ByteString_vector)
+{
+  OpcUa::ByteString byteString(std::vector<uint8_t>{1, 2});
+  OpcUa::Variant var = std::vector<OpcUa::ByteString>{byteString, byteString};
+
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfByteString, nullptr);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString.size(), 2);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString[0].__size, 2);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString[0].__ptr[0], byteString.Data[0]);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString[0].__ptr[1], byteString.Data[1]);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString[1].__ptr[0], byteString.Data[0]);
+  ASSERT_EQ(serialized->ListOfByteString->ByteString[1].__ptr[1], byteString.Data[1]);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::BYTE_STRING);
+  ASSERT_EQ(deserialize.Value.ByteStrings.size(), 2);
+  ASSERT_EQ(deserialize.Value.ByteStrings[0], byteString);
+  ASSERT_EQ(deserialize.Value.ByteStrings[1], byteString);
+}
+
