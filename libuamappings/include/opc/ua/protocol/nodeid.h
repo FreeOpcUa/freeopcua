@@ -158,6 +158,9 @@ namespace OpcUa
     bool HasNamespaceURI() const;
     bool HasServerIndex() const;
 
+    void SetNamespaceURI(const std::string& uri);
+    void SetServerIndex(uint32_t index);
+
     bool IsInteger() const;
     bool IsString() const;
     bool IsBinary() const;

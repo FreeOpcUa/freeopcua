@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-//void
+
 TEST(Variant, bool)
 {
   OpcUa::Variant var = true;
@@ -26,7 +26,7 @@ TEST(Variant, bool)
   ASSERT_EQ(deserialize.Value, true);
 }
 
-//void
+
 TEST(Variant, bool_vector)
 {
   std::vector<bool> data{false, true};
@@ -44,7 +44,7 @@ TEST(Variant, bool_vector)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, byte)
 {
   uint8_t data = 1;
@@ -62,7 +62,7 @@ TEST(Variant, byte)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, byte_vector)
 {
   std::vector<uint8_t> data{1, 2};
@@ -80,7 +80,7 @@ TEST(Variant, byte_vector)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, sbyte)
 {
   int8_t data = -1;
@@ -98,7 +98,7 @@ TEST(Variant, sbyte)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, sbyte_vector)
 {
   std::vector<int8_t> data{-1, -2};
@@ -120,7 +120,7 @@ TEST(Variant, sbyte_vector)
 
 
 
-//void
+
 TEST(Variant, int16)
 {
   int16_t data = -1;
@@ -138,7 +138,7 @@ TEST(Variant, int16)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, int16_vector)
 {
   std::vector<int16_t> data{-1, -2};
@@ -158,7 +158,7 @@ TEST(Variant, int16_vector)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint16)
 {
   uint16_t data = 1;
@@ -176,7 +176,7 @@ TEST(Variant, uint16)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint16_vector)
 {
   std::vector<uint16_t> data{1, 2};
@@ -198,7 +198,7 @@ TEST(Variant, uint16_vector)
 
 
 
-//void
+
 TEST(Variant, int32)
 {
   int32_t data = -1;
@@ -216,7 +216,7 @@ TEST(Variant, int32)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, int32_vector)
 {
   std::vector<int32_t> data{-1, -2};
@@ -236,7 +236,7 @@ TEST(Variant, int32_vector)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint32)
 {
   uint32_t data = 1;
@@ -254,7 +254,7 @@ TEST(Variant, uint32)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint32_vector)
 {
   std::vector<uint32_t> data{1, 2};
@@ -277,7 +277,7 @@ TEST(Variant, uint32_vector)
 
 
 
-//void
+
 TEST(Variant, int64)
 {
   int64_t data = -1;
@@ -295,7 +295,7 @@ TEST(Variant, int64)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, int64_vector)
 {
   std::vector<int64_t> data{-1, -2};
@@ -315,7 +315,7 @@ TEST(Variant, int64_vector)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint64)
 {
   uint64_t data = 1;
@@ -333,7 +333,7 @@ TEST(Variant, uint64)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, uint64_vector)
 {
   std::vector<uint64_t> data{1, 2};
@@ -356,7 +356,7 @@ TEST(Variant, uint64_vector)
 
 
 
-//void
+
 TEST(Variant, float)
 {
   float data = 1.2;
@@ -374,7 +374,7 @@ TEST(Variant, float)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, float_vector)
 {
   std::vector<float> data{1.2, 2.1};
@@ -398,7 +398,7 @@ TEST(Variant, float_vector)
 
 
 
-//void
+
 TEST(Variant, double)
 {
   double data = 1.2;
@@ -416,7 +416,7 @@ TEST(Variant, double)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, double_vector)
 {
   std::vector<double> data{1.2, 2.1};
@@ -440,7 +440,7 @@ TEST(Variant, double_vector)
 
 
 
-//void
+
 TEST(Variant, string)
 {
   std::string data = "hello";
@@ -458,7 +458,7 @@ TEST(Variant, string)
   ASSERT_EQ(deserialize.Value, data);
 }
 
-//void
+
 TEST(Variant, string_vector)
 {
   std::vector<std::string> data{"1", "2"};
@@ -483,7 +483,7 @@ TEST(Variant, string_vector)
 
 
 
-//void
+
 TEST(Variant, time)
 {
   OpcUa::DateTime data = OpcUa::CurrentDateTime();
@@ -501,7 +501,7 @@ TEST(Variant, time)
   ASSERT_EQ(OpcUa::ToTimeT(deserialize.Value.Time[0]), OpcUa::ToTimeT(data));
 }
 
-//void
+
 TEST(Variant, time_vector)
 {
   std::vector<OpcUa::DateTime> data{OpcUa::CurrentDateTime(), OpcUa::CurrentDateTime()};
@@ -527,7 +527,7 @@ TEST(Variant, time_vector)
 
 
 
-//void
+
 TEST(Variant, guid)
 {
   OpcUa::Guid guid;
@@ -548,7 +548,7 @@ TEST(Variant, guid)
   ASSERT_EQ(deserialize.Value.Guids.size(), 1);
   ASSERT_EQ(deserialize.Value.Guids[0], guid);
 }
-//void
+
 TEST(Variant, guid_vector)
 {
   OpcUa::Guid guid;
@@ -584,7 +584,7 @@ TEST(Variant, guid_vector)
 
 
 
-//void
+
 TEST(Variant, ByteString)
 {
   OpcUa::ByteString byteString(std::vector<uint8_t>{1, 2});
@@ -628,4 +628,57 @@ TEST(Variant, ByteString_vector)
   ASSERT_EQ(deserialize.Value.ByteStrings[0], byteString);
   ASSERT_EQ(deserialize.Value.ByteStrings[1], byteString);
 }
+
+
+
+
+TEST(Variant, NodeId)
+{
+  OpcUa::NodeID id = OpcUa::NumericNodeID(1, 1);
+  id.SetNamespaceURI("uri");
+  id.SetServerIndex(1);
+
+  OpcUa::Variant var = id;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ExpandedNodeId, nullptr);
+  ASSERT_NE(serialized->ExpandedNodeId->Identifier, nullptr);
+  ASSERT_EQ(*serialized->ExpandedNodeId->Identifier, "srv=1;nsu=uri;ns=1;i=1;");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::NODE_ID);
+  ASSERT_EQ(deserialize.Value.Node.size(), 1);
+  ASSERT_EQ(deserialize.Value.Node[0], id);
+}
+
+TEST(Variant, NodeId_vector)
+{
+  OpcUa::NodeID id = OpcUa::NumericNodeID(1, 1);
+  id.SetNamespaceURI("uri");
+  id.SetServerIndex(1);
+
+  OpcUa::Variant var = std::vector<OpcUa::NodeID>{id, id};
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfExpandedNodeId, nullptr);
+  ASSERT_EQ(serialized->ListOfExpandedNodeId->ExpandedNodeId.size(), 2);
+  ASSERT_NE(serialized->ListOfExpandedNodeId->ExpandedNodeId[0], nullptr);
+  ASSERT_NE(serialized->ListOfExpandedNodeId->ExpandedNodeId[1], nullptr);
+  ASSERT_NE(serialized->ListOfExpandedNodeId->ExpandedNodeId[0]->Identifier, nullptr);
+  ASSERT_NE(serialized->ListOfExpandedNodeId->ExpandedNodeId[1]->Identifier, nullptr);
+  ASSERT_EQ(*serialized->ListOfExpandedNodeId->ExpandedNodeId[0]->Identifier, "srv=1;nsu=uri;ns=1;i=1;");
+  ASSERT_EQ(*serialized->ListOfExpandedNodeId->ExpandedNodeId[1]->Identifier, "srv=1;nsu=uri;ns=1;i=1;");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::NODE_ID);
+  ASSERT_EQ(deserialize.Value.Node.size(), 2);
+  ASSERT_EQ(deserialize.Value.Node[0], id);
+  ASSERT_EQ(deserialize.Value.Node[1], id);
+}
+
+
+
+
 

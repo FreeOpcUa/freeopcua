@@ -649,3 +649,15 @@ TEST_F(NodeComparing, NodesEqual)
   ASSERT_EQ(node1, node2);
   ASSERT_EQ(node1, NodeID(node1));
 }
+
+TEST(NodeID, SettingNamespaceUri_And_Index)
+{
+  uint32_t id = 1;
+  uint32_t ns = 2;
+  NodeID node = NumericNodeID(id, ns);
+  node.SetNamespaceURI("uri");
+  node.SetServerIndex(3);
+
+  ASSERT_TRUE(node.HasNamespaceURI());
+  ASSERT_TRUE(node.HasServerIndex());
+}

@@ -327,6 +327,18 @@ namespace OpcUa
     return Encoding & EV_SERVER_INDEX_FLAG;
   }
 
+  void NodeID::SetNamespaceURI(const std::string& uri)
+  {
+    Encoding = static_cast<NodeIDEncoding>(Encoding | EV_NAMESPACE_URI_FLAG);
+    NamespaceURI = uri;
+  }
+
+  void NodeID::SetServerIndex(uint32_t index)
+  {
+    Encoding = static_cast<NodeIDEncoding>(Encoding | EV_SERVER_INDEX_FLAG);
+    ServerIndex = index;
+  }
+
   bool NodeID::operator!= (const NodeID& node) const
   {
     return !(*this == node);

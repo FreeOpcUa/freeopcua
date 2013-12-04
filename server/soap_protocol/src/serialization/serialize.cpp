@@ -91,20 +91,40 @@ namespace
     return result;
   }
 
+  ns3__ListOfNodeId* CreateListOfNodeID(soap* s, const std::vector<OpcUa::NodeID>& ids)
+  {
+    ns3__ListOfNodeId* result = soap_new_ns3__ListOfNodeId(s, 1);
+    result->NodeId.resize(ids.size());
+    std::transform(ids.begin(), ids.end(), result->NodeId.begin(), [s](const OpcUa::NodeID& id){\
+      return CreateNodeID(s, id);
+    });
+    return result;
+  }
+
   ns3__ExpandedNodeId* CreateExpandedNodeID(soap* s, const OpcUa::NodeID& id)
   {
     ns3__ExpandedNodeId* result = soap_new__ns3__ExpandedNodeId(s, 1);
     std::stringstream stream;
     if (id.HasServerIndex())
     {
-      stream << "srv:" << id.ServerIndex << ";";
+      stream << "srv=" << id.ServerIndex << ";";
     }
     if (id.HasNamespaceURI())
     {
-      stream << "nsu:" << id.NamespaceURI << ";";
+      stream << "nsu=" << id.NamespaceURI << ";";
     }
     stream << GetNodeIDString(id);
     result->Identifier = CreateString(s, stream.str());
+    return result;
+  }
+
+  ns3__ListOfExpandedNodeId* CreateListOfExpandedNodeID(soap* s, const std::vector<OpcUa::NodeID>& ids)
+  {
+    ns3__ListOfExpandedNodeId* result = soap_new_ns3__ListOfExpandedNodeId(s, 1);
+    result->ExpandedNodeId.resize(ids.size());
+    std::transform(ids.begin(), ids.end(), result->ExpandedNodeId.begin(), [s](const OpcUa::NodeID& id){\
+      return CreateExpandedNodeID(s, id);
+    });
     return result;
   }
 
@@ -640,11 +660,12 @@ namespace
         break;
       }
       case OpcUa::VariantType::NODE_ID:
-      {
-        break;
-      }
       case OpcUa::VariantType::EXPANDED_NODE_ID:
       {
+        if (var.IsArray())
+          result->ListOfExpandedNodeId = CreateListOfExpandedNodeID(s, var.Value.Node);
+        else
+          result->ExpandedNodeId = CreateExpandedNodeID(s, var.Value.Node[0]);
         break;
       }
       case OpcUa::VariantType::STATUS_CODE:
