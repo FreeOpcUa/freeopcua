@@ -1,4 +1,3 @@
-/// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
 /// @brief OPC UA Address space part.
 /// @license GNU GPL
@@ -17,6 +16,14 @@
 
 namespace
 {
+
+  template <typename Out, typename In, typename Func>
+  Out Transform(In in, Func func)
+  {
+    Out out(in.size());
+    std::transform(in.begin(), in.end(), out.begin(), func);
+    return out;
+  }
 
   std::string GetNodeField(const std::string& data, const char* field)
   {
@@ -66,6 +73,16 @@ namespace
     return OpcUa::NodeID();
   }
 
+  std::vector<OpcUa::NodeID> Deserialize(ns3__ListOfNodeId* ids)
+  {
+    std::vector<OpcUa::NodeID> result = Transform<std::vector<OpcUa::NodeID>>(ids->NodeId,
+      [](const ns3__NodeId* v)
+      {
+        return ::Deserialize(v);
+      });
+    return result;
+  }
+
   OpcUa::NodeID Deserialize(const ns3__ExpandedNodeId* id)
   {
     if (!id || !id->Identifier)
@@ -96,6 +113,16 @@ namespace
     }
     // TODO Guid and binary.
     return OpcUa::NodeID();
+  }
+
+  std::vector<OpcUa::NodeID> Deserialize(ns3__ListOfExpandedNodeId* ids)
+  {
+    std::vector<OpcUa::NodeID> result = Transform<std::vector<OpcUa::NodeID>>(ids->ExpandedNodeId,
+      [](const ns3__ExpandedNodeId* v)
+      {
+        return ::Deserialize(v);
+      });
+    return result;
   }
 
   OpcUa::StatusCode Deserialize(const ns3__StatusCode* status)
@@ -651,15 +678,6 @@ namespace OpcUa
     return result;
   }
 
-  template <typename Out, typename In, typename Func>
-  Out Transform(In in, Func func)
-  {
-    Out out(in.size());
-    std::transform(in.begin(), in.end(), out.begin(), func);
-    return out;
-  }
-
-
 
   Variant Soap::Deserialize(ns3__Variant* var)
   {
@@ -752,6 +770,22 @@ namespace OpcUa
         {
           return ::Deserialize(&v);
         });
+    }
+    else if (var->NodeId)
+    {
+      result = ::Deserialize(var->NodeId);
+    }
+    else if (var->ListOfNodeId)
+    {
+      result = ::Deserialize(var->ListOfNodeId);
+    }
+    else if (var->ExpandedNodeId)
+    {
+      result = ::Deserialize(var->ExpandedNodeId);
+    }
+    else if (var->ListOfExpandedNodeId)
+    {
+      result = ::Deserialize(var->ListOfExpandedNodeId);
     }
 
     return result;
