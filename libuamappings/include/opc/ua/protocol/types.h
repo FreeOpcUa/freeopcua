@@ -40,7 +40,16 @@ namespace OpcUa
 
   struct ByteString
   {
-    std::vector<int8_t> Data;
+    std::vector<uint8_t> Data;
+
+    ByteString()
+    {
+    }
+
+    explicit ByteString(const std::vector<uint8_t>& val)
+      : Data(val)
+    {
+    }
 
     bool operator== (const ByteString& str) const
     {

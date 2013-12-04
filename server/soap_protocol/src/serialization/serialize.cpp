@@ -482,6 +482,31 @@ namespace
     return result;
   }
 
+  ns3__ListOfByteString* CreateListOfByteString(soap* s, const std::vector<OpcUa::ByteString>& values)
+  {
+    ns3__ListOfByteString* result = soap_new_ns3__ListOfByteString(s, 1);
+    result->ByteString.resize(values.size());
+    std::transform(values.begin(), values.end(), result->ByteString.begin(), [s](const OpcUa::ByteString& val){
+      xsd__base64Binary result;
+      result.__size = val.Data.size();
+      result.__ptr = (unsigned char*)soap_malloc(s, result.__size);
+      if (!result.__ptr)
+      {
+        result.__size = 0;
+        throw std::bad_alloc();
+      }
+      std::copy(val.Data.begin(), val.Data.end(), result.__ptr);
+      return result;
+    });
+
+    return result;
+  }
+
+  xsd__base64Binary* CreateByteString(soap* s, const OpcUa::ByteString& byteString)
+  {
+    return CreateByteString(s, byteString.Data);
+  }
+
   ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var)
   {
     if (var.IsNul())
@@ -604,6 +629,10 @@ namespace
       }
       case OpcUa::VariantType::BYTE_STRING:
       {
+        if (var.IsArray())
+          result->ListOfByteString = CreateListOfByteString(s, var.Value.ByteStrings);
+        else
+          result->ByteString = CreateByteString(s, var.Value.ByteStrings[0]);
         break;
       }
       case OpcUa::VariantType::XML_ELEMENT:
