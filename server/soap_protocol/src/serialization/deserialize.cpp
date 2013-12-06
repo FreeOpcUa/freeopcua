@@ -134,6 +134,21 @@ namespace
     return OpcUa::StatusCode::Good;
   }
 
+  std::vector<OpcUa::StatusCode> Deserialize(const ns3__ListOfStatusCode* statuses)
+  {
+    std::vector<OpcUa::StatusCode> result;
+    if (!statuses)
+    {
+      return result;
+    }
+
+    result = Transform<std::vector<OpcUa::StatusCode>>(statuses->StatusCode, [](const ns3__StatusCode* v){
+      return ::Deserialize(v);
+    });
+
+    return result;
+  }
+
   OpcUa::AdditionalHeader Deserialize(const ns3__ExtensionObject* obj)
   {
     OpcUa::AdditionalHeader result;
@@ -786,6 +801,14 @@ namespace OpcUa
     else if (var->ListOfExpandedNodeId)
     {
       result = ::Deserialize(var->ListOfExpandedNodeId);
+    }
+    else if (var->StatusCode)
+    {
+      result = ::Deserialize(var->StatusCode);
+    }
+    else if (var->ListOfStatusCode)
+    {
+      result = ::Deserialize(var->ListOfStatusCode);
     }
 
     return result;

@@ -227,6 +227,16 @@ namespace
     return result;
   }
 
+  ns3__ListOfStatusCode* CreateListOfStatusCode(soap* s, const std::vector<OpcUa::StatusCode>& codes)
+  {
+    ns3__ListOfStatusCode* result = soap_new_ns3__ListOfStatusCode(s, 1);
+    result->StatusCode.resize(codes.size());
+    std::transform(codes.begin(), codes.end(), result->StatusCode.begin(), [s](OpcUa::StatusCode code){
+      return CreateStatusCode(s, code);
+    });
+    return result;
+  }
+
   ns3__DiagnosticInfo* CreateDiagnosticInfo(soap* s, const OpcUa::DiagnosticInfo& info)
   {
     ns3__DiagnosticInfo* result = soap_new_ns3__DiagnosticInfo(s, 1);
@@ -670,6 +680,10 @@ namespace
       }
       case OpcUa::VariantType::STATUS_CODE:
       {
+        if (var.IsArray())
+          result->ListOfStatusCode = CreateListOfStatusCode(s, var.Value.Statuses);
+        else
+          result->StatusCode = CreateStatusCode(s, var.Value.Statuses[0]);
         break;
       }
       case OpcUa::VariantType::QUALIFIED_NAME:

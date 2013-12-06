@@ -682,3 +682,48 @@ TEST(Variant, NodeId_vector)
 
 
 
+
+TEST(Variant, StatusCode)
+{
+  OpcUa::StatusCode code = OpcUa::StatusCode::BadNotImplemented;
+
+  OpcUa::Variant var = code;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->StatusCode, nullptr);
+  ASSERT_NE(serialized->StatusCode->Code, nullptr);
+  ASSERT_EQ(*serialized->StatusCode->Code, "0x80440000");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::STATUS_CODE);
+  ASSERT_EQ(deserialize.Value.Statuses.size(), 1);
+  ASSERT_EQ(deserialize.Value.Statuses[0], OpcUa::StatusCode::BadNotImplemented);
+}
+
+TEST(Variant, StatusCode_vector)
+{
+  std::vector<OpcUa::StatusCode> codes = {OpcUa::StatusCode::BadNotImplemented, OpcUa::StatusCode::BadAttributeIdInvalid};
+
+  OpcUa::Variant var = codes;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfStatusCode, nullptr);
+  ASSERT_EQ(serialized->ListOfStatusCode->StatusCode.size(), 2);
+  ASSERT_NE(serialized->ListOfStatusCode->StatusCode[0], nullptr);
+  ASSERT_NE(serialized->ListOfStatusCode->StatusCode[0]->Code, nullptr);
+  ASSERT_NE(serialized->ListOfStatusCode->StatusCode[1], nullptr);
+  ASSERT_NE(serialized->ListOfStatusCode->StatusCode[1]->Code, nullptr);
+  ASSERT_EQ(*serialized->ListOfStatusCode->StatusCode[0]->Code, "0x80440000");
+  ASSERT_EQ(*serialized->ListOfStatusCode->StatusCode[1]->Code, "0x80390000");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::STATUS_CODE);
+  ASSERT_EQ(deserialize.Value.Statuses.size(), 2);
+  ASSERT_EQ(deserialize.Value.Statuses[0], OpcUa::StatusCode::BadNotImplemented);
+  ASSERT_EQ(deserialize.Value.Statuses[1], OpcUa::StatusCode::BadAttributeIdInvalid);
+}
+
+
+
