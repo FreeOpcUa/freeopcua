@@ -810,6 +810,14 @@ namespace OpcUa
     {
       result = ::Deserialize(var->ListOfStatusCode);
     }
+    else if (var->DiagnosticInfo)
+    {
+      result = ::Deserialize(var->DiagnosticInfo);
+    }
+    else if (var->ListOfDiagnosticInfo)
+    {
+      result = ::Deserialize(var->ListOfDiagnosticInfo);
+    }
 
     return result;
   }

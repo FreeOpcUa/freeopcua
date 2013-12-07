@@ -708,6 +708,10 @@ namespace
       }
       case OpcUa::VariantType::DIAGNOSTIC_INFO:
       {
+        if (var.IsArray())
+          result->ListOfDiagnosticInfo = CreateListOfDiagnosticInfo(s, var.Value.Diagnostic);
+        else
+          result->DiagnosticInfo = CreateDiagnosticInfo(s, var.Value.Diagnostic[0]);
         break;
       }
       default:

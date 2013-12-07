@@ -68,7 +68,7 @@ TEST(Read, Response)
   // Fill response
   OpcUa::ReadResponse opcua;
   opcua.Header = OpcUa::Test::CreateResponseHeader();
-  opcua.Result.Diagnostics.push_back(OpcUa::Test::CreateDiagnosticInfo());
+  opcua.Result.Diagnostics = OpcUa::Test::CreateDiagnosticInfoList();
   OpcUa::DataValue value;
   value.Encoding = OpcUa::DATA_VALUE_ALL;
   value.ServerPicoseconds = 1;
