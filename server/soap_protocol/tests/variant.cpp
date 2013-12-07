@@ -727,3 +727,37 @@ TEST(Variant, StatusCode_vector)
 
 
 
+
+
+
+TEST(Variant, DiagnosticInfo)
+{
+  OpcUa::DiagnosticInfo diag = OpcUa::Test::CreateDiagnosticInfo();
+
+  OpcUa::Variant var = diag;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  OpcUa::Test::AssertDiagnosticInfoValid(serialized->DiagnosticInfo);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DIAGNOSTIC_INFO);
+  ASSERT_EQ(deserialize.Value.Diagnostic.size(), 1);
+  OpcUa::Test::AssertDiagnosticInfoValid(deserialize.Value.Diagnostic[0]);
+}
+
+TEST(Variant, DiagnosticInfo_vector)
+{
+  OpcUa::Variant var = OpcUa::Test::CreateDiagnosticInfoList();
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  OpcUa::Test::AssertDiagnosticInfoListValid(serialized->ListOfDiagnosticInfo);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DIAGNOSTIC_INFO);
+  OpcUa::Test::AssertDiagnosticInfoListValid(deserialize.Value.Diagnostic);
+}
+
+
+

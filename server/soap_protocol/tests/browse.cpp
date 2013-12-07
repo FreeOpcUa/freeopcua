@@ -72,7 +72,7 @@ TEST(Browse, Response)
   // Fill response
   OpcUa::BrowseResponse opcua;
   opcua.Header = OpcUa::Test::CreateResponseHeader();
-  opcua.Diagnostics.push_back(OpcUa::Test::CreateDiagnosticInfo());
+  opcua.Diagnostics = OpcUa::Test::CreateDiagnosticInfoList();
   OpcUa::BrowseResult browseResult;
   browseResult.ContinuationPoint.push_back(1);
   browseResult.Status = OpcUa::StatusCode::BadAttributeIdInvalid;

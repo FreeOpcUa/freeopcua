@@ -101,6 +101,14 @@ namespace OpcUa
       return diagnostic;
     }
 
+    inline OpcUa::DiagnosticInfoList CreateDiagnosticInfoList()
+    {
+      OpcUa::DiagnosticInfoList diags;
+      diags.push_back(CreateDiagnosticInfo());
+      diags.push_back(CreateDiagnosticInfo());
+      return diags;
+    }
+
     inline ResponseHeader CreateResponseHeader()
     {
       ResponseHeader header;
@@ -149,7 +157,7 @@ namespace OpcUa
     inline void AssertDiagnosticInfoListValid(const ns3__ListOfDiagnosticInfo* diags)
     {
       ASSERT_NE(diags, nullptr);
-      ASSERT_EQ(diags->DiagnosticInfo.size(), 1);
+      ASSERT_EQ(diags->DiagnosticInfo.size(), 2);
       std::for_each(diags->DiagnosticInfo.begin(), diags->DiagnosticInfo.end(), AssertDiagnosticInfoValid);
     }
 
@@ -171,7 +179,7 @@ namespace OpcUa
       ASSERT_EQ(header->Timestamp, 4);
     }
 
-    inline void AssertDiagnosticInfoListValid(const OpcUa::DiagnosticInfoList& diags)
+    inline void AssertDiagnosticInfoValid(const OpcUa::DiagnosticInfo& diag)
     {
       unsigned mask =
           OpcUa::DiagnosticInfoMask::DIM_ADDITIONAL_INFO |
@@ -182,16 +190,22 @@ namespace OpcUa
           OpcUa::DiagnosticInfoMask::DIM_SYMBOLIC_ID |
           OpcUa::DiagnosticInfoMask::DIM_INNER_DIAGNOSTIC_INFO;
 
-      ASSERT_EQ(diags.size(), 1);
-      ASSERT_EQ(diags[0].AdditionalInfo, "additional");
-      ASSERT_EQ(diags[0].InnerStatusCode, OpcUa::StatusCode::BadNotImplemented);
-      ASSERT_EQ(diags[0].Locale, 1);
-      ASSERT_EQ(diags[0].LocalizedText, 2);
-      ASSERT_EQ(diags[0].NamespaceURI, 3);
-      ASSERT_EQ(diags[0].SymbolicID, 4);
-      ASSERT_EQ(diags[0].EncodingMask, mask);
-      ASSERT_TRUE(static_cast<bool>(diags[0].InnerDiagnostics));
-      ASSERT_EQ(diags[0].InnerDiagnostics->EncodingMask, OpcUa::DiagnosticInfoMask::DIM_NONE);
+      ASSERT_EQ(diag.AdditionalInfo, "additional");
+      ASSERT_EQ(diag.InnerStatusCode, OpcUa::StatusCode::BadNotImplemented);
+      ASSERT_EQ(diag.Locale, 1);
+      ASSERT_EQ(diag.LocalizedText, 2);
+      ASSERT_EQ(diag.NamespaceURI, 3);
+      ASSERT_EQ(diag.SymbolicID, 4);
+      ASSERT_EQ(diag.EncodingMask, mask);
+      ASSERT_TRUE(static_cast<bool>(diag.InnerDiagnostics));
+      ASSERT_EQ(diag.InnerDiagnostics->EncodingMask, OpcUa::DiagnosticInfoMask::DIM_NONE);
+    }
+
+    inline void AssertDiagnosticInfoListValid(const OpcUa::DiagnosticInfoList& diags)
+    {
+      ASSERT_EQ(diags.size(), 2);
+      AssertDiagnosticInfoValid(diags[0]);
+      AssertDiagnosticInfoValid(diags[1]);
     }
 
 #define ASSERT_RESPONSE_HEADER_EQ(h1, h2) \
