@@ -429,7 +429,7 @@ namespace
     return OpcUa::ByteString(result);
   }
 
-  OpcUa::QualifiedName Deserialize(ns3__QualifiedName* name)
+  OpcUa::QualifiedName Deserialize(const ns3__QualifiedName* name)
   {
     OpcUa::QualifiedName result;
     if (!name)
@@ -439,6 +439,19 @@ namespace
       result.Name = *name->Name;
     if (name->NamespaceIndex)
       result.NamespaceIndex = *name->NamespaceIndex;
+
+    return result;
+  }
+
+  std::vector<OpcUa::QualifiedName> Deserialize(ns3__ListOfQualifiedName* names)
+  {
+    std::vector<OpcUa::QualifiedName> result;
+    if (!names)
+      return result;
+
+    result = Transform<std::vector<OpcUa::QualifiedName>>(names->QualifiedName, [](const ns3__QualifiedName* v){
+      return ::Deserialize(v);
+    });
 
     return result;
   }
@@ -817,6 +830,14 @@ namespace OpcUa
     else if (var->ListOfDiagnosticInfo)
     {
       result = ::Deserialize(var->ListOfDiagnosticInfo);
+    }
+    else if (var->QualifiedName)
+    {
+      result = ::Deserialize(var->QualifiedName);
+    }
+    else if (var->ListOfQualifiedName)
+    {
+      result = ::Deserialize(var->ListOfQualifiedName);
     }
 
     return result;

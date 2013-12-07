@@ -323,6 +323,13 @@ namespace
     return result;
   }
 
+  ns3__ListOfQualifiedName* CreateListOfQualifiedName(soap* s, const std::vector<OpcUa::QualifiedName>& names)
+  {
+    ns3__ListOfQualifiedName* result = soap_new_ns3__ListOfQualifiedName(s, 1);
+    std::transform(names.begin(), names.end(), result->QualifiedName.begin(), std::bind(CreateQualifiedName, s, std::placeholders::_1));
+    return result;
+  }
+
   ns3__Guid* CreateGuid(soap* s, const OpcUa::Guid& guid)
   {
     ns3__Guid* result = soap_new_ns3__Guid(s, 1);
@@ -688,6 +695,10 @@ namespace
       }
       case OpcUa::VariantType::QUALIFIED_NAME:
       {
+        if (var.IsArray())
+          result->ListOfQualifiedName = CreateListOfQualifiedName(s, var.Value.Name);
+        else
+          result->QualifiedName = CreateQualifiedName(s, var.Value.Name[0]);
         break;
       }
       case OpcUa::VariantType::LOCALIZED_TEXT:

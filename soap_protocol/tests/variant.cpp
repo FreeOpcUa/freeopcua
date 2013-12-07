@@ -761,3 +761,59 @@ TEST(Variant, DiagnosticInfo_vector)
 
 
 
+
+
+
+
+TEST(Variant, QualifiedName)
+{
+  OpcUa::QualifiedName name;
+  name.Name = "name";
+  name.NamespaceIndex = 1;
+
+  OpcUa::Variant var = name;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->QualifiedName, nullptr);
+  ASSERT_NE(serialized->QualifiedName->Name, nullptr);
+  ASSERT_NE(serialized->QualifiedName->NamespaceIndex, nullptr);
+  ASSERT_EQ(*serialized->QualifiedName->Name, "name");
+  ASSERT_EQ(*serialized->QualifiedName->NamespaceIndex, 1);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::QUALIFIED_NAME);
+  ASSERT_EQ(deserialize.Value.Name.size(), 1);
+  ASSERT_EQ(deserialize.Value.Name[0].Name, "name");
+  ASSERT_EQ(deserialize.Value.Name[0].NamespaceIndex, 1);
+}
+
+TEST(Variant, QualifiedName_vector)
+{
+  std::vector<OpcUa::QualifiedName> names = { OpcUa::QualifiedName(1, "name"), OpcUa::QualifiedName(2, "name2") };
+
+  OpcUa::Variant var = names;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfQualifiedName, nullptr);
+  ASSERT_EQ(serialized->ListOfQualifiedName->QualifiedName.size(), 2);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[0], nullptr);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[1], nullptr);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[0]->Name, nullptr);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[0]->NamespaceIndex, nullptr);
+  ASSERT_EQ(*serialized->ListOfQualifiedName->QualifiedName[0]->Name, "name1");
+  ASSERT_EQ(*serialized->ListOfQualifiedName->QualifiedName[0]->NamespaceIndex, 1);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[1]->Name, nullptr);
+  ASSERT_NE(serialized->ListOfQualifiedName->QualifiedName[1]->NamespaceIndex, nullptr);
+  ASSERT_EQ(*serialized->ListOfQualifiedName->QualifiedName[1]->Name, "name2");
+  ASSERT_EQ(*serialized->ListOfQualifiedName->QualifiedName[1]->NamespaceIndex, 2);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::QUALIFIED_NAME);
+  ASSERT_EQ(deserialize.Value.Name.size(), 2);
+  ASSERT_EQ(deserialize.Value.Name[0].Name, "name1");
+  ASSERT_EQ(deserialize.Value.Name[0].NamespaceIndex, 1);
+  ASSERT_EQ(deserialize.Value.Name[1].Name, "name2");
+  ASSERT_EQ(deserialize.Value.Name[1].NamespaceIndex, 2);
+}
