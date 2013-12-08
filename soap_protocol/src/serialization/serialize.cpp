@@ -582,6 +582,20 @@ namespace
     return result;
   }
 
+  ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var);
+
+  ns3__ListOfVariant* CreateListOfVariant(soap* s, const std::vector<OpcUa::Variant>& vars)
+  {
+    ns3__ListOfVariant* result = soap_new_ns3__ListOfVariant(s, 1);
+    if (!vars.empty())
+    {
+      result->Variant.resize(vars.size());
+      std::transform(vars.begin(), vars.end(), result->Variant.begin(), std::bind(CreateVariant, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
+
   ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var)
   {
     if (var.IsNul())
@@ -761,6 +775,7 @@ namespace
       }
       case OpcUa::VariantType::VARIANT:
       {
+        result->ListOfVariant = CreateListOfVariant(s, var.Value.Variants);
         break;
       }
       case OpcUa::VariantType::DIAGNOSTIC_INFO:
