@@ -865,3 +865,92 @@ TEST(Variant, LocalizedText_vector)
   ASSERT_EQ(deserialize.Value.Text[1].Locale, "en");
   ASSERT_EQ(deserialize.Value.Text[1].Text, "text1");
 }
+
+
+
+
+
+
+
+TEST(Variant, DataValue)
+{
+  OpcUa::LocalizedText text("text", "en");
+  OpcUa::DataValue value;
+  value = OpcUa::Variant(text);
+
+  OpcUa::Variant var = value;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->DataValue, nullptr);
+  ASSERT_EQ(serialized->DataValue->ServerTimestamp, nullptr);
+  ASSERT_EQ(serialized->DataValue->SourceTimestamp, nullptr);
+  ASSERT_EQ(serialized->DataValue->StatusCode, nullptr);
+  ASSERT_NE(serialized->DataValue->Value, nullptr);
+  ASSERT_NE(serialized->DataValue->Value->LocalizedText, nullptr);
+  ASSERT_NE(serialized->DataValue->Value->LocalizedText->Locale, nullptr);
+  ASSERT_NE(serialized->DataValue->Value->LocalizedText->Text, nullptr);
+  ASSERT_EQ(*serialized->DataValue->Value->LocalizedText->Locale, "en");
+  ASSERT_EQ(*serialized->DataValue->Value->LocalizedText->Text, "text");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DATA_VALUE);
+  ASSERT_EQ(deserialize.Value.Value.size(), 1);
+  const OpcUa::DataValue& deserializedValue = deserialize.Value.Value[0];
+  ASSERT_TRUE(deserializedValue.Encoding & OpcUa::DATA_VALUE);
+  ASSERT_EQ(deserializedValue.Value.Type, OpcUa::VariantType::LOCALIZED_TEXT);
+  ASSERT_EQ(deserializedValue.Value.Value.Text[0].Text, "text");
+  ASSERT_EQ(deserializedValue.Value.Value.Text[0].Locale, "en");
+}
+
+TEST(Variant, DataValue_vector)
+{
+  OpcUa::LocalizedText text("text", "en");
+  std::vector<OpcUa::DataValue> value;
+  value.push_back(OpcUa::DataValue(OpcUa::Variant(text)));
+  value.push_back(OpcUa::DataValue(OpcUa::Variant(text)));
+
+  OpcUa::Variant var = value;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfDataValue, nullptr);
+  ASSERT_EQ(serialized->ListOfDataValue->DataValue.size(), 2);
+  const ns3__DataValue* val1 = serialized->ListOfDataValue->DataValue[0];
+  ASSERT_EQ(val1->ServerTimestamp, nullptr);
+  ASSERT_EQ(val1->SourceTimestamp, nullptr);
+  ASSERT_EQ(val1->StatusCode, nullptr);
+  ASSERT_NE(val1->Value, nullptr);
+  ASSERT_NE(val1->Value->LocalizedText, nullptr);
+  ASSERT_NE(val1->Value->LocalizedText->Locale, nullptr);
+  ASSERT_NE(val1->Value->LocalizedText->Text, nullptr);
+  ASSERT_EQ(*val1->Value->LocalizedText->Locale, "en");
+  ASSERT_EQ(*val1->Value->LocalizedText->Text, "text");
+
+  const ns3__DataValue* val2 = serialized->ListOfDataValue->DataValue[1];
+  ASSERT_EQ(val2->ServerTimestamp, nullptr);
+  ASSERT_EQ(val2->SourceTimestamp, nullptr);
+  ASSERT_EQ(val2->StatusCode, nullptr);
+  ASSERT_NE(val2->Value, nullptr);
+  ASSERT_NE(val2->Value->LocalizedText, nullptr);
+  ASSERT_NE(val2->Value->LocalizedText->Locale, nullptr);
+  ASSERT_NE(val2->Value->LocalizedText->Text, nullptr);
+  ASSERT_EQ(*val2->Value->LocalizedText->Locale, "en");
+  ASSERT_EQ(*val2->Value->LocalizedText->Text, "text");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::DATA_VALUE);
+  ASSERT_EQ(deserialize.Value.Value.size(), 2);
+  const OpcUa::DataValue& deserializedValue1 = deserialize.Value.Value[0];
+  ASSERT_TRUE(deserializedValue1.Encoding & OpcUa::DATA_VALUE);
+  ASSERT_EQ(deserializedValue1.Value.Type, OpcUa::VariantType::LOCALIZED_TEXT);
+  ASSERT_EQ(deserializedValue1.Value.Value.Text[0].Text, "text");
+  ASSERT_EQ(deserializedValue1.Value.Value.Text[0].Locale, "en");
+
+  const OpcUa::DataValue& deserializedValue2 = deserialize.Value.Value[1];
+  ASSERT_TRUE(deserializedValue2.Encoding & OpcUa::DATA_VALUE);
+  ASSERT_EQ(deserializedValue2.Value.Type, OpcUa::VariantType::LOCALIZED_TEXT);
+  ASSERT_EQ(deserializedValue2.Value.Value.Text[0].Text, "text");
+  ASSERT_EQ(deserializedValue2.Value.Value.Text[0].Locale, "en");
+}
+

@@ -555,6 +555,33 @@ namespace
     return CreateByteString(s, byteString.Data);
   }
 
+  ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var);
+
+  ns3__DataValue* CreateDataValue(soap* s, const OpcUa::DataValue& value)
+  {
+    ns3__DataValue* result = soap_new_ns3__DataValue(s, 1);
+    if (value.Encoding & OpcUa::DATA_VALUE_SERVER_TIMESTAMP)
+      result->ServerTimestamp = CreateTimeT(s, value.ServerTimestamp);
+    if (value.Encoding & OpcUa::DATA_VALUE_SOURCE_TIMESTAMP)
+      result->SourceTimestamp = CreateTimeT(s, value.SourceTimestamp);
+    if (value.Encoding & OpcUa::DATA_VALUE_STATUS_CODE)
+      result->StatusCode = CreateStatusCode(s, value.Status);
+    if (value.Encoding & OpcUa::DATA_VALUE)
+      result->Value = CreateVariant(s, value.Value);
+    return result;
+  }
+
+  ns3__ListOfDataValue* CreateListOfDataValue(soap* s, const std::vector<OpcUa::DataValue>& values)
+  {
+    ns3__ListOfDataValue* result = soap_new_ns3__ListOfDataValue(s, 1);
+    if (!values.empty())
+    {
+      result->DataValue.resize(values.size());
+      std::transform(values.begin(), values.end(), result->DataValue.begin(), std::bind(CreateDataValue, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
   ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var)
   {
     if (var.IsNul())
@@ -726,6 +753,10 @@ namespace
       }
       case OpcUa::VariantType::DATA_VALUE:
       {
+        if (var.IsArray())
+          result->ListOfDataValue = CreateListOfDataValue(s, var.Value.Value);
+        else
+          result->DataValue = CreateDataValue(s, var.Value.Value[0]);
         break;
       }
       case OpcUa::VariantType::VARIANT:
@@ -748,30 +779,6 @@ namespace
     return result;
   }
 
-  ns3__DataValue* CreateDataValue(soap* s, const OpcUa::DataValue& value)
-  {
-    ns3__DataValue* result = soap_new_ns3__DataValue(s, 1);
-    if (value.Encoding & OpcUa::DATA_VALUE_SERVER_TIMESTAMP)
-      result->ServerTimestamp = CreateTimeT(s, value.ServerTimestamp);
-    if (value.Encoding & OpcUa::DATA_VALUE_SOURCE_TIMESTAMP)
-      result->SourceTimestamp = CreateTimeT(s, value.SourceTimestamp);
-    if (value.Encoding & OpcUa::DATA_VALUE_STATUS_CODE)
-      result->StatusCode = CreateStatusCode(s, value.Status);
-    if (value.Encoding & OpcUa::DATA_VALUE)
-      result->Value = CreateVariant(s, value.Value);
-    return result;
-  }
-
-  ns3__ListOfDataValue* CreateListOfDataValue(soap* s, const std::vector<OpcUa::DataValue>& values)
-  {
-    ns3__ListOfDataValue* result = soap_new_ns3__ListOfDataValue(s, 1);
-    if (!values.empty())
-    {
-      result->DataValue.resize(values.size());
-      std::transform(values.begin(), values.end(), result->DataValue.begin(), std::bind(CreateDataValue, s, std::placeholders::_1));
-    }
-    return result;
-  }
 }
 
 namespace OpcUa
