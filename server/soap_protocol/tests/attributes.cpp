@@ -97,6 +97,8 @@ TEST(Read, Response)
   EXPECT_EQ(*serializedValue->SourceTimestamp, 4);
   EXPECT_EQ(*serializedValue->StatusCode->Code, "0x80390000");
   ASSERT_NE(serializedValue->Value, nullptr);
+  ASSERT_NE(serializedValue->Value->Byte, nullptr);
+  ASSERT_EQ(*serializedValue->Value->Byte, 5);
 
 
   // deserialize response
@@ -120,6 +122,5 @@ TEST(Read, Response)
   ASSERT_EQ(deserializedValue.SourcePicoseconds, 0);
   ASSERT_EQ(deserializedValue.SourceTimestamp, OpcUa::ToDateTime(4));
   ASSERT_EQ(deserializedValue.Status, OpcUa::StatusCode::BadAttributeIdInvalid);
-  // TODO
-  //ASSERT_EQ(deserializedValue.Value, (uint8_t)5);
+  ASSERT_EQ(deserializedValue.Value, (uint8_t)5);
 }
