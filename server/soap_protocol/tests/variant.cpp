@@ -13,7 +13,7 @@
 
 TEST(Variant, bool)
 {
-  OpcUa::Variant var = true;
+  OpcUa::Variant var(true);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -31,7 +31,7 @@ TEST(Variant, bool_vector)
 {
   std::vector<bool> data{false, true};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -49,7 +49,7 @@ TEST(Variant, byte)
 {
   uint8_t data = 1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -67,7 +67,7 @@ TEST(Variant, byte_vector)
 {
   std::vector<uint8_t> data{1, 2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -85,7 +85,7 @@ TEST(Variant, sbyte)
 {
   int8_t data = -1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -103,7 +103,7 @@ TEST(Variant, sbyte_vector)
 {
   std::vector<int8_t> data{-1, -2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -125,7 +125,7 @@ TEST(Variant, int16)
 {
   int16_t data = -1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -143,7 +143,7 @@ TEST(Variant, int16_vector)
 {
   std::vector<int16_t> data{-1, -2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -163,7 +163,7 @@ TEST(Variant, uint16)
 {
   uint16_t data = 1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -181,7 +181,7 @@ TEST(Variant, uint16_vector)
 {
   std::vector<uint16_t> data{1, 2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -203,7 +203,7 @@ TEST(Variant, int32)
 {
   int32_t data = -1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -221,7 +221,7 @@ TEST(Variant, int32_vector)
 {
   std::vector<int32_t> data{-1, -2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -241,7 +241,7 @@ TEST(Variant, uint32)
 {
   uint32_t data = 1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -259,7 +259,7 @@ TEST(Variant, uint32_vector)
 {
   std::vector<uint32_t> data{1, 2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -282,7 +282,7 @@ TEST(Variant, int64)
 {
   int64_t data = -1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -300,7 +300,7 @@ TEST(Variant, int64_vector)
 {
   std::vector<int64_t> data{-1, -2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -320,7 +320,7 @@ TEST(Variant, uint64)
 {
   uint64_t data = 1;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -338,7 +338,7 @@ TEST(Variant, uint64_vector)
 {
   std::vector<uint64_t> data{1, 2};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -361,7 +361,7 @@ TEST(Variant, float)
 {
   float data = 1.2;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -379,7 +379,7 @@ TEST(Variant, float_vector)
 {
   std::vector<float> data{1.2, 2.1};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -403,7 +403,7 @@ TEST(Variant, double)
 {
   double data = 1.2;
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -421,7 +421,7 @@ TEST(Variant, double_vector)
 {
   std::vector<double> data{1.2, 2.1};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -445,7 +445,7 @@ TEST(Variant, string)
 {
   std::string data = "hello";
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -463,7 +463,7 @@ TEST(Variant, string_vector)
 {
   std::vector<std::string> data{"1", "2"};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -488,7 +488,7 @@ TEST(Variant, time)
 {
   OpcUa::DateTime data = OpcUa::CurrentDateTime();
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -506,7 +506,7 @@ TEST(Variant, time_vector)
 {
   std::vector<OpcUa::DateTime> data{OpcUa::CurrentDateTime(), OpcUa::CurrentDateTime()};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
   ASSERT_EQ(var.Type, OpcUa::VariantType::DATE_TIME);
 
   soap s;
@@ -536,7 +536,7 @@ TEST(Variant, guid)
   guid.Data3 = 3;
   memset(guid.Data4, 1, 8);
 
-  OpcUa::Variant var = guid;
+  OpcUa::Variant var(guid);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -559,7 +559,7 @@ TEST(Variant, guid_vector)
 
   std::vector<OpcUa::Guid> data{guid, guid};
 
-  OpcUa::Variant var = data;
+  OpcUa::Variant var(data);
   ASSERT_EQ(var.Type, OpcUa::VariantType::GUID);
 
   soap s;
@@ -589,7 +589,7 @@ TEST(Variant, ByteString)
 {
   OpcUa::ByteString byteString(std::vector<uint8_t>{1, 2});
 
-  OpcUa::Variant var = byteString;
+  OpcUa::Variant var(byteString);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -609,7 +609,7 @@ TEST(Variant, ByteString)
 TEST(Variant, ByteString_vector)
 {
   OpcUa::ByteString byteString(std::vector<uint8_t>{1, 2});
-  OpcUa::Variant var = std::vector<OpcUa::ByteString>{byteString, byteString};
+  OpcUa::Variant var(std::vector<OpcUa::ByteString>{byteString, byteString});
 
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
@@ -638,7 +638,7 @@ TEST(Variant, NodeId)
   id.SetNamespaceURI("uri");
   id.SetServerIndex(1);
 
-  OpcUa::Variant var = id;
+  OpcUa::Variant var(id);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -658,7 +658,7 @@ TEST(Variant, NodeId_vector)
   id.SetNamespaceURI("uri");
   id.SetServerIndex(1);
 
-  OpcUa::Variant var = std::vector<OpcUa::NodeID>{id, id};
+  OpcUa::Variant var(std::vector<OpcUa::NodeID>{id, id});
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -687,7 +687,7 @@ TEST(Variant, StatusCode)
 {
   OpcUa::StatusCode code = OpcUa::StatusCode::BadNotImplemented;
 
-  OpcUa::Variant var = code;
+  OpcUa::Variant var(code);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -705,7 +705,7 @@ TEST(Variant, StatusCode_vector)
 {
   std::vector<OpcUa::StatusCode> codes = {OpcUa::StatusCode::BadNotImplemented, OpcUa::StatusCode::BadAttributeIdInvalid};
 
-  OpcUa::Variant var = codes;
+  OpcUa::Variant var(codes);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -734,7 +734,7 @@ TEST(Variant, DiagnosticInfo)
 {
   OpcUa::DiagnosticInfo diag = OpcUa::Test::CreateDiagnosticInfo();
 
-  OpcUa::Variant var = diag;
+  OpcUa::Variant var(diag);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -748,7 +748,7 @@ TEST(Variant, DiagnosticInfo)
 
 TEST(Variant, DiagnosticInfo_vector)
 {
-  OpcUa::Variant var = OpcUa::Test::CreateDiagnosticInfoList();
+  OpcUa::Variant var(OpcUa::Test::CreateDiagnosticInfoList());
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -769,7 +769,7 @@ TEST(Variant, QualifiedName)
 {
   OpcUa::QualifiedName name(1, "name");
 
-  OpcUa::Variant var = name;
+  OpcUa::Variant var(name);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -789,7 +789,7 @@ TEST(Variant, QualifiedName_vector)
 {
   std::vector<OpcUa::QualifiedName> names = { OpcUa::QualifiedName(1, "name1"), OpcUa::QualifiedName(2, "name2") };
 
-  OpcUa::Variant var = names;
+  OpcUa::Variant var(names);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -818,7 +818,7 @@ TEST(Variant, QualifiedName_vector)
 TEST(Variant, LocalizedText)
 {
   OpcUa::LocalizedText text("text", "en");
-  OpcUa::Variant var = text;
+  OpcUa::Variant var(text);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -838,7 +838,7 @@ TEST(Variant, LocalizedText)
 TEST(Variant, LocalizedText_vector)
 {
   std::vector<OpcUa::LocalizedText> texts = {OpcUa::LocalizedText("text", "en"), OpcUa::LocalizedText("text1", "en") };
-  OpcUa::Variant var = texts;
+  OpcUa::Variant var(texts);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
 
@@ -878,7 +878,7 @@ TEST(Variant, DataValue)
   OpcUa::DataValue value;
   value = OpcUa::Variant(text);
 
-  OpcUa::Variant var = value;
+  OpcUa::Variant var(value);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -910,7 +910,7 @@ TEST(Variant, DataValue_vector)
   value.push_back(OpcUa::DataValue(OpcUa::Variant(text)));
   value.push_back(OpcUa::DataValue(OpcUa::Variant(text)));
 
-  OpcUa::Variant var = value;
+  OpcUa::Variant var(value);
   soap s;
   ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
   ASSERT_NE(serialized, nullptr);
@@ -952,5 +952,35 @@ TEST(Variant, DataValue_vector)
   ASSERT_EQ(deserializedValue2.Value.Type, OpcUa::VariantType::LOCALIZED_TEXT);
   ASSERT_EQ(deserializedValue2.Value.Value.Text[0].Text, "text");
   ASSERT_EQ(deserializedValue2.Value.Value.Text[0].Locale, "en");
+}
+
+
+
+
+
+TEST(Variant, Variant_vector)
+{
+  std::vector<OpcUa::Variant> value;
+  value.push_back(OpcUa::Variant(uint8_t(1)));
+  value.push_back(OpcUa::Variant(uint8_t(2)));
+
+  OpcUa::Variant var(value);
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfVariant, nullptr);
+  ASSERT_EQ(serialized->ListOfVariant->Variant.size(), 2);
+  const ns3__Variant* val1 = serialized->ListOfVariant->Variant[0];
+  ASSERT_NE(val1->Byte, nullptr);
+  ASSERT_EQ(*val1->Byte, 1);
+
+  const ns3__Variant* val2 = serialized->ListOfVariant->Variant[1];
+  ASSERT_NE(val2->Byte, nullptr);
+  ASSERT_EQ(*val2->Byte, 2);
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::VARIANT);
+  ASSERT_EQ(deserialize.Value.Variants.size(), 2);
+  const OpcUa::Variant& deserializedValue1 = deserialize.Value.Variants[0];
 }
 

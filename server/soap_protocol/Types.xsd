@@ -333,8 +333,10 @@
 
       	<xs:element minOccurs="0" nillable="true" name="ListOfBoolean"
       		type="ua:ListOfBoolean" />
-            <xs:element name="ListOfByte" type="tns:ListOfByte" maxOccurs="1" minOccurs="0"></xs:element>
-            <xs:element minOccurs="0" nillable="true" name="ListOfSByte"
+      	<xs:element name="ListOfByte" type="tns:ListOfByte"
+      		maxOccurs="1" minOccurs="0">
+      	</xs:element>
+      	<xs:element minOccurs="0" nillable="true" name="ListOfSByte"
       		type="ua:ListOfSByte" />
       	<xs:element minOccurs="0" nillable="true" name="ListOfInt16"
       		type="ua:ListOfInt16" />
@@ -374,7 +376,8 @@
       		name="ListOfLocalizedText" type="ua:ListOfLocalizedText" />
       	<xs:element minOccurs="0" nillable="true"
       		name="ListOfDataValue" type="ua:ListOfDataValue" />
-      </xs:sequence>
+            <xs:element name="ListOfVariant" type="tns:ListOfVariant" maxOccurs="1" minOccurs="0"></xs:element>
+        </xs:sequence>
     </xs:complexType>
     <xs:element name="Variant" nillable="true" type="tns:Variant"/>
 

@@ -49,9 +49,24 @@ namespace OpcUa
       Encoding |= DATA_VALUE;
     }
 
+    template <typename T>
+    explicit DataValue(const T val)
+    {
+      Value = Variant(val);
+      Encoding |= DATA_VALUE;
+    }
+
     DataValue& operator= (const Variant& value)
     {
       Value = value;
+      Encoding |= DATA_VALUE;
+      return *this;
+    }
+
+    template <typename T>
+    DataValue& operator= (const T& value)
+    {
+      Value = Variant(value);
       Encoding |= DATA_VALUE;
       return *this;
     }

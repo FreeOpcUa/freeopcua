@@ -276,7 +276,7 @@ namespace OpcUa
     bool operator== (const Variant& var) const;
 
     template <typename T>
-    bool operator!= (const T& t) const
+    bool operator!= (T&& t) const
     {
       return !(*this == t);
     }

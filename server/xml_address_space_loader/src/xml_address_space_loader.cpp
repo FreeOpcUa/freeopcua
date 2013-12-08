@@ -390,25 +390,25 @@ namespace
     switch (type)
     {
       case VariantType::SBYTE:
-        return (int8_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((int8_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::BYTE:
-        return (uint8_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((uint8_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::INT16:
-        return (int16_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((int16_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::UINT16:
-        return (uint16_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((uint16_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::INT32:
-        return (int32_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((int32_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::UINT32:
-        return (uint32_t)strtol(nodeValue.c_str(), nullptr, 0);
+        return Variant((uint32_t)strtol(nodeValue.c_str(), nullptr, 0));
       case VariantType::INT64:
-        return (int64_t)strtoll(nodeValue.c_str(), nullptr, 0);
+        return Variant((int64_t)strtoll(nodeValue.c_str(), nullptr, 0));
       case VariantType::UINT64:
-        return (int64_t)strtoll(nodeValue.c_str(), nullptr, 0);
+        return Variant((int64_t)strtoll(nodeValue.c_str(), nullptr, 0));
       case VariantType::FLOAT:
-        return strtof(nodeValue.c_str(), nullptr);
+        return Variant(strtof(nodeValue.c_str(), nullptr));
       case VariantType::DOUBLE:
-        return strtod(nodeValue.c_str(), nullptr);
+        return Variant(strtod(nodeValue.c_str(), nullptr));
       // TODO check for other types.
       case VariantType::NUL:
         return Variant();
@@ -417,7 +417,7 @@ namespace
       default:
         break;
     }
-    return nodeValue;
+    return Variant(nodeValue);
   }
 
   OpcUa::AttributeID GetAttributeID(xmlNode& node)
@@ -473,22 +473,22 @@ namespace
     switch (id)
     {
       case AttributeID::NODE_ID:
-        return GetNodeID(node);
+        return Variant(GetNodeID(node));
 
       case AttributeID::NODE_CLASS:
-        return (uint32_t)GetNodeClass(node);
+        return Variant((uint32_t)GetNodeClass(node));
 
       case AttributeID::DISPLAY_NAME:
-        return GetLocalizedText(node);
+        return Variant(GetLocalizedText(node));
 
       case AttributeID::BROWSE_NAME:
-        return GetQualifiedName(node);
+        return Variant(GetQualifiedName(node));
 
       case AttributeID::DESCRIPTION:
       case AttributeID::INVERSE_NAME:
       case AttributeID::EVENT_NOTIFIER: // TODO Unknown type of attribute..
       case AttributeID::ARRAY_DIMENSIONS:
-        return GetText(node);
+        return Variant(GetText(node));
 
       case AttributeID::WRITE_MASK:
       case AttributeID::USER_WRITE_MASK:
@@ -496,7 +496,7 @@ namespace
       case AttributeID::ACCESS_LEVEL:
       case AttributeID::USER_ACCESS_LEVEL:
       case AttributeID::MINIMUM_SAMPLING_INTERVAL:
-        return GetUInt32(node);
+        return Variant(GetUInt32(node));
 
       case AttributeID::IS_ABSTRACT:
       case AttributeID::SYMMETRIC:
@@ -504,14 +504,14 @@ namespace
       case AttributeID::HISTORIZING:
       case AttributeID::EXECUTABLE:
       case AttributeID::USER_EXECUTABLE:
-        return GetBool(node);
+        return Variant(GetBool(node));
 
       case AttributeID::VALUE:
         break;
 
       default:
         std::cerr << "Unknown attribute '" << node.name << "' at line " << node.line <<  "." << std::endl;
-        return GetText(node);
+        return Variant(GetText(node));
     }
     const VariantType type = GetVariantType(node);
     return GetVariantValue(type, node);

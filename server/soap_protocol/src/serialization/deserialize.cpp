@@ -616,6 +616,19 @@ namespace
 
     return result;
   }
+
+  std::vector<OpcUa::Variant> Deserialize(const ns3__ListOfVariant* var)
+  {
+    std::vector<OpcUa::Variant> result;
+    if (!var)
+      return result;
+
+    result = Transform<std::vector<OpcUa::Variant>>(var->Variant, [](const ns3__Variant* v){
+      return OpcUa::Soap::Deserialize(v);
+    });
+    return result;
+  }
+
 }
 
 namespace OpcUa
@@ -712,8 +725,7 @@ namespace OpcUa
     return result;
   }
 
-
-  Variant Soap::Deserialize(ns3__Variant* var)
+  Variant Soap::Deserialize(const ns3__Variant* var)
   {
     OpcUa::Variant result;
     if (!var)
@@ -860,6 +872,10 @@ namespace OpcUa
     else if (var->ListOfDataValue)
     {
       result = ::Deserialize(var->ListOfDataValue);
+    }
+    else if (var->ListOfVariant)
+    {
+      result = ::Deserialize(var->ListOfVariant);
     }
 
     return result;

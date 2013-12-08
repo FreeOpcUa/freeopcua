@@ -165,52 +165,49 @@ namespace
 
   Variant GetOptionValue(const po::variables_map& vm)
   {
-    Variant var;
     if (vm.count(OPTION_VALUE_BYTE))
     {
-      var.Value.Byte.push_back(vm[OPTION_VALUE_BYTE].as<uint8_t>());
-      return var;
+      return Variant(vm[OPTION_VALUE_BYTE].as<uint8_t>());
     }
     if (vm.count(OPTION_VALUE_SBYTE))
     {
-      var.Value.Byte.push_back(vm[OPTION_VALUE_SBYTE].as<int8_t>());
-      return var;
+      return Variant(vm[OPTION_VALUE_SBYTE].as<int8_t>());
     }
     if (vm.count(OPTION_VALUE_UINT16))
     {
-      return vm[OPTION_VALUE_UINT16].as<uint16_t>();
+      return Variant(vm[OPTION_VALUE_UINT16].as<uint16_t>());
     }
     if (vm.count(OPTION_VALUE_INT16))
     {
-      return vm[OPTION_VALUE_INT16].as<int16_t>();
+      return Variant(vm[OPTION_VALUE_INT16].as<int16_t>());
     }
     if (vm.count(OPTION_VALUE_UINT32))
     {
-      return vm[OPTION_VALUE_UINT32].as<uint32_t>();
+      return Variant(vm[OPTION_VALUE_UINT32].as<uint32_t>());
     }
     if (vm.count(OPTION_VALUE_INT32))
     {
-      return vm[OPTION_VALUE_INT32].as<int32_t>();
+      return Variant(vm[OPTION_VALUE_INT32].as<int32_t>());
     }
     if (vm.count(OPTION_VALUE_UINT64))
     {
-      return vm[OPTION_VALUE_UINT64].as<uint64_t>();
+      return Variant(vm[OPTION_VALUE_UINT64].as<uint64_t>());
     }
     if (vm.count(OPTION_VALUE_INT64))
     {
-      return vm[OPTION_VALUE_INT64].as<int64_t>();
+      return Variant(vm[OPTION_VALUE_INT64].as<int64_t>());
     }
     if (vm.count(OPTION_VALUE_FLOAT))
     {
-      return vm[OPTION_VALUE_FLOAT].as<float>();
+      return Variant(vm[OPTION_VALUE_FLOAT].as<float>());
     }
     if (vm.count(OPTION_VALUE_DOUBLE))
     {
-      return vm[OPTION_VALUE_DOUBLE].as<double>();
+      return Variant(vm[OPTION_VALUE_DOUBLE].as<double>());
     }
     if (vm.count(OPTION_VALUE_STRING))
     {
-      return vm[OPTION_VALUE_STRING].as<std::string>();
+      return Variant(vm[OPTION_VALUE_STRING].as<std::string>());
     }
     return Variant();
   }
