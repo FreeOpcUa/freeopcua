@@ -767,9 +767,7 @@ TEST(Variant, DiagnosticInfo_vector)
 
 TEST(Variant, QualifiedName)
 {
-  OpcUa::QualifiedName name;
-  name.Name = "name";
-  name.NamespaceIndex = 1;
+  OpcUa::QualifiedName name(1, "name");
 
   OpcUa::Variant var = name;
   soap s;
@@ -787,10 +785,9 @@ TEST(Variant, QualifiedName)
   ASSERT_EQ(deserialize.Value.Name[0].Name, "name");
   ASSERT_EQ(deserialize.Value.Name[0].NamespaceIndex, 1);
 }
-
 TEST(Variant, QualifiedName_vector)
 {
-  std::vector<OpcUa::QualifiedName> names = { OpcUa::QualifiedName(1, "name"), OpcUa::QualifiedName(2, "name2") };
+  std::vector<OpcUa::QualifiedName> names = { OpcUa::QualifiedName(1, "name1"), OpcUa::QualifiedName(2, "name2") };
 
   OpcUa::Variant var = names;
   soap s;
@@ -816,4 +813,55 @@ TEST(Variant, QualifiedName_vector)
   ASSERT_EQ(deserialize.Value.Name[0].NamespaceIndex, 1);
   ASSERT_EQ(deserialize.Value.Name[1].Name, "name2");
   ASSERT_EQ(deserialize.Value.Name[1].NamespaceIndex, 2);
+}
+
+TEST(Variant, LocalizedText)
+{
+  OpcUa::LocalizedText text("text", "en");
+  OpcUa::Variant var = text;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->LocalizedText, nullptr);
+  ASSERT_NE(serialized->LocalizedText->Locale, nullptr);
+  ASSERT_NE(serialized->LocalizedText->Text, nullptr);
+  ASSERT_EQ(*serialized->LocalizedText->Locale, "en");
+  ASSERT_EQ(*serialized->LocalizedText->Text, "text");
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::LOCALIZED_TEXT);
+  ASSERT_EQ(deserialize.Value.Text.size(), 1);
+  ASSERT_EQ(deserialize.Value.Text[0].Locale, "en");
+  ASSERT_EQ(deserialize.Value.Text[0].Text, "text");
+}
+
+TEST(Variant, LocalizedText_vector)
+{
+  std::vector<OpcUa::LocalizedText> texts = {OpcUa::LocalizedText("text", "en"), OpcUa::LocalizedText("text1", "en") };
+  OpcUa::Variant var = texts;
+  soap s;
+  ns3__Variant* serialized = OpcUa::Soap::Serialize(&s, var);
+
+  ASSERT_NE(serialized, nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText, nullptr);
+  ASSERT_EQ(serialized->ListOfLocalizedText->LocalizedText.size(), 2);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[0], nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[0]->Locale, nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[0]->Text, nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[1], nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[1]->Locale, nullptr);
+  ASSERT_NE(serialized->ListOfLocalizedText->LocalizedText[1]->Text, nullptr);
+
+  ASSERT_EQ(*serialized->ListOfLocalizedText->LocalizedText[0]->Locale, "en");
+  ASSERT_EQ(*serialized->ListOfLocalizedText->LocalizedText[0]->Text, "text");
+  ASSERT_EQ(*serialized->ListOfLocalizedText->LocalizedText[1]->Locale, "en");
+
+
+  OpcUa::Variant deserialize = OpcUa::Soap::Deserialize(serialized);
+  ASSERT_EQ(deserialize.Type, OpcUa::VariantType::LOCALIZED_TEXT);
+  ASSERT_EQ(deserialize.Value.Text.size(), 2);
+  ASSERT_EQ(deserialize.Value.Text[0].Locale, "en");
+  ASSERT_EQ(deserialize.Value.Text[0].Text, "text");
+  ASSERT_EQ(deserialize.Value.Text[1].Locale, "en");
+  ASSERT_EQ(deserialize.Value.Text[1].Text, "text1");
 }

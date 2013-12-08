@@ -291,6 +291,18 @@ namespace
     return result;
   }
 
+  std::vector<OpcUa::LocalizedText> Deserialize(const ns3__ListOfLocalizedText* texts)
+  {
+    std::vector<OpcUa::LocalizedText> result;
+    if (!texts)
+      return result;
+
+    result = Transform<std::vector<OpcUa::LocalizedText>>(texts->LocalizedText, [](const ns3__LocalizedText* v){
+      return ::Deserialize(v);
+    });
+    return result;
+  }
+
   OpcUa::ApplicationDescription Deserialize(const ns3__ApplicationDescription* desc)
   {
     OpcUa::ApplicationDescription result;
@@ -838,6 +850,14 @@ namespace OpcUa
     else if (var->ListOfQualifiedName)
     {
       result = ::Deserialize(var->ListOfQualifiedName);
+    }
+    else if (var->LocalizedText)
+    {
+      result = ::Deserialize(var->LocalizedText);
+    }
+    else if (var->ListOfLocalizedText)
+    {
+      result = ::Deserialize(var->ListOfLocalizedText);
     }
 
     return result;
