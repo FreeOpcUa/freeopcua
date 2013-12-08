@@ -376,7 +376,8 @@
       		name="ListOfLocalizedText" type="ua:ListOfLocalizedText" />
       	<xs:element minOccurs="0" nillable="true"
       		name="ListOfDataValue" type="ua:ListOfDataValue" />
-            <xs:element name="ListOfVariant" type="tns:ListOfVariant" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element minOccurs="0" nillable="true" 
+        	name="ListOfVariant" type="tns:ListOfVariant"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="Variant" nillable="true" type="tns:Variant"/>
