@@ -23,37 +23,32 @@ namespace OpcUa
    const uint8_t DATA_VALUE_SERVER_PICOSECONDS = 32;
    const uint8_t DATA_VALUE_ALL = ~uint8_t();
 
-   struct DataValue
-   {
-     uint8_t Encoding;
-     Variant Value;
-     StatusCode Status;
-     DateTime SourceTimestamp;
-     uint16_t SourcePicoseconds;
-     DateTime ServerTimestamp;
-     uint16_t ServerPicoseconds;
+  struct DataValue
+  {
+    uint8_t Encoding;
+    Variant Value;
+    StatusCode Status;
+    DateTime SourceTimestamp;
+    uint16_t SourcePicoseconds;
+    DateTime ServerTimestamp;
+    uint16_t ServerPicoseconds;
 
-     DataValue()
-       : Encoding(0)
-       , Status(StatusCode::Good)
-       , SourceTimestamp(0)
-       , SourcePicoseconds(0)
-       , ServerTimestamp(0)
-       , ServerPicoseconds(0)
-     {
-     }
-/*
-     explicit DataValue(const Variant& var)
-       : Encoding(DATA_VALUE)
-       , Value(var)
-       , Status(StatusCode::Good)
-       , SourceTimestamp(0)
-       , SourcePicoseconds(0)
-       , ServerTimestamp(0)
-       , ServerPicoseconds(0)
-     {
-     }
-*/
+    DataValue()
+      : Encoding(0)
+      , Status(StatusCode::Good)
+      , SourceTimestamp(0)
+      , SourcePicoseconds(0)
+      , ServerTimestamp(0)
+      , ServerPicoseconds(0)
+    {
+    }
+
+    explicit DataValue(const Variant& value)
+    {
+      Value = value;
+      Encoding |= DATA_VALUE;
+    }
+
     DataValue& operator= (const Variant& value)
     {
       Value = value;
@@ -69,14 +64,14 @@ namespace OpcUa
 
     bool operator== (const DataValue& data) const
     {
-      return
-        Encoding == data.Encoding &&
-        Value == data.Value &&
-        Status == data.Status &&
-        SourceTimestamp == data.SourceTimestamp &&
-        SourcePicoseconds == data.SourcePicoseconds &&
-        ServerTimestamp == data.ServerTimestamp &&
-        ServerPicoseconds == data.ServerPicoseconds;
+       return
+         Encoding == data.Encoding &&
+         Value == data.Value &&
+         Status == data.Status &&
+         SourceTimestamp == data.SourceTimestamp &&
+         SourcePicoseconds == data.SourcePicoseconds &&
+         ServerTimestamp == data.ServerTimestamp &&
+         ServerPicoseconds == data.ServerPicoseconds;
     }
   };
 

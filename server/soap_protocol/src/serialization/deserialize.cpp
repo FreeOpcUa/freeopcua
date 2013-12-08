@@ -571,12 +571,6 @@ namespace
   }
 
 
-  OpcUa::Variant Deserialize(const ns3__Variant* variant)
-  {
-    OpcUa::Variant result;
-    return result;
-  }
-
   OpcUa::DataValue Deserialize(const ns3__DataValue* value)
   {
     OpcUa::DataValue result;
@@ -601,7 +595,7 @@ namespace
     if (value->Value)
     {
       result.Encoding |= OpcUa::DATA_VALUE;
-      result.Value = Deserialize(value->Value);
+      result.Value = OpcUa::Soap::Deserialize(value->Value);
     }
 
     return result;
@@ -858,6 +852,14 @@ namespace OpcUa
     else if (var->ListOfLocalizedText)
     {
       result = ::Deserialize(var->ListOfLocalizedText);
+    }
+    else if (var->DataValue)
+    {
+      result = ::Deserialize(var->DataValue);
+    }
+    else if (var->ListOfDataValue)
+    {
+      result = ::Deserialize(var->ListOfDataValue);
     }
 
     return result;
