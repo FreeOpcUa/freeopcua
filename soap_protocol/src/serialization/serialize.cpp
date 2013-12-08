@@ -142,6 +142,16 @@ namespace
     return result;
   }
 
+  ns3__ListOfLocalizedText* CreateListOfLocalizedText(soap* s, const std::vector<OpcUa::LocalizedText>& texts)
+  {
+    ns3__ListOfLocalizedText* result = soap_new_ns3__ListOfLocalizedText(s, 1);
+    result->LocalizedText.resize(texts.size());
+    std::transform(texts.begin(), texts.end(), result->LocalizedText.begin(), [s](const OpcUa::LocalizedText& text){\
+      return CreateLocalizedText(s, text);
+    });
+    return result;
+  }
+
   ns3__ApplicationDescription* CreateApplicationDescription(soap* s, const OpcUa::ApplicationDescription& desc)
   {
     ns3__ApplicationDescription* result = soap_new_ns3__ApplicationDescription(s, 1);
@@ -326,6 +336,7 @@ namespace
   ns3__ListOfQualifiedName* CreateListOfQualifiedName(soap* s, const std::vector<OpcUa::QualifiedName>& names)
   {
     ns3__ListOfQualifiedName* result = soap_new_ns3__ListOfQualifiedName(s, 1);
+    result->QualifiedName.resize(names.size());
     std::transform(names.begin(), names.end(), result->QualifiedName.begin(), std::bind(CreateQualifiedName, s, std::placeholders::_1));
     return result;
   }
@@ -703,6 +714,10 @@ namespace
       }
       case OpcUa::VariantType::LOCALIZED_TEXT:
       {
+        if (var.IsArray())
+          result->ListOfLocalizedText = CreateListOfLocalizedText(s, var.Value.Text);
+        else
+          result->LocalizedText = CreateLocalizedText(s, var.Value.Text[0]);
         break;
       }
       case OpcUa::VariantType::EXTENSION_OBJECT:
