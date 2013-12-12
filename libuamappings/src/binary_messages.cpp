@@ -147,6 +147,10 @@ namespace OpcUa
   time_t ToTimeT(DateTime dateTime)
   {
     const int64_t secsFrom1600To1970 = 11676096000LL;
+    if (dateTime.Value < secsFrom1600To1970)
+    {
+      return 0;
+    }
     const int64_t secsFrom1970 = dateTime.Value / 10000000LL - secsFrom1600To1970;
     return secsFrom1970;
   }

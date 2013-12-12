@@ -40,7 +40,7 @@ TEST(DateTime, ZeroToTimeT)
 {
   DateTime t(0);
   const time_t converted = OpcUa::ToTimeT(t);
-  ASSERT_EQ(converted, -11676096000);
+  ASSERT_EQ(converted, 0);
 }
 
 TEST(DateTime, ZeroTimeT)
