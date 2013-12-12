@@ -79,6 +79,10 @@ public:
     SerializedData = std::vector<char>(data, data + size);
   }
 
+  virtual ~OutputChannel()
+  {
+  }
+
   std::vector<char> SerializedData;
 };
 
@@ -123,6 +127,10 @@ public:
   InputChannel()
   {
     CurPos = SerializedData.begin();
+  }
+
+  virtual ~InputChannel()
+  {
   }
 
   virtual std::size_t Receive(char* data, std::size_t size)
