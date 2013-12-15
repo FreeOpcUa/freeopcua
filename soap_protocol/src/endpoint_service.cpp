@@ -109,6 +109,14 @@ namespace OpcUa
 
     int EndpointService::Read(ns3__ReadRequest *ns3__ReadRequest_, ns3__ReadResponse *ns3__ReadResponse_)
     {
+      if (Debug) std::clog << "SOAP: Received ReadRequest." << std::endl;
+
+      const OpcUa::ReadRequest request = OpcUa::Soap::Deserialize(ns3__ReadRequest_);
+      OpcUa::ReadResponse response;
+      response.Result.Results = Computer->Attributes()->Read(request.Parameters);
+      *ns3__ReadResponse_ = *OpcUa::Soap::Serialize(this, response);
+
+      if (Debug) std::clog << "SOAP: Processed ReadRequest." << std::endl;
       return SOAP_OK;
     }
 
