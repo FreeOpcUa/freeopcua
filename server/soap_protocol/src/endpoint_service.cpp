@@ -127,6 +127,14 @@ namespace OpcUa
 
     int EndpointService::Write(ns3__WriteRequest *ns3__WriteRequest_, ns3__WriteResponse *ns3__WriteResponse_)
     {
+      if (Debug) std::clog << "SOAP: Received WriteRequest." << std::endl;
+
+      const OpcUa::WriteRequest request = OpcUa::Soap::Deserialize(ns3__WriteRequest_);
+      OpcUa::WriteResponse response;
+      response.Result.StatusCodes = Computer->Attributes()->Write(request.Parameters.NodesToWrite);
+      *ns3__WriteResponse_ = *OpcUa::Soap::Serialize(this, response);
+
+      if (Debug) std::clog << "SOAP: Processed WriteRequest." << std::endl;
       return SOAP_OK;
     }
 

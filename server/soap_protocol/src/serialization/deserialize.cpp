@@ -629,6 +629,25 @@ namespace
     return result;
   }
 
+  OpcUa::WriteValue Deserialize(const ns3__WriteValue* v)
+  {
+    OpcUa::WriteValue result;
+    result.Attribute = static_cast<OpcUa::AttributeID>(v->AttributeId);
+    result.Node = Deserialize(v->NodeId);
+    result.NumericRange = *v->IndexRange;
+    result.Data = Deserialize(v->Value);
+    return result;
+  }
+
+  std::vector<OpcUa::WriteValue> Deserialize(const ns3__ListOfWriteValue* v)
+  {
+    std::vector<OpcUa::WriteValue> result;
+    result = Transform<std::vector<OpcUa::WriteValue>>(v->WriteValue, [](const ns3__WriteValue* v){
+      return ::Deserialize(v);
+    });
+    return result;
+  }
+
 }
 
 namespace OpcUa
@@ -723,6 +742,23 @@ namespace OpcUa
       result.Result.Results = ::Deserialize(response->Results);
     }
     return result;
+  }
+
+  WriteRequest Soap::Deserialize(const ns3__WriteRequest* request)
+  {
+    WriteRequest result;
+    result.Header = ::Deserialize(request->RequestHeader);
+    result.Parameters.NodesToWrite = ::Deserialize(request->NodesToWrite);
+    return result;
+  }
+
+  WriteResponse Soap::Deserialize(const ns3__WriteResponse* response)
+  {
+    WriteResponse resp;
+    resp.Header = ::Deserialize(response->ResponseHeader);
+    resp.Result.Diagnostics = ::Deserialize(response->DiagnosticInfos);
+    resp.Result.StatusCodes = ::Deserialize(response->Results);
+    return resp;
   }
 
   Variant Soap::Deserialize(const ns3__Variant* var)

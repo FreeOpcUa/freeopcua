@@ -582,6 +582,29 @@ namespace
     return result;
   }
 
+  ns3__WriteValue* CreateWriteValue(soap* s, const OpcUa::WriteValue& value)
+  {
+    ns3__WriteValue* result = soap_new_ns3__WriteValue(s, 1);
+    result->AttributeId = static_cast<unsigned>(value.Attribute);
+    result->IndexRange = CreateString(s, value.NumericRange);
+    result->NodeId = CreateNodeID(s, value.Node);
+    result->Value = CreateDataValue(s, value.Data);
+    return result;
+  }
+
+  ns3__ListOfWriteValue* CreateListOfNodesToWrite(soap* s, const std::vector<OpcUa::WriteValue>& values)
+  {
+    ns3__ListOfWriteValue* result = soap_new_ns3__ListOfWriteValue(s, 1);
+    if (!values.empty())
+    {
+      result->WriteValue.resize(values.size());
+      std::transform(values.begin(), values.end(), result->WriteValue.begin(), std::bind(CreateWriteValue, s, std::placeholders::_1));
+    }
+    return result;
+  }
+
+
+
   ns3__Variant* CreateVariant(soap* s, const OpcUa::Variant& var);
 
   ns3__ListOfVariant* CreateListOfVariant(soap* s, const std::vector<OpcUa::Variant>& vars)
@@ -866,6 +889,23 @@ namespace OpcUa
       result->DiagnosticInfos = CreateListOfDiagnosticInfo(s, opcua.Result.Diagnostics);
     }
     result->Results = CreateListOfDataValue(s, opcua.Result.Results);
+    return result;
+  }
+
+  ns3__WriteRequest* Soap::Serialize(soap* s, const OpcUa::WriteRequest& opcua)
+  {
+    ns3__WriteRequest* result = soap_new_ns3__WriteRequest(s, 1);
+    result->RequestHeader = CreateRequestHeader(s, opcua.Header);
+    result->NodesToWrite = CreateListOfNodesToWrite(s, opcua.Parameters.NodesToWrite);
+    return result;
+  }
+
+  ns3__WriteResponse* Soap::Serialize(soap* s, const OpcUa::WriteResponse& opcua)
+  {
+    ns3__WriteResponse* result = soap_new_ns3__WriteResponse(s, 1);
+    result->ResponseHeader = CreateResponseHeader(s, opcua.Header);
+    result->DiagnosticInfos = CreateListOfDiagnosticInfo(s, opcua.Result.Diagnostics);
+    result->Results = CreateListOfStatusCode(s, opcua.Result.StatusCodes);
     return result;
   }
 

@@ -30,6 +30,9 @@ namespace OpcUa
     ReadRequest Deserialize(const ns3__ReadRequest* request);
     ReadResponse Deserialize(const ns3__ReadResponse* response);
 
+    WriteRequest Deserialize(const ns3__WriteRequest* request);
+    WriteResponse Deserialize(const ns3__WriteResponse* response);
+
     Variant Deserialize(const ns3__Variant* var);
   }
 }
