@@ -11,7 +11,7 @@
 #include "common.h"
 
 #include <gtest/gtest.h>
-//void
+
 TEST(Read, Request)
 {
   OpcUa::ReadRequest opcua;
@@ -62,7 +62,6 @@ TEST(Read, Request)
   ASSERT_EQ(deserializedValueId.Node, OpcUa::NumericNodeID(84));
 }
 
-//void
 TEST(Read, Response)
 {
   // Fill response
@@ -124,3 +123,75 @@ TEST(Read, Response)
   ASSERT_EQ(deserializedValue.Status, OpcUa::StatusCode::BadAttributeIdInvalid);
   ASSERT_EQ(deserializedValue.Value, (uint8_t)5);
 }
+
+
+
+
+TEST(Write, Request)
+{
+  OpcUa::WriteRequest opcua;
+  opcua.Header = OpcUa::Test::CreateRequestHeader();
+
+  OpcUa::WriteValue value;
+  value.Attribute = OpcUa::AttributeID::VALUE;
+  value.Data = OpcUa::DataValue(uint32_t(1));
+  value.Node = OpcUa::NumericNodeID(1,2);
+  value.NumericRange = "1,2";
+
+  opcua.Parameters.NodesToWrite.push_back(value);
+
+  soap service;
+  ns3__WriteRequest* req = OpcUa::Soap::Serialize(&service, opcua);
+  ASSERT_NE(req, nullptr);
+  OpcUa::Test::AssertRequestHeaderValid(req->RequestHeader);
+  ASSERT_NE(req->NodesToWrite, nullptr);
+  ASSERT_EQ(req->NodesToWrite->WriteValue.size(), 1);
+
+  const ns3__WriteValue* serializedValue = req->NodesToWrite->WriteValue[0];
+  ASSERT_NE(serializedValue, nullptr);
+  ASSERT_EQ(serializedValue->AttributeId, static_cast<unsigned>(OpcUa::AttributeID::VALUE));
+  ASSERT_NE(serializedValue->IndexRange, nullptr);
+  ASSERT_EQ(*serializedValue->IndexRange, std::string("1,2"));
+  ASSERT_NE(serializedValue->NodeId, nullptr);
+  ASSERT_NE(serializedValue->NodeId->Identifier, nullptr);
+  ASSERT_EQ(*serializedValue->NodeId->Identifier, std::string("ns=2;i=1;"));
+  ASSERT_NE(serializedValue->Value, nullptr);
+  ASSERT_NE(serializedValue->Value->Value, nullptr);
+  ASSERT_NE(serializedValue->Value->Value->UInt32, nullptr);
+  ASSERT_EQ(*serializedValue->Value->Value->UInt32, 1);
+
+  OpcUa::WriteRequest deserialized = OpcUa::Soap::Deserialize(req);
+  OpcUa::Test::AssertRequestHeaderEq(deserialized.Header, opcua.Header);
+  ASSERT_EQ(deserialized.Parameters.NodesToWrite.size(), 1);
+  OpcUa::WriteValue deserializedValue = deserialized.Parameters.NodesToWrite[0];
+  ASSERT_EQ(deserializedValue.Attribute, OpcUa::AttributeID::VALUE);
+  ASSERT_EQ(deserializedValue.Node, OpcUa::NumericNodeID(1,2));
+  ASSERT_EQ(deserializedValue.NumericRange, std::string("1,2"));
+  ASSERT_TRUE(deserializedValue.Data == OpcUa::DataValue(uint32_t(1)));
+}
+
+TEST(Write, Response)
+{
+  OpcUa::WriteResponse opcua;
+  opcua.Header = OpcUa::Test::CreateResponseHeader();
+  opcua.Result.Diagnostics = OpcUa::Test::CreateDiagnosticInfoList();
+  opcua.Result.StatusCodes = {OpcUa::StatusCode::BadNotReadable};
+
+  soap service;
+  ns3__WriteResponse* req = OpcUa::Soap::Serialize(&service, opcua);
+  ASSERT_NE(req, nullptr);
+  OpcUa::Test::AssertResponseHeaderValid(req->ResponseHeader);
+  OpcUa::Test::AssertDiagnosticInfoListValid(req->DiagnosticInfos);
+  ASSERT_NE(req->Results, nullptr);
+  ASSERT_EQ(req->Results->StatusCode.size(), 1);
+  ns3__StatusCode* code = req->Results->StatusCode[0];
+  ASSERT_NE(code, nullptr);
+  ASSERT_EQ(*code->Code, std::string("0x806f0000"));
+
+  OpcUa::WriteResponse deserialized = OpcUa::Soap::Deserialize(req);
+  ASSERT_RESPONSE_HEADER_EQ(deserialized.Header, opcua.Header);
+  OpcUa::Test::AssertDiagnosticInfoListValid(deserialized.Result.Diagnostics);
+  ASSERT_EQ(deserialized.Result.StatusCodes.size(), 1);
+  ASSERT_EQ(deserialized.Result.StatusCodes[0], OpcUa::StatusCode::BadNotReadable);
+}
+

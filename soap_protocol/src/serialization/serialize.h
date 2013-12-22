@@ -66,6 +66,9 @@ namespace OpcUa
     ns3__ReadRequest* Serialize(soap* s, const OpcUa::ReadRequest& request);
     ns3__ReadResponse* Serialize(soap* s, const OpcUa::ReadResponse& request);
 
+    ns3__WriteRequest* Serialize(soap* s, const OpcUa::WriteRequest& request);
+    ns3__WriteResponse* Serialize(soap* s, const OpcUa::WriteResponse& request);
+
     ns3__Variant* Serialize(soap* s, const OpcUa::Variant& var);
   }
 }
