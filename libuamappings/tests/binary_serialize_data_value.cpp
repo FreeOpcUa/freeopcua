@@ -208,3 +208,12 @@ TEST(DataValue, ConstructivbeFromDataValue)
   ASSERT_EQ(newValue.Value.Type, VariantType::NODE_ID);
   ASSERT_EQ(newValue.Value.Value.Node.size(), 1);
 }
+
+TEST(DataValue, ComparableByValue)
+{
+  using namespace OpcUa;
+  DataValue data1(uint32_t(1));
+  DataValue data2(uint32_t(1));
+
+  ASSERT_EQ(data1, data2);
+}

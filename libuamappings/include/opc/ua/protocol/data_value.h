@@ -44,6 +44,7 @@ namespace OpcUa
     }
 
     explicit DataValue(const Variant& value)
+      : DataValue()
     {
       Value = value;
       Encoding |= DATA_VALUE;
@@ -51,6 +52,7 @@ namespace OpcUa
 
     template <typename T>
     explicit DataValue(const T val)
+    : DataValue()
     {
       Value = Variant(val);
       Encoding |= DATA_VALUE;
@@ -79,14 +81,22 @@ namespace OpcUa
 
     bool operator== (const DataValue& data) const
     {
-       return
-         Encoding == data.Encoding &&
-         Value == data.Value &&
-         Status == data.Status &&
-         SourceTimestamp == data.SourceTimestamp &&
-         SourcePicoseconds == data.SourcePicoseconds &&
-         ServerTimestamp == data.ServerTimestamp &&
-         ServerPicoseconds == data.ServerPicoseconds;
+      if (Encoding != data.Encoding)
+        return false;
+      if ((Encoding & DATA_VALUE) && Value != data.Value)
+        return false;
+      if ((Encoding & DATA_VALUE_STATUS_CODE) && Status != data.Status)
+        return false;
+      if ((Encoding & DATA_VALUE_SOURCE_TIMESTAMP) && SourceTimestamp != data.SourceTimestamp)
+        return false;
+      if ((Encoding & DATA_VALUE_SOURCE_PICOSECONDS) && SourcePicoseconds != data.SourcePicoseconds)
+        return false;
+      if ((Encoding & DATA_VALUE_SERVER_TIMESTAMP) && ServerTimestamp != data.ServerTimestamp)
+        return false;
+      if ((Encoding & DATA_VALUE_SERVER_PICOSECONDS) && ServerPicoseconds != data.ServerPicoseconds)
+        return false;
+
+      return true;
     }
   };
 
