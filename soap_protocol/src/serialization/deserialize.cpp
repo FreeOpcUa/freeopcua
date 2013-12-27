@@ -634,7 +634,10 @@ namespace
     OpcUa::WriteValue result;
     result.Attribute = static_cast<OpcUa::AttributeID>(v->AttributeId);
     result.Node = Deserialize(v->NodeId);
-    result.NumericRange = *v->IndexRange;
+    if (v->IndexRange)
+    {
+      result.NumericRange = *v->IndexRange;
+    }
     result.Data = Deserialize(v->Value);
     return result;
   }
@@ -642,6 +645,9 @@ namespace
   std::vector<OpcUa::WriteValue> Deserialize(const ns3__ListOfWriteValue* v)
   {
     std::vector<OpcUa::WriteValue> result;
+    if (!v)
+      return result;
+
     result = Transform<std::vector<OpcUa::WriteValue>>(v->WriteValue, [](const ns3__WriteValue* v){
       return ::Deserialize(v);
     });
