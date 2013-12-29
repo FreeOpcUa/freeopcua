@@ -8,17 +8,9 @@
 # $Date: $
 # $Revision: $
 
-
-#temporary unused projects
-# libcom
-# opctestlinux
-# libtestopcserver
-# libopc
-
 SUBDIRS = \
           third-party \
           libopccore \
-          libuamappings \
           client \
           python \
           server

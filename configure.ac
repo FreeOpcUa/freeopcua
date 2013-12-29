@@ -19,7 +19,6 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_SUBDIRS([
  libopccore
- libuamappings
  client
  server])
 

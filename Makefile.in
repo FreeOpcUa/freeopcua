@@ -24,12 +24,6 @@
 # $Id:  $
 # $Date: $
 # $Revision: $
-
-#temporary unused projects
-# libcom
-# opctestlinux
-# libtestopcserver
-# libopc
 VPATH = @srcdir@
 am__make_dryrun = \
   { \
@@ -215,7 +209,6 @@ top_srcdir = @top_srcdir@
 SUBDIRS = \
           third-party \
           libopccore \
-          libuamappings \
           client \
           python \
           server

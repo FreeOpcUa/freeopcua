@@ -8,7 +8,6 @@ cd $CUR_PATH
 $ROOT_DIRECTORY/configure \
   --with-libopccore=$ROOT_DIRECTORY/libopccore \
   --with-libopcuaclient=$ROOT_DIRECTORY/client \
-  --with-ua-mappings=$ROOT_DIRECTORY/libuamappings \
   --with-gtest=$ROOT_DIRECTORY/third-party/gtest \
   --with-gmock=$ROOT_DIRECTORY/third-party/gmock \
   $@
