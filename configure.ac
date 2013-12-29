@@ -31,6 +31,8 @@ AC_ARG_WITH([gtest],
               AC_MSG_NOTICE([Gtest path: $GTEST_INCLUDES]) 
             ], 
             [ 
+              AC_SUBST([GTEST_LIB], [-lgtest])
+              AC_SUBST([GTEST_MAIN_LIB], [-lgtest_main])
             ])
 
 AC_ARG_WITH([gmock], 
@@ -41,6 +43,7 @@ AC_ARG_WITH([gmock],
               AC_MSG_NOTICE([Gmock path: $GMOCK_INCLUDES]) 
             ], 
             [ 
+              AC_SUBST([GMOCK_LIBS], [-lgmock])
             ])
 
 
@@ -63,7 +66,8 @@ AC_ARG_WITH([libopccore],
               AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
             ], 
             [ 
-              AC_SUBST([OPC_CORE_LIBS], [-lopccore])
+              AC_SUBST([OPC_CORE_INCLUDES], ["-I/usr/include/libxml2"])
+              AC_SUBST([OPC_CORE_LIBS], ["-lopccore -lxml2"])
             ])
 
 AC_ARG_WITH([libopcuaclient], 

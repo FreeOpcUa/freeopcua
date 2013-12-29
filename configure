@@ -15154,6 +15154,13 @@ if test "${with_gtest+set}" = set; then :
               { $as_echo "$as_me:${as_lineno-$LINENO}: Gtest path: $GTEST_INCLUDES" >&5
 $as_echo "$as_me: Gtest path: $GTEST_INCLUDES" >&6;}
 
+else
+
+              GTEST_LIB=-lgtest
+
+              GTEST_MAIN_LIB=-lgtest_main
+
+
 fi
 
 
@@ -15167,6 +15174,11 @@ if test "${with_gmock+set}" = set; then :
 
               { $as_echo "$as_me:${as_lineno-$LINENO}: Gmock path: $GMOCK_INCLUDES" >&5
 $as_echo "$as_me: Gmock path: $GMOCK_INCLUDES" >&6;}
+
+else
+
+              GMOCK_LIBS=-lgmock
+
 
 fi
 
@@ -15204,7 +15216,9 @@ $as_echo "$as_me: libopccore path: $with_libopccore" >&6;}
 
 else
 
-              OPC_CORE_LIBS=-lopccore
+              OPC_CORE_INCLUDES="-I/usr/include/libxml2"
+
+              OPC_CORE_LIBS="-lopccore -lxml2"
 
 
 fi
