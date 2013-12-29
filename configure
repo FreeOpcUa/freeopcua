@@ -654,9 +654,7 @@ enable_option_checking
       ac_precious_vars='build_alias
 host_alias
 target_alias'
-ac_subdirs_all='
- client
- server'
+ac_subdirs_all='server'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2198,7 +2196,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-subdirs="$subdirs client server"
+subdirs="$subdirs server"
 
 
 ac_config_files="$ac_config_files third-party/Makefile python/Makefile Makefile"

@@ -17,9 +17,7 @@ AC_CONFIG_MACRO_DIR([m4])
 #################################################################
 #AC_CONFIG_FILES([third-party/Makefile])
 
-AC_CONFIG_SUBDIRS([
- client
- server])
+AC_CONFIG_SUBDIRS([server])
 
 AC_CONFIG_FILES([third-party/Makefile python/Makefile Makefile])
 

@@ -10,7 +10,6 @@
 
 SUBDIRS = \
           third-party \
-          client \
           python \
           server
 
