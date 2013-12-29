@@ -1,4 +1,4 @@
-opc_layer
-=========
+opcua-python
+============
 
-Opc DA and UA.
+opcua python bindings
