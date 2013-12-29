@@ -10,7 +10,6 @@
 
 SUBDIRS = \
           third-party \
-          libopccore \
           client \
           python \
           server

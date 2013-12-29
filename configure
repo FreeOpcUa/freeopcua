@@ -655,7 +655,6 @@ enable_option_checking
 host_alias
 target_alias'
 ac_subdirs_all='
- libopccore
  client
  server'
 
@@ -2199,7 +2198,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
-subdirs="$subdirs libopccore client server"
+subdirs="$subdirs client server"
 
 
 ac_config_files="$ac_config_files third-party/Makefile python/Makefile Makefile"
