@@ -9,11 +9,11 @@
 # $Revision: $
 
 SUBDIRS = \
-  exe \
   address_space \
   binary_protocol \
   builtin_server \
   endpoint_services \
+  exe \
   services_registry \
   standard_namespace \
   soap_protocol \

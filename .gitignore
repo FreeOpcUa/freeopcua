@@ -1,0 +1,51 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+.deps
+Makefile
+*.log
+*.status
+config.h
+libtool
+stamp-h1
+
+*.libs
+autom4te.cache
+gmock
+gtest
+third-party/uripp/test/main
+
+#compiled binaries
+comreg
+linux_com_tests
+opc_ua_binary_test
+
+common_test
+error_manager_test
+managers_test
+opc_client_test
+property_tree_manager_test
+opctest
+ua/uaclient/libuaclient_test
+ua/uaclient/opcua
+common_gtest
+
+ua/server/libuaclient_test
+ua/server/client/opcua
+ua/server/opcuaserver
+ua/server/test_opcua_protocol_addon
+ua/server/test_opcuaserver
+ua/server/test_tcp_server
+ua/server/test_tcp_server_addon
+ua/server/server_unittests
