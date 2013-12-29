@@ -168,8 +168,6 @@ FGREP = @FGREP@
 GMOCK_INCLUDES = @GMOCK_INCLUDES@
 GMOCK_LIBS = @GMOCK_LIBS@
 GREP = @GREP@
-GSOAP_CFLAGS = @GSOAP_CFLAGS@
-GSOAP_LIBS = @GSOAP_LIBS@
 GTEST_INCLUDES = @GTEST_INCLUDES@
 GTEST_LIB = @GTEST_LIB@
 GTEST_MAIN_LIB = @GTEST_MAIN_LIB@
@@ -279,7 +277,6 @@ SUBDIRS = \
   exe \
   services_registry \
   standard_namespace \
-  soap_protocol \
   tcp_server \
   xml_address_space_loader
 

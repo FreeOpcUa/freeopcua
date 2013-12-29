@@ -16,7 +16,6 @@ SUBDIRS = \
   exe \
   services_registry \
   standard_namespace \
-  soap_protocol \
   tcp_server \
   xml_address_space_loader
 

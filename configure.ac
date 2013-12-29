@@ -85,9 +85,6 @@ AC_ARG_WITH([libopcuaclient],
 #check headers
 AC_CHECK_HEADERS([unistd.h])
 
-PKG_CHECK_MODULES([GSOAP], ["gsoapssl++"])
-
-
 #################################################################
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([address_space/Makefile])
@@ -97,7 +94,6 @@ AC_CONFIG_FILES([endpoint_services/Makefile])
 AC_CONFIG_FILES([exe/Makefile])
 AC_CONFIG_FILES([services_registry/Makefile])
 AC_CONFIG_FILES([standard_namespace/Makefile])
-AC_CONFIG_FILES([soap_protocol/Makefile])
 AC_CONFIG_FILES([tcp_server/Makefile])
 AC_CONFIG_FILES([xml_address_space_loader/Makefile])
 AC_OUTPUT
