@@ -1,0 +1,56 @@
+OPC layer addon for Mozilla platform.
+
++-com          - MS COM server opc frontend realization
+|
++-doc/         - documentation. Now uml diagrams opens for StarUML. I Suppose to migrate it to VisualParadigm due to crossplatform of the last.
+|
++-msbridge/    - bridge to windows OPC servers from xulrunner. Only for windows.
+|
++-opc_client   - OPC logic realization. Used in all technology frontends (COM and XPCOM)
+|
++-op_test      - test of opc servers.
+|
++property_tree - realization of tree with groups items and properties. Represents server data configuration.
+|
++-servers/
+|  |
+|  +-gps/            - opc server for access to GPS data. Now uses gpsd deamon.
+|  |
+|  +-infrastructure/ - realization of OPC logic and XPCOM and COM interfaces with general C++ interface classes.
+|  |
+|  +-test_server/    - test opc server. Simulates some opc activity.
+|
++-test_app test xul application. Example of uing OPC Servers.
+|
++-tools/ here - Used diring compiling under windows. Here should be copied boost, cppunit sources and xulrunner binaries.
+|
++-xpcom/      - static library. realizes XPCOM interface.
+|
++-ua - realization of OPC UA stack.
+
+
+Required software.
+
+1. g++ 4.5+
+2. xulrunner sdk (7.0 - 8.0.1). download from mozilla size or install shipped with distributive.
+3. boost, booth-thread, boost-program-options,
+4. cppunit
+5. gpsd headers for gps opc server if it enabled during configuring
+Linux
+  All libraries and it developers libraries should be installed in system.
+
+Compiling.
+
+Linux. Now I am compile only on Open SUSE 11.2.
+1. autoreconf -f -i
+2. ./configure --prefix=/path/to/install --with-xulrunner-sdk=/path/to/xulrunner-sdk
+   # Now its better to install somewhere, but not into system directories. ;)
+6. make
+7. make check
+8. make xultunner-apps # output will be in the test/app/.libs/mozopc_test_app.zip
+9. make install (if you are very(!) sure at current step of developing)
+
+starting xulrunner test application:
+cd test_app
+make run
+
