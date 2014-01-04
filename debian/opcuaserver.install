@@ -1,0 +1,5 @@
+etc/opcua/server.config
+usr/bin/opcuaserver
+usr/lib/lib*.a
+usr/lib/lib*.so*
+

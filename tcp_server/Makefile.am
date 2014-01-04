@@ -16,7 +16,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
 
-INCLUDES= \
+COMMON_INCLUDES = \
   -Iinclude \
   $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
@@ -34,8 +34,9 @@ libopcua_tcp_server_la_SOURCES = \
   src/tcp_server_module.cpp \
   src/tcp_server.cpp
 
-libopcua_tcp_server_la_CPPFLAGS = $(INCLUDES)
+libopcua_tcp_server_la_CPPFLAGS = $(COMMON_INCLUDES)
 libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
+
 TESTS = test_tcp_server test_tcp_server_addon
 
 TESTS_ENVIRONMENT = 
@@ -48,7 +49,7 @@ test_tcp_server_SOURCES = \
   src/tcp_server_addon_impl.h \
   tests/tcp_server_test.cpp
 
-test_tcp_server_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+test_tcp_server_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
 test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
 
 test_tcp_server_addon_SOURCES = \
@@ -57,6 +58,6 @@ test_tcp_server_addon_SOURCES = \
   src/tcp_server_addon_impl.h \
   tests/tcp_server_addon_test.cpp
 
-test_tcp_server_addon_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+test_tcp_server_addon_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
 test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 

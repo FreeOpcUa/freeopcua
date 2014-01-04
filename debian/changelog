@@ -1,0 +1,5 @@
+opcuaserver (0.1.2) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- treww <rykovanov.as@gmail.com>  Mon, 30 Dec 2013 21:51:58 +0400

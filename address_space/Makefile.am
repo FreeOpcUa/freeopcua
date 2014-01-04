@@ -15,7 +15,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
 
-INCLUDES = -Iinclude -I$(top_srcdir)/services_registry/include $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+AM_CPPFLAGS = -Iinclude -I$(top_srcdir)/services_registry/include $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
 lib_LTLIBRARIES = libaddress_space_addon.la
@@ -30,7 +30,6 @@ libaddress_space_addon_la_SOURCES = \
    src/address_space_module.cpp \
    tests/address_space_registry_test.h
 
-libaddress_space_addon_la_CPPFLAGS = $(INCLUDES)
 libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
 
 #check_PROGRAMS = $(TESTS)

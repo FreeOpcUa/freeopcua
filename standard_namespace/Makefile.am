@@ -16,7 +16,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
 
-INCLUDES= \
+COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/address_space/include \
   -I$(top_srcdir)/services_registry/include \
@@ -36,13 +36,13 @@ libstandard_ns_addon_la_SOURCES = \
 
 EXTRA_DIST = config/standard_address_space.xml
  
-libstandard_ns_addon_la_CPPFLAGS = $(INCLUDES)
+libstandard_ns_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
 libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
 
 TESTS = test_standard_address_space
 check_PROGRAMS = $(TESTS)
 
-test_standard_address_space_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) 
+test_standard_address_space_CPPFLAGS = $(TESTINCLUDES)  $(COMMON_INCLUDES)
 test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 test_standard_address_space_SOURCES=\
   ../address_space/src/address_space_addon.cpp \
@@ -51,3 +51,4 @@ test_standard_address_space_SOURCES=\
   src/standard_namespace_addon.cpp \
   tests/standard_namespace_ut.cpp \
   tests/standard_namespace_test.h
+

@@ -1,0 +1,25 @@
+Source: opcuaserver
+Section: net
+Priority: extra
+Maintainer: treww <rykovanov.as@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev
+Standards-Version: 3.9.4
+Homepage: https://github.com/treww/opcua-server
+Vcs-Git: https://github.com/treww/opcua-server.git
+
+Package: opcuaserver-dev
+Section: libdevel
+Architecture: any
+Depends: opcuaserver (= ${binary:Version}), opcuaclient-dev (= ${binary:Version}), libopcuacore-dev (= ${binary:Version}), opcuamappings-dev (= ${binary:Version}), libboost-system-dev 
+Description: OPCUA server developer files.
+
+Package: opcuaserver
+Section: net
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, opcuaclient (= ${binary:Version}), libopcuacore (= ${binary:Version}), opcuamappings (= ${binary:Version})
+Description: OPCUA server.
+
+Package: opcuaserver-doc
+Architecture: all
+Description: documentation for opcuaserver
+

@@ -19,3 +19,12 @@ SUBDIRS = \
   tcp_server \
   xml_address_space_loader
 
+EXTRA_DIST = \
+  debian make_deb.sh
+
+clean-local:
+	rm -rvf opcuaserver*$(VERSION)*
+
+dist-deb: dist
+	./make_deb.sh
+

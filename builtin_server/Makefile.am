@@ -16,7 +16,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
 
-INCLUDES= \
+COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/builin_server/include \
   -I$(top_srcdir)/tcp_server/include \
@@ -36,6 +36,6 @@ libbuiltin_server_addon_la_SOURCES = \
   src/builtin_server_impl.h \
   tests/builtin_server_test.h
 
-libibultin_server_addon_la_CPPFLAGS = $(INCLUDES)
+libbuiltin_server_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
 libbuiltin_server_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(OPC_CLIENT_LIBS) -no-undefined
 

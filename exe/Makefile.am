@@ -9,7 +9,7 @@
 # $Revision: $
 
 
-INCLUDES= $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+COMMON_INCLUDES= $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) tests
 
 bin_PROGRAMS = opcuaserver
@@ -20,7 +20,7 @@ opcuaserver_SOURCES = \
   src/server_options.cpp \
   src/server_options.h
 
-opcuaserver_CPPFLAGS = $(INCLUDES)
+opcuaserver_CPPFLAGS = $(COMMON_INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
 
 configdir=$(sysconfdir)/opcua
@@ -45,13 +45,13 @@ EXTRA_DIST = \
   tests/test_addon.h
 
 
-install-data-hook:
-	install -d $(localstatedir)/log/opcua
-	chmod 744 $(sysvdir)/opcuaserver
-	update-rc.d opcuaserver defaults || test true
+#install-data-hook:
+#	install -d $(localstatedir)/log/opcua
+#	chmod 744 $(sysvdir)/opcuaserver
+#	update-rc.d opcuaserver defaults || test true
 
-uninstall-hook:
-	update-rc.d opcuaserver remove || test true
+#uninstall-hook:
+#	update-rc.d opcuaserver remove || test true
 
 
 TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)/exe
@@ -63,7 +63,7 @@ test_opcuaserver_SOURCES = \
   src/server_options.cpp \
   tests/test_server_options.cpp
 
-test_opcuaserver_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES)
+test_opcuaserver_CPPFLAGS = $(COMMON_INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDADD = test_addon.so
 test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 

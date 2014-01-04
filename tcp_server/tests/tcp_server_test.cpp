@@ -25,20 +25,36 @@ const unsigned short TestPort = 33445;
 namespace 
 {
 
-    class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
+  class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
+  {
+  public:
+    IncomingConnectionProcessorMock()
+      : ProcessCallCount(0)
     {
-    public:
-      MOCK_METHOD1(Process, void (std::shared_ptr<OpcUa::IOChannel>));
-      MOCK_METHOD1(StopProcessing, void (std::shared_ptr<OpcUa::IOChannel> clientChannel));
-   };
+    }
+
+    virtual ~IncomingConnectionProcessorMock()
+    {
+    }
+
+    virtual void Process(std::shared_ptr<OpcUa::IOChannel>) override
+    {
+      ++ProcessCallCount;
+    }
+
+    virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel) override
+    {
+    }
+
+  public:
+    unsigned ProcessCallCount;
+  };
 
 }
-
 
 TEST(TcpServer, AcceptConnections)
 {
   std::shared_ptr<IncomingConnectionProcessorMock> clientsProcessor(new IncomingConnectionProcessorMock);
-  EXPECT_CALL(*clientsProcessor, Process(_)).Times(1);
 
   std::unique_ptr<OpcUa::Server::ConnectionListener> server = OpcUa::CreateTcpServer(TestPort);
   server->Start(clientsProcessor);
@@ -50,6 +66,8 @@ TEST(TcpServer, AcceptConnections)
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   server->Stop();
+
+  EXPECT_EQ(clientsProcessor->ProcessCallCount, 1);
 }
 
 namespace

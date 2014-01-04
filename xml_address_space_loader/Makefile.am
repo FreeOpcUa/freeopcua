@@ -15,13 +15,16 @@ uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
 
 
-INCLUDES= \
+COMMON_INCLUDES = \
   -Iinclude \
+  -I/usr/include/libxml2 \
+  -I$(top_srcdir) \
   -I$(top_srcdir)/address_space/include \
-  $(URI_INCLUDES) $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+  -I$(top_srcdir)/services_registry/include \
+  $(UA_MAPPING_INCLUDES) \
+  $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) -I.
-
 
 lib_LTLIBRARIES = libxml_ns_addon.la
 
@@ -35,7 +38,7 @@ libxml_ns_addon_la_SOURCES = \
   src/xml_address_space_module.cpp \
   src/xml_processor.h
 
-libxml_ns_addon_la_CPPFLAGS = $(INCLUDES) -I/usr/include/libxml2 -I$(top_srcdir) 
+libxml_ns_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
 libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
 
 EXTRA_DIST = \
@@ -62,6 +65,6 @@ xml_address_space_ut_SOURCES = \
   tests/xml_addressspace_ut.cpp \
   tests/xml_address_space_addon_ut.cpp
 
-xml_address_space_ut_CPPFLAGS = $(INCLUDES) $(TESTINCLUDES) -I/usr/include/libxml2 -I$(top_srcdir)/services_registry/include
+xml_address_space_ut_CPPFLAGS = $(TESTINCLUDES)  $(COMMON_INCLUDES)
 xml_address_space_ut_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -lxml2 $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 
