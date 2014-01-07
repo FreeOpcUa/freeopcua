@@ -19,7 +19,7 @@ configdir = $(sysconfdir)/opcua
 COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/services_registry/include \
-  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+  $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
@@ -38,7 +38,7 @@ libendpoints_services_addon_la_SOURCES = \
   src/endpoints_services_module.cpp
   
 libendpoints_services_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
-libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
+libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS)
 
 ##############################################################################
 # Tests
@@ -59,5 +59,5 @@ test_endpoints_registry_SOURCES = \
   ../services_registry/src/services_registry_impl.h
   
 test_endpoints_registry_CPPFLAGS = $(COMMON_INCLUDES) $(TESTINCLUDES)
-test_endpoints_registry_LDFLAGS = -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs,-no-undefined
+test_endpoints_registry_LDFLAGS = -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs,-no-undefined
 

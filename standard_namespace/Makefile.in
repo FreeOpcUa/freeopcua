@@ -241,8 +241,9 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-UA_MAPPING_INCLUDES = @UA_MAPPING_INCLUDES@
-UA_MAPPING_LIBS = @UA_MAPPING_LIBS@
+UAMAPPINGS_INCLUDES = @UAMAPPINGS_INCLUDES@
+UAMAPPINGS_LIBS = @UAMAPPINGS_LIBS@
+UAMAPPING_LIBS = @UAMAPPING_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -307,7 +308,7 @@ COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/address_space/include \
   -I$(top_srcdir)/services_registry/include \
-  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+  $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 config_DATA = config/standard_address_space.xml
@@ -320,9 +321,9 @@ libstandard_ns_addon_la_SOURCES = \
 
 EXTRA_DIST = config/standard_address_space.xml
 libstandard_ns_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
-libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) -no-undefined
+libstandard_ns_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -no-undefined
 test_standard_address_space_CPPFLAGS = $(TESTINCLUDES)  $(COMMON_INCLUDES)
-test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
+test_standard_address_space_LDFLAGS = -lboost_thread -lpthread -ldl -Wl,-z,defs $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -no-undefined
 test_standard_address_space_SOURCES = \
   ../address_space/src/address_space_addon.cpp \
   ../address_space/src/address_space_internal.cpp \

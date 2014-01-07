@@ -18,7 +18,7 @@ configdir = $(sysconfdir)/opcua
 
 COMMON_INCLUDES = \
   -Iinclude \
-  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
+  $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
@@ -35,7 +35,7 @@ libopcua_tcp_server_la_SOURCES = \
   src/tcp_server.cpp
 
 libopcua_tcp_server_la_CPPFLAGS = $(COMMON_INCLUDES)
-libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS)
 
 TESTS = test_tcp_server test_tcp_server_addon
 
@@ -50,7 +50,7 @@ test_tcp_server_SOURCES = \
   tests/tcp_server_test.cpp
 
 test_tcp_server_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
-test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
+test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
 
 test_tcp_server_addon_SOURCES = \
   src/tcp_server.cpp \
@@ -59,5 +59,5 @@ test_tcp_server_addon_SOURCES = \
   tests/tcp_server_addon_test.cpp
 
 test_tcp_server_addon_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
-test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
+test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 

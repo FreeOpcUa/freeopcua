@@ -245,8 +245,9 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-UA_MAPPING_INCLUDES = @UA_MAPPING_INCLUDES@
-UA_MAPPING_LIBS = @UA_MAPPING_LIBS@
+UAMAPPINGS_INCLUDES = @UAMAPPINGS_INCLUDES@
+UAMAPPINGS_LIBS = @UAMAPPINGS_LIBS@
+UAMAPPING_LIBS = @UAMAPPING_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -309,7 +310,7 @@ addonsincludedir = $(uaserverincludedir)/addons
 configdir = $(sysconfdir)/opcua
 COMMON_INCLUDES = \
   -Iinclude \
-  $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
+  $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 lib_LTLIBRARIES = libopcua_tcp_server.la
@@ -325,7 +326,7 @@ libopcua_tcp_server_la_SOURCES = \
   src/tcp_server.cpp
 
 libopcua_tcp_server_la_CPPFLAGS = $(COMMON_INCLUDES)
-libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
+libopcua_tcp_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS)
 TESTS_ENVIRONMENT = 
 test_tcp_server_SOURCES = \
   src/tcp_server.cpp \
@@ -334,7 +335,7 @@ test_tcp_server_SOURCES = \
   tests/tcp_server_test.cpp
 
 test_tcp_server_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
-test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
+test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
 test_tcp_server_addon_SOURCES = \
   src/tcp_server.cpp \
   src/tcp_server_addon_impl.cpp \
@@ -342,7 +343,7 @@ test_tcp_server_addon_SOURCES = \
   tests/tcp_server_addon_test.cpp
 
 test_tcp_server_addon_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
-test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
+test_tcp_server_addon_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 all: all-am
 
 .SUFFIXES:

@@ -20,7 +20,7 @@ COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/builin_server/include \
   -I$(top_srcdir)/tcp_server/include \
-   $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
+   $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
@@ -37,5 +37,5 @@ libbuiltin_server_addon_la_SOURCES = \
   tests/builtin_server_test.h
 
 libbuiltin_server_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
-libbuiltin_server_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(OPC_CLIENT_LIBS) -no-undefined
+libbuiltin_server_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) $(OPC_CLIENT_LIBS) -no-undefined
 

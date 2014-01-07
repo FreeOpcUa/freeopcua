@@ -21,7 +21,7 @@ COMMON_INCLUDES = \
   -I$(top_srcdir) \
   -I$(top_srcdir)/address_space/include \
   -I$(top_srcdir)/services_registry/include \
-  $(UA_MAPPING_INCLUDES) \
+  $(UAMAPPINGS_INCLUDES) \
   $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) -I.
@@ -39,7 +39,7 @@ libxml_ns_addon_la_SOURCES = \
   src/xml_processor.h
 
 libxml_ns_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
-libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS)
+libxml_ns_addon_la_LDFLAGS = -lpthread -ldl -lxml2  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS)
 
 EXTRA_DIST = \
   tests/base_node.xml \
@@ -66,5 +66,5 @@ xml_address_space_ut_SOURCES = \
   tests/xml_address_space_addon_ut.cpp
 
 xml_address_space_ut_CPPFLAGS = $(TESTINCLUDES)  $(COMMON_INCLUDES)
-xml_address_space_ut_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -lxml2 $(URI_LIBS) $(OPC_CORE_LIBS) $(UA_MAPPING_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
+xml_address_space_ut_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl -lxml2 $(URI_LIBS) $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 

@@ -640,8 +640,9 @@ OPC_CLIENT_INCLUDES
 OPC_CLIENT_LIBS
 OPC_CORE_INCLUDES
 OPC_CORE_LIBS
-UA_MAPPING_INCLUDES
-UA_MAPPING_LIBS
+UAMAPPING_LIBS
+UAMAPPINGS_INCLUDES
+UAMAPPINGS_LIBS
 GMOCK_INCLUDES
 GMOCK_LIBS
 GTEST_INCLUDES
@@ -778,8 +779,8 @@ with_sysroot
 enable_libtool_lock
 with_gtest
 with_gmock
-with_ua_mappings
-with_libopccore
+with_uamappings
+with_opccore
 with_libopcuaclient
 '
       ac_precious_vars='build_alias
@@ -1434,8 +1435,8 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-gtest=DIR        defines path to gtest root directory
   --with-gmock=DIR        defines path to gmock root directory
-  --with-ua-mappings=DIR  defines path to ua mappings root directory
-  --with-libopccore=DIR   defines path to the root directory of libopccore
+  --with-uamappings=DIR   defines path to uamappings root directory
+  --with-opccore=DIR      defines path to the root directory of libopccore
                           library.
   --with-libopcuaclient=DIR
                           defines path to the root directory of
@@ -15355,44 +15356,44 @@ fi
 
 
 
+# Check whether --with-uamappings was given.
+if test "${with_uamappings+set}" = set; then :
+  withval=$with_uamappings;
+              UAMAPPINGS_LIBS="-L$with_uamappings/.libs -lopcuabinary"
 
-# Check whether --with-ua-mappings was given.
-if test "${with_ua_mappings+set}" = set; then :
-  withval=$with_ua_mappings;
-              UA_MAPPING_LIBS="-L$with_ua_mappings/.libs -lopcuabinary"
+              UAMAPPINGS_INCLUDES=-I$with_uamappings/include
 
-              UA_MAPPING_INCLUDES=-I$with_ua_mappings/include
-
-              { $as_echo "$as_me:${as_lineno-$LINENO}: ua mappings path: $with_ua_mappings" >&5
-$as_echo "$as_me: ua mappings path: $with_ua_mappings" >&6;}
+              { $as_echo "$as_me:${as_lineno-$LINENO}: ua mappings path: $with_uamappings" >&5
+$as_echo "$as_me: ua mappings path: $with_uamappings" >&6;}
 
 else
 
-              UA_MAPPING_LIBS="-lopcuabinary"
+              UAMAPPING_LIBS=-lopcuabinary
 
 
 fi
 
 
 
-# Check whether --with-libopccore was given.
-if test "${with_libopccore+set}" = set; then :
-  withval=$with_libopccore;
-              OPC_CORE_LIBS="-L$with_libopccore/.libs -lopcuacore -lxml2"
+# Check whether --with-opccore was given.
+if test "${with_opccore+set}" = set; then :
+  withval=$with_opccore;
+              OPC_CORE_LIBS="-L$with_opccore/.libs -lopcuacore -lxml2"
 
-              OPC_CORE_INCLUDES="-I$with_libopccore/include -I/usr/include/libxml2"
+              OPC_CORE_INCLUDES="-I$with_opccore/include -I/usr/include/libxml2"
 
-              { $as_echo "$as_me:${as_lineno-$LINENO}: libopccore path: $with_libopccore" >&5
-$as_echo "$as_me: libopccore path: $with_libopccore" >&6;}
+              { $as_echo "$as_me:${as_lineno-$LINENO}: opccore path: $with_opccore" >&5
+$as_echo "$as_me: opccore path: $with_opccore" >&6;}
 
 else
 
               OPC_CORE_INCLUDES="-I/usr/include/libxml2"
 
-              OPC_CORE_LIBS="-lopcuacore -lxml2"
+              OPC_CORE_LIBS=-lopcuacore
 
 
 fi
+
 
 
 

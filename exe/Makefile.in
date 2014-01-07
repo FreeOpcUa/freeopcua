@@ -233,8 +233,9 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-UA_MAPPING_INCLUDES = @UA_MAPPING_INCLUDES@
-UA_MAPPING_LIBS = @UA_MAPPING_LIBS@
+UAMAPPINGS_INCLUDES = @UAMAPPINGS_INCLUDES@
+UAMAPPINGS_LIBS = @UAMAPPINGS_LIBS@
+UAMAPPING_LIBS = @UAMAPPING_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -289,7 +290,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-COMMON_INCLUDES = $(UA_MAPPING_INCLUDES) $(OPC_CORE_INCLUDES)
+COMMON_INCLUDES = $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) tests
 opcuaserver_SOURCES = \
   src/daemon.cpp \
@@ -299,7 +300,7 @@ opcuaserver_SOURCES = \
   src/server_options.h
 
 opcuaserver_CPPFLAGS = $(COMMON_INCLUDES)
-opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
+opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
 configdir = $(sysconfdir)/opcua
 config_DATA = configs/server.config
 
@@ -334,7 +335,7 @@ test_opcuaserver_SOURCES = \
 
 test_opcuaserver_CPPFLAGS = $(COMMON_INCLUDES) $(TESTINCLUDES)
 test_opcuaserver_LDADD = test_addon.so
-test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UA_MAPPING_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
+test_opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined
 CLEANFILES = test_addon.o test_addon.so
 all: all-am
 
@@ -892,7 +893,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-configDATA \
 check : test_addon.so
 
 test_addon.so: tests/test_addon.h tests/test_addon.cpp
-	gcc -o0 -g -Wall -std=c++0x -fPIC -c tests/test_addon.cpp -o test_addon.o $(INCLUDES)
+	gcc -o0 -g -Wall -std=c++0x -fPIC -c $(COMMON_INCLUDES) tests/test_addon.cpp -o test_addon.o 
 	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(OPC_CORE_LIBS)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

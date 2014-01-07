@@ -46,29 +46,29 @@ AC_ARG_WITH([gmock],
               AC_SUBST([GMOCK_LIBS], [-lgmock])
             ])
 
-
-AC_ARG_WITH([ua-mappings], 
-            [AS_HELP_STRING([--with-ua-mappings=DIR], [defines path to ua mappings root directory])],
+AC_ARG_WITH([uamappings], 
+            [AS_HELP_STRING([--with-uamappings=DIR], [defines path to uamappings root directory])],
             [ 
-              AC_SUBST([UA_MAPPING_LIBS], ["-L$with_ua_mappings/.libs -lopcuabinary"])
-              AC_SUBST([UA_MAPPING_INCLUDES], [-I$with_ua_mappings/include])
-              AC_MSG_NOTICE([ua mappings path: $with_ua_mappings]) 
+              AC_SUBST([UAMAPPINGS_LIBS], ["-L$with_uamappings/.libs -lopcuabinary"])
+              AC_SUBST([UAMAPPINGS_INCLUDES], [-I$with_uamappings/include])
+              AC_MSG_NOTICE([ua mappings path: $with_uamappings]) 
             ], 
             [ 
-              AC_SUBST([UA_MAPPING_LIBS], ["-lopcuabinary"])
+              AC_SUBST([UAMAPPING_LIBS], [-lopcuabinary])
             ])
 
-AC_ARG_WITH([libopccore], 
-            [AS_HELP_STRING([--with-libopccore=DIR], [defines path to the root directory of libopccore library.])],
+AC_ARG_WITH([opccore],
+            [AS_HELP_STRING([--with-opccore=DIR], [defines path to the root directory of libopccore library.])],
             [ 
-              AC_SUBST([OPC_CORE_LIBS], ["-L$with_libopccore/.libs -lopcuacore -lxml2"])
-              AC_SUBST([OPC_CORE_INCLUDES], ["-I$with_libopccore/include -I/usr/include/libxml2"])
-              AC_MSG_NOTICE([libopccore path: $with_libopccore]) 
+              AC_SUBST([OPC_CORE_LIBS], ["-L$with_opccore/.libs -lopcuacore -lxml2"])
+              AC_SUBST([OPC_CORE_INCLUDES], ["-I$with_opccore/include -I/usr/include/libxml2"])
+              AC_MSG_NOTICE([opccore path: $with_opccore]) 
             ], 
             [ 
               AC_SUBST([OPC_CORE_INCLUDES], ["-I/usr/include/libxml2"])
-              AC_SUBST([OPC_CORE_LIBS], ["-lopcuacore -lxml2"])
+              AC_SUBST([OPC_CORE_LIBS], [-lopcuacore])
             ])
+
 
 AC_ARG_WITH([libopcuaclient], 
             [AS_HELP_STRING([--with-libopcuaclient=DIR], [defines path to the root directory of libopcua_client library.])],
