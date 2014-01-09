@@ -35,7 +35,7 @@ namespace
     {
       return vm[OPTION_CONFIG].as<std::string>();
     }
-    return "/etc/opcua/server.config";
+    return "/etc/opcua/server";
   }
 
 
@@ -69,7 +69,7 @@ namespace OpcUa
       po::options_description desc("Parameters");
       desc.add_options()
         (OPTION_HELP, "Print help message and exit.")
-        (OPTION_CONFIG, po::value<std::string>(), "Path to config file.")
+        (OPTION_CONFIG, po::value<std::string>(), "Path to directory with configuration files.")
         (OPTION_LOGFILE, po::value<std::string>(), "Set path to the log file. Default 'var/log/opcua/server.log")
         (OPTION_DAEMON, "Start in daemon mode.")
         ;
@@ -86,8 +86,8 @@ namespace OpcUa
       }
 
       IsDaemon = GetDaemonMode(vm);
-      std::string configFile = GetConfigOptionValue(vm);
-      const Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
+      const std::string configDir = GetConfigOptionValue(vm);
+      const Common::ModulesConfiguration modules = Common::ParseConfiguration(configDir);
       std::transform(modules.begin(), modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
       LogFile = ::GetLogFile(vm);
     }

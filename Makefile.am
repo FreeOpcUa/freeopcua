@@ -26,5 +26,5 @@ clean-local:
 	rm -rvf opcuaserver*$(VERSION)*
 
 dist-deb: dist
-	./make_deb.sh
+	VERSION=$(VERSION) $(top_srcdir)/make_deb.sh
 

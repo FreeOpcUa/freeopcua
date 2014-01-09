@@ -6,7 +6,7 @@
 # http://www.gnu.org/licenses/lgpl.html)
 #
 
-AC_INIT([opcuaserver], [0.1.2], [rykovanov.as@gmail.com])
+AC_INIT([opcuaserver], [0.1.3], [rykovanov.as@gmail.com])
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([exe/src/server_main.cpp])
 AM_INIT_AUTOMAKE([-Wall -Werror])
@@ -82,10 +82,13 @@ AC_ARG_WITH([libopcuaclient],
             ])
 
 
+AC_SUBST([RELEASE_DATE], [$(date -R)])
+
 #check headers
 AC_CHECK_HEADERS([unistd.h])
 
 #################################################################
+AC_CONFIG_FILES([debian/changelog])
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([address_space/Makefile])
 AC_CONFIG_FILES([binary_protocol/Makefile])

@@ -24,7 +24,8 @@ opcuaserver_CPPFLAGS = $(COMMON_INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
 
 configdir=$(sysconfdir)/opcua
-config_DATA = configs/server.config
+srvconfigdir=$(configdir)/server
+srvconfig_DATA = configs/main.config
 
 #upstartdir=$(sysconfdir)/init
 #upstart_DATA=configs/opcuaserver.conf
@@ -34,7 +35,7 @@ sysv_DATA=configs/opcuaserver
 
 EXTRA_DIST = \
   configs/opcuaserver \
-  configs/server.config \
+  configs/main.config \
   configs/opcuaserver.conf \
   tests/configs/endpoints.xml \
   tests/configs/test_addon.config \

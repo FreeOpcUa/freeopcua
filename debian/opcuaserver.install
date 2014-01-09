@@ -1,4 +1,4 @@
-etc/opcua/server.config
+etc/opcua/server/main.config
 usr/bin/opcuaserver
 usr/lib/lib*.a
 usr/lib/lib*.so*

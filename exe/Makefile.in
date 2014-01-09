@@ -75,7 +75,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" \
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(srvconfigdir)" \
 	"$(DESTDIR)$(sysvdir)"
 am__EXEEXT_1 = test_opcuaserver$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
@@ -151,7 +151,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-DATA = $(config_DATA) $(sysv_DATA)
+DATA = $(srvconfig_DATA) $(sysv_DATA)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -229,6 +229,7 @@ PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
+RELEASE_DATE = @RELEASE_DATE@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -302,7 +303,8 @@ opcuaserver_SOURCES = \
 opcuaserver_CPPFLAGS = $(COMMON_INCLUDES)
 opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) -Wl,--no-undefined,-rpath -Wl,LIBDIR
 configdir = $(sysconfdir)/opcua
-config_DATA = configs/server.config
+srvconfigdir = $(configdir)/server
+srvconfig_DATA = configs/main.config
 
 #upstartdir=$(sysconfdir)/init
 #upstart_DATA=configs/opcuaserver.conf
@@ -310,7 +312,7 @@ sysvdir = $(sysconfdir)/init.d
 sysv_DATA = configs/opcuaserver
 EXTRA_DIST = \
   configs/opcuaserver \
-  configs/server.config \
+  configs/main.config \
   configs/opcuaserver.conf \
   tests/configs/endpoints.xml \
   tests/configs/test_addon.config \
@@ -541,27 +543,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-configDATA: $(config_DATA)
+install-srvconfigDATA: $(srvconfig_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	@list='$(srvconfig_DATA)'; test -n "$(srvconfigdir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(configdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(configdir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(srvconfigdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(srvconfigdir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(configdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(configdir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(srvconfigdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(srvconfigdir)" || exit $$?; \
 	done
 
-uninstall-configDATA:
+uninstall-srvconfigDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	@list='$(srvconfig_DATA)'; test -n "$(srvconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(configdir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(srvconfigdir)'; $(am__uninstall_files_from_dir)
 install-sysvDATA: $(sysv_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(sysv_DATA)'; test -n "$(sysvdir)" || list=; \
@@ -765,7 +767,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(configdir)" "$(DESTDIR)$(sysvdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(srvconfigdir)" "$(DESTDIR)$(sysvdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -822,7 +824,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-configDATA install-sysvDATA
+install-data-am: install-srvconfigDATA install-sysvDATA
 
 install-dvi: install-dvi-am
 
@@ -868,7 +870,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-configDATA \
+uninstall-am: uninstall-binPROGRAMS uninstall-srvconfigDATA \
 	uninstall-sysvDATA
 
 .MAKE: check-am install-am install-strip
@@ -878,16 +880,16 @@ uninstall-am: uninstall-binPROGRAMS uninstall-configDATA \
 	clean-libtool ctags distclean distclean-compile \
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-configDATA install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip install-sysvDATA \
+	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-srvconfigDATA install-strip install-sysvDATA \
 	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-configDATA uninstall-sysvDATA
+	uninstall-srvconfigDATA uninstall-sysvDATA
 
 
 check : test_addon.so
