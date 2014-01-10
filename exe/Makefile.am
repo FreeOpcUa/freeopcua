@@ -37,9 +37,7 @@ EXTRA_DIST = \
   configs/opcuaserver \
   configs/main.config \
   configs/opcuaserver.conf \
-  tests/configs/endpoints.xml \
   tests/configs/test_addon.config \
-  tests/configs/test_tcp_server.xml \
   tests/common.cpp \
   tests/common.h \
   tests/test_addon.cpp \
