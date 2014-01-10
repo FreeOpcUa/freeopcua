@@ -16,7 +16,7 @@
 
 TEST(LoadingAddon, TestAdon)
 {
-  char* argv[4] = { "test.exe", "--config=./tests/configs/test_addon.config", "--log-file=/path/to/log/server.log", "--daemon" };
+  char* argv[4] = { "test.exe", "--config=./tests/configs", "--log-file=/path/to/log/server.log", "--daemon" };
   OpcUa::Server::CommandLine cmdline(4, argv);
   EXPECT_EQ(cmdline.GetLogFile(), "/path/to/log/server.log");
   EXPECT_TRUE(cmdline.IsDaemonMode());
