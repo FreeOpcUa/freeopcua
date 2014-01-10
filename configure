@@ -15401,7 +15401,7 @@ fi
 # Check whether --with-libopcuaclient was given.
 if test "${with_libopcuaclient+set}" = set; then :
   withval=$with_libopcuaclient;
-              OPC_CLIENT_LIBS="-L$with_libopcuaclient/.libs -lopcua_client"
+              OPC_CLIENT_LIBS="-L$with_libopcuaclient/.libs -lopc_tcp_client"
 
               OPC_CLIENT_INCLUDES=-I$with_libopcuaclient/include
 

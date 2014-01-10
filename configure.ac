@@ -73,7 +73,7 @@ AC_ARG_WITH([opccore],
 AC_ARG_WITH([libopcuaclient], 
             [AS_HELP_STRING([--with-libopcuaclient=DIR], [defines path to the root directory of libopcua_client library.])],
             [ 
-              AC_SUBST([OPC_CLIENT_LIBS], ["-L$with_libopcuaclient/.libs -lopcua_client"])
+              AC_SUBST([OPC_CLIENT_LIBS], ["-L$with_libopcuaclient/.libs -lopc_tcp_client"])
               AC_SUBST([OPC_CLIENT_INCLUDES], [-I$with_libopcuaclient/include])
               AC_MSG_NOTICE([libopcuaclient path: $with_libopcuaclient]) 
             ], 
