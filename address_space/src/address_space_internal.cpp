@@ -48,6 +48,50 @@ namespace
       Referencies.insert({sourceNode, reference});
     }
 
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const
+    {
+      std::vector<BrowsePathResult> results;
+      NodeID current;
+      for (BrowsePath browsepath : params.BrowsePaths )
+      {
+        current = browsepath.StartingNode;
+        std::cout << "Starting node is: " << current.GetIntegerIdentifier() << std::endl;
+        bool found = false;
+        for (RelativePathElement element : browsepath.Path.Elements)
+        {
+          found = false;
+          std::cout << "Looking for element: " << element.TargetName.Name << std::endl;
+          for (auto reference : Referencies)
+          {
+            if (reference.first == current && reference.second.BrowseName == element.TargetName)
+            {
+              current = reference.second.TargetNodeID;
+              found = true;
+              std::cout << "Found element: " << reference.second.BrowseName.Name<< std::endl;
+              break;
+            }
+            found = false;
+          }
+        }
+        BrowsePathResult res;
+        if ( !found) {
+          std::cout << "Node not found " << std::endl;
+          res.Status = OpcUa::StatusCode::BadNotReadable;
+        }
+        else
+        {
+          std::cout << "Found Node: " <<  current.GetIntegerIdentifier() << std::endl;
+          res.Status = OpcUa::StatusCode::Good;
+          std::vector<BrowsePathTarget> targets;
+          BrowsePathTarget target;
+          target.Node = current;
+          targets.push_back(target);
+          res.Targets = targets;
+        }
+        results.push_back(res);
+        }
+      return results;
+    }
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {

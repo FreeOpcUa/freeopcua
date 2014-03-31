@@ -55,10 +55,14 @@ namespace OpcUa
     {
       return Registry->Browse(query);
     }
-
     std::vector<ReferenceDescription> AddressSpaceAddon::BrowseNext() const
     {
       return Registry->BrowseNext();
+    }
+
+    std::vector<BrowsePathResult> AddressSpaceAddon::TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const 
+    {
+      return Registry->TranslateBrowsePathToNodeIds(params);
     }
 
     std::vector<DataValue> AddressSpaceAddon::Read(const OpcUa::ReadParameters& filter) const

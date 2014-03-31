@@ -46,6 +46,11 @@ namespace
       return std::vector<ReferenceDescription>();
     }
 
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const
+    {
+      return std::vector<BrowsePathResult>();
+    }
+
     virtual std::vector<OpcUa::DataValue> Read(const OpcUa::ReadParameters& filter) const
     {
       DataValue value;

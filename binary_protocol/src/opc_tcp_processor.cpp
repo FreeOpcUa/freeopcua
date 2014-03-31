@@ -99,7 +99,7 @@ namespace
 
         case MT_ACKNOWLEDGE:
         {
-          if (Debug) std::clog << "Received acknowledge from client. He mustn't do that.." << std::endl;
+          if (Debug) std::clog << "Received acknowledge from client. This should not have happend..." << std::endl;
           throw std::logic_error("Thank to client about acknowledge.");
         }
         case MT_ERROR:
@@ -440,14 +440,38 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
           std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
-
+          //std::cout << "Size of packet in byte: " << data.size() << std::endl;
+          //RawBuffer buffer(&data[0], restSize);
+          //stream >> buffer;
+          TranslateBrowsePathsParameters params;
+          stream >> params;
+          //debug
+          for ( BrowsePath path : params.BrowsePaths)
+          {
+            std::cout << "Requested path is: " << path.StartingNode.GetNamespaceIndex() << path.StartingNode.GetIntegerIdentifier() << " : " ;
+            for ( RelativePathElement el : path.Path.Elements)
+            {
+              std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
+            }
+            std::cout << std::endl; 
+          }
+          //end debug
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          BrowsePathResult path;
-          path.Status = StatusCode::BadNotReadable;
-          response.Result.Paths.push_back(path);
+
+          std::vector<BrowsePathResult> result = Computer->Views()->TranslateBrowsePathToNodeIds(params); 
+          //debug
+
+          for (BrowsePathResult res: result)
+          {
+          for ( BrowsePathTarget path : res.Targets)
+          {
+            std::cout << "Result of browsePath is: " << path.Node.GetNamespaceIndex() << path.Node.GetIntegerIdentifier() << std::endl;
+          }
+          }
+          //end debug
+          response.Result.Paths = result;
+
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

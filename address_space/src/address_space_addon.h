@@ -44,6 +44,7 @@ namespace OpcUa
     public:
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
       virtual std::vector<ReferenceDescription> BrowseNext() const;
+      virtual std::vector<BrowsePathResult> TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const;
 
     public:
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
