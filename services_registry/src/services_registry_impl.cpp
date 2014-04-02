@@ -46,7 +46,7 @@ namespace
       return std::vector<ReferenceDescription>();
     }
 
-    virtual std::vector<BrowsePathResult> TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
       return std::vector<BrowsePathResult>();
     }

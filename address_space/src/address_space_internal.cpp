@@ -48,7 +48,7 @@ namespace
       Referencies.insert({sourceNode, reference});
     }
 
-    virtual std::vector<BrowsePathResult> TranslateBrowsePathToNodeIds(TranslateBrowsePathsParameters params) const
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
       std::vector<BrowsePathResult> results;
       NodeID current;
@@ -70,8 +70,8 @@ namespace
               std::cout << "Found element: " << reference.second.BrowseName.Name<< std::endl;
               break;
             }
-            found = false;
           }
+          if (! found ) { break; std::cout << element.TargetName.Name << " not found" << std::endl;}
         }
         BrowsePathResult res;
         if ( !found) {

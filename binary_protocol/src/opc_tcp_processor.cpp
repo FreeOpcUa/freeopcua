@@ -459,7 +459,7 @@ namespace
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          std::vector<BrowsePathResult> result = Computer->Views()->TranslateBrowsePathToNodeIds(params); 
+          std::vector<BrowsePathResult> result = Computer->Views()->TranslateBrowsePathsToNodeIds(params); 
           //debug
 
           for (BrowsePathResult res: result)

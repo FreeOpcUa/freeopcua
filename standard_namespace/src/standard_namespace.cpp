@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <map>
+#include <iostream>
 
 namespace
 {
@@ -39,8 +40,10 @@ namespace
 
       void Fill()
       {
+          std::cout << "Programmatically fillig address space" << std::endl;
        Root();
          Objects();
+         Server();
          Types();
            DataTypes();
              BaseDataType();
@@ -267,12 +270,13 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::RootFolder, AttributeID::NODE_ID,      NodeID(ObjectID::RootFolder));
-        NewValue(ObjectID::RootFolder, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::RootFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::RootFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Root));
         NewValue(ObjectID::RootFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Root));
         NewValue(ObjectID::RootFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Root));
         NewValue(ObjectID::RootFolder, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, 0);
+        NewValue(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER, 0);
 
         // Referencies
         AddReference(ObjectID::RootFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
@@ -285,19 +289,49 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::ObjectsFolder, AttributeID::NODE_ID,      NodeID(ObjectID::ObjectsFolder));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ObjectsFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ObjectsFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Objects));
         NewValue(ObjectID::ObjectsFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Objects));
         NewValue(ObjectID::ObjectsFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Objects));
         NewValue(ObjectID::ObjectsFolder, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::ObjectsFolder, AttributeID::USER_WRITE_MASK, 0);
+
+        AddReference(ObjectID::ObjectsFolder, forward, ReferenceID::Organizes, ObjectID::Server, Names::Server, NodeClass::Object, ObjectID::ServerType);
       }
+
+    void Server()
+      {
+        // Attributes
+        NewValue(ObjectID::Server, AttributeID::NODE_ID,      NodeID(ObjectID::Server));
+        NewValue(ObjectID::Server, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
+        NewValue(ObjectID::Server, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Server));
+        NewValue(ObjectID::Server, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Server));
+        NewValue(ObjectID::Server, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Server));
+        NewValue(ObjectID::Server, AttributeID::WRITE_MASK,   0);
+        NewValue(ObjectID::Server, AttributeID::USER_WRITE_MASK, 0);
+        AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::ServerCapabilities, Names::ServerCapabilities, NodeClass::Variable, ObjectID::PropertyType);
+        AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::NamespaceArray, Names::NamespaceArray, NodeClass::Variable, ObjectID::PropertyType);
+      }
+/*
+    void ServerCapabilities()
+      {
+        // Attributes
+        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_ID,      NodeID(ObjectID::ServerCapabilities));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerCapabilities));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerCapabilities));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerCapabilities));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::WRITE_MASK,   0);
+        NewValue(ObjectID::ServerCapabilities, AttributeID::USER_WRITE_MASK, 0);
+      }
+
+*/
 
       void Types()
       {
         // Attributes
         NewValue(ObjectID::TypesFolder, AttributeID::NODE_ID,      NodeID(ObjectID::TypesFolder));
-        NewValue(ObjectID::TypesFolder, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::TypesFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::TypesFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Types));
         NewValue(ObjectID::TypesFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Types));
         NewValue(ObjectID::TypesFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Types));
@@ -317,7 +351,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::DataTypes, AttributeID::NODE_ID,      NodeID(ObjectID::DataTypes));
-        NewValue(ObjectID::DataTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::DataTypes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::DataTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DataTypes));
         NewValue(ObjectID::DataTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DataTypes));
         NewValue(ObjectID::DataTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DataTypes));
@@ -333,7 +367,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BaseDataType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseDataType));
-        NewValue(ObjectID::BaseDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::BaseDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::BaseDataType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseDataType));
         NewValue(ObjectID::BaseDataType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseDataType));
         NewValue(ObjectID::BaseDataType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseDataType));
@@ -365,7 +399,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Boolean, AttributeID::NODE_ID,      NodeID(ObjectID::Boolean));
-        NewValue(ObjectID::Boolean, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Boolean, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Boolean, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Boolean));
         NewValue(ObjectID::Boolean, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Boolean));
         NewValue(ObjectID::Boolean, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Boolean));
@@ -379,7 +413,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ByteString, AttributeID::NODE_ID,      NodeID(ObjectID::ByteString));
-        NewValue(ObjectID::ByteString, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ByteString, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ByteString, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ByteString));
         NewValue(ObjectID::ByteString, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ByteString));
         NewValue(ObjectID::ByteString, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ByteString));
@@ -396,7 +430,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Image, AttributeID::NODE_ID,      NodeID(ObjectID::Image));
-        NewValue(ObjectID::Image, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Image, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Image, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Image));
         NewValue(ObjectID::Image, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Image));
         NewValue(ObjectID::Image, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Image));
@@ -416,7 +450,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ImageBmp, AttributeID::NODE_ID,      NodeID(ObjectID::ImageBmp));
-        NewValue(ObjectID::ImageBmp, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ImageBmp, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ImageBmp, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ImageBmp));
         NewValue(ObjectID::ImageBmp, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ImageBmp));
         NewValue(ObjectID::ImageBmp, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ImageBmp));
@@ -430,7 +464,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ImageGif, AttributeID::NODE_ID,      NodeID(ObjectID::ImageGif));
-        NewValue(ObjectID::ImageGif, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ImageGif, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ImageGif, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ImageGif));
         NewValue(ObjectID::ImageGif, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ImageGif));
         NewValue(ObjectID::ImageGif, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ImageGif));
@@ -444,7 +478,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ImageJpg, AttributeID::NODE_ID,      NodeID(ObjectID::ImageJpg));
-        NewValue(ObjectID::ImageJpg, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ImageJpg, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ImageJpg, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ImageJpg));
         NewValue(ObjectID::ImageJpg, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ImageJpg));
         NewValue(ObjectID::ImageJpg, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ImageJpg));
@@ -458,7 +492,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ImagePng, AttributeID::NODE_ID,      NodeID(ObjectID::ImagePng));
-        NewValue(ObjectID::ImagePng, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ImagePng, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ImagePng, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ImagePng));
         NewValue(ObjectID::ImagePng, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ImagePng));
         NewValue(ObjectID::ImagePng, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ImagePng));
@@ -472,7 +506,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::DataValue, AttributeID::NODE_ID,      NodeID(ObjectID::DataValue));
-        NewValue(ObjectID::DataValue, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::DataValue, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::DataValue, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DataValue));
         NewValue(ObjectID::DataValue, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DataValue));
         NewValue(ObjectID::DataValue, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DataValue));
@@ -486,7 +520,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::DateTime, AttributeID::NODE_ID,      NodeID(ObjectID::DateTime));
-        NewValue(ObjectID::DateTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::DateTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::DateTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DateTime));
         NewValue(ObjectID::DateTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DateTime));
         NewValue(ObjectID::DateTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DateTime));
@@ -503,7 +537,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::UtcTime, AttributeID::NODE_ID,      NodeID(ObjectID::UtcTime));
-        NewValue(ObjectID::UtcTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::UtcTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::UtcTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UtcTime));
         NewValue(ObjectID::UtcTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::UtcTime));
         NewValue(ObjectID::UtcTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::UtcTime));
@@ -517,7 +551,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::DiagnosticInfo, AttributeID::NODE_ID,      NodeID(ObjectID::DiagnosticInfo));
-        NewValue(ObjectID::DiagnosticInfo, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::DiagnosticInfo, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::DiagnosticInfo, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DiagnosticInfo));
         NewValue(ObjectID::DiagnosticInfo, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DiagnosticInfo));
         NewValue(ObjectID::DiagnosticInfo, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DiagnosticInfo));
@@ -531,7 +565,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Enumeration, AttributeID::NODE_ID,      NodeID(ObjectID::Enumeration));
-        NewValue(ObjectID::Enumeration, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Enumeration, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Enumeration, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Enumeration));
         NewValue(ObjectID::Enumeration, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Enumeration));
         NewValue(ObjectID::Enumeration, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Enumeration));
@@ -553,7 +587,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::IdType, AttributeID::NODE_ID,      NodeID(ObjectID::IdType));
-        NewValue(ObjectID::IdType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::IdType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::IdType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::IdType));
         NewValue(ObjectID::IdType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::IdType));
         NewValue(ObjectID::IdType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::IdType));
@@ -569,7 +603,7 @@ namespace
       {
         // Base Attributes
         NewValue(nodeID, AttributeID::NODE_ID,      NodeID(nodeID));
-        NewValue(nodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(nodeID, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(nodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EnumStrings));
         NewValue(nodeID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EnumStrings));
         NewValue(nodeID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EnumStrings));
@@ -578,7 +612,7 @@ namespace
         // Variable Attributes
         NewValue(nodeID, AttributeID::VALUE, values);
         NewValue(nodeID, AttributeID::DATA_TYPE, NodeID(ObjectID::LocalizedText));
-        NewValue(nodeID, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>(1,0));
+        NewValue(nodeID, AttributeID::ARRAY_DIMENSIONS, std::vector<int32_t>(1,0));
         NewValue(nodeID, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(nodeID, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(nodeID, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(100));
@@ -602,7 +636,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::MessageSecurityMode, AttributeID::NODE_ID,      NodeID(ObjectID::MessageSecurityMode));
-        NewValue(ObjectID::MessageSecurityMode, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::MessageSecurityMode, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::MessageSecurityMode, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::MessageSecurityMode));
         NewValue(ObjectID::MessageSecurityMode, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::MessageSecurityMode));
         NewValue(ObjectID::MessageSecurityMode, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::MessageSecurityMode));
@@ -628,7 +662,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::NodeClass, AttributeID::NODE_ID,      NodeID(ObjectID::NodeClass));
-        NewValue(ObjectID::NodeClass, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::NodeClass, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::NodeClass, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NodeClass));
         NewValue(ObjectID::NodeClass, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::NodeClass));
         NewValue(ObjectID::NodeClass, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::NodeClass));
@@ -642,7 +676,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::RedundancySupport, AttributeID::NODE_ID,      NodeID(ObjectID::RedundancySupport));
-        NewValue(ObjectID::RedundancySupport, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::RedundancySupport, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::RedundancySupport, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::RedundancySupport));
         NewValue(ObjectID::RedundancySupport, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::RedundancySupport));
         NewValue(ObjectID::RedundancySupport, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::RedundancySupport));
@@ -669,7 +703,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SecurityTokenRequestType, AttributeID::NODE_ID,      NodeID(ObjectID::SecurityTokenRequestType));
-        NewValue(ObjectID::SecurityTokenRequestType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::SecurityTokenRequestType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::SecurityTokenRequestType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SecurityTokenRequestType));
         NewValue(ObjectID::SecurityTokenRequestType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SecurityTokenRequestType));
         NewValue(ObjectID::SecurityTokenRequestType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SecurityTokenRequestType));
@@ -693,7 +727,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerState, AttributeID::NODE_ID,      NodeID(ObjectID::ServerState));
-        NewValue(ObjectID::ServerState, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ServerState, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ServerState, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerState));
         NewValue(ObjectID::ServerState, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerState));
         NewValue(ObjectID::ServerState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerState));
@@ -723,7 +757,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ExpandedNodeID, AttributeID::NODE_ID,      NodeID(ObjectID::ExpandedNodeID));
-        NewValue(ObjectID::ExpandedNodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::ExpandedNodeID, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::ExpandedNodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ExpandedNodeID));
         NewValue(ObjectID::ExpandedNodeID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ExpandedNodeID));
         NewValue(ObjectID::ExpandedNodeID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ExpandedNodeID));
@@ -737,7 +771,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Guid, AttributeID::NODE_ID,      NodeID(ObjectID::Guid));
-        NewValue(ObjectID::Guid, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Guid, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Guid, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Guid));
         NewValue(ObjectID::Guid, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Guid));
         NewValue(ObjectID::Guid, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Guid));
@@ -751,7 +785,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::LocalizedText, AttributeID::NODE_ID,      NodeID(ObjectID::LocalizedText));
-        NewValue(ObjectID::LocalizedText, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::LocalizedText, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::LocalizedText, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocalizedText));
         NewValue(ObjectID::LocalizedText, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::LocalizedText));
         NewValue(ObjectID::LocalizedText, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::LocalizedText));
@@ -765,7 +799,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::NodeID, AttributeID::NODE_ID,      NodeID(ObjectID::NodeID));
-        NewValue(ObjectID::NodeID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::NodeID, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::NodeID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NodeID));
         NewValue(ObjectID::NodeID, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::NodeID));
         NewValue(ObjectID::NodeID, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::NodeID));
@@ -779,7 +813,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Number, AttributeID::NODE_ID,      NodeID(ObjectID::Number));
-        NewValue(ObjectID::Number, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Number, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Number, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Number));
         NewValue(ObjectID::Number, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Number));
         NewValue(ObjectID::Number, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Number));
@@ -798,7 +832,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Double, AttributeID::NODE_ID,      NodeID(ObjectID::Double));
-        NewValue(ObjectID::Double, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Double, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Double, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Double));
         NewValue(ObjectID::Double, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Double));
         NewValue(ObjectID::Double, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Double));
@@ -814,7 +848,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Duration, AttributeID::NODE_ID,      NodeID(ObjectID::Duration));
-        NewValue(ObjectID::Duration, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Duration, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Duration, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Duration));
         NewValue(ObjectID::Duration, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Duration));
         NewValue(ObjectID::Duration, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Duration));
@@ -828,7 +862,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Float, AttributeID::NODE_ID,      NodeID(ObjectID::Float));
-        NewValue(ObjectID::Float, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Float, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Float, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Float));
         NewValue(ObjectID::Float, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Float));
         NewValue(ObjectID::Float, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Float));
@@ -842,7 +876,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Integer, AttributeID::NODE_ID,      NodeID(ObjectID::Integer));
-        NewValue(ObjectID::Integer, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Integer, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Integer, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Integer));
         NewValue(ObjectID::Integer, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Integer));
         NewValue(ObjectID::Integer, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Integer));
@@ -861,7 +895,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Int16, AttributeID::NODE_ID,      NodeID(ObjectID::Int16));
-        NewValue(ObjectID::Int16, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Int16, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Int16, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int16));
         NewValue(ObjectID::Int16, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int16));
         NewValue(ObjectID::Int16, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int16));
@@ -875,7 +909,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Int32, AttributeID::NODE_ID,      NodeID(ObjectID::Int32));
-        NewValue(ObjectID::Int32, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Int32, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Int32, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int32));
         NewValue(ObjectID::Int32, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int32));
         NewValue(ObjectID::Int32, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int32));
@@ -889,7 +923,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Int64, AttributeID::NODE_ID,      NodeID(ObjectID::Int64));
-        NewValue(ObjectID::Int64, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Int64, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Int64, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Int64));
         NewValue(ObjectID::Int64, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Int64));
         NewValue(ObjectID::Int64, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Int64));
@@ -903,7 +937,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SByte, AttributeID::NODE_ID,      NodeID(ObjectID::SByte));
-        NewValue(ObjectID::SByte, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::SByte, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::SByte, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SByte));
         NewValue(ObjectID::SByte, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SByte));
         NewValue(ObjectID::SByte, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SByte));
@@ -917,7 +951,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::UInteger, AttributeID::NODE_ID,      NodeID(ObjectID::UInteger));
-        NewValue(ObjectID::UInteger, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::UInteger, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::UInteger, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInteger));
         NewValue(ObjectID::UInteger, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInteger));
         NewValue(ObjectID::UInteger, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInteger));
@@ -936,7 +970,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::UInt16, AttributeID::NODE_ID,      NodeID(ObjectID::UInt16));
-        NewValue(ObjectID::UInt16, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::UInt16, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::UInt16, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt16));
         NewValue(ObjectID::UInt16, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt16));
         NewValue(ObjectID::UInt16, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt16));
@@ -950,7 +984,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::UInt32, AttributeID::NODE_ID,      NodeID(ObjectID::UInt32));
-        NewValue(ObjectID::UInt32, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::UInt32, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::UInt32, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt32));
         NewValue(ObjectID::UInt32, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt32));
         NewValue(ObjectID::UInt32, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt32));
@@ -964,7 +998,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::UInt64, AttributeID::NODE_ID,      NodeID(ObjectID::UInt64));
-        NewValue(ObjectID::UInt64, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::UInt64, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::UInt64, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::UInt64));
         NewValue(ObjectID::UInt64, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UInt64));
         NewValue(ObjectID::UInt64, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UInt64));
@@ -978,7 +1012,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Byte, AttributeID::NODE_ID,      NodeID(ObjectID::Byte));
-        NewValue(ObjectID::Byte, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Byte, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Byte, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Byte));
         NewValue(ObjectID::Byte, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Byte));
         NewValue(ObjectID::Byte, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Byte));
@@ -992,7 +1026,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::QualifiedName, AttributeID::NODE_ID,      NodeID(ObjectID::QualifiedName));
-        NewValue(ObjectID::QualifiedName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::QualifiedName, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::QualifiedName, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::QualifiedName));
         NewValue(ObjectID::QualifiedName, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::QualifiedName));
         NewValue(ObjectID::QualifiedName, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::QualifiedName));
@@ -1006,7 +1040,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StatusCode, AttributeID::NODE_ID,      NodeID(ObjectID::StatusCode));
-        NewValue(ObjectID::StatusCode, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StatusCode, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StatusCode, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::StatusCode));
         NewValue(ObjectID::StatusCode, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::StatusCode));
         NewValue(ObjectID::StatusCode, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::StatusCode));
@@ -1020,7 +1054,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::String, AttributeID::NODE_ID,      NodeID(ObjectID::String));
-        NewValue(ObjectID::String, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::String, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::String, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::String));
         NewValue(ObjectID::String, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::String));
         NewValue(ObjectID::String, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::String));
@@ -1037,7 +1071,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::LocaleID, AttributeID::NODE_ID,      NodeID(ObjectID::LocaleID));
-        NewValue(ObjectID::LocaleID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::LocaleID, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::LocaleID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocaleID));
         NewValue(ObjectID::LocaleID, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::LocaleID));
         NewValue(ObjectID::LocaleID, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::LocaleID));
@@ -1051,7 +1085,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::NumericRange, AttributeID::NODE_ID,      NodeID(ObjectID::NumericRange));
-        NewValue(ObjectID::NumericRange, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::NumericRange, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::NumericRange, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NumericRange));
         NewValue(ObjectID::NumericRange, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::NumericRange));
         NewValue(ObjectID::NumericRange, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::NumericRange));
@@ -1065,7 +1099,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Structure, AttributeID::NODE_ID,      NodeID(ObjectID::Structure));
-        NewValue(ObjectID::Structure, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::Structure, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::Structure, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Structure));
         NewValue(ObjectID::Structure, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Structure));
         NewValue(ObjectID::Structure, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Structure));
@@ -1101,7 +1135,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureAddNodesItem, AttributeID::NODE_ID,      NodeID(ObjectID::StructureAddNodesItem));
-        NewValue(ObjectID::StructureAddNodesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureAddNodesItem, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureAddNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::AddNodesItem));
         NewValue(ObjectID::StructureAddNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AddNodesItem));
         NewValue(ObjectID::StructureAddNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AddNodesItem));
@@ -1115,7 +1149,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureAddReferencesItem, AttributeID::NODE_ID,      NodeID(ObjectID::StructureAddReferencesItem));
-        NewValue(ObjectID::StructureAddReferencesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureAddReferencesItem, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureAddReferencesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::AddReferencesItem));
         NewValue(ObjectID::StructureAddReferencesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AddReferencesItem));
         NewValue(ObjectID::StructureAddReferencesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AddReferencesItem));
@@ -1129,7 +1163,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureApplicationDescription, AttributeID::NODE_ID,      NodeID(ObjectID::StructureApplicationDescription));
-        NewValue(ObjectID::StructureApplicationDescription, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureApplicationDescription, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureApplicationDescription, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ApplicationDescription));
         NewValue(ObjectID::StructureApplicationDescription, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ApplicationDescription));
         NewValue(ObjectID::StructureApplicationDescription, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ApplicationDescription));
@@ -1143,7 +1177,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureArgument, AttributeID::NODE_ID,      NodeID(ObjectID::StructureArgument));
-        NewValue(ObjectID::StructureArgument, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureArgument, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureArgument, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Argument));
         NewValue(ObjectID::StructureArgument, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Argument));
         NewValue(ObjectID::StructureArgument, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Argument));
@@ -1157,7 +1191,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureBuildInfo, AttributeID::NODE_ID,      NodeID(ObjectID::StructureBuildInfo));
-        NewValue(ObjectID::StructureBuildInfo, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureBuildInfo, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureBuildInfo, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BuildInfo));
         NewValue(ObjectID::StructureBuildInfo, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::BuildInfo));
         NewValue(ObjectID::StructureBuildInfo, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::BuildInfo));
@@ -1171,7 +1205,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::NODE_ID,      NodeID(ObjectID::StructureDeleteNodesItem));
-        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DeleteNodesItem));
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::DeleteNodesItem));
         NewValue(ObjectID::StructureDeleteNodesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::DeleteNodesItem));
@@ -1185,7 +1219,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::NODE_ID,      NodeID(ObjectID::StructureDeleteReferencesItem));
-        NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DeleteReferencesItem));
         NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::DeleteReferencesItem));
         NewValue(ObjectID::StructureDeleteReferencesItem, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::DeleteReferencesItem));
@@ -1199,7 +1233,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureEUInformation, AttributeID::NODE_ID,      NodeID(ObjectID::StructureEUInformation));
-        NewValue(ObjectID::StructureEUInformation, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureEUInformation, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureEUInformation, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EUInformation));
         NewValue(ObjectID::StructureEUInformation, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::EUInformation));
         NewValue(ObjectID::StructureEUInformation, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::EUInformation));
@@ -1213,7 +1247,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureModelChangeStructureDataType));
-        NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ModelChangeStructureDataType));
         NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ModelChangeStructureDataType));
         NewValue(ObjectID::StructureModelChangeStructureDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ModelChangeStructureDataType));
@@ -1227,7 +1261,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureRange, AttributeID::NODE_ID,      NodeID(ObjectID::StructureRange));
-        NewValue(ObjectID::StructureRange, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureRange, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureRange, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Range));
         NewValue(ObjectID::StructureRange, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::Range));
         NewValue(ObjectID::StructureRange, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::Range));
@@ -1241,7 +1275,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSamplingIntervalDiagnosticsDataType));
-        NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsDataType));
         NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsDataType));
         NewValue(ObjectID::StructureSamplingIntervalDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsDataType));
@@ -1255,7 +1289,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSemanticChangeStructureDataType));
-        NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SemanticChangeStructureDataType));
         NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SemanticChangeStructureDataType));
         NewValue(ObjectID::StructureSemanticChangeStructureDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SemanticChangeStructureDataType));
@@ -1269,7 +1303,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureServerDiagnosticsSummaryType));
-        NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServerDiagnosticsSummaryType));
         NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServerDiagnosticsSummaryType));
         NewValue(ObjectID::StructureServerDiagnosticsSummaryType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServerDiagnosticsSummaryType));
@@ -1283,7 +1317,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureServerStatusDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureServerStatusDataType));
-        NewValue(ObjectID::StructureServerStatusDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureServerStatusDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureServerStatusDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServerStatusDataType));
         NewValue(ObjectID::StructureServerStatusDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServerStatusDataType));
         NewValue(ObjectID::StructureServerStatusDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServerStatusDataType));
@@ -1297,7 +1331,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureServiceCounterDataType));
-        NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::ServiceCounterDataType));
         NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::ServiceCounterDataType));
         NewValue(ObjectID::StructureServiceCounterDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::ServiceCounterDataType));
@@ -1311,7 +1345,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSessionDiagnosticsDataType));
-        NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SessionDiagnosticsDataType));
         NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SessionDiagnosticsDataType));
         NewValue(ObjectID::StructureSessionDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SessionDiagnosticsDataType));
@@ -1325,7 +1359,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSessionSecurityDiagnosticsDataType));
-        NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SessionSecurityDiagnosticsDataType));
         NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SessionSecurityDiagnosticsDataType));
         NewValue(ObjectID::StructureSessionSecurityDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SessionSecurityDiagnosticsDataType));
@@ -1339,7 +1373,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSignedSoftwareCertificate));
-        NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SignedSoftwareCertificate));
         NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SignedSoftwareCertificate));
         NewValue(ObjectID::StructureSignedSoftwareCertificate, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SignedSoftwareCertificate));
@@ -1353,7 +1387,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureStatusResult, AttributeID::NODE_ID,      NodeID(ObjectID::StructureStatusResult));
-        NewValue(ObjectID::StructureStatusResult, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureStatusResult, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureStatusResult, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::StatusResult));
         NewValue(ObjectID::StructureStatusResult, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::StatusResult));
         NewValue(ObjectID::StructureStatusResult, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::StatusResult));
@@ -1367,7 +1401,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::NODE_ID,      NodeID(ObjectID::StructureSubscriptionDiagnosticsDataType));
-        NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SubscriptionDiagnosticsDataType));
         NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SubscriptionDiagnosticsDataType));
         NewValue(ObjectID::StructureSubscriptionDiagnosticsDataType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SubscriptionDiagnosticsDataType));
@@ -1381,7 +1415,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::StructureUserIdentifyToken));
-        NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::UserIdentifyToken));
         NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UserIdentifyToken));
         NewValue(ObjectID::StructureUserIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UserIdentifyToken));
@@ -1399,7 +1433,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::AnonymousIdentifyToken));
-        NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::AnonymousIdentifyToken));
         NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::AnonymousIdentifyToken));
         NewValue(ObjectID::AnonymousIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::AnonymousIdentifyToken));
@@ -1413,7 +1447,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::UserNameIdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::UserNameIdentifyToken));
-        NewValue(ObjectID::UserNameIdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::UserNameIdentifyToken, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::UserNameIdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::UserNameIdentifyToken));
         NewValue(ObjectID::UserNameIdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::UserNameIdentifyToken));
         NewValue(ObjectID::UserNameIdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::UserNameIdentifyToken));
@@ -1427,7 +1461,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::X509IdentifyToken, AttributeID::NODE_ID,      NodeID(ObjectID::X509IdentifyToken));
-        NewValue(ObjectID::X509IdentifyToken, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::X509IdentifyToken, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::X509IdentifyToken, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::X509IdentifyToken));
         NewValue(ObjectID::X509IdentifyToken, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::X509IdentifyToken));
         NewValue(ObjectID::X509IdentifyToken, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::X509IdentifyToken));
@@ -1441,7 +1475,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::XmlElement, AttributeID::NODE_ID,      NodeID(ObjectID::XmlElement));
-        NewValue(ObjectID::XmlElement, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::DataType));
+        NewValue(ObjectID::XmlElement, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::DataType));
         NewValue(ObjectID::XmlElement, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::XmlElement));
         NewValue(ObjectID::XmlElement, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::XmlElement));
         NewValue(ObjectID::XmlElement, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::XmlElement));
@@ -1455,7 +1489,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::EventTypes, AttributeID::NODE_ID,      NodeID(ObjectID::EventTypes));
-        NewValue(ObjectID::EventTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::EventTypes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::EventTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventTypes));
         NewValue(ObjectID::EventTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventTypes));
         NewValue(ObjectID::EventTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventTypes));
@@ -1471,7 +1505,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BaseEventType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseEventType));
-        NewValue(ObjectID::BaseEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::BaseEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::BaseEventType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseEventType));
         NewValue(ObjectID::BaseEventType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseEventType));
         NewValue(ObjectID::BaseEventType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseEventType));
@@ -1499,7 +1533,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BaseModelChangeEventType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseModelChangeEventType));
-        NewValue(ObjectID::BaseModelChangeEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::BaseModelChangeEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::BaseModelChangeEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::BaseModelChangeEventType));
         NewValue(ObjectID::BaseModelChangeEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::BaseModelChangeEventType));
         NewValue(ObjectID::BaseModelChangeEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::BaseModelChangeEventType));
@@ -1513,7 +1547,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SemanticChangeEventType, AttributeID::NODE_ID,      NodeID(ObjectID::SemanticChangeEventType));
-        NewValue(ObjectID::SemanticChangeEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::SemanticChangeEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::SemanticChangeEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SemanticChangeEventType));
         NewValue(ObjectID::SemanticChangeEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SemanticChangeEventType));
         NewValue(ObjectID::SemanticChangeEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SemanticChangeEventType));
@@ -1527,7 +1561,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SystemEventType, AttributeID::NODE_ID,      NodeID(ObjectID::SystemEventType));
-        NewValue(ObjectID::SystemEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::SystemEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::SystemEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::SystemEventType));
         NewValue(ObjectID::SystemEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::SystemEventType));
         NewValue(ObjectID::SystemEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::SystemEventType));
@@ -1546,7 +1580,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::DeviceFailureEventType, AttributeID::NODE_ID,      NodeID(ObjectID::DeviceFailureEventType));
-        NewValue(ObjectID::DeviceFailureEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::DeviceFailureEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::DeviceFailureEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::DeviceFailureEventType));
         NewValue(ObjectID::DeviceFailureEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::DeviceFailureEventType));
         NewValue(ObjectID::DeviceFailureEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::DeviceFailureEventType));
@@ -1560,7 +1594,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::RefreshEndEventType, AttributeID::NODE_ID,      NodeID(ObjectID::RefreshEndEventType));
-        NewValue(ObjectID::RefreshEndEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::RefreshEndEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::RefreshEndEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::RefreshEndEventType));
         NewValue(ObjectID::RefreshEndEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::RefreshEndEventType));
         NewValue(ObjectID::RefreshEndEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::RefreshEndEventType));
@@ -1574,7 +1608,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::RefreshRequiredEventType, AttributeID::NODE_ID,      NodeID(ObjectID::RefreshRequiredEventType));
-        NewValue(ObjectID::RefreshRequiredEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::RefreshRequiredEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::RefreshRequiredEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::RefreshRequiredEventType));
         NewValue(ObjectID::RefreshRequiredEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::RefreshRequiredEventType));
         NewValue(ObjectID::RefreshRequiredEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::RefreshRequiredEventType));
@@ -1588,7 +1622,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::RefreshStartEventType, AttributeID::NODE_ID,      NodeID(ObjectID::RefreshStartEventType));
-        NewValue(ObjectID::RefreshStartEventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::RefreshStartEventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::RefreshStartEventType, AttributeID::BROWSE_NAME,  QualifiedName(0,     OpcUa::Names::RefreshStartEventType));
         NewValue(ObjectID::RefreshStartEventType, AttributeID::DISPLAY_NAME, OpcUa::LocalizedText(OpcUa::Names::RefreshStartEventType));
         NewValue(ObjectID::RefreshStartEventType, AttributeID::DESCRIPTION,  OpcUa::LocalizedText(OpcUa::Names::RefreshStartEventType));
@@ -1602,7 +1636,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::EventID, AttributeID::NODE_ID,      NodeID(ObjectID::EventID));
-        NewValue(ObjectID::EventID, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::EventID, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::EventID, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventID));
         NewValue(ObjectID::EventID, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventID));
         NewValue(ObjectID::EventID, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventID));
@@ -1628,7 +1662,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::EventType, AttributeID::NODE_ID,      NodeID(ObjectID::EventType));
-        NewValue(ObjectID::EventType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::EventType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::EventType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EventType));
         NewValue(ObjectID::EventType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EventType));
         NewValue(ObjectID::EventType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EventType));
@@ -1653,7 +1687,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::LocalTime, AttributeID::NODE_ID,      NodeID(ObjectID::LocalTime));
-        NewValue(ObjectID::LocalTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::LocalTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::LocalTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocalTime));
         NewValue(ObjectID::LocalTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::LocalTime));
         NewValue(ObjectID::LocalTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::LocalTime));
@@ -1679,7 +1713,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Message, AttributeID::NODE_ID,      NodeID(ObjectID::Message));
-        NewValue(ObjectID::Message, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::Message, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::Message, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Message));
         NewValue(ObjectID::Message, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Message));
         NewValue(ObjectID::Message, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Message));
@@ -1704,7 +1738,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ReceiveTime, AttributeID::NODE_ID,      NodeID(ObjectID::ReceiveTime));
-        NewValue(ObjectID::ReceiveTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ReceiveTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ReceiveTime, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ReceiveTime));
         NewValue(ObjectID::ReceiveTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ReceiveTime));
         NewValue(ObjectID::ReceiveTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ReceiveTime));
@@ -1729,7 +1763,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Severity, AttributeID::NODE_ID,      NodeID(ObjectID::Severity));
-        NewValue(ObjectID::Severity, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::Severity, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::Severity, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Severity));
         NewValue(ObjectID::Severity, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Severity));
         NewValue(ObjectID::Severity, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Severity));
@@ -1754,7 +1788,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SourceName, AttributeID::NODE_ID,      NodeID(ObjectID::SourceName));
-        NewValue(ObjectID::SourceName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SourceName, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SourceName, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SourceName));
         NewValue(ObjectID::SourceName, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SourceName));
         NewValue(ObjectID::SourceName, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SourceName));
@@ -1779,7 +1813,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SourceNode, AttributeID::NODE_ID,      NodeID(ObjectID::SourceNode));
-        NewValue(ObjectID::SourceNode, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SourceNode, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SourceNode, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SourceNode));
         NewValue(ObjectID::SourceNode, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SourceNode));
         NewValue(ObjectID::SourceNode, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SourceNode));
@@ -1804,7 +1838,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Time, AttributeID::NODE_ID,      NodeID(ObjectID::Time));
-        NewValue(ObjectID::Time, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::Time, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::Time, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Time));
         NewValue(ObjectID::Time, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Time));
         NewValue(ObjectID::Time, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Time));
@@ -1829,7 +1863,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::ObjectTypes, AttributeID::NODE_ID,      NodeID(ObjectID::ObjectTypes));
-        NewValue(ObjectID::ObjectTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ObjectTypes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ObjectTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ObjectTypes));
         NewValue(ObjectID::ObjectTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ObjectTypes));
         NewValue(ObjectID::ObjectTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ObjectTypes));
@@ -1845,7 +1879,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BaseObjectType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseObjectType));
-        NewValue(ObjectID::BaseObjectType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::BaseObjectType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::BaseObjectType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseObjectType));
         NewValue(ObjectID::BaseObjectType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseObjectType));
         NewValue(ObjectID::BaseObjectType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseObjectType));
@@ -1876,7 +1910,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::DataTypeEncodingType, AttributeID::NODE_ID,      NodeID(ObjectID::DataTypeEncodingType));
-        NewValue(ObjectID::DataTypeEncodingType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::DataTypeEncodingType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::DataTypeEncodingType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DataTypeEncodingType));
         NewValue(ObjectID::DataTypeEncodingType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DataTypeEncodingType));
         NewValue(ObjectID::DataTypeEncodingType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DataTypeEncodingType));
@@ -1890,7 +1924,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::DataTypeSystemType, AttributeID::NODE_ID,      NodeID(ObjectID::DataTypeSystemType));
-        NewValue(ObjectID::DataTypeSystemType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::DataTypeSystemType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::DataTypeSystemType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::DataTypeSystemType));
         NewValue(ObjectID::DataTypeSystemType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::DataTypeSystemType));
         NewValue(ObjectID::DataTypeSystemType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::DataTypeSystemType));
@@ -1904,7 +1938,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::FolderType, AttributeID::NODE_ID,      NodeID(ObjectID::FolderType));
-        NewValue(ObjectID::FolderType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::FolderType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::FolderType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::FolderType));
         NewValue(ObjectID::FolderType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::FolderType));
         NewValue(ObjectID::FolderType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::FolderType));
@@ -1918,7 +1952,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::NODE_ID,      NodeID(ObjectID::HistoricalEventConfigurationType));
-        NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HistoricalEventConfigurationType));
         NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HistoricalEventConfigurationType));
         NewValue(ObjectID::HistoricalEventConfigurationType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HistoricalEventConfigurationType));
@@ -1932,7 +1966,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ModellingRuleType, AttributeID::NODE_ID,      NodeID(ObjectID::ModellingRuleType));
-        NewValue(ObjectID::ModellingRuleType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::ModellingRuleType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::ModellingRuleType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ModellingRuleType));
         NewValue(ObjectID::ModellingRuleType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ModellingRuleType));
         NewValue(ObjectID::ModellingRuleType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ModellingRuleType));
@@ -1948,7 +1982,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::NamingRule, AttributeID::NODE_ID,      NodeID(ObjectID::Time));
-        NewValue(ObjectID::NamingRule, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::NamingRule, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::NamingRule, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Time));
         NewValue(ObjectID::NamingRule, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Time));
         NewValue(ObjectID::NamingRule, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Time));
@@ -1971,7 +2005,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerCapabilitiesType, AttributeID::NODE_ID,      NodeID(ObjectID::ModellingRuleType));
-        NewValue(ObjectID::ServerCapabilitiesType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::ServerCapabilitiesType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::ServerCapabilitiesType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerCapabilitiesType));
         NewValue(ObjectID::ServerCapabilitiesType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerCapabilitiesType));
         NewValue(ObjectID::ServerCapabilitiesType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerCapabilitiesType));
@@ -1994,7 +2028,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::AggregateFunctions, AttributeID::NODE_ID,      NodeID(ObjectID::AggregateFunctions));
-        NewValue(ObjectID::AggregateFunctions, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::AggregateFunctions, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::AggregateFunctions, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::AggregateFunctions));
         NewValue(ObjectID::AggregateFunctions, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::AggregateFunctions));
         NewValue(ObjectID::AggregateFunctions, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::AggregateFunctions));
@@ -2009,7 +2043,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::ModellingRules, AttributeID::NODE_ID,      NodeID(ObjectID::ModellingRules));
-        NewValue(ObjectID::ModellingRules, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ModellingRules, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ModellingRules, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ModellingRules));
         NewValue(ObjectID::ModellingRules, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ModellingRules));
         NewValue(ObjectID::ModellingRules, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ModellingRules));
@@ -2024,7 +2058,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::LocaleIDArray, AttributeID::NODE_ID,      NodeID(ObjectID::LocaleIDArray));
-        NewValue(ObjectID::LocaleIDArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::LocaleIDArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::LocaleIDArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::LocaleIDArray));
         NewValue(ObjectID::LocaleIDArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::LocaleIDArray));
         NewValue(ObjectID::LocaleIDArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::LocaleIDArray));
@@ -2049,7 +2083,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::NODE_ID,      NodeID(ObjectID::MaxBrowseContinuationPoints));
-        NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::MaxBrowseContinuationPoints));
         NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::MaxBrowseContinuationPoints));
         NewValue(ObjectID::MaxBrowseContinuationPoints, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::MaxBrowseContinuationPoints));
@@ -2074,7 +2108,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::NODE_ID,      NodeID(ObjectID::MaxHistoryContinuationPoints));
-        NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::MaxHistoryContinuationPoints));
         NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::MaxHistoryContinuationPoints));
         NewValue(ObjectID::MaxHistoryContinuationPoints, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::MaxHistoryContinuationPoints));
@@ -2099,7 +2133,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::NODE_ID,      NodeID(ObjectID::MinSupportedSampleRate));
-        NewValue(ObjectID::MinSupportedSampleRate, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::MinSupportedSampleRate, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::MinSupportedSampleRate));
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::MinSupportedSampleRate));
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::MinSupportedSampleRate));
@@ -2108,7 +2142,7 @@ namespace
         // Variable Attributes
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::VALUE, double());
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::DATA_TYPE, NodeID(ObjectID::Double));
-        NewValue(ObjectID::MinSupportedSampleRate, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
+        NewValue(ObjectID::MinSupportedSampleRate, AttributeID::ARRAY_DIMENSIONS, std::vector<int32_t>());
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::MinSupportedSampleRate, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
@@ -2124,7 +2158,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerProfileArray, AttributeID::NODE_ID,      NodeID(ObjectID::ServerProfileArray));
-        NewValue(ObjectID::ServerProfileArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ServerProfileArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ServerProfileArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerProfileArray));
         NewValue(ObjectID::ServerProfileArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerProfileArray));
         NewValue(ObjectID::ServerProfileArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerProfileArray));
@@ -2133,7 +2167,7 @@ namespace
         // Variable Attributes
         NewValue(ObjectID::ServerProfileArray, AttributeID::VALUE, std::string());
         NewValue(ObjectID::ServerProfileArray, AttributeID::DATA_TYPE, NodeID(ObjectID::String));
-        NewValue(ObjectID::ServerProfileArray, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>{0});
+        NewValue(ObjectID::ServerProfileArray, AttributeID::ARRAY_DIMENSIONS, std::vector<int32_t>{0});
         NewValue(ObjectID::ServerProfileArray, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::ServerProfileArray, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::ServerProfileArray, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
@@ -2149,7 +2183,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SoftwareCertificates, AttributeID::NODE_ID,      NodeID(ObjectID::SoftwareCertificates));
-        NewValue(ObjectID::SoftwareCertificates, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SoftwareCertificates, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SoftwareCertificates, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SoftwareCertificates));
         NewValue(ObjectID::SoftwareCertificates, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SoftwareCertificates));
         NewValue(ObjectID::SoftwareCertificates, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SoftwareCertificates));
@@ -2158,7 +2192,7 @@ namespace
         // Variable Attributes
         NewValue(ObjectID::SoftwareCertificates, AttributeID::VALUE, Variant());
         NewValue(ObjectID::SoftwareCertificates, AttributeID::DATA_TYPE, NodeID(ObjectID::SoftwareCertificate));
-        NewValue(ObjectID::SoftwareCertificates, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>{0});
+        NewValue(ObjectID::SoftwareCertificates, AttributeID::ARRAY_DIMENSIONS, std::vector<int32_t>{0});
         NewValue(ObjectID::SoftwareCertificates, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::SoftwareCertificates, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::SoftwareCertificates, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
@@ -2174,7 +2208,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerDiagnosticsType, AttributeID::NODE_ID,      NodeID(ObjectID::ServerDiagnosticsType));
-        NewValue(ObjectID::ServerDiagnosticsType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::ServerDiagnosticsType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::ServerDiagnosticsType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerDiagnosticsType));
         NewValue(ObjectID::ServerDiagnosticsType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerDiagnosticsType));
         NewValue(ObjectID::ServerDiagnosticsType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerDiagnosticsType));
@@ -2194,7 +2228,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::EnableFlag, AttributeID::NODE_ID,      NodeID(ObjectID::EnableFlag));
-        NewValue(ObjectID::EnableFlag, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::EnableFlag, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::EnableFlag, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::EnableFlag));
         NewValue(ObjectID::EnableFlag, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::EnableFlag));
         NewValue(ObjectID::EnableFlag, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::EnableFlag));
@@ -2219,7 +2253,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::NODE_ID,      NodeID(ObjectID::SamplingIntervalDiagnosticsArray));
-        NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsArray));
         NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray));
         NewValue(ObjectID::SamplingIntervalDiagnosticsArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray));
@@ -2244,7 +2278,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::NODE_ID,      NodeID(ObjectID::ServerDiagnosticsSummary));
-        NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerDiagnosticsSummary));
         NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerDiagnosticsSummary));
         NewValue(ObjectID::ServerDiagnosticsSummary, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerDiagnosticsSummary));
@@ -2269,7 +2303,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::NODE_ID,      NodeID(ObjectID::SessionsDiagnosticsSummary));
-        NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SessionDiagnosticsSummary));
         NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SessionDiagnosticsSummary));
         NewValue(ObjectID::SessionsDiagnosticsSummary, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SessionDiagnosticsSummary));
@@ -2285,7 +2319,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::NODE_ID,      NodeID(ObjectID::SubscriptionDiagnosticsArray));
-        NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::SubscriptionDiagnosticsArray));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SubscriptionDiagnosticsArray));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SubscriptionDiagnosticsArray));
@@ -2294,7 +2328,7 @@ namespace
         // Variable Attributes
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::VALUE, NodeID());
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::DATA_TYPE, NodeID(ObjectID::StructureSubscriptionDiagnosticsDataType));
-        NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>(0));
+        NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::ARRAY_DIMENSIONS, std::vector<int32_t>(0));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::SubscriptionDiagnosticsArray, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
@@ -2310,7 +2344,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerRedundancyType, AttributeID::NODE_ID,      NodeID(ObjectID::ServerRedundancyType));
-        NewValue(ObjectID::ServerRedundancyType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::ServerRedundancyType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::ServerRedundancyType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerRedundancyType));
         NewValue(ObjectID::ServerRedundancyType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerRedundancyType));
         NewValue(ObjectID::ServerRedundancyType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerRedundancyType));
@@ -2351,7 +2385,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerType, AttributeID::NODE_ID,      NodeID(ObjectID::ServerType));
-        NewValue(ObjectID::ServerType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::ServerType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::ServerType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerType));
         NewValue(ObjectID::ServerType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerType));
         NewValue(ObjectID::ServerType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerType));
@@ -2364,6 +2398,7 @@ namespace
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasProperty,  ObjectID::Auditing, Names::Auditing, NodeClass::Variable, ObjectID::PropertyType);
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasProperty,  ObjectID::NamespaceArray, Names::NamespaceArray, NodeClass::Variable, ObjectID::PropertyType);
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasProperty,  ObjectID::ServerArray, Names::ServerArray, NodeClass::Variable, ObjectID::PropertyType);
+        AddReference(ObjectID::ServerType, forward, ReferenceID::HasProperty,  ObjectID::ServerProfileArray, Names::ServerProfileArray, NodeClass::Variable, ObjectID::PropertyType);
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasComponent, ObjectID::ServerCapabilities, Names::ServerCapabilities, NodeClass::Object, ObjectID::ServerCapabilitiesType);
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasComponent, ObjectID::ServerDiagnostics, Names::ServerDiagnostics, NodeClass::Object, ObjectID::ServerDiagnosticsType);
         AddReference(ObjectID::ServerType, forward, ReferenceID::HasComponent, ObjectID::ServerRedundancy, Names::ServerRedundancy, NodeClass::Object, ObjectID::ServerRedundancyType);
@@ -2376,7 +2411,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::Auditing, AttributeID::NODE_ID,      NodeID(ObjectID::Auditing));
-        NewValue(ObjectID::Auditing, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::Auditing, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::Auditing, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Auditing));
         NewValue(ObjectID::Auditing, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Auditing));
         NewValue(ObjectID::Auditing, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Auditing));
@@ -2401,7 +2436,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::NamespaceArray, AttributeID::NODE_ID,      NodeID(ObjectID::NamespaceArray));
-        NewValue(ObjectID::NamespaceArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::NamespaceArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::NamespaceArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NamespaceArray));
         NewValue(ObjectID::NamespaceArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::NamespaceArray));
         NewValue(ObjectID::NamespaceArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::NamespaceArray));
@@ -2426,7 +2461,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerArray, AttributeID::NODE_ID,      NodeID(ObjectID::ServerArray));
-        NewValue(ObjectID::ServerArray, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ServerArray, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ServerArray, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerArray));
         NewValue(ObjectID::ServerArray, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerArray));
         NewValue(ObjectID::ServerArray, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerArray));
@@ -2447,11 +2482,12 @@ namespace
         AddReference(ObjectID::ServerArray, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, Names::PropertyType, NodeClass::DataType, ObjectID::Null);
       }
 
+
       void ServerCapabilities()
       {
         // Base Attributes
         NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_ID,      NodeID(ObjectID::ServerCapabilities));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ServerCapabilities, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerCapabilities));
         NewValue(ObjectID::ServerCapabilities, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerCapabilities));
         NewValue(ObjectID::ServerCapabilities, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerCapabilities));
@@ -2463,13 +2499,14 @@ namespace
         // References
         AddReference(ObjectID::ServerCapabilities, forward, ReferenceID::HasTypeDefinition, ObjectID::ServerCapabilitiesType, Names::ServerCapabilitiesType, NodeClass::DataType, ObjectID::Null);
         AddReference(ObjectID::ServerCapabilities, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, Names::ModellingRuleMandatory, NodeClass::DataType, ObjectID::ModellingRuleType);
+        AddReference(ObjectID::ServerCapabilities, forward, ReferenceID::HasProperty,  ObjectID::ServerProfileArray, Names::ServerProfileArray, NodeClass::Variable, ObjectID::PropertyType);
       }
 
       void ServerDiagnostics()
       {
         // Base Attributes
         NewValue(ObjectID::ServerDiagnostics, AttributeID::NODE_ID,      NodeID(ObjectID::ServerDiagnostics));
-        NewValue(ObjectID::ServerDiagnostics, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ServerDiagnostics, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ServerDiagnostics, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerDiagnostics));
         NewValue(ObjectID::ServerDiagnostics, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerDiagnostics));
         NewValue(ObjectID::ServerDiagnostics, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerDiagnostics));
@@ -2487,7 +2524,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerRedundancy, AttributeID::NODE_ID,      NodeID(ObjectID::ServerRedundancy));
-        NewValue(ObjectID::ServerRedundancy, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ServerRedundancy, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ServerRedundancy, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ServerRedundancy));
         NewValue(ObjectID::ServerRedundancy, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerRedundancy));
         NewValue(ObjectID::ServerRedundancy, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerRedundancy));
@@ -2505,7 +2542,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServerStatus, AttributeID::NODE_ID,      NodeID(ObjectID::ServerStatus));
-        NewValue(ObjectID::ServerStatus, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ServerStatus, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ServerStatus, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ServerStatus));
         NewValue(ObjectID::ServerStatus, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerStatus));
         NewValue(ObjectID::ServerStatus, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerStatus));
@@ -2536,7 +2573,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BuildInfo, AttributeID::NODE_ID,      NodeID(ObjectID::BuildInfo));
-        NewValue(ObjectID::BuildInfo, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::BuildInfo, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::BuildInfo, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::BuildInfo));
         NewValue(ObjectID::BuildInfo, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BuildInfo));
         NewValue(ObjectID::BuildInfo, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BuildInfo));
@@ -2566,7 +2603,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BuildDate, AttributeID::NODE_ID,      NodeID(ObjectID::BuildDate));
-        NewValue(ObjectID::BuildDate, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::BuildDate, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::BuildDate, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::BuildDate));
         NewValue(ObjectID::BuildDate, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BuildDate));
         NewValue(ObjectID::BuildDate, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BuildDate));
@@ -2590,7 +2627,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::BuildNumber, AttributeID::NODE_ID,      NodeID(ObjectID::BuildNumber));
-        NewValue(ObjectID::BuildNumber, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::BuildNumber, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::BuildNumber, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::BuildNumber));
         NewValue(ObjectID::BuildNumber, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BuildNumber));
         NewValue(ObjectID::BuildNumber, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BuildNumber));
@@ -2614,7 +2651,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ManufacturerName, AttributeID::NODE_ID,      NodeID(ObjectID::ManufacturerName));
-        NewValue(ObjectID::ManufacturerName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ManufacturerName, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ManufacturerName, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::BuildNumber));
         NewValue(ObjectID::ManufacturerName, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BuildNumber));
         NewValue(ObjectID::ManufacturerName, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BuildNumber));
@@ -2638,7 +2675,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ProductName, AttributeID::NODE_ID,      NodeID(ObjectID::ProductName));
-        NewValue(ObjectID::ProductName, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ProductName, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ProductName, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ProductName));
         NewValue(ObjectID::ProductName, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ProductName));
         NewValue(ObjectID::ProductName, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ProductName));
@@ -2662,7 +2699,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ProductURI, AttributeID::NODE_ID,      NodeID(ObjectID::ProductURI));
-        NewValue(ObjectID::ProductURI, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ProductURI, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ProductURI, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ProductURI));
         NewValue(ObjectID::ProductURI, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ProductURI));
         NewValue(ObjectID::ProductURI, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ProductURI));
@@ -2686,7 +2723,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SoftwareVersion, AttributeID::NODE_ID,      NodeID(ObjectID::SoftwareVersion));
-        NewValue(ObjectID::SoftwareVersion, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SoftwareVersion, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SoftwareVersion, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::SoftwareVersion));
         NewValue(ObjectID::SoftwareVersion, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SoftwareVersion));
         NewValue(ObjectID::SoftwareVersion, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SoftwareVersion));
@@ -2710,7 +2747,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::CurrentTime, AttributeID::NODE_ID,      NodeID(ObjectID::CurrentTime));
-        NewValue(ObjectID::CurrentTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::CurrentTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::CurrentTime, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::CurrentTime));
         NewValue(ObjectID::CurrentTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::CurrentTime));
         NewValue(ObjectID::CurrentTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::CurrentTime));
@@ -2734,7 +2771,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::NODE_ID,      NodeID(ObjectID::SecondsTillShutdown));
-        NewValue(ObjectID::SecondsTillShutdown, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::SecondsTillShutdown, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::SecondsTillShutdown));
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SecondsTillShutdown));
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SecondsTillShutdown));
@@ -2758,7 +2795,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ShutdownReason, AttributeID::NODE_ID,      NodeID(ObjectID::ShutdownReason));
-        NewValue(ObjectID::ShutdownReason, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ShutdownReason, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ShutdownReason, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ShutdownReason));
         NewValue(ObjectID::ShutdownReason, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ShutdownReason));
         NewValue(ObjectID::ShutdownReason, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ShutdownReason));
@@ -2782,7 +2819,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StartTime, AttributeID::NODE_ID,      NodeID(ObjectID::StartTime));
-        NewValue(ObjectID::StartTime, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::StartTime, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::StartTime, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::StartTime));
         NewValue(ObjectID::StartTime, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::StartTime));
         NewValue(ObjectID::StartTime, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::StartTime));
@@ -2806,7 +2843,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::State, AttributeID::NODE_ID,      NodeID(ObjectID::State));
-        NewValue(ObjectID::State, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::State, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::State, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::State));
         NewValue(ObjectID::State, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::State));
         NewValue(ObjectID::State, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::State));
@@ -2830,7 +2867,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::ServiceLevel, AttributeID::NODE_ID,      NodeID(ObjectID::ServiceLevel));
-        NewValue(ObjectID::ServiceLevel, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::ServiceLevel, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::ServiceLevel, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::ServiceLevel));
         NewValue(ObjectID::ServiceLevel, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServiceLevel));
         NewValue(ObjectID::ServiceLevel, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServiceLevel));
@@ -2855,7 +2892,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::VendorServerInfo, AttributeID::NODE_ID,      NodeID(ObjectID::VendorServerInfo));
-        NewValue(ObjectID::VendorServerInfo, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::VendorServerInfo, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::VendorServerInfo, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::VendorServerInfo));
         NewValue(ObjectID::VendorServerInfo, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::VendorServerInfo));
         NewValue(ObjectID::VendorServerInfo, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::VendorServerInfo));
@@ -2873,7 +2910,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::NODE_ID,      NodeID(ObjectID::SessionDiagnosticsObjectType));
-        NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::SessionDiagnosticsObjectType));
         NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SessionDiagnosticsObjectType));
         NewValue(ObjectID::SessionDiagnosticsObjectType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SessionDiagnosticsObjectType));
@@ -2887,7 +2924,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::NODE_ID,      NodeID(ObjectID::SessionDiagnosticsSummaryType));
-        NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::SessionDiagnosticsSummaryType));
         NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::SessionDiagnosticsSummaryType));
         NewValue(ObjectID::SessionDiagnosticsSummaryType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::SessionDiagnosticsSummaryType));
@@ -2901,7 +2938,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StateType, AttributeID::NODE_ID,      NodeID(ObjectID::StateType));
-        NewValue(ObjectID::StateType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::StateType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::StateType, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::StateType));
         NewValue(ObjectID::StateType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::StateType));
         NewValue(ObjectID::StateType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::StateType));
@@ -2917,7 +2954,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::StateNumber, AttributeID::NODE_ID,      NodeID(ObjectID::StateNumber));
-        NewValue(ObjectID::StateNumber, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Variable));
+        NewValue(ObjectID::StateNumber, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
         NewValue(ObjectID::StateNumber, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::StateNumber));
         NewValue(ObjectID::StateNumber, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::StateNumber));
         NewValue(ObjectID::StateNumber, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::StateNumber));
@@ -2941,7 +2978,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::TransitionType, AttributeID::NODE_ID,      NodeID(ObjectID::TransitionType));
-        NewValue(ObjectID::TransitionType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::TransitionType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::TransitionType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::TransitionType));
         NewValue(ObjectID::TransitionType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::TransitionType));
         NewValue(ObjectID::TransitionType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::TransitionType));
@@ -2955,7 +2992,7 @@ namespace
       {
         // Base Attributes
         NewValue(ObjectID::VendorServerInfoType, AttributeID::NODE_ID,      NodeID(ObjectID::VendorServerInfoType));
-        NewValue(ObjectID::VendorServerInfoType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ObjectType));
+        NewValue(ObjectID::VendorServerInfoType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ObjectType));
         NewValue(ObjectID::VendorServerInfoType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::VendorServerInfoType));
         NewValue(ObjectID::VendorServerInfoType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::VendorServerInfoType));
         NewValue(ObjectID::VendorServerInfoType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::VendorServerInfoType));
@@ -2969,7 +3006,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::ReferenceTypes, AttributeID::NODE_ID,      NodeID(ObjectID::ReferenceTypes));
-        NewValue(ObjectID::ReferenceTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::ReferenceTypes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::ReferenceTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ReferenceTypes));
         NewValue(ObjectID::ReferenceTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ReferenceTypes));
         NewValue(ObjectID::ReferenceTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ReferenceTypes));
@@ -2985,7 +3022,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::References, AttributeID::NODE_ID,      NodeID(ObjectID::References));
-        NewValue(ObjectID::References, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::References, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::References, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::References));
         NewValue(ObjectID::References, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::References));
         NewValue(ObjectID::References, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::References));
@@ -3005,7 +3042,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HierarchicalReferences, AttributeID::NODE_ID,      NodeID(ObjectID::HierarchicalReferences));
-        NewValue(ObjectID::HierarchicalReferences, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HierarchicalReferences, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HierarchicalReferences, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HierarchicalReferences));
         NewValue(ObjectID::HierarchicalReferences, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HierarchicalReferences));
         NewValue(ObjectID::HierarchicalReferences, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HierarchicalReferences));
@@ -3026,7 +3063,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasChild, AttributeID::NODE_ID,      NodeID(ObjectID::HasChild));
-        NewValue(ObjectID::HasChild, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasChild, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasChild, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasChild));
         NewValue(ObjectID::HasChild, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasChild));
         NewValue(ObjectID::HasChild, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasChild));
@@ -3046,7 +3083,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::Aggregates, AttributeID::NODE_ID,      NodeID(ObjectID::Aggregates));
-        NewValue(ObjectID::Aggregates, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::Aggregates, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::Aggregates, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Aggregates));
         NewValue(ObjectID::Aggregates, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Aggregates));
         NewValue(ObjectID::Aggregates, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Aggregates));
@@ -3067,7 +3104,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasComponent, AttributeID::NODE_ID,      NodeID(ObjectID::HasComponent));
-        NewValue(ObjectID::HasComponent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasComponent, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasComponent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasComponent));
         NewValue(ObjectID::HasComponent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasComponent));
         NewValue(ObjectID::HasComponent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasComponent));
@@ -3087,7 +3124,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasOrderedComponent, AttributeID::NODE_ID,      NodeID(ObjectID::HasOrderedComponent));
-        NewValue(ObjectID::HasOrderedComponent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasOrderedComponent, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasOrderedComponent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasOrderedComponent));
         NewValue(ObjectID::HasOrderedComponent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasOrderedComponent));
         NewValue(ObjectID::HasOrderedComponent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasOrderedComponent));
@@ -3104,7 +3141,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::NODE_ID,      NodeID(ObjectID::HasHistoricalConfiguration));
-        NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasHistoricalConfiguration));
         NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
         NewValue(ObjectID::HasHistoricalConfiguration, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
@@ -3121,7 +3158,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasProperty, AttributeID::NODE_ID,      NodeID(ObjectID::HasHistoricalConfiguration));
-        NewValue(ObjectID::HasProperty, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasProperty, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasProperty, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasHistoricalConfiguration));
         NewValue(ObjectID::HasProperty, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
         NewValue(ObjectID::HasProperty, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
@@ -3138,7 +3175,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasSubtype, AttributeID::NODE_ID,      NodeID(ObjectID::HasSubtype));
-        NewValue(ObjectID::HasSubtype, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasSubtype, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasSubtype, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasSubtype));
         NewValue(ObjectID::HasSubtype, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasSubtype));
         NewValue(ObjectID::HasSubtype, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasSubtype));
@@ -3155,7 +3192,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasEventSource, AttributeID::NODE_ID,      NodeID(ObjectID::HasEventSource));
-        NewValue(ObjectID::HasEventSource, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasEventSource, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasEventSource, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEventSource));
         NewValue(ObjectID::HasEventSource, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEventSource));
         NewValue(ObjectID::HasEventSource, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEventSource));
@@ -3174,7 +3211,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasNotifier, AttributeID::NODE_ID,      NodeID(ObjectID::HasNotifier));
-        NewValue(ObjectID::HasNotifier, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasNotifier, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasNotifier, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasNotifier));
         NewValue(ObjectID::HasNotifier, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasNotifier));
         NewValue(ObjectID::HasNotifier, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasNotifier));
@@ -3191,7 +3228,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::Organizes, AttributeID::NODE_ID,      NodeID(ObjectID::Organizes));
-        NewValue(ObjectID::Organizes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::Organizes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::Organizes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Organizes));
         NewValue(ObjectID::Organizes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Organizes));
         NewValue(ObjectID::Organizes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Organizes));
@@ -3208,7 +3245,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::NonHierarchicalReferences, AttributeID::NODE_ID,      NodeID(ObjectID::NonHierarchicalReferences));
-        NewValue(ObjectID::NonHierarchicalReferences, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::NonHierarchicalReferences, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::NonHierarchicalReferences, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::NonHierarchicalReferences));
         NewValue(ObjectID::NonHierarchicalReferences, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::NonHierarchicalReferences));
         NewValue(ObjectID::NonHierarchicalReferences, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::NonHierarchicalReferences));
@@ -3237,7 +3274,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::FromState, AttributeID::NODE_ID,      NodeID(ObjectID::FromState));
-        NewValue(ObjectID::FromState, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::FromState, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::FromState, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::FromState));
         NewValue(ObjectID::FromState, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::FromState));
         NewValue(ObjectID::FromState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::FromState));
@@ -3254,7 +3291,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::GeneratesEvent, AttributeID::NODE_ID,      NodeID(ObjectID::GeneratesEvent));
-        NewValue(ObjectID::GeneratesEvent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::GeneratesEvent, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::GeneratesEvent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::GeneratesEvent));
         NewValue(ObjectID::GeneratesEvent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::GeneratesEvent));
         NewValue(ObjectID::GeneratesEvent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::GeneratesEvent));
@@ -3271,7 +3308,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasCause, AttributeID::NODE_ID,      NodeID(ObjectID::HasCause));
-        NewValue(ObjectID::HasCause, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasCause, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasCause, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasCause));
         NewValue(ObjectID::HasCause, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasCause));
         NewValue(ObjectID::HasCause, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasCause));
@@ -3288,7 +3325,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasDescription, AttributeID::NODE_ID,      NodeID(ObjectID::HasDescription));
-        NewValue(ObjectID::HasDescription, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasDescription, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasDescription, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasDescription));
         NewValue(ObjectID::HasDescription, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasDescription));
         NewValue(ObjectID::HasDescription, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasDescription));
@@ -3305,7 +3342,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasEffect, AttributeID::NODE_ID,      NodeID(ObjectID::HasEffect));
-        NewValue(ObjectID::HasEffect, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasEffect, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasEffect, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEffect));
         NewValue(ObjectID::HasEffect, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEffect));
         NewValue(ObjectID::HasEffect, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEffect));
@@ -3322,7 +3359,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasEncoding, AttributeID::NODE_ID,      NodeID(ObjectID::HasEncoding));
-        NewValue(ObjectID::HasEncoding, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasEncoding, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasEncoding, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasEncoding));
         NewValue(ObjectID::HasEncoding, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasEncoding));
         NewValue(ObjectID::HasEncoding, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasEncoding));
@@ -3339,7 +3376,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasModelParent, AttributeID::NODE_ID,      NodeID(ObjectID::HasModelParent));
-        NewValue(ObjectID::HasModelParent, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasModelParent, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasModelParent, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasModelParent));
         NewValue(ObjectID::HasModelParent, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasModelParent));
         NewValue(ObjectID::HasModelParent, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasModelParent));
@@ -3356,7 +3393,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasModellingRule, AttributeID::NODE_ID,      NodeID(ObjectID::HasModellingRule));
-        NewValue(ObjectID::HasModellingRule, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasModellingRule, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasModellingRule, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasModellingRule));
         NewValue(ObjectID::HasModellingRule, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasModellingRule));
         NewValue(ObjectID::HasModellingRule, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasModellingRule));
@@ -3373,7 +3410,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::HasTypeDefinition, AttributeID::NODE_ID,      NodeID(ObjectID::HasTypeDefinition));
-        NewValue(ObjectID::HasTypeDefinition, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::HasTypeDefinition, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::HasTypeDefinition, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasTypeDefinition));
         NewValue(ObjectID::HasTypeDefinition, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasTypeDefinition));
         NewValue(ObjectID::HasTypeDefinition, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasTypeDefinition));
@@ -3390,7 +3427,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::ToState, AttributeID::NODE_ID,      NodeID(ObjectID::ToState));
-        NewValue(ObjectID::ToState, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::ReferenceType));
+        NewValue(ObjectID::ToState, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
         NewValue(ObjectID::ToState, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ToState));
         NewValue(ObjectID::ToState, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ToState));
         NewValue(ObjectID::ToState, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ToState));
@@ -3407,7 +3444,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::VariableTypes, AttributeID::NODE_ID,      NodeID(ObjectID::VariableTypes));
-        NewValue(ObjectID::VariableTypes, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::Object));
+        NewValue(ObjectID::VariableTypes, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
         NewValue(ObjectID::VariableTypes, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::VariableTypes));
         NewValue(ObjectID::VariableTypes, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::VariableTypes));
         NewValue(ObjectID::VariableTypes, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::VariableTypes));
@@ -3422,7 +3459,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::BaseVariableType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseVariableType));
-        NewValue(ObjectID::BaseVariableType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+        NewValue(ObjectID::BaseVariableType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::VariableType));
         NewValue(ObjectID::BaseVariableType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseVariableType));
         NewValue(ObjectID::BaseVariableType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseVariableType));
         NewValue(ObjectID::BaseVariableType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseVariableType));
@@ -3448,7 +3485,7 @@ namespace
       {
         // Attributes
         NewValue(ObjectID::BaseDataVariableType, AttributeID::NODE_ID,      NodeID(ObjectID::BaseDataVariableType));
-        NewValue(ObjectID::BaseDataVariableType, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+        NewValue(ObjectID::BaseDataVariableType, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::VariableType));
         NewValue(ObjectID::BaseDataVariableType, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::BaseDataVariableType));
         NewValue(ObjectID::BaseDataVariableType, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::BaseDataVariableType));
         NewValue(ObjectID::BaseDataVariableType, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::BaseDataVariableType));
@@ -3485,7 +3522,7 @@ namespace
       {
         // Attributes
         NewValue(id, AttributeID::NODE_ID,      NodeID(id));
-        NewValue(id, AttributeID::NODE_CLASS,   static_cast<uint32_t>(NodeClass::VariableType));
+        NewValue(id, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::VariableType));
         NewValue(id, AttributeID::BROWSE_NAME,  QualifiedName(0, name));
         NewValue(id, AttributeID::DISPLAY_NAME, LocalizedText(name));
         NewValue(id, AttributeID::DESCRIPTION,  LocalizedText(name));
