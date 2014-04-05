@@ -2,16 +2,12 @@
 #include <opc/common/application.h>
 #include <opc/common/addons_core/config_file.h>
 
-#include "daemon.h"
 
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/addons/tcp_server_addon.h>
 #include <opc/ua/server/tcp_server.h>
-#include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/node.h>
 
-#include "opcuaserver.h"
+#include <opc/ua/opcuaserver.h>
 
 
 namespace OpcUa
