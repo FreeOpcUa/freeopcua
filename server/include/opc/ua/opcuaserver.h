@@ -26,8 +26,11 @@ namespace OpcUa
       //Node GetNode(std::vector<QualifiedName> browsepath); //Do we need that? or should we use rootnode anyway?
       //Node GetNode(std::vector<std::string> browsepath);
       Node GetRootNode();
-      void GetObjectsNode();
+      Node GetObjectsNode();
+      Node GetNode(NodeID nodeid) {return Node(server, nodeid);}
       void SetConfigFile(const std::string path);
+      Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChildNode(path);}
+      Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChildNode(path);}
 
     private:
 

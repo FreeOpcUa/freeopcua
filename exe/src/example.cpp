@@ -27,6 +27,8 @@ int main(int argc, char** argv)
   OpcUa::OPCUAServer server;
   try
   {
+    server.AddAddressSpace("standard_address_space.xml");
+    //server.AddAddressSpace("user_address_space.xml");
     server.Start();
     Node root = server.GetRootNode();
     std::cout << "Root node is: " << root << std::endl;

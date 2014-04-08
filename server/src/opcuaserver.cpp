@@ -50,12 +50,28 @@ namespace OpcUa
       mod4.Dependencies.push_back("services_registry");
       modules.push_back(mod4);
 
+
+      Common::ModuleConfiguration mod6;
+      mod6.ID = "xml_address_space_loader";
+      mod6.Path = "libxml_address_space_loader_addon.so";
+      mod6.Dependencies.push_back("address_space_registry");
+      for (std::string path : xml_address_spaces)
+      {
+        mod6.Parameters.Parameters.push_back(Common::Parameter("file_name", path));
+      }
+      modules.push_back(mod6);
+
+
+
+
       Common::ModuleConfiguration mod5;
       mod5.ID = "opcua_protocol";
       mod5.Path = "libopcua_protocol.so";
       mod5.Dependencies.push_back("tcp_server");
       mod5.Dependencies.push_back("services_registry");
       mod5.Dependencies.push_back("endpoints_services");
+      mod5.Dependencies.push_back("xml_address_space_loader");
+
       mod5.Parameters.Parameters.push_back(Common::Parameter("debug", "1"));
       Common::ParametersGroup app("application");
       app.Parameters.push_back(Common::Parameter("name", name));
@@ -117,5 +133,10 @@ namespace OpcUa
   Node OPCUAServer::GetRootNode()
   {
     return Node(server, OpcUa::ObjectID::RootFolder);
+  }
+
+  Node OPCUAServer::GetObjectsNode()
+  {
+    return Node(server, OpcUa::ObjectID::ObjectsFolder);
   }
 }
