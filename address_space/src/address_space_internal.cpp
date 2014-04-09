@@ -55,32 +55,30 @@ namespace
       for (BrowsePath browsepath : params.BrowsePaths )
       {
         current = browsepath.StartingNode;
-        std::cout << "Starting node is: " << current.GetIntegerIdentifier() << std::endl;
         bool found = false;
         for (RelativePathElement element : browsepath.Path.Elements)
         {
           found = false;
-          std::cout << "Looking for element: " << element.TargetName.Name << std::endl;
           for (auto reference : Referencies)
           {
+            //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
             if (reference.first == current && reference.second.BrowseName == element.TargetName)
             {
               current = reference.second.TargetNodeID;
+              std::cout << "found" << std::endl;
               found = true;
-              std::cout << "Found element: " << reference.second.BrowseName.Name<< std::endl;
               break;
             }
           }
-          if (! found ) { break; std::cout << element.TargetName.Name << " not found" << std::endl;}
+          if (! found ) { break;}
         }
         BrowsePathResult res;
         if ( !found) {
-          std::cout << "Node not found " << std::endl;
+          std::cout << "Element not found, last found element is: " << current.GetNamespaceIndex() << ":" << current.GetIntegerIdentifier() << std::endl;
           res.Status = OpcUa::StatusCode::BadNotReadable;
         }
         else
         {
-          std::cout << "Found Node: " <<  current.GetIntegerIdentifier() << std::endl;
           res.Status = OpcUa::StatusCode::Good;
           std::vector<BrowsePathTarget> targets;
           BrowsePathTarget target;
@@ -184,7 +182,7 @@ namespace
       {
         return false;
       }
-      if (desc.NodeClasses && (desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
+      if (desc.NodeClasses && (desc.NodeClasses & static_cast<int32_t>(reference.TargetNodeClass)) == 0)
       {
         return false;
       }

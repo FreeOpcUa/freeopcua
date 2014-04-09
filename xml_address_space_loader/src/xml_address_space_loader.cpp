@@ -36,8 +36,6 @@ namespace
       return ReferenceID::References;
     if (referenceName == "has_child")
       return ReferenceID::HasChild;
-    if (referenceName == "organizes")
-      return ReferenceID::Organizes;
     if (referenceName == "has_event_source")
       return ReferenceID::HasEventSource;
     if (referenceName == "has_modelling_rule")
@@ -227,6 +225,44 @@ namespace
     return (const char*)content.get();
   }
 
+  NodeID GetDataType(xmlNode& node)
+  {
+    const std::string nodeValue = GetNodeValue(node);
+    if (nodeValue == "int32")
+    {
+      return ObjectID::Int32;
+    }
+    if (nodeValue == "uint32")
+    {
+      std::cout << "Type is uint32" << std::endl;
+      return ObjectID::UInt32;
+    }
+    if (nodeValue == "string")
+    {
+      return ObjectID::String;
+    }
+    if (nodeValue == "enum")
+    {
+      return ObjectID::Enumeration;
+    }
+    if (nodeValue == "int")
+    {
+      return ObjectID::Integer;
+    }
+    if (nodeValue == "bool")
+    {
+      return ObjectID::Boolean;
+    }
+    if (nodeValue == "byte_string")
+    {
+      return ObjectID::ByteString;
+    }
+    std::stringstream stream;
+    stream << "Unknown data type '" << nodeValue << "'. Line " << node.line << ".";
+    throw std::logic_error(stream.str());
+  }
+
+
   NodeClass GetNodeClass(xmlNode& node)
   {
     const std::string nodeValue = GetNodeValue(node);
@@ -347,6 +383,19 @@ namespace
     return atoi(nodeValue.c_str());
   }
 
+  int32_t GetInt32(xmlNode& node)
+  {
+    const std::string nodeValue = GetNodeValue(node);
+    if (nodeValue.empty())
+    {
+      std::stringstream stream;
+      stream << "Empty opcua attribute value. Line " << node.line << ".";
+      throw std::logic_error(stream.str());
+    }
+    return atoi(nodeValue.c_str());
+  }
+
+
   bool GetBool(xmlNode& node)
   {
     const std::string nodeValue = GetNodeValue(node);
@@ -450,6 +499,8 @@ namespace
       return AttributeID::VALUE;
     else if (IsXmlNode(node, "value_rank"))
       return AttributeID::VALUE_RANK;
+    else if (IsXmlNode(node, "data_type"))
+      return AttributeID::DATA_TYPE;
     else if (IsXmlNode(node, "array_dimensions"))
       return AttributeID::ARRAY_DIMENSIONS;
     else if (IsXmlNode(node, "access_level"))
@@ -476,7 +527,7 @@ namespace
         return Variant(GetNodeID(node));
 
       case AttributeID::NODE_CLASS:
-        return Variant((uint32_t)GetNodeClass(node));
+        return Variant((int32_t)GetNodeClass(node));
 
       case AttributeID::DISPLAY_NAME:
         return Variant(GetLocalizedText(node));
@@ -487,12 +538,14 @@ namespace
       case AttributeID::DESCRIPTION:
       case AttributeID::INVERSE_NAME:
       case AttributeID::EVENT_NOTIFIER: // TODO Unknown type of attribute..
-      case AttributeID::ARRAY_DIMENSIONS:
         return Variant(GetText(node));
+
+      case AttributeID::VALUE_RANK:
+        return Variant(GetInt32(node));
 
       case AttributeID::WRITE_MASK:
       case AttributeID::USER_WRITE_MASK:
-      case AttributeID::VALUE_RANK:
+      case AttributeID::ARRAY_DIMENSIONS:
       case AttributeID::ACCESS_LEVEL:
       case AttributeID::USER_ACCESS_LEVEL:
       case AttributeID::MINIMUM_SAMPLING_INTERVAL:
@@ -508,6 +561,10 @@ namespace
 
       case AttributeID::VALUE:
         break;
+
+      case AttributeID::DATA_TYPE:
+        std::cout << "checkling for data type: " << std::endl;
+        return Variant(GetDataType(node));
 
       default:
         std::cerr << "Unknown attribute '" << node.name << "' at line " << node.line <<  "." << std::endl;
@@ -543,10 +600,12 @@ namespace
 
         const Variant value = GetAttributeValue(attribute, *subNode);
         OpcUaNode.Attributes.insert(std::make_pair(attribute, value));
-        if (attribute == AttributeID::VALUE)
-        {
-          OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
-        }
+        //if (attribute == AttributeID::VALUE)
+        //{
+         // //OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
+          //OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, NodeID(value.Type.)));
+          //value.Value.T
+        //}
       }
     }
 
@@ -812,6 +871,7 @@ namespace
     {
       for (const auto& node : nodes)
       {
+        std::cout << " node: " << node.second.ID.GetIntegerIdentifier() << std::endl;
         if (!node.second.IsExternal)
         {
           RegisterNode(node.second);
@@ -823,6 +883,7 @@ namespace
   private:
     void RegisterNode(const Node& node)
     {
+        std::cout << "Register node: " << node.ID.GetIntegerIdentifier() << std::endl;
       Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
       for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
       {
@@ -832,8 +893,10 @@ namespace
 
     void AddReferences(const Node& node)
     {
+        std::cout << "Adding ref for: " << node.ID.GetIntegerIdentifier() << std::endl;
       for (const Reference& ref : node.References)
       {
+        std::cout << "   ID: " << ref.TargetNode.GetIntegerIdentifier() << std::endl;
         ReferenceDescription desc;
         desc.BrowseName = ref.TargetBrowseName;
         desc.DisplayName = ref.TargetDisplayName;
