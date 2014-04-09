@@ -370,23 +370,18 @@ namespace OpcUa
 
   Variant FromObject(const python::object object)
   {
-    //FIXME: this codes seems broken. it checks if the object is element and then handle it as a list ?!?!
     Variant var;
     if (python::extract<std::string>(object).check())
     {
       var = python::extract<std::string>(object)();
     }
-    else if (python::extract<uint64_t>(object).check())
+    else if (python::extract<int>(object).check())
     {
-      var = FromList<uint64_t>(object);
-    }
-    else if (python::extract<float>(object).check())
-    {
-      var = FromList<float>(object);
+      var = python::extract<int>(object);
     }
     else if (python::extract<double>(object).check())
     {
-      var = FromList<double>(object);
+      var = python::extract<double>(object);
     }
     else if (python::extract<PyNodeID>(object).check())
     {
@@ -820,7 +815,7 @@ namespace OpcUa
   {
     public:
       PyNode(OpcUa::Remote::Computer::SharedPtr server, NodeID nodeid) : Node(server, nodeid) {}
-      PyNode (const Node& other): Node( other.GetServer(), other.GetNodeId()) {}
+      PyNode (const Node& other): Node( other.GetServer(), other.GetNodeId(), other.IsNull()) {}
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyReadValue() { return ToObject(Node::ReadValue()); }
       python::object PyReadBrowseName() { return ToObject(Node::ReadBrowseName()); }
@@ -1036,6 +1031,16 @@ BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in comma
         //.def("get_type", &Variant::GetType)
       ;
 
+      enum_<StatusCode>("StatusCode")
+        .value("good", StatusCode::Good)
+        .value("BadAttributeIdInvalid", StatusCode::BadAttributeIdInvalid )
+        .value("BadNotImplemented",  StatusCode::BadNotImplemented        )
+        .value("BadNotReadable",  StatusCode::BadNotReadable              )
+        .value("BadWriteNotSupported",  StatusCode::BadWriteNotSupported )
+        .value("BadNotWritable",   StatusCode::BadNotWritable    )
+      ;
+
+
 
     class_<NodeID>("NodeId" )
           .def("from_numeric", &NumericNodeID)
@@ -1043,8 +1048,8 @@ BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in comma
           .def("get_namespace_index", &NodeID::GetNamespaceIndex)
       ;
 
-    std::vector<Node> (Node::*NodeBrowse)() = &Node::Browse;
-    Node (Node::*NodeGetChildNode)(const std::vector<std::string>&) = &Node::GetChildNode;
+    //std::vector<Node> (Node::*NodeBrowse)() = &Node::Browse;
+    //Node (Node::*NodeGetChildNode)(const std::vector<std::string>&) = &Node::GetChildNode;
 
     class_<PyNode>("Node", init<Remote::Computer::SharedPtr, NodeID>())
           .def(init<Node>())
@@ -1055,7 +1060,7 @@ BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in comma
           .def("write_value", &PyNode::PyWriteValue)
           .def("get_properties", &PyNode::GetProperties)
           .def("get_variables", &PyNode::GetVariables)
-          .def("get_browse_name", &PyNode::PyReadBrowseName)
+          .def("read_browse_name", &PyNode::PyReadBrowseName)
           .def("browse", &PyNode::PyBrowse)
           .def("get_child", &PyNode::PyGetChildNode)
           .def("__str__", &PyNode::ToString)
@@ -1104,6 +1109,7 @@ BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in comma
           .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
           .def("set_server_name", &PyOPCUAServer::SetServerName)
           .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
+          .def("load_cpp_addressspace", &PyOPCUAServer::SetLoadCppAddressSpace)
       ;
 
 
