@@ -62,6 +62,16 @@ namespace OpcUa
       modules.push_back(mod6);
 
 
+      if (loadCppAddressSpace)
+      {
+
+        Common::ModuleConfiguration mod8;
+        mod8.ID = "standard_namespace";
+        mod8.Path = "libstandard_ns_addon.so";
+        mod8.Dependencies.push_back("services_registry");
+        modules.push_back(mod8);
+
+      }
 
 
       Common::ModuleConfiguration mod5;
@@ -116,10 +126,20 @@ namespace OpcUa
     //OpcUa::Server::TcpServerAddon::SharedPtr tcpserv = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
     //tcpserv->;
     //tcpserv->operator=
-    
-
-
-
+  }
+  
+  Node OPCUAServer::GetNode(NodeID nodeid)
+  {
+    //FIXME: the validity check might have to be put in node code....
+    Node node(server, nodeid);
+    Variant var = node.Read(OpcUa::AttributeID::BROWSE_NAME); 
+    if (var.Type == OpcUa::VariantType::QUALIFIED_NAME)
+    {
+      QualifiedName qn = var.Value.Name.front();
+      node.SetBrowseNameCache(qn);
+      return node;
+    }
+    return Node(server); //Null node
   }
 
   void OPCUAServer::Stop()

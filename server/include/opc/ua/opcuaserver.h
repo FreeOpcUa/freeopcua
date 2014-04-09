@@ -20,6 +20,7 @@ namespace OpcUa
       void SetURI(const std::string uri){this->uri = uri;}
       void SetServerName(const std::string name){this->name = name;}
       void AddAddressSpace(const std::string path) {xml_address_spaces.push_back(path);}
+      void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
 
       void Start();
       void Stop();
@@ -27,15 +28,13 @@ namespace OpcUa
       //Node GetNode(std::vector<std::string> browsepath);
       Node GetRootNode();
       Node GetObjectsNode();
-      Node GetNode(NodeID nodeid) {return Node(server, nodeid);}
+      Node GetNode(NodeID nodeid);
       void SetConfigFile(const std::string path);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChildNode(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChildNode(path);}
 
-    private:
-
+    protected:
       Common::ModulesConfiguration const GetConfig();
-
       OpcUa::Application::UniquePtr application;
       OpcUa::Server::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
       std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
@@ -46,6 +45,7 @@ namespace OpcUa
       std::string uri = "opcua.treww.org";
       std::string name = "Open Source OPC-UA Server";
       std::string security_mode = "none"; //should be correct class
+      bool loadCppAddressSpace = false;
       
   };
 
