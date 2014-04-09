@@ -10,9 +10,14 @@
 
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 #include <opc/ua/client/remote_computer.h>
 #include <opc/ua/computer.h>
+#include <opc/ua/node.h>
+#include <opc/ua/protocol/types.h>
+#include <opc/ua/client/client.h>
+#include <opc/ua/opcuaserver.h>
 
 #include <functional>
 
@@ -365,6 +370,7 @@ namespace OpcUa
 
   Variant FromObject(const python::object object)
   {
+    //FIXME: this codes seems broken. it checks if the object is element and then handle it as a list ?!?!
     Variant var;
     if (python::extract<std::string>(object).check())
     {
@@ -389,9 +395,17 @@ namespace OpcUa
       std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
       var = result;
     }
+    else if (python::extract<int>(object[0]).check())
+    {
+      var = FromList<int>(object);
+    }
+    else if (python::extract<double>(object[0]).check())
+    {
+      var = FromList<double>(object);
+    }
     else
     {
-      throw std::logic_error("Cannot create variant from python object. Unsupported typa.");
+      throw std::logic_error("Cannot create variant from python object. Unsupported type.");
     }
     return var;
   }
@@ -510,7 +524,7 @@ namespace OpcUa
       : Impl(OpcUa::Remote::Connect(endpointUrl))
     {
     }
-
+/*
     python::list FindServers() const
     {
       const OpcUa::FindServersParameters params;
@@ -524,7 +538,7 @@ namespace OpcUa
       const std::vector<EndpointDescription> endpoints = Impl->Endpoints()->GetEndpoints(filter);
       return ToList(endpoints);
     }
-
+*/
     python::list Browse(const PyBrowseParameters& p) const
     {
       OpcUa::BrowseDescription description;
@@ -800,10 +814,61 @@ namespace OpcUa
 */
     ;
   }
+
+
+  class PyNode: public Node
+  {
+    public:
+      PyNode(OpcUa::Remote::Computer::SharedPtr server, NodeID nodeid) : Node(server, nodeid) {}
+      PyNode (const Node& other): Node( other.GetServer(), other.GetNodeId()) {}
+      //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
+      python::object PyReadValue() { return ToObject(Node::ReadValue()); }
+      python::object PyReadBrowseName() { return ToObject(Node::ReadBrowseName()); }
+      python::object PyWriteValue(python::object val) 
+      { 
+        OpcUa::StatusCode code = Node::WriteValue(FromObject(val)); 
+        return ToObject(code); 
+      }
+      python::list PyBrowse()
+      {
+        python::list result;
+        for (Node n: Node::Browse())
+        {
+          result.append(PyNode(n));
+        }
+        return result;
+      }
+      PyNode PyGetChildNode(python::object path) 
+      {
+        Node n = Node::GetChildNode(FromList<std::string>(path));
+        return PyNode(n);
+      }
+  };
+
+  class PyClient: public Client::Client
+  {
+    public:
+      PyNode PyGetRootNode() { return PyNode(server, OpcUa::ObjectID::RootFolder); }
+      PyNode PyGetObjectsNode() { return PyNode(server, OpcUa::ObjectID::ObjectsFolder); }
+      PyNode PyGetNode(NodeID nodeid) { return PyNode(Client::Client::GetNode(nodeid)); }
+      //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(FromList<std::string>(path)); }
+  };
+
+
+
+  class PyOPCUAServer: public OPCUAServer
+  {
+    public:
+      PyNode PyGetRootNode() { return PyNode(server, OpcUa::ObjectID::RootFolder); }
+      PyNode PyGetObjectsNode() { return PyNode(server, OpcUa::ObjectID::ObjectsFolder); }
+      //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
+      PyNode PyGetNode(NodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
+      PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(FromList<std::string>(path)); }
+  };
 }
 
 
-BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in command line
+BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in command line
 {
   using namespace boost::python;
   using namespace OpcUa;
@@ -953,9 +1018,104 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("data", &PyWriteValue::Data);
 
     class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
-    .def("find_servers", &PyComputer::FindServers)
-    .def("get_endpoints", &PyComputer::GetEndpoints)
+    //.def("find_servers", &PyComputer::FindServers)
+    //.def("get_endpoints", &PyComputer::GetEndpoints)
     .def("browse", &PyComputer::Browse)
     .def("read", &PyComputer::Read)
     .def("write", &PyComputer::Write);
+
+
+
+    def("VariantToObject", ToObject);
+    def("ObjectToVariant", FromObject);
+
+    class_<Variant>("Variant")
+        .def_readonly("value", &Variant::Value)
+        .def_readonly("type", &Variant::Type)
+        .def("is_null", &Variant::IsNul)
+        //.def("get_type", &Variant::GetType)
+      ;
+
+
+    class_<NodeID>("NodeId" )
+          .def("from_numeric", &NumericNodeID)
+          .def("get_string_identifier", &NodeID::GetStringIdentifier)
+          .def("get_namespace_index", &NodeID::GetNamespaceIndex)
+      ;
+
+    std::vector<Node> (Node::*NodeBrowse)() = &Node::Browse;
+    Node (Node::*NodeGetChildNode)(const std::vector<std::string>&) = &Node::GetChildNode;
+
+    class_<PyNode>("Node", init<Remote::Computer::SharedPtr, NodeID>())
+          .def(init<Node>())
+          .def("get_node_id", &PyNode::GetNodeId)
+          .def("read", &PyNode::Read)
+          .def("write", &PyNode::Write)
+          .def("read_value", &PyNode::PyReadValue)
+          .def("write_value", &PyNode::PyWriteValue)
+          .def("get_properties", &PyNode::GetProperties)
+          .def("get_variables", &PyNode::GetVariables)
+          .def("get_browse_name", &PyNode::PyReadBrowseName)
+          .def("browse", &PyNode::PyBrowse)
+          .def("get_child", &PyNode::PyGetChildNode)
+          .def("__str__", &PyNode::ToString)
+          .def("__repr__", &PyNode::ToString)
+      ;
+
+    class_<std::vector<Node> >("NodeVector")
+        .def(vector_indexing_suite<std::vector<Node> >())
+    ;
+
+    class_<std::vector<std::string> >("StringVector")
+        .def(vector_indexing_suite<std::vector<std::string> >())
+    ;
+
+
+    class_<PyClient, boost::noncopyable>("Client")
+          .def("connect", &PyClient::Connect)
+          .def("disconnect", &PyClient::Disconnect)
+          .def("get_root_node", &PyClient::PyGetRootNode)
+          .def("get_objects_node", &PyClient::PyGetObjectsNode)
+          .def("get_node", &PyClient::PyGetNode)
+          .def("set_endpoint", &PyClient::SetEndpoint)
+          .def("get_endpoint", &PyClient::GetEndpoint)
+          .def("set_session_name", &PyClient::SetSessionName)
+          .def("get_session_name", &PyClient::GetSessionName)
+          .def("get_uri", &PyClient::GetURI)
+          .def("set_uri", &PyClient::SetURI)
+          .def("set_security_policy", &PyClient::SetSecurityPolicy)
+          .def("get_security_policy", &PyClient::GetSecurityPolicy)
+      ;
+
+
+    //Node (OPCUAServer::*NodeFromPathString)(const std::vector<std::string>&) = &OPCUAServer::GetNodeFromPath;
+    //Node (OPCUAServer::*NodeFromPathQN)(const std::vector<QualifiedName>&) = &OPCUAServer::GetNodeFromPath;
+
+    class_<PyOPCUAServer, boost::noncopyable >("Server" )
+          .def("start", &PyOPCUAServer::Start)
+          .def("stop", &PyOPCUAServer::Stop)
+          .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
+          .def("get_objects_node", &PyOPCUAServer::PyGetObjectsNode)
+          .def("get_node", &PyOPCUAServer::PyGetNode)
+          .def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
+          //.def("get_node_from_qn_path", NodeFromPathQN)
+          .def("set_config_file", &PyOPCUAServer::SetConfigFile)
+          .def("set_uri", &PyOPCUAServer::SetURI)
+          .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
+          .def("set_server_name", &PyOPCUAServer::SetServerName)
+          .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
+      ;
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
