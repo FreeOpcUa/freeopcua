@@ -863,7 +863,7 @@ namespace OpcUa
 }
 
 
-BOOST_PYTHON_MODULE(libopcua) // MODULE_NAME specifies via preprocessor in command line
+BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in command line
 {
   using namespace boost::python;
   using namespace OpcUa;

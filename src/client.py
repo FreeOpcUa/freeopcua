@@ -4,7 +4,7 @@ import time
 sys.path.append(".")
 
 from IPython import embed
-import libopcua as opcua
+import opcua
 print(sys)
 
 if __name__ == "__main__":

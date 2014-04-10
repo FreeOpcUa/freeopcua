@@ -3,8 +3,7 @@ import sys
 sys.path.append(".")
 
 from IPython import embed
-import libopcua as opcua
-print(sys)
+import opcua
 
 if __name__ == "__main__":
     s =opcua.Server()
