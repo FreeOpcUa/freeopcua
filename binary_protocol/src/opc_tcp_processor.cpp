@@ -44,7 +44,7 @@ namespace
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
-      std::unique_lock<std::mutex> lock(ProcessMutex);
+      //std::unique_lock<std::mutex> lock(ProcessMutex);
       if (!clientChannel)
       {
         if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
@@ -64,9 +64,11 @@ namespace
     bool ProcessChunk(IOStreamBinary& stream)
     {
       using namespace OpcUa::Binary;
-
       Header hdr;
+      std::cout << "Waiting for data ..." << std::endl;
       stream >> hdr;
+      std::cout << "Got data, Locking ..." << std::endl;
+      std::unique_lock<std::mutex> lock(ProcessMutex);
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -113,6 +115,9 @@ namespace
           throw std::logic_error("Invalid message type received.");
         }
       }
+
+      std::cout << "Release Lock ..." << std::endl;
+      lock.unlock();
       return true;
     }
 
