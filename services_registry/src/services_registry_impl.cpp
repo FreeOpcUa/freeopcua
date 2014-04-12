@@ -22,6 +22,7 @@ namespace
     : public EndpointServices
     , public ViewServices
     , public AttributeServices
+    , public AddressSpaceServices
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const FindServersParameters& params) const
@@ -33,6 +34,15 @@ namespace
       return std::vector<OpcUa::EndpointDescription>();
     }
     virtual void RegisterServer(const ServerParameters& parameters)
+    {
+    }
+
+
+    virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
+    {
+    }
+
+    virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
     }
 
@@ -103,6 +113,12 @@ public:
     return ViewsServices;
   }
 
+  virtual std::shared_ptr<AddressSpaceServices> AddressSpace() const
+  {
+    return AddressSpacesServices;
+  }
+
+
   virtual std::shared_ptr<AttributeServices> Attributes() const
   {
     return AttributesServices;
@@ -124,6 +140,11 @@ public:
     ViewsServices = views ? views : Services;
   }
 
+  void SetAddressSpace(std::shared_ptr<AddressSpaceServices> addrs)
+  {
+    AddressSpacesServices = addrs ? addrs : Services;
+  }
+
   void SetAttributes(std::shared_ptr<AttributeServices> attributes)
   {
     AttributesServices = attributes ? attributes : Services;
@@ -132,6 +153,7 @@ public:
 public:
   std::shared_ptr<AttributeServices> AttributesServices;
   std::shared_ptr<ViewServices> ViewsServices;
+  std::shared_ptr<AddressSpaceServices> AddressSpacesServices;
   std::shared_ptr<EndpointServices> EndpointsServices;
   std::shared_ptr<DefaultServices> Services;
 };
@@ -174,6 +196,17 @@ void RequestProcessor::UnregisterViewServices()
 {
   Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
 }
+
+void RequestProcessor::RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> addr)
+{
+  Comp->SetAddressSpace(addr);
+}
+
+void RequestProcessor::UnregisterAddressSpaceServices()
+{
+  Comp->SetAddressSpace(std::shared_ptr<OpcUa::Remote::AddressSpaceServices>());
+}
+
 
 void RequestProcessor::RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
 {

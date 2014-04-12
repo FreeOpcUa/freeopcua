@@ -32,11 +32,13 @@ namespace OpcUa
       InternalComputer = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
       InternalComputer->RegisterViewServices(Registry);
       InternalComputer->RegisterAttributeServices(Registry);
+      InternalComputer->RegisterAddressSpaceServices(Registry);
     }
 
     void AddressSpaceAddon::Stop()
     {
       InternalComputer->UnregisterViewServices();
+      InternalComputer->UnregisterAttributeServices();
       InternalComputer->UnregisterAttributeServices();
       InternalComputer.reset();
     }

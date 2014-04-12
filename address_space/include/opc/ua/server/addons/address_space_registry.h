@@ -13,6 +13,7 @@
 
 #include <opc/ua/attributes.h>
 #include <opc/ua/view.h>
+#include <opc/ua/addressspace.h>
 
 
 namespace OpcUa
@@ -22,14 +23,15 @@ namespace OpcUa
 
     /// @brief Basic address space registry.
     /// Instance will enumerate spaces and browse nodes in the every registered address space.
-    class AddressSpaceRegistry : Common::Interface
+    //class AddressSpaceRegistry : Common::Interface
+    class AddressSpaceRegistry : public Remote::AddressSpaceServices
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpaceRegistry);
 
     public:
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value) = 0;
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference) = 0;
+      //virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value) = 0;
+      //virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference) = 0;
     };
 
     const char AddressSpaceRegistryAddonID[] = "address_space_registry";

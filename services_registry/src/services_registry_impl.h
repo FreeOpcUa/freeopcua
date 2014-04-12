@@ -30,6 +30,8 @@ namespace OpcUa
       virtual void UnregisterEndpointsServices();
       virtual void RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views);
       virtual void UnregisterViewServices();
+      virtual void RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> addr);
+      virtual void UnregisterAddressSpaceServices();
       virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes);
       virtual void UnregisterAttributeServices();
 
