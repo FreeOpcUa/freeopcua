@@ -24,11 +24,11 @@ if __name__ == "__main__":
         print("InputQueueSize value is: ", qs.read_value())
         o = s.get_objects_node()
         print("Children of objects are: ", o.browse())
-        n = root.get_child(["0:Objects", "0:MakinoInBuffer", "0:Size"])
-        print("My node: ", n)
+        n = root.get_child(["0:Objects", "0:MakinoInBuffer", "0:Tags"])
+        print("Tags are: ", n)
         print("Val is: ", n.read_value())
-        n.write_value([9.5, 3.1])
-        print("Val is: ", n.read_value())
+        #n.write_value([9.5, 3.1])
+        #print("Val is: ", n.read_value())
         #n = root.get_child(["0:Objects"])
 
 

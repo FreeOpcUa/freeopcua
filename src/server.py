@@ -17,7 +17,10 @@ if __name__ == "__main__":
         print(opcua.NodeId.from_numeric(0,84))
         print("r2 is: ", s.get_node(opcua.NodeId.from_numeric(84,0)))
         print("objects is: ", s.get_node(opcua.NodeId.from_numeric(85,0)))
-        print("test is: ", s.get_node(opcua.NodeId.from_numeric(0,99)))
+        print("Non existing node is: ", s.get_node(opcua.NodeId.from_numeric(0,99)))
+        test = root.add_folder("testfolder")
+        v = test.add_variable("myvar", [16, 56])
+        p = test.add_property("myprop", 9.9)
 
         embed()
     finally:

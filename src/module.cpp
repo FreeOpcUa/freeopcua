@@ -838,6 +838,9 @@ namespace OpcUa
         Node n = Node::GetChildNode(FromList<std::string>(path));
         return PyNode(n);
       }
+      PyNode PyAddFolder(std::string name) { return PyNode(Node::AddFolder(name)); }
+      PyNode PyAddVariable(std::string name, python::object val) { return PyNode(Node::AddVariable(name, FromObject(val))); }
+      PyNode PyAddProperty(std::string name, python::object val) { return PyNode(Node::AddProperty(name, FromObject(val))); }
   };
 
   class PyClient: public Client::Client
@@ -1063,6 +1066,9 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("read_browse_name", &PyNode::PyReadBrowseName)
           .def("browse", &PyNode::PyBrowse)
           .def("get_child", &PyNode::PyGetChildNode)
+          .def("add_folder", &PyNode::PyAddFolder)
+          .def("add_variable", &PyNode::PyAddVariable)
+          .def("add_property", &PyNode::PyAddProperty)
           .def("__str__", &PyNode::ToString)
           .def("__repr__", &PyNode::ToString)
       ;
