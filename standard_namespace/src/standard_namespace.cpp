@@ -43,6 +43,7 @@ namespace
           std::cout << "Programmatically fillig address space" << std::endl;
        Root();
          Objects();
+         Views();
          Server();
          Types();
            DataTypes();
@@ -276,7 +277,7 @@ namespace
         NewValue(ObjectID::RootFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Root));
         NewValue(ObjectID::RootFolder, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, 0);
-        NewValue(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER, 0);
+        NewValue(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
 
         // Referencies
         AddReference(ObjectID::RootFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
@@ -295,9 +296,27 @@ namespace
         NewValue(ObjectID::ObjectsFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Objects));
         NewValue(ObjectID::ObjectsFolder, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::ObjectsFolder, AttributeID::USER_WRITE_MASK, 0);
+        NewValue(ObjectID::ObjectsFolder, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
 
         AddReference(ObjectID::ObjectsFolder, forward, ReferenceID::Organizes, ObjectID::Server, Names::Server, NodeClass::Object, ObjectID::ServerType);
+        AddReference(ObjectID::ObjectsFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
       }
+
+      void Views()
+      {
+        // Attributes
+        NewValue(ObjectID::ViewsFolder, AttributeID::NODE_ID,      NodeID(ObjectID::ViewsFolder));
+        NewValue(ObjectID::ViewsFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
+        NewValue(ObjectID::ViewsFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Views));
+        NewValue(ObjectID::ViewsFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Views));
+        NewValue(ObjectID::ViewsFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Views));
+        NewValue(ObjectID::ViewsFolder, AttributeID::WRITE_MASK,   0);
+        NewValue(ObjectID::ViewsFolder, AttributeID::USER_WRITE_MASK, 0);
+        NewValue(ObjectID::ViewsFolder, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
+
+        AddReference(ObjectID::ViewsFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
+      }
+
 
     void Server()
       {
@@ -309,6 +328,7 @@ namespace
         NewValue(ObjectID::Server, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Server));
         NewValue(ObjectID::Server, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::Server, AttributeID::USER_WRITE_MASK, 0);
+        NewValue(ObjectID::Server, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
         AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::ServerCapabilities, Names::ServerCapabilities, NodeClass::Variable, ObjectID::PropertyType);
         AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::NamespaceArray, Names::NamespaceArray, NodeClass::Variable, ObjectID::PropertyType);
       }
@@ -2443,10 +2463,10 @@ namespace
         NewValue(ObjectID::NamespaceArray, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::NamespaceArray, AttributeID::USER_WRITE_MASK, 0);
         // Variable Attributes
-        const std::vector<std::string> namespaces {"http://opcfoundation.org/UA/"};
+        const std::vector<std::string> namespaces {"http://opcfoundation.org/UA/", "http://treww.github.com"};
         NewValue(ObjectID::NamespaceArray, AttributeID::VALUE, namespaces);
         NewValue(ObjectID::NamespaceArray, AttributeID::DATA_TYPE, NodeID(ObjectID::String));
-        NewValue(ObjectID::NamespaceArray, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>(1));
+        NewValue(ObjectID::NamespaceArray, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>(2));
         NewValue(ObjectID::NamespaceArray, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::NamespaceArray, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
         NewValue(ObjectID::NamespaceArray, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
@@ -3157,11 +3177,11 @@ namespace
       void HasProperty()
       {
         // Attributes
-        NewValue(ObjectID::HasProperty, AttributeID::NODE_ID,      NodeID(ObjectID::HasHistoricalConfiguration));
+        NewValue(ObjectID::HasProperty, AttributeID::NODE_ID,      NodeID(ObjectID::HasProperty));
         NewValue(ObjectID::HasProperty, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::ReferenceType));
-        NewValue(ObjectID::HasProperty, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasHistoricalConfiguration));
-        NewValue(ObjectID::HasProperty, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
-        NewValue(ObjectID::HasProperty, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasHistoricalConfiguration));
+        NewValue(ObjectID::HasProperty, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::HasProperty));
+        NewValue(ObjectID::HasProperty, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::HasProperty));
+        NewValue(ObjectID::HasProperty, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::HasProperty));
         NewValue(ObjectID::HasProperty, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::HasProperty, AttributeID::USER_WRITE_MASK, 0);
         // Type Attributes
