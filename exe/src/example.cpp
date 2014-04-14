@@ -75,11 +75,11 @@ int main(int argc, char** argv)
         std::cout << "    " << n << std::endl;
     }
     */
-    //sleep(5);
+    sleep(1);
     //server.Stop();
-    OpcUa::Daemon daemon;
+//OpcUa::Daemon daemon;
 
-    daemon.WaitForTerminate();
+//daemon.WaitForTerminate();
   }
   catch (const std::exception& exc)
   {

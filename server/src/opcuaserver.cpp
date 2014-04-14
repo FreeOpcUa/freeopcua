@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <opc/common/application.h>
 #include <opc/common/addons_core/config_file.h>
 
 
@@ -8,7 +7,6 @@
 #include <opc/ua/node.h>
 
 #include <opc/ua/opcuaserver.h>
-
 
 namespace OpcUa
 {
@@ -25,7 +23,7 @@ namespace OpcUa
     }
     else
     {
-
+      
       Common::ModulesConfiguration modules;
 
       Common::ModuleConfiguration mod1;
@@ -61,7 +59,6 @@ namespace OpcUa
       }
       modules.push_back(mod6);
 
-
       if (loadCppAddressSpace)
       {
 
@@ -72,7 +69,6 @@ namespace OpcUa
         modules.push_back(mod8);
 
       }
-
 
       Common::ModuleConfiguration mod5;
       mod5.ID = "opcua_protocol";
@@ -107,7 +103,7 @@ namespace OpcUa
 
   OPCUAServer::OPCUAServer()
   {
-    application = OpcUa::CreateApplication();
+    addons = Common::CreateAddonsManager();
   }
 
   void OPCUAServer::Start()
@@ -117,11 +113,14 @@ namespace OpcUa
     //std::vector<Common::AddonInformation> infos; 
     std::transform(modules.begin(), modules.end(), std::back_inserter(infos), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
 
+      for (const Common::AddonInformation& config : infos)
+      {
+        addons->Register(config);
+      }
+      addons->Start();
 
-    application->Start(infos);
-
-    const Common::AddonsManager& addons = application->GetAddonsManager();
-    registry = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
+    //const Common::AddonsManager& addons = application->GetAddonsManager();
+    registry = addons->GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
     server = registry->GetComputer();
     //OpcUa::Server::TcpServerAddon::SharedPtr tcpserv = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
     //tcpserv->;
@@ -144,10 +143,14 @@ namespace OpcUa
 
   void OPCUAServer::Stop()
   {
-    registry.reset(); //for some reason the pointers must be reset before stopping the application
-    server.reset();
+    //registry.reset(); //for some reason the pointers must be reset before stopping the application
+    //server.reset();
+    addons->Stop();
+    //addons.reset();
+
     std::cout << "Stopping Application" << std::endl;
-    application->Stop();
+    sleep(4);
+    //application->Stop();
   }
 
   Node OPCUAServer::GetRootNode()

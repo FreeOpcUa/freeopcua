@@ -5,7 +5,9 @@
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/common/addons_core/config_file.h>
-#include <opc/common/application.h>
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/common/addons_core/dynamic_addon_factory.h>
+//#include <opc/common/application.h>
 #include <opc/ua/computer.h>
 #include <opc/ua/node.h>
 
@@ -35,7 +37,8 @@ namespace OpcUa
 
     protected:
       Common::ModulesConfiguration const GetConfig();
-      OpcUa::Application::UniquePtr application;
+      Common::AddonsManager::UniquePtr addons;
+      //OpcUa::Application::UniquePtr application;
       OpcUa::Server::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
       std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
       OpcUa::Remote::Computer::SharedPtr server;
