@@ -29,7 +29,7 @@ namespace OpcUa
       }
       return std::string();
     }
-    inline std::string GetBuiltinComputerAddonPath()
+    inline std::string GetBuiltinServerAddonPath()
     {
       if (const char* path = getenv("BUILTIN_COMPUTER_ADDON_PATH"))
       {
@@ -57,14 +57,14 @@ namespace OpcUa
     }
 
 /*
-     class IncomingConnectionProcessorMock : public OpcUa::Server::IncomingConnectionProcessor
+     class IncomingConnectionProcessorMock : public OpcUa::UaServer::IncomingConnectionProcessor
      {
      public:
        MOCK_METHOD1(Process, void (std::shared_ptr<OpcUa::IOChannel>));
        MOCK_METHOD1(StopProcessing, void (std::shared_ptr<OpcUa::IOChannel> clientChannel));
      };
 
-    class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
+    class EchoProcessor : public OpcUa::UaServer::IncomingConnectionProcessor
     {
     public:
       virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)

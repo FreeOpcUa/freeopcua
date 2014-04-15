@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 {
   try
   {
-    OpcUa::Server::CommandLine options(argc, argv);
+    OpcUa::UaServer::CommandLine options(argc, argv);
     if (!options.NeedStartServer())
     {
       return 0;

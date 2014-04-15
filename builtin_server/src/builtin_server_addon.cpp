@@ -12,5 +12,5 @@
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::BuiltinComputerAddon);
+  return Common::Addon::UniquePtr(new OpcUa::Impl::BuiltinServerAddon);
 }

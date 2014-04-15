@@ -58,7 +58,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     CommandLine::CommandLine(int argc, char** argv)
@@ -92,6 +92,6 @@ namespace OpcUa
       LogFile = ::GetLogFile(vm);
     }
 
-  } // namespace Server
+  } // namespace UaServer
 } // namespace OpcUa
 

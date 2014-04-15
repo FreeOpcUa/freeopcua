@@ -537,8 +537,14 @@ namespace
 
       case AttributeID::DESCRIPTION:
       case AttributeID::INVERSE_NAME:
-      case AttributeID::EVENT_NOTIFIER: // TODO Unknown type of attribute..
         return Variant(GetText(node));
+
+      case AttributeID::EVENT_NOTIFIER:{ // TODO Unknown type of attribute..
+        Variant v;
+        v = std::vector<uint8_t>({0});
+        std::cout << "event notifier is of type: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << std::endl;
+        return v;
+                                       }
 
       case AttributeID::VALUE_RANK:
         return Variant(GetInt32(node));
@@ -600,6 +606,9 @@ namespace
 
         const Variant value = GetAttributeValue(attribute, *subNode);
         OpcUaNode.Attributes.insert(std::make_pair(attribute, value));
+        //if (attribute == AttributeID::VALUE) {
+          //std::cout << "valye is " << value.Value.UInt32() << std::endl;
+        //}
         //if (attribute == AttributeID::VALUE)
         //{
          // //OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
@@ -861,7 +870,7 @@ namespace
   class NodesRegistrator
   {
   public:
-    NodesRegistrator(OpcUa::Server::AddressSpaceRegistry& registry, bool debug)
+    NodesRegistrator(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {
@@ -893,10 +902,9 @@ namespace
 
     void AddReferences(const Node& node)
     {
-        std::cout << "Adding ref for: " << node.ID.GetIntegerIdentifier() << std::endl;
       for (const Reference& ref : node.References)
       {
-        std::cout << "   ID: " << ref.TargetNode.GetIntegerIdentifier() << std::endl;
+      std::cout << "Adding ref for: " << node.ID.GetIntegerIdentifier() << " of type "<< (uint)ref.ID << " to " << ref.TargetNode.GetIntegerIdentifier() << std::endl;
         ReferenceDescription desc;
         desc.BrowseName = ref.TargetBrowseName;
         desc.DisplayName = ref.TargetDisplayName;
@@ -910,7 +918,7 @@ namespace
     }
 
   private:
-    OpcUa::Server::AddressSpaceRegistry& Registry;
+    OpcUa::UaServer::AddressSpaceRegistry& Registry;
     const bool Debug;
   };
 } // namespace
@@ -920,7 +928,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::Server::AddressSpaceRegistry& registry, bool debug)
+    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {

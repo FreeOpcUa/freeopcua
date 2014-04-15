@@ -52,7 +52,7 @@ namespace OpcUa
 
     private:
       OpcUa::Internal::AddressSpaceMultiplexor::SharedPtr Registry;
-      std::shared_ptr<OpcUa::Server::ServicesRegistryAddon> InternalComputer;
+      std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
     };
 
     class AddressSpaceAddonFactory : public Common::AddonFactory

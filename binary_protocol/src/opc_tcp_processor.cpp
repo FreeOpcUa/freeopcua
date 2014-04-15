@@ -27,15 +27,15 @@ namespace
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  using namespace OpcUa::Server;
+  using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
 
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
-    OpcTcp(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
-      : Computer(computer)
+    OpcTcp(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
+      : Server(computer)
       , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
@@ -235,7 +235,7 @@ namespace
 
           GetEndpointsResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+          response.Endpoints = Server->Endpoints()->GetEndpoints(filter);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -253,7 +253,7 @@ namespace
 
           FindServersResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Data.Descriptions = Computer->Endpoints()->FindServers(params);
+          response.Data.Descriptions = Server->Endpoints()->FindServers(params);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -273,7 +273,7 @@ namespace
           FillResponseHeader(requestHeader, response.Header);
 
           OpcUa::BrowseResult result;
-          result.Referencies = Computer->Views()->Browse(query);
+          result.Referencies = Server->Views()->Browse(query);
           response.Results.push_back(result);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -293,7 +293,7 @@ namespace
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
           {
             values = service->Read(params);
           }
@@ -327,7 +327,7 @@ namespace
           WriteResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
           {
             response.Result.StatusCodes = service->Write(params.NodesToWrite);
           }
@@ -464,7 +464,7 @@ namespace
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          std::vector<BrowsePathResult> result = Computer->Views()->TranslateBrowsePathsToNodeIds(params); 
+          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
           //debug
 
           for (BrowsePathResult res: result)
@@ -549,7 +549,7 @@ namespace
 
   private:
     std::mutex ProcessMutex;
-    std::shared_ptr<OpcUa::Remote::Computer> Computer;
+    std::shared_ptr<OpcUa::Remote::Server> Server;
     bool Debug;
     uint32_t ChannelID;
     uint32_t TokenID;
@@ -564,7 +564,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
+    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
     {
       return std::unique_ptr<IncomingConnectionProcessor>(new OpcTcp(computer, debug));
     }

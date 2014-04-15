@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Internal Computer wich is used by addons.
+/// @brief Internal Server wich is used by addons.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -11,11 +11,11 @@
 #pragma once
 
 #include <opc/common/addons_core/addon.h>
-#include <opc/ua/computer.h>
+#include <opc/ua/server.h>
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     class ServicesRegistryAddon : public Common::Addon
@@ -24,7 +24,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(ServicesRegistryAddon);
 
     public:
-      virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const = 0;
+      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const = 0;
 
       virtual void RegisterEndpointsServices(std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints) = 0;
       virtual void UnregisterEndpointsServices() = 0;

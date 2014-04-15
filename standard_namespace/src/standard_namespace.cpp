@@ -33,7 +33,7 @@ namespace
     class StandardNamespace
     {
     public:
-      StandardNamespace(OpcUa::Server::AddressSpaceRegistry& registry)
+      StandardNamespace(OpcUa::UaServer::AddressSpaceRegistry& registry)
         : Registry(registry)
       {
       }
@@ -3634,7 +3634,7 @@ namespace
       }
 
     private:
-      OpcUa::Server::AddressSpaceRegistry& Registry;
+      OpcUa::UaServer::AddressSpaceRegistry& Registry;
     };
 } // namespace
 
@@ -3643,7 +3643,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    void FillStandardNamespace(OpcUa::Server::AddressSpaceRegistry& registry)
+    void FillStandardNamespace(OpcUa::UaServer::AddressSpaceRegistry& registry)
     {
       StandardNamespace ns(registry);
       ns.Fill();

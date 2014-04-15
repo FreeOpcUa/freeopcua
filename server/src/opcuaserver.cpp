@@ -120,9 +120,9 @@ namespace OpcUa
       addons->Start();
 
     //const Common::AddonsManager& addons = application->GetAddonsManager();
-    registry = addons->GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
-    server = registry->GetComputer();
-    //OpcUa::Server::TcpServerAddon::SharedPtr tcpserv = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
+    OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry = addons->GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
+    server = registry->GetServer().get();
+    //OpcUa::UaServer::TcpServerAddon::SharedPtr tcpserv = addons.GetAddon<OpcUa::UaServer::TcpServerAddon>(OpcUa::UaServer::TcpServerAddonID);
     //tcpserv->;
     //tcpserv->operator=
   }
@@ -143,14 +143,9 @@ namespace OpcUa
 
   void OPCUAServer::Stop()
   {
-    //registry.reset(); //for some reason the pointers must be reset before stopping the application
-    //server.reset();
     addons->Stop();
-    //addons.reset();
 
-    std::cout << "Stopping Application" << std::endl;
-    sleep(4);
-    //application->Stop();
+    std::cout << "Stopping opcua server application" << std::endl;
   }
 
   Node OPCUAServer::GetRootNode()

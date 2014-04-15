@@ -12,7 +12,7 @@
 
 #include "builtin_server_impl.h"
 
-Common::Addon::UniquePtr OpcUa::Server::BuiltingServerFactory::CreateAddon()
+Common::Addon::UniquePtr OpcUa::UaServer::BuiltingServerFactory::CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::BuiltinComputerAddon);
+  return Common::Addon::UniquePtr(new OpcUa::Impl::BuiltinServerAddon);
 }

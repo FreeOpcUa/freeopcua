@@ -28,7 +28,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader);
 
     public:
-      explicit XmlAddressSpaceLoader(OpcUa::Server::AddressSpaceRegistry& registry, bool debug = false);
+      explicit XmlAddressSpaceLoader(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug = false);
 
       void Load(const char* fileName);
 
@@ -38,12 +38,12 @@ namespace OpcUa
       }
 
     private:
-      OpcUa::Server::AddressSpaceRegistry& Registry;
+      OpcUa::UaServer::AddressSpaceRegistry& Registry;
       const bool Debug;
     };
 
 
-    class XmlAddressSpaceAddon : public OpcUa::Server::XmlAddressSpace
+    class XmlAddressSpaceAddon : public OpcUa::UaServer::XmlAddressSpace
     {
     public:
       DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon);
@@ -55,10 +55,10 @@ namespace OpcUa
       virtual void Load(const char* path);
 
     private:
-      void Load(const char* file, OpcUa::Server::AddressSpaceRegistry& registry);
+      void Load(const char* file, OpcUa::UaServer::AddressSpaceRegistry& registry);
 
     private:
-      Server::AddressSpaceRegistry::SharedPtr Registry;
+      UaServer::AddressSpaceRegistry::SharedPtr Registry;
     };
 
 

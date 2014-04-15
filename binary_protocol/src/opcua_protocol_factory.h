@@ -16,7 +16,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     class OpcUaProtocolFactory : public Common::AddonFactory
@@ -28,5 +28,5 @@ namespace OpcUa
       }
     };
 
-  } // namespace Server
+  } // namespace UaServer
 } // namespace OpcUa

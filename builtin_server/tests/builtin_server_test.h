@@ -21,8 +21,8 @@ namespace OpcUa
     void RegisterBuiltinServerAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation config;
-      config.Factory.reset(new OpcUa::Server::BuiltingServerFactory());
-      config.ID = OpcUa::Server::TcpServerAddonID;
+      config.Factory.reset(new OpcUa::UaServer::BuiltingServerFactory());
+      config.ID = OpcUa::UaServer::TcpServerAddonID;
       addons.Register(config);
     }
 

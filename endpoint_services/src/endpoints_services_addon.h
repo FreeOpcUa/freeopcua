@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Impl
   {
 
-		class EndpointsAddon : public Server::EndpointsServicesAddon
+		class EndpointsAddon : public UaServer::EndpointsServicesAddon
 		{
 		public:
 			virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
@@ -34,7 +34,7 @@ namespace OpcUa
 		private:
 			class EndpointsImpl;
 			std::shared_ptr<EndpointsImpl> Services;
-			std::shared_ptr<Server::ServicesRegistryAddon> InternalComputer;
+			std::shared_ptr<UaServer::ServicesRegistryAddon> InternalServer;
 			bool Debug;
 		};
 

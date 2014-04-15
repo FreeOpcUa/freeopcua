@@ -13,7 +13,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
     Common::Addon::UniquePtr ServicesRegistryFactory::CreateAddon()
     {

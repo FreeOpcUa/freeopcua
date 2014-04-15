@@ -25,7 +25,7 @@ namespace OpcUa
       Common::AddonInformation config;
       config.Factory.reset(new OpcUa::Internal::StandardNamespaceAddonFactory());
       config.ID = OpcUa::Internal::StandardNamespaceAddonID;
-      config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonID);
+      config.Dependencies.push_back(OpcUa::UaServer::AddressSpaceRegistryAddonID);
       addons.Register(config);
     }
 

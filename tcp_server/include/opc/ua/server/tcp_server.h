@@ -17,7 +17,7 @@
 namespace OpcUa
 {
 
-  std::unique_ptr<Server::ConnectionListener> CreateTcpServer(unsigned short port);
+  std::unique_ptr<UaServer::ConnectionListener> CreateTcpServer(unsigned short port);
 
 }
 

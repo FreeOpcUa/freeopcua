@@ -18,7 +18,7 @@ namespace
 {
 
   using namespace OpcUa;
-  //using namespace OpcUa::Server;
+  //using namespace OpcUa::UaServer;
   using namespace OpcUa::Remote;
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;

@@ -8,7 +8,7 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
 //#include <opc/common/application.h>
-#include <opc/ua/computer.h>
+#include <opc/ua/server.h>
 #include <opc/ua/node.h>
 
 
@@ -39,9 +39,9 @@ namespace OpcUa
       Common::ModulesConfiguration const GetConfig();
       Common::AddonsManager::UniquePtr addons;
       //OpcUa::Application::UniquePtr application;
-      OpcUa::Server::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
+      //OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
       std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
-      OpcUa::Remote::Computer::SharedPtr server;
+      OpcUa::Remote::Server* server;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine

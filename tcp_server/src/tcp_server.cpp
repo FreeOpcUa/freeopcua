@@ -28,7 +28,7 @@
 namespace
 {
   using namespace OpcUa;
-  using namespace OpcUa::Server;
+  using namespace OpcUa::UaServer;
 
  
   class SocketHolder
@@ -93,6 +93,7 @@ namespace
     {
       try
       {
+        std::cout << "start process" << std::endl;
         Processor->Process(Channel); 
       }
       catch (const std::exception& exc)
@@ -190,6 +191,7 @@ namespace
       }
 
       SocketHolder holder(Socket);
+      std::cout << "Listening on: " << Port << std::endl;
 
       sockaddr_in addr;
       addr.sin_family = AF_INET;
@@ -250,8 +252,8 @@ namespace
   };
 }
 
-std::unique_ptr<OpcUa::Server::ConnectionListener> OpcUa::CreateTcpServer(unsigned short port)
+std::unique_ptr<OpcUa::UaServer::ConnectionListener> OpcUa::CreateTcpServer(unsigned short port)
 {
-  return std::unique_ptr<OpcUa::Server::ConnectionListener>(new TcpServer(port));
+  return std::unique_ptr<OpcUa::UaServer::ConnectionListener>(new TcpServer(port));
 }
 

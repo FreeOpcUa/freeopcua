@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <opc/ua/computer.h>
+#include <opc/ua/server.h>
 #include <opc/ua/connection_listener.h>
 
 namespace OpcUa
@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    std::unique_ptr<OpcUa::Server::IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug);
+    std::unique_ptr<OpcUa::UaServer::IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Server> server, bool debug);
 
   }
 }

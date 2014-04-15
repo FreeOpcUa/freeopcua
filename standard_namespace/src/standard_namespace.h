@@ -21,7 +21,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    void FillStandardNamespace(OpcUa::Server::AddressSpaceRegistry& registry);
+    void FillStandardNamespace(OpcUa::UaServer::AddressSpaceRegistry& registry);
 
     class StandardNamespaceAddon : public Common::Addon
     {

@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Internal Computer wich is used by addons.
+/// @brief Internal Server wich is used by addons.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -80,10 +80,10 @@ namespace
 
 using namespace OpcUa::Impl;
 
-class RequestProcessor::InternalComputer : public Computer
+class RequestProcessor::InternalServer : public Server
 {
 public:
-  InternalComputer()
+  InternalServer()
     : Services(new DefaultServices())
   {
     SetEndpoints(Services);
@@ -160,7 +160,7 @@ public:
 
 
 RequestProcessor::RequestProcessor()
-  : Comp(new InternalComputer())
+  : Comp(new InternalServer())
 {
 }
 
@@ -172,7 +172,7 @@ void RequestProcessor::Stop()
 {
 }
 
-std::shared_ptr<Computer> RequestProcessor::GetComputer() const
+std::shared_ptr<Server> RequestProcessor::GetServer() const
 {
   return Comp;
 }

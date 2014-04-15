@@ -59,14 +59,14 @@ int main(int argc, char** argv)
     attribute.Data = val;
     std::cout << "variant is: " << value.IsArray()   << std::endl;
     //std::cout << "variant is: " << value.IsArray() << value.Type << std::endl;
-    std::vector<StatusCode> statuses = registry->GetComputer()->Attributes()->Write(std::vector<OpcUa::WriteValue>(1, attribute));
+    std::vector<StatusCode> statuses = registry->GetServer()->Attributes()->Write(std::vector<OpcUa::WriteValue>(1, attribute));
     //std::vector<StatusCode> statuses = registry.Write(std::vector<OpcUa::WriteValue>(1, attribute));
     for (OpcUa::StatusCode status : statuses)
     {
       std::cout << "Status code: 0x" << std::hex << static_cast<uint32_t>(status) << std::endl;
     }
 
-    Node objects(registry->GetComputer(), OpcUa::ObjectID::ObjectsFolder);
+    Node objects(registry->GetServer(), OpcUa::ObjectID::ObjectsFolder);
     std::cout << "node is: " << objects << std::endl;
 
     std::cout << "browsing object folder: " << std::endl;

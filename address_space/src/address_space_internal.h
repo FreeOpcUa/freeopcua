@@ -31,7 +31,7 @@ namespace OpcUa
     };
 
     class AddressSpaceMultiplexor
-      : public Server::AddressSpaceRegistry
+      : public UaServer::AddressSpaceRegistry
       , public AddressSpace
     {
     public:

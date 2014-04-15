@@ -23,18 +23,18 @@ namespace OpcUa
   namespace Impl
   {
 
-    class TcpServerAddon : public OpcUa::Server::TcpServerAddon
+    class TcpServerAddon : public OpcUa::UaServer::TcpServerAddon
     {
     public:
-      virtual void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
-      virtual void StopListen(const OpcUa::Server::TcpParameters& params);
+      virtual void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor);
+      virtual void StopListen(const OpcUa::UaServer::TcpParameters& params);
 
     public: // Common::Addon
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
 
     private:
-      typedef std::map<unsigned short, std::shared_ptr<OpcUa::Server::ConnectionListener>> ServersMap;
+      typedef std::map<unsigned short, std::shared_ptr<OpcUa::UaServer::ConnectionListener>> ServersMap;
       ServersMap Servers;
     };
   }

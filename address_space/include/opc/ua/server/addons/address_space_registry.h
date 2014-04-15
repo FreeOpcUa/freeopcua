@@ -18,7 +18,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     /// @brief Basic address space registry.
@@ -36,7 +36,7 @@ namespace OpcUa
 
     const char AddressSpaceRegistryAddonID[] = "address_space_registry";
 
-  } // namespace Server
+  } // namespace UaServer
 } // nmespace OpcUa
 
 #endif // opc_ua_address_space_addon_h

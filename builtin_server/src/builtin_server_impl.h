@@ -16,7 +16,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/thread.h>
-#include <opc/ua/client/binary_computer.h>
+#include <opc/ua/client/binary_server.h>
 #include <opc/ua/protocol/binary/secure_connection.h>
 
 #include <atomic>
@@ -50,22 +50,22 @@ namespace OpcUa
     };
 
 
-    class BuiltinComputerAddon
-      : public ::OpcUa::Server::BuiltinServerAddon
+    class BuiltinServerAddon
+      : public ::OpcUa::UaServer::BuiltinServerAddon
       , private Common::ThreadObserver
     {
     public:
-      BuiltinComputerAddon();
-      ~BuiltinComputerAddon();
+      BuiltinServerAddon();
+      ~BuiltinServerAddon();
 
-      virtual std::shared_ptr<OpcUa::Remote::Computer> GetComputer() const;
+      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const;
 
     public: // Common::Addon
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
 
-      virtual void Listen(const OpcUa::Server::TcpParameters&, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
-      virtual void StopListen(const OpcUa::Server::TcpParameters&);
+      virtual void Listen(const OpcUa::UaServer::TcpParameters&, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor);
+      virtual void StopListen(const OpcUa::UaServer::TcpParameters&);
 
     private:
       virtual void OnSuccess();

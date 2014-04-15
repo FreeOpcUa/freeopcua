@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     struct TcpParameters
@@ -31,7 +31,7 @@ namespace OpcUa
     class TcpServerAddon : public Common::Addon
     {
     public:
-      virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
+      virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor) = 0;
       virtual void StopListen(const TcpParameters& tcpParams) = 0;
     };
 

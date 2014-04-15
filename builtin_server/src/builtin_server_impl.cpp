@@ -57,7 +57,7 @@ namespace
   };
 
 
-  void Process(std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
+  void Process(std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
   {
     processor->Process(channel);
   }
@@ -140,12 +140,12 @@ void BufferedInput::ThrowIfStopped()
 }
 
 
-BuiltinComputerAddon::BuiltinComputerAddon()
+BuiltinServerAddon::BuiltinServerAddon()
   : Debug(false)
 {
 }
 
-std::shared_ptr<OpcUa::Remote::Computer> BuiltinComputerAddon::GetComputer() const
+std::shared_ptr<OpcUa::Remote::Server> BuiltinServerAddon::GetServer() const
 {
   if (!ClientChannel)
   {
@@ -156,10 +156,10 @@ std::shared_ptr<OpcUa::Remote::Computer> BuiltinComputerAddon::GetComputer() con
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
   std::shared_ptr<OpcUa::IOChannel> secureChannel = OpcUa::Binary::CreateSecureChannel(ClientChannel, params);
-  return OpcUa::Remote::CreateBinaryComputer(secureChannel);
+  return OpcUa::Remote::CreateBinaryServer(secureChannel);
 }
 
-BuiltinComputerAddon::~BuiltinComputerAddon()
+BuiltinServerAddon::~BuiltinServerAddon()
 {
   try
   {
@@ -170,7 +170,7 @@ BuiltinComputerAddon::~BuiltinComputerAddon()
   }
 }
 
-void BuiltinComputerAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
+void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
 {
   for (const Common::Parameter parameter : params.Parameters)
   {
@@ -181,7 +181,7 @@ void BuiltinComputerAddon::Initialize(Common::AddonsManager& addons, const Commo
   }
 }
 
-void BuiltinComputerAddon::Stop()
+void BuiltinServerAddon::Stop()
 {
   if (ClientInput)
   {
@@ -199,7 +199,7 @@ void BuiltinComputerAddon::Stop()
   ServerInput.reset();
 }
 
-void BuiltinComputerAddon::Listen(const OpcUa::Server::TcpParameters&, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
+void BuiltinServerAddon::Listen(const OpcUa::UaServer::TcpParameters&, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
 {
   if (Thread)
   {
@@ -215,18 +215,18 @@ void BuiltinComputerAddon::Listen(const OpcUa::Server::TcpParameters&, std::shar
   Thread.reset(new Common::Thread(std::bind(Process, processor, ServerChannel), this));
 }
 
-void BuiltinComputerAddon::StopListen(const OpcUa::Server::TcpParameters&)
+void BuiltinServerAddon::StopListen(const OpcUa::UaServer::TcpParameters&)
 {
   Stop();
 }
 
-void BuiltinComputerAddon::OnSuccess()
+void BuiltinServerAddon::OnSuccess()
 {
   ClientInput->Stop();
   if (Debug) std::clog  << "Server thread exited with success." << std::endl;
 }
 
-void BuiltinComputerAddon::OnError(const std::exception& exc)
+void BuiltinServerAddon::OnError(const std::exception& exc)
 {
   ClientInput->Stop();
   if (Debug) std::clog  << "Server thread exited with error: " << exc.what() << std::endl;
