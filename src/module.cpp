@@ -12,8 +12,8 @@
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
-#include <opc/ua/client/remote_computer.h>
-#include <opc/ua/computer.h>
+#include <opc/ua/client/remote_server.h>
+#include <opc/ua/server.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/client/client.h>
@@ -512,10 +512,10 @@ namespace OpcUa
     return result;
   }
 
-  class PyComputer
+  class PyServer
   {
   public:
-    explicit PyComputer(const std::string& endpointUrl)
+    explicit PyServer(const std::string& endpointUrl)
       : Impl(OpcUa::Remote::Connect(endpointUrl))
     {
     }
@@ -590,7 +590,7 @@ namespace OpcUa
     }
 
   private:
-    OpcUa::Remote::Computer::SharedPtr Impl;
+    OpcUa::Remote::Server::SharedPtr Impl;
   };
 
   void RegisterCommonObjectIDs()
@@ -814,7 +814,7 @@ namespace OpcUa
   class PyNode: public Node
   {
     public:
-      PyNode(OpcUa::Remote::Computer::SharedPtr server, NodeID nodeid) : Node(server, nodeid) {}
+      PyNode(OpcUa::Remote::Server* server, NodeID nodeid) : Node(server, nodeid) {}
       PyNode (const Node& other): Node( other.GetServer(), other.GetNodeId(), other.IsNull()) {}
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyReadValue() { return ToObject(Node::ReadValue()); }
@@ -1015,12 +1015,12 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("numeric_range", &PyWriteValue::NumericRange)
     .def_readwrite("data", &PyWriteValue::Data);
 
-    class_<PyComputer>("Computer", "Interface for remote opc ua server.", init<std::string>())
-    //.def("find_servers", &PyComputer::FindServers)
-    //.def("get_endpoints", &PyComputer::GetEndpoints)
-    .def("browse", &PyComputer::Browse)
-    .def("read", &PyComputer::Read)
-    .def("write", &PyComputer::Write);
+    class_<PyServer>("Server", "Interface for remote opc ua server.", init<std::string>())
+    //.def("find_servers", &PyServer::FindServers)
+    //.def("get_endpoints", &PyServer::GetEndpoints)
+    .def("browse", &PyServer::Browse)
+    .def("read", &PyServer::Read)
+    .def("write", &PyServer::Write);
 
 
 
@@ -1054,7 +1054,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     //std::vector<Node> (Node::*NodeBrowse)() = &Node::Browse;
     //Node (Node::*NodeGetChildNode)(const std::vector<std::string>&) = &Node::GetChildNode;
 
-    class_<PyNode>("Node", init<Remote::Computer::SharedPtr, NodeID>())
+    class_<PyNode>("Node", init<Remote::Server*, NodeID>())
           .def(init<Node>())
           .def("get_node_id", &PyNode::GetNodeId)
           .def("read", &PyNode::Read)

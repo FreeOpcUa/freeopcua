@@ -9,7 +9,7 @@ if __name__ == "__main__":
     s =opcua.Server()
     s.load_cpp_addressspace(True)
     #s.add_xml_address_space("standard_address_space.xml")
-    s.add_xml_address_space("user_address_space.xml")
+    #s.add_xml_address_space("user_address_space.xml")
     s.start()
     try:
         root = s.get_root_node()
