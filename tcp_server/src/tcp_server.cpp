@@ -167,6 +167,7 @@ namespace
     virtual void OnError(const std::exception& exc)
     {
       std::cerr << "Server thread has exited with error:" << exc.what() << std::endl;
+      throw 20;
     }   
 
   private:
