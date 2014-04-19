@@ -40,6 +40,7 @@ namespace
       , ChannelID(1)
       , TokenID(2)
     {
+      SessionID = NumericNodeID(5, 0);
     }
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -130,9 +131,12 @@ namespace
       stream >> hello;
 
       Acknowledge ack;
-      ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      ack.ReceiveBufferSize = hello.ReceiveBufferSize;
+      ack.SendBufferSize = hello.SendBufferSize;
+      ack.MaxMessageSize = hello.MaxMessageSize;
       ack.MaxChunkCount = 1;
 
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
