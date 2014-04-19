@@ -362,6 +362,9 @@ namespace
           response.Session.AuthenticationToken = SessionID;
           response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
           response.Session.MaxRequestMessageSize = 65536;
+          EndpointsFilter epf;
+          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
