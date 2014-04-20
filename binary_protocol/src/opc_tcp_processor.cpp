@@ -163,11 +163,11 @@ namespace
       OpenSecureChannelRequest request;
       stream >> request;
       
-      //RequestType is either renew or issue. We handle both the same way
-      //if (request.RequestType != STR_ISSUE)
-      //{
-        //throw std::logic_error("Client have to create secure channel!" + request.RequestType.);
-      //}
+      if (request.RequestType != STR_RENEW)
+      {
+        //FIXME:Should check that channel has been issued first
+        TokenID += 1;
+      }
 
       if (request.SecurityMode != MSM_NONE)
       {
