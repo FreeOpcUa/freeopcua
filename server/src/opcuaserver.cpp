@@ -122,6 +122,17 @@ namespace OpcUa
     //const Common::AddonsManager& addons = application->GetAddonsManager();
     OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry = addons->GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
     server = registry->GetServer().get();
+    Node root = GetRootNode();
+    Node serverarray = root.GetChildNode(std::vector<std::string>({"0:Objects", "0:Server", "0:ServerArray"}));
+    if (serverarray)
+    {
+      serverarray.WriteValue(endpoint); //writing endpoint is wrong it should be urn of server....
+    }
+    else
+    {
+      std::cout << "Error could not get serverArray node" << std::endl;
+    }
+
     //OpcUa::UaServer::TcpServerAddon::SharedPtr tcpserv = addons.GetAddon<OpcUa::UaServer::TcpServerAddon>(OpcUa::UaServer::TcpServerAddonID);
     //tcpserv->;
     //tcpserv->operator=

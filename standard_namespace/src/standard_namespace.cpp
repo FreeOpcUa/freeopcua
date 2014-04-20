@@ -331,6 +331,8 @@ namespace
         NewValue(ObjectID::Server, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
         AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::ServerCapabilities, Names::ServerCapabilities, NodeClass::Variable, ObjectID::PropertyType);
         AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::NamespaceArray, Names::NamespaceArray, NodeClass::Variable, ObjectID::PropertyType);
+        AddReference(ObjectID::Server, forward, ReferenceID::HasProperty,  ObjectID::ServerStatus, Names::ServerStatus, NodeClass::Variable, ObjectID::ServerStatusType);
+        AddReference(ObjectID::Server, forward, ReferenceID::HasProperty,  ObjectID::ServerArray, Names::ServerArray, NodeClass::Variable, ObjectID::PropertyType);
       }
 /*
     void ServerCapabilities()
@@ -2798,7 +2800,7 @@ namespace
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::USER_WRITE_MASK, 0);
         // Variable Attributes
-        NewValue(ObjectID::SecondsTillShutdown, AttributeID::VALUE, int32_t());
+        NewValue(ObjectID::SecondsTillShutdown, AttributeID::VALUE, uint32_t());
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::DATA_TYPE, NodeID(ObjectID::Int32));
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
         NewValue(ObjectID::SecondsTillShutdown, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
@@ -2864,13 +2866,13 @@ namespace
         // Base Attributes
         NewValue(ObjectID::State, AttributeID::NODE_ID,      NodeID(ObjectID::State));
         NewValue(ObjectID::State, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Variable));
-        NewValue(ObjectID::State, AttributeID::BROWSE_NAME,  QualifiedName(1, OpcUa::Names::State));
+        NewValue(ObjectID::State, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::State));
         NewValue(ObjectID::State, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::State));
         NewValue(ObjectID::State, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::State));
         NewValue(ObjectID::State, AttributeID::WRITE_MASK,   0);
         NewValue(ObjectID::State, AttributeID::USER_WRITE_MASK, 0);
         // Variable Attributes
-        NewValue(ObjectID::State, AttributeID::VALUE, uint32_t());
+        NewValue(ObjectID::State, AttributeID::VALUE, uint32_t(0));
         NewValue(ObjectID::State, AttributeID::DATA_TYPE, NodeID(ObjectID::ServerState));
         NewValue(ObjectID::State, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
         NewValue(ObjectID::State, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
