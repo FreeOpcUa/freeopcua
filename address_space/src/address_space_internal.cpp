@@ -65,7 +65,6 @@ namespace
             if (reference.first == current && reference.second.BrowseName == element.TargetName)
             {
               current = reference.second.TargetNodeID;
-              std::cout << "found" << std::endl;
               found = true;
               break;
             }
@@ -74,7 +73,6 @@ namespace
         }
         BrowsePathResult res;
         if ( !found) {
-          std::cout << "Element not found, last found element is: " << current.GetNamespaceIndex() << ":" << current.GetIntegerIdentifier() << std::endl;
           res.Status = OpcUa::StatusCode::BadNotReadable;
         }
         else

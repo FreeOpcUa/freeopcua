@@ -16,6 +16,7 @@
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/status_codes.h>
+#include <opc/ua/node.h>
 
 #include <iostream>
 #include <mutex>
@@ -461,7 +462,8 @@ namespace
           //debug
           for ( BrowsePath path : params.BrowsePaths)
           {
-            std::cout << "Requested path is: " << path.StartingNode.GetNamespaceIndex() << path.StartingNode.GetIntegerIdentifier() << " : " ;
+            Node n(Server.get(), path.StartingNode) ;
+            std::cout << "Requested path is: " << n << " : " ;
             for ( RelativePathElement el : path.Path.Elements)
             {
               std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
@@ -469,23 +471,22 @@ namespace
             std::cout << std::endl; 
           }
           //end debug
-          TranslateBrowsePathsToNodeIDsResponse response;
-          FillResponseHeader(requestHeader, response.Header);
 
           std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
           //debug
-
           for (BrowsePathResult res: result)
           {
-          for ( BrowsePathTarget path : res.Targets)
-          {
-            std::cout << "Result of browsePath is: " << path.Node.GetNamespaceIndex() << path.Node.GetIntegerIdentifier() << std::endl;
-          }
+            for ( BrowsePathTarget path : res.Targets)
+            {
+              std::cout << "Result of browsePath is: " << Node(Server.get(), path.Node) << std::endl;
+            }
           }
           //end debug
+
+
+          TranslateBrowsePathsToNodeIDsResponse response;
+          FillResponseHeader(requestHeader, response.Header);
           response.Result.Paths = result;
-
-
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
