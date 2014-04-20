@@ -164,7 +164,7 @@ namespace
       OpenSecureChannelRequest request;
       stream >> request;
       
-      if (request.RequestType != STR_RENEW)
+      if (request.RequestType == STR_RENEW)
       {
         //FIXME:Should check that channel has been issued first
         TokenID += 1;
