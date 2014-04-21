@@ -81,6 +81,7 @@ namespace
           std::vector<BrowsePathTarget> targets;
           BrowsePathTarget target;
           target.Node = current;
+          target.RemainingPathIndex = UINT32_MAX;
           targets.push_back(target);
           res.Targets = targets;
         }
