@@ -180,7 +180,7 @@ namespace
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
       response.ChannelSecurityToken.TokenID = TokenID;
       response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
-      response.ChannelSecurityToken.RevisedLifetime = 3600;
+      response.ChannelSecurityToken.RevisedLifetime = request.RequestLifeTime;
 
       SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
       responseHeader.AddSize(RawSize(algorithmHeader));
