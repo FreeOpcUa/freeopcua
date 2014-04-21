@@ -69,8 +69,8 @@ namespace
       Header hdr;
       std::cout << "Waiting for data ..." << std::endl;
       stream >> hdr;
-      std::cout << "Got data, Locking ..." << std::endl;
-      std::unique_lock<std::mutex> lock(ProcessMutex);
+      //std::cout << "Got data, Locking ..." << std::endl;
+      //std::unique_lock<std::mutex> lock(ProcessMutex);
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -118,8 +118,7 @@ namespace
         }
       }
 
-      std::cout << "Release Lock ..." << std::endl;
-      lock.unlock();
+      //std::cout << "Release Lock ..." << std::endl;
       return true;
     }
 
