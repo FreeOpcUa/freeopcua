@@ -390,13 +390,31 @@ namespace OpcUa
       std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
       var = result;
     }
-    else if (python::extract<int>(object[0]).check())
+    else if ( python::extract<python::list>(object).check() )
     {
-      var = FromList<int>(object);
-    }
-    else if (python::extract<double>(object[0]).check())
-    {
-      var = FromList<double>(object);
+      python::list plist = (python::list) object;
+      if ( python::len(object) == 0 )
+      {
+      }
+      else
+      {
+        if (python::extract<int>(object[0]).check())
+        {
+          var = FromList<int>(object);
+        }
+        else if (python::extract<double>(object[0]).check())
+        {
+          var = FromList<double>(object);
+        }
+        else if (python::extract<std::string>(object[0]).check())
+        {
+          var = FromList<std::string>(object);
+        }
+        else
+        {
+          throw std::logic_error("Cannot create variant from python list. Unsupported type.");
+        }
+      }
     }
     else
     {
