@@ -16,7 +16,6 @@
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/status_codes.h>
-#include <opc/ua/node.h>
 
 #include <iostream>
 #include <mutex>
@@ -291,9 +290,18 @@ namespace
 
         case OpcUa::READ_REQUEST:
         {
-          if (Debug) std::clog << "Processing read request." << std::endl;
           ReadParameters params;
           stream >> params;
+
+          if (Debug)
+          {
+            std::clog << "Processing read request for Node:";
+            for (AttributeValueID id : params.AttributesToRead) 
+            {
+              std::clog << " " << id.Node ;  
+            }
+            std::cout << std::endl;
+          }
 
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -458,30 +466,34 @@ namespace
           //stream >> buffer;
           TranslateBrowsePathsParameters params;
           stream >> params;
-          //debug
-          for ( BrowsePath path : params.BrowsePaths)
+
+          if (Debug) 
           {
-            Node n(Server.get(), path.StartingNode) ;
-            std::cout << "Requested path is: " << n << " : " ;
-            for ( RelativePathElement el : path.Path.Elements)
+            for ( BrowsePath path : params.BrowsePaths)
             {
-              std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
+              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              for ( RelativePathElement el : path.Path.Elements)
+              {
+                std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
+              }
+              std::cout << std::endl; 
             }
-            std::cout << std::endl; 
           }
-          //end debug
 
           std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
-          //debug
-          for (BrowsePathResult res: result)
+
+          if (Debug)
           {
-            for ( BrowsePathTarget path : res.Targets)
+            for (BrowsePathResult res: result)
             {
-              std::cout << "Result of browsePath is: " << Node(Server.get(), path.Node) << std::endl;
+              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              for ( BrowsePathTarget path : res.Targets)
+              {
+                std::cout << path.Node ;
+              }
+              std::cout << std::endl;
             }
           }
-          //end debug
-
 
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
