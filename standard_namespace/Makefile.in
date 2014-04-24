@@ -101,7 +101,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(configdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(serverconfigdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libstandard_ns_addon_la_LIBADD =
 am_libstandard_ns_addon_la_OBJECTS =  \
@@ -159,7 +159,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(config_DATA)
+DATA = $(serverconfig_DATA)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -305,6 +305,7 @@ uaclientincludedir = $(opcuaincludedir)/client
 uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
 configdir = $(sysconfdir)/opcua
+serverconfigdir = $(configdir)/server
 COMMON_INCLUDES = \
   -Iinclude \
   -I$(top_srcdir)/address_space/include \
@@ -312,7 +313,7 @@ COMMON_INCLUDES = \
   $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-config_DATA = config/standard_address_space.xml
+serverconfig_DATA = config/standard_address_space.xml
 lib_LTLIBRARIES = libstandard_ns_addon.la
 libstandard_ns_addon_la_SOURCES = \
    src/standard_namespace.cpp \
@@ -546,27 +547,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-configDATA: $(config_DATA)
+install-serverconfigDATA: $(serverconfig_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	@list='$(serverconfig_DATA)'; test -n "$(serverconfigdir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(configdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(configdir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(serverconfigdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(serverconfigdir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(configdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(configdir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(serverconfigdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(serverconfigdir)" || exit $$?; \
 	done
 
-uninstall-configDATA:
+uninstall-serverconfigDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(config_DATA)'; test -n "$(configdir)" || list=; \
+	@list='$(serverconfig_DATA)'; test -n "$(serverconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(configdir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(serverconfigdir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -749,7 +750,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(configdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(serverconfigdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -805,7 +806,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-configDATA
+install-data-am: install-serverconfigDATA
 
 install-dvi: install-dvi-am
 
@@ -851,7 +852,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-configDATA uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES uninstall-serverconfigDATA
 
 .MAKE: check-am install-am install-strip
 
@@ -860,16 +861,16 @@ uninstall-am: uninstall-configDATA uninstall-libLTLIBRARIES
 	clean-libtool ctags distclean distclean-compile \
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-configDATA install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-serverconfigDATA install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-configDATA \
-	uninstall-libLTLIBRARIES
+	tags uninstall uninstall-am uninstall-libLTLIBRARIES \
+	uninstall-serverconfigDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

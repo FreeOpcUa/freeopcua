@@ -15,6 +15,7 @@ uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
 
 configdir = $(sysconfdir)/opcua
+serverconfigdir=$(configdir)/server
 
 COMMON_INCLUDES = \
   -Iinclude \
@@ -25,7 +26,7 @@ COMMON_INCLUDES = \
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 
-config_DATA = config/standard_address_space.xml
+serverconfig_DATA = config/standard_address_space.xml
 
 lib_LTLIBRARIES = libstandard_ns_addon.la
 libstandard_ns_addon_la_SOURCES = \
