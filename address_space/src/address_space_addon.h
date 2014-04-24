@@ -44,6 +44,7 @@ namespace OpcUa
     public:
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
       virtual std::vector<ReferenceDescription> BrowseNext() const;
+      virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const;
 
     public:
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
@@ -51,7 +52,7 @@ namespace OpcUa
 
     private:
       OpcUa::Internal::AddressSpaceMultiplexor::SharedPtr Registry;
-      std::shared_ptr<OpcUa::Server::ServicesRegistryAddon> InternalComputer;
+      std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
     };
 
     class AddressSpaceAddonFactory : public Common::AddonFactory

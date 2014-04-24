@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Test of class Server::CommandLine.
+/// @brief Test of class UaServer::CommandLine.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -17,7 +17,7 @@
 TEST(LoadingAddon, TestAdon)
 {
   char* argv[4] = { "test.exe", "--config=./tests/configs", "--log-file=/path/to/log/server.log", "--daemon" };
-  OpcUa::Server::CommandLine cmdline(4, argv);
+  OpcUa::UaServer::CommandLine cmdline(4, argv);
   EXPECT_EQ(cmdline.GetLogFile(), "/path/to/log/server.log");
   EXPECT_TRUE(cmdline.IsDaemonMode());
 

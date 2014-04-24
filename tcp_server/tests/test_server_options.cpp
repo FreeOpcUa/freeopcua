@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Test of class Server::CommandLine.
+/// @brief Test of class UaServer::CommandLine.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -15,10 +15,10 @@
 TEST(ServerOptions, ParsesConfigurationFile)
 {
   char* argv[2] = { "test.exe", "--config=./tests/configs/test.xml" };
-  OpcUa::Server::CommandLine cmdline(2, argv);
-  OpcUa::Server::ModulesConfiguration modules = cmdline.GetModules();
+  OpcUa::UaServer::CommandLine cmdline(2, argv);
+  OpcUa::UaServer::ModulesConfiguration modules = cmdline.GetModules();
   ASSERT_EQ(modules.size(), 1);
-  const OpcUa::Server::ModuleConfig& module = modules.front();
+  const OpcUa::UaServer::ModuleConfig& module = modules.front();
   ASSERT_EQ(module.ID, "child_module");
   ASSERT_EQ(module.Path, "child_module.so");
   ASSERT_EQ(module.DependsOn.size(), 2);

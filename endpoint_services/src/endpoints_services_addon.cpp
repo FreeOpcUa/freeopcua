@@ -18,7 +18,7 @@
 
 using namespace OpcUa;
 using namespace OpcUa::Impl;
-using namespace OpcUa::Server;
+using namespace OpcUa::UaServer;
 using namespace OpcUa::Remote;
 
 class EndpointsAddon::EndpointsImpl : public EndpointServices
@@ -61,8 +61,8 @@ void EndpointsAddon::Initialize(Common::AddonsManager& addons, const Common::Add
   ApplyAddonParameters(params);
 
   Services.reset(new EndpointsImpl());
-  InternalComputer = addons.GetAddon<ServicesRegistryAddon>(ServicesRegistryAddonID);
-  InternalComputer->RegisterEndpointsServices(Services);
+  InternalServer = addons.GetAddon<ServicesRegistryAddon>(ServicesRegistryAddonID);
+  InternalServer->RegisterEndpointsServices(Services);
 
   const std::vector<OpcUa::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
   for (const OpcUa::ApplicationData& application : data)
@@ -74,8 +74,8 @@ void EndpointsAddon::Initialize(Common::AddonsManager& addons, const Common::Add
 
 void EndpointsAddon::Stop()
 {
-  InternalComputer->UnregisterEndpointsServices();
-  InternalComputer.reset();
+  InternalServer->UnregisterEndpointsServices();
+  InternalServer.reset();
   Services.reset();
 }
 

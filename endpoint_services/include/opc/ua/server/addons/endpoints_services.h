@@ -16,7 +16,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     class EndpointsServicesAddon : public Common::Addon
@@ -31,6 +31,6 @@ namespace OpcUa
 
     const char EndpointsServicesAddonID[] = "endpoints_services";
 
-  } // namespace Server
+  } // namespace UaServer
 } // nmespace OpcUa
 

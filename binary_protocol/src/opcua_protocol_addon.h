@@ -37,8 +37,8 @@ namespace OpcUa
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
     private:
-      std::shared_ptr<OpcUa::Server::TcpServerAddon> TcpAddon;
-      std::shared_ptr<OpcUa::Server::ServicesRegistryAddon> InternalComputer;
+      std::shared_ptr<OpcUa::UaServer::TcpServerAddon> TcpAddon;
+      std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
       std::vector<unsigned short> Ports;
       bool Debug;
     };

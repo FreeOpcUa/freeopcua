@@ -1,4 +1,4 @@
-<?xml version="1.0" encodng="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <address_space version="1">
 
   <node>
@@ -18,7 +18,6 @@
       <organizes node="87" name="Views"/>
     </references>
   </node>
-<!-- 
   <node>
     <attributes>
       <id type="numeric">85</id>
@@ -31,6 +30,7 @@
     </attributes>
   </node>
 
+<!-- 
   <node>
     <attributes>
       <id type="numeric">86</id>

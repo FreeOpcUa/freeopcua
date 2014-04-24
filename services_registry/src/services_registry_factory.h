@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     class ServicesRegistryFactory : public Common::AddonFactory
@@ -27,6 +27,6 @@ namespace OpcUa
       virtual Common::Addon::UniquePtr CreateAddon();
     };
 
-  } // namespace Server
+  } // namespace UaServer
 } // namespace OpcUa
 

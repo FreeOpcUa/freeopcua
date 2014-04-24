@@ -22,8 +22,8 @@ std::unique_ptr<Common::AddonsManager> OpcUa::Tests::LoadAddons(const std::strin
   char* argv[2];
   argv[0] =  "test.exe";
   argv[1] =   const_cast<char*>(config.c_str());
-  OpcUa::Server::CommandLine cmdline(2, argv);
-  OpcUa::Server::ModulesConfiguration modules = cmdline.GetModules();
+  OpcUa::UaServer::CommandLine cmdline(2, argv);
+  OpcUa::UaServer::ModulesConfiguration modules = cmdline.GetModules();
   Common::AddonsManager::UniquePtr addons = Common::CreateAddonsManager();
   for (auto module : modules)
   {

@@ -51,10 +51,10 @@ namespace OpcUa
     void RegisterOpcTcpAddon(Common::AddonsManager& addons)
     {
       Common::AddonConfiguration opcTcp;
-      opcTcp.Factory.reset(new OpcUa::Server::OpcUaProtocolFactory());
-      opcTcp.ID = OpcUa::Server::OpcUaProtocolAddonID;
-      opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsServicesAddonID);
-      opcTcp.Dependencies.push_back(OpcUa::Server::TcpServerAddonID);
+      opcTcp.Factory.reset(new OpcUa::UaServer::OpcUaProtocolFactory());
+      opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsServicesAddonID);
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::TcpServerAddonID);
 
       opcTcp.Parameters.Parameters.push_back(Common::Parameter("application_name", "Test OPC UA Server"));
       opcTcp.Parameters.Parameters.push_back(Common::Parameter("application_uri", "opcua.treww.org"));

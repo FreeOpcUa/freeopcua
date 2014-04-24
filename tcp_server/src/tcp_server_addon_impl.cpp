@@ -21,9 +21,9 @@ namespace OpcUa
 {
   namespace Impl
   {
-    using namespace OpcUa::Server;
+    using namespace OpcUa::UaServer;
 
-    void TcpServerAddon::Listen(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
+    void TcpServerAddon::Listen(const TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
     {
       if (Servers.find(params.Port) != std::end(Servers))
       {

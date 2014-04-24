@@ -52,10 +52,10 @@ namespace OpcUa
     void RegisterOpcTcpAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation opcTcp;
-      opcTcp.Factory.reset(new OpcUa::Server::OpcUaProtocolFactory());
-      opcTcp.ID = OpcUa::Server::OpcUaProtocolAddonID;
-      opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsServicesAddonID);
-      opcTcp.Dependencies.push_back(OpcUa::Server::TcpServerAddonID);
+      opcTcp.Factory.reset(new OpcUa::UaServer::OpcUaProtocolFactory());
+      opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsServicesAddonID);
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::TcpServerAddonID);
 
       Common::ParametersGroup application("application");
       application.Parameters.push_back(Common::Parameter("application_name","Test OPC UA Server"));

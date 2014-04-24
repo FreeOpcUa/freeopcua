@@ -29,16 +29,18 @@ namespace OpcUa
 
     void AddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      InternalComputer = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
-      InternalComputer->RegisterViewServices(Registry);
-      InternalComputer->RegisterAttributeServices(Registry);
+      InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
+      InternalServer->RegisterViewServices(Registry);
+      InternalServer->RegisterAttributeServices(Registry);
+      InternalServer->RegisterAddressSpaceServices(Registry);
     }
 
     void AddressSpaceAddon::Stop()
     {
-      InternalComputer->UnregisterViewServices();
-      InternalComputer->UnregisterAttributeServices();
-      InternalComputer.reset();
+      InternalServer->UnregisterViewServices();
+      InternalServer->UnregisterAttributeServices();
+      InternalServer->UnregisterAttributeServices();
+      InternalServer.reset();
     }
 
     void AddressSpaceAddon::AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
@@ -55,10 +57,14 @@ namespace OpcUa
     {
       return Registry->Browse(query);
     }
-
     std::vector<ReferenceDescription> AddressSpaceAddon::BrowseNext() const
     {
       return Registry->BrowseNext();
+    }
+
+    std::vector<BrowsePathResult> AddressSpaceAddon::TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const 
+    {
+      return Registry->TranslateBrowsePathsToNodeIds(params);
     }
 
     std::vector<DataValue> AddressSpaceAddon::Read(const OpcUa::ReadParameters& filter) const

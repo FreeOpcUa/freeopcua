@@ -18,7 +18,7 @@ namespace
 {
 
   using namespace OpcUa;
-  using namespace OpcUa::Server;
+  //using namespace OpcUa::UaServer;
   using namespace OpcUa::Remote;
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
@@ -48,6 +48,47 @@ namespace
       Referencies.insert({sourceNode, reference});
     }
 
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+    {
+      std::vector<BrowsePathResult> results;
+      NodeID current;
+      for (BrowsePath browsepath : params.BrowsePaths )
+      {
+        current = browsepath.StartingNode;
+        bool found = false;
+        for (RelativePathElement element : browsepath.Path.Elements)
+        {
+          found = false;
+          for (auto reference : Referencies)
+          {
+            //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
+            if (reference.first == current && reference.second.BrowseName == element.TargetName)
+            {
+              current = reference.second.TargetNodeID;
+              found = true;
+              break;
+            }
+          }
+          if (! found ) { break;}
+        }
+        BrowsePathResult res;
+        if ( !found) {
+          res.Status = OpcUa::StatusCode::BadNotReadable;
+        }
+        else
+        {
+          res.Status = OpcUa::StatusCode::Good;
+          std::vector<BrowsePathTarget> targets;
+          BrowsePathTarget target;
+          target.Node = current;
+          target.RemainingPathIndex = UINT32_MAX;
+          targets.push_back(target);
+          res.Targets = targets;
+        }
+        results.push_back(res);
+        }
+      return results;
+    }
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
@@ -140,7 +181,7 @@ namespace
       {
         return false;
       }
-      if (desc.NodeClasses && (desc.NodeClasses & static_cast<uint32_t>(reference.TargetNodeClass)) == 0)
+      if (desc.NodeClasses && (desc.NodeClasses & static_cast<int32_t>(reference.TargetNodeClass)) == 0)
       {
         return false;
       }

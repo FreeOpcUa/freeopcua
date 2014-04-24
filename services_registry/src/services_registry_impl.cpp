@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Internal Computer wich is used by addons.
+/// @brief Internal Server wich is used by addons.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -22,6 +22,7 @@ namespace
     : public EndpointServices
     , public ViewServices
     , public AttributeServices
+    , public AddressSpaceServices
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const FindServersParameters& params) const
@@ -36,6 +37,15 @@ namespace
     {
     }
 
+
+    virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
+    {
+    }
+
+    virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
+    {
+    }
+
     virtual std::vector<ReferenceDescription> Browse(const NodesQuery& query) const
     {
       return std::vector<ReferenceDescription>();
@@ -44,6 +54,11 @@ namespace
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
       return std::vector<ReferenceDescription>();
+    }
+
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+    {
+      return std::vector<BrowsePathResult>();
     }
 
     virtual std::vector<OpcUa::DataValue> Read(const OpcUa::ReadParameters& filter) const
@@ -65,10 +80,10 @@ namespace
 
 using namespace OpcUa::Impl;
 
-class RequestProcessor::InternalComputer : public Computer
+class RequestProcessor::InternalServer : public Server
 {
 public:
-  InternalComputer()
+  InternalServer()
     : Services(new DefaultServices())
   {
     SetEndpoints(Services);
@@ -98,6 +113,12 @@ public:
     return ViewsServices;
   }
 
+  virtual std::shared_ptr<AddressSpaceServices> AddressSpace() const
+  {
+    return AddressSpacesServices;
+  }
+
+
   virtual std::shared_ptr<AttributeServices> Attributes() const
   {
     return AttributesServices;
@@ -119,6 +140,11 @@ public:
     ViewsServices = views ? views : Services;
   }
 
+  void SetAddressSpace(std::shared_ptr<AddressSpaceServices> addrs)
+  {
+    AddressSpacesServices = addrs ? addrs : Services;
+  }
+
   void SetAttributes(std::shared_ptr<AttributeServices> attributes)
   {
     AttributesServices = attributes ? attributes : Services;
@@ -127,13 +153,14 @@ public:
 public:
   std::shared_ptr<AttributeServices> AttributesServices;
   std::shared_ptr<ViewServices> ViewsServices;
+  std::shared_ptr<AddressSpaceServices> AddressSpacesServices;
   std::shared_ptr<EndpointServices> EndpointsServices;
   std::shared_ptr<DefaultServices> Services;
 };
 
 
 RequestProcessor::RequestProcessor()
-  : Comp(new InternalComputer())
+  : Comp(new InternalServer())
 {
 }
 
@@ -145,7 +172,7 @@ void RequestProcessor::Stop()
 {
 }
 
-std::shared_ptr<Computer> RequestProcessor::GetComputer() const
+std::shared_ptr<Server> RequestProcessor::GetServer() const
 {
   return Comp;
 }
@@ -169,6 +196,17 @@ void RequestProcessor::UnregisterViewServices()
 {
   Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
 }
+
+void RequestProcessor::RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> addr)
+{
+  Comp->SetAddressSpace(addr);
+}
+
+void RequestProcessor::UnregisterAddressSpaceServices()
+{
+  Comp->SetAddressSpace(std::shared_ptr<OpcUa::Remote::AddressSpaceServices>());
+}
+
 
 void RequestProcessor::RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
 {

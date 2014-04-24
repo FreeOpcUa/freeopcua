@@ -26,7 +26,7 @@
 
 using namespace OpcUa;
 using namespace OpcUa::Impl;
-using namespace OpcUa::Server;
+using namespace OpcUa::UaServer;
 
 
 OpcUaProtocol::OpcUaProtocol()
@@ -38,6 +38,9 @@ void OpcUaProtocol::Initialize(Common::AddonsManager& addons, const Common::Addo
 {
   ApplyAddonParameters(params);
   const std::vector<ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+  for (ApplicationData d: applications) {
+    std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+  }
 
   std::vector<ApplicationDescription> applicationDescriptions;
   std::vector<EndpointDescription> endpointDescriptions;
@@ -74,14 +77,14 @@ void OpcUaProtocol::ApplyAddonParameters(const Common::AddonParameters& params)
 
 void OpcUaProtocol::StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons)
 {
-  InternalComputer = addons.GetAddon<OpcUa::Server::ServicesRegistryAddon>(OpcUa::Server::ServicesRegistryAddonID);
-  TcpAddon = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
+  InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
+  TcpAddon = addons.GetAddon<OpcUa::UaServer::TcpServerAddon>(OpcUa::UaServer::TcpServerAddonID);
   for (const EndpointDescription endpoint : endpoints)
   {
     const Common::Uri uri(endpoint.EndpointURL);
     if (uri.Scheme() == "opc.tcp")
     {
-      std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalComputer->GetComputer(), Debug);
+      std::shared_ptr<IncomingConnectionProcessor> processor = OpcUa::Internal::CreateOpcTcpProcessor(InternalServer->GetServer(), Debug);
       TcpParameters tcpParams;
       tcpParams.Port = uri.Port();
       if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;

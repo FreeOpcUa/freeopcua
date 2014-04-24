@@ -12,10 +12,10 @@
 
 namespace OpcUa
 {
-  namespace Server
+  namespace UaServer
   {
 
     const char OpcUaProtocolAddonID[] = "opcua_protocol";
 
-  } // namespace Server
+  } // namespace UaServer
 } // nmespace OpcUa

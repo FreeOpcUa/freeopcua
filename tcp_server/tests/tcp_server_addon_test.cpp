@@ -27,7 +27,7 @@ unsigned short TestPort = 33449;
 namespace
 {
 
-  class EchoProcessor : public OpcUa::Server::IncomingConnectionProcessor
+  class EchoProcessor : public OpcUa::UaServer::IncomingConnectionProcessor
   {
   public:
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -51,9 +51,9 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
-      std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor(new EchoProcessor());
-      TcpAddon = addons.GetAddon<OpcUa::Server::TcpServerAddon>(OpcUa::Server::TcpServerAddonID);
-      OpcUa::Server::TcpParameters tcpParams;
+      std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor(new EchoProcessor());
+      TcpAddon = addons.GetAddon<OpcUa::UaServer::TcpServerAddon>(OpcUa::UaServer::TcpServerAddonID);
+      OpcUa::UaServer::TcpParameters tcpParams;
       tcpParams.Port = ++TestPort;
 
       TcpAddon->Listen(tcpParams, processor);
@@ -61,13 +61,13 @@ namespace
 
     virtual void Stop()
     {
-      OpcUa::Server::TcpParameters params;
+      OpcUa::UaServer::TcpParameters params;
       params.Port = TestPort;
       TcpAddon->StopListen(params);
     }
 
   private:
-    std::shared_ptr<OpcUa::Server::TcpServerAddon> TcpAddon;
+    std::shared_ptr<OpcUa::UaServer::TcpServerAddon> TcpAddon;
   };
 
   class EchoAddonFactory : public Common::AddonFactory
@@ -91,14 +91,14 @@ namespace
     Common::AddonInformation config;
     config.ID = "echo_addon";
     config.Factory =  CreateEchoAddonFactory();
-    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::Server::TcpServerAddonID);
+    config.Dependencies = std::vector<Common::AddonID>(1, OpcUa::UaServer::TcpServerAddonID);
     return config;
   }
 
   Common::AddonInformation CreateTcpAddonConfig()
   {
     Common::AddonInformation tcpConfig;
-    tcpConfig.ID = OpcUa::Server::TcpServerAddonID;
+    tcpConfig.ID = OpcUa::UaServer::TcpServerAddonID;
     tcpConfig.Factory.reset(new OpcUa::Impl::TcpServerFactory());
     return tcpConfig;
   }
@@ -111,7 +111,7 @@ TEST(TcpServerAddon, CanBeCreated)
   addons->Register(CreateTcpAddonConfig());
   addons->Register(CreateEchoAddonConfiguration());
   addons->Start();
-  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::Server::TcpServerAddonID)));
+  ASSERT_TRUE(static_cast<bool>(addons->GetAddon(OpcUa::UaServer::TcpServerAddonID)));
   addons->Stop();
 }
 

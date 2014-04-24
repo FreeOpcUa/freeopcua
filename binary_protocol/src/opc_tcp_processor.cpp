@@ -27,24 +27,25 @@ namespace
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  using namespace OpcUa::Server;
+  using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
 
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
-    OpcTcp(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
-      : Computer(computer)
+    OpcTcp(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
+      : Server(computer)
       , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
     {
+      SessionID = NumericNodeID(5, 0);
     }
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
-      std::unique_lock<std::mutex> lock(ProcessMutex);
+      //std::unique_lock<std::mutex> lock(ProcessMutex);
       if (!clientChannel)
       {
         if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
@@ -64,9 +65,11 @@ namespace
     bool ProcessChunk(IOStreamBinary& stream)
     {
       using namespace OpcUa::Binary;
-
       Header hdr;
+      std::cout << "Waiting for data ..." << std::endl;
       stream >> hdr;
+      //std::cout << "Got data, Locking ..." << std::endl;
+      //std::unique_lock<std::mutex> lock(ProcessMutex);
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -99,7 +102,7 @@ namespace
 
         case MT_ACKNOWLEDGE:
         {
-          if (Debug) std::clog << "Received acknowledge from client. He mustn't do that.." << std::endl;
+          if (Debug) std::clog << "Received acknowledge from client. This should not have happend..." << std::endl;
           throw std::logic_error("Thank to client about acknowledge.");
         }
         case MT_ERROR:
@@ -113,6 +116,8 @@ namespace
           throw std::logic_error("Invalid message type received.");
         }
       }
+
+      //std::cout << "Release Lock ..." << std::endl;
       return true;
     }
 
@@ -125,9 +130,12 @@ namespace
       stream >> hello;
 
       Acknowledge ack;
-      ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      //ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
+      ack.ReceiveBufferSize = hello.ReceiveBufferSize;
+      ack.SendBufferSize = hello.SendBufferSize;
+      ack.MaxMessageSize = hello.MaxMessageSize;
       ack.MaxChunkCount = 1;
 
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
@@ -153,10 +161,11 @@ namespace
 
       OpenSecureChannelRequest request;
       stream >> request;
-
-      if (request.RequestType != STR_ISSUE)
+      
+      if (request.RequestType == STR_RENEW)
       {
-        throw std::logic_error("Client have to create secure channel!");
+        //FIXME:Should check that channel has been issued first
+        TokenID += 1;
       }
 
       if (request.SecurityMode != MSM_NONE)
@@ -169,7 +178,7 @@ namespace
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
       response.ChannelSecurityToken.TokenID = TokenID;
       response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
-      response.ChannelSecurityToken.RevisedLifetime = 3600;
+      response.ChannelSecurityToken.RevisedLifetime = request.RequestLifeTime;
 
       SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
       responseHeader.AddSize(RawSize(algorithmHeader));
@@ -230,7 +239,7 @@ namespace
 
           GetEndpointsResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Endpoints = Computer->Endpoints()->GetEndpoints(filter);
+          response.Endpoints = Server->Endpoints()->GetEndpoints(filter);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -248,7 +257,7 @@ namespace
 
           FindServersResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Data.Descriptions = Computer->Endpoints()->FindServers(params);
+          response.Data.Descriptions = Server->Endpoints()->FindServers(params);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -268,7 +277,7 @@ namespace
           FillResponseHeader(requestHeader, response.Header);
 
           OpcUa::BrowseResult result;
-          result.Referencies = Computer->Views()->Browse(query);
+          result.Referencies = Server->Views()->Browse(query);
           response.Results.push_back(result);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -281,14 +290,23 @@ namespace
 
         case OpcUa::READ_REQUEST:
         {
-          if (Debug) std::clog << "Processing read request." << std::endl;
           ReadParameters params;
           stream >> params;
+
+          if (Debug)
+          {
+            std::clog << "Processing read request for Node:";
+            for (AttributeValueID id : params.AttributesToRead) 
+            {
+              std::clog << " " << id.Node ;  
+            }
+            std::cout << std::endl;
+          }
 
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
           {
             values = service->Read(params);
           }
@@ -322,7 +340,7 @@ namespace
           WriteResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Computer->Attributes())
+          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
           {
             response.Result.StatusCodes = service->Write(params.NodesToWrite);
           }
@@ -353,6 +371,9 @@ namespace
           response.Session.AuthenticationToken = SessionID;
           response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
           response.Session.MaxRequestMessageSize = 65536;
+          EndpointsFilter epf;
+          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -440,15 +461,43 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
           std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
+          //std::cout << "Size of packet in byte: " << data.size() << std::endl;
+          //RawBuffer buffer(&data[0], restSize);
+          //stream >> buffer;
+          TranslateBrowsePathsParameters params;
+          stream >> params;
+
+          if (Debug) 
+          {
+            for ( BrowsePath path : params.BrowsePaths)
+            {
+              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              for ( RelativePathElement el : path.Path.Elements)
+              {
+                std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
+              }
+              std::cout << std::endl; 
+            }
+          }
+
+          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
+
+          if (Debug)
+          {
+            for (BrowsePathResult res: result)
+            {
+              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              for ( BrowsePathTarget path : res.Targets)
+              {
+                std::cout << path.Node ;
+              }
+              std::cout << std::endl;
+            }
+          }
 
           TranslateBrowsePathsToNodeIDsResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          BrowsePathResult path;
-          path.Status = StatusCode::BadNotReadable;
-          response.Result.Paths.push_back(path);
-
+          response.Result.Paths = result;
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
@@ -520,7 +569,7 @@ namespace
 
   private:
     std::mutex ProcessMutex;
-    std::shared_ptr<OpcUa::Remote::Computer> Computer;
+    std::shared_ptr<OpcUa::Remote::Server> Server;
     bool Debug;
     uint32_t ChannelID;
     uint32_t TokenID;
@@ -535,7 +584,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Computer> computer, bool debug)
+    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
     {
       return std::unique_ptr<IncomingConnectionProcessor>(new OpcTcp(computer, debug));
     }
