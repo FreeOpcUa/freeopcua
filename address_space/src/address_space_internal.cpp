@@ -11,6 +11,7 @@
 
 #include "address_space_internal.h"
 
+#include <mutex>
 #include <map>
 #include <set>
 
@@ -35,21 +36,28 @@ namespace
   public:
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       AttributeValue data;
       data.Node = node;
       data.Attribute = attribute;
       data.Value.Encoding = DATA_VALUE;
       data.Value.Value = value;
+
       AttributeValues.push_back(data);
     }
 
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       Referencies.insert({sourceNode, reference});
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       std::vector<BrowsePathResult> results;
       NodeID current;
       for (BrowsePath browsepath : params.BrowsePaths )
@@ -92,6 +100,8 @@ namespace
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       std::vector<ReferenceDescription> result;
       for (auto reference : Referencies)
       {
@@ -108,11 +118,15 @@ namespace
 
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       return std::vector<ReferenceDescription>();
     }
 
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       std::vector<DataValue> values;
       for (const AttributeValueID& attribute : params.AttributesToRead)
       {
@@ -123,6 +137,8 @@ namespace
 
     virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
     {
+      std::unique_lock<std::mutex> lock(DBMutex);
+
       std::vector<StatusCode> statuses;
       for (WriteValue value : values)
       {
@@ -137,6 +153,7 @@ namespace
     }
 
   private:
+
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
     {
       for (const AttributeValue& value : AttributeValues)
@@ -231,6 +248,7 @@ namespace
     }
 
   private:
+    mutable std::mutex DBMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
   };
