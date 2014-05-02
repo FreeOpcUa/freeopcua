@@ -14,32 +14,14 @@
 #include <opc/ua/attributes.h>
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/view.h>
-#include <opc/ua/addressspace.h>
+#include <opc/ua/node_management.h>
 
 namespace OpcUa
 {
   namespace Internal
   {
 
-    class AddressSpace
-      : public Remote::ViewServices
-      , public Remote::AttributeServices
-      //, public Remote::AddressSpaceServices
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AddressSpace);
-    };
-
-    class AddressSpaceMultiplexor
-      : public UaServer::AddressSpaceRegistry
-      , public AddressSpace
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AddressSpaceMultiplexor);
-    };
-
-
-    AddressSpaceMultiplexor::UniquePtr CreateAddressSpaceMultiplexor();
+    UaServer::AddressSpace::UniquePtr CreateAddressSpaceInMemory();
 
   }
 }

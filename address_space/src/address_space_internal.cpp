@@ -11,6 +11,7 @@
 
 #include "address_space_internal.h"
 
+#include <limits>
 #include <map>
 #include <set>
 
@@ -30,7 +31,7 @@ namespace
     DataValue Value;
   };
 
-  class ServicesRegistry : public Internal::AddressSpaceMultiplexor
+  class AddressSpaceInMemory : public UaServer::AddressSpace
   {
   public:
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
@@ -81,7 +82,7 @@ namespace
           std::vector<BrowsePathTarget> targets;
           BrowsePathTarget target;
           target.Node = current;
-          target.RemainingPathIndex = UINT32_MAX;
+          target.RemainingPathIndex = std::numeric_limits<uint32_t>::max();
           targets.push_back(target);
           res.Targets = targets;
         }
@@ -239,8 +240,8 @@ namespace
 
 namespace OpcUa
 {
-  Internal::AddressSpaceMultiplexor::UniquePtr Internal::CreateAddressSpaceMultiplexor()
+  UaServer::AddressSpace::UniquePtr Internal::CreateAddressSpaceInMemory()
   {
-    return AddressSpaceMultiplexor::UniquePtr(new ServicesRegistry());
+    return UaServer::AddressSpace::UniquePtr(new AddressSpaceInMemory());
   }
 }

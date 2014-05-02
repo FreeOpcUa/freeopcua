@@ -19,6 +19,8 @@
       <inverse_name>inverse_name</inverse_name>
       <contains_no_loops>false</contains_no_loops>
       <event_notifier>notifier</event_notifier>
+      <!-- User can define a tag data_type. This type can be a enum. -->
+      <data_type>uint32</data_type>
       <!--Data type attribute is defined by type of value  -->
       <value type="uint32">55</value>
       <value_rank>0</value_rank>

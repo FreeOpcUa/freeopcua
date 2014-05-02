@@ -298,7 +298,7 @@ namespace
             std::clog << "Processing read request for Node:";
             for (AttributeValueID id : params.AttributesToRead) 
             {
-              std::clog << " " << id.Node ;  
+              //std::clog << " " << id.Node;
             }
             std::cout << std::endl;
           }
@@ -471,7 +471,7 @@ namespace
           {
             for ( BrowsePath path : params.BrowsePaths)
             {
-              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              //std::cout << "Requested path is: " << path.StartingNode << " : ";
               for ( RelativePathElement el : path.Path.Elements)
               {
                 std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
@@ -489,7 +489,7 @@ namespace
               std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
               for ( BrowsePathTarget path : res.Targets)
               {
-                std::cout << path.Node ;
+                //std::cout << path.Node;
               }
               std::cout << std::endl;
             }

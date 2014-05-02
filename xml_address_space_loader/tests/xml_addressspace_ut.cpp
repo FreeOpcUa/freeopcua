@@ -33,7 +33,7 @@ class XmlAddressSpace : public testing::Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = OpcUa::Internal::CreateAddressSpaceMultiplexor();
+    NameSpace = OpcUa::Internal::CreateAddressSpaceInMemory();
   }
 
   virtual void TearDown()
@@ -89,7 +89,7 @@ protected:
   }
 
 protected:
-  Internal::AddressSpaceMultiplexor::UniquePtr NameSpace;
+  UaServer::AddressSpace::UniquePtr NameSpace;
 };
 
 TEST_F(XmlAddressSpace, ExceptionIfCannotLoadDocument)
@@ -135,7 +135,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasClass)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::NODE_CLASS, (uint32_t)NodeClass::Object));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::NODE_CLASS, (int32_t)NodeClass::Object));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasBrowseName)
@@ -215,7 +215,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasEventNotifier)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::EVENT_NOTIFIER, std::string("notifier")));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::EVENT_NOTIFIER, std::vector<uint8_t>{0}));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasValue)
@@ -231,7 +231,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasDataType)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::DATA_TYPE, (uint32_t)VariantType::UINT32));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::DATA_TYPE, NodeID(ObjectID::UInt32)));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
@@ -239,7 +239,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasValueRank)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::VALUE_RANK, (uint32_t)0));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::VALUE_RANK, (int32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasArrayDimensions)
@@ -247,7 +247,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasArrayDimensions)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::ARRAY_DIMENSIONS, std::string("0")));
+  ASSERT_TRUE(HasAttribute(NumericNodeID(84, 10), AttributeID::ARRAY_DIMENSIONS, (uint32_t)0));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasAccessLevel)
