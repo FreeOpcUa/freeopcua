@@ -11,6 +11,7 @@
 
 #include "address_space_internal.h"
 
+#include <boost/thread/shared_mutex.hpp>
 #include <limits>
 #include <map>
 #include <set>
@@ -35,23 +36,29 @@ namespace
   public:
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       AttributeValue data;
       data.Node = node;
       data.Attribute = attribute;
       data.Value.Encoding = DATA_VALUE;
       data.Value.Value = value;
+
       AttributeValues.push_back(data);
     }
 
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       Referencies.insert({sourceNode, reference});
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
       std::vector<BrowsePathResult> results;
       NodeID current;
+      // TODO: Rewrite after adding unit tests - too much loops and ifs.
       for (BrowsePath browsepath : params.BrowsePaths )
       {
         current = browsepath.StartingNode;
@@ -61,7 +68,6 @@ namespace
           found = false;
           for (auto reference : Referencies)
           {
-            //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
             if (reference.first == current && reference.second.BrowseName == element.TargetName)
             {
               current = reference.second.TargetNodeID;
@@ -69,10 +75,14 @@ namespace
               break;
             }
           }
-          if (! found ) { break;}
+          if (!found )
+          {
+            break;
+          }
         }
         BrowsePathResult res;
-        if ( !found) {
+        if (!found)
+        {
           res.Status = OpcUa::StatusCode::BadNotReadable;
         }
         else
@@ -86,12 +96,14 @@ namespace
           res.Targets = targets;
         }
         results.push_back(res);
-        }
+      }
       return results;
     }
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
       std::vector<ReferenceDescription> result;
       for (auto reference : Referencies)
       {
@@ -108,11 +120,13 @@ namespace
 
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       return std::vector<ReferenceDescription>();
     }
 
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       std::vector<DataValue> values;
       for (const AttributeValueID& attribute : params.AttributesToRead)
       {
@@ -123,6 +137,7 @@ namespace
 
     virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       std::vector<StatusCode> statuses;
       for (WriteValue value : values)
       {
@@ -139,6 +154,7 @@ namespace
   private:
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
     {
+      // TODO: Copy-past at if.
       for (const AttributeValue& value : AttributeValues)
       {
         if (value.Node == node && value.Attribute == attribute)
@@ -195,15 +211,8 @@ namespace
         return reference.ReferenceTypeID == typeID;
       }
       const std::vector<NodeID> suitableTypes = SelectNodesHierarchy(std::vector<NodeID>(1, typeID));
-      for (const NodeID& id : suitableTypes)
-      {
-        if (id == reference.ReferenceTypeID)
-        {
-          return true;
-        }
-      }
-      return false;
-//      return std::find(suitableTypes.begin(), suitableTypes.end(), reference.ReferenceTypeID) != suitableTypes.end();
+      const auto resultIt = std::find(suitableTypes.begin(), suitableTypes.end(), reference.ReferenceTypeID);\
+      return resultIt != suitableTypes.end();
     }
 
     std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
@@ -211,7 +220,6 @@ namespace
       std::vector<NodeID> subNodes;
       for (ReferenciesMap::const_iterator refIt = Referencies.begin(); refIt != Referencies.end(); ++refIt)
       {
-
         for (const NodeID& id : sourceNodes)
         {
           if (id == refIt->first)
@@ -231,6 +239,7 @@ namespace
     }
 
   private:
+    mutable boost::shared_mutex DbMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
   };
