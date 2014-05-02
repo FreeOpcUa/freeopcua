@@ -66,10 +66,8 @@ namespace
     {
       using namespace OpcUa::Binary;
       Header hdr;
-      std::cout << "Waiting for data ..." << std::endl;
+      if (Debug) std::cout << "Processing new chunk." << std::endl;
       stream >> hdr;
-      //std::cout << "Got data, Locking ..." << std::endl;
-      //std::unique_lock<std::mutex> lock(ProcessMutex);
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -78,7 +76,6 @@ namespace
           HelloClient(stream);
           break;
         }
-
 
         case MT_SECURE_OPEN:
         {
@@ -117,7 +114,6 @@ namespace
         }
       }
 
-      //std::cout << "Release Lock ..." << std::endl;
       return true;
     }
 
@@ -130,9 +126,6 @@ namespace
       stream >> hello;
 
       Acknowledge ack;
-      //ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      //ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      //ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
       ack.ReceiveBufferSize = hello.ReceiveBufferSize;
       ack.SendBufferSize = hello.SendBufferSize;
       ack.MaxMessageSize = hello.MaxMessageSize;
@@ -162,15 +155,15 @@ namespace
       OpenSecureChannelRequest request;
       stream >> request;
       
-      if (request.RequestType == STR_RENEW)
-      {
-        //FIXME:Should check that channel has been issued first
-        TokenID += 1;
-      }
-
       if (request.SecurityMode != MSM_NONE)
       {
         throw std::logic_error("Unsupported security mode.");
+      }
+
+      if (request.RequestType == STR_RENEW)
+      {
+        //FIXME:Should check that channel has been issued first
+        ++TokenID;
       }
 
       OpenSecureChannelResponse response;
