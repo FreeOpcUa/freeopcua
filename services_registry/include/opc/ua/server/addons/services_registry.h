@@ -12,6 +12,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server.h>
+#include <opc/ua/server/subscriptions_server.h>
 
 namespace OpcUa
 {
@@ -37,6 +38,9 @@ namespace OpcUa
 
       virtual void RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> attributes) = 0;
       virtual void UnregisterAddressSpaceServices() = 0;
+
+      virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> attributes) = 0;
+      virtual void UnregisterSubscriptionServices() = 0;
     };
 
     const char ServicesRegistryAddonID[] = "services_registry";

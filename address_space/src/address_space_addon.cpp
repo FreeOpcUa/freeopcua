@@ -33,13 +33,15 @@ namespace OpcUa
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
       InternalServer->RegisterAddressSpaceServices(Registry);
+      InternalServer->RegisterSubscriptionServices(Registry);
     }
 
     void AddressSpaceAddon::Stop()
     {
       InternalServer->UnregisterViewServices();
       InternalServer->UnregisterAttributeServices();
-      InternalServer->UnregisterAttributeServices();
+      InternalServer->UnregisterAddressSpaceServices();
+      InternalServer->UnregisterSubscriptionServices();
       InternalServer.reset();
     }
 
@@ -75,6 +77,21 @@ namespace OpcUa
     std::vector<StatusCode> AddressSpaceAddon::Write(const std::vector<OpcUa::WriteValue>& filter)
     {
       return Registry->Write(filter);
+    }
+
+    SubscriptionData AddressSpaceAddon::CreateSubscription(const SubscriptionParameters& parameters)
+    {
+      return Registry->CreateSubscription(parameters);
+    }
+
+    MonitoredItemsData AddressSpaceAddon::CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    {
+      return Registry->CreateMonitoredItems(parameters);
+    }
+
+    std::vector<MonitoredItemData> AddressSpaceAddon::PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    {
+      return Registry->PopItemsToPublish(subscriptions);
     }
 
   } // namespace Internal

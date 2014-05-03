@@ -17,6 +17,7 @@
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/view.h>
+#include <opc/ua/server/subscriptions_server.h>
 
 namespace OpcUa
 {
@@ -49,6 +50,12 @@ namespace OpcUa
     public:
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
+
+    public:
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters);
+      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
+      virtual std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions);
+ 
 
     private:
       OpcUa::Internal::AddressSpaceMultiplexor::SharedPtr Registry;

@@ -10,31 +10,94 @@
 
 
 #include "address_space_internal.h"
+#include "opc/ua/server/subscriptions_server.h"
 
 #include <boost/thread/shared_mutex.hpp>
-//#include <mutex>
 #include <map>
 #include <set>
+#include <ctime>
+#include <list>
+
+
 
 namespace
 {
 
   using namespace OpcUa;
-  //using namespace OpcUa::UaServer;
   using namespace OpcUa::Remote;
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
+
+
 
   struct AttributeValue
   {
     NodeID Node;
     AttributeID Attribute;
     DataValue Value;
+    std::list<uint32_t> AttSubscriptions;
+    //std::vector<MonitoredItemData> AttSubscriptions;
+    //std::map<IntegerID, std::vector<uint32_t>> AttSubscriptions; //A map SubscriptionID, MonitoredItemID
+
+    //AttributeValue();
   };
 
   class ServicesRegistry : public Internal::AddressSpaceMultiplexor
   {
   public:
+
+    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params)
+    {
+      SubscriptionData data;
+      LastSubscriptionID += 1;
+      data.ID = LastSubscriptionID;
+      data.RevisedLifetimeCount = params.RequestedLifetimeCount;
+      data.RevisedPublishingInterval = params.RequestedPublishingInterval;
+      data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
+      Subscriptions[data.ID] = data;
+      return data;
+    }
+
+    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params)
+    {
+      MonitoredItemsData data;
+      for (const MonitoredItemRequest& req: params.ItemsToCreate)
+      {
+        std::cout << "Creating monitored request for one item" << std::endl;
+        CreateMonitoredItemsResult res;
+        bool found = false;
+        for (AttributeValue value : AttributeValues)
+        {
+          if (value.Node == req.ItemToMonitor.Node && value.Attribute == req.ItemToMonitor.Attribute)
+          { //We found attribute //FIXME: what to do if item allready exist?
+              res.Status = OpcUa::StatusCode::Good;
+              LastMonitoredItemID += 1;
+              res.MonitoredItemID = LastMonitoredItemID;
+              res.RevisedSamplingInterval = Subscriptions[params.SubscriptionID].RevisedPublishingInterval;
+              res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
+              //res.FilterResult = //We can omit that one if we do not change anything in filter
+              MonitoredItemData mdata;
+              mdata.SubscriptionID = params.SubscriptionID;
+              mdata.Parameters = res;
+              mdata.Mode = req.Mode;
+              MonitoredItems[res.MonitoredItemID] = mdata;
+              value.AttSubscriptions.push_back(res.MonitoredItemID); 
+              found = true;
+              std::cout << "monitored item fore one item created " << std::endl;
+              break;
+          }
+        }
+        if ( ! found )
+        {
+          res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+          std::cout << "item not found" << std::endl;
+        }
+        //data.Diagnostics =  Not necessary
+        data.Results.push_back(res);
+      }
+      return data;
+    }
+
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
       boost::unique_lock<boost::shared_mutex> lock(_dbmutex);
@@ -52,7 +115,6 @@ namespace
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
       boost::unique_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
 
       Referencies.insert({sourceNode, reference});
     }
@@ -60,7 +122,6 @@ namespace
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
       boost::shared_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
 
       std::vector<BrowsePathResult> results;
       NodeID current;
@@ -160,6 +221,37 @@ namespace
       return statuses;
     }
 
+    std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    {
+      std::vector<MonitoredItemData> result;
+      std::vector<uint32_t> published;
+      for ( uint32_t miid: EventsToFire)
+      {
+        if (MonitoredItems.find( miid ) != MonitoredItems.end() )
+        {
+          for (const IntegerID& subID: subscriptions )
+          {
+            if  ( MonitoredItems[miid].SubscriptionID == subID )  
+            {
+              time_t now = std::time(0);
+              if ( ( now - MonitoredItems[miid].LastTrigger ) >= MonitoredItems[miid].Parameters.RevisedSamplingInterval )
+              {
+                MonitoredItems[miid].LastTrigger = now;
+                result.push_back(MonitoredItems[miid]);
+                published.push_back(miid);
+              }
+            }
+          }
+        }
+      }
+      for (uint32_t miid: published)
+      {
+        EventsToFire.remove(miid);
+      }
+      return result;
+    }
+
+
   private:
 
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
@@ -184,10 +276,32 @@ namespace
         if (value.Node == node && value.Attribute == attribute)
         {
           value.Value = data;
+          UpdateSubscriptions(value);
           return StatusCode::Good;
         }
       }
       return StatusCode::BadAttributeIdInvalid;
+    }
+
+
+    void UpdateSubscriptions(AttributeValue val)
+    {
+      std::vector<uint32_t> toremove;
+      for (uint32_t miid : val.AttSubscriptions)
+      {
+        if (MonitoredItems.find( miid ) != MonitoredItems.end() )
+        {
+          EventsToFire.push_back(miid);
+        }
+        else
+        {
+          toremove.push_back(miid);
+        }
+      }
+      for (uint32_t miid: toremove)
+      {
+        val.AttSubscriptions.remove(miid);
+      }
     }
 
     bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
@@ -260,6 +374,12 @@ namespace
     mutable boost::shared_mutex _dbmutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
+    std::map <IntegerID, SubscriptionData> Subscriptions; // Map SubscptioinID, SubscriptionData
+    std::map <uint32_t, MonitoredItemData> MonitoredItems; //Map MonitoredItemID, MonitoredItemData
+    uint32_t LastSubscriptionID = 2;
+    uint32_t LastMonitoredItemID = 2;
+    //std::vector<MonitoredItemData> EventsToFire; // Map SubscptioinID, EventToFire
+    std::list<uint32_t> EventsToFire; 
   };
 
 }

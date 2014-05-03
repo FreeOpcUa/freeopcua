@@ -10,6 +10,7 @@
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/server/subscriptions_server.h>
 
 namespace OpcUa
 {
@@ -35,6 +36,8 @@ namespace OpcUa
       virtual void UnregisterAddressSpaceServices();
       virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes);
       virtual void UnregisterAttributeServices();
+      virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service);
+      virtual void UnregisterSubscriptionServices();
 
     private:
       class InternalServer;

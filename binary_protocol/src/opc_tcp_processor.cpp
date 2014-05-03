@@ -15,6 +15,7 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/status_codes.h>
 
 #include <iostream>
@@ -425,10 +426,8 @@ namespace
 
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Data.ID = 2;
-          response.Data.RevisedLifetimeCount = params.RequestedLifetimeCount;
-          response.Data.RevisedPublishingInterval = params.RequestedPublishingInterval;
-          response.Data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
+
+          response.Data = Server->Subscriptions()->CreateSubscription(params);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -441,11 +440,15 @@ namespace
         case CREATE_MONITORED_ITEMS_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
-          std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
+          MonitoredItemsParameters params;
+          stream >> params;
+          if (Debug) std::clog << "Parameters read done." << std::endl;
 
           CreateMonitoredItemsResponse response;
+
+          response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
+          if (Debug) std::clog << "Got answer from subscription service" << std::endl;
+
           FillResponseHeader(requestHeader, response.Header);
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -461,9 +464,6 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
           std::vector<char> data(restSize);
-          //std::cout << "Size of packet in byte: " << data.size() << std::endl;
-          //RawBuffer buffer(&data[0], restSize);
-          //stream >> buffer;
           TranslateBrowsePathsParameters params;
           stream >> params;
 
@@ -474,7 +474,7 @@ namespace
               std::cout << "Requested path is: " << path.StartingNode << " : " ;
               for ( RelativePathElement el : path.Path.Elements)
               {
-                std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
+                std::cout << "/" << el.TargetName ;
               }
               std::cout << std::endl; 
             }
@@ -511,9 +511,11 @@ namespace
         case PUBLISH_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
-          std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
+          PublishParameters params;
+          stream >> params;
+          //std::vector<char> data(restSize);
+          //RawBuffer buffer(&data[0], restSize);
+          //stream >> buffer;
 /*
           PublishResponse response;
           FillResponseHeader(requestHeader, response.Header);

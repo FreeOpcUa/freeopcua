@@ -23,6 +23,7 @@ namespace
     , public ViewServices
     , public AttributeServices
     , public AddressSpaceServices
+    , public SubscriptionServicesServer
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const FindServersParameters& params) const
@@ -73,8 +74,23 @@ namespace
     {
       return std::vector<OpcUa::StatusCode>(filter.size(), StatusCode::BadNotImplemented);
     }
-  };
 
+    virtual std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    {
+      return std::vector<MonitoredItemData>();
+    }
+    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters)
+    {
+      return SubscriptionData();
+    }
+    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    {
+      return MonitoredItemsData();
+    }
+ 
+
+
+  };
 
 }
 
@@ -89,6 +105,7 @@ public:
     SetEndpoints(Services);
     SetViews(Services);
     SetAttributes(Services);
+    SetSubscriptions(Services);
   }
 
   virtual void CreateSession(const SessionParameters& parameters)
@@ -126,7 +143,7 @@ public:
 
   virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
   {
-    return std::shared_ptr<SubscriptionServices>();
+    return SubscriptionsServices;
   }
 
 public:
@@ -150,11 +167,17 @@ public:
     AttributesServices = attributes ? attributes : Services;
   }
 
+  void SetSubscriptions(std::shared_ptr<SubscriptionServices> subscriptions)
+  {
+    SubscriptionsServices = subscriptions ? subscriptions : Services;
+  }
+
 public:
   std::shared_ptr<AttributeServices> AttributesServices;
   std::shared_ptr<ViewServices> ViewsServices;
   std::shared_ptr<AddressSpaceServices> AddressSpacesServices;
   std::shared_ptr<EndpointServices> EndpointsServices;
+  std::shared_ptr<SubscriptionServices> SubscriptionsServices;
   std::shared_ptr<DefaultServices> Services;
 };
 
@@ -217,3 +240,15 @@ void RequestProcessor::UnregisterAttributeServices()
 {
   Comp->SetAttributes(std::shared_ptr<OpcUa::Remote::AttributeServices>());
 }
+
+void RequestProcessor::RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service)
+{
+  Comp->SetSubscriptions(service);
+}
+
+void RequestProcessor::UnregisterSubscriptionServices()
+{
+  Comp->SetSubscriptions(std::shared_ptr<OpcUa::SubscriptionServicesServer>());
+}
+
+

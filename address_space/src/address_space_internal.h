@@ -15,15 +15,22 @@
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/view.h>
 #include <opc/ua/addressspace.h>
+#include <opc/ua/server/subscriptions_server.h>
+
+#include <opc/ua/protocol/subscriptions.h>
+#include <opc/ua/protocol/monitored_items.h>
+
+#include <map>
 
 namespace OpcUa
 {
+
   namespace Internal
   {
-
     class AddressSpace
       : public Remote::ViewServices
       , public Remote::AttributeServices
+      , public SubscriptionServicesServer
       //, public Remote::AddressSpaceServices
     {
     public:
