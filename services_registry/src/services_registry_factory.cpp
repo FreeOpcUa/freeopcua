@@ -17,7 +17,7 @@ namespace OpcUa
   {
     Common::Addon::UniquePtr ServicesRegistryFactory::CreateAddon()
     {
-      return Common::Addon::UniquePtr(new OpcUa::Impl::RequestProcessor());
+      return Common::Addon::UniquePtr(new OpcUa::Impl::ServicesRegistry());
     }
   }
 }

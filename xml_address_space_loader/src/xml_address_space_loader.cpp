@@ -225,16 +225,34 @@ namespace
     return (const char*)content.get();
   }
 
-  NodeID GetDataType(xmlNode& node)
+  ObjectID GetObjectIdOfType(const std::string& nodeValue)
   {
-    const std::string nodeValue = GetNodeValue(node);
+    if (nodeValue == "bool")
+    {
+      return ObjectID::Boolean;
+    }
+    if (nodeValue == "sbyte")
+    {
+      return ObjectID::SByte;
+    }
+    if (nodeValue == "byte")
+    {
+      return ObjectID::Byte;
+    }
+    if (nodeValue == "int16")
+    {
+      return ObjectID::Int16;
+    }
+    if (nodeValue == "uint16")
+    {
+      return ObjectID::UInt16;
+    }
     if (nodeValue == "int32")
     {
       return ObjectID::Int32;
     }
     if (nodeValue == "uint32")
     {
-      std::cout << "Type is uint32" << std::endl;
       return ObjectID::UInt32;
     }
     if (nodeValue == "string")
@@ -249,19 +267,94 @@ namespace
     {
       return ObjectID::Integer;
     }
-    if (nodeValue == "bool")
-    {
-      return ObjectID::Boolean;
-    }
     if (nodeValue == "byte_string")
     {
       return ObjectID::ByteString;
     }
+    if (nodeValue == "guid")
+    {
+      return ObjectID::Guid;
+    }
+    if (nodeValue == "date_time")
+    {
+      return ObjectID::DateTime;
+    }
+
     std::stringstream stream;
-    stream << "Unknown data type '" << nodeValue << "'. Line " << node.line << ".";
+    stream << "Unknown data type '" << nodeValue << "'.";
     throw std::logic_error(stream.str());
   }
 
+  inline ObjectID GetObjectIdOfType(xmlNode& node)
+  {
+    return GetObjectIdOfType(GetNodeValue(node));
+  }
+
+  inline VariantType ConvertToVariantType(ObjectID id)
+  {
+    switch (id)
+    {
+      case ObjectID::Null:        return VariantType::NUL;
+      case ObjectID::Boolean:     return VariantType::BOOLEAN;
+      case ObjectID::SByte:       return VariantType::SBYTE;
+      case ObjectID::Byte:        return VariantType::BYTE;
+      case ObjectID::Int16:       return VariantType::INT16;
+      case ObjectID::UInt16:      return VariantType::UINT16;
+
+      case ObjectID::Integer:
+      case ObjectID::Enumeration:
+      case ObjectID::Int32:       return VariantType::INT32;
+
+      case ObjectID::UInt32:      return VariantType::UINT32;
+      case ObjectID::Int64:       return VariantType::INT64;
+      case ObjectID::UInt64:      return VariantType::UINT64;
+      case ObjectID::Float:       return VariantType::FLOAT;
+      case ObjectID::Double:      return VariantType::DOUBLE;
+      case ObjectID::String:      return VariantType::STRING;
+      case ObjectID::ByteString:  return VariantType::BYTE_STRING;
+      case ObjectID::DateTime:    return VariantType::DATE_TIME;
+      case ObjectID::Guid:        return VariantType::GUID;
+
+      default:
+        std::stringstream stream;
+        stream << "Cannot convert ObjectID '" << (unsigned)id << "' to VariantType.";
+        throw std::logic_error(stream.str());
+    }
+  }
+
+  inline ObjectID ConvertToObjectID(VariantType type)
+  {
+    switch (type)
+    {
+      case VariantType::NUL:         return ObjectID::Null;
+      case VariantType::BOOLEAN:     return ObjectID::Boolean;
+      case VariantType::SBYTE:       return ObjectID::SByte;
+      case VariantType::BYTE:        return ObjectID::Byte;
+      case VariantType::INT16:       return ObjectID::Int16;
+      case VariantType::UINT16:      return ObjectID::UInt16;
+      case VariantType::INT32:       return ObjectID::Int32;
+      case VariantType::UINT32:      return ObjectID::UInt32;
+      case VariantType::INT64:       return ObjectID::Int64;
+      case VariantType::UINT64:      return ObjectID::UInt64;
+      case VariantType::FLOAT:       return ObjectID::Float;
+      case VariantType::DOUBLE:      return ObjectID::Double;
+      case VariantType::STRING:      return ObjectID::String;
+      case VariantType::BYTE_STRING: return ObjectID::ByteString;
+      case VariantType::DATE_TIME:   return ObjectID::DateTime;
+      case VariantType::GUID:        return ObjectID::Guid;
+
+      default:
+        std::stringstream stream;
+        stream << "Cannot convert VariantType '"<< (unsigned)type << "' to ObjectID.";
+        throw std::logic_error(stream.str());
+    }
+  }
+
+  inline VariantType GetVariantType(xmlNode& node)
+  {
+    const ObjectID typeId = GetObjectIdOfType(GetProperty(node, "type"));
+    return ConvertToVariantType(typeId);
+  }
 
   NodeClass GetNodeClass(xmlNode& node)
   {
@@ -402,37 +495,6 @@ namespace
     return ::GetBool(nodeValue);
   }
 
-  VariantType GetVariantType(xmlNode& node)
-  {
-    const std::string propValue = GetProperty(node, "type");
-    if (propValue.empty() || propValue == "string")
-      return VariantType::STRING;
-    if (propValue == "sbyte")
-      return VariantType::SBYTE;
-    if (propValue == "byte")
-      return VariantType::BYTE;
-    if (propValue == "int16")
-      return VariantType::INT16;
-    if (propValue == "uint16")
-      return VariantType::UINT16;
-    if (propValue == "int32")
-      return VariantType::INT32;
-    if (propValue == "uint32")
-      return VariantType::UINT32;
-    if (propValue == "int64")
-      return VariantType::INT64;
-    if (propValue == "uint64")
-      return VariantType::UINT64;
-    if (propValue == "float")
-      return VariantType::FLOAT;
-    if (propValue == "double")
-      return VariantType::DOUBLE;
-
-    std::stringstream stream;
-    stream << std::string("Invalid value type '") << propValue << std::string("'. Line ") << node.line << ".";
-    throw std::logic_error(stream.str());
-  }
-
   Variant GetVariantValue(OpcUa::VariantType type, xmlNode& node)
   {
     const std::string nodeValue = GetNodeValue(node);
@@ -539,12 +601,8 @@ namespace
       case AttributeID::INVERSE_NAME:
         return Variant(GetText(node));
 
-      case AttributeID::EVENT_NOTIFIER:{ // TODO Unknown type of attribute..
-        Variant v;
-        v = std::vector<uint8_t>({0});
-        std::cout << "event notifier is of type: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " << std::endl;
-        return v;
-                                       }
+      case AttributeID::EVENT_NOTIFIER:
+        return Variant(std::vector<uint8_t>{0});
 
       case AttributeID::VALUE_RANK:
         return Variant(GetInt32(node));
@@ -569,11 +627,9 @@ namespace
         break;
 
       case AttributeID::DATA_TYPE:
-        std::cout << "checkling for data type: " << std::endl;
-        return Variant(GetDataType(node));
+        return Variant(GetObjectIdOfType(node));
 
       default:
-        std::cerr << "Unknown attribute '" << node.name << "' at line " << node.line <<  "." << std::endl;
         return Variant(GetText(node));
     }
     const VariantType type = GetVariantType(node);
@@ -605,16 +661,13 @@ namespace
         }
 
         const Variant value = GetAttributeValue(attribute, *subNode);
-        OpcUaNode.Attributes.insert(std::make_pair(attribute, value));
-        //if (attribute == AttributeID::VALUE) {
-          //std::cout << "valye is " << value.Value.UInt32() << std::endl;
-        //}
-        //if (attribute == AttributeID::VALUE)
-        //{
-         // //OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, Variant((uint32_t)value.Type)));
-          //OpcUaNode.Attributes.insert(std::make_pair(AttributeID::DATA_TYPE, NodeID(value.Type.)));
-          //value.Value.T
-        //}
+        AddAttribute(attribute, value);
+      }
+
+      // If tag 'data_type' is absent in the xml then need to add data type which will be based on type of value.
+      if (!HasAttribute(AttributeID::DATA_TYPE) && HasAttribute(AttributeID::VALUE))
+      {
+        AddAttribute(AttributeID::DATA_TYPE, GetDataType(AttributeID::VALUE));
       }
     }
 
@@ -622,6 +675,26 @@ namespace
     bool IsAttributes(const xmlNode& node) const
     {
       return IsXmlNode(node, "attributes");
+    }
+
+    void AddAttribute(AttributeID attr, const Variant& value)
+    {
+      OpcUaNode.Attributes.insert(std::make_pair(attr, value));
+    }
+
+    bool HasAttribute(AttributeID attr) const
+    {
+      return OpcUaNode.Attributes.find(AttributeID::DATA_TYPE) != OpcUaNode.Attributes.end();
+    }
+
+    ObjectID GetDataType(AttributeID attr) const
+    {
+      auto attrPos = OpcUaNode.Attributes.find(attr);
+      if (attrPos == OpcUaNode.Attributes.end())
+      {
+        return ObjectID::Null;
+      }
+      return ConvertToObjectID(attrPos->second.Type);
     }
 
   private:
@@ -870,7 +943,7 @@ namespace
   class NodesRegistrator
   {
   public:
-    NodesRegistrator(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug)
+    NodesRegistrator(OpcUa::Remote::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {
@@ -880,7 +953,6 @@ namespace
     {
       for (const auto& node : nodes)
       {
-        std::cout << " node: " << node.second.ID.GetIntegerIdentifier() << std::endl;
         if (!node.second.IsExternal)
         {
           RegisterNode(node.second);
@@ -892,7 +964,6 @@ namespace
   private:
     void RegisterNode(const Node& node)
     {
-        std::cout << "Register node: " << node.ID.GetIntegerIdentifier() << std::endl;
       Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
       for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
       {
@@ -904,7 +975,6 @@ namespace
     {
       for (const Reference& ref : node.References)
       {
-      std::cout << "Adding ref for: " << node.ID.GetIntegerIdentifier() << " of type "<< (uint)ref.ID << " to " << ref.TargetNode.GetIntegerIdentifier() << std::endl;
         ReferenceDescription desc;
         desc.BrowseName = ref.TargetBrowseName;
         desc.DisplayName = ref.TargetDisplayName;
@@ -918,7 +988,7 @@ namespace
     }
 
   private:
-    OpcUa::UaServer::AddressSpaceRegistry& Registry;
+    OpcUa::Remote::NodeManagementServices& Registry;
     const bool Debug;
   };
 } // namespace
@@ -928,7 +998,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug)
+    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::Remote::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {

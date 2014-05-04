@@ -22,7 +22,7 @@ namespace
     : public EndpointServices
     , public ViewServices
     , public AttributeServices
-    , public AddressSpaceServices
+    , public NodeManagementServices
     , public SubscriptionServicesServer
   {
   public:
@@ -96,7 +96,7 @@ namespace
 
 using namespace OpcUa::Impl;
 
-class RequestProcessor::InternalServer : public Server
+class ServicesRegistry::InternalServer : public Server
 {
 public:
   InternalServer()
@@ -120,28 +120,28 @@ public:
   {
   }
 
-  virtual std::shared_ptr<EndpointServices> Endpoints() const
+  virtual std::shared_ptr<EndpointServices> Endpoints() const override
   {
     return EndpointsServices;
   }
 
-  virtual std::shared_ptr<ViewServices> Views() const
+  virtual std::shared_ptr<ViewServices> Views() const override
   {
     return ViewsServices;
   }
 
-  virtual std::shared_ptr<AddressSpaceServices> AddressSpace() const
+  virtual std::shared_ptr<NodeManagementServices> NodeManagement() const  override
   {
-    return AddressSpacesServices;
+    return NodeServices;
   }
 
 
-  virtual std::shared_ptr<AttributeServices> Attributes() const
+  virtual std::shared_ptr<AttributeServices> Attributes() const  override
   {
     return AttributesServices;
   }
 
-  virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
+  virtual std::shared_ptr<SubscriptionServices> Subscriptions() const  override
   {
     return SubscriptionsServices;
   }
@@ -157,9 +157,9 @@ public:
     ViewsServices = views ? views : Services;
   }
 
-  void SetAddressSpace(std::shared_ptr<AddressSpaceServices> addrs)
+  void SetAddressSpace(std::shared_ptr<NodeManagementServices> addrs)
   {
-    AddressSpacesServices = addrs ? addrs : Services;
+    NodeServices = addrs ? addrs : Services;
   }
 
   void SetAttributes(std::shared_ptr<AttributeServices> attributes)
@@ -175,78 +175,78 @@ public:
 public:
   std::shared_ptr<AttributeServices> AttributesServices;
   std::shared_ptr<ViewServices> ViewsServices;
-  std::shared_ptr<AddressSpaceServices> AddressSpacesServices;
+  std::shared_ptr<NodeManagementServices> NodeServices;
   std::shared_ptr<EndpointServices> EndpointsServices;
   std::shared_ptr<SubscriptionServices> SubscriptionsServices;
   std::shared_ptr<DefaultServices> Services;
 };
 
 
-RequestProcessor::RequestProcessor()
+ServicesRegistry::ServicesRegistry()
   : Comp(new InternalServer())
 {
 }
 
-void RequestProcessor::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
+void ServicesRegistry::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
 {
 }
 
-void RequestProcessor::Stop()
+void ServicesRegistry::Stop()
 {
 }
 
-std::shared_ptr<Server> RequestProcessor::GetServer() const
+std::shared_ptr<Server> ServicesRegistry::GetServer() const
 {
   return Comp;
 }
 
-void RequestProcessor::RegisterEndpointsServices(std::shared_ptr<EndpointServices> endpoints)
+void ServicesRegistry::RegisterEndpointsServices(std::shared_ptr<EndpointServices> endpoints)
 {
   Comp->SetEndpoints(endpoints);
 }
 
-void RequestProcessor::UnregisterEndpointsServices()
+void ServicesRegistry::UnregisterEndpointsServices()
 {
   Comp->SetEndpoints(std::shared_ptr<EndpointServices>());
 }
 
-void RequestProcessor::RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
+void ServicesRegistry::RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
 {
   Comp->SetViews(views);
 }
 
-void RequestProcessor::UnregisterViewServices()
+void ServicesRegistry::UnregisterViewServices()
 {
   Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
 }
 
-void RequestProcessor::RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> addr)
+void ServicesRegistry::RegisterNodeManagementServices(std::shared_ptr<OpcUa::Remote::NodeManagementServices> addr)
 {
   Comp->SetAddressSpace(addr);
 }
 
-void RequestProcessor::UnregisterAddressSpaceServices()
+void ServicesRegistry::UnregisterNodeManagementServices()
 {
-  Comp->SetAddressSpace(std::shared_ptr<OpcUa::Remote::AddressSpaceServices>());
+  Comp->SetAddressSpace(std::shared_ptr<OpcUa::Remote::NodeManagementServices>());
 }
 
 
-void RequestProcessor::RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
+void ServicesRegistry::RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
 {
   Comp->SetAttributes(attributes);
 }
 
-void RequestProcessor::UnregisterAttributeServices()
+void ServicesRegistry::UnregisterAttributeServices()
 {
   Comp->SetAttributes(std::shared_ptr<OpcUa::Remote::AttributeServices>());
 }
 
-void RequestProcessor::RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service)
+void ServicesRegistry::RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service)
 {
   Comp->SetSubscriptions(service);
 }
 
-void RequestProcessor::UnregisterSubscriptionServices()
+void ServicesRegistry::UnregisterSubscriptionServices()
 {
   Comp->SetSubscriptions(std::shared_ptr<OpcUa::SubscriptionServicesServer>());
 }

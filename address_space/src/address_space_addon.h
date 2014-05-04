@@ -26,7 +26,7 @@ namespace OpcUa
 
     class AddressSpaceAddon
       : public Common::Addon
-      , public AddressSpaceMultiplexor
+      , public UaServer::AddressSpace
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpaceAddon);
@@ -38,16 +38,16 @@ namespace OpcUa
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
 
-    public: // AddressSpaceRegistry
+    public: // NodeManagementServices
       virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value);
       virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference);
 
-    public:
+    public: // ViewServices
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
       virtual std::vector<ReferenceDescription> BrowseNext() const;
       virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const;
 
-    public:
+    public: // AttribueServices
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
@@ -58,7 +58,7 @@ namespace OpcUa
  
 
     private:
-      OpcUa::Internal::AddressSpaceMultiplexor::SharedPtr Registry;
+      OpcUa::UaServer::AddressSpace::SharedPtr Registry;
       std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
     };
 

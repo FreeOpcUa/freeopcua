@@ -32,8 +32,8 @@ namespace OpcUa
       Node GetObjectsNode();
       Node GetNode(NodeID nodeid);
       void SetConfigFile(const std::string path);
-      Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChildNode(path);}
-      Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChildNode(path);}
+      Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
+      Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
 
     protected:
       Common::ModulesConfiguration const GetConfig();
@@ -41,7 +41,7 @@ namespace OpcUa
       //OpcUa::Application::UniquePtr application;
       //OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
       std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
-      OpcUa::Remote::Server* server;
+      OpcUa::Remote::Server::SharedPtr Server;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine

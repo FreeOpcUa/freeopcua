@@ -28,8 +28,9 @@ class StandardNamespaceStructure : public Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = OpcUa::Internal::CreateAddressSpaceMultiplexor();
-    OpcUa::Internal::FillStandardNamespace(*NameSpace);
+    NameSpace = OpcUa::Internal::CreateAddressSpaceInMemory();
+    const bool debug = false;
+    OpcUa::Internal::FillStandardNamespace(*NameSpace, false);
   }
 
   virtual void TearDown()
@@ -106,7 +107,7 @@ protected:
   }
 
 protected:
-  Internal::AddressSpaceMultiplexor::UniquePtr NameSpace;
+  UaServer::AddressSpace::UniquePtr NameSpace;
 };
 
 template <typename T>
@@ -166,7 +167,9 @@ TEST_F(StandardNamespaceStructure, CheckRoot)
 TEST_F(StandardNamespaceStructure, CheckObjects)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ObjectsFolder);
-  EXPECT_EQ(SizeOf(refs), 0);
+  EXPECT_EQ(SizeOf(refs), 2);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::Server));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
 
   ExpectHasBaseAttributes(ObjectID::ObjectsFolder);
 }
@@ -1343,10 +1346,11 @@ TEST_F(StandardNamespaceStructure, RedundancySupportTypeRedundancySupport)
 TEST_F(StandardNamespaceStructure, ServerType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerType);
-  EXPECT_EQ(SizeOf(refs), 9);
+  EXPECT_EQ(SizeOf(refs), 10);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::Auditing));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::NamespaceArray));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerArray));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerProfileArray));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerCapabilities));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerDiagnostics));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerRedundancy));
@@ -1392,9 +1396,10 @@ TEST_F(StandardNamespaceStructure, ServerArray)
 TEST_F(StandardNamespaceStructure, ServerCapabilities)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerCapabilities);
-  EXPECT_EQ(SizeOf(refs), 2);
+  EXPECT_EQ(SizeOf(refs), 3);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::ServerCapabilitiesType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule,  ObjectID::ModellingRuleMandatory));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerProfileArray));
 
   ExpectHasBaseAttributes(ObjectID::ServerCapabilities);
   ExpectHasTypeAttributes(ObjectID::ServerCapabilities);

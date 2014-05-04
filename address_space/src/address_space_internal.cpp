@@ -10,9 +10,9 @@
 
 
 #include "address_space_internal.h"
-#include "opc/ua/server/subscriptions_server.h"
 
 #include <boost/thread/shared_mutex.hpp>
+#include <limits>
 #include <map>
 #include <set>
 #include <ctime>
@@ -24,11 +24,10 @@ namespace
 {
 
   using namespace OpcUa;
+  //using namespace OpcUa::UaServer;
   using namespace OpcUa::Remote;
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
-
-
 
   struct AttributeValue
   {
@@ -42,7 +41,7 @@ namespace
     //AttributeValue();
   };
 
-  class ServicesRegistry : public Internal::AddressSpaceMultiplexor
+  class AddressSpaceInMemory : public UaServer::AddressSpace
   {
   public:
 
@@ -100,9 +99,7 @@ namespace
 
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
-      boost::unique_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
-
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       AttributeValue data;
       data.Node = node;
       data.Attribute = attribute;
@@ -114,17 +111,17 @@ namespace
 
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
-      boost::unique_lock<boost::shared_mutex> lock(_dbmutex);
-
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       Referencies.insert({sourceNode, reference});
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
-      boost::shared_lock<boost::shared_mutex> lock(_dbmutex);
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<BrowsePathResult> results;
       NodeID current;
+      // TODO: Rewrite after adding unit tests - too much loops and ifs.
       for (BrowsePath browsepath : params.BrowsePaths )
       {
         current = browsepath.StartingNode;
@@ -142,10 +139,14 @@ namespace
               break;
             }
           }
-          if (! found ) { break;}
+          if (!found )
+          {
+            break;
+          }
         }
         BrowsePathResult res;
-        if ( !found) {
+        if (!found)
+        {
           res.Status = OpcUa::StatusCode::BadNotReadable;
         }
         else
@@ -154,7 +155,7 @@ namespace
           std::vector<BrowsePathTarget> targets;
           BrowsePathTarget target;
           target.Node = current;
-          target.RemainingPathIndex = UINT32_MAX;
+          target.RemainingPathIndex = std::numeric_limits<uint32_t>::max();
           targets.push_back(target);
           res.Targets = targets;
         }
@@ -165,8 +166,7 @@ namespace
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
-      boost::shared_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<ReferenceDescription> result;
       for (auto reference : Referencies)
@@ -184,17 +184,13 @@ namespace
 
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
-      boost::shared_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
-
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       return std::vector<ReferenceDescription>();
     }
 
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
-      boost::shared_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
-
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       std::vector<DataValue> values;
       for (const AttributeValueID& attribute : params.AttributesToRead)
       {
@@ -205,9 +201,7 @@ namespace
 
     virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
     {
-      boost::unique_lock<boost::shared_mutex> lock(_dbmutex);
-      //std::unique_lock<std::mutex> lock(DBMutex);
-
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
       std::vector<StatusCode> statuses;
       for (WriteValue value : values)
       {
@@ -256,6 +250,7 @@ namespace
 
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
     {
+      // TODO: Copy-past at if.
       for (const AttributeValue& value : AttributeValues)
       {
         if (value.Node == node && value.Attribute == attribute)
@@ -334,15 +329,8 @@ namespace
         return reference.ReferenceTypeID == typeID;
       }
       const std::vector<NodeID> suitableTypes = SelectNodesHierarchy(std::vector<NodeID>(1, typeID));
-      for (const NodeID& id : suitableTypes)
-      {
-        if (id == reference.ReferenceTypeID)
-        {
-          return true;
-        }
-      }
-      return false;
-//      return std::find(suitableTypes.begin(), suitableTypes.end(), reference.ReferenceTypeID) != suitableTypes.end();
+      const auto resultIt = std::find(suitableTypes.begin(), suitableTypes.end(), reference.ReferenceTypeID);\
+      return resultIt != suitableTypes.end();
     }
 
     std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
@@ -370,8 +358,7 @@ namespace
     }
 
   private:
-    //mutable std::mutex DBMutex;
-    mutable boost::shared_mutex _dbmutex;
+    mutable boost::shared_mutex DbMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
     std::map <IntegerID, SubscriptionData> Subscriptions; // Map SubscptioinID, SubscriptionData
@@ -386,8 +373,8 @@ namespace
 
 namespace OpcUa
 {
-  Internal::AddressSpaceMultiplexor::UniquePtr Internal::CreateAddressSpaceMultiplexor()
+  UaServer::AddressSpace::UniquePtr Internal::CreateAddressSpaceInMemory()
   {
-    return AddressSpaceMultiplexor::UniquePtr(new ServicesRegistry());
+    return UaServer::AddressSpace::UniquePtr(new AddressSpaceInMemory());
   }
 }

@@ -36,8 +36,8 @@ namespace OpcUa
       virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes) = 0;
       virtual void UnregisterAttributeServices() = 0;
 
-      virtual void RegisterAddressSpaceServices(std::shared_ptr<OpcUa::Remote::AddressSpaceServices> attributes) = 0;
-      virtual void UnregisterAddressSpaceServices() = 0;
+      virtual void RegisterNodeManagementServices(std::shared_ptr<OpcUa::Remote::NodeManagementServices> attributes) = 0;
+      virtual void UnregisterNodeManagementServices() = 0;
 
       virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> attributes) = 0;
       virtual void UnregisterSubscriptionServices() = 0;

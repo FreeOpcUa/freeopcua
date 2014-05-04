@@ -121,14 +121,14 @@ namespace OpcUa
 
     //const Common::AddonsManager& addons = application->GetAddonsManager();
     OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry = addons->GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
-    server = registry->GetServer().get();
+    Server = registry->GetServer();
     Node root = GetRootNode();
-    Node serverarray = root.GetChildNode(std::vector<std::string>({"0:Objects", "0:Server", "0:ServerArray"}));
-    if (serverarray)
+    try
     {
-      serverarray.WriteValue(endpoint); //writing endpoint is wrong it should be urn of server....
+      Node serverarray = root.GetChild(std::vector<std::string>({"0:Objects", "0:Server", "0:ServerArray"}));
+      serverarray.SetValue(endpoint); //writing endpoint is wrong it should be urn of server....
     }
-    else
+    catch (NodeNotFoundException ex)
     {
       std::cout << "Error could not get serverArray node" << std::endl;
     }
@@ -140,16 +140,7 @@ namespace OpcUa
   
   Node OPCUAServer::GetNode(NodeID nodeid)
   {
-    //FIXME: the validity check might have to be put in node code....
-    Node node(server, nodeid);
-    Variant var = node.Read(OpcUa::AttributeID::BROWSE_NAME); 
-    if (var.Type == OpcUa::VariantType::QUALIFIED_NAME)
-    {
-      QualifiedName qn = var.Value.Name.front();
-      node.SetBrowseNameCache(qn);
-      return node;
-    }
-    return Node(server); //Null node
+    return Node(Server, nodeid);
   }
 
   void OPCUAServer::Stop()
@@ -161,11 +152,11 @@ namespace OpcUa
 
   Node OPCUAServer::GetRootNode()
   {
-    return Node(server, OpcUa::ObjectID::RootFolder);
+    return Node(Server, OpcUa::ObjectID::RootFolder);
   }
 
   Node OPCUAServer::GetObjectsNode()
   {
-    return Node(server, OpcUa::ObjectID::ObjectsFolder);
+    return Node(Server, OpcUa::ObjectID::ObjectsFolder);
   }
 }

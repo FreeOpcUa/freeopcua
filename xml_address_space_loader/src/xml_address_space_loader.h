@@ -13,7 +13,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/node_management.h>
 #include <opc/ua/server/addons/xml_ns.h>
 
 
@@ -28,7 +28,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader);
 
     public:
-      explicit XmlAddressSpaceLoader(OpcUa::UaServer::AddressSpaceRegistry& registry, bool debug = false);
+      explicit XmlAddressSpaceLoader(OpcUa::Remote::NodeManagementServices& registry, bool debug = false);
 
       void Load(const char* fileName);
 
@@ -38,7 +38,7 @@ namespace OpcUa
       }
 
     private:
-      OpcUa::UaServer::AddressSpaceRegistry& Registry;
+      OpcUa::Remote::NodeManagementServices& Registry;
       const bool Debug;
     };
 
@@ -55,10 +55,10 @@ namespace OpcUa
       virtual void Load(const char* path);
 
     private:
-      void Load(const char* file, OpcUa::UaServer::AddressSpaceRegistry& registry);
+      void Load(const char* file, OpcUa::Remote::NodeManagementServices& registry);
 
     private:
-      UaServer::AddressSpaceRegistry::SharedPtr Registry;
+      Remote::NodeManagementServices::SharedPtr Registry;
     };
 
 

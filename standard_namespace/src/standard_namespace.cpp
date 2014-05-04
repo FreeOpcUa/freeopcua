@@ -13,7 +13,7 @@
 #include "standard_namespace.h"
 
 #include <opc/common/addons_core/addon.h>
-#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/node_management.h>
 #include <opc/ua/node_classes.h>
 #include <opc/ua/variable_access_level.h>
 #include <opc/ua/strings.h>
@@ -33,14 +33,16 @@ namespace
     class StandardNamespace
     {
     public:
-      StandardNamespace(OpcUa::UaServer::AddressSpaceRegistry& registry)
+      StandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
         : Registry(registry)
+        , Debug(debug)
       {
       }
 
       void Fill()
       {
-          std::cout << "Programmatically fillig address space" << std::endl;
+        if (Debug) std::clog << "Programmatically fillig address space" << std::endl;
+
        Root();
          Objects();
          Views();
@@ -3636,7 +3638,8 @@ namespace
       }
 
     private:
-      OpcUa::UaServer::AddressSpaceRegistry& Registry;
+      OpcUa::Remote::NodeManagementServices& Registry;
+      const bool Debug;
     };
 } // namespace
 
@@ -3645,9 +3648,9 @@ namespace OpcUa
   namespace Internal
   {
 
-    void FillStandardNamespace(OpcUa::UaServer::AddressSpaceRegistry& registry)
+    void FillStandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
     {
-      StandardNamespace ns(registry);
+      StandardNamespace ns(registry, debug);
       ns.Fill();
     }
 

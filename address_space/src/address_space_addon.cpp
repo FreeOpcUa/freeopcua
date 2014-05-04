@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Internal
   {
     AddressSpaceAddon::AddressSpaceAddon()
-      : Registry(Internal::CreateAddressSpaceMultiplexor())
+      : Registry(Internal::CreateAddressSpaceInMemory())
     {
     }
 
@@ -32,7 +32,7 @@ namespace OpcUa
       InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
-      InternalServer->RegisterAddressSpaceServices(Registry);
+      InternalServer->RegisterNodeManagementServices(Registry);
       InternalServer->RegisterSubscriptionServices(Registry);
     }
 
@@ -40,7 +40,7 @@ namespace OpcUa
     {
       InternalServer->UnregisterViewServices();
       InternalServer->UnregisterAttributeServices();
-      InternalServer->UnregisterAddressSpaceServices();
+      InternalServer->UnregisterNodeManagementServices();
       InternalServer->UnregisterSubscriptionServices();
       InternalServer.reset();
     }

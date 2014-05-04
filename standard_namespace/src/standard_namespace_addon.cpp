@@ -17,8 +17,9 @@ namespace OpcUa
 
     void StandardNamespaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      UaServer::AddressSpaceRegistry::SharedPtr registry = addons.GetAddon<UaServer::AddressSpaceRegistry>(UaServer::AddressSpaceRegistryAddonID);
-      FillStandardNamespace(*registry);
+      Remote::NodeManagementServices::SharedPtr registry = addons.GetAddon<Remote::NodeManagementServices>(UaServer::AddressSpaceRegistryAddonID);
+      const bool debug = false;
+      FillStandardNamespace(*registry, false);
     }
 
     void StandardNamespaceAddon::Stop()

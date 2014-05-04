@@ -10,6 +10,7 @@
 
 #include "xml_address_space_loader.h"
 
+#include <opc/ua/server/addons/address_space_registry.h>
 #include <sstream>
 #include <stdexcept>
 
@@ -20,7 +21,7 @@ namespace OpcUa
 
     void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      Registry = addons.GetAddon<UaServer::AddressSpaceRegistry>(UaServer::AddressSpaceRegistryAddonID);
+      Registry = addons.GetAddon<Remote::NodeManagementServices>(UaServer::AddressSpaceRegistryAddonID);
       if (!Registry)
       {
         std::stringstream stream;
@@ -54,7 +55,7 @@ namespace OpcUa
       Load(path, *Registry);
     }
 
-    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::UaServer::AddressSpaceRegistry& registry)
+    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::Remote::NodeManagementServices& registry)
     {
       if (!Registry)
       {

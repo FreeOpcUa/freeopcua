@@ -15,7 +15,6 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/status_codes.h>
 
 #include <iostream>
@@ -78,7 +77,7 @@ namespace
     {
       using namespace OpcUa::Binary;
       Header hdr;
-      std::cout << "Waiting for data ..." << std::endl;
+      if (Debug) std::cout << "Processing new chunk." << std::endl;
       stream >> hdr;
       //std::cout << "Got data, Locking ..." << std::endl;
       //std::unique_lock<std::mutex> lock(ProcessMutex);
@@ -90,6 +89,7 @@ namespace
           HelloClient(stream);
           break;
         }
+
 
         case MT_SECURE_OPEN:
         {
@@ -173,15 +173,15 @@ namespace
       OpenSecureChannelRequest request;
       stream >> request;
       
-      if (request.RequestType == STR_RENEW)
-      {
-        //FIXME:Should check that channel has been issued first
-        TokenID += 1;
-      }
-
       if (request.SecurityMode != MSM_NONE)
       {
         throw std::logic_error("Unsupported security mode.");
+      }
+
+      if (request.RequestType == STR_RENEW)
+      {
+        //FIXME:Should check that channel has been issued first
+        ++TokenID;
       }
 
       OpenSecureChannelResponse response;
@@ -518,7 +518,6 @@ namespace
           stream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
-
 
         case PUBLISH_REQUEST:
         {
