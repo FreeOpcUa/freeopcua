@@ -22,6 +22,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <sstream>
+#include <queue>
 
 namespace
 {
@@ -31,6 +32,16 @@ namespace
   using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
+
+  struct QueuedPublishRequest
+  {
+    RequestHeader Header;
+    SymmetricAlgorithmHeader algorithmHeader;
+    SequenceHeader sequence;
+    NodeID  typeID;
+    uint32_t channelID;
+    PublishParameters Parameters;
+  };
 
   class OpcTcp : public IncomingConnectionProcessor
   {
@@ -79,7 +90,6 @@ namespace
           HelloClient(stream);
           break;
         }
-
 
         case MT_SECURE_OPEN:
         {
@@ -359,6 +369,55 @@ namespace
           return;
         }
 
+        case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
+          std::vector<char> data(restSize);
+          TranslateBrowsePathsParameters params;
+          stream >> params;
+
+          if (Debug) 
+          {
+            for ( BrowsePath path : params.BrowsePaths)
+            {
+              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              for ( RelativePathElement el : path.Path.Elements)
+              {
+                std::cout << "/" << el.TargetName ;
+              }
+              std::cout << std::endl; 
+            }
+          }
+
+          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
+
+          if (Debug)
+          {
+            for (BrowsePathResult res: result)
+            {
+              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              for ( BrowsePathTarget path : res.Targets)
+              {
+                std::cout << path.Node ;
+              }
+              std::cout << std::endl;
+            }
+          }
+
+          TranslateBrowsePathsToNodeIDsResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Result.Paths = result;
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+
         case CREATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "Processing create session request." << std::endl;
@@ -460,75 +519,21 @@ namespace
           return;
         }
 
-        case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
-        {
-          if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
-          std::vector<char> data(restSize);
-          TranslateBrowsePathsParameters params;
-          stream >> params;
-
-          if (Debug) 
-          {
-            for ( BrowsePath path : params.BrowsePaths)
-            {
-              std::cout << "Requested path is: " << path.StartingNode << " : " ;
-              for ( RelativePathElement el : path.Path.Elements)
-              {
-                std::cout << "/" << el.TargetName ;
-              }
-              std::cout << std::endl; 
-            }
-          }
-
-          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
-
-          if (Debug)
-          {
-            for (BrowsePathResult res: result)
-            {
-              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
-              for ( BrowsePathTarget path : res.Targets)
-              {
-                std::cout << path.Node ;
-              }
-              std::cout << std::endl;
-            }
-          }
-
-          TranslateBrowsePathsToNodeIDsResponse response;
-          FillResponseHeader(requestHeader, response.Header);
-          response.Result.Paths = result;
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(algorithmHeader));
-          secureHeader.AddSize(RawSize(sequence));
-          secureHeader.AddSize(RawSize(response));
-
-          if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
-          return;
-        }
 
         case PUBLISH_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
+          if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
           PublishParameters params;
           stream >> params;
-          //std::vector<char> data(restSize);
-          //RawBuffer buffer(&data[0], restSize);
-          //stream >> buffer;
-/*
-          PublishResponse response;
-          FillResponseHeader(requestHeader, response.Header);
+          QueuedPublishRequest q;
+          q.Header = requestHeader;
+          q.Parameters = params;
+          q.sequence = sequence;
+          q.typeID = typeID;
+          q.channelID = channelID;
+          PublishRequestQueue.push(q);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(algorithmHeader));
-          secureHeader.AddSize(RawSize(sequence));
-          secureHeader.AddSize(RawSize(response));
-
-          if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
-*/
-          return;
+         return;
         }
 
         case SET_PUBLISHING_MODE_REQUEST:
@@ -569,6 +574,30 @@ namespace
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
+    void SendPublishResponse(IOStreamBinary& stream)
+    {
+      QueuedPublishRequest request = PublishRequestQueue.front();
+      PublishRequestQueue.pop();
+      PublishResponse response;
+      FillResponseHeader(request.Header, response.Header);
+      response.Result = MakePublishResult();
+
+      SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+      secureHeader.AddSize(RawSize(request.algorithmHeader));
+      secureHeader.AddSize(RawSize(request.sequence));
+      secureHeader.AddSize(RawSize(response));
+
+      if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
+      stream << secureHeader << request.algorithmHeader << request.sequence << response << flush;
+    }
+
+
+    PublishResult MakePublishResult()
+    {
+      PublishResult result;
+      return result;
+    }
+
   private:
     std::mutex ProcessMutex;
     std::shared_ptr<OpcUa::Remote::Server> Server;
@@ -577,6 +606,7 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
+    std::queue<QueuedPublishRequest> PublishRequestQueue;
   };
 
 }
