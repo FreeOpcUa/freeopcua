@@ -17,7 +17,7 @@
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/view.h>
-#include <opc/ua/server/subscriptions_server.h>
+#include <opc/ua/subscriptions.h>
 
 namespace OpcUa
 {
@@ -54,7 +54,9 @@ namespace OpcUa
     public:
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters);
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
-      virtual std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions);
+      virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds);
+      virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements);
+
  
 
     private:

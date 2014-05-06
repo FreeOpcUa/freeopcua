@@ -10,7 +10,6 @@
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/protocol/endpoints.h>
-#include <opc/ua/server/subscriptions_server.h>
 
 namespace OpcUa
 {
@@ -21,7 +20,6 @@ namespace OpcUa
     {
     public:
       ServicesRegistry();
-      ~ServicesRegistry(){std::cout << "Service registry is deleted" << std::endl;}
 
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
@@ -36,7 +34,7 @@ namespace OpcUa
       virtual void UnregisterNodeManagementServices() override;
       virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes) override;
       virtual void UnregisterAttributeServices() override;
-      virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service);
+      virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::Remote::SubscriptionServices> service);
       virtual void UnregisterSubscriptionServices();
 
     private:

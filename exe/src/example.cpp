@@ -75,7 +75,6 @@ int main(int argc, char** argv)
         std::cout << "    " << n << std::endl;
     }
     */
-    sleep(1);
     //server.Stop();
 //OpcUa::Daemon daemon;
 

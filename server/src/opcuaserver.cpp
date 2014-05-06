@@ -8,6 +8,8 @@
 
 #include <opc/ua/opcuaserver.h>
 
+#include <iostream>
+
 namespace OpcUa
 {
   void OPCUAServer::SetConfigFile(const std::string path)

@@ -579,7 +579,7 @@ namespace
       PublishRequestQueue.pop();
       PublishResponse response;
       FillResponseHeader(request.Header, response.Header);
-      response.Result = MakePublishResult();
+      response.Result = MakePublishResult(request);
 
       SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
       secureHeader.AddSize(RawSize(request.algorithmHeader));
@@ -591,9 +591,15 @@ namespace
     }
 
 
-    PublishResult MakePublishResult()
+    PublishResult MakePublishResult(const QueuedPublishRequest& request)
     {
+      //request.Parameters.Acknowledgements
       PublishResult result;
+      //result.SubscriptionID = subscription;
+      //result.Diagnostics = ?? Not necessary
+      result.MoreNotifications = false; //we send all notifications at once
+      //response.Data = Server->Subscriptions()->
+
       return result;
     }
 

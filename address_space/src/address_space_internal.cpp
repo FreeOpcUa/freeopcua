@@ -29,6 +29,14 @@ namespace
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
 
+  struct MonitoredItemData
+  {
+    IntegerID SubscriptionID;
+    MonitoringMode Mode;
+    time_t LastTrigger;
+    CreateMonitoredItemsResult Parameters;
+  };
+
   struct AttributeValue
   {
     NodeID Node;
@@ -53,7 +61,7 @@ namespace
       data.RevisedLifetimeCount = params.RequestedLifetimeCount;
       data.RevisedPublishingInterval = params.RequestedPublishingInterval;
       data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
-      Subscriptions[data.ID] = data;
+      SubscriptionsMap[data.ID] = data;
       return data;
     }
 
@@ -72,17 +80,16 @@ namespace
               res.Status = OpcUa::StatusCode::Good;
               LastMonitoredItemID += 1;
               res.MonitoredItemID = LastMonitoredItemID;
-              res.RevisedSamplingInterval = Subscriptions[params.SubscriptionID].RevisedPublishingInterval;
+              res.RevisedSamplingInterval = SubscriptionsMap[params.SubscriptionID].RevisedPublishingInterval;
               res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
               //res.FilterResult = //We can omit that one if we do not change anything in filter
               MonitoredItemData mdata;
               mdata.SubscriptionID = params.SubscriptionID;
               mdata.Parameters = res;
               mdata.Mode = req.Mode;
-              MonitoredItems[res.MonitoredItemID] = mdata;
+              MonitoredItemsMap[res.MonitoredItemID] = mdata;
               value.AttSubscriptions.push_back(res.MonitoredItemID); 
               found = true;
-              std::cout << "monitored item fore one item created " << std::endl;
               break;
           }
         }
@@ -215,35 +222,39 @@ namespace
       return statuses;
     }
 
-    std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
     {
-      std::vector<MonitoredItemData> result;
+      std::vector<PublishResult> result;
+      /*
       std::vector<uint32_t> published;
-      for ( uint32_t miid: EventsToFire)
+      for ( uint32_t miid: MonitoredItemsTriggered)
       {
         if (MonitoredItems.find( miid ) != MonitoredItems.end() )
         {
-          for (const IntegerID& subID: subscriptions )
-          {
-            if  ( MonitoredItems[miid].SubscriptionID == subID )  
+            if  ( MonitoredItems[miid].SubscriptionID == subscription )  
             {
               time_t now = std::time(0);
               if ( ( now - MonitoredItems[miid].LastTrigger ) >= MonitoredItems[miid].Parameters.RevisedSamplingInterval )
               {
                 MonitoredItems[miid].LastTrigger = now;
-                result.push_back(MonitoredItems[miid]);
+                //result.push_back(MonitoredItems[miid]);
                 published.push_back(miid);
               }
-            }
           }
         }
       }
       for (uint32_t miid: published)
       {
-        EventsToFire.remove(miid);
+        MonitoredItemsTriggered.remove(miid);
       }
+      */
       return result;
     }
+
+    virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    {
+    }
+
 
 
   private:
@@ -282,15 +293,18 @@ namespace
     void UpdateSubscriptions(AttributeValue val)
     {
       std::vector<uint32_t> toremove;
-      for (uint32_t miid : val.AttSubscriptions)
+      for (uint32_t clientHandle : val.AttSubscriptions)
       {
-        if (MonitoredItems.find( miid ) != MonitoredItems.end() )
+        if (MonitoredItemsMap.find( clientHandle ) != MonitoredItemsMap.end() )
         {
-          EventsToFire.push_back(miid);
+          MonitoredItems event;
+          event.ClientHandle = clientHandle;
+          event.Value = val.Value;
+          MonitoredItemsTriggered.push_back(event);
         }
         else
         {
-          toremove.push_back(miid);
+          toremove.push_back(clientHandle);
         }
       }
       for (uint32_t miid: toremove)
@@ -361,12 +375,12 @@ namespace
     mutable boost::shared_mutex DbMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
-    std::map <IntegerID, SubscriptionData> Subscriptions; // Map SubscptioinID, SubscriptionData
-    std::map <uint32_t, MonitoredItemData> MonitoredItems; //Map MonitoredItemID, MonitoredItemData
+    std::map <IntegerID, SubscriptionData> SubscriptionsMap; // Map SubscptioinID, SubscriptionData
+    std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
     uint32_t LastSubscriptionID = 2;
     uint32_t LastMonitoredItemID = 2;
-    //std::vector<MonitoredItemData> EventsToFire; // Map SubscptioinID, EventToFire
-    std::list<uint32_t> EventsToFire; 
+    std::list<MonitoredItems> MonitoredItemsTriggered; 
+    std::list<EventFieldList> EventTriggered; 
   };
 
 }

@@ -89,10 +89,15 @@ namespace OpcUa
       return Registry->CreateMonitoredItems(parameters);
     }
 
-    std::vector<MonitoredItemData> AddressSpaceAddon::PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    std::vector<PublishResult> AddressSpaceAddon::PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
     {
-      return Registry->PopItemsToPublish(subscriptions);
+      return Registry->PopPublishResults(std::vector<IntegerID>());
     }
+
+    void AddressSpaceAddon::CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    {
+    }
+
 
   } // namespace Internal
 } // namespace OpcUa

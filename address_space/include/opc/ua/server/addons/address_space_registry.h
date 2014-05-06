@@ -13,7 +13,7 @@
 #include <opc/ua/view.h>
 #include <opc/ua/attributes.h>
 #include <opc/ua/node_management.h>
-#include <opc/ua/server/subscriptions_server.h>
+#include <opc/ua/subscriptions.h>
 
 
 namespace OpcUa
@@ -25,7 +25,7 @@ namespace OpcUa
       : public Remote::ViewServices
       , public Remote::AttributeServices
       , public Remote::NodeManagementServices
-      , public OpcUa::SubscriptionServicesServer 
+      , public Remote::SubscriptionServices 
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpace);

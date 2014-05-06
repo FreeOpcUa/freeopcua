@@ -23,7 +23,7 @@ namespace
     , public ViewServices
     , public AttributeServices
     , public NodeManagementServices
-    , public SubscriptionServicesServer
+    , public SubscriptionServices
   {
   public:
     virtual std::vector<OpcUa::ApplicationDescription> FindServers(const FindServersParameters& params) const
@@ -75,10 +75,11 @@ namespace
       return std::vector<OpcUa::StatusCode>(filter.size(), StatusCode::BadNotImplemented);
     }
 
-    virtual std::vector<MonitoredItemData> PopItemsToPublish(const std::vector<IntegerID>& subscriptions)
+    virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIDs)
     {
-      return std::vector<MonitoredItemData>();
+      return std::vector<PublishResult>();
     }
+
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters)
     {
       return SubscriptionData();
@@ -87,6 +88,10 @@ namespace
     {
       return MonitoredItemsData();
     }
+    virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    {
+    }
+    
  
 
 
@@ -134,7 +139,6 @@ public:
   {
     return NodeServices;
   }
-
 
   virtual std::shared_ptr<AttributeServices> Attributes() const  override
   {
@@ -241,14 +245,14 @@ void ServicesRegistry::UnregisterAttributeServices()
   Comp->SetAttributes(std::shared_ptr<OpcUa::Remote::AttributeServices>());
 }
 
-void ServicesRegistry::RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServicesServer> service)
+void ServicesRegistry::RegisterSubscriptionServices(std::shared_ptr<OpcUa::Remote::SubscriptionServices> service)
 {
   Comp->SetSubscriptions(service);
 }
 
 void ServicesRegistry::UnregisterSubscriptionServices()
 {
-  Comp->SetSubscriptions(std::shared_ptr<OpcUa::SubscriptionServicesServer>());
+  Comp->SetSubscriptions(std::shared_ptr<OpcUa::Remote::SubscriptionServices>());
 }
 
 
