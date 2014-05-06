@@ -32,15 +32,13 @@ namespace
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
 
-  struct QueuedPublishRequest
+  struct PublishRequestElement
   {
-    RequestHeader Header;
-    SymmetricAlgorithmHeader algorithmHeader;
     SequenceHeader sequence;
-    NodeID  typeID;
-    uint32_t channelID;
-    PublishParameters Parameters;
+    RequestHeader requestHeader;
+    SymmetricAlgorithmHeader algorithmHeader;
   };
+
 
   class OpcTcp : public IncomingConnectionProcessor
   {
@@ -56,7 +54,6 @@ namespace
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
-      //std::unique_lock<std::mutex> lock(ProcessMutex);
       if (!clientChannel)
       {
         if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
@@ -76,11 +73,11 @@ namespace
     bool ProcessChunk(IOStreamBinary& stream)
     {
       using namespace OpcUa::Binary;
-      Header hdr;
+
       if (Debug) std::cout << "Processing new chunk." << std::endl;
+      Header hdr;
       stream >> hdr;
-      //std::cout << "Got data, Locking ..." << std::endl;
-      //std::unique_lock<std::mutex> lock(ProcessMutex);
+
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -141,9 +138,6 @@ namespace
       stream >> hello;
 
       Acknowledge ack;
-      //ack.ReceiveBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      //ack.SendBufferSize = OPCUA_DEFAULT_BUFFER_SIZE;
-      //ack.MaxMessageSize = OPCUA_DEFAULT_BUFFER_SIZE;
       ack.ReceiveBufferSize = hello.ReceiveBufferSize;
       ack.SendBufferSize = hello.SendBufferSize;
       ack.MaxMessageSize = hello.MaxMessageSize;
@@ -487,6 +481,8 @@ namespace
           FillResponseHeader(requestHeader, response.Header);
 
           response.Data = Server->Subscriptions()->CreateSubscription(params);
+          Subscriptions.push_back(response.Data.ID);
+          SubscriptionDurations.push_back(response.Data.RevisedPublishingInterval);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -524,15 +520,13 @@ namespace
           if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
           PublishParameters params;
           stream >> params;
-          QueuedPublishRequest q;
-          q.Header = requestHeader;
-          q.Parameters = params;
-          q.sequence = sequence;
-          q.typeID = typeID;
-          q.channelID = channelID;
-          PublishRequestQueue.push(q);
-
-         return;
+          PublishRequestElement data;
+          data.sequence = sequence;
+          data.algorithmHeader = algorithmHeader;
+          data.requestHeader = requestHeader;
+          PublishRequestQueue.push(data);
+          Server->Subscriptions()->CreatePublishRequest(params.Acknowledgements);
+          return;
         }
 
         case SET_PUBLISHING_MODE_REQUEST:
@@ -540,7 +534,8 @@ namespace
           if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
           PublishingModeParameters params;
           stream >> params;
-
+          
+          //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
           response.Result.Statuses.resize(params.SubscriptionIDs.size(), StatusCode::Good);
@@ -575,32 +570,25 @@ namespace
 
     void SendPublishResponse(IOStreamBinary& stream)
     {
-      QueuedPublishRequest request = PublishRequestQueue.front();
-      PublishRequestQueue.pop();
-      PublishResponse response;
-      FillResponseHeader(request.Header, response.Header);
-      response.Result = MakePublishResult(request);
 
-      SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-      secureHeader.AddSize(RawSize(request.algorithmHeader));
-      secureHeader.AddSize(RawSize(request.sequence));
-      secureHeader.AddSize(RawSize(response));
+      std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(Subscriptions);
+      for (PublishResult publishResult: res_list)
+      {
+        PublishRequestElement requestData = PublishRequestQueue.front();
+        PublishRequestQueue.pop(); 
 
-      if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
-      stream << secureHeader << request.algorithmHeader << request.sequence << response << flush;
-    }
+        PublishResponse response;
+        FillResponseHeader(requestData.requestHeader, response.Header);
+        response.Result = publishResult;
 
+        SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+        secureHeader.AddSize(RawSize(requestData.algorithmHeader));
+        secureHeader.AddSize(RawSize(requestData.sequence));
+        secureHeader.AddSize(RawSize(response));
 
-    PublishResult MakePublishResult(const QueuedPublishRequest& request)
-    {
-      //request.Parameters.Acknowledgements
-      PublishResult result;
-      //result.SubscriptionID = subscription;
-      //result.Diagnostics = ?? Not necessary
-      result.MoreNotifications = false; //we send all notifications at once
-      //response.Data = Server->Subscriptions()->
-
-      return result;
+        if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
+        stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+      }
     }
 
   private:
@@ -611,7 +599,9 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
-    std::queue<QueuedPublishRequest> PublishRequestQueue;
+    std::vector<IntegerID> Subscriptions;
+    std::vector<Duration> SubscriptionDurations; 
+    std::queue<PublishRequestElement> PublishRequestQueue; 
   };
 
 }
