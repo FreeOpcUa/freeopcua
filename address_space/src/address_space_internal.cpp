@@ -17,6 +17,7 @@
 #include <set>
 #include <ctime>
 #include <list>
+#include <queue>
 
 
 
@@ -29,6 +30,7 @@ namespace
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
 
+
   struct MonitoredItemData
   {
     IntegerID SubscriptionID;
@@ -37,12 +39,23 @@ namespace
     CreateMonitoredItemsResult Parameters;
   };
 
+  struct SubscriptionDB
+  {
+    SubscriptionData SubscriptionData;
+    uint32_t NoficationSequence = 1;
+    uint32_t LastMonitoredItemID = 2;
+    std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
+    std::queue<uint32_t> RequestSequenceNumber; 
+    std::list<MonitoredItems> MonitoredItemsTriggered; 
+    std::list<EventFieldList> EventTriggered; 
+  };
+
   struct AttributeValue
   {
     NodeID Node;
     AttributeID Attribute;
     DataValue Value;
-    std::list<uint32_t> AttSubscriptions;
+    std::list<std::pair<IntegerID, uint32_t>> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
     //std::vector<MonitoredItemData> AttSubscriptions;
     //std::map<IntegerID, std::vector<uint32_t>> AttSubscriptions; //A map SubscriptionID, MonitoredItemID
 
@@ -61,34 +74,52 @@ namespace
       data.RevisedLifetimeCount = params.RequestedLifetimeCount;
       data.RevisedPublishingInterval = params.RequestedPublishingInterval;
       data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
-      SubscriptionsMap[data.ID] = data;
+
+      SubscriptionDB db;
+      db.SubscriptionData = data;
+      SubscriptionsMap[data.ID] = db;
       return data;
     }
 
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params)
     {
       MonitoredItemsData data;
+
+      bool bad = false;
+
+      if ( SubscriptionsMap.find(params.SubscriptionID) == SubscriptionsMap.end())
+      {
+        bad = true;
+      }
+
       for (const MonitoredItemRequest& req: params.ItemsToCreate)
       {
         std::cout << "Creating monitored request for one item" << std::endl;
         CreateMonitoredItemsResult res;
         bool found = false;
+
+
         for (AttributeValue value : AttributeValues)
         {
+          if (bad)
+          {
+            res.Status = StatusCode::BadAttributeIdInvalid;
+            continue;
+          }
           if (value.Node == req.ItemToMonitor.Node && value.Attribute == req.ItemToMonitor.Attribute)
           { //We found attribute //FIXME: what to do if item allready exist?
               res.Status = OpcUa::StatusCode::Good;
-              LastMonitoredItemID += 1;
-              res.MonitoredItemID = LastMonitoredItemID;
-              res.RevisedSamplingInterval = SubscriptionsMap[params.SubscriptionID].RevisedPublishingInterval;
+              SubscriptionsMap[params.SubscriptionID].LastMonitoredItemID += 1;
+              res.MonitoredItemID = SubscriptionsMap[params.SubscriptionID].LastMonitoredItemID ;
+              res.RevisedSamplingInterval = SubscriptionsMap[params.SubscriptionID].SubscriptionData.RevisedPublishingInterval;
               res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
               //res.FilterResult = //We can omit that one if we do not change anything in filter
               MonitoredItemData mdata;
               mdata.SubscriptionID = params.SubscriptionID;
               mdata.Parameters = res;
               mdata.Mode = req.Mode;
-              MonitoredItemsMap[res.MonitoredItemID] = mdata;
-              value.AttSubscriptions.push_back(res.MonitoredItemID); 
+              SubscriptionsMap[params.SubscriptionID].MonitoredItemsMap[res.MonitoredItemID] = mdata;
+              value.AttSubscriptions.push_back(std::make_pair(params.SubscriptionID, res.MonitoredItemID)); 
               found = true;
               break;
           }
@@ -225,34 +256,55 @@ namespace
     std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
     {
       std::vector<PublishResult> result;
-      /*
-      std::vector<uint32_t> published;
-      for ( uint32_t miid: MonitoredItemsTriggered)
+      for (const IntegerID& subscription: subscriptionsIds)
       {
-        if (MonitoredItems.find( miid ) != MonitoredItems.end() )
+        if ( SubscriptionsMap.find(subscription) != SubscriptionsMap.end())
         {
-            if  ( MonitoredItems[miid].SubscriptionID == subscription )  
+          PublishResult res;
+          SubscriptionDB sub = SubscriptionsMap[subscription];
+          res.Statuses.push_back(StatusCode::Good);
+          NotificationData data;
+          DataChangeNotification notification;
+          for ( MonitoredItems monitoreditem: sub.MonitoredItemsTriggered)
+          {
+            if (sub.MonitoredItemsMap.find( monitoreditem.ClientHandle ) != sub.MonitoredItemsMap.end() )
             {
-              time_t now = std::time(0);
-              if ( ( now - MonitoredItems[miid].LastTrigger ) >= MonitoredItems[miid].Parameters.RevisedSamplingInterval )
-              {
-                MonitoredItems[miid].LastTrigger = now;
-                //result.push_back(MonitoredItems[miid]);
-                published.push_back(miid);
+                notification.Notification.push_back(monitoreditem);
               }
+          }
+          //data.data = notification //FIXME not implemented!!!
+          if (notification.Notification.size() > 0)
+          {
+            res.Message.Data.push_back(data);
+          }
+          sub.MonitoredItemsTriggered.clear();
+          
+          // FIXME: parse events and statuschange notification
+
+          if (res.Statuses.size() > 0 )
+          {
+            res.SubscriptionID = subscription;
+            res.Message.SequenceID = sub.RequestSequenceNumber.front();
+            sub.RequestSequenceNumber.pop();
+            res.Message.PublishTime = CurrentDateTime();
+            res.MoreNotifications = false;
+            //res.AvailableSequenceNumber = ??
+            result.push_back(res);
           }
         }
       }
-      for (uint32_t miid: published)
-      {
-        MonitoredItemsTriggered.remove(miid);
-      }
-      */
       return result;
     }
 
     virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
+      for (SubscriptionAcknowledgement ack: acknowledgements)
+      {
+        if ( SubscriptionsMap.find(ack.SubscriptionID) != SubscriptionsMap.end())
+        {
+          SubscriptionsMap[ack.SubscriptionID].RequestSequenceNumber.push(ack.SequenceNumber);
+        }
+      }
     }
 
 
@@ -292,24 +344,28 @@ namespace
 
     void UpdateSubscriptions(AttributeValue val)
     {
-      std::vector<uint32_t> toremove;
-      for (uint32_t clientHandle : val.AttSubscriptions)
+      std::vector<std::pair<IntegerID, uint32_t>> toremove;
+      for (auto pair : val.AttSubscriptions)
       {
-        if (MonitoredItemsMap.find( clientHandle ) != MonitoredItemsMap.end() )
+        if ( SubscriptionsMap.find(pair.first) == SubscriptionsMap.end())
         {
-          MonitoredItems event;
-          event.ClientHandle = clientHandle;
-          event.Value = val.Value;
-          MonitoredItemsTriggered.push_back(event);
+          toremove.push_back(pair);
+          continue;
         }
-        else
+        if (SubscriptionsMap[pair.first].MonitoredItemsMap.find( pair.second ) == SubscriptionsMap[pair.first].MonitoredItemsMap.end() )
         {
-          toremove.push_back(clientHandle);
+          toremove.push_back(pair);
+          continue;
         }
+
+        MonitoredItems event;
+        event.ClientHandle = pair.second;
+        event.Value = val.Value;
+        SubscriptionsMap[pair.first].MonitoredItemsTriggered.push_back(event);
       }
-      for (uint32_t miid: toremove)
+      for (auto pair: toremove)
       {
-        val.AttSubscriptions.remove(miid);
+        val.AttSubscriptions.remove(pair);
       }
     }
 
@@ -375,12 +431,8 @@ namespace
     mutable boost::shared_mutex DbMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
-    std::map <IntegerID, SubscriptionData> SubscriptionsMap; // Map SubscptioinID, SubscriptionData
-    std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
+    std::map <IntegerID, SubscriptionDB> SubscriptionsMap; // Map SubscptioinID, SubscriptionData
     uint32_t LastSubscriptionID = 2;
-    uint32_t LastMonitoredItemID = 2;
-    std::list<MonitoredItems> MonitoredItemsTriggered; 
-    std::list<EventFieldList> EventTriggered; 
   };
 
 }
