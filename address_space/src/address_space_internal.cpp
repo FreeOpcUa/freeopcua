@@ -18,6 +18,7 @@
 #include <ctime>
 #include <list>
 #include <queue>
+#include <deque>
 
 
 
@@ -45,9 +46,42 @@ namespace
     uint32_t NoficationSequence = 1;
     uint32_t LastMonitoredItemID = 2;
     std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
-    std::queue<uint32_t> RequestSequenceNumber; 
+    std::deque<uint32_t> RequestSequenceNumbers; 
     std::list<MonitoredItems> MonitoredItemsTriggered; 
     std::list<EventFieldList> EventTriggered; 
+    PublishResult PopPublishResult()
+    {
+      PublishResult result;
+      NotificationData data;
+      DataChangeNotification notification;
+      for ( MonitoredItems monitoreditem: MonitoredItemsTriggered)
+      {
+        if (MonitoredItemsMap.find( monitoreditem.ClientHandle ) != MonitoredItemsMap.end() )
+        {
+            notification.Notification.push_back(monitoreditem);
+          }
+      }
+      data.DataChange = notification;
+      if (notification.Notification.size() > 0)
+      {
+        result.Message.Data.push_back(data);
+        result.Statuses.push_back(StatusCode::Good);
+      }
+      MonitoredItemsTriggered.clear();
+      
+      // FIXME: parse events and statuschange notification
+
+      result.SubscriptionID = SubscriptionData.ID;
+      result.Message.SequenceID = RequestSequenceNumbers.front();
+      RequestSequenceNumbers.pop_front();
+      result.Message.PublishTime = CurrentDateTime();
+      result.MoreNotifications = false;
+      for (uint32_t seq: RequestSequenceNumbers)
+      {
+        result.AvailableSequenceNumber.push_back(seq);
+      }
+      return result;
+    };
   };
 
   struct AttributeValue
@@ -260,37 +294,8 @@ namespace
       {
         if ( SubscriptionsMap.find(subscription) != SubscriptionsMap.end())
         {
-          PublishResult res;
-          SubscriptionDB sub = SubscriptionsMap[subscription];
-          res.Statuses.push_back(StatusCode::Good);
-          NotificationData data;
-          DataChangeNotification notification;
-          for ( MonitoredItems monitoreditem: sub.MonitoredItemsTriggered)
-          {
-            if (sub.MonitoredItemsMap.find( monitoreditem.ClientHandle ) != sub.MonitoredItemsMap.end() )
-            {
-                notification.Notification.push_back(monitoreditem);
-              }
-          }
-          //data.data = notification //FIXME not implemented!!!
-          if (notification.Notification.size() > 0)
-          {
-            res.Message.Data.push_back(data);
-          }
-          sub.MonitoredItemsTriggered.clear();
-          
-          // FIXME: parse events and statuschange notification
-
-          if (res.Statuses.size() > 0 )
-          {
-            res.SubscriptionID = subscription;
-            res.Message.SequenceID = sub.RequestSequenceNumber.front();
-            sub.RequestSequenceNumber.pop();
-            res.Message.PublishTime = CurrentDateTime();
-            res.MoreNotifications = false;
-            //res.AvailableSequenceNumber = ??
-            result.push_back(res);
-          }
+          PublishResult res = SubscriptionsMap[subscription].PopPublishResult();
+          result.push_back(res);
         }
       }
       return result;
@@ -302,7 +307,7 @@ namespace
       {
         if ( SubscriptionsMap.find(ack.SubscriptionID) != SubscriptionsMap.end())
         {
-          SubscriptionsMap[ack.SubscriptionID].RequestSequenceNumber.push(ack.SequenceNumber);
+          SubscriptionsMap[ack.SubscriptionID].RequestSequenceNumbers.push_back(ack.SequenceNumber);
         }
       }
     }
