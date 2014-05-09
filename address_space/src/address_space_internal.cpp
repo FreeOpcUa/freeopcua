@@ -66,11 +66,8 @@ namespace
       DataChangeNotification notification;
       for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
       {
-        if (MonitoredItemsMap.find( monitoreditem.ClientHandle ) != MonitoredItemsMap.end() )
-        {
-          std::cout << "pushing back element in notification listt" << std::endl;
-            notification.Notification.push_back(monitoreditem);
-        }
+        std::cout << "pushing back element in notification listt" << std::endl;
+        notification.Notification.push_back(monitoreditem);
       }
       if (notification.Notification.size() > 0)
       {
@@ -108,12 +105,21 @@ namespace
     };
   };
 
+  struct AttSubscription
+  {
+    IntegerID SubscriptionId;
+    uint32_t MonitoredItemId;
+    MonitoringParameters Parameters;
+    bool ToRemove = false;
+  };
+
   struct AttributeValue
   {
     NodeID Node;
     AttributeID Attribute;
     DataValue Value;
-    std::list<std::pair<IntegerID, uint32_t>> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
+    //std::list<std::pair<IntegerID, uint32_t>> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
+    std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
     //std::vector<MonitoredItemData> AttSubscriptions;
     //std::map<IntegerID, std::vector<uint32_t>> AttSubscriptions; //A map SubscriptionID, MonitoredItemID
 
@@ -177,7 +183,11 @@ namespace
               mdata.Parameters = res;
               mdata.Mode = req.Mode;
               SubscriptionsMap[params.SubscriptionID].MonitoredItemsMap[res.MonitoredItemID] = mdata;
-              value.AttSubscriptions.push_back(std::make_pair(params.SubscriptionID, res.MonitoredItemID)); 
+              AttSubscription attsub;
+              attsub.SubscriptionId = params.SubscriptionID;
+              attsub.MonitoredItemId = res.MonitoredItemID;
+              attsub.Parameters = req.Parameters;
+              value.AttSubscriptions.push_back(attsub); 
               found = true;
               break;
           }
@@ -375,30 +385,32 @@ namespace
 
     void UpdateSubscriptions(AttributeValue& val)
     {
-      std::vector<std::pair<IntegerID, uint32_t>> toremove;
-      for (const auto& pair : val.AttSubscriptions)
+      for (AttSubscription& attsub : val.AttSubscriptions)
       {
-        if ( SubscriptionsMap.find(pair.first) == SubscriptionsMap.end())
+        if ( SubscriptionsMap.find(attsub.SubscriptionId) == SubscriptionsMap.end())
         {
-          toremove.push_back(pair);
+          attsub.ToRemove = true;
+          //toremove.push_back(attsub);
           continue;
         }
-        if (SubscriptionsMap[pair.first].MonitoredItemsMap.find( pair.second ) == SubscriptionsMap[pair.first].MonitoredItemsMap.end() )
+        if (SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsMap.find( attsub.MonitoredItemId ) == SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsMap.end() )
         {
-          toremove.push_back(pair);
+          attsub.ToRemove = true;
+          //toremove.push_back(attsub);
           continue;
         }
 
         MonitoredItems event;
-        event.ClientHandle = pair.second;
+        event.ClientHandle = attsub.Parameters.ClientHandle;
         event.Value = val.Value;
-        std::cout << "Adding triggered item for suc: " << pair.first << " and monitoreditem: " << pair.second << std::endl;
-        SubscriptionsMap[pair.first].MonitoredItemsTriggered.push_back(event);
+        std::cout << "Adding triggered item for sub: " << attsub.SubscriptionId << " and clienthandle: " << attsub.Parameters.ClientHandle << std::endl;
+        SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsTriggered.push_back(event);
       }
-      for (const auto& pair: toremove)
-      {
-        val.AttSubscriptions.remove(pair);
-      }
+      val.AttSubscriptions.remove_if([](AttSubscription attsub){return attsub.ToRemove;});
+      //for (const AttSubscription& attsub: toremove)
+      //{
+        //val.AttSubscriptions.remove(attsub);
+      //}
     }
 
     bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
