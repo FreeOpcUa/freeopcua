@@ -43,27 +43,38 @@ namespace
   struct SubscriptionDB
   {
     SubscriptionData SubscriptionData;
-    uint32_t NoficationSequence = 1;
+    uint32_t NotificationSequence = 1;
+    //bool upstart = true;
+    uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max();
+    time_t lastNotificationTime = 0;
     uint32_t LastMonitoredItemID = 2;
     std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
-    std::deque<uint32_t> RequestSequenceNumbers; 
+    std::queue<uint32_t> Acknowledgments;
+    std::queue<PublishResult> NotAcknowledgedResults;
+    //uint32_t RequestQueue = 0; 
     std::list<MonitoredItems> MonitoredItemsTriggered; 
     std::list<EventFieldList> EventTriggered; 
-    PublishResult PopPublishResult()
+
+    std::vector<PublishResult> PopPublishResult()
     {
+      std::cout << "PopPublishresult for sub: " << SubscriptionData.ID << std::endl;
+      std::vector<PublishResult> resultlist;
       PublishResult result;
-      NotificationData data;
+      result.SubscriptionID = SubscriptionData.ID;
+      result.Message.PublishTime = CurrentDateTime();
+
       DataChangeNotification notification;
-      for ( MonitoredItems monitoreditem: MonitoredItemsTriggered)
+      for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
       {
         if (MonitoredItemsMap.find( monitoreditem.ClientHandle ) != MonitoredItemsMap.end() )
         {
+          std::cout << "pushing back element in notification listt" << std::endl;
             notification.Notification.push_back(monitoreditem);
-          }
+        }
       }
-      data.DataChange = notification;
       if (notification.Notification.size() > 0)
       {
+        NotificationData data(notification);
         result.Message.Data.push_back(data);
         result.Statuses.push_back(StatusCode::Good);
       }
@@ -71,16 +82,29 @@ namespace
       
       // FIXME: parse events and statuschange notification
 
-      result.SubscriptionID = SubscriptionData.ID;
-      result.Message.SequenceID = RequestSequenceNumbers.front();
-      RequestSequenceNumbers.pop_front();
-      result.Message.PublishTime = CurrentDateTime();
-      result.MoreNotifications = false;
-      for (uint32_t seq: RequestSequenceNumbers)
+      if ( result.Statuses.size() == 0 )
       {
-        result.AvailableSequenceNumber.push_back(seq);
+        if ( KeepAliveCount < SubscriptionData.RevizedMaxKeepAliveCount ) 
+        {
+          ++KeepAliveCount;
+          return  resultlist; //No event and we do not need to send keepalive notification yet so return empty list
+        }
+        else 
+        {
+          std::cout << "Sending KeepAlive Notification" << std::endl;
+        }
       }
-      return result;
+      KeepAliveCount = 0;
+      result.Message.SequenceID = NotificationSequence;
+      ++NotificationSequence;
+      result.MoreNotifications = false;
+      //for (uint32_t seq: RequestSequenceNumbers)
+      //{
+        //result.AvailableSequenceNumber.push_back(seq);
+      //}
+      std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
+      resultlist.push_back(result);
+      return resultlist;
     };
   };
 
@@ -133,7 +157,7 @@ namespace
         bool found = false;
 
 
-        for (AttributeValue value : AttributeValues)
+        for ( AttributeValue& value : AttributeValues)
         {
           if (bad)
           {
@@ -294,8 +318,10 @@ namespace
       {
         if ( SubscriptionsMap.find(subscription) != SubscriptionsMap.end())
         {
-          PublishResult res = SubscriptionsMap[subscription].PopPublishResult();
-          result.push_back(res);
+          for ( const PublishResult& res: SubscriptionsMap[subscription].PopPublishResult() )
+          {
+            result.push_back(res);
+          }
         }
       }
       return result;
@@ -307,7 +333,7 @@ namespace
       {
         if ( SubscriptionsMap.find(ack.SubscriptionID) != SubscriptionsMap.end())
         {
-          SubscriptionsMap[ack.SubscriptionID].RequestSequenceNumbers.push_back(ack.SequenceNumber);
+          SubscriptionsMap[ack.SubscriptionID].Acknowledgments.push(ack.SequenceNumber);
         }
       }
     }
@@ -347,10 +373,10 @@ namespace
     }
 
 
-    void UpdateSubscriptions(AttributeValue val)
+    void UpdateSubscriptions(AttributeValue& val)
     {
       std::vector<std::pair<IntegerID, uint32_t>> toremove;
-      for (auto pair : val.AttSubscriptions)
+      for (const auto& pair : val.AttSubscriptions)
       {
         if ( SubscriptionsMap.find(pair.first) == SubscriptionsMap.end())
         {
@@ -366,9 +392,10 @@ namespace
         MonitoredItems event;
         event.ClientHandle = pair.second;
         event.Value = val.Value;
+        std::cout << "Adding triggered item for suc: " << pair.first << " and monitoreditem: " << pair.second << std::endl;
         SubscriptionsMap[pair.first].MonitoredItemsTriggered.push_back(event);
       }
-      for (auto pair: toremove)
+      for (const auto& pair: toremove)
       {
         val.AttSubscriptions.remove(pair);
       }

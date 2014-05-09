@@ -105,6 +105,7 @@ namespace
         case MT_SECURE_MESSAGE:
         {
           ProcessMessage(stream, hdr.MessageSize());
+          SendPublishResponse(stream);
           break;
         }
 
@@ -497,12 +498,10 @@ namespace
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
           MonitoredItemsParameters params;
           stream >> params;
-          if (Debug) std::clog << "Parameters read done." << std::endl;
 
           CreateMonitoredItemsResponse response;
 
           response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
-          if (Debug) std::clog << "Got answer from subscription service" << std::endl;
 
           FillResponseHeader(requestHeader, response.Header);
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -570,24 +569,41 @@ namespace
 
     void SendPublishResponse(IOStreamBinary& stream)
     {
-
-      std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(Subscriptions);
-      for (PublishResult publishResult: res_list)
+      for (const IntegerID& sub: Subscriptions)
       {
-        PublishRequestElement requestData = PublishRequestQueue.front();
-        PublishRequestQueue.pop(); 
+        if ( PublishRequestQueue.size() == 0)
+        {
+          std::cout << "RequestQueueSize is empty" << std::endl;
+          return;
+        }
+        std::cout << "Trying to send publishResponse" << std::endl;
+        std::vector<IntegerID> sub_query;
+        sub_query.push_back(sub);
+        std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
+        std::cout << "got " << res_list.size() << " notifications from server" << std::endl;
 
-        PublishResponse response;
-        FillResponseHeader(requestData.requestHeader, response.Header);
-        response.Result = publishResult;
+        for (const PublishResult& publishResult: res_list)
+        {
+          PublishRequestElement requestData = PublishRequestQueue.front();
+          PublishRequestQueue.pop(); 
 
-        SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-        secureHeader.AddSize(RawSize(requestData.algorithmHeader));
-        secureHeader.AddSize(RawSize(requestData.sequence));
-        secureHeader.AddSize(RawSize(response));
+          PublishResponse response;
+          FillResponseHeader(requestData.requestHeader, response.Header);
+          response.Result = publishResult;
 
-        if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
-        stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(requestData.algorithmHeader));
+          secureHeader.AddSize(RawSize(requestData.sequence));
+          secureHeader.AddSize(RawSize(response));
+          std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " results" << std::endl;
+          for  ( NotificationData d: response.Result.Message.Data )
+          {
+            std::cout << "   and " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+          }
+
+          if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
+          stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+        }
       }
     }
 
