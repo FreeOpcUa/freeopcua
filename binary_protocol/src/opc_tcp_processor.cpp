@@ -105,7 +105,7 @@ namespace
         case MT_SECURE_MESSAGE:
         {
           ProcessMessage(stream, hdr.MessageSize());
-          SendPublishResponse(stream);
+          SendPublishResponse(stream); //HACK, that method should be at multiplum of all subscription rates, NOT here! This is broken
           break;
         }
 
@@ -576,11 +576,11 @@ namespace
           std::cout << "RequestQueueSize is empty" << std::endl;
           return;
         }
-        std::cout << "Trying to send publishResponse" << std::endl;
+        std::cout << "Asking server for notifications" << std::endl;
         std::vector<IntegerID> sub_query;
         sub_query.push_back(sub);
         std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        std::cout << "got " << res_list.size() << " notifications from server" << std::endl;
+        std::cout << "got " << res_list.size() << " notifications from server, sending them" << std::endl;
 
         for (const PublishResult& publishResult: res_list)
         {
@@ -595,7 +595,7 @@ namespace
           secureHeader.AddSize(RawSize(requestData.algorithmHeader));
           secureHeader.AddSize(RawSize(requestData.sequence));
           secureHeader.AddSize(RawSize(response));
-          std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " results" << std::endl;
+          std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
           for  ( NotificationData d: response.Result.Message.Data )
           {
             std::cout << "   and " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
@@ -615,9 +615,9 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
-    std::vector<IntegerID> Subscriptions;
-    std::vector<Duration> SubscriptionDurations; 
-    std::queue<PublishRequestElement> PublishRequestQueue; 
+    std::vector<IntegerID> Subscriptions; //Keep a list of subscriptions to query internal server
+    std::vector<Duration> SubscriptionDurations; //This should be used to compute the rate at which we query the server for notifications
+    std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
   };
 
 }

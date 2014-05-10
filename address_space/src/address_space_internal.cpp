@@ -31,8 +31,8 @@ namespace
 
   typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
 
-
-  struct MonitoredItemData
+  //Structure to store in memory description of current MonitoredItems
+  struct DataMonitoredItems
   {
     IntegerID SubscriptionID;
     MonitoringMode Mode;
@@ -40,24 +40,22 @@ namespace
     CreateMonitoredItemsResult Parameters;
   };
 
-  struct SubscriptionDB
+  //Structure to store in memory description of current Subscriptions
+  struct DataSubscription
   {
     SubscriptionData SubscriptionData;
-    uint32_t NotificationSequence = 1;
-    //bool upstart = true;
-    uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max();
+    uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
+    uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
     time_t lastNotificationTime = 0;
     uint32_t LastMonitoredItemID = 2;
-    std::map <uint32_t, MonitoredItemData> MonitoredItemsMap; //Map MonitoredItemID, MonitoredItemData
-    std::queue<uint32_t> Acknowledgments;
-    std::queue<PublishResult> NotAcknowledgedResults;
-    //uint32_t RequestQueue = 0; 
+    std::map <uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
+    std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to resent
     std::list<MonitoredItems> MonitoredItemsTriggered; 
     std::list<EventFieldList> EventTriggered; 
 
     std::vector<PublishResult> PopPublishResult()
     {
-      std::cout << "PopPublishresult for sub: " << SubscriptionData.ID << std::endl;
+      std::cout << "PopPublishresult for sub: " << SubscriptionData.ID << "with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
       std::vector<PublishResult> resultlist;
       PublishResult result;
       result.SubscriptionID = SubscriptionData.ID;
@@ -66,10 +64,9 @@ namespace
       DataChangeNotification notification;
       for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
       {
-        std::cout << "pushing back element in notification listt" << std::endl;
         notification.Notification.push_back(monitoreditem);
       }
-      if (notification.Notification.size() > 0)
+      if (notification.Notification.size() > 0) 
       {
         NotificationData data(notification);
         result.Message.Data.push_back(data);
@@ -77,7 +74,7 @@ namespace
       }
       MonitoredItemsTriggered.clear();
       
-      // FIXME: parse events and statuschange notification
+      // FIXME: parse events and statuschange notification since they can be send in same result
 
       if ( result.Statuses.size() == 0 )
       {
@@ -95,10 +92,11 @@ namespace
       result.Message.SequenceID = NotificationSequence;
       ++NotificationSequence;
       result.MoreNotifications = false;
-      //for (uint32_t seq: RequestSequenceNumbers)
-      //{
-        //result.AvailableSequenceNumber.push_back(seq);
-      //}
+      for (const PublishResult& res: NotAcknowledgedResults)
+      {
+        result.AvailableSequenceNumber.push_back(res.Message.SequenceID);
+      }
+      NotAcknowledgedResults.push_back(result);
       std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
       resultlist.push_back(result);
       return resultlist;
@@ -118,12 +116,8 @@ namespace
     NodeID Node;
     AttributeID Attribute;
     DataValue Value;
-    //std::list<std::pair<IntegerID, uint32_t>> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
+    //List to keep track of monitoredItems monitoring this AttributeValue
     std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
-    //std::vector<MonitoredItemData> AttSubscriptions;
-    //std::map<IntegerID, std::vector<uint32_t>> AttSubscriptions; //A map SubscriptionID, MonitoredItemID
-
-    //AttributeValue();
   };
 
   class AddressSpaceInMemory : public UaServer::AddressSpace
@@ -132,6 +126,8 @@ namespace
 
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       SubscriptionData data;
       LastSubscriptionID += 1;
       data.ID = LastSubscriptionID;
@@ -139,7 +135,7 @@ namespace
       data.RevisedPublishingInterval = params.RequestedPublishingInterval;
       data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
 
-      SubscriptionDB db;
+      DataSubscription db;
       db.SubscriptionData = data;
       SubscriptionsMap[data.ID] = db;
       return data;
@@ -150,7 +146,6 @@ namespace
       MonitoredItemsData data;
 
       bool bad = false;
-
       if ( SubscriptionsMap.find(params.SubscriptionID) == SubscriptionsMap.end())
       {
         bad = true;
@@ -178,7 +173,7 @@ namespace
               res.RevisedSamplingInterval = SubscriptionsMap[params.SubscriptionID].SubscriptionData.RevisedPublishingInterval;
               res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
               //res.FilterResult = //We can omit that one if we do not change anything in filter
-              MonitoredItemData mdata;
+              DataMonitoredItems mdata;
               mdata.SubscriptionID = params.SubscriptionID;
               mdata.Parameters = res;
               mdata.Mode = req.Mode;
@@ -206,6 +201,7 @@ namespace
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       AttributeValue data;
       data.Node = node;
       data.Attribute = attribute;
@@ -218,6 +214,7 @@ namespace
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       Referencies.insert({sourceNode, reference});
     }
 
@@ -323,6 +320,8 @@ namespace
 
     std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       std::vector<PublishResult> result;
       for (const IntegerID& subscription: subscriptionsIds)
       {
@@ -339,11 +338,13 @@ namespace
 
     virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       for (SubscriptionAcknowledgement ack: acknowledgements)
       {
         if ( SubscriptionsMap.find(ack.SubscriptionID) != SubscriptionsMap.end())
         {
-          SubscriptionsMap[ack.SubscriptionID].Acknowledgments.push(ack.SequenceNumber);
+          SubscriptionsMap[ack.SubscriptionID].NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceID; });
         }
       }
     }
@@ -390,13 +391,11 @@ namespace
         if ( SubscriptionsMap.find(attsub.SubscriptionId) == SubscriptionsMap.end())
         {
           attsub.ToRemove = true;
-          //toremove.push_back(attsub);
           continue;
         }
         if (SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsMap.find( attsub.MonitoredItemId ) == SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsMap.end() )
         {
           attsub.ToRemove = true;
-          //toremove.push_back(attsub);
           continue;
         }
 
@@ -407,10 +406,6 @@ namespace
         SubscriptionsMap[attsub.SubscriptionId].MonitoredItemsTriggered.push_back(event);
       }
       val.AttSubscriptions.remove_if([](AttSubscription attsub){return attsub.ToRemove;});
-      //for (const AttSubscription& attsub: toremove)
-      //{
-        //val.AttSubscriptions.remove(attsub);
-      //}
     }
 
     bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
@@ -475,7 +470,7 @@ namespace
     mutable boost::shared_mutex DbMutex;
     ReferenciesMap Referencies;
     std::vector<AttributeValue> AttributeValues;
-    std::map <IntegerID, SubscriptionDB> SubscriptionsMap; // Map SubscptioinID, SubscriptionData
+    std::map <IntegerID, DataSubscription> SubscriptionsMap; // Map SubscptioinID, SubscriptionData
     uint32_t LastSubscriptionID = 2;
   };
 
