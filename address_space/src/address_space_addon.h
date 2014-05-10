@@ -53,9 +53,11 @@ namespace OpcUa
 
     public:
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters);
-      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions);
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds);
       virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements);
+
+      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
 
  
 

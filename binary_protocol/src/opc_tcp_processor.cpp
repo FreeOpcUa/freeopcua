@@ -461,6 +461,11 @@ namespace
           bool deleteSubscriptions = false;
           stream >> deleteSubscriptions;
 
+          if (deleteSubscriptions)
+          {
+            Server->Subscriptions()->DeleteSubscriptions(Subscriptions);
+          }
+
           CloseSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 

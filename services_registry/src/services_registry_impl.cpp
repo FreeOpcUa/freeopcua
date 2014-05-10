@@ -84,6 +84,12 @@ namespace
     {
       return SubscriptionData();
     }
+
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+    {
+      return std::vector<StatusCode>();
+    }
+
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
       return MonitoredItemsData();

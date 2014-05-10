@@ -124,6 +124,21 @@ namespace
   {
   public:
 
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+    {
+      std::vector<StatusCode> result;
+      for (const IntegerID& subid: subscriptions)
+      {
+        std::cout << "Delete Subscription: " << subid << std::endl;
+        if ( SubscriptionsMap.find(subid) != SubscriptionsMap.end() )
+        {
+          SubscriptionsMap.erase(subid);
+        }
+        result.push_back(StatusCode::Good);
+      }
+      return result;
+    }
+
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);

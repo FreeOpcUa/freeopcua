@@ -84,6 +84,11 @@ namespace OpcUa
       return Registry->CreateSubscription(parameters);
     }
 
+    std::vector<StatusCode> AddressSpaceAddon::DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+    {
+      return Registry->DeleteSubscriptions(subscriptions);
+    }
+
     MonitoredItemsData AddressSpaceAddon::CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
       return Registry->CreateMonitoredItems(parameters);
