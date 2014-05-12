@@ -22,6 +22,8 @@
 #include <stdexcept>
 #include <sstream>
 #include <queue>
+#include <list>
+#include <chrono>
 
 namespace
 {
@@ -31,6 +33,13 @@ namespace
   using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
+
+  struct SubscriptionBinaryData
+  {
+    IntegerID SubscriptionID;
+    std::chrono::duration<double> period;
+    std::chrono::duration<double> last_check;
+  };
 
   struct PublishRequestElement
   {
@@ -62,7 +71,24 @@ namespace
 
       if (Debug) std::clog << "Hello client!" << std::endl;
       IOStreamBinary stream(clientChannel);
-      while(ProcessChunk(stream));
+      for(;;)
+      {
+        float period = GetNextSleepPeriod();
+        std::cout << "Sleeping for " << period << " seconds" << std::endl;
+        int res = clientChannel->WaitForData(period);
+        if (res < 0)
+        {
+          return;
+        }
+        else if (res == 1)
+        {
+          ProcessChunk(stream);
+        }
+        else
+        {
+          SendPublishResponse(stream);
+        }
+      }
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -105,7 +131,6 @@ namespace
         case MT_SECURE_MESSAGE:
         {
           ProcessMessage(stream, hdr.MessageSize());
-          SendPublishResponse(stream); //HACK, that method should be at multiplum of all subscription rates, NOT here! This is broken
           break;
         }
 
@@ -463,7 +488,12 @@ namespace
 
           if (deleteSubscriptions)
           {
-            Server->Subscriptions()->DeleteSubscriptions(Subscriptions);
+            std::vector<IntegerID> subs;
+            for (SubscriptionBinaryData data: Subscriptions)
+            {
+              subs.push_back(data.SubscriptionID);
+            }
+            Server->Subscriptions()->DeleteSubscriptions(subs);
           }
 
           CloseSessionResponse response;
@@ -487,8 +517,10 @@ namespace
           FillResponseHeader(requestHeader, response.Header);
 
           response.Data = Server->Subscriptions()->CreateSubscription(params);
-          Subscriptions.push_back(response.Data.ID);
-          SubscriptionDurations.push_back(response.Data.RevisedPublishingInterval);
+          SubscriptionBinaryData SubData;
+          SubData.SubscriptionID = response.Data.ID;
+          SubData.period =  std::chrono::duration<double>(response.Data.RevisedPublishingInterval/1000); //seconds
+          Subscriptions.push_back(SubData);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -572,23 +604,65 @@ namespace
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
+    float GetNextSleepPeriod()
+    {
+      if ( Subscriptions.size() == 0)
+      {
+        return  10;
+      }
+      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); 
+      std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
+      
+      for (const SubscriptionBinaryData& data: Subscriptions)
+      {
+        std::chrono::duration<double> tmp =  data.last_check + data.period;
+        std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        if (tmp < next_fire)
+        {
+          next_fire = tmp;
+        }
+      }
+      auto diff = next_fire - now;
+      if ( diff.count() < 0 ) 
+      {
+        std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        return 0;
+      }
+      return diff.count() ;
+    }
+
     void SendPublishResponse(IOStreamBinary& stream)
     {
-      for (const IntegerID& sub: Subscriptions)
+      for (SubscriptionBinaryData& subdata: Subscriptions)
       {
         if ( PublishRequestQueue.size() == 0)
         {
-          std::cout << "RequestQueueSize is empty" << std::endl;
+          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
           return;
         }
-        std::cout << "Asking server for notifications" << std::endl;
+       
+        //std::chrono::duration<double> now =  std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()); //make sure it is in milliseconds
+        std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
+
+        std::cout << now.count() << " " << subdata.last_check.count() << " " << subdata.period.count() << std::endl;
+
+        std::cout << (now - subdata.last_check).count() << " " << subdata.period.count() << std::endl;
+        if ((now - subdata.last_check) <= subdata.period)
+        {
+          std::cout << " No need to process subscription yet" << std::endl;
+          continue;
+        } 
+
+        subdata.last_check = now;
+
         std::vector<IntegerID> sub_query;
-        sub_query.push_back(sub);
+        sub_query.push_back(subdata.SubscriptionID);
         std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        std::cout << "got " << res_list.size() << " notifications from server, sending them" << std::endl;
+        std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << " sending them" << std::endl;
 
         for (const PublishResult& publishResult: res_list)
         {
+
           PublishRequestElement requestData = PublishRequestQueue.front();
           PublishRequestQueue.pop(); 
 
@@ -620,8 +694,9 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
-    std::vector<IntegerID> Subscriptions; //Keep a list of subscriptions to query internal server
-    std::vector<Duration> SubscriptionDurations; //This should be used to compute the rate at which we query the server for notifications
+    std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server
+    //std::vector<IntegerID> Subscriptions; //Keep a list of subscriptions to query internal server
+    //std::vector<Duration> SubscriptionDurations; //This should be used to compute the rate at which we query the server for notifications
     std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
   };
 
