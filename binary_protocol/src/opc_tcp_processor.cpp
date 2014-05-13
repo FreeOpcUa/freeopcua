@@ -184,7 +184,7 @@ namespace
 
       if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        throw std::logic_error(std::string("Client want to create secure channel with invalid policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
       }
 
       SequenceHeader sequence;
@@ -641,24 +641,18 @@ namespace
           return;
         }
        
-        //std::chrono::duration<double> now =  std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()); //make sure it is in milliseconds
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
-
-        std::cout << now.count() << " " << subdata.last_check.count() << " " << subdata.period.count() << std::endl;
-
-        std::cout << (now - subdata.last_check).count() << " " << subdata.period.count() << std::endl;
         if ((now - subdata.last_check) <= subdata.period)
         {
           std::cout << " No need to process subscription yet" << std::endl;
           continue;
         } 
-
         subdata.last_check = now;
 
         std::vector<IntegerID> sub_query;
         sub_query.push_back(subdata.SubscriptionID);
         std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << " sending them" << std::endl;
+        std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
 
         for (const PublishResult& publishResult: res_list)
         {
@@ -674,13 +668,13 @@ namespace
           secureHeader.AddSize(RawSize(requestData.algorithmHeader));
           secureHeader.AddSize(RawSize(requestData.sequence));
           secureHeader.AddSize(RawSize(response));
-          std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
-          for  ( NotificationData d: response.Result.Message.Data )
-          {
-            std::cout << "   and " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+          if (Debug) {
+            std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+            for  ( NotificationData d: response.Result.Message.Data )
+            {
+              std::cout << "     " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+            }
           }
-
-          if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
           stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
         }
       }
@@ -694,9 +688,7 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
-    std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server
-    //std::vector<IntegerID> Subscriptions; //Keep a list of subscriptions to query internal server
-    //std::vector<Duration> SubscriptionDurations; //This should be used to compute the rate at which we query the server for notifications
+    std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
     std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
   };
 
