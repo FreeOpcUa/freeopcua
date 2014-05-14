@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     Node root = server.GetRootNode();
     std::cout << "Root node is: " << root << std::endl;
     std::cout << "Childs are: " << std::endl;
-    for (Node node: root.Browse() )
+    for (Node node: root.GetChildren() )
     {
       std::cout << "    " << node << std::endl;
     }
@@ -75,7 +75,6 @@ int main(int argc, char** argv)
         std::cout << "    " << n << std::endl;
     }
     */
-    sleep(1);
     //server.Stop();
 //OpcUa::Daemon daemon;
 

@@ -12,6 +12,7 @@
 
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <sstream>
+#include <iostream>
 #include <stdexcept>
 
 namespace OpcUa

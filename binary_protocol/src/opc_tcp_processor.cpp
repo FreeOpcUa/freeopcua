@@ -21,6 +21,9 @@
 #include <mutex>
 #include <stdexcept>
 #include <sstream>
+#include <queue>
+#include <list>
+#include <chrono>
 
 namespace
 {
@@ -30,6 +33,21 @@ namespace
   using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
+
+  struct SubscriptionBinaryData
+  {
+    IntegerID SubscriptionID;
+    std::chrono::duration<double> period;
+    std::chrono::duration<double> last_check;
+  };
+
+  struct PublishRequestElement
+  {
+    SequenceHeader sequence;
+    RequestHeader requestHeader;
+    SymmetricAlgorithmHeader algorithmHeader;
+  };
+
 
   class OpcTcp : public IncomingConnectionProcessor
   {
@@ -45,7 +63,6 @@ namespace
 
     virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
     {
-      //std::unique_lock<std::mutex> lock(ProcessMutex);
       if (!clientChannel)
       {
         if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
@@ -54,7 +71,24 @@ namespace
 
       if (Debug) std::clog << "Hello client!" << std::endl;
       IOStreamBinary stream(clientChannel);
-      while(ProcessChunk(stream));
+      for(;;)
+      {
+        double period = GetNextSleepPeriod();
+        std::cout << "Sleeping for " << period << " seconds" << std::endl;
+        int res = clientChannel->WaitForData(period); //double to float cast
+        if (res < 0)
+        {
+          return;
+        }
+        else if (res == 1)
+        {
+          ProcessChunk(stream);
+        }
+        else
+        {
+          SendPublishResponse(stream);
+        }
+      }
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -65,9 +99,11 @@ namespace
     bool ProcessChunk(IOStreamBinary& stream)
     {
       using namespace OpcUa::Binary;
-      Header hdr;
+
       if (Debug) std::cout << "Processing new chunk." << std::endl;
+      Header hdr;
       stream >> hdr;
+
       switch (hdr.Type)
       {
         case MT_HELLO:
@@ -76,6 +112,7 @@ namespace
           HelloClient(stream);
           break;
         }
+
 
         case MT_SECURE_OPEN:
         {
@@ -114,6 +151,7 @@ namespace
         }
       }
 
+      //std::cout << "Release Lock ..." << std::endl;
       return true;
     }
 
@@ -146,7 +184,7 @@ namespace
 
       if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        throw std::logic_error(std::string("Client want to create secure channel with invalid policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
       }
 
       SequenceHeader sequence;
@@ -291,7 +329,7 @@ namespace
             std::clog << "Processing read request for Node:";
             for (AttributeValueID id : params.AttributesToRead) 
             {
-              //std::clog << " " << id.Node;
+              std::clog << " " << id.Node ;  
             }
             std::cout << std::endl;
           }
@@ -351,6 +389,55 @@ namespace
           return;
         }
 
+        case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
+          std::vector<char> data(restSize);
+          TranslateBrowsePathsParameters params;
+          stream >> params;
+
+          if (Debug) 
+          {
+            for ( BrowsePath path : params.BrowsePaths)
+            {
+              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              for ( RelativePathElement el : path.Path.Elements)
+              {
+                std::cout << "/" << el.TargetName ;
+              }
+              std::cout << std::endl; 
+            }
+          }
+
+          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
+
+          if (Debug)
+          {
+            for (BrowsePathResult res: result)
+            {
+              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              for ( BrowsePathTarget path : res.Targets)
+              {
+                std::cout << path.Node ;
+              }
+              std::cout << std::endl;
+            }
+          }
+
+          TranslateBrowsePathsToNodeIDsResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Result.Paths = result;
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+
         case CREATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "Processing create session request." << std::endl;
@@ -399,6 +486,16 @@ namespace
           bool deleteSubscriptions = false;
           stream >> deleteSubscriptions;
 
+          if (deleteSubscriptions)
+          {
+            std::vector<IntegerID> subs;
+            for (SubscriptionBinaryData data: Subscriptions)
+            {
+              subs.push_back(data.SubscriptionID);
+            }
+            Server->Subscriptions()->DeleteSubscriptions(subs);
+          }
+
           CloseSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
@@ -418,10 +515,12 @@ namespace
 
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Data.ID = 2;
-          response.Data.RevisedLifetimeCount = params.RequestedLifetimeCount;
-          response.Data.RevisedPublishingInterval = params.RequestedPublishingInterval;
-          response.Data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
+
+          response.Data = Server->Subscriptions()->CreateSubscription(params);
+          SubscriptionBinaryData SubData;
+          SubData.SubscriptionID = response.Data.ID;
+          SubData.period =  std::chrono::duration<double>(response.Data.RevisedPublishingInterval/1000); //seconds
+          Subscriptions.push_back(SubData);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -434,11 +533,13 @@ namespace
         case CREATE_MONITORED_ITEMS_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
-          std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
+          MonitoredItemsParameters params;
+          stream >> params;
 
           CreateMonitoredItemsResponse response;
+
+          response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
+
           FillResponseHeader(requestHeader, response.Header);
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -450,75 +551,17 @@ namespace
           return;
         }
 
-        case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
-        {
-          if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
-          std::vector<char> data(restSize);
-          //std::cout << "Size of packet in byte: " << data.size() << std::endl;
-          //RawBuffer buffer(&data[0], restSize);
-          //stream >> buffer;
-          TranslateBrowsePathsParameters params;
-          stream >> params;
-
-          if (Debug) 
-          {
-            for ( BrowsePath path : params.BrowsePaths)
-            {
-              //std::cout << "Requested path is: " << path.StartingNode << " : ";
-              for ( RelativePathElement el : path.Path.Elements)
-              {
-                std::cout << "/" << el.TargetName.NamespaceIndex << ":" << el.TargetName.Name ;
-              }
-              std::cout << std::endl; 
-            }
-          }
-
-          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
-
-          if (Debug)
-          {
-            for (BrowsePathResult res: result)
-            {
-              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
-              for ( BrowsePathTarget path : res.Targets)
-              {
-                //std::cout << path.Node;
-              }
-              std::cout << std::endl;
-            }
-          }
-
-          TranslateBrowsePathsToNodeIDsResponse response;
-          FillResponseHeader(requestHeader, response.Header);
-          response.Result.Paths = result;
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(algorithmHeader));
-          secureHeader.AddSize(RawSize(sequence));
-          secureHeader.AddSize(RawSize(response));
-
-          if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
-          return;
-        }
-
         case PUBLISH_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
-          std::vector<char> data(restSize);
-          RawBuffer buffer(&data[0], restSize);
-          stream >> buffer;
-/*
-          PublishResponse response;
-          FillResponseHeader(requestHeader, response.Header);
-
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(algorithmHeader));
-          secureHeader.AddSize(RawSize(sequence));
-          secureHeader.AddSize(RawSize(response));
-
-          if (Debug) std::clog << "Sending response to 'Publish' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
-*/
+          if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
+          PublishParameters params;
+          stream >> params;
+          PublishRequestElement data;
+          data.sequence = sequence;
+          data.algorithmHeader = algorithmHeader;
+          data.requestHeader = requestHeader;
+          PublishRequestQueue.push(data);
+          Server->Subscriptions()->CreatePublishRequest(params.Acknowledgements);
           return;
         }
 
@@ -527,7 +570,8 @@ namespace
           if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
           PublishingModeParameters params;
           stream >> params;
-
+          
+          //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
           response.Result.Statuses.resize(params.SubscriptionIDs.size(), StatusCode::Good);
@@ -560,6 +604,82 @@ namespace
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
+    double GetNextSleepPeriod()
+    {
+      if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
+      {
+        return  10;
+      }
+      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); 
+      std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
+      
+      for (const SubscriptionBinaryData& data: Subscriptions)
+      {
+        std::chrono::duration<double> tmp =  data.last_check + data.period;
+        //std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        if (tmp < next_fire)
+        {
+          next_fire = tmp;
+        }
+      }
+      auto diff = next_fire - now;
+      if ( diff.count() < 0 ) 
+      {
+        //std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        return 0;
+      }
+      return diff.count() ;
+    }
+
+    void SendPublishResponse(IOStreamBinary& stream)
+    {
+      for (SubscriptionBinaryData& subdata: Subscriptions)
+      {
+        if ( PublishRequestQueue.size() == 0)
+        {
+          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
+          return;
+        }
+       
+        std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
+        if ((now - subdata.last_check) <= subdata.period)
+        {
+          std::cout << " No need to process subscription yet" << std::endl;
+          continue;
+        } 
+        subdata.last_check = now;
+
+        std::vector<IntegerID> sub_query;
+        sub_query.push_back(subdata.SubscriptionID);
+        std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
+        std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
+
+        for (const PublishResult& publishResult: res_list)
+        {
+
+          PublishRequestElement requestData = PublishRequestQueue.front();
+          PublishRequestQueue.pop(); 
+
+          PublishResponse response;
+          FillResponseHeader(requestData.requestHeader, response.Header);
+          response.Result = publishResult;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(requestData.algorithmHeader));
+          secureHeader.AddSize(RawSize(requestData.sequence));
+          secureHeader.AddSize(RawSize(response));
+          if (Debug) {
+            std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+            for  ( NotificationData d: response.Result.Message.Data )
+            {
+              std::cout << "     " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+            }
+          }
+          stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+        }
+      }
+    }
+
   private:
     std::mutex ProcessMutex;
     std::shared_ptr<OpcUa::Remote::Server> Server;
@@ -568,6 +688,8 @@ namespace
     uint32_t TokenID;
     NodeID SessionID;
     NodeID AuthenticationToken;
+    std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
+    std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
   };
 
 }

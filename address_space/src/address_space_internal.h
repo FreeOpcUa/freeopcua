@@ -15,14 +15,17 @@
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/view.h>
 #include <opc/ua/node_management.h>
+#include <opc/ua/protocol/subscriptions.h>
+#include <opc/ua/protocol/monitored_items.h>
 
 namespace OpcUa
 {
+
   namespace Internal
   {
 
     UaServer::AddressSpace::UniquePtr CreateAddressSpaceInMemory();
-
+  
   }
 }
 

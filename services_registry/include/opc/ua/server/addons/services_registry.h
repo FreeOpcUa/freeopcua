@@ -37,6 +37,9 @@ namespace OpcUa
 
       virtual void RegisterNodeManagementServices(std::shared_ptr<OpcUa::Remote::NodeManagementServices> attributes) = 0;
       virtual void UnregisterNodeManagementServices() = 0;
+
+      virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::Remote::SubscriptionServices> attributes) = 0;
+      virtual void UnregisterSubscriptionServices() = 0;
     };
 
     const char ServicesRegistryAddonID[] = "services_registry";
