@@ -18,14 +18,14 @@
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 
-#include <map>
-
 namespace OpcUa
 {
 
   namespace Internal
   {
+
     UaServer::AddressSpace::UniquePtr CreateAddressSpaceInMemory();
+  
   }
 }
 

@@ -73,9 +73,9 @@ namespace
       IOStreamBinary stream(clientChannel);
       for(;;)
       {
-        float period = GetNextSleepPeriod();
+        double period = GetNextSleepPeriod();
         std::cout << "Sleeping for " << period << " seconds" << std::endl;
-        int res = clientChannel->WaitForData(period);
+        int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
           return;
@@ -604,9 +604,9 @@ namespace
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
-    float GetNextSleepPeriod()
+    double GetNextSleepPeriod()
     {
-      if ( Subscriptions.size() == 0)
+      if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
       {
         return  10;
       }
@@ -616,7 +616,7 @@ namespace
       for (const SubscriptionBinaryData& data: Subscriptions)
       {
         std::chrono::duration<double> tmp =  data.last_check + data.period;
-        std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        //std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
         if (tmp < next_fire)
         {
           next_fire = tmp;
@@ -625,7 +625,7 @@ namespace
       auto diff = next_fire - now;
       if ( diff.count() < 0 ) 
       {
-        std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        //std::cout << "Event should allrady have been fired returning 0"<< std::endl;
         return 0;
       }
       return diff.count() ;
