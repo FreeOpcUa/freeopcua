@@ -12,6 +12,11 @@ class TestServer(unittest.TestCase):
         self.srv.set_endpoint("opc.tcp://192.168.56.1:4841")
         self.srv.start()
 
+    @classmethod
+    def tearDownClass(self):
+        self.srv.stop()
+
+
     def test_root(self):
         root = self.srv.get_root_node()
         self.assertEqual(opcua.QualifiedName(0, "Root"), root.get_name())
@@ -20,10 +25,31 @@ class TestServer(unittest.TestCase):
         objects = self.srv.get_objects_node()
         self.assertEqual(opcua.QualifiedName(0, "Objects"), objects.get_name())
 
+    def test_addressspace(self):
+        objects = self.srv.get_objects_node()
+        f = objects.add_folder("3:MyFolder")
+        v = f.add_variable("3:MyVariable", 6)
+        p = f.add_property("3:MyProperty", 10)
+        childs = f.get_children()
+        print(v, childs)
+        self.assertTrue( v in childs)
+        self.assertTrue( p in childs)
 
-    @classmethod
-    def tearDownClass(self):
-        self.srv.stop()
+    def test_simple_value(self):
+        o = self.srv.get_objects_node()
+        v = o.add_variable("3:VariableTestValue", 4.32)
+        val = v.get_value()
+        self.assertEqual(4.32, val)
+
+    def test_array_value(self):
+        o = self.srv.get_objects_node()
+        v = o.add_variable("3:VariableArrayValue", [1,2,3])
+        val = v.get_value()
+        self.assertEqual([1,2,3], val)
+        v.set_value([1])
+        val = v.get_value()
+        self.assertEqual([1], val)
+
 
 
 

@@ -1169,6 +1169,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("add_property", &PyNode::PyAddProperty2)
           .def(str(self))
           .def(repr(self))
+          .def(self == self)
       ;
 
     class_<std::vector<Node> >("NodeVector")
