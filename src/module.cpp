@@ -72,6 +72,7 @@ namespace OpcUa
     python::object Identifier;
     unsigned ServerIndex;
     std::string NamespaceURI;
+    NodeID CNodeId;
 
     PyNodeID()
       : NamespaceIndex(0)
@@ -83,6 +84,7 @@ namespace OpcUa
       : NamespaceIndex(node.GetNamespaceIndex())
       , ServerIndex(node.ServerIndex)
       , NamespaceURI(node.NamespaceURI)
+      , CNodeId(node)
     {
       if (node.IsString())
       {
@@ -99,6 +101,12 @@ namespace OpcUa
         throw std::logic_error(stream.str());
       }
     }
+
+   friend std::ostream& operator<<(std::ostream& os, const PyNodeID& pynodeid)
+   {
+     os << pynodeid.CNodeId;
+     return os;
+   }
 
   };
 
@@ -947,6 +955,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   using namespace boost::python;
   using namespace OpcUa;
 
+  using self_ns::str; //hack to enable __str__ in python classes with str(self)
+
   RegisterCommonObjectIDs();
 
   enum_<OpcUa::ApplicationType>("ApplicationType")
@@ -1013,10 +1023,15 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
 
   class_<PyNodeID>("NodeID")
+    //.def(init<uint16_t, uint32_t>())
+    //.def(init<uint16_t, std::string>())
     .def_readwrite("namespace_index", &PyNodeID::NamespaceIndex)
     .def_readwrite("identifier", &PyNodeID::Identifier)
     .def_readwrite("server_index", &PyNodeID::ServerIndex)
-    .def_readwrite("namespace_uri", &PyNodeID::NamespaceURI);
+    .def_readwrite("namespace_uri", &PyNodeID::NamespaceURI)
+    .def(str(self))
+    .def(repr(self))
+    ;
 
   class_<PyApplicationDescription>("ApplicationDescription")
     .def_readwrite("uri", &PyApplicationDescription::URI)
@@ -1061,9 +1076,16 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("display_name", &PyReferenceDescription::DisplayName)
     .def_readwrite("target_node_class", &PyReferenceDescription::TargetNodeClass)
     .def_readwrite("target_node_type_definition", &PyReferenceDescription::TargetNodeTypeDefinition);
-
+  
   class_<PyQualifiedName>("QualifiedName")
+    .def(init<uint16_t, std::string>())
+    .def("parse", &QualifiedName::ParseFromString)
     .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
+    .def(self == self)
+    .def(str(self))
+    .def(repr(self))
+    //.def(self_ns::str(self_ns::self))
+    //.def("__str__", operator<<)
     .def_readwrite("name", &PyQualifiedName::Name);
 
   class_<PyReadParameters>("ReadParameters")
@@ -1126,17 +1148,6 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
         .value("bool", VariantType::BOOLEAN)
       ;
 
-
-
-    class_<NodeID>("NodeId" )
-          .def("from_numeric", &NumericNodeID)
-          .def("get_string_identifier", &NodeID::GetStringIdentifier)
-          .def("get_namespace_index", &NodeID::GetNamespaceIndex)
-      ;
-
-    //std::vector<Node> (Node::*NodeBrowse)() = &Node::Browse;
-    //Node (Node::*NodeGetChildNode)(const std::vector<std::string>&) = &Node::GetChildNode;
-
     class_<PyNode>("Node", init<Remote::Server::SharedPtr, NodeID>())
           .def(init<Node>())
           .def("get_node_id", &PyNode::GetId)
@@ -1147,7 +1158,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("set_value", &PyNode::PySetValue2) //should be possible to use default argument
           .def("get_properties", &PyNode::GetProperties)
           .def("get_variables", &PyNode::GetVariables)
-          .def("read_browse_name", &PyNode::PyGetName)
+          .def("get_name", &PyNode::PyGetName)
           .def("get_children", &PyNode::PyGetChildren)
           .def("get_child", &PyNode::PyGetChild)
           .def("add_folder", &PyNode::PyAddFolder)
@@ -1156,8 +1167,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("add_variable", &PyNode::PyAddVariable2)
           .def("add_property", &PyNode::PyAddProperty)
           .def("add_property", &PyNode::PyAddProperty2)
-          .def("__str__", &PyNode::ToString)
-          .def("__repr__", &PyNode::ToString)
+          .def(str(self))
+          .def(repr(self))
       ;
 
     class_<std::vector<Node> >("NodeVector")
