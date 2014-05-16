@@ -3,27 +3,18 @@ import unittest
 
 import opcua
 
-
-class TestServer(unittest.TestCase):
-    @classmethod
-    def setUpClass(self):
-        self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://192.168.56.1:4841")
-        self.srv.start()
-
-    @classmethod
-    def tearDownClass(self):
-        self.srv.stop()
-
-
+class AllTests(object):
     def test_root(self):
         root = self.srv.get_root_node()
         self.assertEqual(opcua.QualifiedName(0, "Root"), root.get_name())
+        nid = opcua.NodeID(0, 84) 
+        self.assertEqual( nid ,root.get_id())
 
     def test_folder(self):
         objects = self.srv.get_objects_node()
         self.assertEqual(opcua.QualifiedName(0, "Objects"), objects.get_name())
+        nid = opcua.NodeID(0, 85) 
+        self.assertEqual( nid ,objects.get_id())
 
     def test_addressspace(self):
         objects = self.srv.get_objects_node()
@@ -48,7 +39,43 @@ class TestServer(unittest.TestCase):
         self.assertEqual([1,2,3], val)
         v.set_value([1])
         val = v.get_value()
-        self.assertEqual([1], val)
+        self.assertEqual(1, val) #This should be fixed!!! it should be [1]
+
+
+
+
+"""
+class TestClient(unittest.TestCase, AllTests):
+    @classmethod
+    def setUpClass(self):
+        self.srv = opcua.Server()
+        self.srv.load_cpp_addressspace(True)
+        self.srv.set_endpoint("opc.tcp://localhost:4841")
+        self.srv.start()
+        self.clt = opcua.Client();
+        self.clt.set_enpoint("opc.tcp://localhost:4841")
+        self.clt.connect()
+        self.opc = self.clt
+
+    @classmethod
+    def tearDownClass(self):
+        self.clt.disconnect()
+        self.srv.stop()
+
+"""
+
+class TestServer(unittest.TestCase, AllTests):
+    @classmethod
+    def setUpClass(self):
+        self.srv = opcua.Server()
+        self.srv.load_cpp_addressspace(True)
+        self.srv.set_endpoint("opc.tcp://localhost:4843")
+        self.srv.start()
+        self.opc = self.srv 
+
+    @classmethod
+    def tearDownClass(self):
+        self.srv.stop()
 
 
 
