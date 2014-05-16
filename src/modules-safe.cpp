@@ -66,6 +66,252 @@ namespace OpcUa
     return result;
   }
 
+  struct PyNodeID
+  {
+    unsigned NamespaceIndex;
+    python::object Identifier;
+    unsigned ServerIndex;
+    std::string NamespaceURI;
+    NodeID CNodeId;
+
+    PyNodeID()
+      : NamespaceIndex(0)
+      , ServerIndex(0)
+    {
+    }
+
+    PyNodeID(const OpcUa::NodeID& node)
+      : NamespaceIndex(node.GetNamespaceIndex())
+      , ServerIndex(node.ServerIndex)
+      , NamespaceURI(node.NamespaceURI)
+      , CNodeId(node)
+    {
+      if (node.IsString())
+      {
+        Identifier = python::str(node.GetStringIdentifier());
+      }
+      else if (node.IsInteger())
+      {
+        Identifier = python::long_(node.GetIntegerIdentifier());
+      }
+      else
+      {
+        std::stringstream stream;
+        stream << "Unsupported or not implemented node type: " << node.Encoding;
+        throw std::logic_error(stream.str());
+      }
+    }
+
+   friend std::ostream& operator<<(std::ostream& os, const PyNodeID& pynodeid)
+   {
+     os << pynodeid.CNodeId;
+     return os;
+   }
+
+  };
+
+  struct PyApplicationDescription
+  {
+    std::string URI;
+    std::string ProductURI;
+    std::string Name;
+    unsigned Type;
+    std::string GatewayServerURI;
+    std::string DiscoveryProfileURI;
+    python::list DiscoveryURLs;
+
+    PyApplicationDescription()
+      : Type(0)
+    {
+    }
+
+    explicit PyApplicationDescription(const OpcUa::ApplicationDescription& desc)
+      : URI(desc.URI)
+      , ProductURI(desc.ProductURI)
+      , Name(desc.Name.Text) // NOTE: encoding mask doesn't check.
+      , Type(static_cast<unsigned>(desc.Type))
+      , GatewayServerURI(desc.GatewayServerURI)
+      , DiscoveryProfileURI(desc.DiscoveryProfileURI)
+      , DiscoveryURLs(ToList(desc.DiscoveryURLs))
+    {
+    }
+  };
+
+  boost::python::list ToList(const std::vector<ApplicationDescription> nativeApps)
+  {
+    boost::python::list resultApps;
+    std::for_each(
+      nativeApps.begin(),
+      nativeApps.end(),
+      [&resultApps](const ApplicationDescription& app)
+      {
+        resultApps.append(PyApplicationDescription(app));
+      });
+
+    return resultApps;
+  }
+
+  struct PyUserTokenPolicy
+  {
+    std::string PolicyID;
+    unsigned TokenType;
+    std::string IssuedTokenType;
+    std::string IssuerEndpointURL;
+    std::string SecurityPolicyURI;
+
+    PyUserTokenPolicy()
+      : TokenType(0)
+    {
+    }
+
+    PyUserTokenPolicy(const UserTokenPolicy& policy)
+      : PolicyID(policy.PolicyID)
+      , TokenType(static_cast<unsigned>(policy.TokenType))
+      , IssuedTokenType(policy.IssuedTokenType)
+      , IssuerEndpointURL(policy.IssuerEndpointURL)
+      , SecurityPolicyURI(policy.SecurityPolicyURI)
+    {
+    }
+  };
+
+  boost::python::list ToList(const std::vector<OpcUa::UserTokenPolicy> policies)
+  {
+    boost::python::list result;
+    std::for_each(
+      policies.begin(),
+      policies.end(),
+      [&result](const UserTokenPolicy& policy)
+      {
+        result.append(PyUserTokenPolicy(policy));
+      }
+    );
+    return result;
+  }
+
+  struct PyEndpointDescription
+  {
+    std::string EndpointURL;
+    PyApplicationDescription ServerDescription;
+    //CertificateData ServerCertificate; TODO
+    unsigned SecurityMode;
+    std::string SecurityPolicyURI;
+    python::list UserIdentifyTokens;
+    std::string TransportProfileURI;
+    unsigned SecurityLevel;
+
+    PyEndpointDescription()
+      : SecurityMode(0)
+      , SecurityLevel(0)
+    {
+    }
+
+    explicit PyEndpointDescription(const EndpointDescription& endpoint)
+      : EndpointURL(endpoint.EndpointURL)
+      , ServerDescription(endpoint.ServerDescription)
+      // , ServerCertificate(endpoint.ServerCertificate)
+      , SecurityMode(endpoint.SecurityMode)
+      , SecurityPolicyURI(endpoint.SecurityPolicyURI)
+      , UserIdentifyTokens(ToList(endpoint.UserIdentifyTokens))
+      , TransportProfileURI(endpoint.TransportProfileURI)
+      , SecurityLevel(endpoint.SecurityLevel)
+    {
+    }
+  };
+
+  boost::python::list ToList(const std::vector<EndpointDescription> endpoints)
+  {
+    boost::python::list resultApps;
+    std::for_each(
+      endpoints.begin(),
+      endpoints.end(),
+      [&resultApps](const EndpointDescription& endpoint)
+      {
+        resultApps.append(PyEndpointDescription(endpoint));
+      });
+
+    return resultApps;
+  }
+
+  struct PyBrowseParameters
+  {
+    unsigned MaxReferenciesCount;
+    PyNodeID NodeToBrowse;
+    unsigned Direction;
+    PyNodeID ReferenceTypeID;
+    bool IncludeSubtypes;
+    unsigned NodeClasses;
+    unsigned ResultMask;
+
+    PyBrowseParameters()
+      : MaxReferenciesCount(0)
+      , Direction(0)
+      , IncludeSubtypes(false)
+      , NodeClasses(0)
+      , ResultMask(0)
+    {
+    }
+  };
+
+
+  typedef OpcUa::QualifiedName PyQualifiedName;
+
+  struct PyReferenceDescription
+  {
+    PyNodeID ReferenceTypeID;
+    bool IsForward;
+    PyNodeID TargetNodeID;
+    PyQualifiedName BrowseName;
+    std::string DisplayName;
+    unsigned TargetNodeClass;
+    PyNodeID TargetNodeTypeDefinition;
+
+    PyReferenceDescription()
+      : IsForward(false)
+      , TargetNodeClass(0)
+    {
+    }
+
+    explicit PyReferenceDescription(const OpcUa::ReferenceDescription& desc)
+      : ReferenceTypeID(desc.ReferenceTypeID)
+      , IsForward(desc.IsForward)
+      , TargetNodeID(desc.TargetNodeID)
+      , BrowseName(desc.BrowseName)
+      , DisplayName(desc.DisplayName.Text)
+      , TargetNodeClass(static_cast<unsigned>(desc.TargetNodeClass))
+      , TargetNodeTypeDefinition(desc.TargetNodeTypeDefinition)
+    {
+    }
+  };
+
+  boost::python::list ToList(const std::vector<ReferenceDescription> descs)
+  {
+    boost::python::list result;
+    std::for_each(
+      descs.begin(),
+      descs.end(),
+      [&result](const ReferenceDescription& desc)
+      {
+        result.append(PyReferenceDescription(desc));
+      });
+
+    return result;
+  }
+
+  struct PyAttributeValueID
+  {
+    PyNodeID Node;
+    unsigned Attribute; // type AttributeID
+    std::string IndexRange;
+    PyQualifiedName DataEncoding;
+  };
+
+  struct PyReadParameters
+  {
+    double MaxAge;
+    TimestampsToReturn TimestampsType;
+    python::list AttributesToRead; // type of elmnts is AttributeValueID
+  };
+
   struct VariantToObjectConverter
   {
     python::object Result;
@@ -97,6 +343,37 @@ namespace OpcUa
     VariantToObjectConverter convertor;
     OpcUa::ApplyVisitor(var, convertor);
     return convertor.Result;
+  }
+  OpcUa::NodeID GetNode(const PyNodeID& object)
+  {
+    OpcUa::NodeID id;
+    unsigned encoding = 0;
+    if (!object.NamespaceURI.empty())
+    {
+      id.NamespaceURI = object.NamespaceURI;
+      encoding |= NodeIDEncoding::EV_NAMESPACE_URI_FLAG;
+    }
+
+    if (object.ServerIndex)
+    {
+      id.ServerIndex = object.ServerIndex;
+      encoding |= NodeIDEncoding::EV_SERVER_INDEX_FLAG;
+    }
+
+    if (python::extract<std::string>(object.Identifier).check())
+    {
+      id.StringData.Identifier = python::extract<std::string>(object.Identifier);
+      id.StringData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_STRING;
+    }
+    if (python::extract<unsigned>(object.Identifier).check())
+    {
+      id.NumericData.Identifier = python::extract<unsigned>(object.Identifier);
+      id.NumericData.NamespaceIndex = object.NamespaceIndex;
+      encoding |= NodeIDEncoding::EV_NUMERIC;
+    }
+    id.Encoding = static_cast<OpcUa::NodeIDEncoding>(encoding);
+    return id;
   }
 
   Variant FromObject(const python::object object)
@@ -140,13 +417,12 @@ namespace OpcUa
     {
       var = python::extract<double>(object);
     }
-    else if (python::extract<NodeID>(object).check())
+    else if (python::extract<PyNodeID>(object).check())
     {
-      var = FromList<NodeID>(object);
-      //std::vector<PyNodeID> ids = FromList<PyNodeID>(object);
-      //std::vector<NodeID> result(ids.size());
-      //std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
-      //var = result;
+      std::vector<PyNodeID> ids = FromList<PyNodeID>(object);
+      std::vector<NodeID> result(ids.size());
+      std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
+      var = result;
     }
     else
     {
@@ -201,6 +477,195 @@ namespace OpcUa
   }
 
 
+
+
+  struct PyDataValue
+  {
+    python::object Value;
+    unsigned Status;
+    uint64_t SourceTimestamp;
+    uint16_t SourcePicoseconds;
+    uint64_t ServerTimestamp;
+    uint16_t ServerPicoseconds;
+
+    PyDataValue()
+      : Status(0)
+      , SourceTimestamp(0)
+      , SourcePicoseconds(0)
+      , ServerTimestamp(0)
+      , ServerPicoseconds(0)
+    {
+    }
+
+    explicit PyDataValue(const OpcUa::DataValue& value)
+    {
+      if (value.Encoding & DATA_VALUE)
+      {
+        Value = ToObject(value.Value);
+      }
+      if (value.Encoding & DATA_VALUE_STATUS_CODE)
+      {
+        Status = static_cast<unsigned>(value.Status);
+      }
+      if (value.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
+      {
+        SourceTimestamp = value.SourceTimestamp.Value;
+      }
+      if (value.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
+      {
+        ServerTimestamp = value.ServerTimestamp.Value;
+      }
+      if (value.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
+      {
+        SourcePicoseconds = value.SourcePicoseconds;
+      }
+      if (value.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
+      {
+        ServerPicoseconds = value.ServerPicoseconds;
+      }
+    }
+  };
+
+  struct PyWriteValue
+  {
+    PyNodeID Node;
+    unsigned Attribute;
+    std::string NumericRange;
+    PyDataValue Data;
+
+    PyWriteValue()
+      : Attribute(0)
+    {
+    }
+
+    explicit PyWriteValue(const OpcUa::WriteValue& value)
+      : Node(value.Node)
+      , Attribute(static_cast<unsigned>(value.Attribute))
+      , NumericRange(value.NumericRange)
+      , Data(value.Data)
+    {
+    }
+  };
+
+  WriteValue GetWriteValue(const PyWriteValue& pyValue)
+  {
+    WriteValue result;
+    result.Attribute = static_cast<AttributeID>(pyValue.Attribute);
+    result.Node = GetNode(pyValue.Node);
+    result.NumericRange = pyValue.NumericRange;
+    if (pyValue.Data.Status)
+    {
+      result.Data.Status = static_cast<StatusCode>(pyValue.Data.Status);
+      result.Data.Encoding |= DATA_VALUE_STATUS_CODE;
+    }
+    if (pyValue.Data.ServerPicoseconds)
+    {
+      result.Data.ServerPicoseconds = pyValue.Data.ServerPicoseconds;
+      result.Data.Encoding |= DATA_VALUE_SERVER_PICOSECONDS;
+    }
+    if (pyValue.Data.SourcePicoseconds)
+    {
+      result.Data.SourcePicoseconds = pyValue.Data.SourcePicoseconds;
+      result.Data.Encoding |= DATA_VALUE_SOURCE_PICOSECONDS;
+    }
+    if (pyValue.Data.ServerTimestamp)
+    {
+      result.Data.ServerTimestamp.Value = pyValue.Data.ServerTimestamp;
+      result.Data.Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
+    }
+    if (pyValue.Data.SourceTimestamp)
+    {
+      result.Data.SourceTimestamp.Value = pyValue.Data.SourceTimestamp;
+      result.Data.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
+    }
+    if (pyValue.Data.Value)
+    {
+      result.Data.Value = FromObject(pyValue.Data.Value);
+      result.Data.Encoding |= DATA_VALUE;
+    }
+    return result;
+  }
+
+  class PyServer
+  {
+  public:
+    explicit PyServer(const std::string& endpointUrl)
+      : Impl(OpcUa::Remote::Connect(endpointUrl))
+    {
+    }
+/*
+    python::list FindServers() const
+    {
+      const OpcUa::FindServersParameters params;
+      const std::vector<ApplicationDescription> nativeApps = Impl->Endpoints()->FindServers(params);
+      return ToList(nativeApps);
+    }
+
+    python::list GetEndpoints() const
+    {
+      const EndpointsFilter filter;
+      const std::vector<EndpointDescription> endpoints = Impl->Endpoints()->GetEndpoints(filter);
+      return ToList(endpoints);
+    }
+*/
+    python::list Browse(const PyBrowseParameters& p) const
+    {
+      OpcUa::BrowseDescription description;
+      description.NodeToBrowse = GetNode(p.NodeToBrowse);
+      description.ReferenceTypeID = GetNode(p.ReferenceTypeID);
+      description.Direction = static_cast<OpcUa::BrowseDirection>(p.Direction);
+      description.IncludeSubtypes = p.IncludeSubtypes;
+      description.NodeClasses = p.NodeClasses;
+      description.ResultMask = p.ResultMask;
+
+      OpcUa::NodesQuery query;
+      query.NodesToBrowse.push_back(description);
+      query.MaxReferenciesPerNode = p.MaxReferenciesCount;
+      const std::vector<ReferenceDescription> references = Impl->Views()->Browse(query);
+      return ToList(references);
+    }
+
+    python::list Read(const PyReadParameters& in)
+    {
+      OpcUa::ReadParameters params;
+      params.MaxAge = in.MaxAge;
+      params.TimestampsType = static_cast<TimestampsToReturn>(in.TimestampsType);
+
+      std::size_t listSize = python::len(in.AttributesToRead);
+      for (std::size_t i = 0; i < listSize; ++i)
+      {
+        const PyAttributeValueID& value = python::extract<PyAttributeValueID>(in.AttributesToRead[i]);
+        OpcUa::AttributeValueID attr;
+        attr.Attribute = static_cast<OpcUa::AttributeID>(value.Attribute);
+        attr.DataEncoding.NamespaceIndex = value.DataEncoding.NamespaceIndex;
+        attr.DataEncoding.Name = value.DataEncoding.Name;
+        attr.IndexRange = value.IndexRange;
+        attr.Node = GetNode(value.Node);
+        params.AttributesToRead.push_back(attr);
+      }
+
+      std::vector<DataValue> data = Impl->Attributes()->Read(params);
+      return ToList<PyDataValue, DataValue>(data);
+    }
+
+    //    std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
+    python::list Write(const python::list& in)
+    {
+      const std::vector<PyWriteValue>& pyValues = FromList<PyWriteValue>(in);
+      std::vector<WriteValue> values;
+      for (std::vector<PyWriteValue>::const_iterator valueIt = pyValues.begin(); valueIt != pyValues.end(); ++valueIt)
+      {
+        const PyWriteValue& pyValue = *valueIt;
+        const WriteValue& value = GetWriteValue(pyValue);
+        values.push_back(value);
+      }
+      const python::list& result = ToList<unsigned, StatusCode>(Impl->Attributes()->Write(values));
+      return result;
+    }
+
+  private:
+    OpcUa::Remote::Server::SharedPtr Impl;
+  };
 
   void RegisterCommonObjectIDs()
   {
@@ -419,97 +884,6 @@ namespace OpcUa
     ;
   }
 
-  struct PyNodeID: public NodeID
-  {
-    using NodeID::NodeID; //should work but it does not ...
-    PyNodeID() : NodeID() {};
-    //PyNodeID(uint16_t index, uint32_t integerId) : NodeID(uint16_t index, uint32_t integerId) {};
-    //PyNodeID() : NodeID() {};
-    //PyNodeID()
-
-    python::object GetIdentifier()
-    {
-      if (IsInteger() )
-      {
-        return python::object(GetIntegerIdentifier());
-      }
-      else if ( IsString() )
-      {
-        return python::object(GetStringIdentifier());
-      }
-      else if ( IsGuid() )
-      {
-        return python::object(GetGuidIdentifier());
-      }
-      else if ( IsBinary() )
-      {
-        return python::object(GetBinaryIdentifier());
-      }
-      else
-      {
-        throw std::logic_error("Error unknown identifier.");
-      }
-    }
-
-    PyNodeID(const NodeID& node)
-    {
-      Encoding = node.Encoding;
-      const NodeIDEncoding enc = node.GetEncodingValue();
-      switch (enc)
-      {
-        case EV_TWO_BYTE:
-        {
-          TwoByteData.Identifier = node.TwoByteData.Identifier;
-          break;
-        }
-        case EV_FOUR_BYTE:
-        {
-          FourByteData.NamespaceIndex = node.FourByteData.NamespaceIndex;
-          FourByteData.Identifier = node.FourByteData.Identifier;
-          break;
-        }
-        case EV_NUMERIC:
-        {
-          NumericData.NamespaceIndex = node.NumericData.NamespaceIndex;
-          NumericData.Identifier = node.NumericData.Identifier;
-          break;
-        }
-        case EV_STRING:
-        {
-          StringData.NamespaceIndex = node.StringData.NamespaceIndex;
-          StringData.Identifier = node.StringData.Identifier;
-          break;
-        }
-        case EV_GUID:
-        {
-          GuidData.NamespaceIndex = node.GuidData.NamespaceIndex;
-          GuidData.Identifier = node.GuidData.Identifier;
-          break;
-        }
-        case EV_BYTE_STRING:
-        {
-          BinaryData.NamespaceIndex = node.BinaryData.NamespaceIndex;
-          BinaryData.Identifier = node.BinaryData.Identifier;
-          break;
-        }
-        default:
-        {
-          throw std::logic_error("Invalid Node ID encoding value.");
-        }
-      }
-
-      if (node.HasServerIndex())
-      {
-        ServerIndex = node.ServerIndex;
-      }
-      if (node.HasNamespaceURI())
-      {
-        NamespaceURI = node.NamespaceURI;
-      }
-    }
-
-  };
- 
 
   class PyNode: public Node
   {
@@ -520,7 +894,6 @@ namespace OpcUa
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyGetValue() { return ToObject(Node::GetValue()); }
       python::object PyGetName() { return ToObject(Node::GetName()); }
-      PyNodeID PyGetNodeID() { return PyNodeID(Node::GetId()); }
       python::object PySetValue(python::object val) 
       { 
         OpcUa::StatusCode code = Node::SetValue(FromObject(val)); 
@@ -559,7 +932,7 @@ namespace OpcUa
     public:
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
-      PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
+      PyNode PyGetNode(NodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(FromList<std::string>(path)); }
   };
 
@@ -571,7 +944,7 @@ namespace OpcUa
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
-      PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
+      PyNode PyGetNode(NodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(FromList<std::string>(path)); }
   };
 }
@@ -585,6 +958,12 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   using self_ns::str; //hack to enable __str__ in python classes with str(self)
 
   RegisterCommonObjectIDs();
+
+  enum_<OpcUa::ApplicationType>("ApplicationType")
+    .value("CLIENT", OpcUa::ApplicationType::CLIENT)
+    .value("CLIENT_AND_SERVER", OpcUa::ApplicationType::CLIENT_AND_SERVER)
+    .value("DISCOVERY_SERVER", OpcUa::ApplicationType::DISCOVERY_SERVER)
+    .value("SERVER", OpcUa::ApplicationType::SERVER);
 
   enum_<OpcUa::MessageSecurityMode>("MessageSecurityMode")
     .value("NONE", OpcUa::MessageSecurityMode::MSM_NONE)
@@ -644,46 +1023,16 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
 
   class_<PyNodeID>("NodeID")
-    .def(init<uint16_t, uint32_t>())
-    .def(init<uint16_t, std::string>())
-    .def("get_namespace_index", &PyNodeID::GetNamespaceIndex)
-    .def("get_identifier", &PyNodeID::GetIdentifier)
-    .def("get_encoding", &PyNodeID::GetEncodingValue)
-    .def("is_integer", &NodeID::IsInteger)
-    .def("is_binary", &NodeID::IsBinary)
-    .def("is_guid", &NodeID::IsGuid)
-    .def("is_string", &NodeID::IsString)
-    .def_readonly("namespace_uri", &PyNodeID::NamespaceURI)
+    //.def(init<uint16_t, uint32_t>())
+    //.def(init<uint16_t, std::string>())
+    .def_readwrite("namespace_index", &PyNodeID::NamespaceIndex)
+    .def_readwrite("identifier", &PyNodeID::Identifier)
+    .def_readwrite("server_index", &PyNodeID::ServerIndex)
+    .def_readwrite("namespace_uri", &PyNodeID::NamespaceURI)
     .def(str(self))
     .def(repr(self))
-    .def(self == self)
     ;
 
-  
-  class_<QualifiedName>("QualifiedName")
-    .def(init<uint16_t, std::string>())
-    .def("parse", &QualifiedName::ParseFromString)
-    .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
-    .def(self == self)
-    .def(str(self))
-    .def(repr(self))
-    //.def(self_ns::str(self_ns::self))
-    //.def("__str__", operator<<)
-    .def_readwrite("name", &QualifiedName::Name)
-    ;
-
-
-  class_<DataValue>("DataValue", "Parameters of read data.")
-    .def_readwrite("value", &DataValue::Value)
-    .def_readwrite("status", &DataValue::Status)
-    .def_readwrite("source_timestamp", &DataValue::SourceTimestamp)
-    .def_readwrite("source_picoseconds", &DataValue::SourcePicoseconds)
-    .def_readwrite("server_timestamp", &DataValue::ServerTimestamp)
-    .def_readwrite("server_picoseconds", &DataValue::ServerPicoseconds);
-
-
-
-/*
   class_<PyApplicationDescription>("ApplicationDescription")
     .def_readwrite("uri", &PyApplicationDescription::URI)
     .def_readwrite("product_uri", &PyApplicationDescription::ProductURI)
@@ -727,6 +1076,18 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("display_name", &PyReferenceDescription::DisplayName)
     .def_readwrite("target_node_class", &PyReferenceDescription::TargetNodeClass)
     .def_readwrite("target_node_type_definition", &PyReferenceDescription::TargetNodeTypeDefinition);
+  
+  class_<PyQualifiedName>("QualifiedName")
+    .def(init<uint16_t, std::string>())
+    .def("parse", &QualifiedName::ParseFromString)
+    .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
+    .def(self == self)
+    .def(str(self))
+    .def(repr(self))
+    //.def(self_ns::str(self_ns::self))
+    //.def("__str__", operator<<)
+    .def_readwrite("name", &PyQualifiedName::Name);
+
   class_<PyReadParameters>("ReadParameters")
     .def_readwrite("max_age", &PyReadParameters::MaxAge)
     .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
@@ -737,6 +1098,15 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("attribute", &PyAttributeValueID::Attribute)
     .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
     .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
+
+  class_<PyDataValue>("DataValue", "Parameters of read data.")
+    .def_readwrite("value", &PyDataValue::Value)
+    .def_readwrite("status", &PyDataValue::Status)
+    .def_readwrite("source_timestamp", &PyDataValue::SourceTimestamp)
+    .def_readwrite("source_picoseconds", &PyDataValue::SourcePicoseconds)
+    .def_readwrite("server_timestamp", &PyDataValue::ServerTimestamp)
+    .def_readwrite("server_picoseconds", &PyDataValue::ServerPicoseconds);
+
   class_<PyWriteValue>("WriteValue", "Parameters data for writing.")
     .def_readwrite("node", &PyWriteValue::Node)
     .def_readwrite("attribute", &PyWriteValue::Attribute)
@@ -750,7 +1120,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def("read", &PyServer::Read)
     .def("write", &PyServer::Write);
 
-*/
+
 
     def("VariantToObject", ToObject);
     def("ObjectToVariant", FromObject);
@@ -780,7 +1150,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
     class_<PyNode>("Node", init<Remote::Server::SharedPtr, NodeID>())
           .def(init<Node>())
-          .def("get_id", &PyNode::PyGetNodeID)
+          .def("get_node_id", &PyNode::GetId)
           .def("get_attribute", &PyNode::GetAttribute)
           .def("set_attribute", &PyNode::SetAttribute)
           .def("get_value", &PyNode::PyGetValue)
