@@ -12,7 +12,6 @@
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
-#include <opc/ua/client/remote_server.h>
 #include <opc/ua/server.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/types.h>
