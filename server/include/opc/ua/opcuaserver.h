@@ -7,7 +7,6 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
-//#include <opc/common/application.h>
 #include <opc/ua/server.h>
 #include <opc/ua/node.h>
 

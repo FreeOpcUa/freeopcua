@@ -42,7 +42,7 @@ namespace
   //Structure to store in memory description of current Subscriptions
   struct DataSubscription
   {
-    SubscriptionData SubscriptionData;
+    SubscriptionData Data;
     uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
     uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
     time_t lastNotificationTime = 0;
@@ -54,10 +54,10 @@ namespace
 
     std::vector<PublishResult> PopPublishResult()
     {
-      std::cout << "PopPublishresult for subscription: " << SubscriptionData.ID << " with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
+      std::cout << "PopPublishresult for subscription: " << Data.ID << " with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
       std::vector<PublishResult> resultlist;
       PublishResult result;
-      result.SubscriptionID = SubscriptionData.ID;
+      result.SubscriptionID = Data.ID;
       result.Message.PublishTime = CurrentDateTime();
 
       DataChangeNotification notification;
@@ -75,7 +75,7 @@ namespace
       
       // FIXME: parse events and statuschange notification since they can be send in same result
 
-      if ( result.Statuses.size() == 0 && ( KeepAliveCount < SubscriptionData.RevizedMaxKeepAliveCount ) ) 
+      if ( result.Statuses.size() == 0 && ( KeepAliveCount < Data.RevizedMaxKeepAliveCount ) ) 
       {
         std::cout << "No event and not need to send keep-alive notification" << std::endl;
         ++KeepAliveCount;
@@ -149,7 +149,7 @@ namespace
       std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
 
       DataSubscription db;
-      db.SubscriptionData = data;
+      db.Data = data;
       SubscriptionsMap[data.ID] = db;
       return data;
     }
@@ -184,7 +184,7 @@ namespace
                 res.Status = OpcUa::StatusCode::Good;
                 itsub->second.LastMonitoredItemID += 1;
                 res.MonitoredItemID = itsub->second.LastMonitoredItemID ;
-                res.RevisedSamplingInterval = itsub->second.SubscriptionData.RevisedPublishingInterval;
+                res.RevisedSamplingInterval = itsub->second.Data.RevisedPublishingInterval;
                 res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
                 //res.FilterResult = //We can omit that one if we do not change anything in filter
                 DataMonitoredItems mdata;
