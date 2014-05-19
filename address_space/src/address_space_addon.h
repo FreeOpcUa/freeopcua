@@ -39,8 +39,10 @@ namespace OpcUa
       virtual void Stop();
 
     public: // NodeManagementServices
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value);
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference);
+      virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items);
+      virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items);
+      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value); //FIXME: remove
+      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference); //FIXME: remove
 
     public: // ViewServices
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
@@ -51,7 +53,7 @@ namespace OpcUa
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
-    public:
+    public: // SubscriptionServices
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters);
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions);
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds);

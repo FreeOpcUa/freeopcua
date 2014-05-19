@@ -30,14 +30,25 @@ namespace
     {
       return std::vector<OpcUa::ApplicationDescription>();
     }
+
     virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
     {
       return std::vector<OpcUa::EndpointDescription>();
     }
+
     virtual void RegisterServer(const ServerParameters& parameters)
     {
     }
 
+    virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
+    {
+      return std::vector<AddNodesResult>();
+    }
+
+    virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
+    {
+      return std::vector<StatusCode>();
+    }
 
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
@@ -94,13 +105,11 @@ namespace
     {
       return MonitoredItemsData();
     }
+
     virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
     }
     
- 
-
-
   };
 
 }

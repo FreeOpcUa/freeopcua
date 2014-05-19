@@ -214,6 +214,18 @@ namespace
       }
     }
 
+    virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
+    {
+      std::vector<AddNodesResult> results;
+      return results;
+    }
+
+    virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
+    {
+      std::vector<StatusCode> results;
+      return results;
+    }
+
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);

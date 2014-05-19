@@ -45,6 +45,15 @@ namespace OpcUa
       InternalServer.reset();
     }
 
+    std::vector<AddNodesResult> AddressSpaceAddon::AddNodes(const std::vector<AddNodesItem>& items)
+    {
+      return Registry->AddNodes(items);
+    }
+
+    std::vector<StatusCode> AddressSpaceAddon::AddReferences(const std::vector<AddReferencesItem>& items)
+    {
+      return Registry->AddReferences(items);
+    }
     void AddressSpaceAddon::AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
       Registry->AddAttribute(node, attribute, value);
