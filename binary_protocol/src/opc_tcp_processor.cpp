@@ -586,6 +586,49 @@ namespace
           return;
         }
 
+        case ADD_NODES_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Add Nodes' request." << std::endl;
+          AddNodesParameters params;
+          stream >> params;
+          
+          std::vector<AddNodesResult> results = Server->NodeManagement()->AddNodes(params.NodesToAdd);
+
+          AddNodesResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.results = results;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Add Nodes' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case ADD_REFERENCES_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Add References' request." << std::endl;
+          AddReferencesParameters params;
+          stream >> params;
+          
+          std::vector<StatusCode> results = Server->NodeManagement()->AddReferences(params.ReferencesToAdd);
+
+          AddReferencesResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Results = results;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to 'Add References' request." << std::endl;
+          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
 
         default:
         {
