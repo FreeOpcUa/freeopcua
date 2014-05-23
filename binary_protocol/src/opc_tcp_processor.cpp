@@ -71,6 +71,10 @@ namespace
 
       if (Debug) std::clog << "Hello client!" << std::endl;
       IOStreamBinary stream(clientChannel);
+
+      while(ProcessChunk(stream));
+
+/*
       for(;;)
       {
         double period = GetNextSleepPeriod();
@@ -89,6 +93,7 @@ namespace
           SendPublishResponse(stream);
         }
       }
+*/
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)

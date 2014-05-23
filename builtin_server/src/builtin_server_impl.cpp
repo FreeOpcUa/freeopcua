@@ -10,6 +10,8 @@
 
 #include "builtin_server_impl.h"
 
+#include <iostream>
+
 using namespace OpcUa::Impl;
 
 namespace
@@ -37,7 +39,7 @@ namespace
       }
       return 0;
     }
-
+/*
     virtual int WaitForData(float second)
     {
       std::shared_ptr<InputChannel> input = Input.lock();
@@ -47,7 +49,7 @@ namespace
       }
       return 0;
     }
-
+*/
     virtual void Send(const char* message, std::size_t size)
     {
       if (Debug) std::clog << ID << ": send data." << std::endl;
