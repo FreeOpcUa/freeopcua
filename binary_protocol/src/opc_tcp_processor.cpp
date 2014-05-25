@@ -74,7 +74,6 @@ namespace
       for(;;)
       {
         double period = GetNextSleepPeriod();
-        std::cout << "Sleeping for " << period << " seconds" << std::endl;
         int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
@@ -651,7 +650,7 @@ namespace
     {
       if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
       {
-        return  10;
+        return  9999;
       }
       std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); 
       std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;

@@ -28,7 +28,7 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Remote;
 
-  typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
+  //typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
 
   //Structure to store in memory description of current MonitoredItems
   struct DataMonitoredItems
@@ -107,12 +107,22 @@ namespace
 
   struct AttributeValue
   {
-    NodeID Node;
-    AttributeID Attribute;
+    //AttributeID Attribute;
     DataValue Value;
     //List to keep track of monitoredItems monitoring this AttributeValue
     std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
   };
+
+  typedef std::map<AttributeID, AttributeValue> AttributesMap;
+  //typedef std::map<AttributeID, AttSubscription> AttSubscriptionsMap;
+
+  struct NodeStruct
+  {
+    AttributesMap Attributes;
+    std::vector<ReferenceDescription> References;
+  };
+
+  typedef std::map<NodeID, NodeStruct> NodesMap;
 
   class AddressSpaceInMemory : public UaServer::AddressSpace
   {
@@ -175,12 +185,22 @@ namespace
         {
           std::cout << "Creating monitored request for one item" << std::endl;
           CreateMonitoredItemsResult res;
-          bool found = false;
-
-          for ( AttributeValue& value : AttributeValues)
+          NodesMap::iterator it = Nodes.find(req.ItemToMonitor.Node);
+          if ( it == Nodes.end() )
           {
-            if (value.Node == req.ItemToMonitor.Node && value.Attribute == req.ItemToMonitor.Attribute)
-            { //We found attribute //FIXME: what to do if item allready exist?
+            res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+            std::cout << "NodeID does not exist: " << req.ItemToMonitor.Node << std::endl;
+          }
+          else
+          {
+            AttributesMap::iterator attrit = it->second.Attributes.find(req.ItemToMonitor.Attribute);
+            if ( attrit == it->second.Attributes.end() )
+            {
+              res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+              std::cout << "attribute not found" << std::endl;
+            }
+            else
+            {
                 res.Status = OpcUa::StatusCode::Good;
                 itsub->second.LastMonitoredItemID += 1;
                 res.MonitoredItemID = itsub->second.LastMonitoredItemID ;
@@ -197,18 +217,11 @@ namespace
                 attsub.SubscriptionId = params.SubscriptionID;
                 attsub.MonitoredItemId = res.MonitoredItemID;
                 attsub.Parameters = req.Parameters;
-                value.AttSubscriptions.push_back(attsub); 
-                found = true;
-                break;
+                attrit->second.AttSubscriptions.push_back(attsub); 
             }
           }
-          if ( ! found )
-          {
-            res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
-            std::cout << "item not found" << std::endl;
-          }
-          //data.Diagnostics =  Not necessary
-          data.Results.push_back(res);
+        //data.Diagnostics =  Not necessary
+        data.Results.push_back(res);
         }
       return data;
       }
@@ -217,33 +230,52 @@ namespace
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
       std::vector<AddNodesResult> results;
+      AddNodesResult res;
+      res.Status = StatusCode::BadNotImplemented;
+      results.push_back(res);
       return results;
     }
 
     virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
     {
       std::vector<StatusCode> results;
+      results.push_back(StatusCode::BadNotImplemented);
       return results;
     }
-
+    
+    // Deprecated method, remove when not called anymore
     virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      AttributeValue data;
-      data.Node = node;
-      data.Attribute = attribute;
-      data.Value.Encoding = DATA_VALUE;
-      data.Value.Value = value;
+      if ( attribute == AttributeID::NODE_ID ) // create node
+      {
+        NodeStruct ns;
+        Nodes[value.Value.Node.front()] = ns;
+        return;
+      }
 
-      AttributeValues.push_back(data);
+
+      NodesMap::iterator it = Nodes.find(node);
+      if ( it != Nodes.end() )
+      {
+        AttributeValue attrval;
+        attrval.Value.Encoding = DATA_VALUE;
+        attrval.Value = value;
+
+        it->second.Attributes[attribute] = attrval;
+       }
     }
 
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      Referencies.insert({sourceNode, reference});
+      NodesMap::iterator it = Nodes.find(sourceNode);
+      if ( it != Nodes.end() )
+      {
+        it->second.References.push_back(reference);
+      }
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
@@ -260,14 +292,18 @@ namespace
         for (RelativePathElement element : browsepath.Path.Elements)
         {
           found = false;
-          for (auto reference : Referencies)
+          NodesMap::const_iterator nodeit = Nodes.find(current);
+          if ( nodeit != Nodes.end() )
           {
-            //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
-            if (reference.first == current && reference.second.BrowseName == element.TargetName)
+            for (auto reference : nodeit->second.References)
             {
-              current = reference.second.TargetNodeID;
-              found = true;
-              break;
+              //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
+              if (reference.BrowseName == element.TargetName)
+              {
+                current = reference.TargetNodeID;
+                found = true;
+                break;
+              }
             }
           }
           if (!found )
@@ -300,15 +336,24 @@ namespace
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<ReferenceDescription> result;
-      for (auto reference : Referencies)
+      std::cout << "browse request" << std::endl;
+      for ( BrowseDescription browseDescription: query.NodesToBrowse)
       {
-        for (auto browseDescription : query.NodesToBrowse)
+        std::cout << "Browsing: " << browseDescription.NodeToBrowse << std::endl;
+        NodesMap::const_iterator nodeit = Nodes.find(browseDescription.NodeToBrowse);
+        if ( nodeit != Nodes.end() )
         {
-          if (IsSuitableReference(browseDescription, reference))
+          std::cout << "found node" << std::endl;
+          for (auto reference : nodeit->second.References)
           {
-            result.push_back(reference.second);
+            if (IsSuitableReference(browseDescription, reference))
+            {
+              std::cout << "found suitable node" << std::endl;
+              result.push_back(reference);
+            }
           }
         }
+        break; //FIXME: It looks like we only support browsing one node at a time!!!
       }
       return result;
     }
@@ -316,12 +361,14 @@ namespace
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
       return std::vector<ReferenceDescription>();
     }
 
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
       std::vector<DataValue> values;
       for (const AttributeValueID& attribute : params.AttributesToRead)
       {
@@ -386,12 +433,13 @@ namespace
 
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
     {
-      // TODO: Copy-past at if.
-      for (const AttributeValue& value : AttributeValues)
+      NodesMap::const_iterator nodeit = Nodes.find(node);
+      if ( nodeit != Nodes.end() )
       {
-        if (value.Node == node && value.Attribute == attribute)
+        AttributesMap::const_iterator attrit = nodeit->second.Attributes.find(attribute);
+        if ( attrit != nodeit->second.Attributes.end() )
         {
-          return value.Value;
+          return attrit->second.Value;
         }
       }
       DataValue value;
@@ -402,12 +450,14 @@ namespace
 
     StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
     {
-      for (AttributeValue& value : AttributeValues)
+      NodesMap::iterator it = Nodes.find(node);
+      if ( it != Nodes.end() )
       {
-        if (value.Node == node && value.Attribute == attribute)
+        AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+        if ( ait != it->second.Attributes.end() )
         {
-          value.Value = data;
-          UpdateSubscriptions(value);
+          ait->second.Value = data;
+          UpdateSubscriptions(ait->second);
           return StatusCode::Good;
         }
       }
@@ -435,14 +485,8 @@ namespace
       }
     }
 
-    bool IsSuitableReference(const BrowseDescription& desc, const ReferenciesMap::value_type& refPair) const
+    bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
     {
-      const NodeID sourceNode = refPair.first;
-      if (desc.NodeToBrowse != sourceNode)
-      {
-        return false;
-      }
-      const ReferenceDescription reference = refPair.second;
       if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
       {
         return false;
@@ -472,14 +516,16 @@ namespace
     std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
     {
       std::vector<NodeID> subNodes;
-      for (ReferenciesMap::const_iterator refIt = Referencies.begin(); refIt != Referencies.end(); ++refIt)
+      for ( NodeID nodeid: sourceNodes )
       {
-
-        for (const NodeID& id : sourceNodes)
-        {
-          if (id == refIt->first)
+        std::cout << "looking at " << nodeid<< std::endl; 
+          NodesMap::const_iterator it = Nodes.find(nodeid);
+          if ( it != Nodes.end() )
           {
-            subNodes.push_back(refIt->second.TargetNodeID);
+            for (auto& ref:  it->second.References )
+            {
+              std::cout << "    found child: " << ref.TargetNodeID<< std::endl; 
+              subNodes.push_back(ref.TargetNodeID);
           }
         }
       }
@@ -495,8 +541,9 @@ namespace
 
   private:
     mutable boost::shared_mutex DbMutex;
-    ReferenciesMap Referencies;
-    std::vector<AttributeValue> AttributeValues;
+    //ReferenciesMap Referencies;
+    //std::vector<AttributeValue> AttributeValues;
+    NodesMap Nodes;
     SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
     uint32_t LastSubscriptionID = 2;
   };
