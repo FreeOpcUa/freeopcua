@@ -40,6 +40,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/opcua-mappings/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/opcua-core/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/opcua-client/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/treww/work/gmock-1.7.0/include"/>
+									<listOptionValue builtIn="false" value="/home/treww/work/gtest-1.7.0/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1494321682" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

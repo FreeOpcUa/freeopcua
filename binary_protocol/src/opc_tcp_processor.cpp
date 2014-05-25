@@ -651,7 +651,7 @@ namespace
        responseHeader.Timestamp = CurrentDateTime();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
-
+/*
     double GetNextSleepPeriod()
     {
       if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
@@ -678,7 +678,7 @@ namespace
       }
       return diff.count() ;
     }
-
+*/
     void SendPublishResponse(IOStreamBinary& stream)
     {
       for (SubscriptionBinaryData& subdata: Subscriptions)

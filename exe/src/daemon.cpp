@@ -59,7 +59,7 @@ namespace OpcUa
     pid = fork();
     if (pid < 0)
     {
-      std::cout << "Failed to fork: " << strerror(errno) << std::endl;
+      std::cerr << "Failed to fork: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
     if (pid > 0)
@@ -72,13 +72,13 @@ namespace OpcUa
     sid = setsid();
     if (sid < 0)
     {
-      std::cout << "setsid() failed: " << strerror(errno) << std::endl;
+      std::cerr << "setsid() failed: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
     if ((chdir("/")) < 0)
     {
-      std:: cout << "Cannot change dir. " << strerror(errno) << std::endl;
+      std::cerr << "Cannot change dir. " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
@@ -91,7 +91,7 @@ namespace OpcUa
       FILE* tmp = fopen(logFile.c_str(), "w");
       if (!tmp)
       {
-        std:: cout << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
+        std::cerr << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
       }
       dup2(fileno(tmp), STDOUT_FILENO);
       dup2(fileno(tmp), STDERR_FILENO);
