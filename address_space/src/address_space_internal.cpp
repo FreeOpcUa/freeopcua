@@ -210,15 +210,15 @@ namespace
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      NodesMap::iterator it = Nodes.find(node);
-      if ( it == Nodes.end() )
+      NodesMap::iterator node_it = Nodes.find(node);
+      if ( node_it == Nodes.end() )
       {
         if ( attribute == AttributeID::NODE_ID ) // create node
         {
           NodeStruct ns;
           //Nodes[value.Value.Node.front()] = ns;
           Nodes[node] = ns;
-          it =  Nodes.find(node);//should always be good since we just created it
+          node_it =  Nodes.find(node);//should always be good since we just created it
         }
         else
         {
@@ -230,7 +230,7 @@ namespace
       AttributeValue attrval;
       attrval.Value.Encoding = DATA_VALUE;
       attrval.Value = value;
-      it->second.Attributes[attribute] = attrval;
+      node_it->second.Attributes[attribute] = attrval;
     }
 
     // Deprecated method, remove when not called anymore
@@ -238,10 +238,10 @@ namespace
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      NodesMap::iterator it = Nodes.find(sourceNode);
-      if ( it != Nodes.end() )
+      NodesMap::iterator node_it = Nodes.find(sourceNode);
+      if ( node_it != Nodes.end() )
       {
-        it->second.References.push_back(reference);
+        node_it->second.References.push_back(reference);
       }
     }
 
@@ -265,10 +265,10 @@ namespace
       std::vector<ReferenceDescription> result;
       for ( BrowseDescription browseDescription: query.NodesToBrowse)
       {
-        NodesMap::const_iterator nodeit = Nodes.find(browseDescription.NodeToBrowse);
-        if ( nodeit != Nodes.end() )
+        NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
+        if ( node_it != Nodes.end() )
         {
-          for (auto reference : nodeit->second.References)
+          for (auto reference : node_it->second.References)
           {
             if (IsSuitableReference(browseDescription, reference))
             {
@@ -323,11 +323,11 @@ namespace
       std::vector<PublishResult> result;
       for (const IntegerID& subscription: subscriptionsIds)
       {
-        std::map <IntegerID, DataSubscription>::iterator it =  SubscriptionsMap.find(subscription); 
+        std::map <IntegerID, DataSubscription>::iterator sub_it =  SubscriptionsMap.find(subscription); 
         {
-          if ( it != SubscriptionsMap.end() )
+          if ( sub_it != SubscriptionsMap.end() )
           {
-            for ( const PublishResult& res: SubscriptionsMap[subscription].PopPublishResult() )
+            for ( const PublishResult& res: sub_it->second.PopPublishResult() )
             {
               result.push_back(res);
             }
@@ -343,10 +343,10 @@ namespace
 
       for (SubscriptionAcknowledgement ack: acknowledgements)
       {
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(ack.SubscriptionID);
-        if ( itsub != SubscriptionsMap.end())
+        SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
+        if ( sub_it != SubscriptionsMap.end())
         {
-          itsub->second.NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceID; });
+          sub_it->second.NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceID; });
         }
       }
     }
@@ -404,16 +404,16 @@ namespace
       std::cout << "Creating monitored request for one item" << std::endl;
       CreateMonitoredItemsResult res;
 
-      NodesMap::iterator it = Nodes.find(request.ItemToMonitor.Node);
-      if ( it == Nodes.end() )
+      NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
+      if ( node_it == Nodes.end() )
       {
         res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
         std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
         return res;
       }
 
-      AttributesMap::iterator attrit = it->second.Attributes.find(request.ItemToMonitor.Attribute);
-      if ( attrit == it->second.Attributes.end() )
+      AttributesMap::iterator attrit = node_it->second.Attributes.find(request.ItemToMonitor.Attribute);
+      if ( attrit == node_it->second.Attributes.end() )
       {
         res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
         std::cout << "attribute not found" << std::endl;
@@ -479,7 +479,7 @@ namespace
       for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end() ;)
       {
         SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-        if ( itsub == SubscriptionsMap.end() || (itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId ) == SubscriptionsMap[attsub->SubscriptionId].MonitoredItemsMap.end() ) )
+        if ( itsub == SubscriptionsMap.end() || (itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId ) == itsub->second.MonitoredItemsMap.end() ) )
         {
           attsub = val.AttSubscriptions.erase(attsub);
           continue;
@@ -529,10 +529,10 @@ namespace
       for ( NodeID nodeid: sourceNodes )
       {
         std::cout << "looking at " << nodeid<< std::endl; 
-          NodesMap::const_iterator it = Nodes.find(nodeid);
-          if ( it != Nodes.end() )
+          NodesMap::const_iterator node_it = Nodes.find(nodeid);
+          if ( node_it != Nodes.end() )
           {
-            for (auto& ref:  it->second.References )
+            for (auto& ref:  node_it->second.References )
             {
               std::cout << "    found child: " << ref.TargetNodeID<< std::endl; 
               subNodes.push_back(ref.TargetNodeID);
