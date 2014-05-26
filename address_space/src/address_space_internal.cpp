@@ -28,8 +28,6 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Remote;
 
-  //typedef std::multimap<NodeID, ReferenceDescription> ReferenciesMap;
-
   //Structure to store in memory description of current MonitoredItems
   struct DataMonitoredItems
   {
@@ -97,7 +95,8 @@ namespace
   };
 
   typedef std::map <IntegerID, DataSubscription> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
-
+  
+  //store subscription for one attribute
   struct AttSubscription
   {
     IntegerID SubscriptionId;
@@ -105,17 +104,16 @@ namespace
     MonitoringParameters Parameters;
   };
 
+  //Store an attribute value together with a link to all its suscriptions
   struct AttributeValue
   {
-    //AttributeID Attribute;
     DataValue Value;
-    //List to keep track of monitoredItems monitoring this AttributeValue
     std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
   };
 
   typedef std::map<AttributeID, AttributeValue> AttributesMap;
-  //typedef std::map<AttributeID, AttSubscription> AttSubscriptionsMap;
-
+  
+  //Store all data related to a Node
   struct NodeStruct
   {
     AttributesMap Attributes;
@@ -123,6 +121,8 @@ namespace
   };
 
   typedef std::map<NodeID, NodeStruct> NodesMap;
+
+
 
   class AddressSpaceInMemory : public UaServer::AddressSpace
   {
@@ -179,52 +179,14 @@ namespace
         }
         return data;
       }
-      else
+
+      for (const MonitoredItemRequest& req: params.ItemsToCreate)
       {
-        for (const MonitoredItemRequest& req: params.ItemsToCreate)
-        {
-          std::cout << "Creating monitored request for one item" << std::endl;
-          CreateMonitoredItemsResult res;
-          NodesMap::iterator it = Nodes.find(req.ItemToMonitor.Node);
-          if ( it == Nodes.end() )
-          {
-            res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
-            std::cout << "NodeID does not exist: " << req.ItemToMonitor.Node << std::endl;
-          }
-          else
-          {
-            AttributesMap::iterator attrit = it->second.Attributes.find(req.ItemToMonitor.Attribute);
-            if ( attrit == it->second.Attributes.end() )
-            {
-              res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
-              std::cout << "attribute not found" << std::endl;
-            }
-            else
-            {
-                res.Status = OpcUa::StatusCode::Good;
-                itsub->second.LastMonitoredItemID += 1;
-                res.MonitoredItemID = itsub->second.LastMonitoredItemID ;
-                res.RevisedSamplingInterval = itsub->second.Data.RevisedPublishingInterval;
-                res.RevizedQueueSize = req.Parameters.QueueSize; // We should check that value, maybe set to a default...
-                //res.FilterResult = //We can omit that one if we do not change anything in filter
-                DataMonitoredItems mdata;
-                mdata.SubscriptionID = params.SubscriptionID;
-                mdata.Parameters = res;
-                mdata.Mode = req.Mode;
-                itsub->second.MonitoredItemsMap[res.MonitoredItemID] = mdata;
-                AttSubscription attsub;
-                std::cout << "creating monitored item with sub: " << params.SubscriptionID  << std::endl;
-                attsub.SubscriptionId = params.SubscriptionID;
-                attsub.MonitoredItemId = res.MonitoredItemID;
-                attsub.Parameters = req.Parameters;
-                attrit->second.AttSubscriptions.push_back(attsub); 
-            }
-          }
-        //data.Diagnostics =  Not necessary
-        data.Results.push_back(res);
-        }
-      return data;
+        CreateMonitoredItemsResult result = CreateMonitoredItem(itsub, req);
+        data.Results.push_back(result);
       }
+      return data;
+   
     }
 
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
@@ -248,25 +210,30 @@ namespace
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      if ( attribute == AttributeID::NODE_ID ) // create node
+      NodesMap::iterator it = Nodes.find(node);
+      if ( it == Nodes.end() )
       {
-        NodeStruct ns;
-        Nodes[value.Value.Node.front()] = ns;
-        return;
+        if ( attribute == AttributeID::NODE_ID ) // create node
+        {
+          NodeStruct ns;
+          //Nodes[value.Value.Node.front()] = ns;
+          Nodes[node] = ns;
+          it =  Nodes.find(node);//should always be good since we just created it
+        }
+        else
+        {
+          std::cerr << "Error trying to sett attribute to non existing node: " << node << std::endl; 
+          return;
+        }
       }
 
-
-      NodesMap::iterator it = Nodes.find(node);
-      if ( it != Nodes.end() )
-      {
-        AttributeValue attrval;
-        attrval.Value.Encoding = DATA_VALUE;
-        attrval.Value = value;
-
-        it->second.Attributes[attribute] = attrval;
-       }
+      AttributeValue attrval;
+      attrval.Value.Encoding = DATA_VALUE;
+      attrval.Value = value;
+      it->second.Attributes[attribute] = attrval;
     }
 
+    // Deprecated method, remove when not called anymore
     virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
@@ -283,51 +250,11 @@ namespace
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<BrowsePathResult> results;
-      NodeID current;
-      // TODO: Rewrite after adding unit tests - too much loops and ifs.
       for (BrowsePath browsepath : params.BrowsePaths )
       {
-        current = browsepath.StartingNode;
-        bool found = false;
-        for (RelativePathElement element : browsepath.Path.Elements)
-        {
-          found = false;
-          NodesMap::const_iterator nodeit = Nodes.find(current);
-          if ( nodeit != Nodes.end() )
-          {
-            for (auto reference : nodeit->second.References)
-            {
-              //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
-              if (reference.BrowseName == element.TargetName)
-              {
-                current = reference.TargetNodeID;
-                found = true;
-                break;
-              }
-            }
-          }
-          if (!found )
-          {
-            break;
-          }
-        }
-        BrowsePathResult res;
-        if (!found)
-        {
-          res.Status = OpcUa::StatusCode::BadNotReadable;
-        }
-        else
-        {
-          res.Status = OpcUa::StatusCode::Good;
-          std::vector<BrowsePathTarget> targets;
-          BrowsePathTarget target;
-          target.Node = current;
-          target.RemainingPathIndex = std::numeric_limits<uint32_t>::max();
-          targets.push_back(target);
-          res.Targets = targets;
-        }
-        results.push_back(res);
-        }
+        BrowsePathResult result = TranslateBrowsePath(browsepath);
+        results.push_back(result);
+      }
       return results;
     }
 
@@ -336,19 +263,15 @@ namespace
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<ReferenceDescription> result;
-      std::cout << "browse request" << std::endl;
       for ( BrowseDescription browseDescription: query.NodesToBrowse)
       {
-        std::cout << "Browsing: " << browseDescription.NodeToBrowse << std::endl;
         NodesMap::const_iterator nodeit = Nodes.find(browseDescription.NodeToBrowse);
         if ( nodeit != Nodes.end() )
         {
-          std::cout << "found node" << std::endl;
           for (auto reference : nodeit->second.References)
           {
             if (IsSuitableReference(browseDescription, reference))
             {
-              std::cout << "found suitable node" << std::endl;
               result.push_back(reference);
             }
           }
@@ -430,6 +353,93 @@ namespace
 
 
   private:
+
+
+    std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
+    {
+      NodesMap::const_iterator nodeit = Nodes.find(nodeid);
+      if ( nodeit != Nodes.end() )
+      {
+        for (auto reference : nodeit->second.References)
+        {
+          //if (reference.first == current) { std::cout <<   reference.second.BrowseName.NamespaceIndex << reference.second.BrowseName.Name << " to " << element.TargetName.NamespaceIndex << element.TargetName.Name <<std::endl; }
+          if (reference.BrowseName == element.TargetName)
+          {
+            return std::make_tuple(true, reference.TargetNodeID);
+          }
+        }
+      }
+      return std::make_tuple(false, NodeID());
+    }
+
+    BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const
+    {
+      NodeID current = browsepath.StartingNode;
+      BrowsePathResult result;
+
+      for (RelativePathElement element : browsepath.Path.Elements)
+      {
+        auto res = FindElementInNode(current, element);
+        if ( std::get<0>(res) == false )
+        {
+          result.Status = OpcUa::StatusCode::BadNotReadable;
+          return result;
+        }
+        current = std::get<1>(res);
+      }
+
+      result.Status = OpcUa::StatusCode::Good;
+      std::vector<BrowsePathTarget> targets;
+      BrowsePathTarget target;
+      target.Node = current;
+      target.RemainingPathIndex = std::numeric_limits<uint32_t>::max();
+      targets.push_back(target);
+      result.Targets = targets;
+      return result;
+    }
+
+
+    CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
+    {
+      std::cout << "Creating monitored request for one item" << std::endl;
+      CreateMonitoredItemsResult res;
+
+      NodesMap::iterator it = Nodes.find(request.ItemToMonitor.Node);
+      if ( it == Nodes.end() )
+      {
+        res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+        std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
+        return res;
+      }
+
+      AttributesMap::iterator attrit = it->second.Attributes.find(request.ItemToMonitor.Attribute);
+      if ( attrit == it->second.Attributes.end() )
+      {
+        res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+        std::cout << "attribute not found" << std::endl;
+        return res;
+      }
+
+      res.Status = OpcUa::StatusCode::Good;
+      subscription_it->second.LastMonitoredItemID += 1;
+      res.MonitoredItemID = subscription_it->second.LastMonitoredItemID ;
+      res.RevisedSamplingInterval = subscription_it->second.Data.RevisedPublishingInterval;
+      res.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
+      //res.FilterResult = //We can omit that one if we do not change anything in filter
+      DataMonitoredItems mdata;
+      mdata.SubscriptionID = subscription_it->first;
+      mdata.Parameters = res;
+      mdata.Mode = request.Mode;
+      subscription_it->second.MonitoredItemsMap[res.MonitoredItemID] = mdata;
+      AttSubscription attsub;
+      std::cout << "creating monitored item with sub: " << subscription_it->first << std::endl;
+      attsub.SubscriptionId = subscription_it->first;
+      attsub.MonitoredItemId = res.MonitoredItemID;
+      attsub.Parameters = request.Parameters;
+      attrit->second.AttSubscriptions.push_back(attsub); 
+      //data.Diagnostics =  Not necessary
+      return res;
+    }
 
     DataValue GetValue(const NodeID& node, AttributeID attribute) const
     {
