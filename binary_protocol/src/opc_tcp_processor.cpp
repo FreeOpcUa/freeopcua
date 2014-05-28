@@ -15,6 +15,7 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/input_from_buffer.h>
 #include <opc/ua/status_codes.h>
 
 #include <iostream>
@@ -33,6 +34,9 @@ namespace
   using namespace OpcUa::UaServer;
 
   typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
+
+  typedef OpcUa::Binary::IStream<OpcUa::InputChannel> IStreamBinary;
+  typedef OpcUa::Binary::OStream<OpcUa::OutputChannel> OStreamBinary;
 
   struct SubscriptionBinaryData
   {
@@ -61,7 +65,7 @@ namespace
       SessionID = NumericNodeID(5, 0);
     }
 
-    virtual void Process(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+    virtual void Process(OpcUa::IOChannel::SharedPtr clientChannel)
     {
       if (!clientChannel)
       {
@@ -70,9 +74,8 @@ namespace
       }
 
       if (Debug) std::clog << "Hello client!" << std::endl;
-      IOStreamBinary stream(clientChannel);
 
-      while(ProcessChunk(stream));
+      while(ProcessChunk(clientChannel));
 
 /*
       for(;;)
@@ -101,20 +104,32 @@ namespace
     }
 
   private:
-    bool ProcessChunk(IOStreamBinary& stream)
+    bool ProcessChunk(OpcUa::IOChannel::SharedPtr clientChannel)
     {
       using namespace OpcUa::Binary;
 
       if (Debug) std::cout << "Processing new chunk." << std::endl;
+      IStreamBinary iStream(clientChannel);
+      OStreamBinary oStream(clientChannel);
       Header hdr;
-      stream >> hdr;
+      // Receive message header.
+      iStream >> hdr;
+
+      // Receive full message.
+      std::vector<char> buffer(hdr.MessageSize());
+      OpcUa::Binary::RawBuffer buf(&buffer[0], buffer.size());
+      iStream >> buf;
+
+      // restrict server size code only with current message.
+      OpcUa::InputFromBuffer messageChannel(&buffer[0], buffer.size());
+      IStreamBinary messageStream(messageChannel);
 
       switch (hdr.Type)
       {
         case MT_HELLO:
         {
           if (Debug) std::clog << "Accepted hello message." << std::endl;
-          HelloClient(stream);
+          HelloClient(messageStream, oStream);
           break;
         }
 
@@ -122,20 +137,20 @@ namespace
         case MT_SECURE_OPEN:
         {
           if (Debug) std::clog << "Opening securechannel." << std::endl;
-          OpenChannel(stream);
+          OpenChannel(messageStream, oStream);
           break;
         }
 
         case MT_SECURE_CLOSE:
         {
           if (Debug) std::clog << "Closing secure channel." << std::endl;
-          CloseChannel(stream);
+          CloseChannel(messageStream);
           return false;
         }
 
         case MT_SECURE_MESSAGE:
         {
-          ProcessMessage(stream, hdr.MessageSize());
+          ProcessMessage(messageStream, oStream);
           break;
         }
 
@@ -151,22 +166,26 @@ namespace
         }
         default:
         {
-          if (Debug) std::clog << "Unknown message received!" << std::endl;
+          if (Debug) std::clog << "Unknown message type '" << hdr.Type << "' received!" << std::endl;
           throw std::logic_error("Invalid message type received.");
         }
       }
 
-      //std::cout << "Release Lock ..." << std::endl;
+      if (messageChannel.GetRemainSize())
+      {
+        std::cerr << "ERROR!!! Message from client has been processed partially." << std::endl;
+      }
+
       return true;
     }
 
-    void HelloClient(IOStreamBinary& stream)
+    void HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
     {
       using namespace OpcUa::Binary;
 
       if (Debug) std::clog << "Reading hello message." << std::endl;
       Hello hello;
-      stream >> hello;
+      istream >> hello;
 
       Acknowledge ack;
       ack.ReceiveBufferSize = hello.ReceiveBufferSize;
@@ -177,15 +196,15 @@ namespace
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
       if (Debug) std::clog << "Sending answer to client." << std::endl;
-      stream << ackHeader << ack << flush;
+      ostream << ackHeader << ack << flush;
     }
 
-    void OpenChannel(IOStreamBinary& stream)
+    void OpenChannel(IStreamBinary& istream, OStreamBinary& ostream)
     {
       uint32_t channelID = 0;
-      stream >> channelID;
+      istream >> channelID;
       AsymmetricAlgorithmHeader algorithmHeader;
-      stream >> algorithmHeader;
+      istream >> algorithmHeader;
 
       if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
@@ -193,10 +212,10 @@ namespace
       }
 
       SequenceHeader sequence;
-      stream >> sequence;
+      istream >> sequence;
 
       OpenSecureChannelRequest request;
-      stream >> request;
+      istream >> request;
       
       if (request.SecurityMode != MSM_NONE)
       {
@@ -220,40 +239,40 @@ namespace
       responseHeader.AddSize(RawSize(algorithmHeader));
       responseHeader.AddSize(RawSize(sequence));
       responseHeader.AddSize(RawSize(response));
-      stream << responseHeader << algorithmHeader << sequence << response << flush;
+      ostream << responseHeader << algorithmHeader << sequence << response << flush;
     }
 
-    void CloseChannel(IOStreamBinary& stream)
+    void CloseChannel(IStreamBinary& istream)
     {
       uint32_t channelID = 0;
-      stream >> channelID;
+      istream >> channelID;
 
       SymmetricAlgorithmHeader algorithmHeader;
-      stream >> algorithmHeader;
+      istream >> algorithmHeader;
 
       SequenceHeader sequence;
-      stream >> sequence;
+      istream >> sequence;
 
       CloseSecureChannelRequest request;
-      stream >> request;
+      istream >> request;
     }
 
-    void ProcessMessage(IOStreamBinary& stream, std::size_t messageSize)
+    void ProcessMessage(IStreamBinary& istream, OStreamBinary& ostream)
     {
       uint32_t channelID = 0;
-      stream >> channelID;
+      istream >> channelID;
 
       SymmetricAlgorithmHeader algorithmHeader;
-      stream >> algorithmHeader;
+      istream >> algorithmHeader;
 
       SequenceHeader sequence;
-      stream >> sequence;
+      istream >> sequence;
 
       NodeID typeID;
-      stream >> typeID;
+      istream >> typeID;
 
       RequestHeader requestHeader;
-      stream >> requestHeader;
+      istream >> requestHeader;
 
       const std::size_t receivedSize =
         RawSize(channelID) +
@@ -262,8 +281,6 @@ namespace
         RawSize(typeID) +
         RawSize(requestHeader);
 
-      const std::size_t restSize = messageSize - receivedSize;
-
       const OpcUa::MessageID message = GetMessageID(typeID);
       switch (message)
       {
@@ -271,7 +288,7 @@ namespace
         {
           if (Debug) std::clog << "Processing get endpoints request." << std::endl;
           EndpointsFilter filter;
-          stream >> filter;
+          istream >> filter;
 
           GetEndpointsResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -281,7 +298,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -289,7 +306,7 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Find Servers' request." << std::endl;
           FindServersParameters params;
-          stream >> params;
+          istream >> params;
 
           FindServersResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -299,7 +316,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -307,7 +324,7 @@ namespace
         {
           if (Debug) std::clog << "Processing browse request." << std::endl;
           NodesQuery query;
-          stream >> query;
+          istream >> query;
 
           BrowseResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -320,14 +337,14 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
         case OpcUa::READ_REQUEST:
         {
           ReadParameters params;
-          stream >> params;
+          istream >> params;
 
           if (Debug)
           {
@@ -362,7 +379,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
 
           return;
         }
@@ -371,7 +388,7 @@ namespace
         {
           if (Debug) std::clog << "Processing write request." << std::endl;
           WriteParameters params;
-          stream >> params;
+          istream >> params;
 
           WriteResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -389,7 +406,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
 
           return;
         }
@@ -397,9 +414,8 @@ namespace
         case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
-          std::vector<char> data(restSize);
           TranslateBrowsePathsParameters params;
-          stream >> params;
+          istream >> params;
 
           if (Debug) 
           {
@@ -438,7 +454,7 @@ namespace
           secureHeader.AddSize(RawSize(response));
 
           if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -447,7 +463,7 @@ namespace
         {
           if (Debug) std::clog << "Processing create session request." << std::endl;
           SessionParameters params;
-          stream >> params;
+          istream >> params;
 
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -464,7 +480,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
 
           return;
         }
@@ -472,7 +488,7 @@ namespace
         {
           if (Debug) std::clog << "Processing activate session request." << std::endl;
           UpdatedSessionParameters params;
-          stream >> params;
+          istream >> params;
 
           ActivateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -481,7 +497,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -489,7 +505,7 @@ namespace
         {
           if (Debug) std::clog << "Processing close session request." << std::endl;
           bool deleteSubscriptions = false;
-          stream >> deleteSubscriptions;
+          istream >> deleteSubscriptions;
 
           if (deleteSubscriptions)
           {
@@ -508,7 +524,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -516,7 +532,7 @@ namespace
         {
           if (Debug) std::clog << "Processing create subscription request." << std::endl;
           SubscriptionParameters params;
-          stream >> params;
+          istream >> params;
 
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -531,7 +547,7 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -539,7 +555,7 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
           MonitoredItemsParameters params;
-          stream >> params;
+          istream >> params;
 
           CreateMonitoredItemsResponse response;
 
@@ -552,7 +568,7 @@ namespace
           secureHeader.AddSize(RawSize(response));
 
           if (Debug) std::clog << "Sending response to Create Monitored Items Request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -560,7 +576,7 @@ namespace
         {
           if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
           PublishParameters params;
-          stream >> params;
+          istream >> params;
           PublishRequestElement data;
           data.sequence = sequence;
           data.algorithmHeader = algorithmHeader;
@@ -574,7 +590,7 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
           PublishingModeParameters params;
-          stream >> params;
+          istream >> params;
           
           //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
@@ -587,7 +603,7 @@ namespace
           secureHeader.AddSize(RawSize(response));
 
           if (Debug) std::clog << "Sending response to 'Set Publishing Mode' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -595,7 +611,7 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Add Nodes' request." << std::endl;
           AddNodesParameters params;
-          stream >> params;
+          istream >> params;
           
           std::vector<AddNodesResult> results = Server->NodeManagement()->AddNodes(params.NodesToAdd);
 
@@ -609,7 +625,7 @@ namespace
           secureHeader.AddSize(RawSize(response));
 
           if (Debug) std::clog << "Sending response to 'Add Nodes' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
@@ -617,7 +633,7 @@ namespace
         {
           if (Debug) std::clog << "Processing 'Add References' request." << std::endl;
           AddReferencesParameters params;
-          stream >> params;
+          istream >> params;
           
           std::vector<StatusCode> results = Server->NodeManagement()->AddReferences(params.ReferencesToAdd);
 
@@ -631,7 +647,7 @@ namespace
           secureHeader.AddSize(RawSize(response));
 
           if (Debug) std::clog << "Sending response to 'Add References' request." << std::endl;
-          stream << secureHeader << algorithmHeader << sequence << response << flush;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
