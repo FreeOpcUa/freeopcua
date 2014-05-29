@@ -11,7 +11,7 @@
 #include "endpoints_services_test.h"
 #include "../../services_registry/tests/services_registry_test.h"
 
-#include <chrono>
+//#include <chrono>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 

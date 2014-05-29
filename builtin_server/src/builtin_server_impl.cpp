@@ -10,6 +10,8 @@
 
 #include "builtin_server_impl.h"
 
+#include <iostream>
+
 using namespace OpcUa::Impl;
 
 namespace

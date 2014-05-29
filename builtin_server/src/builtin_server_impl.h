@@ -38,6 +38,11 @@ namespace OpcUa
       void AddBuffer(const char* buf, std::size_t size);
       void Stop();
 
+      virtual int WaitForData(float second)
+      {
+        return 1;
+      }
+
     private:
       void ThrowIfStopped();
 

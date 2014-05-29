@@ -298,7 +298,7 @@ libaddress_space_addon_la_SOURCES = \
    src/address_space_module.cpp \
    tests/address_space_registry_test.h
 
-libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS)
+libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -lboost_thread
 all: all-am
 
 .SUFFIXES:

@@ -71,6 +71,7 @@ void OpcUaProtocol::ApplyAddonParameters(const Common::AddonParameters& params)
     if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
     {
       Debug = true;
+      std::cout << "Enabled debug mod." << std::endl;
     }
   }
 }
