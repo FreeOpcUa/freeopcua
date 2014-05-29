@@ -191,17 +191,23 @@ namespace
 
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       std::vector<AddNodesResult> results;
-      AddNodesResult res;
-      res.Status = StatusCode::BadNotImplemented;
-      results.push_back(res);
+      for (const AddNodesItem& item: items)
+      {
+        results.push_back(AddNode(item));
+      }
       return results;
     }
 
     virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
     {
       std::vector<StatusCode> results;
-      results.push_back(StatusCode::BadNotImplemented);
+      for (const auto& item : items)
+      {
+        results.push_back(AddReference(item));
+      }
       return results;
     }
     
@@ -216,7 +222,6 @@ namespace
         if ( attribute == AttributeID::NODE_ID ) // create node
         {
           NodeStruct ns;
-          //Nodes[value.Value.Node.front()] = ns;
           Nodes[node] = ns;
           node_it =  Nodes.find(node);//should always be good since we just created it
         }
@@ -549,10 +554,83 @@ namespace
       return sourceNodes;
     }
 
+    AddNodesResult AddNode( const AddNodesItem& item )
+    {
+      std::cout << "Creating Node with ID: "<<  item.RequestedNewNodeID  << " and browsename " << item.BrowseName << " and parent "  << item.ParentNodeId << std::endl;
+
+      AddNodesResult result;
+      NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);
+      if ( node_it != Nodes.end() )
+      {
+        //Not sure what spec says but we refuse to create node with existing ideas
+        std::cout << "Error: NodeID allready exist" << std::endl;
+        result.Status = StatusCode::BadAttributeIdInvalid;
+        return result;
+      }
+      NodesMap::iterator parent_node_it = Nodes.find(item.ParentNodeId);
+      if ( parent_node_it == Nodes.end() )
+      {
+        std::cout << "Error: Parent node does not exist" << std::endl;
+        //Parent does not exist give up, FIXME: return correct error type
+        result.Status = StatusCode::BadAttributeIdInvalid;
+        return result;
+      }
+
+      NodeStruct nodestruct;
+
+      //Add Common attributes
+      AttributeValue attv;
+      attv.Value = item.RequestedNewNodeID;
+      nodestruct.Attributes[AttributeID::NODE_ID] = attv;
+      attv.Value = item.BrowseName;
+      nodestruct.Attributes[AttributeID::BROWSE_NAME] = attv;
+      attv.Value = static_cast<int32_t>(item.Class);
+      nodestruct.Attributes[AttributeID::NODE_CLASS] = attv;
+
+      // Add requested attributes
+      for (const auto& attr: item.Attributes.Attributes)
+      {
+        AttributeValue attval;
+        attval.Value = attr.second;
+        nodestruct.Attributes[attr.first] = attval;
+      }
+      Nodes[item.RequestedNewNodeID] = nodestruct;
+
+      // Link to parent
+      ReferenceDescription desc;
+      desc.ReferenceTypeID = item.ReferenceTypeId;
+      desc.TargetNodeID = item.RequestedNewNodeID;
+      desc.TargetNodeClass = item.Class;
+      desc.BrowseName = item.BrowseName;
+      desc.DisplayName = LocalizedText(item.BrowseName.Name);
+      desc.TargetNodeTypeDefinition = item.TypeDefinition;
+      desc.IsForward = true; // should this be in constructor?
+      
+      parent_node_it->second.References.push_back(desc);
+
+      result.Status = StatusCode::Good;
+      result.AddedNodeID = item.RequestedNewNodeID;
+      return result;
+    }
+
+    StatusCode AddReference(const AddReferencesItem& item)
+    {
+      NodesMap::iterator node_it = Nodes.find(item.SourceNodeID);
+      if ( node_it == Nodes.end() )
+      {
+        return StatusCode::BadAttributeIdInvalid;
+      }
+      ReferenceDescription desc;
+      desc.ReferenceTypeID = item.ReferenceTypeId;
+      desc.IsForward = item.IsForward;
+      desc.TargetNodeID = item.TargetNodeID;
+      desc.TargetNodeClass = item.TargetNodeClass;
+      node_it->second.References.push_back(desc);
+      return StatusCode::Good;
+    }
+
   private:
     mutable boost::shared_mutex DbMutex;
-    //ReferenciesMap Referencies;
-    //std::vector<AttributeValue> AttributeValues;
     NodesMap Nodes;
     SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
     uint32_t LastSubscriptionID = 2;
