@@ -25,7 +25,7 @@ opcuaserver_LDFLAGS = -lboost_program_options -lboost_thread -lpthread -ldl  $(U
 
 configdir=$(sysconfdir)/opcua
 srvconfigdir=$(configdir)/server
-srvconfig_DATA = configs/main.config
+srvconfig_DATA = configs/main.conf
 
 #upstartdir=$(sysconfdir)/init
 #upstart_DATA=configs/opcuaserver.conf
@@ -37,7 +37,7 @@ EXTRA_DIST = \
   configs/opcuaserver \
   configs/main.config \
   configs/opcuaserver.conf \
-  tests/configs/test_addon.config \
+  tests/configs/test_addon.conf \
   tests/common.cpp \
   tests/common.h \
   tests/test_addon.cpp \
