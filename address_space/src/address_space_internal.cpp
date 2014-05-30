@@ -10,6 +10,7 @@
 
 
 #include "address_space_internal.h"
+#include "opc/ua/strings.h"
 
 #include <boost/thread/shared_mutex.hpp>
 #include <limits>
@@ -562,7 +563,6 @@ namespace
       NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);
       if ( node_it != Nodes.end() )
       {
-        //Not sure what spec says but we refuse to create node with existing ideas
         std::cout << "Error: NodeID allready exist" << std::endl;
         result.Status = StatusCode::BadAttributeIdInvalid;
         return result;
@@ -571,8 +571,7 @@ namespace
       if ( parent_node_it == Nodes.end() )
       {
         std::cout << "Error: Parent node does not exist" << std::endl;
-        //Parent does not exist give up, FIXME: return correct error type
-        result.Status = StatusCode::BadAttributeIdInvalid;
+        result.Status = StatusCode::BadAttributeIdInvalid; //FiXME return correct error type
         return result;
       }
 
@@ -592,6 +591,7 @@ namespace
       {
         AttributeValue attval;
         attval.Value = attr.second;
+
         nodestruct.Attributes[attr.first] = attval;
       }
       Nodes[item.RequestedNewNodeID] = nodestruct;
@@ -625,6 +625,8 @@ namespace
       desc.IsForward = item.IsForward;
       desc.TargetNodeID = item.TargetNodeID;
       desc.TargetNodeClass = item.TargetNodeClass;
+      desc.BrowseName = QualifiedName(GetObjectIdName(item.TargetNodeID));
+      desc.DisplayName = LocalizedText(GetObjectIdName(item.TargetNodeID));
       node_it->second.References.push_back(desc);
       return StatusCode::Good;
     }
