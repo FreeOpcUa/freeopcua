@@ -14,8 +14,10 @@ if __name__ == "__main__":
     s.start()
     try:
         root = s.get_root_node()
-        print("I got root: ", root)
-        test = root.add_folder("testfolder")
+        print("I got root folder: ", root)
+        objects = s.get_objects_node()
+        print("I got objects folder: ", objects)
+        test = objects.add_folder("testfolder")
         v = test.add_variable("myvar", [16, 56])
         p = test.add_property("myprop", 9.9)
 

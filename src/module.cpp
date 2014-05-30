@@ -520,17 +520,20 @@ namespace OpcUa
       python::object PyGetValue() { return ToObject(Node::GetValue()); }
       python::object PyGetName() { return ToObject(Node::GetName()); }
       PyNodeID PyGetNodeID() { return PyNodeID(Node::GetId()); }
+
       python::object PySetValue(python::object val) 
       { 
         OpcUa::StatusCode code = Node::SetValue(FromObject(val)); 
         return ToObject(code); 
       }
+
       python::object PySetValue2(python::object val, VariantType hint) 
       { 
         Variant var = FromObject2(val, hint); 
         OpcUa::StatusCode code = Node::SetValue(var); 
         return ToObject(code); 
       }
+
       python::list PyGetChildren()
       {
         python::list result;
@@ -540,17 +543,25 @@ namespace OpcUa
         }
         return result;
       }
+
       PyNode PyGetChild(python::object path) 
       {
         Node n = Node::GetChild(FromList<std::string>(path));
         return PyNode(n);
       }
+
       PyNode PyAddFolder(std::string browsename) { return PyNode(Node::AddFolder(browsename)); }
       PyNode PyAddFolder2(std::string nodeid, std::string browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
+
+      PyNode PyAddObject(std::string browsename) { return PyNode(Node::AddObject(browsename)); }
+      PyNode PyAddObject2(std::string nodeid, std::string browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
+
       PyNode PyAddVariable(std::string browsename, python::object val) { return PyNode(Node::AddVariable(browsename, FromObject(val))); }
       PyNode PyAddVariable2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, FromObject(val))); }
+
       PyNode PyAddProperty(std::string browsename, python::object val) { return PyNode(Node::AddProperty(browsename, FromObject(val))); }
       PyNode PyAddProperty2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, FromObject(val))); }
+
   };
 
   class PyClient: public RemoteClient
@@ -792,6 +803,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("get_child", &PyNode::PyGetChild)
           .def("add_folder", &PyNode::PyAddFolder)
           .def("add_folder", &PyNode::PyAddFolder2)
+          .def("add_object", &PyNode::PyAddObject)
+          .def("add_object", &PyNode::PyAddObject2)
           .def("add_variable", &PyNode::PyAddVariable)
           .def("add_variable", &PyNode::PyAddVariable2)
           .def("add_property", &PyNode::PyAddProperty)
