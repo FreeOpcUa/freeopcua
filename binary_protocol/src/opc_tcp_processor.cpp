@@ -75,9 +75,6 @@ namespace
 
       if (Debug) std::clog << "Hello client!" << std::endl;
 
-      while(ProcessChunk(clientChannel));
-
-/*
       for(;;)
       {
         double period = GetNextSleepPeriod();
@@ -88,14 +85,13 @@ namespace
         }
         else if (res == 1)
         {
-          ProcessChunk(stream);
+          ProcessChunk(*clientChannel);
         }
         else
         {
-          SendPublishResponse(stream);
+          SendPublishResponse(*clientChannel);
         }
       }
-*/
     }
 
     virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
@@ -103,7 +99,7 @@ namespace
     }
 
   private:
-    bool ProcessChunk(OpcUa::IOChannel::SharedPtr clientChannel)
+    bool ProcessChunk(OpcUa::IOChannel& clientChannel)
     {
       using namespace OpcUa::Binary;
 
@@ -666,7 +662,7 @@ namespace
        responseHeader.Timestamp = CurrentDateTime();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
-/*
+
     double GetNextSleepPeriod()
     {
       if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
@@ -693,9 +689,10 @@ namespace
       }
       return diff.count() ;
     }
-*/
-    void SendPublishResponse(IOStreamBinary& stream)
+
+    void SendPublishResponse(OpcUa::OutputChannel& clientChannel)
     {
+      OStreamBinary stream(clientChannel);
       for (SubscriptionBinaryData& subdata: Subscriptions)
       {
         if ( PublishRequestQueue.size() == 0)
