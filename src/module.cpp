@@ -552,15 +552,19 @@ namespace OpcUa
 
       PyNode PyAddFolder(std::string browsename) { return PyNode(Node::AddFolder(browsename)); }
       PyNode PyAddFolder2(std::string nodeid, std::string browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
+      PyNode PyAddFolder3(PyNodeID nodeid, QualifiedName browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
 
       PyNode PyAddObject(std::string browsename) { return PyNode(Node::AddObject(browsename)); }
       PyNode PyAddObject2(std::string nodeid, std::string browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
+      PyNode PyAddObject3(PyNodeID nodeid, QualifiedName browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
 
       PyNode PyAddVariable(std::string browsename, python::object val) { return PyNode(Node::AddVariable(browsename, FromObject(val))); }
       PyNode PyAddVariable2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, FromObject(val))); }
+      PyNode PyAddVariable3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, FromObject(val))); }
 
       PyNode PyAddProperty(std::string browsename, python::object val) { return PyNode(Node::AddProperty(browsename, FromObject(val))); }
       PyNode PyAddProperty2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, FromObject(val))); }
+      PyNode PyAddProperty3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, FromObject(val))); }
 
   };
 
@@ -656,8 +660,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   class_<PyNodeID>("NodeID")
     .def(init<uint16_t, uint32_t>())
     .def(init<uint16_t, std::string>())
-    .def("get_namespace_index", &PyNodeID::GetNamespaceIndex)
-    .def("get_identifier", &PyNodeID::GetIdentifier)
+    .def_readonly("namespace_index", &PyNodeID::GetNamespaceIndex)
+    .def_readonly("identifier", &PyNodeID::GetIdentifier)
     .def("get_encoding", &PyNodeID::GetEncodingValue)
     .def("is_integer", &NodeID::IsInteger)
     .def("is_binary", &NodeID::IsBinary)
@@ -807,8 +811,10 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("add_object", &PyNode::PyAddObject2)
           .def("add_variable", &PyNode::PyAddVariable)
           .def("add_variable", &PyNode::PyAddVariable2)
+          .def("add_variable", &PyNode::PyAddVariable3)
           .def("add_property", &PyNode::PyAddProperty)
           .def("add_property", &PyNode::PyAddProperty2)
+          .def("add_property", &PyNode::PyAddProperty3)
           .def(str(self))
           .def(repr(self))
           .def(self == self)
