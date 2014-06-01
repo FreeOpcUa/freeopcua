@@ -28,7 +28,7 @@ class Unit(unittest.TestCase):
         self.assertEqual(qn.name, "qname")
 
 
-class AllTests(object):
+class CommonTests(object):
     def test_root(self):
         root = self.opc.get_root_node()
         self.assertEqual(opcua.QualifiedName(0, "Root"), root.get_name())
@@ -51,31 +51,44 @@ class AllTests(object):
         self.assertTrue( v in childs)
         self.assertTrue( p in childs)
 
-
-    def test_add_node(self):
+    def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
+        v = objects.add_variable("3:888", "3:numericnodefromstring", 1)
+        self.assertEqual( nid ,v.get_id())
+        self.assertEqual(qn, v.get_name())
 
+    def test_add_numeric_node(self):
+        objects = self.opc.get_objects_node()
+        v = objects.add_variable("3:stringid", "3:stringnodefromstring", 1)
+        self.assertEqual( nid ,v.get_id())
+        self.assertEqual(qn, v.get_name())
+
+
+    def test_add_numeric_node(self):
+        objects = self.opc.get_objects_node()
+        nid = opcua.NodeID(3, 9999)
         qn = opcua.QualifiedName(3, "AddNodeVar1")
-        nid = opcua.NodeID(3, "90")
         v1 = objects.add_variable(nid, qn, 0)
         self.assertEqual( nid ,v1.get_id())
         self.assertEqual(qn, v1.get_name())
-        self.assertEqual("AddNodeVar1", v1.get_name().name)
 
+    def test_add_string_node(self):
+        objects = self.opc.get_objects_node()
         qn = opcua.QualifiedName(3, "AddNodeVar2")
         nid = opcua.NodeID(3, "AddNodeVar2Id")
         v2 = objects.add_variable(nid, qn, 0)
         self.assertEqual( nid ,v2.get_id())
         self.assertEqual(qn, v2.get_name())
-        self.assertEqual("AddNodeVar2", v2.get_name().name)
-
-
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableTestValue", 4.32)
         val = v.get_value()
         self.assertEqual(4.32, val)
+
+    def test_negative_value(self):
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:VariableNegativeValue", 4)
         v.set_value(-4.54)
         val = v.get_value()
         self.assertEqual(-4.54, val)
@@ -85,6 +98,11 @@ class AllTests(object):
         v = o.add_variable("3:VariableArrayValue", [1,2,3])
         val = v.get_value()
         self.assertEqual([1,2,3], val)
+
+
+    def test_array_size_one_value(self):
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:VariableArrayValue", [1,2,3])
         v.set_value([1])
         val = v.get_value()
         self.assertEqual(1, val) #This should be fixed!!! it should be [1]
@@ -112,7 +130,7 @@ class ServerProcess(Process):
     def stop(self):
         self._exit.set()
 
-class TestClient(unittest.TestCase, AllTests):
+class TestClient(unittest.TestCase, CommonTests):
     @classmethod
     def setUpClass(self):
         #start server in its own process
@@ -133,7 +151,7 @@ class TestClient(unittest.TestCase, AllTests):
         print("Trying to stop server")
         self.srv.stop()
 
-class TestServer(unittest.TestCase, AllTests):
+class TestServer(unittest.TestCase, CommonTests):
     @classmethod
     def setUpClass(self):
         self.srv = opcua.Server()
