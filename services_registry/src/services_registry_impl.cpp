@@ -270,4 +270,15 @@ void ServicesRegistry::UnregisterSubscriptionServices()
   Comp->SetSubscriptions(std::shared_ptr<OpcUa::Remote::SubscriptionServices>());
 }
 
+namespace OpcUa
+{
+  namespace UaServer
+  {
+    UaServer::ServicesRegistryAddon::UniquePtr CreateServiceRegistry()
+    {
+      return UaServer::ServicesRegistryAddon::UniquePtr(new Impl::ServicesRegistry());
+    }
+  }
+}
+
 

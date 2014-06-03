@@ -3,6 +3,14 @@
 
 #include<string>
 
+#include <opc/ua/server/addons/services_registry_factory.h>
+#include <opc/ua/server/addons/tcp_server_factory.h>
+#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/server/addons/address_space_factory.h>
+#include <opc/ua/server/endpoints_services.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
+
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/addons_core/addon_manager.h>
@@ -35,11 +43,11 @@ namespace OpcUa
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
 
     protected:
-      Common::ModulesConfiguration const GetConfig();
-      Common::AddonsManager::UniquePtr addons;
+      //Common::ModulesConfiguration const GetConfig();
+      //Common::AddonsManager::UniquePtr addons;
       //OpcUa::Application::UniquePtr application;
       //OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
-      std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
+      //std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
       OpcUa::Remote::Server::SharedPtr Server;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
@@ -48,6 +56,13 @@ namespace OpcUa
       std::string name = "Open Source OPC-UA Server";
       std::string security_mode = "none"; //should be correct class
       bool loadCppAddressSpace = false;
+
+
+      UaServer::ServicesRegistryAddon::SharedPtr Registry;
+      UaServer::TcpServerAddon::SharedPtr TcpServer;
+      UaServer::EndpointsServicesAddon::SharedPtr EndpointsServices;
+      UaServer::AddressSpace::SharedPtr AddressSpace;
+      Common::Addon::UniquePtr Protocol;
       
   };
 

@@ -68,15 +68,6 @@ namespace OpcUa
       std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
     };
 
-    class AddressSpaceAddonFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AddressSpaceAddonFactory);
-
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon();
-    };
-
   }
 } // namespace OpcUa
 

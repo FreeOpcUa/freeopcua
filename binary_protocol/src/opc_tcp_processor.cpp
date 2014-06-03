@@ -78,6 +78,7 @@ namespace
       for(;;)
       {
         double period = GetNextSleepPeriod();
+        std::cout << "waiting for data" << std::endl;
         int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
@@ -85,7 +86,11 @@ namespace
         }
         else if (res == 1)
         {
-          ProcessChunk(*clientChannel);
+          bool ret = ProcessChunk(*clientChannel);
+          if ( ! ret)
+          {
+            return;
+          }
         }
         else
         {
@@ -520,6 +525,7 @@ namespace
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          if (Debug) std::clog << "Closed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
           return;
         }
 

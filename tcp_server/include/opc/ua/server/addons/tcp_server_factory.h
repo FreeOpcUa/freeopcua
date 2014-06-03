@@ -10,20 +10,17 @@
 
 #pragma once
 
-#include "tcp_server_addon_impl.h"
+#include <opc/common/addons_core/addon.h>
 
 namespace OpcUa
 {
-  namespace Impl
+  namespace UaServer
   {
 
     class TcpServerFactory : public Common::AddonFactory
     {
     public:
-      Common::Addon::UniquePtr CreateAddon()
-      {
-        return Common::Addon::UniquePtr(new OpcUa::Impl::TcpServerAddon());
-      }
+      Common::Addon::UniquePtr CreateAddon();
     };
 
   }

@@ -13,6 +13,7 @@
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/server/addons/address_space_factory.h>
 
 namespace OpcUa
 {
@@ -116,7 +117,7 @@ namespace OpcUa
   } // namespace Internal
 } // namespace OpcUa
 
-Common::Addon::UniquePtr OpcUa::Internal::AddressSpaceAddonFactory::CreateAddon()
+Common::Addon::UniquePtr OpcUa::UaServer::AddressSpaceAddonFactory::CreateAddon()
 {
-  return Common::Addon::UniquePtr(new AddressSpaceAddon());
+  return Common::Addon::UniquePtr(new Internal::AddressSpaceAddon());
 }

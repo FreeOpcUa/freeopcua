@@ -44,6 +44,8 @@ namespace OpcUa
 
     const char ServicesRegistryAddonID[] = "services_registry";
 
+    ServicesRegistryAddon::UniquePtr CreateServiceRegistry();
+
   }
 }
 

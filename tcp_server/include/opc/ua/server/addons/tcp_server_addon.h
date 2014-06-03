@@ -31,11 +31,15 @@ namespace OpcUa
     class TcpServerAddon : public Common::Addon
     {
     public:
+      DEFINE_CLASS_POINTERS(TcpServerAddon);
+
       virtual void Listen(const TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor) = 0;
       virtual void StopListen(const TcpParameters& tcpParams) = 0;
     };
 
     const char TcpServerAddonID[] = "tcp_server";
+
+    //OpcUa::UaServer::TcpServerAddon::UniquePtr CreateTcpServer();
 
   }
 }

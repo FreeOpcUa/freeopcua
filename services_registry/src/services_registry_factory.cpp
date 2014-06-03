@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "services_registry_factory.h"
+#include <opc/ua/server/addons/services_registry_factory.h>
 #include "services_registry_impl.h"
 
 namespace OpcUa

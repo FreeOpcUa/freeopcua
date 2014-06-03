@@ -1,9 +1,8 @@
 #include <algorithm>
 #include <opc/common/addons_core/config_file.h>
+#include <opc/ua/server/standard_namespace.h>
 
 
-#include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/tcp_server.h>
 #include <opc/ua/node.h>
 
 #include <opc/ua/opcuaserver.h>
@@ -16,7 +15,7 @@ namespace OpcUa
   {
     config_path = path;
   }
-
+/*
   Common::ModulesConfiguration const OPCUAServer::GetConfig()
   {
     if (config_path.length() > 0)
@@ -102,12 +101,59 @@ namespace OpcUa
       return modules;
     }
   }
-
+*/
   OPCUAServer::OPCUAServer()
   {
-    addons = Common::CreateAddonsManager();
+    //addons = Common::CreateAddonsManager();
   }
 
+  void OPCUAServer::Start()
+  {
+    UaServer::ServicesRegistryFactory RegistryFactory;
+    Common::Addon::SharedPtr tmp1 = RegistryFactory.CreateAddon();
+    Registry = std::dynamic_pointer_cast<UaServer::ServicesRegistryAddon>(tmp1);
+    //UaServer::ServicesRegistryAddon::SharedPtr Registry = UaServer::CreateServiceRegistry();
+    UaServer::TcpServerFactory TcpServFactory;
+    Common::Addon::SharedPtr TcpServer1 = TcpServFactory.CreateAddon();
+    TcpServer = std::dynamic_pointer_cast<UaServer::TcpServerAddon>(TcpServer1);
+    //UaServer::TcpServerAddon::SharedPtr TcpServer = std::dynamic_pointer_cast<UaServer::TcpServerAddon>(TcpServFactory.CreateAddon());
+      //UaServer::TcpServerAddon::SharedPtr TcpServer = UaServer::CreateTcpServer();
+      EndpointsServices = UaServer::CreateEndpointsServices(Registry);
+     
+      std::vector<ApplicationDescription> Applications;
+      ApplicationDescription appdesc;
+      appdesc.Name = LocalizedText(name);
+      appdesc.URI = uri;
+      appdesc.Type = ApplicationType::SERVER;
+      Applications.push_back(appdesc);
+      std::vector<EndpointDescription> Endpoints;
+      EndpointDescription ed;
+      ed.EndpointURL = endpoint;
+      ed.SecurityMode = MessageSecurityMode::MSM_NONE;
+      ed.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      ed.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
+      Endpoints.push_back(ed);
+      
+
+    UaServer::AddressSpaceAddonFactory AddressSpaceFactory;
+    Common::Addon::SharedPtr tmp2 = AddressSpaceFactory.CreateAddon();
+    AddressSpace = std::dynamic_pointer_cast<UaServer::AddressSpace>(tmp2);
+    Registry->RegisterViewServices(AddressSpace);
+    Registry->RegisterAttributeServices(AddressSpace);
+    Registry->RegisterNodeManagementServices(AddressSpace);
+    Registry->RegisterSubscriptionServices(AddressSpace);
+
+    UaServer::CreateStandardNamespace(Registry->GetServer()->NodeManagement());
+
+      //UaServer::AddressSpace::SharedPtr AddressSpace = UaServer::CreateEndpointsServices(Registry);
+      //conf.Applications.push_back();
+      //conf.Endoints.push_back();
+    Protocol = UaServer::CreateOpcUaProtocol(Registry, TcpServer, Endpoints);
+    Server = Registry->GetServer(); //Not necessary when we have a link to Registry anyway
+
+ 
+  }
+  /*
   void OPCUAServer::Start()
   {
     const Common::ModulesConfiguration modules = GetConfig(); 
@@ -139,6 +185,7 @@ namespace OpcUa
     //tcpserv->;
     //tcpserv->operator=
   }
+  */
   
   Node OPCUAServer::GetNode(NodeID nodeid)
   {
@@ -147,7 +194,7 @@ namespace OpcUa
 
   void OPCUAServer::Stop()
   {
-    addons->Stop();
+    //addons->Stop();
 
     std::cout << "Stopping opcua server application" << std::endl;
   }

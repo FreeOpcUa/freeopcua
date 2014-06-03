@@ -100,3 +100,14 @@ void EndpointsAddon::ApplyAddonParameters(const Common::AddonParameters& addons)
   }
 }
 
+namespace OpcUa
+{
+  namespace UaServer
+  {
+    EndpointsServicesAddon::UniquePtr CreateEndpointsServices(ServicesRegistryAddon::SharedPtr registry)
+    {
+      return EndpointsServicesAddon::UniquePtr(new EndpointsAddon(registry) );
+    }
+  }
+}
+
