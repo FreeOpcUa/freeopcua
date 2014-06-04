@@ -3,11 +3,9 @@
 
 #include<string>
 
-#include <opc/ua/server/addons/services_registry_factory.h>
-#include <opc/ua/server/addons/tcp_server_factory.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/tcp_server.h>
 #include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/server/addons/address_space_factory.h>
 #include <opc/ua/server/endpoints_services.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
 

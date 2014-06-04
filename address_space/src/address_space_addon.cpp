@@ -9,18 +9,17 @@
 ///
 
 #include "address_space_addon.h"
-#include "address_space_internal.h"
+#include "address_space_factory.h"
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/server/addons/address_space_factory.h>
 
 namespace OpcUa
 {
   namespace Internal
   {
     AddressSpaceAddon::AddressSpaceAddon()
-      : Registry(Internal::CreateAddressSpaceInMemory())
+      : Registry(UaServer::CreateAddressSpace())
     {
     }
 

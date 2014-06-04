@@ -274,7 +274,7 @@ namespace OpcUa
 {
   namespace UaServer
   {
-    UaServer::ServicesRegistryAddon::UniquePtr CreateServiceRegistry()
+    UaServer::ServicesRegistryAddon::UniquePtr CreateServicesRegistry()
     {
       return UaServer::ServicesRegistryAddon::UniquePtr(new Impl::ServicesRegistry());
     }

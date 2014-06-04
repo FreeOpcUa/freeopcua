@@ -12,8 +12,8 @@
 #ifndef ADDRESS_SPACE_ADDON_H_
 #define ADDRESS_SPACE_ADDON_H_
 
-#include "address_space_internal.h"
 
+#include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/view.h>

@@ -22,15 +22,9 @@ namespace OpcUa
 
   void OPCUAServer::Start()
   {
-    UaServer::ServicesRegistryFactory RegistryFactory;
-    Common::Addon::SharedPtr tmp1 = RegistryFactory.CreateAddon();
-    Registry = std::dynamic_pointer_cast<UaServer::ServicesRegistryAddon>(tmp1);
-    //UaServer::ServicesRegistryAddon::SharedPtr Registry = UaServer::CreateServiceRegistry();
-    UaServer::TcpServerFactory TcpServFactory;
-    Common::Addon::SharedPtr TcpServer1 = TcpServFactory.CreateAddon();
-    TcpServer = std::dynamic_pointer_cast<UaServer::TcpServerAddon>(TcpServer1);
-    //UaServer::TcpServerAddon::SharedPtr TcpServer = std::dynamic_pointer_cast<UaServer::TcpServerAddon>(TcpServFactory.CreateAddon());
-    //UaServer::TcpServerAddon::SharedPtr TcpServer = UaServer::CreateTcpServer();
+    UaServer::ServicesRegistryAddon::SharedPtr Registry = UaServer::CreateServicesRegistry();
+
+    UaServer::TcpServerAddon::SharedPtr TcpServer = UaServer::CreateTcpServer();
     EndpointsServices = UaServer::CreateEndpointsServices(Registry);
    
     std::vector<ApplicationDescription> Applications;
@@ -48,9 +42,7 @@ namespace OpcUa
     Endpoints.push_back(ed);
       
 
-    UaServer::AddressSpaceAddonFactory AddressSpaceFactory;
-    Common::Addon::SharedPtr tmp2 = AddressSpaceFactory.CreateAddon();
-    AddressSpace = std::dynamic_pointer_cast<UaServer::AddressSpace>(tmp2);
+    AddressSpace = UaServer::CreateAddressSpace(); 
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);

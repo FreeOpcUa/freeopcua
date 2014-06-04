@@ -39,7 +39,7 @@ namespace OpcUa
 
     const char TcpServerAddonID[] = "tcp_server";
 
-    //OpcUa::UaServer::TcpServerAddon::UniquePtr CreateTcpServer();
+    TcpServerAddon::UniquePtr CreateTcpServer();
 
   }
 }

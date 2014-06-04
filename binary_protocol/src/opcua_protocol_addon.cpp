@@ -87,7 +87,7 @@ void OpcUaProtocol::ApplyAddonParameters(const Common::AddonParameters& params)
   }
 }
 
-void OpcUaProtocol::StartEndpoints(std::vector<EndpointDescription> endpoints)
+void OpcUaProtocol::StartEndpoints(const std::vector<EndpointDescription>& endpoints)
 {
   for (const EndpointDescription endpoint : endpoints)
   {
@@ -121,7 +121,7 @@ namespace OpcUa
   namespace UaServer
   {
 
-    Common::Addon::UniquePtr CreateOpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon, std::vector<EndpointDescription> Endpoints)
+    Common::Addon::UniquePtr CreateOpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon, const std::vector<EndpointDescription>& Endpoints)
     {
       return  Common::Addon::UniquePtr(new OpcUaProtocol(Registry, TcpAddon, Endpoints ));
     }

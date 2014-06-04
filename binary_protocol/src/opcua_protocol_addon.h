@@ -35,7 +35,7 @@ namespace OpcUa
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
       void PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
-      void StartEndpoints(std::vector<EndpointDescription> endpoints);
+      void StartEndpoints(const std::vector<EndpointDescription>& endpoints);
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
     private:

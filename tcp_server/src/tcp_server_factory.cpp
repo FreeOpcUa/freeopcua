@@ -11,7 +11,7 @@
 #pragma once
 
 #include "tcp_server_addon_impl.h"
-#include <opc/ua/server/addons/tcp_server_factory.h>
+#include "tcp_server_factory.h"
 
 namespace OpcUa
 {

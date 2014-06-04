@@ -23,7 +23,7 @@ namespace OpcUa
 
     const char OpcUaProtocolAddonID[] = "opcua_protocol";
 
-    Common::Addon::UniquePtr CreateOpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon, std::vector<EndpointDescription> Endpoints);
+    Common::Addon::UniquePtr CreateOpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon, const std::vector<EndpointDescription>& Endpoints);
 
   } // namespace UaServer
 } // nmespace OpcUa
