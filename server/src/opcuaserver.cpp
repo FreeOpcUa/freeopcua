@@ -11,11 +11,6 @@
 
 namespace OpcUa
 {
-  void OPCUAServer::SetConfigFile(const std::string path)
-  {
-    config_path = path;
-  }
-
   OPCUAServer::OPCUAServer()
   {
   }
@@ -23,24 +18,22 @@ namespace OpcUa
   void OPCUAServer::Start()
   {
     UaServer::ServicesRegistryAddon::SharedPtr Registry = UaServer::CreateServicesRegistry();
-
     UaServer::TcpServerAddon::SharedPtr TcpServer = UaServer::CreateTcpServer();
     EndpointsServices = UaServer::CreateEndpointsServices(Registry);
    
     std::vector<ApplicationDescription> Applications;
     ApplicationDescription appdesc;
-    appdesc.Name = LocalizedText(name);
-    appdesc.URI = uri;
+    appdesc.Name = LocalizedText(Name);
+    appdesc.URI = Uri;
     appdesc.Type = ApplicationType::SERVER;
     Applications.push_back(appdesc);
     std::vector<EndpointDescription> Endpoints;
     EndpointDescription ed;
-    ed.EndpointURL = endpoint;
-    ed.SecurityMode = MessageSecurityMode::MSM_NONE;
+    ed.EndpointURL = Endpoint;
+    ed.SecurityMode = SecurityMode;
     ed.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
     ed.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
     Endpoints.push_back(ed);
-      
 
     AddressSpace = UaServer::CreateAddressSpace(); 
     Registry->RegisterViewServices(AddressSpace);
@@ -51,14 +44,12 @@ namespace OpcUa
     UaServer::CreateStandardNamespace(Registry->GetServer()->NodeManagement());
 
     Protocol = UaServer::CreateOpcUaProtocol(Registry, TcpServer, Endpoints);
-    Server = Registry->GetServer(); //Not necessary when we have a link to Registry anyway
-
  
   }
   
   Node OPCUAServer::GetNode(NodeID nodeid)
   {
-    return Node(Server, nodeid);
+    return Node(Registry->GetServer(), nodeid);
   }
 
   void OPCUAServer::Stop()
@@ -68,11 +59,11 @@ namespace OpcUa
 
   Node OPCUAServer::GetRootNode()
   {
-    return Node(Server, OpcUa::ObjectID::RootFolder);
+    return Node(Registry->GetServer(), OpcUa::ObjectID::RootFolder);
   }
 
   Node OPCUAServer::GetObjectsNode()
   {
-    return Node(Server, OpcUa::ObjectID::ObjectsFolder);
+    return Node(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder);
   }
 }
