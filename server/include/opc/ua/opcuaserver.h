@@ -51,7 +51,7 @@ namespace OpcUa
 
       UaServer::ServicesRegistryAddon::SharedPtr Registry;
       UaServer::TcpServerAddon::SharedPtr TcpServer;
-      UaServer::EndpointsServicesAddon::SharedPtr EndpointsServices;
+      UaServer::EndpointsServicesAddon::UniquePtr EndpointsServices;
       UaServer::AddressSpace::SharedPtr AddressSpace;
       Common::Addon::UniquePtr Protocol;
       
