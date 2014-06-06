@@ -22,14 +22,12 @@ namespace OpcUa
 		class EndpointsAddon : public UaServer::EndpointsServicesAddon
 		{
 		public:
-      EndpointsAddon(){};
-      EndpointsAddon(UaServer::ServicesRegistryAddon::SharedPtr server): InternalServer(server){};
-
 			virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
 			virtual void Stop();
 
 			virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints);
       virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application);
+			void SetServicesRegistry(std::shared_ptr<UaServer::ServicesRegistryAddon> server){InternalServer = server;}
 
 		private:
       void ApplyAddonParameters(const Common::AddonParameters& addons);
@@ -42,5 +40,10 @@ namespace OpcUa
 		};
 
   } // namespace Impl
+
+  namespace UaServer
+  {
+    EndpointsServicesAddon::UniquePtr CreateEndpointsServices(ServicesRegistryAddon::SharedPtr registry);
+  }
 } // namespace OpcUa
 
