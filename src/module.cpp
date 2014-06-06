@@ -1022,8 +1022,8 @@ namespace OpcUa
   class PyOPCUAServer: public OPCUAServer
   {
     public:
-      PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
-      PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
+      PyNode PyGetRootNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
+      PyNode PyGetObjectsNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder); }
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(FromList<std::string>(path)); }
@@ -1310,7 +1310,6 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("get_node", &PyOPCUAServer::PyGetNode)
           .def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
           //.def("get_node_from_qn_path", NodeFromPathQN)
-          .def("set_config_file", &PyOPCUAServer::SetConfigFile)
           .def("set_uri", &PyOPCUAServer::SetURI)
           .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
           .def("set_server_name", &PyOPCUAServer::SetServerName)
