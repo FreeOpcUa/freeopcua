@@ -47,7 +47,6 @@ class CommonTests(object):
         v = f.add_variable("3:MyVariable", 6)
         p = f.add_property("3:MyProperty", 10)
         childs = f.get_children()
-        print(v, childs)
         self.assertTrue( v in childs)
         self.assertTrue( p in childs)
 
