@@ -17,8 +17,8 @@ namespace OpcUa
 
   void OPCUAServer::Start()
   {
-    UaServer::ServicesRegistryAddon::SharedPtr Registry = UaServer::CreateServicesRegistry();
-    UaServer::TcpServerAddon::SharedPtr TcpServer = UaServer::CreateTcpServer();
+    Registry = UaServer::CreateServicesRegistry();
+    TcpServer = UaServer::CreateTcpServer();
     EndpointsServices = UaServer::CreateEndpointsServices(Registry);
    
     std::vector<ApplicationDescription> Applications;
@@ -44,7 +44,7 @@ namespace OpcUa
     UaServer::CreateStandardNamespace(Registry->GetServer()->NodeManagement());
 
     Protocol = UaServer::CreateOpcUaProtocol(Registry, TcpServer, Endpoints);
- 
+
   }
   
   Node OPCUAServer::GetNode(NodeID nodeid)
@@ -59,11 +59,11 @@ namespace OpcUa
 
   Node OPCUAServer::GetRootNode()
   {
-    return Node(Registry->GetServer(), OpcUa::ObjectID::RootFolder);
+    return GetNode(OpcUa::ObjectID::RootFolder);
   }
 
   Node OPCUAServer::GetObjectsNode()
   {
-    return Node(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder);
+    return GetNode(OpcUa::ObjectID::ObjectsFolder);
   }
 }
