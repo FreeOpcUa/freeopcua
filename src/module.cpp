@@ -954,7 +954,7 @@ namespace OpcUa
   {
     public:
       PyNode(OpcUa::Remote::Server::SharedPtr srv, const NodeID& id) : Node(srv, id){}
-      PyNode (const Node& other): Node( other.GetServer(), other.GetId()) {}
+      PyNode (const Node& other): Node( other.GetServer(), other.GetId(), other.GetCachedName()) {}
       //PyNode (const Node& other): Server(other.Server), Id(other.Id), BrowseName(other.BrowseName) {}
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyGetValue() { return ToObject(Node::GetValue()); }
@@ -984,9 +984,9 @@ namespace OpcUa
         return result;
       }
 
-      PyNode PyGetChild(python::object path) 
+      PyNode PyGetChild(std::string path) 
       {
-        Node n = Node::GetChild(FromList<std::string>(path));
+        Node n = Node::GetChild(path);
         return PyNode(n);
       }
 
