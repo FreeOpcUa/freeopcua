@@ -100,6 +100,12 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual(4.32, val)
 
+    def test_add_exception(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("2:103", "2:AddReadObject")
+        with self.assertRaises(RuntimeError):
+            o2 = objects.add_object("2:103", "2:AddReadObject")
+
     def test_negative_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableNegativeValue", 4)
@@ -181,5 +187,5 @@ class TestServer(unittest.TestCase, CommonTests):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
 
