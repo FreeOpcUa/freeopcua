@@ -80,6 +80,20 @@ class CommonTests(object):
         self.assertEqual( nid ,v2.get_id())
         self.assertEqual(qn, v2.get_name())
 
+    def test_add_find_node_(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("2:101", "2:AddFindObject")
+        o2 = objects.get_child("2:AddFindObject")
+        self.assertEqual(o, o2)
+
+    def test_add_read_node(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("2:102", "2:AddReadObject")
+        nid = opcua.NodeID(2, 102)
+        self.assertEqual(o.get_id(), nid)
+        qn = opcua.QualifiedName(2, "AddReadObject")
+        self.assertEqual(o.get_name(), qn)
+
     def test_simple_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableTestValue", 4.32)
