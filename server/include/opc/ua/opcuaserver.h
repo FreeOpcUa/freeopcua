@@ -3,6 +3,12 @@
 
 #include<string>
 
+#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/tcp_server.h>
+#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/server/endpoints_services.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
+
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/addons_core/addon_manager.h>
@@ -17,9 +23,9 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
-      void SetEndpoint(const std::string endpoint){this->endpoint = endpoint;}
-      void SetURI(const std::string uri){this->uri = uri;}
-      void SetServerName(const std::string name){this->name = name;}
+      void SetEndpoint(const std::string endpoint){this->Endpoint = endpoint;}
+      void SetURI(const std::string uri){this->Uri = uri;}
+      void SetServerName(const std::string name){this->Name = name;}
       void AddAddressSpace(const std::string path) {xml_address_spaces.push_back(path);}
       void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
 
@@ -30,24 +36,24 @@ namespace OpcUa
       Node GetRootNode();
       Node GetObjectsNode();
       Node GetNode(NodeID nodeid);
-      void SetConfigFile(const std::string path);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
 
     protected:
-      Common::ModulesConfiguration const GetConfig();
-      Common::AddonsManager::UniquePtr addons;
-      //OpcUa::Application::UniquePtr application;
-      //OpcUa::UaServer::ServicesRegistryAddon::SharedPtr registry; //Why do I need to keep a pointer to the registry? 
-      std::vector<Common::AddonInformation> infos; //why do I need to keep a pointer? otherwise I get coredump
-      OpcUa::Remote::Server::SharedPtr Server;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
-      std::string endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine
-      std::string uri = "opcua.treww.org";
-      std::string name = "Open Source OPC-UA Server";
-      std::string security_mode = "none"; //should be correct class
-      bool loadCppAddressSpace = false;
+      std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine
+      std::string Uri = "opcua.treww.org";
+      std::string Name = "Open Source OPC-UA Server";
+      OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
+      bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
+
+
+      UaServer::ServicesRegistryAddon::SharedPtr Registry;
+      UaServer::TcpServerAddon::SharedPtr TcpServer;
+      UaServer::EndpointsServicesAddon::UniquePtr EndpointsServices;
+      UaServer::AddressSpace::SharedPtr AddressSpace;
+      Common::Addon::UniquePtr Protocol;
       
   };
 

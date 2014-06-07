@@ -69,4 +69,13 @@ namespace OpcUa
       Servers.clear();
     }
   }
+
+namespace UaServer
+  {
+    OpcUa::UaServer::TcpServerAddon::UniquePtr CreateTcpServer()
+    {
+      return OpcUa::UaServer::TcpServerAddon::UniquePtr(new Impl::TcpServerAddon());
+    }
+  }
+
 }

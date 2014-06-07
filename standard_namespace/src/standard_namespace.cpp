@@ -11,6 +11,7 @@
 // TODO Add EventNotifier Attribute to all requred nodes.
 
 #include "standard_namespace.h"
+#include <opc/ua/server/standard_namespace.h>
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/node_management.h>
@@ -3655,4 +3656,14 @@ namespace OpcUa
     }
 
   } // namespace Internal
+
+
+  void UaServer::CreateStandardNamespace(Remote::NodeManagementServices::SharedPtr Service)
+  {
+
+    Internal::FillStandardNamespace(*Service, false);
+
+  }
+
+
 } // namespace OpcUa
