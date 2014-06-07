@@ -38,6 +38,9 @@ int main(int argc, char** argv)
     {
       std::cout << "    " << node << std::endl;
     }
+    NodeID nid(1,99);
+    QualifiedName qn(2, "NewObject");
+    root.AddObject(nid, qn);
 
   }
   catch (const std::exception& exc)

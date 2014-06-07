@@ -78,7 +78,6 @@ namespace
       for(;;)
       {
         double period = GetNextSleepPeriod();
-        std::cout << "waiting for data" << std::endl;
         int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
