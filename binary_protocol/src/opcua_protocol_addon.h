@@ -16,6 +16,7 @@
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
 
 namespace OpcUa
 {
@@ -26,6 +27,7 @@ namespace OpcUa
     {
     public:
       OpcUaProtocol();
+      OpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpServer,  std::vector<EndpointDescription> Endpoints);
 
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
@@ -33,12 +35,12 @@ namespace OpcUa
     private:
       void ApplyAddonParameters(const Common::AddonParameters& params);
       void PublishApplicationsInformation(std::vector<ApplicationDescription> applications, std::vector<EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
-      void StartEndpoints(std::vector<EndpointDescription> endpoints, Common::AddonsManager& addons);
+      void StartEndpoints(const std::vector<EndpointDescription>& endpoints);
       void FillEndpointDescription(const std::vector<Common::Parameter>& params, EndpointDescription& desc);
 
     private:
-      std::shared_ptr<OpcUa::UaServer::TcpServerAddon> TcpAddon;
-      std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
+      OpcUa::UaServer::ServicesRegistryAddon::SharedPtr InternalServer;
+      OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon;
       std::vector<unsigned short> Ports;
       bool Debug;
     };

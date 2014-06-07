@@ -33,5 +33,7 @@ namespace OpcUa
 
     const char AddressSpaceRegistryAddonID[] = "address_space_registry";
 
+    AddressSpace::UniquePtr CreateAddressSpace();
+
   } // namespace UaServer
 } // nmespace OpcUa
