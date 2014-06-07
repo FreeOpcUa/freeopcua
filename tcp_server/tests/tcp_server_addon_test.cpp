@@ -99,7 +99,7 @@ namespace
   {
     Common::AddonInformation tcpConfig;
     tcpConfig.ID = OpcUa::UaServer::TcpServerAddonID;
-    tcpConfig.Factory.reset(new OpcUa::Impl::TcpServerFactory());
+    tcpConfig.Factory.reset(new OpcUa::UaServer::TcpServerFactory());
     return tcpConfig;
   }
 

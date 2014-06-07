@@ -30,6 +30,7 @@ addonsinclude_HEADERS = \
 libopcua_tcp_server_la_SOURCES = \
   src/tcp_server_addon_impl.cpp \
   src/tcp_server_addon_impl.h \
+  src/tcp_server_factory.cpp \
   src/tcp_server_factory.h \
   src/tcp_server_module.cpp \
   src/tcp_server.cpp
@@ -44,18 +45,24 @@ TESTS_ENVIRONMENT =
 check_PROGRAMS = $(TESTS)
 
 test_tcp_server_SOURCES = \
-  src/tcp_server.cpp \
   src/tcp_server_addon_impl.cpp \
   src/tcp_server_addon_impl.h \
+  src/tcp_server_factory.cpp \
+  src/tcp_server_factory.h \
+  src/tcp_server_module.cpp \
+  src/tcp_server.cpp \
   tests/tcp_server_test.cpp
 
 test_tcp_server_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
 test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
 
 test_tcp_server_addon_SOURCES = \
-  src/tcp_server.cpp \
   src/tcp_server_addon_impl.cpp \
   src/tcp_server_addon_impl.h \
+  src/tcp_server_factory.cpp \
+  src/tcp_server_factory.h \
+  src/tcp_server_module.cpp \
+  src/tcp_server.cpp \
   tests/tcp_server_addon_test.cpp
 
 test_tcp_server_addon_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)

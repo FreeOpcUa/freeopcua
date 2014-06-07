@@ -10,21 +10,22 @@
 
 #include "opc_tcp_processor.h"
 
+#include <opc/ua/input_from_buffer.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
-#include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/input_from_buffer.h>
 #include <opc/ua/status_codes.h>
+#include <opc/ua/string_utils.h>
 
+#include <chrono>
 #include <iostream>
+#include <list>
 #include <mutex>
 #include <stdexcept>
 #include <sstream>
 #include <queue>
-#include <list>
-#include <chrono>
 
 namespace
 {
@@ -351,7 +352,7 @@ namespace
             std::clog << "Processing read request for Node:";
             for (AttributeValueID id : params.AttributesToRead) 
             {
-              std::clog << " " << id.Node ;  
+              std::clog << " " << id.Node;
             }
             std::cout << std::endl;
           }
