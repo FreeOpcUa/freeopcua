@@ -18,7 +18,7 @@ namespace OpcUa
   void OPCUAServer::Start()
   {
     Registry = UaServer::CreateServicesRegistry();
-    TcpServer = UaServer::CreateTcpServer();
+    TcpServer = UaServer::CreateTcpServerAddon();
     EndpointsServices = UaServer::CreateEndpointsServices(Registry);
    
     std::vector<ApplicationDescription> Applications;
