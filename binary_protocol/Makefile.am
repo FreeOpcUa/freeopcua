@@ -20,6 +20,7 @@ COMMON_INCLUDES = \
   -I$(top_srcdir)/address_space/include \
   -I$(top_srcdir)/endpoint_services/include \
   -I$(top_srcdir)/services_registry/include \
+  -I$(top_srcdir)/standard_namespace/include \
   -I$(top_srcdir)/tcp_server/include \
   $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES) $(OPC_CLIENT_INCLUDES)
 

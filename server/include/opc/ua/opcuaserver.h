@@ -4,7 +4,6 @@
 #include<string>
 
 #include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opc/ua/server/tcp_server.h>
 #include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/ua/server/endpoints_services.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
@@ -43,11 +42,10 @@ namespace OpcUa
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine
-      std::string Uri = "opcua.treww.org";
+      std::string Uri = "freeopcua.github.io";
       std::string Name = "Open Source OPC-UA Server";
       OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
-
 
       UaServer::ServicesRegistryAddon::SharedPtr Registry;
       UaServer::TcpServerAddon::SharedPtr TcpServer;

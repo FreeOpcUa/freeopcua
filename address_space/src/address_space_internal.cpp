@@ -8,24 +8,24 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-
-#include "opc/ua/strings.h"
+#include <opc/ua/server/addons/address_space_registry.h>
 
 #include <opc/ua/attributes.h>
-#include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/view.h>
 #include <opc/ua/node_management.h>
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/strings.h>
+#include <opc/ua/string_utils.h>
+#include <opc/ua/view.h>
 
 #include <boost/thread/shared_mutex.hpp>
-#include <limits>
-#include <map>
-#include <set>
 #include <ctime>
+#include <limits>
 #include <list>
+#include <map>
 #include <queue>
 #include <deque>
+#include <set>
 
 
 
@@ -562,8 +562,6 @@ namespace OpcUa
 
       AddNodesResult AddNode( const AddNodesItem& item )
       {
-        //std::cout << "Creating Node with ID: "<<  item.RequestedNewNodeID  << " and browsename " << item.BrowseName << " and parent "  << item.ParentNodeId << std::endl;
-
         AddNodesResult result;
 
         NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);

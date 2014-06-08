@@ -20,7 +20,7 @@ namespace OpcUa
   namespace UaServer
   {
 
-  class AddressSpaceAddonFactory : public Common::AddonFactory
+    class AddressSpaceAddonFactory : public Common::AddonFactory
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpaceAddonFactory);
