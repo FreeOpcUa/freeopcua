@@ -72,7 +72,7 @@ namespace OpcUa
 
 namespace UaServer
   {
-    OpcUa::UaServer::TcpServerAddon::UniquePtr CreateTcpServer()
+    OpcUa::UaServer::TcpServerAddon::UniquePtr CreateTcpServerAddon()
     {
       return OpcUa::UaServer::TcpServerAddon::UniquePtr(new Impl::TcpServerAddon());
     }

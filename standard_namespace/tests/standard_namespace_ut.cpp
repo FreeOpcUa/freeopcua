@@ -13,7 +13,6 @@
 #include <opc/ua/status_codes.h>
 
 #include "../../standard_namespace/src/standard_namespace.h"
-#include "../../address_space/src/address_space_internal.h"
 
 #include <functional>
 
@@ -28,7 +27,7 @@ class StandardNamespaceStructure : public Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = OpcUa::Internal::CreateAddressSpaceInMemory();
+    NameSpace = OpcUa::UaServer::CreateAddressSpace();
     const bool debug = false;
     OpcUa::Internal::FillStandardNamespace(*NameSpace, false);
   }
