@@ -15,6 +15,7 @@
 #include <opc/ua/client/remote_server.h>
 #include <opc/ua/server.h>
 #include <opc/ua/node.h>
+#include <opc/ua/string_utils.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/client/client.h>
 #include <opc/ua/opcuaserver.h>
@@ -74,6 +75,11 @@ namespace OpcUa
     //PyNodeID(uint16_t index, uint32_t integerId) : NodeID(uint16_t index, uint32_t integerId) {};
     //PyNodeID() : NodeID() {};
     //PyNodeID()
+
+    static PyNodeID FromString(std::string str)
+    {
+      return PyNodeID(ToNodeID(str));
+    }
 
     python::object GetIdentifier()
     {
@@ -1104,10 +1110,11 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
 
   class_<PyNodeID>("NodeID")
-    .def(init<uint16_t, uint32_t>())
-    .def(init<uint16_t, std::string>())
+    .def(init<uint32_t, uint16_t>())
+    .def(init<std::string, uint16_t>())
     .def_readonly("namespace_index", &PyNodeID::GetNamespaceIndex)
     .def_readonly("identifier", &PyNodeID::GetIdentifier)
+    .def("from_string", &PyNodeID::FromString)
     .def("get_encoding", &PyNodeID::GetEncodingValue)
     .def("is_integer", &NodeID::IsInteger)
     .def("is_binary", &NodeID::IsBinary)
@@ -1121,8 +1128,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
   
   class_<QualifiedName>("QualifiedName")
-    .def(init<uint16_t, std::string>())
-    .def("parse", &QualifiedName::ParseFromString)
+    .def(init<std::string, uint16_t>())
+    .def("from_string", &ToQualifiedName)
     .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
     .def(self == self)
     .def(str(self))
