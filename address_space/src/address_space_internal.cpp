@@ -541,13 +541,11 @@ namespace OpcUa
         std::vector<NodeID> subNodes;
         for ( NodeID nodeid: sourceNodes )
         {
-          std::cout << "looking at " << nodeid<< std::endl; 
             NodesMap::const_iterator node_it = Nodes.find(nodeid);
             if ( node_it != Nodes.end() )
             {
               for (auto& ref:  node_it->second.References )
               {
-                std::cout << "    found child: " << ref.TargetNodeID<< std::endl; 
                 subNodes.push_back(ref.TargetNodeID);
             }
           }
@@ -564,11 +562,8 @@ namespace OpcUa
 
       AddNodesResult AddNode( const AddNodesItem& item )
       {
-        std::cout << "Creating Node with ID: "<<  item.RequestedNewNodeID;
-        std::cout << " and browsename " << item.BrowseName << " and parent ";
-        std::cout << item.ParentNodeId << std::endl;
-
         AddNodesResult result;
+
         NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);
         if ( node_it != Nodes.end() )
         {
@@ -576,6 +571,7 @@ namespace OpcUa
           result.Status = StatusCode::BadAttributeIdInvalid;
           return result;
         }
+
         NodesMap::iterator parent_node_it = Nodes.find(item.ParentNodeId);
         if ( parent_node_it == Nodes.end() )
         {
@@ -585,7 +581,6 @@ namespace OpcUa
         }
 
         NodeStruct nodestruct;
-
         //Add Common attributes
         AttributeValue attv;
         attv.Value = item.RequestedNewNodeID;
@@ -601,9 +596,9 @@ namespace OpcUa
           AttributeValue attval;
           attval.Value = attr.second;
 
-          nodestruct.Attributes[attr.first] = attval;
+          nodestruct.Attributes.insert(std::make_pair(attr.first, attval));
         }
-        Nodes[item.RequestedNewNodeID] = nodestruct;
+        Nodes.insert(std::make_pair(item.RequestedNewNodeID, nodestruct));
 
         // Link to parent
         ReferenceDescription desc;
