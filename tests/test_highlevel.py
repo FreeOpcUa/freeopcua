@@ -62,7 +62,6 @@ class CommonTests(object):
         self.assertEqual( nid ,v.get_id())
         self.assertEqual(qn, v.get_name())
 
-
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
         nid = opcua.NodeID(9999, 3)
@@ -83,6 +82,13 @@ class CommonTests(object):
         objects = self.opc.get_objects_node()
         o = objects.add_object("ns=2;i=101;", "2:AddFindObject")
         o2 = objects.get_child("2:AddFindObject")
+        self.assertEqual(o, o2)
+
+    def test_node_path(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("ns=2;i=105;", "2:NodePathObject")
+        root = self.opc.get_root_node()
+        o2 = root.get_child(["0:Objects", "2:NodePathObject"])
         self.assertEqual(o, o2)
 
     def test_add_read_node(self):
@@ -118,13 +124,12 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual([1,2,3], val)
 
-
     def test_array_size_one_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableArrayValue", [1,2,3])
         v.set_value([1])
         val = v.get_value()
-        self.assertEqual(1, val) #This should be fixed!!! it should be [1]
+        self.assertEqual([1], val) 
 
 
 class ServerProcess(Process):
