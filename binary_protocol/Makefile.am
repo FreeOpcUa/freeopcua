@@ -61,8 +61,7 @@ test_opcua_protocol_addon_SOURCES = \
   ../builtin_server/src/builtin_server_impl.h \
   ../endpoint_services/src/endpoints_parameters.cpp \
   ../endpoint_services/src/endpoints_services_addon.cpp \
-  ../endpoint_services/src/endpoints_services_addon.h \
-  ../endpoint_services/src/endpoints_services_factory.h \
+  ../endpoint_services/src/endpoints_registry.cpp \
   ../services_registry/src/services_registry_factory.cpp \
   ../services_registry/src/services_registry_factory.h \
   ../services_registry/src/services_registry_impl.cpp \

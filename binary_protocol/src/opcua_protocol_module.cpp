@@ -9,11 +9,12 @@
 ///
 
 
-#include "opcua_protocol_addon.h"
+#include <opc/ua/server/addons/opcua_protocol.h>
 
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::OpcUaProtocol());
+  OpcUa::UaServer::OpcUaProtocolAddonFactory factory;
+  return factory.CreateAddon();
 }
 

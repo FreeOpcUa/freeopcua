@@ -19,17 +19,17 @@ namespace OpcUa
   namespace UaServer
   {
 
-    class EndpointsServicesAddon : public Common::Addon
+    const char EndpointsRegistryAddonID[] = "endpoints_services";
+
+
+    class EndpointsRegistryAddonFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(EndpointsServicesAddon);
+      DEFINE_CLASS_POINTERS(EndpointsRegistryAddonFactory);
 
     public:
-      virtual void AddEndpoints(const std::vector<OpcUa::EndpointDescription>& endpoints) = 0;
-      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application) = 0;
+      virtual Common::Addon::UniquePtr CreateAddon() override;
     };
-
-    const char EndpointsServicesAddonID[] = "endpoints_services";
 
   } // namespace UaServer
 } // nmespace OpcUa

@@ -8,10 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "tcp_server_addon_impl.h"
+#include <opc/ua/server/addons/tcp_server.h>
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::TcpServerAddon());
+  OpcUa::UaServer::TcpServerAddonFactory factory;
+  return factory.CreateAddon();
 }
-

@@ -12,17 +12,12 @@
 
 #include <opc/common/addons_core/addon_parameters.h>
 #include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/server/endpoints_services.h>
 
 
 namespace OpcUa
 {
 
-  struct ApplicationData
-  {
-    ApplicationDescription Application;
-    std::vector<EndpointDescription> Endpoints;
-  };
-
-  std::vector<ApplicationData> ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& rootGroup, bool debug);
+  std::vector<UaServer::ApplicationData> ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& rootGroup, bool debug);
 
 }

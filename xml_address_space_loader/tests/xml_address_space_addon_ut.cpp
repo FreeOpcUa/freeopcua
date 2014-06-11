@@ -12,10 +12,10 @@
 #include "../../address_space/tests/address_space_registry_test.h"
 #include "../../services_registry/tests/services_registry_test.h"
 
-#include <opc/ua/object_ids.h>
 #include <opc/ua/attribute_ids.h>
+#include <opc/ua/object_ids.h>
+#include <opc/ua/server/addons/address_space.h>
 #include <opc/ua/status_codes.h>
-#include <opc/ua/server/addons/address_space_registry.h>
 
 #include <functional>
 

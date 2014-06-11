@@ -24,19 +24,21 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 lib_LTLIBRARIES = libservices_registry_addon.la
 
+uaserverinclude_HEADERS = \
+  include/opc/ua/server/services_registry.h
+
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/services_registry.h
 
 libservices_registry_addon_la_SOURCES = \
   src/services_registry_factory.cpp \
-  src/services_registry_factory.h \
   src/services_registry_impl.cpp \
-  src/services_registry_impl.h \
-  src/services_registry_module.cpp \
-  tests/services_registry_test.h
+  src/services_registry_module.cpp
 
 libservices_registry_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
 libservices_registry_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -no-undefined
+
+EXTRA_DIST = tests/services_registry_test.h
 
 #TESTS = test_services_registry
 

@@ -66,7 +66,7 @@ TESTS = test_endpoints_registry$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = endpoint_services
 DIST_COMMON = $(addonsinclude_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in $(uaserverinclude_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -103,11 +103,13 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(addonsincludedir)"
+	"$(DESTDIR)$(addonsincludedir)" \
+	"$(DESTDIR)$(uaserverincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libendpoints_services_addon_la_LIBADD =
 am_libendpoints_services_addon_la_OBJECTS =  \
 	libendpoints_services_addon_la-endpoints_parameters.lo \
+	libendpoints_services_addon_la-endpoints_registry.lo \
 	libendpoints_services_addon_la-endpoints_services_addon.lo \
 	libendpoints_services_addon_la-endpoints_services_module.lo
 libendpoints_services_addon_la_OBJECTS =  \
@@ -120,6 +122,7 @@ am__EXEEXT_1 = test_endpoints_registry$(EXEEXT)
 am_test_endpoints_registry_OBJECTS =  \
 	test_endpoints_registry-endpoints_parameters.$(OBJEXT) \
 	test_endpoints_registry-endpoints_services_addon.$(OBJEXT) \
+	test_endpoints_registry-endpoints_registry.$(OBJEXT) \
 	test_endpoints_registry-endpoints_services_test.$(OBJEXT) \
 	test_endpoints_registry-services_registry_factory.$(OBJEXT) \
 	test_endpoints_registry-services_registry_impl.$(OBJEXT)
@@ -161,7 +164,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(addonsinclude_HEADERS)
+HEADERS = $(addonsinclude_HEADERS) $(uaserverinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -314,15 +317,17 @@ COMMON_INCLUDES = \
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 lib_LTLIBRARIES = libendpoints_services_addon.la
+uaserverinclude_HEADERS = \
+  include/opc/ua/server/endpoints_services.h
+
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/endpoints_services.h
 
 libendpoints_services_addon_la_SOURCES = \
   src/endpoints_parameters.cpp \
   src/endpoints_parameters.h \
+  src/endpoints_registry.cpp \
   src/endpoints_services_addon.cpp \
-  src/endpoints_services_addon.h \
-  src/endpoints_services_factory.h \
   src/endpoints_services_module.cpp
 
 libendpoints_services_addon_la_CPPFLAGS = $(COMMON_INCLUDES)
@@ -330,14 +335,11 @@ libendpoints_services_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMA
 test_endpoints_registry_SOURCES = \
   src/endpoints_parameters.cpp \
   src/endpoints_services_addon.cpp \
-  src/endpoints_services_addon.h \
-  src/endpoints_services_factory.h \
+  src/endpoints_registry.cpp \
   tests/endpoints_services_test.cpp \
   tests/endpoints_services_test.h \
   ../services_registry/src/services_registry_factory.cpp \
-  ../services_registry/src/services_registry_factory.h \
-  ../services_registry/src/services_registry_impl.cpp \
-  ../services_registry/src/services_registry_impl.h
+  ../services_registry/src/services_registry_impl.cpp
 
 test_endpoints_registry_CPPFLAGS = $(COMMON_INCLUDES) $(TESTINCLUDES)
 test_endpoints_registry_LDFLAGS = -lboost_thread -lpthread -ldl  $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,-z,defs,-no-undefined
@@ -429,9 +431,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_parameters.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_registry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libendpoints_services_addon_la-endpoints_services_module.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_parameters.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_registry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_services_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-endpoints_services_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endpoints_registry-services_registry_factory.Po@am__quote@
@@ -464,6 +468,13 @@ libendpoints_services_addon_la-endpoints_parameters.lo: src/endpoints_parameters
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_parameters.cpp' object='libendpoints_services_addon_la-endpoints_parameters.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libendpoints_services_addon_la-endpoints_parameters.lo `test -f 'src/endpoints_parameters.cpp' || echo '$(srcdir)/'`src/endpoints_parameters.cpp
+
+libendpoints_services_addon_la-endpoints_registry.lo: src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libendpoints_services_addon_la-endpoints_registry.lo -MD -MP -MF $(DEPDIR)/libendpoints_services_addon_la-endpoints_registry.Tpo -c -o libendpoints_services_addon_la-endpoints_registry.lo `test -f 'src/endpoints_registry.cpp' || echo '$(srcdir)/'`src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libendpoints_services_addon_la-endpoints_registry.Tpo $(DEPDIR)/libendpoints_services_addon_la-endpoints_registry.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_registry.cpp' object='libendpoints_services_addon_la-endpoints_registry.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libendpoints_services_addon_la-endpoints_registry.lo `test -f 'src/endpoints_registry.cpp' || echo '$(srcdir)/'`src/endpoints_registry.cpp
 
 libendpoints_services_addon_la-endpoints_services_addon.lo: src/endpoints_services_addon.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libendpoints_services_addon_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libendpoints_services_addon_la-endpoints_services_addon.lo -MD -MP -MF $(DEPDIR)/libendpoints_services_addon_la-endpoints_services_addon.Tpo -c -o libendpoints_services_addon_la-endpoints_services_addon.lo `test -f 'src/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/endpoints_services_addon.cpp
@@ -506,6 +517,20 @@ test_endpoints_registry-endpoints_services_addon.obj: src/endpoints_services_add
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_services_addon.cpp' object='test_endpoints_registry-endpoints_services_addon.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_registry-endpoints_services_addon.obj `if test -f 'src/endpoints_services_addon.cpp'; then $(CYGPATH_W) 'src/endpoints_services_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/src/endpoints_services_addon.cpp'; fi`
+
+test_endpoints_registry-endpoints_registry.o: src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_registry.o -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_registry.Tpo -c -o test_endpoints_registry-endpoints_registry.o `test -f 'src/endpoints_registry.cpp' || echo '$(srcdir)/'`src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_registry-endpoints_registry.Tpo $(DEPDIR)/test_endpoints_registry-endpoints_registry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_registry.cpp' object='test_endpoints_registry-endpoints_registry.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_registry-endpoints_registry.o `test -f 'src/endpoints_registry.cpp' || echo '$(srcdir)/'`src/endpoints_registry.cpp
+
+test_endpoints_registry-endpoints_registry.obj: src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_registry.obj -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_registry.Tpo -c -o test_endpoints_registry-endpoints_registry.obj `if test -f 'src/endpoints_registry.cpp'; then $(CYGPATH_W) 'src/endpoints_registry.cpp'; else $(CYGPATH_W) '$(srcdir)/src/endpoints_registry.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_endpoints_registry-endpoints_registry.Tpo $(DEPDIR)/test_endpoints_registry-endpoints_registry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/endpoints_registry.cpp' object='test_endpoints_registry-endpoints_registry.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_endpoints_registry-endpoints_registry.obj `if test -f 'src/endpoints_registry.cpp'; then $(CYGPATH_W) 'src/endpoints_registry.cpp'; else $(CYGPATH_W) '$(srcdir)/src/endpoints_registry.cpp'; fi`
 
 test_endpoints_registry-endpoints_services_test.o: tests/endpoints_services_test.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_endpoints_registry_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_endpoints_registry-endpoints_services_test.o -MD -MP -MF $(DEPDIR)/test_endpoints_registry-endpoints_services_test.Tpo -c -o test_endpoints_registry-endpoints_services_test.o `test -f 'tests/endpoints_services_test.cpp' || echo '$(srcdir)/'`tests/endpoints_services_test.cpp
@@ -575,6 +600,27 @@ uninstall-addonsincludeHEADERS:
 	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(addonsincludedir)'; $(am__uninstall_files_from_dir)
+install-uaserverincludeHEADERS: $(uaserverinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(uaserverincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(uaserverincludedir)" || exit $$?; \
+	done
+
+uninstall-uaserverincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(uaserverincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -757,7 +803,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -813,7 +859,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-addonsincludeHEADERS
+install-data-am: install-addonsincludeHEADERS \
+	install-uaserverincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -859,7 +906,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
+uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES \
+	uninstall-uaserverincludeHEADERS
 
 .MAKE: check-am install-am install-strip
 
@@ -873,11 +921,12 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-addonsincludeHEADERS uninstall-am \
-	uninstall-libLTLIBRARIES
+	install-uaserverincludeHEADERS installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonsincludeHEADERS uninstall-am \
+	uninstall-libLTLIBRARIES uninstall-uaserverincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

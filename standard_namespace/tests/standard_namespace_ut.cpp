@@ -12,7 +12,8 @@
 #include <opc/ua/attribute_ids.h>
 #include <opc/ua/status_codes.h>
 
-#include "../../standard_namespace/src/standard_namespace.h"
+#include <opc/ua/server/address_space.h>
+#include <opc/ua/server/standard_namespace.h>
 
 #include <functional>
 
@@ -29,7 +30,7 @@ protected:
   {
     NameSpace = OpcUa::UaServer::CreateAddressSpace();
     const bool debug = false;
-    OpcUa::Internal::FillStandardNamespace(*NameSpace, false);
+    OpcUa::UaServer::FillStandardNamespace(*NameSpace, false);
   }
 
   virtual void TearDown()

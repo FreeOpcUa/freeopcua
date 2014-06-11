@@ -24,14 +24,11 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 lib_LTLIBRARIES = libopcua_tcp_server.la
 addonsinclude_HEADERS = \
-  include/opc/ua/server/addons/tcp_server_addon.h \
+  include/opc/ua/server/addons/tcp_server.h \
   include/opc/ua/server/tcp_server.h
 
 libopcua_tcp_server_la_SOURCES = \
-  src/tcp_server_addon_impl.cpp \
-  src/tcp_server_addon_impl.h \
   src/tcp_server_factory.cpp \
-  src/tcp_server_factory.h \
   src/tcp_server_module.cpp \
   src/tcp_server.cpp
 
@@ -45,10 +42,7 @@ TESTS_ENVIRONMENT =
 check_PROGRAMS = $(TESTS)
 
 test_tcp_server_SOURCES = \
-  src/tcp_server_addon_impl.cpp \
-  src/tcp_server_addon_impl.h \
   src/tcp_server_factory.cpp \
-  src/tcp_server_factory.h \
   src/tcp_server_module.cpp \
   src/tcp_server.cpp \
   tests/tcp_server_test.cpp
@@ -57,10 +51,7 @@ test_tcp_server_CPPFLAGS = $(TESTINCLUDES) $(COMMON_INCLUDES)
 test_tcp_server_LDFLAGS = -lboost_thread -lpthread -ldl $(UAMAPPINGS_LIBS) $(OPC_CORE_LIBS) $(OPC_CLIENT_LIBS) $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) -Wl,--no-undefined 
 
 test_tcp_server_addon_SOURCES = \
-  src/tcp_server_addon_impl.cpp \
-  src/tcp_server_addon_impl.h \
   src/tcp_server_factory.cpp \
-  src/tcp_server_factory.h \
   src/tcp_server_module.cpp \
   src/tcp_server.cpp \
   tests/tcp_server_addon_test.cpp

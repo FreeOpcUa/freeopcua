@@ -8,15 +8,38 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "services_registry_impl.h"
+#include <opc/ua/server/addons/services_registry.h>
 
 #include <opc/ua/protocol/endpoints.h>
-
 
 namespace
 {
   using namespace OpcUa;
   using namespace OpcUa::Remote;
+
+  class ServicesRegistry : public OpcUa::UaServer::ServicesRegistry
+  {
+  public:
+    ServicesRegistry();
+
+  public: // InternalServerAddon
+    virtual OpcUa::Remote::Server::SharedPtr GetServer() const;
+    virtual void RegisterEndpointsServices(EndpointServices::SharedPtr endpoints) override;
+    virtual void UnregisterEndpointsServices()  override;
+    virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
+    virtual void UnregisterViewServices() override;
+    virtual void RegisterNodeManagementServices(NodeManagementServices::SharedPtr addr) override;
+    virtual void UnregisterNodeManagementServices() override;
+    virtual void RegisterAttributeServices(AttributeServices::SharedPtr attributes) override;
+    virtual void UnregisterAttributeServices() override;
+    virtual void RegisterSubscriptionServices(SubscriptionServices::SharedPtr service) override;
+    virtual void UnregisterSubscriptionServices() override;
+
+  private:
+    class InternalServer;
+    std::shared_ptr<InternalServer> Comp;
+  };
+
 
   class DefaultServices
     : public EndpointServices
@@ -112,173 +135,160 @@ namespace
     
   };
 
-}
-
-using namespace OpcUa::Impl;
-
-class ServicesRegistry::InternalServer : public Server
-{
-public:
-  InternalServer()
-    : Services(new DefaultServices())
+  class ServicesRegistry::InternalServer : public Server
   {
-    SetEndpoints(Services);
-    SetViews(Services);
-    SetAttributes(Services);
-    SetSubscriptions(Services);
+  public:
+    InternalServer()
+      : Services(new DefaultServices())
+    {
+      SetEndpoints(Services);
+      SetViews(Services);
+      SetAttributes(Services);
+      SetSubscriptions(Services);
+    }
+
+    virtual void CreateSession(const SessionParameters& parameters)
+    {
+    }
+
+    virtual void ActivateSession()
+    {
+    }
+
+    virtual void CloseSession()
+    {
+    }
+
+    virtual EndpointServices::SharedPtr Endpoints() const override
+    {
+      return EndpointsServices;
+    }
+
+    virtual std::shared_ptr<ViewServices> Views() const override
+    {
+      return ViewsServices;
+    }
+
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement() const  override
+    {
+      return NodeServices;
+    }
+
+    virtual std::shared_ptr<AttributeServices> Attributes() const  override
+    {
+      return AttributesServices;
+    }
+
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() const  override
+    {
+      return SubscriptionsServices;
+    }
+
+  public:
+    void SetEndpoints(std::shared_ptr<EndpointServices> endpoints)
+    {
+      EndpointsServices = endpoints ? endpoints : Services;
+    }
+
+    void SetViews(std::shared_ptr<ViewServices> views)
+    {
+      ViewsServices = views ? views : Services;
+    }
+
+    void SetAddressSpace(std::shared_ptr<NodeManagementServices> addrs)
+    {
+      NodeServices = addrs ? addrs : Services;
+    }
+
+    void SetAttributes(std::shared_ptr<AttributeServices> attributes)
+    {
+      AttributesServices = attributes ? attributes : Services;
+    }
+
+    void SetSubscriptions(std::shared_ptr<SubscriptionServices> subscriptions)
+    {
+      SubscriptionsServices = subscriptions ? subscriptions : Services;
+    }
+
+  public:
+    OpcUa::Remote::AttributeServices::SharedPtr AttributesServices;
+    OpcUa::Remote::ViewServices::SharedPtr ViewsServices;
+    OpcUa::Remote::NodeManagementServices::SharedPtr NodeServices;
+    OpcUa::Remote::EndpointServices::SharedPtr EndpointsServices;
+    OpcUa::Remote::SubscriptionServices::SharedPtr SubscriptionsServices;
+    std::shared_ptr<DefaultServices> Services;
+  };
+
+
+  ServicesRegistry::ServicesRegistry()
+    : Comp(new InternalServer())
+  {
   }
 
-  virtual void CreateSession(const SessionParameters& parameters)
+  std::shared_ptr<Server> ServicesRegistry::GetServer() const
   {
+    return Comp;
   }
 
-  virtual void ActivateSession()
+  void ServicesRegistry::RegisterEndpointsServices(EndpointServices::SharedPtr endpoints)
   {
+    Comp->SetEndpoints(endpoints);
   }
 
-  virtual void CloseSession()
+  void ServicesRegistry::UnregisterEndpointsServices()
   {
+    Comp->SetEndpoints(EndpointServices::SharedPtr());
   }
 
-  virtual std::shared_ptr<EndpointServices> Endpoints() const override
+  void ServicesRegistry::RegisterViewServices(ViewServices::SharedPtr views)
   {
-    return EndpointsServices;
+    Comp->SetViews(views);
   }
 
-  virtual std::shared_ptr<ViewServices> Views() const override
+  void ServicesRegistry::UnregisterViewServices()
   {
-    return ViewsServices;
+    Comp->SetViews(ViewServices::SharedPtr());
   }
 
-  virtual std::shared_ptr<NodeManagementServices> NodeManagement() const  override
+  void ServicesRegistry::RegisterNodeManagementServices(NodeManagementServices::SharedPtr addr)
   {
-    return NodeServices;
+    Comp->SetAddressSpace(addr);
   }
 
-  virtual std::shared_ptr<AttributeServices> Attributes() const  override
+  void ServicesRegistry::UnregisterNodeManagementServices()
   {
-    return AttributesServices;
+    Comp->SetAddressSpace(NodeManagementServices::SharedPtr());
   }
 
-  virtual std::shared_ptr<SubscriptionServices> Subscriptions() const  override
+
+  void ServicesRegistry::RegisterAttributeServices(AttributeServices::SharedPtr attributes)
   {
-    return SubscriptionsServices;
+    Comp->SetAttributes(attributes);
   }
 
-public:
-  void SetEndpoints(std::shared_ptr<EndpointServices> endpoints)
+  void ServicesRegistry::UnregisterAttributeServices()
   {
-    EndpointsServices = endpoints ? endpoints : Services;
+    Comp->SetAttributes(AttributeServices::SharedPtr());
   }
 
-  void SetViews(std::shared_ptr<ViewServices> views)
+  void ServicesRegistry::RegisterSubscriptionServices(SubscriptionServices::SharedPtr service)
   {
-    ViewsServices = views ? views : Services;
+    Comp->SetSubscriptions(service);
   }
 
-  void SetAddressSpace(std::shared_ptr<NodeManagementServices> addrs)
+  void ServicesRegistry::UnregisterSubscriptionServices()
   {
-    NodeServices = addrs ? addrs : Services;
+    Comp->SetSubscriptions(SubscriptionServices::SharedPtr());
   }
 
-  void SetAttributes(std::shared_ptr<AttributeServices> attributes)
-  {
-    AttributesServices = attributes ? attributes : Services;
-  }
-
-  void SetSubscriptions(std::shared_ptr<SubscriptionServices> subscriptions)
-  {
-    SubscriptionsServices = subscriptions ? subscriptions : Services;
-  }
-
-public:
-  std::shared_ptr<AttributeServices> AttributesServices;
-  std::shared_ptr<ViewServices> ViewsServices;
-  std::shared_ptr<NodeManagementServices> NodeServices;
-  std::shared_ptr<EndpointServices> EndpointsServices;
-  std::shared_ptr<SubscriptionServices> SubscriptionsServices;
-  std::shared_ptr<DefaultServices> Services;
-};
-
-
-ServicesRegistry::ServicesRegistry()
-  : Comp(new InternalServer())
-{
-}
-
-void ServicesRegistry::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
-{
-}
-
-void ServicesRegistry::Stop()
-{
-}
-
-std::shared_ptr<Server> ServicesRegistry::GetServer() const
-{
-  return Comp;
-}
-
-void ServicesRegistry::RegisterEndpointsServices(std::shared_ptr<EndpointServices> endpoints)
-{
-  Comp->SetEndpoints(endpoints);
-}
-
-void ServicesRegistry::UnregisterEndpointsServices()
-{
-  Comp->SetEndpoints(std::shared_ptr<EndpointServices>());
-}
-
-void ServicesRegistry::RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
-{
-  Comp->SetViews(views);
-}
-
-void ServicesRegistry::UnregisterViewServices()
-{
-  Comp->SetViews(std::shared_ptr<OpcUa::Remote::ViewServices>());
-}
-
-void ServicesRegistry::RegisterNodeManagementServices(std::shared_ptr<OpcUa::Remote::NodeManagementServices> addr)
-{
-  Comp->SetAddressSpace(addr);
-}
-
-void ServicesRegistry::UnregisterNodeManagementServices()
-{
-  Comp->SetAddressSpace(std::shared_ptr<OpcUa::Remote::NodeManagementServices>());
-}
-
-
-void ServicesRegistry::RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
-{
-  Comp->SetAttributes(attributes);
-}
-
-void ServicesRegistry::UnregisterAttributeServices()
-{
-  Comp->SetAttributes(std::shared_ptr<OpcUa::Remote::AttributeServices>());
-}
-
-void ServicesRegistry::RegisterSubscriptionServices(std::shared_ptr<OpcUa::Remote::SubscriptionServices> service)
-{
-  Comp->SetSubscriptions(service);
-}
-
-void ServicesRegistry::UnregisterSubscriptionServices()
-{
-  Comp->SetSubscriptions(std::shared_ptr<OpcUa::Remote::SubscriptionServices>());
 }
 
 namespace OpcUa
 {
-  namespace UaServer
+
+  UaServer::ServicesRegistry::UniquePtr UaServer::CreateServicesRegistry()
   {
-    UaServer::ServicesRegistryAddon::UniquePtr CreateServicesRegistry()
-    {
-      return UaServer::ServicesRegistryAddon::UniquePtr(new Impl::ServicesRegistry());
-    }
+    return UaServer::ServicesRegistry::UniquePtr(new ::ServicesRegistry());
   }
+
 }
-
-

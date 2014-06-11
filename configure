@@ -15457,6 +15457,8 @@ ac_config_files="$ac_config_files tcp_server/Makefile"
 
 ac_config_files="$ac_config_files xml_address_space_loader/Makefile"
 
+ac_config_files="$ac_config_files server/Makefile"
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -16567,6 +16569,7 @@ do
     "standard_namespace/Makefile") CONFIG_FILES="$CONFIG_FILES standard_namespace/Makefile" ;;
     "tcp_server/Makefile") CONFIG_FILES="$CONFIG_FILES tcp_server/Makefile" ;;
     "xml_address_space_loader/Makefile") CONFIG_FILES="$CONFIG_FILES xml_address_space_loader/Makefile" ;;
+    "server/Makefile") CONFIG_FILES="$CONFIG_FILES server/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

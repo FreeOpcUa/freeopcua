@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at
+/// (See accompanying file LICENSE or copy at 
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -17,10 +17,15 @@ namespace OpcUa
   namespace UaServer
   {
 
-    class TcpServerFactory : public Common::AddonFactory
+    const char TcpServerAddonID[] = "tcp_server";
+
+    class TcpServerAddonFactory : public Common::AddonFactory
     {
     public:
-      Common::Addon::UniquePtr CreateAddon();
+      DEFINE_CLASS_POINTERS(TcpServerAddonFactory);
+
+    public:
+      virtual Common::Addon::UniquePtr CreateAddon();
     };
 
   }

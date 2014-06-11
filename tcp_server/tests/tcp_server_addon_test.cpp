@@ -12,11 +12,9 @@
 #include <gtest/gtest.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/client/remote_connection.h>
-#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/addons/tcp_server.h>
+#include <opc/ua/server/tcp_server.h>
 
-#include "../src/tcp_server_factory.h"
-
-//#include <chrono>
 #include <thread>
 
 using namespace testing;
@@ -52,7 +50,7 @@ namespace
     virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters&)
     {
       std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor(new EchoProcessor());
-      TcpAddon = addons.GetAddon<OpcUa::UaServer::TcpServerAddon>(OpcUa::UaServer::TcpServerAddonID);
+      TcpAddon = addons.GetAddon<OpcUa::UaServer::TcpServer>(OpcUa::UaServer::TcpServerAddonID);
       OpcUa::UaServer::TcpParameters tcpParams;
       tcpParams.Port = ++TestPort;
 
@@ -67,7 +65,7 @@ namespace
     }
 
   private:
-    std::shared_ptr<OpcUa::UaServer::TcpServerAddon> TcpAddon;
+    std::shared_ptr<OpcUa::UaServer::TcpServer> TcpAddon;
   };
 
   class EchoAddonFactory : public Common::AddonFactory
@@ -99,7 +97,7 @@ namespace
   {
     Common::AddonInformation tcpConfig;
     tcpConfig.ID = OpcUa::UaServer::TcpServerAddonID;
-    tcpConfig.Factory.reset(new OpcUa::UaServer::TcpServerFactory());
+    tcpConfig.Factory.reset(new OpcUa::UaServer::TcpServerAddonFactory());
     return tcpConfig;
   }
 

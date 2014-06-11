@@ -8,21 +8,54 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#pragma once
+#include <opc/ua/server/addons/tcp_server.h>
+#include <opc/ua/server/tcp_server.h>
 
-#include "tcp_server_addon_impl.h"
-#include "tcp_server_factory.h"
+
+namespace
+{
+
+  class TcpServerAddon : public Common::Addon, public OpcUa::UaServer::TcpServer
+  {
+  public: // Common::Addon
+    void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
+    {
+      Server = OpcUa::UaServer::CreateTcpServer();
+    }
+
+    void Stop()
+    {
+      Server.reset();
+    }
+
+  public: // TcpServer
+    void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
+    {
+      Server->Listen(params, processor);
+    }
+
+    void StopListen(const OpcUa::UaServer::TcpParameters& params)
+    {
+      Server->StopListen(params);
+    }
+
+  private:
+    OpcUa::UaServer::TcpServer::UniquePtr Server;
+  };
+
+} // namespace
+
 
 namespace OpcUa
 {
   namespace UaServer
   {
 
-    Common::Addon::UniquePtr TcpServerFactory::CreateAddon()
+    Common::Addon::UniquePtr TcpServerAddonFactory::CreateAddon()
     {
-      return Common::Addon::UniquePtr(new OpcUa::Impl::TcpServerAddon());
+      return Common::Addon::UniquePtr(new ::TcpServerAddon());
     }
 
-  }
-}
+  } // namespace UaServer
+} // namespace OpcUa
 

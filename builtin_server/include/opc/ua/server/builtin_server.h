@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Internal Computer wich is used by addons.
+/// @brief Addon for accessing opcua server inside process.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -10,23 +10,24 @@
 
 #pragma once
 
-#include <opc/common/addons_core/addon.h>
-#include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server.h>
+#include <opc/ua/server/addons/tcp_server.h>
+#include <opc/ua/server/tcp_server.h>
 
 namespace OpcUa
 {
   namespace UaServer
   {
 
-    class ServicesRegistryFactory : public Common::AddonFactory
+    class BuiltinServer : public Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(ServicesRegistryFactory);
+      DEFINE_CLASS_POINTERS(BuiltingServerFactory);
 
     public:
-      virtual Common::Addon::UniquePtr CreateAddon();
+      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const = 0;
     };
+
 
   } // namespace UaServer
 } // namespace OpcUa
-

@@ -13,7 +13,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/addons/tcp_server.h>
 
 
 namespace OpcUa
@@ -23,7 +23,14 @@ namespace OpcUa
 
     const char OpcUaProtocolAddonID[] = "opcua_protocol";
 
-    Common::Addon::UniquePtr CreateOpcUaProtocol(UaServer::ServicesRegistryAddon::SharedPtr Registry, OpcUa::UaServer::TcpServerAddon::SharedPtr TcpAddon, const std::vector<EndpointDescription>& Endpoints);
+    class OpcUaProtocolAddonFactory : public Common::AddonFactory
+    {
+    public:
+      DEFINE_CLASS_POINTERS(OpcUaProtocolAddonFactory);
+
+    public:
+      virtual Common::Addon::UniquePtr CreateAddon() override;
+    };
 
   } // namespace UaServer
 } // nmespace OpcUa

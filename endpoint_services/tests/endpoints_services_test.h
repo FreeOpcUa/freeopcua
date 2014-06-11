@@ -11,10 +11,9 @@
 
 #pragma once
 
-#include "../../services_registry/src/services_registry_factory.h"
-#include "../src/endpoints_services_factory.h"
-
 #include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server/addons/endpoints_services.h>
 
 namespace OpcUa
 {
@@ -24,8 +23,8 @@ namespace OpcUa
     void RegisterEndpointsServicesAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation endpoints;
-      endpoints.Factory.reset(new OpcUa::Impl::EndpointsAddonFactory());
-      endpoints.ID = OpcUa::UaServer::EndpointsServicesAddonID;
+      endpoints.Factory.reset(new OpcUa::UaServer::EndpointsRegistryAddonFactory());
+      endpoints.ID = OpcUa::UaServer::EndpointsRegistryAddonID;
       endpoints.Dependencies.push_back(OpcUa::UaServer::ServicesRegistryAddonID);
       addons.Register(endpoints);
     }

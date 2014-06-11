@@ -8,42 +8,31 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server/addons/endpoints_services.h>
-
-#include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/endpoints.h>
 
 namespace OpcUa
 {
-  namespace Impl
-  {
-
-		class EndpointsAddon : public UaServer::EndpointsServicesAddon
-		{
-		public:
-			virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
-			virtual void Stop();
-
-			virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints);
-      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application);
-			void SetServicesRegistry(std::shared_ptr<UaServer::ServicesRegistryAddon> server){InternalServer = server;}
-
-		private:
-      void ApplyAddonParameters(const Common::AddonParameters& addons);
-
-		private:
-			class EndpointsImpl;
-			std::shared_ptr<EndpointsImpl> Services;
-			std::shared_ptr<UaServer::ServicesRegistryAddon> InternalServer;
-			bool Debug;
-		};
-
-  } // namespace Impl
-
   namespace UaServer
   {
-    EndpointsServicesAddon::UniquePtr CreateEndpointsServices(ServicesRegistryAddon::SharedPtr registry);
-  }
-} // namespace OpcUa
 
+    struct ApplicationData
+    {
+      ApplicationDescription Application;
+      std::vector<EndpointDescription> Endpoints;
+    };
+
+    class EndpointsRegistry : public OpcUa::Remote::EndpointServices
+    {
+    public:
+      DEFINE_CLASS_POINTERS(EndpointsRegistry);
+
+    public:
+      virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints) = 0;
+      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application) = 0;
+    };
+
+    EndpointsRegistry::UniquePtr CreateEndpointsRegistry();
+
+  } // namespace UaServer
+} // namespace OpcUa

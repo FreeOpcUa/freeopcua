@@ -11,18 +11,13 @@
 #pragma once
 
 #include <opc/ua/server.h>
-#include <opc/ua/server/addons/tcp_server_addon.h>
+#include <opc/ua/server/addons/tcp_server.h>
+#include <opc/ua/server/tcp_server.h>
 
 namespace OpcUa
 {
   namespace UaServer
   {
-
-    class BuiltinServerAddon : public TcpServerAddon
-    {
-    public:
-      virtual std::shared_ptr<Remote::Server> GetServer() const = 0;
-    };
 
     class BuiltingServerFactory : public Common::AddonFactory
     {

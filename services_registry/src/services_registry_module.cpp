@@ -8,9 +8,10 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "services_registry_impl.h"
+#include <opc/ua/server/addons/services_registry.h>
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::ServicesRegistry());
+  OpcUa::UaServer::ServicesRegistryFactory factory;
+  return factory.CreateAddon();
 }

@@ -11,6 +11,7 @@
 #pragma once
 
 #include <opc/ua/server/addons/builtin_server.h>
+#include <opc/ua/server/builtin_server.h>
 
 #include <opc/ua/connection_listener.h>
 
@@ -29,48 +30,27 @@ namespace OpcUa
 {
   namespace Impl
   {
-
-    class BufferedInput : public OpcUa::InputChannel
-    {
-    public:
-      explicit BufferedInput(bool debug);
-      virtual std::size_t Receive(char* data, std::size_t size);
-      void AddBuffer(const char* buf, std::size_t size);
-      void Stop();
-
-      virtual int WaitForData(float second)
-      {
-        return 1;
-      }
-
-    private:
-      void ThrowIfStopped();
-
-    private:
-      std::vector<char> Buffer;
-      std::atomic<bool> Running;
-      std::mutex BufferMutex;
-      std::condition_variable DataReady;
-      bool Debug;
-    };
-
+    class BufferedInput;
 
     class BuiltinServerAddon
-      : public ::OpcUa::UaServer::BuiltinServerAddon
+      : public Common::Addon
+      , public UaServer::TcpServer
+      , public UaServer::BuiltinServer
       , private Common::ThreadObserver
     {
     public:
       BuiltinServerAddon();
       ~BuiltinServerAddon();
 
-      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const;
+      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const override;
 
     public: // Common::Addon
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
 
-      virtual void Listen(const OpcUa::UaServer::TcpParameters&, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor);
-      virtual void StopListen(const OpcUa::UaServer::TcpParameters&);
+    public: // TcpServer
+      virtual void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor);
+      virtual void StopListen(const OpcUa::UaServer::TcpParameters& params);
 
     private:
       virtual void OnSuccess();

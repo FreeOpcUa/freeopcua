@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <src/opcua_protocol_factory.h>
+#include <opc/ua/server/opcua_protocol.h>
 
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/endpoints_services.h>
@@ -52,9 +52,9 @@ namespace OpcUa
     void RegisterOpcTcpAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation opcTcp;
-      opcTcp.Factory.reset(new OpcUa::UaServer::OpcUaProtocolFactory());
+      opcTcp.Factory.reset(new OpcUa::UaServer::OpcUaProtocolAddonFactory());
       opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
-      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsServicesAddonID);
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
       opcTcp.Dependencies.push_back(OpcUa::UaServer::TcpServerAddonID);
 
       Common::ParametersGroup application("application");
