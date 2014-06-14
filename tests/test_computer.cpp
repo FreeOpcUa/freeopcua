@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/computer.h>
+#include <opc/ua/server.h>
 
 #include <stdexcept>
 
@@ -188,9 +188,14 @@ namespace
     {
       return std::vector<ReferenceDescription>();
     }
+
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+    {
+      throw std::logic_error("not implemented.");
+    }
   };
 
-  class TestComputer : public Computer
+  class TestComputer : public Server
   {
   public:
     TestComputer(const std::string& url)
@@ -235,6 +240,11 @@ namespace
       throw std::logic_error("not implemented.");
     }
 
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement() const
+    {
+      throw std::logic_error("not implemented.");
+    }
+
   private:
     EndpointServices::SharedPtr EndpointsImpl;
     ViewServices::SharedPtr ViewsImpl;
@@ -248,10 +258,11 @@ namespace OpcUa
   namespace Remote
   {
 
-    std::unique_ptr<Computer> Connect(const std::string& url)
+    std::unique_ptr<Server> Connect(const std::string& url)
     {
-      return std::unique_ptr<Computer>(new TestComputer(url));
+      return std::unique_ptr<Server>(new TestComputer(url));
     }
 
   }
 }
+

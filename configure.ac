@@ -14,6 +14,17 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([opcuaserver], [0.1.2], [rykovanov.as@gmail.com])
 AC_CONFIG_MACRO_DIR([m4])
 
+
+AC_ARG_WITH([opcuaserver],
+            [AS_HELP_STRING([--with-opcuaserver=DIR], [defines path to the root directory of installed opcua-server.])],
+            [
+              AC_SUBST([OPCUA_SERVER_PATH], ["$with_opcuaserver"])
+              AC_MSG_NOTICE([opcuaserver path: $with_opcuaserver])
+            ],
+            [
+            ])
+
+
 #################################################################
 AC_CONFIG_FILES([Makefile])
 

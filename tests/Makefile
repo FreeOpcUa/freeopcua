@@ -1,8 +1,11 @@
+opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
+libraries_path =$(OPCUA_SERVER_PATH)/lib
+
 all:
-	python setup.py bdist
+	$(opcua_paths) python setup.py bdist
 
 check: all
-	LD_LIBRARY_PATH=../../libuamappings/.libs PYTHONPATH=$(shell find . -name \*.so -exec dirname {} + ) python test.py
+	$(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find . -name \*.so -exec dirname {} + ) python test.py
 	
 clean:
 	rm -rvf build dist

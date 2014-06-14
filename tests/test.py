@@ -3,7 +3,7 @@ import unittest
 import test_opcua as opcua
 
 endpointUrl = "opc.tcp://cool_server:4841"
-computer = opcua.Computer(endpointUrl)
+computer = opcua.Server(endpointUrl)
 
 class EndpointsTests(unittest.TestCase):
     def test_find_servers(self):
