@@ -66,7 +66,7 @@ TESTS = test_opcua_protocol_addon$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = binary_protocol
 DIST_COMMON = $(addonsinclude_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in $(uaserverinclude_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -103,7 +103,8 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(addonsincludedir)"
+	"$(DESTDIR)$(addonsincludedir)" \
+	"$(DESTDIR)$(uaserverincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_protocol_la_LIBADD =
 am_libopcua_protocol_la_OBJECTS =  \
@@ -170,7 +171,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(addonsinclude_HEADERS)
+HEADERS = $(addonsinclude_HEADERS) $(uaserverinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -329,6 +330,7 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
   -I$(top_srcdir)/builtin_server/include
 
 lib_LTLIBRARIES = libopcua_protocol.la
+uaserverinclude_HEADERS = include/opc/ua/server/opcua_protocol.h
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
 libopcua_protocol_la_SOURCES = \
  ../endpoint_services/src/endpoints_parameters.cpp \
@@ -759,6 +761,27 @@ uninstall-addonsincludeHEADERS:
 	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(addonsincludedir)'; $(am__uninstall_files_from_dir)
+install-uaserverincludeHEADERS: $(uaserverinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(uaserverincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(uaserverincludedir)" || exit $$?; \
+	done
+
+uninstall-uaserverincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(uaserverincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -941,7 +964,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -997,7 +1020,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-addonsincludeHEADERS
+install-data-am: install-addonsincludeHEADERS \
+	install-uaserverincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -1043,7 +1067,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
+uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES \
+	uninstall-uaserverincludeHEADERS
 
 .MAKE: check-am install-am install-strip
 
@@ -1057,11 +1082,12 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-addonsincludeHEADERS uninstall-am \
-	uninstall-libLTLIBRARIES
+	install-uaserverincludeHEADERS installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonsincludeHEADERS uninstall-am \
+	uninstall-libLTLIBRARIES uninstall-uaserverincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

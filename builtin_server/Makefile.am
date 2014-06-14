@@ -26,6 +26,9 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
 lib_LTLIBRARIES = libbuiltin_server_addon.la
 
+uaserverinclude_HEADERS = \
+  include/opc/ua/server/builtin_server.h
+
 addonsinclude_HEADERS = \
   include/opc/ua/server/addons/builtin_server.h
 

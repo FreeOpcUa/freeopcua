@@ -23,9 +23,12 @@ COMMON_INCLUDES = \
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 lib_LTLIBRARIES = libopcua_tcp_server.la
-addonsinclude_HEADERS = \
-  include/opc/ua/server/addons/tcp_server.h \
+
+uaserverinclude_HEADERS = \
   include/opc/ua/server/tcp_server.h
+
+addonsinclude_HEADERS = \
+  include/opc/ua/server/addons/tcp_server.h
 
 libopcua_tcp_server_la_SOURCES = \
   src/tcp_server_factory.cpp \

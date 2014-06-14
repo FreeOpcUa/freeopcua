@@ -29,7 +29,9 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
   -I$(top_srcdir)/builtin_server/include
 
 lib_LTLIBRARIES = libopcua_protocol.la
+uaserverinclude_HEADERS = include/opc/ua/server/opcua_protocol.h
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
+
 libopcua_protocol_la_SOURCES = \
  ../endpoint_services/src/endpoints_parameters.cpp \
  src/opcua_protocol_addon.cpp \

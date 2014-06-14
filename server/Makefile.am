@@ -30,10 +30,22 @@ COMMON_INCLUDES = \
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 
 
+opcuainclude_HEADERS = include/opc/ua/opcuaserver.h
+
+
 lib_LTLIBRARIES = libopcua_server.la
 libopcua_server_la_SOURCES = \
+   include/opc/ua/server/opcuaserver.h \
    src/opcuaserver.cpp
 
 libopcua_server_la_CPPFLAGS = $(COMMON_INCLUDES)
-libopcua_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -no-undefined
+libopcua_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)  $(UAMAPPINGS_LIBS) $(OPC_CLIENT_LIBS)\
+  -L$(top_builddir)/standard_namespace/.libs -lstandard_ns_addon \
+  -L$(top_builddir)/address_space/.libs -laddress_space_addon \
+  -L$(top_builddir)/binary_protocol/.libs -lopcua_protocol \
+  -L$(top_builddir)/endpoint_services/.libs -lendpoints_services_addon \
+  -L$(top_builddir)/services_registry/.libs -lservices_registry_addon \
+  -L$(top_builddir)/tcp_server/.libs -lopcua_tcp_server \
+  -no-undefined
+  
 

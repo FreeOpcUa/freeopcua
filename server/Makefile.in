@@ -25,6 +25,7 @@
 # $Date: $
 # $Revision: $
 
+
 VPATH = @srcdir@
 am__make_dryrun = \
   { \
@@ -62,7 +63,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = server
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(opcuainclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -98,7 +100,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(opcuaincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_server_la_LIBADD =
 am_libopcua_server_la_OBJECTS = libopcua_server_la-opcuaserver.lo
@@ -119,6 +121,15 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 SOURCES = $(libopcua_server_la_SOURCES)
 DIST_SOURCES = $(libopcua_server_la_SOURCES)
 am__can_run_installinfo = \
@@ -126,6 +137,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(opcuainclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -281,12 +293,22 @@ COMMON_INCLUDES = \
   $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+opcuainclude_HEADERS = include/opc/ua/opcuaserver.h
 lib_LTLIBRARIES = libopcua_server.la
 libopcua_server_la_SOURCES = \
+   include/opc/ua/server/opcuaserver.h \
    src/opcuaserver.cpp
 
 libopcua_server_la_CPPFLAGS = $(COMMON_INCLUDES)
-libopcua_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -no-undefined
+libopcua_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)  $(UAMAPPINGS_LIBS) $(OPC_CLIENT_LIBS)\
+  -L$(top_builddir)/standard_namespace/.libs -lstandard_ns_addon \
+  -L$(top_builddir)/address_space/.libs -laddress_space_addon \
+  -L$(top_builddir)/binary_protocol/.libs -lopcua_protocol \
+  -L$(top_builddir)/endpoint_services/.libs -lendpoints_services_addon \
+  -L$(top_builddir)/services_registry/.libs -lservices_registry_addon \
+  -L$(top_builddir)/tcp_server/.libs -lopcua_tcp_server \
+  -no-undefined
+
 all: all-am
 
 .SUFFIXES:
@@ -397,6 +419,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-opcuaincludeHEADERS: $(opcuainclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(opcuainclude_HEADERS)'; test -n "$(opcuaincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(opcuaincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(opcuaincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(opcuaincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(opcuaincludedir)" || exit $$?; \
+	done
+
+uninstall-opcuaincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(opcuainclude_HEADERS)'; test -n "$(opcuaincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(opcuaincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -482,9 +525,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(opcuaincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -540,7 +583,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-opcuaincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -586,7 +629,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -597,12 +640,13 @@ uninstall-am: uninstall-libLTLIBRARIES
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES
+	install-libLTLIBRARIES install-man install-opcuaincludeHEADERS \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
