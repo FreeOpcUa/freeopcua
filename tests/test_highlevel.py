@@ -13,17 +13,17 @@ class Unit(unittest.TestCase):
         self.assertEqual(nid, zero)
 
     def test_string_nodeid(self):
-        nid = opcua.NodeID(1, "titi")
+        nid = opcua.NodeID("titi", 1)
         self.assertEqual(nid.namespace_index, 1)
         self.assertEqual(nid.identifier, "titi")
 
     def test_numeric_nodeid(self):
-        nid = opcua.NodeID(2, 999)
+        nid = opcua.NodeID(999, 2)
         self.assertEqual(nid.namespace_index, 2)
         self.assertEqual(nid.identifier, 999)
 
     def test_qualified_name(self):
-        qn = opcua.QualifiedName(2, "qname")
+        qn = opcua.QualifiedName("qname", 2)
         self.assertEqual(qn.namespace_index, 2)
         self.assertEqual(qn.name, "qname")
 
@@ -31,14 +31,14 @@ class Unit(unittest.TestCase):
 class CommonTests(object):
     def test_root(self):
         root = self.opc.get_root_node()
-        self.assertEqual(opcua.QualifiedName(0, "Root"), root.get_name())
-        nid = opcua.NodeID(0, 84) 
+        self.assertEqual(opcua.QualifiedName("Root", 0), root.get_name())
+        nid = opcua.NodeID(84, 0) 
         self.assertEqual( nid ,root.get_id())
 
     def test_objects(self):
         objects = self.opc.get_objects_node()
-        self.assertEqual(opcua.QualifiedName(0, "Objects"), objects.get_name())
-        nid = opcua.NodeID(0, 85) 
+        self.assertEqual(opcua.QualifiedName("Objects", 0), objects.get_name())
+        nid = opcua.NodeID(85, 0) 
         self.assertEqual( nid ,objects.get_id())
 
     def test_add_nodes(self):
@@ -47,44 +47,69 @@ class CommonTests(object):
         v = f.add_variable("3:MyVariable", 6)
         p = f.add_property("3:MyProperty", 10)
         childs = f.get_children()
-        print(v, childs)
         self.assertTrue( v in childs)
         self.assertTrue( p in childs)
 
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
-        v = objects.add_variable("3:888", "3:numericnodefromstring", 1)
+        v = objects.add_variable("ns=3; i=888;", "3:numericnodefromstring", 1)
         self.assertEqual( nid ,v.get_id())
         self.assertEqual(qn, v.get_name())
 
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
-        v = objects.add_variable("3:stringid", "3:stringnodefromstring", 1)
+        v = objects.add_variable("ns=3;s=stringid;", "3:stringnodefromstring", 1)
         self.assertEqual( nid ,v.get_id())
         self.assertEqual(qn, v.get_name())
 
-
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
-        nid = opcua.NodeID(3, 9999)
-        qn = opcua.QualifiedName(3, "AddNodeVar1")
+        nid = opcua.NodeID(9999, 3)
+        qn = opcua.QualifiedName("AddNodeVar1", 3)
         v1 = objects.add_variable(nid, qn, 0)
-        self.assertEqual( nid ,v1.get_id())
+        self.assertEqual(nid ,v1.get_id())
         self.assertEqual(qn, v1.get_name())
 
     def test_add_string_node(self):
         objects = self.opc.get_objects_node()
-        qn = opcua.QualifiedName(3, "AddNodeVar2")
-        nid = opcua.NodeID(3, "AddNodeVar2Id")
+        qn = opcua.QualifiedName("AddNodeVar2", 3)
+        nid = opcua.NodeID("AddNodeVar2Id", 3)
         v2 = objects.add_variable(nid, qn, 0)
-        self.assertEqual( nid ,v2.get_id())
+        self.assertEqual(nid ,v2.get_id())
         self.assertEqual(qn, v2.get_name())
+
+    def test_add_find_node_(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("ns=2;i=101;", "2:AddFindObject")
+        o2 = objects.get_child("2:AddFindObject")
+        self.assertEqual(o, o2)
+
+    def test_node_path(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("ns=2;i=105;", "2:NodePathObject")
+        root = self.opc.get_root_node()
+        o2 = root.get_child(["0:Objects", "2:NodePathObject"])
+        self.assertEqual(o, o2)
+
+    def test_add_read_node(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("ns=2;i=102;", "2:AddReadObject")
+        nid = opcua.NodeID(102, 2)
+        self.assertEqual(o.get_id(), nid)
+        qn = opcua.QualifiedName("AddReadObject", 2)
+        self.assertEqual(o.get_name(), qn)
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableTestValue", 4.32)
         val = v.get_value()
         self.assertEqual(4.32, val)
+
+    def test_add_exception(self):
+        objects = self.opc.get_objects_node()
+        o = objects.add_object("ns=2;i=103;", "2:AddReadObject")
+        with self.assertRaises(RuntimeError):
+            o2 = objects.add_object("ns=2;i=103;", "2:AddReadObject")
 
     def test_negative_value(self):
         o = self.opc.get_objects_node()
@@ -99,13 +124,12 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual([1,2,3], val)
 
-
     def test_array_size_one_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:VariableArrayValue", [1,2,3])
         v.set_value([1])
         val = v.get_value()
-        self.assertEqual(1, val) #This should be fixed!!! it should be [1]
+        self.assertEqual([1], val) 
 
 
 class ServerProcess(Process):
@@ -167,5 +191,5 @@ class TestServer(unittest.TestCase, CommonTests):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
 

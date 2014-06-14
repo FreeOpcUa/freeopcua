@@ -53,7 +53,7 @@ namespace OpcUa
   }
 
   template <typename T>
-  std::vector<T> FromList(const python::object& list)
+  std::vector<T> ToVector(const python::object& list)
   {
     std::vector<T> result;
     std::size_t listSize = python::len(list);
@@ -74,13 +74,18 @@ namespace OpcUa
     {
     }
 
-    PyNodeID(uint16_t ns, uint32_t id)
+    PyNodeID(uint32_t id, uint16_t ns)
       : ID(id, ns)
     {
     }
 
-    PyNodeID(uint16_t ns, const std::string& id)
+    PyNodeID(const std::string& id, uint16_t ns)
       : ID(id, ns)
+    {
+    }
+
+    explicit PyNodeID(const std::string& encoded)
+      : ID(OpcUa::ToNodeID(encoded))
     {
     }
 
@@ -121,7 +126,7 @@ namespace OpcUa
     uint8_t GetEncodingValue() const
     {
       return ID.Encoding;
-    } 
+    }
 
     bool IsInteger() const
     {
@@ -355,8 +360,7 @@ namespace OpcUa
   };
 
 
-  typedef QualifiedName PyQualifiedName;
-
+  typedef OpcUa::QualifiedName PyQualifiedName;
 
   struct PyReferenceDescription
   {
@@ -417,7 +421,9 @@ namespace OpcUa
 
   struct VariantToObjectConverter
   {
+    VariantToObjectConverter(bool isArray):IsArray(isArray){};
     python::object Result;
+    bool IsArray;
 
     template <typename T>
     void Visit(const std::vector<T>& values)
@@ -427,7 +433,7 @@ namespace OpcUa
         return;
       }
 
-      if (values.size() == 1)
+      if (!IsArray  && values.size() == 1)
       {
         Result = python::object(values[0]);
         return;
@@ -443,12 +449,12 @@ namespace OpcUa
     {
       return python::object();
     }
-    VariantToObjectConverter convertor;
+    VariantToObjectConverter convertor(var.IsArray());
     OpcUa::ApplyVisitor(var, convertor);
     return convertor.Result;
   }
 
-  Variant FromObject(const python::object object)
+  Variant ToVariant(const python::object object)
   {
     Variant var;
     if (python::extract<std::string>(object).check())
@@ -465,15 +471,15 @@ namespace OpcUa
       {
         if (python::extract<int>(object[0]).check())
         {
-          var = FromList<int>(object);
+          var = ToVector<int>(object);
         }
         else if (python::extract<double>(object[0]).check())
         {
-          var = FromList<double>(object);
+          var = ToVector<double>(object);
         }
         else if (python::extract<std::string>(object[0]).check())
         {
-          var = FromList<std::string>(object);
+          var = ToVector<std::string>(object);
         }
         else
         {
@@ -491,8 +497,8 @@ namespace OpcUa
     }
     else if (python::extract<NodeID>(object).check())
     {
-      var = FromList<NodeID>(object);
-      //std::vector<PyNodeID> ids = FromList<PyNodeID>(object);
+      var = ToVector<NodeID>(object);
+      //std::vector<PyNodeID> ids = ToVector<PyNodeID>(object);
       //std::vector<NodeID> result(ids.size());
       //std::transform(ids.begin(), ids.end(), result.begin(), GetNode);
       //var = result;
@@ -504,8 +510,8 @@ namespace OpcUa
     return var;
   }
 
-  //similar to FromObject but gives a hint to what c++ object type the python object should be converted to
-  Variant FromObject2(const python::object object, VariantType vtype)
+  //similar to ToVariant but gives a hint to what c++ object type the python object should be converted to
+  Variant ToVariant2(const python::object object, VariantType vtype)
   {
     Variant var;
 
@@ -522,13 +528,13 @@ namespace OpcUa
         switch (vtype)
         {
           case VariantType::BOOLEAN:
-            var = FromList<bool>(object);
+            var = ToVector<bool>(object);
             return var;
           case VariantType::UINT32:
-            var = FromList<uint32_t>(object);
+            var = ToVector<uint32_t>(object);
             return var;
           default:
-            return FromObject(object);
+            return ToVariant(object);
         }
       }
     }
@@ -544,7 +550,7 @@ namespace OpcUa
           var = python::extract<uint32_t>(object)();
           return var;
         default:
-          return FromObject(object);
+          return ToVariant(object);
       }
     }
   }
@@ -653,7 +659,7 @@ namespace OpcUa
     }
     if (pyValue.Data.Value)
     {
-      result.Data.Value = FromObject(pyValue.Data.Value);
+      result.Data.Value = ToVariant(pyValue.Data.Value);
       result.Data.Encoding |= DATA_VALUE;
     }
     return result;
@@ -724,7 +730,7 @@ namespace OpcUa
     //    std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
     python::list Write(const python::list& in)
     {
-      const std::vector<PyWriteValue>& pyValues = FromList<PyWriteValue>(in);
+      const std::vector<PyWriteValue>& pyValues = ToVector<PyWriteValue>(in);
       std::vector<WriteValue> values;
       for (std::vector<PyWriteValue>::const_iterator valueIt = pyValues.begin(); valueIt != pyValues.end(); ++valueIt)
       {
@@ -971,13 +977,13 @@ namespace OpcUa
 
       python::object PySetValue(python::object val) 
       { 
-        OpcUa::StatusCode code = Node::SetValue(FromObject(val)); 
+        OpcUa::StatusCode code = Node::SetValue(ToVariant(val)); 
         return ToObject(code); 
       }
 
       python::object PySetValue2(python::object val, VariantType hint) 
       { 
-        Variant var = FromObject2(val, hint); 
+        Variant var = ToVariant2(val, hint); 
         OpcUa::StatusCode code = Node::SetValue(var); 
         return ToObject(code); 
       }
@@ -992,9 +998,9 @@ namespace OpcUa
         return result;
       }
 
-      PyNode PyGetChild(python::object path) 
+      PyNode PyGetChild(python::object path)
       {
-        Node n = Node::GetChild(FromList<std::string>(path));
+        Node n = Node::GetChild(ToVector<std::string>(path));
         return PyNode(n);
       }
 
@@ -1006,13 +1012,13 @@ namespace OpcUa
       PyNode PyAddObject2(std::string nodeid, std::string browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
       PyNode PyAddObject3(PyNodeID nodeid, QualifiedName browsename) { return PyNode(Node::AddObject(nodeid.ID, browsename)); }
 
-      PyNode PyAddVariable(std::string browsename, python::object val) { return PyNode(Node::AddVariable(browsename, FromObject(val))); }
-      PyNode PyAddVariable2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, FromObject(val))); }
-      PyNode PyAddVariable3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddVariable(nodeid.ID, browsename, FromObject(val))); }
+      PyNode PyAddVariable(std::string browsename, python::object val) { return PyNode(Node::AddVariable(browsename, ToVariant(val))); }
+      PyNode PyAddVariable2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddVariable3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddVariable(nodeid.ID, browsename, ToVariant(val))); }
 
-      PyNode PyAddProperty(std::string browsename, python::object val) { return PyNode(Node::AddProperty(browsename, FromObject(val))); }
-      PyNode PyAddProperty2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, FromObject(val))); }
-      PyNode PyAddProperty3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddProperty(nodeid.ID, browsename, FromObject(val))); }
+      PyNode PyAddProperty(std::string browsename, python::object val) { return PyNode(Node::AddProperty(browsename, ToVariant(val))); }
+      PyNode PyAddProperty2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddProperty3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddProperty(nodeid.ID, browsename, ToVariant(val))); }
 
   };
 
@@ -1022,7 +1028,7 @@ namespace OpcUa
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid.ID)); }
-      //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(FromList<std::string>(path)); }
+      //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
   };
 
 
@@ -1034,7 +1040,7 @@ namespace OpcUa
       PyNode PyGetObjectsNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder); }
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid.ID)); }
-      PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(FromList<std::string>(path)); }
+      PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
   };
 }
 
@@ -1112,8 +1118,9 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
 
   class_<PyNodeID>("NodeID")
-    .def(init<uint16_t, uint32_t>())
-    .def(init<uint16_t, std::string>())
+    .def(init<uint32_t, uint16_t>())
+    .def(init<std::string, uint16_t>())
+    .def(init<std::string>())
     .def_readonly("namespace_index", &PyNodeID::GetNamespaceIndex)
     .def_readonly("identifier", &PyNodeID::GetIdentifier)
     .def("get_encoding", &PyNodeID::GetEncodingValue)
@@ -1133,7 +1140,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
     .def_readwrite("name", &PyQualifiedName::Name)
     .def(str(self))
-    //.def(repr(self))
+    .def(repr(self))
     //.def(self_ns::str(self_ns::self))
     //.def("__str__", operator<<)
     .def(self == self)
@@ -1226,7 +1233,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
 
     def("VariantToObject", ToObject);
-    def("ObjectToVariant", FromObject);
+    def("ObjectToVariant", ToVariant);
 
     class_<Variant>("Variant")
         .def_readonly("value", &Variant::Value)
@@ -1314,7 +1321,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
           .def("get_objects_node", &PyOPCUAServer::PyGetObjectsNode)
           .def("get_node", &PyOPCUAServer::PyGetNode)
-          .def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
+          //.def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
           //.def("get_node_from_qn_path", NodeFromPathQN)
           .def("set_uri", &PyOPCUAServer::SetURI)
           .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
@@ -1324,3 +1331,4 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
       ;
 
 }
+
