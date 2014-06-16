@@ -11,9 +11,8 @@
 
 #pragma once
 
-#include "../src/standard_namespace.h"
-
 #include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/server/addons/standard_namespace.h>
 
 namespace OpcUa
 {
@@ -23,8 +22,8 @@ namespace OpcUa
     void RegisterStandardNamespace(Common::AddonsManager& addons)
     {
       Common::AddonInformation config;
-      config.Factory.reset(new OpcUa::Internal::StandardNamespaceAddonFactory());
-      config.ID = OpcUa::Internal::StandardNamespaceAddonID;
+      config.Factory.reset(new OpcUa::UaServer::StandardNamespaceAddonFactory());
+      config.ID = OpcUa::UaServer::StandardNamespaceAddonID;
       config.Dependencies.push_back(OpcUa::UaServer::AddressSpaceRegistryAddonID);
       addons.Register(config);
     }

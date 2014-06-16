@@ -66,7 +66,7 @@ TESTS = test_opcua_protocol_addon$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
 subdir = binary_protocol
 DIST_COMMON = $(addonsinclude_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in $(uaserverinclude_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -103,7 +103,8 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(addonsincludedir)"
+	"$(DESTDIR)$(addonsincludedir)" \
+	"$(DESTDIR)$(uaserverincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libopcua_protocol_la_LIBADD =
 am_libopcua_protocol_la_OBJECTS =  \
@@ -127,6 +128,7 @@ am_test_opcua_protocol_addon_OBJECTS =  \
 	test_opcua_protocol_addon-builtin_server_impl.$(OBJEXT) \
 	test_opcua_protocol_addon-endpoints_parameters.$(OBJEXT) \
 	test_opcua_protocol_addon-endpoints_services_addon.$(OBJEXT) \
+	test_opcua_protocol_addon-endpoints_registry.$(OBJEXT) \
 	test_opcua_protocol_addon-services_registry_factory.$(OBJEXT) \
 	test_opcua_protocol_addon-services_registry_impl.$(OBJEXT) \
 	test_opcua_protocol_addon-standard_namespace_addon.$(OBJEXT) \
@@ -169,7 +171,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(addonsinclude_HEADERS)
+HEADERS = $(addonsinclude_HEADERS) $(uaserverinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -328,6 +330,7 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
   -I$(top_srcdir)/builtin_server/include
 
 lib_LTLIBRARIES = libopcua_protocol.la
+uaserverinclude_HEADERS = include/opc/ua/server/opcua_protocol.h
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
 libopcua_protocol_la_SOURCES = \
  ../endpoint_services/src/endpoints_parameters.cpp \
@@ -356,8 +359,7 @@ test_opcua_protocol_addon_SOURCES = \
   ../builtin_server/src/builtin_server_impl.h \
   ../endpoint_services/src/endpoints_parameters.cpp \
   ../endpoint_services/src/endpoints_services_addon.cpp \
-  ../endpoint_services/src/endpoints_services_addon.h \
-  ../endpoint_services/src/endpoints_services_factory.h \
+  ../endpoint_services/src/endpoints_registry.cpp \
   ../services_registry/src/services_registry_factory.cpp \
   ../services_registry/src/services_registry_factory.h \
   ../services_registry/src/services_registry_impl.cpp \
@@ -463,6 +465,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-builtin_server_factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-builtin_server_impl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-endpoints_parameters.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-endpoints_services_addon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-opc_tcp_processor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_opcua_protocol_addon-opcua_protocol_addon.Po@am__quote@
@@ -662,6 +665,20 @@ test_opcua_protocol_addon-endpoints_services_addon.obj: ../endpoint_services/src
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-endpoints_services_addon.obj `if test -f '../endpoint_services/src/endpoints_services_addon.cpp'; then $(CYGPATH_W) '../endpoint_services/src/endpoints_services_addon.cpp'; else $(CYGPATH_W) '$(srcdir)/../endpoint_services/src/endpoints_services_addon.cpp'; fi`
 
+test_opcua_protocol_addon-endpoints_registry.o: ../endpoint_services/src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-endpoints_registry.o -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Tpo -c -o test_opcua_protocol_addon-endpoints_registry.o `test -f '../endpoint_services/src/endpoints_registry.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Tpo $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../endpoint_services/src/endpoints_registry.cpp' object='test_opcua_protocol_addon-endpoints_registry.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-endpoints_registry.o `test -f '../endpoint_services/src/endpoints_registry.cpp' || echo '$(srcdir)/'`../endpoint_services/src/endpoints_registry.cpp
+
+test_opcua_protocol_addon-endpoints_registry.obj: ../endpoint_services/src/endpoints_registry.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-endpoints_registry.obj -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Tpo -c -o test_opcua_protocol_addon-endpoints_registry.obj `if test -f '../endpoint_services/src/endpoints_registry.cpp'; then $(CYGPATH_W) '../endpoint_services/src/endpoints_registry.cpp'; else $(CYGPATH_W) '$(srcdir)/../endpoint_services/src/endpoints_registry.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Tpo $(DEPDIR)/test_opcua_protocol_addon-endpoints_registry.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../endpoint_services/src/endpoints_registry.cpp' object='test_opcua_protocol_addon-endpoints_registry.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_opcua_protocol_addon-endpoints_registry.obj `if test -f '../endpoint_services/src/endpoints_registry.cpp'; then $(CYGPATH_W) '../endpoint_services/src/endpoints_registry.cpp'; else $(CYGPATH_W) '$(srcdir)/../endpoint_services/src/endpoints_registry.cpp'; fi`
+
 test_opcua_protocol_addon-services_registry_factory.o: ../services_registry/src/services_registry_factory.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_opcua_protocol_addon_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_opcua_protocol_addon-services_registry_factory.o -MD -MP -MF $(DEPDIR)/test_opcua_protocol_addon-services_registry_factory.Tpo -c -o test_opcua_protocol_addon-services_registry_factory.o `test -f '../services_registry/src/services_registry_factory.cpp' || echo '$(srcdir)/'`../services_registry/src/services_registry_factory.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/test_opcua_protocol_addon-services_registry_factory.Tpo $(DEPDIR)/test_opcua_protocol_addon-services_registry_factory.Po
@@ -744,6 +761,27 @@ uninstall-addonsincludeHEADERS:
 	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(addonsincludedir)'; $(am__uninstall_files_from_dir)
+install-uaserverincludeHEADERS: $(uaserverinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(uaserverincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(uaserverincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(uaserverincludedir)" || exit $$?; \
+	done
+
+uninstall-uaserverincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(uaserverincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -926,7 +964,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -982,7 +1020,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-addonsincludeHEADERS
+install-data-am: install-addonsincludeHEADERS \
+	install-uaserverincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -1028,7 +1067,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
+uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES \
+	uninstall-uaserverincludeHEADERS
 
 .MAKE: check-am install-am install-strip
 
@@ -1042,11 +1082,12 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-addonsincludeHEADERS uninstall-am \
-	uninstall-libLTLIBRARIES
+	install-uaserverincludeHEADERS installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonsincludeHEADERS uninstall-am \
+	uninstall-libLTLIBRARIES uninstall-uaserverincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -62,9 +62,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = address_space
-DIST_COMMON = $(addonsinclude_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(uaserverinclude_HEADERS)
+subdir = server
+DIST_COMMON = $(opcuainclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -100,19 +100,14 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(addonsincludedir)" \
-	"$(DESTDIR)$(uaserverincludedir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(opcuaincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libaddress_space_addon_la_LIBADD =
-am_libaddress_space_addon_la_OBJECTS = address_space_addon.lo \
-	address_space_internal.lo address_space_module.lo
-libaddress_space_addon_la_OBJECTS =  \
-	$(am_libaddress_space_addon_la_OBJECTS)
-libaddress_space_addon_la_LINK = $(LIBTOOL) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) \
-	$(libaddress_space_addon_la_LDFLAGS) $(LDFLAGS) -o $@
+libopcua_server_la_LIBADD =
+am_libopcua_server_la_OBJECTS = libopcua_server_la-opcuaserver.lo
+libopcua_server_la_OBJECTS = $(am_libopcua_server_la_OBJECTS)
+libopcua_server_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(libopcua_server_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -135,14 +130,14 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libaddress_space_addon_la_SOURCES)
-DIST_SOURCES = $(libaddress_space_addon_la_SOURCES)
+SOURCES = $(libopcua_server_la_SOURCES)
+DIST_SOURCES = $(libopcua_server_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(addonsinclude_HEADERS) $(uaserverinclude_HEADERS)
+HEADERS = $(opcuainclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -282,27 +277,38 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
+uaclientincludedir = $(opcuaincludedir)/client
 uaserverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(uaserverincludedir)/addons
 configdir = $(sysconfdir)/opcua
-AM_CPPFLAGS = -Iinclude -I$(top_srcdir)/services_registry/include $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
-TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
-lib_LTLIBRARIES = libaddress_space_addon.la
-uaserverinclude_HEADERS = \
-  include/opc/ua/server/address_space.h
+serverconfigdir = $(configdir)/server
+COMMON_INCLUDES = \
+  -I$(top_srcdir)/standard_namespace/include \
+  -I$(top_srcdir)/address_space/include \
+  -I$(top_srcdir)/binary_protocol/include \
+  -I$(top_srcdir)/endpoint_services/include \
+  -I$(top_srcdir)/services_registry/include \
+  -I$(top_srcdir)/tcp_server/include \
+  -I$(top_srcdir)/server/include \
+  $(UAMAPPINGS_INCLUDES) $(OPC_CORE_INCLUDES)
 
-addonsinclude_HEADERS = \
-  include/opc/ua/server/addons/address_space.h
+TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+opcuainclude_HEADERS = include/opc/ua/opcuaserver.h
+lib_LTLIBRARIES = libopcua_server.la
+libopcua_server_la_SOURCES = \
+   include/opc/ua/server/opcuaserver.h \
+   src/opcuaserver.cpp
 
-libaddress_space_addon_la_SOURCES = \
-   src/address_space_addon.cpp \
-   src/address_space_addon.h \
-   src/address_space_internal.cpp \
-   src/address_space_internal.h \
-   src/address_space_module.cpp
+libopcua_server_la_CPPFLAGS = $(COMMON_INCLUDES)
+libopcua_server_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS)  $(UAMAPPINGS_LIBS) $(OPC_CLIENT_LIBS)\
+  -L$(top_builddir)/standard_namespace/.libs -lstandard_ns_addon \
+  -L$(top_builddir)/address_space/.libs -laddress_space_addon \
+  -L$(top_builddir)/binary_protocol/.libs -lopcua_protocol \
+  -L$(top_builddir)/endpoint_services/.libs -lendpoints_services_addon \
+  -L$(top_builddir)/services_registry/.libs -lservices_registry_addon \
+  -L$(top_builddir)/tcp_server/.libs -lopcua_tcp_server \
+  -no-undefined
 
-libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -lboost_thread
-EXTRA_DIST = tests/address_space_registry_test.h
 all: all-am
 
 .SUFFIXES:
@@ -316,9 +322,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu address_space/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu server/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu address_space/Makefile
+	  $(AUTOMAKE) --gnu server/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -369,8 +375,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libaddress_space_addon.la: $(libaddress_space_addon_la_OBJECTS) $(libaddress_space_addon_la_DEPENDENCIES) $(EXTRA_libaddress_space_addon_la_DEPENDENCIES) 
-	$(libaddress_space_addon_la_LINK) -rpath $(libdir) $(libaddress_space_addon_la_OBJECTS) $(libaddress_space_addon_la_LIBADD) $(LIBS)
+libopcua_server.la: $(libopcua_server_la_OBJECTS) $(libopcua_server_la_DEPENDENCIES) $(EXTRA_libopcua_server_la_DEPENDENCIES) 
+	$(libopcua_server_la_LINK) -rpath $(libdir) $(libopcua_server_la_OBJECTS) $(libopcua_server_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -378,9 +384,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/address_space_addon.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/address_space_internal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/address_space_module.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcua_server_la-opcuaserver.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -403,74 +407,39 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-address_space_addon.lo: src/address_space_addon.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT address_space_addon.lo -MD -MP -MF $(DEPDIR)/address_space_addon.Tpo -c -o address_space_addon.lo `test -f 'src/address_space_addon.cpp' || echo '$(srcdir)/'`src/address_space_addon.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/address_space_addon.Tpo $(DEPDIR)/address_space_addon.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/address_space_addon.cpp' object='address_space_addon.lo' libtool=yes @AMDEPBACKSLASH@
+libopcua_server_la-opcuaserver.lo: src/opcuaserver.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcua_server_la-opcuaserver.lo -MD -MP -MF $(DEPDIR)/libopcua_server_la-opcuaserver.Tpo -c -o libopcua_server_la-opcuaserver.lo `test -f 'src/opcuaserver.cpp' || echo '$(srcdir)/'`src/opcuaserver.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcua_server_la-opcuaserver.Tpo $(DEPDIR)/libopcua_server_la-opcuaserver.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/opcuaserver.cpp' object='libopcua_server_la-opcuaserver.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o address_space_addon.lo `test -f 'src/address_space_addon.cpp' || echo '$(srcdir)/'`src/address_space_addon.cpp
-
-address_space_internal.lo: src/address_space_internal.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT address_space_internal.lo -MD -MP -MF $(DEPDIR)/address_space_internal.Tpo -c -o address_space_internal.lo `test -f 'src/address_space_internal.cpp' || echo '$(srcdir)/'`src/address_space_internal.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/address_space_internal.Tpo $(DEPDIR)/address_space_internal.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/address_space_internal.cpp' object='address_space_internal.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o address_space_internal.lo `test -f 'src/address_space_internal.cpp' || echo '$(srcdir)/'`src/address_space_internal.cpp
-
-address_space_module.lo: src/address_space_module.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT address_space_module.lo -MD -MP -MF $(DEPDIR)/address_space_module.Tpo -c -o address_space_module.lo `test -f 'src/address_space_module.cpp' || echo '$(srcdir)/'`src/address_space_module.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/address_space_module.Tpo $(DEPDIR)/address_space_module.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/address_space_module.cpp' object='address_space_module.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o address_space_module.lo `test -f 'src/address_space_module.cpp' || echo '$(srcdir)/'`src/address_space_module.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcua_server_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcua_server_la-opcuaserver.lo `test -f 'src/opcuaserver.cpp' || echo '$(srcdir)/'`src/opcuaserver.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-addonsincludeHEADERS: $(addonsinclude_HEADERS)
+install-opcuaincludeHEADERS: $(opcuainclude_HEADERS)
 	@$(NORMAL_INSTALL)
-	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
+	@list='$(opcuainclude_HEADERS)'; test -n "$(opcuaincludedir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(addonsincludedir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(addonsincludedir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(opcuaincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(opcuaincludedir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(addonsincludedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(addonsincludedir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(opcuaincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(opcuaincludedir)" || exit $$?; \
 	done
 
-uninstall-addonsincludeHEADERS:
+uninstall-opcuaincludeHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
+	@list='$(opcuainclude_HEADERS)'; test -n "$(opcuaincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(addonsincludedir)'; $(am__uninstall_files_from_dir)
-install-uaserverincludeHEADERS: $(uaserverinclude_HEADERS)
-	@$(NORMAL_INSTALL)
-	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(uaserverincludedir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(uaserverincludedir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(uaserverincludedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(uaserverincludedir)" || exit $$?; \
-	done
-
-uninstall-uaserverincludeHEADERS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(uaserverinclude_HEADERS)'; test -n "$(uaserverincludedir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(uaserverincludedir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(opcuaincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -558,7 +527,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(uaserverincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(opcuaincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -614,8 +583,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-addonsincludeHEADERS \
-	install-uaserverincludeHEADERS
+install-data-am: install-opcuaincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -661,8 +629,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES \
-	uninstall-uaserverincludeHEADERS
+uninstall-am: uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -670,17 +637,16 @@ uninstall-am: uninstall-addonsincludeHEADERS uninstall-libLTLIBRARIES \
 	clean-libLTLIBRARIES clean-libtool ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-addonsincludeHEADERS install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	install-uaserverincludeHEADERS installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-addonsincludeHEADERS uninstall-am \
-	uninstall-libLTLIBRARIES uninstall-uaserverincludeHEADERS
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-opcuaincludeHEADERS \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

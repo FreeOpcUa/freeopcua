@@ -9,9 +9,7 @@
 ///
 
 
-#ifndef ADDRESS_SPACE_FACTORY_H
-#define ADDRESS_SPACE_FACTORY_H
-
+#pragma once
 
 #include <opc/common/addons_core/addon.h>
 
@@ -19,6 +17,8 @@ namespace OpcUa
 {
   namespace UaServer
   {
+
+    const char AddressSpaceRegistryAddonID[] = "address_space_registry";
 
     class AddressSpaceAddonFactory : public Common::AddonFactory
     {
@@ -29,7 +29,5 @@ namespace OpcUa
       virtual Common::Addon::UniquePtr CreateAddon();
     };
 
-  }
+  } // namespace UaServer
 } // namespace OpcUa
-#endif /* ADDRESS_SPACE_FACTORY_H */
-

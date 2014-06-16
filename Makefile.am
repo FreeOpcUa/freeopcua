@@ -17,7 +17,8 @@ SUBDIRS = \
   services_registry \
   standard_namespace \
   tcp_server \
-  xml_address_space_loader
+  xml_address_space_loader \
+  server
 
 EXTRA_DIST = \
   debian make_deb.sh

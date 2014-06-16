@@ -8,9 +8,10 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "standard_namespace.h"
+#include <opc/ua/server/addons/standard_namespace.h>
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Internal::StandardNamespaceAddon());
+  OpcUa::UaServer::StandardNamespaceAddonFactory factory;
+  return factory.CreateAddon();
 }

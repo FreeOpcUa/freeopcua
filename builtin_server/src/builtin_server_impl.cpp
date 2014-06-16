@@ -14,66 +14,31 @@
 
 using namespace OpcUa::Impl;
 
-namespace
+
+class OpcUa::Impl::BufferedInput : public OpcUa::InputChannel
 {
+public:
+  explicit BufferedInput(bool debug);
+  virtual std::size_t Receive(char* data, std::size_t size);
+  void AddBuffer(const char* buf, std::size_t size);
+  void Stop();
 
-  class BufferedIO : public OpcUa::IOChannel
+  virtual int WaitForData(float second)
   {
-  public:
-    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output, bool debug)
-      : Input(input)
-      , Output(output)
-      , ID(channelID)
-      , Debug(debug)
-    {
-    }
-
-    virtual std::size_t Receive(char* data, std::size_t size)
-    {
-      if (Debug) std::clog << ID << ": receive data." << std::endl;
-
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
-      {
-        return input->Receive(data, size);
-      }
-      return 0;
-    }
-
-    virtual int WaitForData(float second)
-    {
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
-      {
-        return input->WaitForData(second);
-      }
-      return 0;
-    }
-
-    virtual void Send(const char* message, std::size_t size)
-    {
-      if (Debug) std::clog << ID << ": send data." << std::endl;
-
-      std::shared_ptr<BufferedInput> output = Output.lock();
-      if (output)
-      {
-        output->AddBuffer(message, size);
-      }
-    }
-
-  private:
-    std::weak_ptr<InputChannel> Input;
-    std::weak_ptr<BufferedInput> Output;
-    const std::string ID;
-    bool Debug;
-  };
-
-
-  void Process(std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
-  {
-    processor->Process(channel);
+    return 1;
   }
-}  // namespace
+
+private:
+  void ThrowIfStopped();
+
+private:
+  std::vector<char> Buffer;
+  std::atomic<bool> Running;
+  std::mutex BufferMutex;
+  std::condition_variable DataReady;
+  bool Debug;
+};
+
 
 BufferedInput::BufferedInput(bool debug)
   : Running(true)
@@ -150,6 +115,69 @@ void BufferedInput::ThrowIfStopped()
     throw std::logic_error("Conversation through connection stopped.");
   }
 }
+
+
+namespace
+{
+
+  class BufferedIO : public OpcUa::IOChannel
+  {
+  public:
+    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output, bool debug)
+      : Input(input)
+      , Output(output)
+      , ID(channelID)
+      , Debug(debug)
+    {
+    }
+
+    virtual std::size_t Receive(char* data, std::size_t size)
+    {
+      if (Debug) std::clog << ID << ": receive data." << std::endl;
+
+      std::shared_ptr<InputChannel> input = Input.lock();
+      if (input)
+      {
+        return input->Receive(data, size);
+      }
+      return 0;
+    }
+
+    virtual int WaitForData(float second)
+    {
+      std::shared_ptr<InputChannel> input = Input.lock();
+      if (input)
+      {
+        return input->WaitForData(second);
+      }
+      return 0;
+    }
+
+    virtual void Send(const char* message, std::size_t size)
+    {
+      if (Debug) std::clog << ID << ": send data." << std::endl;
+
+      std::shared_ptr<BufferedInput> output = Output.lock();
+      if (output)
+      {
+        output->AddBuffer(message, size);
+      }
+    }
+
+  private:
+    std::weak_ptr<InputChannel> Input;
+    std::weak_ptr<BufferedInput> Output;
+    const std::string ID;
+    bool Debug;
+  };
+
+
+  void Process(std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
+  {
+    processor->Process(channel);
+  }
+}  // namespace
+
 
 
 BuiltinServerAddon::BuiltinServerAddon()

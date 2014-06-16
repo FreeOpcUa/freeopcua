@@ -12,7 +12,8 @@
 
 #include <opc/ua/object_ids.h>
 #include <opc/ua/attribute_ids.h>
-#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/server/addons/address_space.h>
+#include <opc/ua/server/address_space.h>
 #include <opc/ua/status_codes.h>
 
 #include <functional>

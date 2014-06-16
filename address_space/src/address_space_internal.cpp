@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server/addons/address_space_registry.h>
+#include "address_space_addon.h"
 
 #include <opc/ua/attributes.h>
 #include <opc/ua/node_management.h>

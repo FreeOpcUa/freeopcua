@@ -8,11 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "endpoints_services_addon.h"
+#include <opc/ua/server/addons/endpoints_services.h>
 
 
 extern "C" Common::Addon::UniquePtr CreateAddon()
 {
-  return Common::Addon::UniquePtr(new OpcUa::Impl::EndpointsAddon());
+  OpcUa::UaServer::EndpointsRegistryAddonFactory factory;
+  return factory.CreateAddon();
 }
 

@@ -8,14 +8,20 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "opc_tcp_processor.h"
+#include <opc/ua/server/addons/opcua_protocol.h>
+#include <opc/ua/server/opcua_protocol.h>
 
+#include <opc/common/uri_facade.h>
 #include <opc/ua/input_from_buffer.h>
+#include <opc/ua/connection_listener.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
+#include <opc/ua/server/addons/endpoints_services.h>
+#include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server/addons/tcp_server.h>
 #include <opc/ua/status_codes.h>
 #include <opc/ua/string_utils.h>
 
@@ -99,7 +105,7 @@ namespace
       }
     }
 
-    virtual void StopProcessing(std::shared_ptr<OpcUa::IOChannel> clientChannel)
+    virtual void StopProcessing(OpcUa::IOChannel::SharedPtr clientChannel)
     {
     }
 
@@ -758,18 +764,53 @@ namespace
     std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
   };
 
-}
-
-namespace OpcUa
-{
-  namespace Internal
+  class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol
   {
+  public:
+    DEFINE_CLASS_POINTERS(OpcUaProtocol);
 
-    std::unique_ptr<IncomingConnectionProcessor> CreateOpcTcpProcessor(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
+  public:
+    OpcUaProtocol(OpcUa::UaServer::TcpServer::SharedPtr tcpServer, bool debug)
+      : Debug(debug)
+      , TcpAddon(tcpServer)
     {
-      return std::unique_ptr<IncomingConnectionProcessor>(new OpcTcp(computer, debug));
     }
 
-  }
+    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Server::SharedPtr server) override
+    {
+      for (const EndpointDescription endpoint : endpoints)
+      {
+        const Common::Uri uri(endpoint.EndpointURL);
+        if (uri.Scheme() == "opc.tcp")
+        {
+          std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
+          TcpParameters tcpParams;
+          tcpParams.Port = uri.Port();
+          if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
+          TcpAddon->Listen(tcpParams, processor);
+          Ports.push_back(tcpParams);
+        }
+      }
+    }
+
+    virtual void StopEndpoints() override
+    {
+      for (const TcpParameters& params : Ports)
+      {
+        TcpAddon->StopListen(params);
+      }
+      TcpAddon.reset();
+    }
+
+  private:
+    OpcUa::UaServer::TcpServer::SharedPtr TcpAddon;
+    std::vector<TcpParameters> Ports;
+    bool Debug;
+  };
+
 }
 
+OpcUa::UaServer::OpcUaProtocol::UniquePtr OpcUa::UaServer::CreateOpcUaProtocol(OpcUa::UaServer::TcpServer::SharedPtr tcpServer, bool debug)
+{
+  return OpcUaProtocol::UniquePtr(new ::OpcUaProtocol(tcpServer, debug));
+}

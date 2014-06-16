@@ -55,9 +55,11 @@ namespace
 TEST(TcpServer, AcceptConnections)
 {
   std::shared_ptr<IncomingConnectionProcessorMock> clientsProcessor(new IncomingConnectionProcessorMock);
+  OpcUa::UaServer::TcpParameters params;
+  params.Port = TestPort;
 
-  std::unique_ptr<OpcUa::UaServer::ConnectionListener> server = OpcUa::CreateTcpServer(TestPort);
-  server->Start(clientsProcessor);
+  std::unique_ptr<OpcUa::UaServer::TcpServer> server = OpcUa::UaServer::CreateTcpServer();
+  server->Listen(params, clientsProcessor);
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   {
     std::unique_ptr<OpcUa::RemoteConnection> connect;
@@ -65,7 +67,7 @@ TEST(TcpServer, AcceptConnections)
     ASSERT_TRUE(connect.get());
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  server->Stop();
+  server->StopListen(params);
 
   EXPECT_EQ(clientsProcessor->ProcessCallCount, 1);
 }
@@ -89,12 +91,13 @@ namespace
 
 TEST(TcpServer, CanSendAndReceiveData)
 {
-  const unsigned int port = TestPort + 1;
-  std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> clientsProcessor(new EchoProcessor());
-  std::unique_ptr<OpcUa::UaServer::ConnectionListener> server = OpcUa::CreateTcpServer(port);
-  server->Start(clientsProcessor);
+  OpcUa::UaServer::TcpParameters params;
+  params.Port = TestPort + 1;
+  std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> clientProcessor(new EchoProcessor());
+  std::unique_ptr<OpcUa::UaServer::TcpServer> server = OpcUa::UaServer::CreateTcpServer();
+  server->Listen(params, clientProcessor);
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", port);
+  std::unique_ptr<OpcUa::RemoteConnection> connection = OpcUa::Connect("localhost", params.Port);
 
   char data[4] = {0, 1, 2, 3};
   connection->Send(data, 4);
@@ -102,7 +105,7 @@ TEST(TcpServer, CanSendAndReceiveData)
   char dataReceived[4] = {0};
   connection->Receive(dataReceived, 4);
   connection.reset();
-  server->Stop();
+  server->StopListen(params);
   server.reset();
   ASSERT_EQ(memcmp(data, dataReceived, 4), 0);
 }

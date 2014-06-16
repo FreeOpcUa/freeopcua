@@ -31,8 +31,6 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(AddressSpace);
     };
 
-    const char AddressSpaceRegistryAddonID[] = "address_space_registry";
-
     AddressSpace::UniquePtr CreateAddressSpace();
 
   } // namespace UaServer

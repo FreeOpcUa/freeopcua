@@ -11,7 +11,7 @@
 #include "endpoints_services_test.h"
 #include "../../services_registry/tests/services_registry_test.h"
 
-//#include <chrono>
+#include <opc/ua/server/endpoints_services.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -41,9 +41,9 @@ protected:
 
 TEST_F(EndpointsRegistry, CanBeCreated)
 {
-  OpcUa::UaServer::EndpointsServicesAddon::SharedPtr endpoints;
+  OpcUa::UaServer::EndpointsRegistry::SharedPtr endpoints;
 
-  ASSERT_NO_THROW(endpoints = Addons->GetAddon<OpcUa::UaServer::EndpointsServicesAddon>(OpcUa::UaServer::EndpointsServicesAddonID));
+  ASSERT_NO_THROW(endpoints = Addons->GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID));
   ASSERT_TRUE(static_cast<bool>(endpoints));
 }
 
@@ -52,10 +52,10 @@ TEST_F(EndpointsRegistry, RegisterEndpoints)
   OpcUa::EndpointDescription desc;
   desc.EndpointURL = "url";
 
-  OpcUa::UaServer::EndpointsServicesAddon::SharedPtr endpoints = Addons->GetAddon<OpcUa::UaServer::EndpointsServicesAddon>(OpcUa::UaServer::EndpointsServicesAddonID);
+  OpcUa::UaServer::EndpointsRegistry::SharedPtr endpoints = Addons->GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
   endpoints->AddEndpoints(std::vector<OpcUa::EndpointDescription>(1, desc));
 
-  OpcUa::UaServer::ServicesRegistryAddon::SharedPtr services = Addons->GetAddon<OpcUa::UaServer::ServicesRegistryAddon>(OpcUa::UaServer::ServicesRegistryAddonID);
+  OpcUa::UaServer::ServicesRegistry::SharedPtr services = Addons->GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
   OpcUa::Remote::Server::SharedPtr computer = services->GetServer();
   std::vector<OpcUa::EndpointDescription> descriptions;
   ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::EndpointsFilter()));

@@ -9,13 +9,11 @@
 ///
 
 
-#ifndef ADDRESS_SPACE_ADDON_H_
-#define ADDRESS_SPACE_ADDON_H_
+#pragma once
 
-
-#include <opc/ua/server/addons/address_space_registry.h>
 #include <opc/common/addons_core/addon.h>
-#include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server/address_space.h>
+#include <opc/ua/server/services_registry.h>
 #include <opc/ua/view.h>
 #include <opc/ua/subscriptions.h>
 
@@ -59,16 +57,13 @@ namespace OpcUa
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds);
       virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements);
 
+    public: // MonitoredItemsServices
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
-
- 
 
     private:
       OpcUa::UaServer::AddressSpace::SharedPtr Registry;
-      std::shared_ptr<OpcUa::UaServer::ServicesRegistryAddon> InternalServer;
+      std::shared_ptr<OpcUa::UaServer::ServicesRegistry> InternalServer;
     };
 
-  }
+  } // namespace UaServer
 } // namespace OpcUa
-
-#endif /* ADDRESS_SPACE_ADDON_H_ */

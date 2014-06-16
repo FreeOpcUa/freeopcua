@@ -3,17 +3,16 @@
 
 #include<string>
 
-#include <opc/ua/server/addons/tcp_server_addon.h>
-#include <opc/ua/server/addons/address_space_registry.h>
-#include <opc/ua/server/endpoints_services.h>
-#include <opc/ua/server/addons/opcua_protocol.h>
-
-#include <opc/ua/server/addons/services_registry.h>
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
-#include <opc/ua/server.h>
 #include <opc/ua/node.h>
+#include <opc/ua/server.h>
+#include <opc/ua/server/tcp_server.h>
+#include <opc/ua/server/address_space.h>
+#include <opc/ua/server/endpoints_services.h>
+#include <opc/ua/server/opcua_protocol.h>
+#include <opc/ua/server/services_registry.h>
 
 
 namespace OpcUa
@@ -44,15 +43,15 @@ namespace OpcUa
       std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine
       std::string Uri = "freeopcua.github.io";
       std::string Name = "Open Source OPC-UA Server";
+      bool Debug = false;
       OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
 
-      UaServer::ServicesRegistryAddon::SharedPtr Registry;
-      UaServer::TcpServerAddon::SharedPtr TcpServer;
-      UaServer::EndpointsServicesAddon::UniquePtr EndpointsServices;
+      UaServer::ServicesRegistry::SharedPtr Registry;
+      UaServer::TcpServer::SharedPtr TcpServer;
+      UaServer::EndpointsRegistry::SharedPtr EndpointsServices;
       UaServer::AddressSpace::SharedPtr AddressSpace;
-      Common::Addon::UniquePtr Protocol;
-      
+      UaServer::OpcUaProtocol::SharedPtr Protocol;
   };
 
 }

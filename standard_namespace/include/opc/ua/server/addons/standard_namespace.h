@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <opc/common/addons_core/addon.h>
 #include <opc/ua/node_management.h>
 
 namespace OpcUa
@@ -17,7 +18,13 @@ namespace OpcUa
   namespace UaServer
   {
 
-    void FillStandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug);
+    class StandardNamespaceAddonFactory : public Common::AddonFactory
+    {
+    public:
+      virtual Common::Addon::UniquePtr CreateAddon();
+    };
+
+    const char StandardNamespaceAddonID[] = "standard_namespace";
 
   } // namespace UaServer
 } // namespace OpcUa

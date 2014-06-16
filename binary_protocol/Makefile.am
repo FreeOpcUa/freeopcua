@@ -29,7 +29,9 @@ TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
   -I$(top_srcdir)/builtin_server/include
 
 lib_LTLIBRARIES = libopcua_protocol.la
+uaserverinclude_HEADERS = include/opc/ua/server/opcua_protocol.h
 addonsinclude_HEADERS = include/opc/ua/server/addons/opcua_protocol.h
+
 libopcua_protocol_la_SOURCES = \
  ../endpoint_services/src/endpoints_parameters.cpp \
  src/opcua_protocol_addon.cpp \
@@ -61,8 +63,7 @@ test_opcua_protocol_addon_SOURCES = \
   ../builtin_server/src/builtin_server_impl.h \
   ../endpoint_services/src/endpoints_parameters.cpp \
   ../endpoint_services/src/endpoints_services_addon.cpp \
-  ../endpoint_services/src/endpoints_services_addon.h \
-  ../endpoint_services/src/endpoints_services_factory.h \
+  ../endpoint_services/src/endpoints_registry.cpp \
   ../services_registry/src/services_registry_factory.cpp \
   ../services_registry/src/services_registry_factory.h \
   ../services_registry/src/services_registry_impl.cpp \

@@ -19,18 +19,20 @@ AM_CPPFLAGS = -Iinclude -I$(top_srcdir)/services_registry/include $(UAMAPPINGS_I
 TESTINCLUDES = $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(top_srcdir)/tests
 
 lib_LTLIBRARIES = libaddress_space_addon.la
+
+uaserverinclude_HEADERS = \
+  include/opc/ua/server/address_space.h
+
 addonsinclude_HEADERS = \
-  include/opc/ua/server/addons/address_space_registry.h
+  include/opc/ua/server/addons/address_space.h
 
 libaddress_space_addon_la_SOURCES = \
    src/address_space_addon.cpp \
    src/address_space_addon.h \
    src/address_space_internal.cpp \
    src/address_space_internal.h \
-   src/address_space_module.cpp \
-   tests/address_space_registry_test.h
+   src/address_space_module.cpp
 
 libaddress_space_addon_la_LDFLAGS = -lpthread -ldl  $(OPC_CORE_LIBS) $(UAMAPPINGS_LIBS) -lboost_thread
 
-#check_PROGRAMS = $(TESTS)
-
+EXTRA_DIST = tests/address_space_registry_test.h

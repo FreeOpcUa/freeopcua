@@ -13,7 +13,7 @@
 #include "xml_address_space_loader.h"
 #include "xml_processor.h"
 
-#include <opc/ua/server/addons/address_space_registry.h>
+#include <opc/ua/server/address_space.h>
 
 #include <libxml2/libxml/xmlmemory.h>
 #include <libxml2/libxml/parser.h>

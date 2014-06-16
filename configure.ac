@@ -99,5 +99,6 @@ AC_CONFIG_FILES([services_registry/Makefile])
 AC_CONFIG_FILES([standard_namespace/Makefile])
 AC_CONFIG_FILES([tcp_server/Makefile])
 AC_CONFIG_FILES([xml_address_space_loader/Makefile])
+AC_CONFIG_FILES([server/Makefile])
 AC_OUTPUT
 

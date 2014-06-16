@@ -112,19 +112,18 @@ namespace
   };
 
 
-  class TcpServer
-    : public ConnectionListener
-    , private Common::ThreadObserver
+  class TcpServerConnection : private Common::ThreadObserver
   {
   public:
-    TcpServer(unsigned short port)
-      : Port(port)
+    TcpServerConnection(const TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
+      : Port(params.Port)
       , Stopped(true)
       , Socket(-1)
+      , Processor(processor)
     {
     }
 
-    virtual ~TcpServer()
+    virtual ~TcpServerConnection()
     {
       try
       {
@@ -136,10 +135,12 @@ namespace
       }
     }
 
-    virtual void Start(std::shared_ptr<IncomingConnectionProcessor> connectionProcessor) 
+    virtual void Start()
     {
-      Processor = connectionProcessor;
-      StartNewThread();
+      if (!ServerThread)
+      {
+        StartNewThread();
+      }
     }
 
     virtual void Stop()
@@ -151,10 +152,6 @@ namespace
         shutdown(Socket, SHUT_RDWR);
         ServerThread->Join();
         ServerThread.reset();
-        if (Processor)
-        {
-          Processor.reset();
-        }
       }
     }
 
@@ -175,7 +172,7 @@ namespace
     {
       std::clog << "Starting new server thread." << std::endl;
       Stopped = false;
-      std::function<void()> func = std::bind(&TcpServer::Run, std::ref(*this));
+      std::function<void()> func = std::bind(&TcpServerConnection::Run, std::ref(*this));
       ServerThread.reset(new Common::Thread(func, this));
     }
 
@@ -226,7 +223,7 @@ namespace
 
         std::unique_lock<std::mutex> lock(ClientsMutex);
         std::shared_ptr<IOChannel> clientChannel(new SocketChannel(clientSocket));
-        std::shared_ptr<Client> clientThread(new Client(clientChannel, Processor, std::bind(&TcpServer::Erase, std::ref(*this), clientSocket)));
+        std::shared_ptr<Client> clientThread(new Client(clientChannel, Processor, std::bind(&TcpServerConnection::Erase, std::ref(*this), clientSocket)));
         ClientThreads.insert(std::make_pair(clientSocket, clientThread));
       }
 
@@ -251,10 +248,53 @@ namespace
     std::mutex ClientsMutex;
     std::map<int, std::shared_ptr<Client>> ClientThreads;
   };
-}
 
-std::unique_ptr<OpcUa::UaServer::ConnectionListener> OpcUa::CreateTcpServer(unsigned short port)
+  class TcpServer : public OpcUa::UaServer::TcpServer
+  {
+  public:
+    DEFINE_CLASS_POINTERS(TcpServer);
+
+    void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor) override
+    {
+      if (Servers.find(params.Port) != std::end(Servers))
+      {
+        // TODO add portnumber into message.
+        throw std::logic_error("Server already started at this port.");
+      }
+
+      std::shared_ptr<TcpServerConnection> listener(new TcpServerConnection(params, processor));
+      listener->Start();
+      Servers.insert(std::make_pair(params.Port, listener));
+    }
+
+    void StopListen(const OpcUa::UaServer::TcpParameters& params) override
+    {
+      ServersMap::iterator serverIt = Servers.find(params.Port);
+      if (serverIt == std::end(Servers))
+      {
+        return;
+      }
+
+      try
+      {
+        serverIt->second->Stop();
+        Servers.erase(serverIt);
+      }
+      catch (const std::exception& exc)
+      {
+        // TODO add port number to the message
+        std::clog << "Stopping TcpServerAddon failed with error: " << exc.what() << std::endl;
+      }
+    }
+
+  private:
+    typedef std::map<unsigned short, std::shared_ptr<TcpServerConnection>> ServersMap;
+    ServersMap Servers;
+  };
+
+} // namespace
+
+std::unique_ptr<OpcUa::UaServer::TcpServer> OpcUa::UaServer::CreateTcpServer()
 {
-  return std::unique_ptr<OpcUa::UaServer::ConnectionListener>(new TcpServer(port));
+  return std::unique_ptr<OpcUa::UaServer::TcpServer>(new ::TcpServer());
 }
-

@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include "../../services_registry/src/services_registry_factory.h"
-
 #include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/server/addons/services_registry.h>
+
 
 namespace OpcUa
 {

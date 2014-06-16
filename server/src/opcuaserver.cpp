@@ -17,9 +17,7 @@ namespace OpcUa
 
   void OPCUAServer::Start()
   {
-    Registry = UaServer::CreateServicesRegistry();
-    TcpServer = UaServer::CreateTcpServerAddon();
-    EndpointsServices = UaServer::CreateEndpointsServices(Registry);
+    EndpointsServices = UaServer::CreateEndpointsRegistry();
    
     std::vector<ApplicationDescription> Applications;
     ApplicationDescription appdesc;
@@ -35,16 +33,23 @@ namespace OpcUa
     ed.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
     Endpoints.push_back(ed);
 
+    EndpointsServices->AddApplications(Applications);
+    EndpointsServices->AddEndpoints(Endpoints);
+
+    Registry = UaServer::CreateServicesRegistry();
+    Registry->RegisterEndpointsServices(EndpointsServices);
+
     AddressSpace = UaServer::CreateAddressSpace(); 
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);
     Registry->RegisterSubscriptionServices(AddressSpace);
 
-    UaServer::CreateStandardNamespace(Registry->GetServer()->NodeManagement());
+    UaServer::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
 
-    Protocol = UaServer::CreateOpcUaProtocol(Registry, TcpServer, Endpoints);
-
+    TcpServer = UaServer::CreateTcpServer();
+    Protocol = UaServer::CreateOpcUaProtocol(TcpServer, Debug);
+    Protocol->StartEndpoints(Endpoints, Registry->GetServer());
   }
   
   Node OPCUAServer::GetNode(NodeID nodeid)
