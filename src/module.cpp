@@ -903,10 +903,18 @@ namespace OpcUa
         return result;
       }
 
-      PyNode PyGetChild(python::object path)
+      PyNode PyGetChild(const python::object path)
       {
-        Node n = Node::GetChild(ToVector<std::string>(path));
-        return PyNode(n);
+        if (python::extract<std::string>(path).check())
+        {
+          Node n = Node::GetChild(python::extract<std::string>(path)());
+          return PyNode(n);
+        }
+        else
+        {
+          Node n = Node::GetChild(ToVector<std::string>(path));
+          return PyNode(n);
+        }
       }
 
       PyNode PyAddFolder(std::string browsename) { return PyNode(Node::AddFolder(browsename)); }
