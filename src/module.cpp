@@ -359,7 +359,7 @@ namespace OpcUa
     return convertor.Result;
   }
 
-  Variant ToVariant(const python::object object)
+  Variant ToVariant(const python::object& object)
   {
     Variant var;
     if (python::extract<std::string>(object).check())
@@ -416,7 +416,7 @@ namespace OpcUa
   }
 
   //similar to ToVariant but gives a hint to what c++ object type the python object should be converted to
-  Variant ToVariant2(const python::object object, VariantType vtype)
+  Variant ToVariant2(const python::object& object, VariantType vtype)
   {
     Variant var;
 
@@ -880,13 +880,13 @@ namespace OpcUa
       python::object PyGetName() { return ToObject(Node::GetName()); }
       PyNodeID PyGetNodeID() { return PyNodeID(Node::GetId()); }
 
-      python::object PySetValue(python::object val) 
+      python::object PySetValue(const python::object& val) 
       { 
         OpcUa::StatusCode code = Node::SetValue(ToVariant(val)); 
         return ToObject(code); 
       }
 
-      python::object PySetValue2(python::object val, VariantType hint) 
+      python::object PySetValue2(const python::object& val, VariantType hint) 
       { 
         Variant var = ToVariant2(val, hint); 
         OpcUa::StatusCode code = Node::SetValue(var); 
@@ -903,7 +903,7 @@ namespace OpcUa
         return result;
       }
 
-      PyNode PyGetChild(const python::object path)
+      PyNode PyGetChild(const python::object& path)
       {
         if (python::extract<std::string>(path).check())
         {
@@ -917,21 +917,21 @@ namespace OpcUa
         }
       }
 
-      PyNode PyAddFolder(std::string browsename) { return PyNode(Node::AddFolder(browsename)); }
-      PyNode PyAddFolder2(std::string nodeid, std::string browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
-      PyNode PyAddFolder3(PyNodeID nodeid, QualifiedName browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
+      PyNode PyAddFolder(const std::string& browsename) { return PyNode(Node::AddFolder(browsename)); }
+      PyNode PyAddFolder2(const std::string& nodeid, const std::string& browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
+      PyNode PyAddFolder3(const PyNodeID& nodeid, const QualifiedName browsename) { return PyNode(Node::AddFolder(nodeid, browsename)); }
 
-      PyNode PyAddObject(std::string browsename) { return PyNode(Node::AddObject(browsename)); }
-      PyNode PyAddObject2(std::string nodeid, std::string browsename) { return PyNode(Node::AddObject(OpcUa::ToNodeID(nodeid), OpcUa::ToQualifiedName(browsename, 0))); }
-      PyNode PyAddObject3(PyNodeID nodeid, QualifiedName browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
+      PyNode PyAddObject(const std::string& browsename) { return PyNode(Node::AddObject(browsename)); }
+      PyNode PyAddObject2(const std::string& nodeid, const std::string& browsename) { return PyNode(Node::AddObject(OpcUa::ToNodeID(nodeid), OpcUa::ToQualifiedName(browsename, 0))); }
+      PyNode PyAddObject3(const PyNodeID& nodeid, const QualifiedName& browsename) { return PyNode(Node::AddObject(nodeid, browsename)); }
 
-      PyNode PyAddVariable(std::string browsename, python::object val) { return PyNode(Node::AddVariable(browsename, ToVariant(val))); }
-      PyNode PyAddVariable2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val))); }
-      PyNode PyAddVariable3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddVariable(const std::string& browsename, const python::object& val) { return PyNode(Node::AddVariable(browsename, ToVariant(val))); }
+      PyNode PyAddVariable2(const std::string& nodeid, const std::string& browsename, const python::object& val) { return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddVariable3(const PyNodeID& nodeid, const QualifiedName& browsename, const python::object& val) { return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val))); }
 
-      PyNode PyAddProperty(std::string browsename, python::object val) { return PyNode(Node::AddProperty(browsename, ToVariant(val))); }
-      PyNode PyAddProperty2(std::string nodeid, std::string browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val))); }
-      PyNode PyAddProperty3(PyNodeID nodeid, QualifiedName browsename, python::object val) { return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddProperty(const std::string& browsename, const python::object& val) { return PyNode(Node::AddProperty(browsename, ToVariant(val))); }
+      PyNode PyAddProperty2(const std::string& nodeid, const std::string& browsename, const python::object& val) { return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val))); }
+      PyNode PyAddProperty3(const PyNodeID& nodeid, const QualifiedName& browsename, const python::object& val) { return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val))); }
 
   };
 
