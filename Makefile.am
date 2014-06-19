@@ -8,19 +8,20 @@ EXTRA_DIST = \
   Makefile.in \
   setup.py
 
+opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
 
 all:
-	python setup.py build
+	$(opcua_paths) python setup.py build
 
 check:
-	$(MAKE) -C tests check
+	$(opcua_paths) $(MAKE) -C tests check
 	
 clean:
 	$(MAKE) -C tests clean
 	rm -rvf build dist
 
 python-dist:
-	python setup.py bdist
+	$(opcua_paths) python setup.py bdist
 
 dist:
 
@@ -28,5 +29,5 @@ distclean: clean
 	rm -vf Makefile
 
 install: python-dist
-	python setup.py install --prefix=$(prefix)
+	$(opcua_paths)python setup.py install --prefix=$(prefix)
 

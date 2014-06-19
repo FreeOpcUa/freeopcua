@@ -2,30 +2,37 @@
 
 from distutils.core import setup
 from distutils.extension import Extension
+import os
 
-sources = ['../src/module.cpp',
-           'test_computer.cpp'
-          ] 
+opcua_server_path = os.environ['OPCUA_SERVER_PATH']
+
+sources = [
+	'../src/module.cpp',
+	'test_computer.cpp'
+] 
+
 
 includes = [
-            '../../client/include',
-            '../../libuamappings/include',
-            '../../libopccore/include']
+	opcua_server_path + '/include',
+]
 
-cpp_flags = ['-std=c++11', 
-             '-DMODULE_NAME=test_opcua', 
-             '-Wl,--no-undefined']
+cpp_flags = [
+	'-std=c++11', 
+	'-DMODULE_NAME=test_opcua',
+	'-Wl,--no-undefined'
+]
 
-libs = ['opccore',
-        'opcuabinary',
-        'stdc++',
-        'pthread',
-        'boost_python']
+libs = [
+	'opc_tcp_client',
+	'opcua_server',
+	'stdc++',
+	'pthread',
+	'boost_python'
+]
 
 ldirs = [
-            '../../libuamappings/.libs',
-            '../../libopccore/.libs',
-            '../../client']
+	opcua_server_path + '/lib'
+]
 
 opcua_client = Extension(
     'test_opcua', 
@@ -43,7 +50,7 @@ setup(name='test_opcua',
       description='Client interface for OPC UA servers.',
       author='Alexander Rykovanov',
       author_email='rykovanov.as@gmail.com',
-      url='https://github.com/treww/opc_layer',
+      url='https://github.com/treww/opcua-python',
       license = 'LGPL',
       ext_modules = modules       
       )

@@ -2,28 +2,33 @@
 
 from distutils.core import setup
 from distutils.extension import Extension
+import os
+
+opcua_server_path = os.environ['OPCUA_SERVER_PATH']
 
 sources = ['src/module.cpp'] 
 
 includes = [
-            '../client/include',
-            '../libuamappings/include',
-            '../libopccore/include']
+	opcua_server_path + '/include',
+]
 
-cpp_flags = ['-std=c++11', 
-             '-DMODULE_NAME=opcua']
+cpp_flags = [
+	'-std=c++11', 
+	'-DMODULE_NAME=opcua',
+	'-Wl,--no-undefined'
+]
 
-libs = ['opccore',
-        'opcuabinary',
-        'opcua_client',
-        'stdc++',
-        'pthread',
-        'boost_python']
+libs = [
+	'opc_tcp_client',
+	'opcua_server',
+	'stdc++',
+	'pthread',
+	'boost_python'
+]
 
 ldirs = [
-            '../client/.libs',
-            '../libopccore/.libs',
-            '../libuamappings/.libs']
+	opcua_server_path + '/lib'
+]
 
 opcua_client = Extension(
     'opcua', 
@@ -41,7 +46,7 @@ setup(name='opcua',
       description='Client interface for OPC UA servers.',
       author='Alexander Rykovanov',
       author_email='rykovanov.as@gmail.com',
-      url='https://github.com/treww/opc_layer',
+      url='https://github.com/treww/opcua-python',
       license = 'LGPL',
       ext_modules = modules       
       )
