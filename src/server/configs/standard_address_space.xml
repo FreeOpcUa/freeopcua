@@ -1,0 +1,1233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<address_space version="1">
+
+  <node>
+    <attributes>
+      <id type="numeric">84</id>
+      <class>object</class>
+      <browse_name>Root</browse_name>
+      <display_name>Root</display_name>
+      <description>Root</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+    <references>
+      <has_type_definition node="61" name="FolderType"/>
+      <organizes node="85" name="Objects"/>
+      <organizes node="86" name="Types"/>
+      <organizes node="87" name="Views"/>
+    </references>
+  </node>
+  <node>
+    <attributes>
+      <id type="numeric">85</id>
+      <class>object</class>
+      <browse_name>Objects</browse_name>
+      <display_name>Objects</display_name>
+      <description>Objects</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+  </node>
+
+<!-- 
+  <node>
+    <attributes>
+      <id type="numeric">86</id>
+      <class>object</class>
+      <browse_name>Types</browse_name>
+      <display_name>Types</display_name>
+      <description>Types</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+    <references>
+      <has_type_definition node="61" name="FolderType"/>
+      <organizes node="90"   name="DataTypes"/>
+      <organizes node="3048" name="EventTypes"/>
+      <organizes node="88"   name="ObjectTypes"/>
+      <organizes node="91"   name="ReferenceTypes"/>
+      <organizes node="89"   name="VariableTypes"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">90</id>
+      <class>DataTypes</class>
+      <browse_name>DataTypes</browse_name>
+      <display_name>DataTypes</display_name>
+      <description>DataTypes</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+    <references>
+      <has_type_definition node="61" name="FolderType"/>
+      <organizes node="24" name="BaseDataType"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">24</id>
+      <class>data_type</class>
+      <browse_name>BaseDataType</browse_name>
+      <display_name>BaseDataType</display_name>
+      <description>BaseDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="1" name="Boolean"/>
+      <has_subtype node="15" name="ByteString"/>
+      <has_subtype node="23" name="DataValue"/>
+      <has_subtype node="13" name="DateTime"/>
+      <has_subtype node="25" name="DiagnosticInfo"/>
+      <has_subtype node="29" name="Enumeration"/>
+      <has_subtype node="18" name="ExpandedNodeID"/>
+      <has_subtype node="14" name="Guidd"/>
+      <has_subtype node="21" name="LocalizedText"/>
+      <has_subtype node="17" name="NodeID"/>
+      <has_subtype node="26" name="Number"/>
+      <has_subtype node="20" name="QualifiedName"/>
+      <has_subtype node="12" name="String"/>
+      <has_subtype node="22" name="Structure"/>
+      <has_subtype node="16" name="XmlElement"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">1</id>
+      <class>data_type</class>
+      <browse_name>Boolean</browse_name>
+      <display_name>Boolean</display_name>
+      <description>Boolean</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">15</id>
+      <class>data_type</class>
+      <browse_name>ByteString</browse_name>
+      <display_name>ByteString</display_name>
+      <description>ByteString</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="30" name="Image"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">30</id>
+      <class>data_type</class>
+      <browse_name>Image</browse_name>
+      <display_name>Image</display_name>
+      <description>Image</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="2000" name="ImageBmp"/>
+      <has_subtype node="2001" name="ImageGif"/>
+      <has_subtype node="2002" name="ImageJpg"/>
+      <has_subtype node="2003" name="ImagePng"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">2000</id>
+      <class>data_type</class>
+      <browse_name>ImageBmp</browse_name>
+      <display_name>ImageBmp</display_name>
+      <description>ImageBmp</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">2001</id>
+      <class>data_type</class>
+      <browse_name>ImageGif</browse_name>
+      <display_name>ImageGif</display_name>
+      <description>ImageGif</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">2002</id>
+      <class>data_type</class>
+      <browse_name>ImageJpg</browse_name>
+      <display_name>ImageJpg</display_name>
+      <description>ImageJpg</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">2003</id>
+      <class>data_type</class>
+      <browse_name>ImagePng</browse_name>
+      <display_name>ImagePng</display_name>
+      <description>ImagePng</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">23</id>
+      <class>data_type</class>
+      <browse_name>DataValue</browse_name>
+      <display_name>DataValue</display_name>
+      <description>DataValue</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">13</id>
+      <class>data_type</class>
+      <browse_name>DateTime</browse_name>
+      <display_name>DateTime</display_name>
+      <description>DateTime</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="294" name="UtcTime"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">294</id>
+      <class>data_type</class>
+      <browse_name>UtcTime</browse_name>
+      <display_name>UtcTime</display_name>
+      <description>UtcTime</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">25</id>
+      <class>data_type</class>
+      <browse_name>DiagnosticInfo</browse_name>
+      <display_name>DiagnosticInfo</display_name>
+      <description>DiagnosticInfo</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">29</id>
+      <class>data_type</class>
+      <browse_name>Enumeration</browse_name>
+      <display_name>Enumeration</display_name>
+      <description>Enumeration</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype  node="256" name="IdType"/>
+      <has_subtype  node="302" name="MessageSecurityMode"/>
+      <has_subtype  node="257" name="NodeClass"/>
+      <has_subtype  node="851" name="RedundancySupport"/>
+      <has_subtype  node="315" name="SecurityTokenRequestType"/>
+      <has_subtype  node="852" name="ServerState"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">256</id>
+      <class>data_type</class>
+      <browse_name>IdType</browse_name>
+      <display_name>IdType</display_name>
+      <description>IdType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_property node="7591" name="EnumStrings"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7591</id>
+      <class>variable</class>
+      <browse_name>EnumStrings</browse_name>
+      <display_name>EnumStrings</display_name>
+      <description>EnumStrings</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <value type="enumeration">
+          <localized_text>Numeric</localized_text>
+          <localized_text>String</localized_text>
+          <localized_text>Guid</localized_text>
+          <localized_text>Opaque</localized_text>
+      </value>
+      <data_type>localized_text</data_type>
+      <array_dimensions>1,0</array_dimensions>
+      <access_level>current_read</access_level>
+      <user_access_level>current_read</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>false</historizing>
+      <value_rank>1</value_rank>
+    </attributes>
+    <references>
+      <has_type_definition node="68" name="property_type"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">302</id>
+      <class>data_type</class>
+      <browse_name>MessageSecurityMode</browse_name>
+      <display_name>MessageSecurityMode</display_name>
+      <description>MessageSecurityMode</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_property node="7595" name="EnumStrings"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7595</id>
+      <class>variable</class>
+      <browse_name>EnumStrings</browse_name>
+      <display_name>EnumStrings</display_name>
+      <description>EnumStrings</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <value type="enumeration">
+          <localized_text>Invalid</localized_text>
+          <localized_text>None</localized_text>
+          <localized_text>Sign</localized_text>
+          <localized_text>SignAndEncrypt</localized_text>
+      </value>
+      <data_type>localized_text</data_type>
+      <array_dimensions>1,0</array_dimensions>
+      <access_level>current_read</access_level>
+      <user_access_level>current_read</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>false</historizing>
+      <value_rank>1</value_rank>
+    </attributes>
+    <references>
+      <has_type_definition node="68" name="property_type"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">257</id>
+      <class>data_type</class>
+      <browse_name>NodeClass</browse_name>
+      <display_name>NodeClass</display_name>
+      <description>NodeClass</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">851</id>
+      <class>data_type</class>
+      <browse_name>RedundancySupport</browse_name>
+      <display_name>RedundancySupport</display_name>
+      <description>RedundancySupport</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_property node="7611" name="EnumStrings"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7611</id>
+      <class>variable</class>
+      <browse_name>EnumStrings</browse_name>
+      <display_name>EnumStrings</display_name>
+      <description>EnumStrings</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <value type="enumeration">
+          <localized_text>None</localized_text>
+          <localized_text>Cold</localized_text>
+          <localized_text>Warm</localized_text>
+          <localized_text>Hot</localized_text>
+          <localized_text>Transparent</localized_text>
+      </value>
+      <data_type>localized_text</data_type>
+      <array_dimensions>1,0</array_dimensions>
+      <access_level>current_read</access_level>
+      <user_access_level>current_read</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>false</historizing>
+      <value_rank>1</value_rank>
+    </attributes>
+    <references>
+      <has_type_definition node="68" name="property_type"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">315</id>
+      <class>data_type</class>
+      <browse_name>SecurityTokenRequestType</browse_name>
+      <display_name>SecurityTokenRequestType</display_name>
+      <description>SecurityTokenRequestType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_property node="7598" name="EnumStrings"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7598</id>
+      <class>variable</class>
+      <browse_name>EnumStrings</browse_name>
+      <display_name>EnumStrings</display_name>
+      <description>EnumStrings</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <value type="enumeration">
+          <localized_text>Issue</localized_text>
+          <localized_text>Renew</localized_text>
+      </value>
+      <data_type>localized_text</data_type>
+      <array_dimensions>1,0</array_dimensions>
+      <access_level>current_read</access_level>
+      <user_access_level>current_read</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>false</historizing>
+      <value_rank>1</value_rank>
+    </attributes>
+    <references>
+      <has_type_definition node="68" name="property_type"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">852</id>
+      <class>data_type</class>
+      <browse_name>ServerState</browse_name>
+      <display_name>ServerState</display_name>
+      <description>ServerState</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_property node="7612" name="EnumStrings"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7612</id>
+      <class>variable</class>
+      <browse_name>EnumStrings</browse_name>
+      <display_name>EnumStrings</display_name>
+      <description>EnumStrings</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <value type="enumeration">
+          <localized_text>Running</localized_text>
+          <localized_text>Failed</localized_text>
+          <localized_text>NonConfiguration</localized_text>
+          <localized_text>Suspended</localized_text>
+          <localized_text>Shutdown</localized_text>
+          <localized_text>Test</localized_text>
+          <localized_text>CommunicationFault</localized_text>
+          <localized_text>Unknown</localized_text>
+      </value>
+      <data_type>localized_text</data_type>
+      <array_dimensions>1,0</array_dimensions>
+      <access_level>current_read</access_level>
+      <user_access_level>current_read</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>false</historizing>
+      <value_rank>1</value_rank>
+    </attributes>
+    <references>
+      <has_type_definition node="68" name="property_type"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">18</id>
+      <class>data_type</class>
+      <browse_name>ExpandedNodeID</browse_name>
+      <display_name>ExpandedNodeID</display_name>
+      <description>ExpandedNodeID</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">14</id>
+      <class>data_type</class>
+      <browse_name>Guid</browse_name>
+      <display_name>Guid</display_name>
+      <description>Guid</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">21</id>
+      <class>data_type</class>
+      <browse_name>LocalizedText</browse_name>
+      <display_name>LocalizedText</display_name>
+      <description>LocalizedText</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">17</id>
+      <class>data_type</class>
+      <browse_name>NodeID</browse_name>
+      <display_name>NodeID</display_name>
+      <description>NodeID</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">26</id>
+      <class>data_type</class>
+      <browse_name>Number</browse_name>
+      <display_name>Number</display_name>
+      <description>Number</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="11" name="Double"/>
+      <has_subtype node="10" name="Float"/>
+      <has_subtype node="27" name="Integer"/>
+      <has_subtype node="28" name="UInteger"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">11</id>
+      <class>data_type</class>
+      <browse_name>Double</browse_name>
+      <display_name>Double</display_name>
+      <description>Double</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="290" name="Duration"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">290</id>
+      <class>data_type</class>
+      <browse_name>Duration</browse_name>
+      <display_name>Duration</display_name>
+      <description>Duration</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">10</id>
+      <class>data_type</class>
+      <browse_name>Float</browse_name>
+      <display_name>Float</display_name>
+      <description>Float</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">27</id>
+      <class>data_type</class>
+      <browse_name>Integer</browse_name>
+      <display_name>Integer</display_name>
+      <description>Integer</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">27</id>
+      <class>data_type</class>
+      <browse_name>Integer</browse_name>
+      <display_name>Integer</display_name>
+      <description>Integer</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="4" name="Int16"/>
+      <has_subtype node="6" name="Int32"/>
+      <has_subtype node="8" name="Int64"/>
+      <has_subtype node="2" name="SByte"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">4</id>
+      <class>data_type</class>
+      <browse_name>Int16</browse_name>
+      <display_name>Int16</display_name>
+      <description>Int16</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">6</id>
+      <class>data_type</class>
+      <browse_name>Int32</browse_name>
+      <display_name>Int32</display_name>
+      <description>Int32</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">8</id>
+      <class>data_type</class>
+      <browse_name>Int64</browse_name>
+      <display_name>Int64</display_name>
+      <description>Int64</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">2</id>
+      <class>data_type</class>
+      <browse_name>SByte</browse_name>
+      <display_name>SByte</display_name>
+      <description>SByte</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">28</id>
+      <class>data_type</class>
+      <browse_name>UInteger</browse_name>
+      <display_name>UInteger</display_name>
+      <description>UInteger</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="3" name="Byte"/>
+      <has_subtype node="5" name="UInt16"/>
+      <has_subtype node="7" name="UInt32"/>
+      <has_subtype node="9" name="UInt64"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">3</id>
+      <class>data_type</class>
+      <browse_name>Byte</browse_name>
+      <display_name>Byte</display_name>
+      <description>Byte</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">5</id>
+      <class>data_type</class>
+      <browse_name>UInt16</browse_name>
+      <display_name>UInt16</display_name>
+      <description>UInt16</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">7</id>
+      <class>data_type</class>
+      <browse_name>UInt32</browse_name>
+      <display_name>UInt32</display_name>
+      <description>UInt32</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">9</id>
+      <class>data_type</class>
+      <browse_name>UInt64</browse_name>
+      <display_name>UInt64</display_name>
+      <description>UInt64</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">20</id>
+      <class>data_type</class>
+      <browse_name>QualifiedName</browse_name>
+      <display_name>QualifiedName</display_name>
+      <description>QualifiedName</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">19</id>
+      <class>data_type</class>
+      <browse_name>StatusCode</browse_name>
+      <display_name>StatusCode</display_name>
+      <description>StatusCode</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">12</id>
+      <class>data_type</class>
+      <browse_name>String</browse_name>
+      <display_name>String</display_name>
+      <description>String</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="295" name="LocaleID"/>
+      <has_subtype node="291" name="NumericRange"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">295</id>
+      <class>data_type</class>
+      <browse_name>LocaleID</browse_name>
+      <display_name>LocaleID</display_name>
+      <description>LocaleID</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">291</id>
+      <class>data_type</class>
+      <browse_name>NumericRange</browse_name>
+      <display_name>NumericRange</display_name>
+      <description>NumericRange</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">22</id>
+      <class>data_type</class>
+      <browse_name>StructureType</browse_name>
+      <display_name>StructureType</display_name>
+      <description>StructureType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="376" name="AddNodesItem"/>
+      <has_subtype node="379" name="AddReferencesItem"/>
+      <has_subtype node="308" name="ApplicationDescription"/>
+      <has_subtype node="296" name="Argument"/>
+      <has_subtype node="338" name="BuildInfo"/>
+      <has_subtype node="382" name="DeleteNodesItem"/>
+      <has_subtype node="385" name="DeleteReferencesItem"/>
+      <has_subtype node="887" name="EUInformation"/>
+      <has_subtype node="877" name="ModelChangeStructureDataType"/>
+      <has_subtype node="884" name="Range"/>
+      <has_subtype node="856" name="SamplingIntervalDiagnosticsDataType"/>
+      <has_subtype node="897" name="SemanticChangeStructureDataType"/>
+      <has_subtype node="859" name="ServerDiagnosticsSummaryType"/>
+      <has_subtype node="862" name="ServerStatusDataType"/>
+      <has_subtype node="871" name="ServiceCounterDataType"/>
+      <has_subtype node="865" name="SessionDiagnosticsDataType"/>
+      <has_subtype node="868" name="SessionSecurityDiagnosticsDataType"/>
+      <has_subtype node="344" name="SignedSoftwareCertificate"/>
+      <has_subtype node="299" name="StatusResult"/>
+      <has_subtype node="874" name="SubscriptionDiagnosticsDataType"/>
+      <has_subtype node="316" name="UserIdentifyToken"/>
+    </references>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">376</id>
+      <class>data_type</class>
+      <browse_name>AddNodesItem</browse_name>
+      <display_name>AddNodesItem</display_name>
+      <description>AddNodesItem</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">379</id>
+      <class>data_type</class>
+      <browse_name>AddReferencesItem</browse_name>
+      <display_name>AddReferencesItem</display_name>
+      <description>AddReferencesItem</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">308</id>
+      <class>data_type</class>
+      <browse_name>ApplicationDescription</browse_name>
+      <display_name>ApplicationDescription</display_name>
+      <description>ApplicationDescription</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">2096</id>
+      <class>data_type</class>
+      <browse_name>Argument</browse_name>
+      <display_name>Argument</display_name>
+      <description>Argument</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">338</id>
+      <class>data_type</class>
+      <browse_name>BuildInfo</browse_name>
+      <display_name>BuildInfo</display_name>
+      <description>BuildInfo</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">382</id>
+      <class>data_type</class>
+      <browse_name>DeleteNodesItem</browse_name>
+      <display_name>DeleteNodesItem</display_name>
+      <description>DeleteNodesItem</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">385</id>
+      <class>data_type</class>
+      <browse_name>DeleteReferencesItem</browse_name>
+      <display_name>DeleteReferencesItem</display_name>
+      <description>DeleteReferencesItem</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">887</id>
+      <class>data_type</class>
+      <browse_name>EUInformation</browse_name>
+      <display_name>EUInformation</display_name>
+      <description>EUInformation</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">877</id>
+      <class>data_type</class>
+      <browse_name>ModelChangeStructureDataType</browse_name>
+      <display_name>ModelChangeStructureDataType</display_name>
+      <description>ModelChangeStructureDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">884</id>
+      <class>data_type</class>
+      <browse_name>Range</browse_name>
+      <display_name>Range</display_name>
+      <description>Range</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">856</id>
+      <class>data_type</class>
+      <browse_name>SamplingIntervalDiagnosticsDataType</browse_name>
+      <display_name>SamplingIntervalDiagnosticsDataType</display_name>
+      <description>SamplingIntervalDiagnosticsDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">897</id>
+      <class>data_type</class>
+      <browse_name>SemanticChangeStructureDataType</browse_name>
+      <display_name>SemanticChangeStructureDataType</display_name>
+      <description>SemanticChangeStructureDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">859</id>
+      <class>data_type</class>
+      <browse_name>ServerDiagnosticsSummaryType</browse_name>
+      <display_name>ServerDiagnosticsSummaryType</display_name>
+      <description>ServerDiagnosticsSummaryType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">862</id>
+      <class>data_type</class>
+      <browse_name>ServerStatusDataType</browse_name>
+      <display_name>ServerStatusDataType</display_name>
+      <description>ServerStatusDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">871</id>
+      <class>data_type</class>
+      <browse_name>ServiceCounterDataType</browse_name>
+      <display_name>ServiceCounterDataType</display_name>
+      <description>ServiceCounterDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">865</id>
+      <class>data_type</class>
+      <browse_name>SessionDiagnosticsDataType</browse_name>
+      <display_name>SessionDiagnosticsDataType</display_name>
+      <description>SessionDiagnosticsDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">868</id>
+      <class>data_type</class>
+      <browse_name>SessionSecurityDiagnosticsDataType</browse_name>
+      <display_name>SessionSecurityDiagnosticsDataType</display_name>
+      <description>SessionSecurityDiagnosticsDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">344</id>
+      <class>data_type</class>
+      <browse_name>SignedSoftwareCertificate</browse_name>
+      <display_name>SignedSoftwareCertificate</display_name>
+      <description>SignedSoftwareCertificate</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">299</id>
+      <class>data_type</class>
+      <browse_name>StatusResult</browse_name>
+      <display_name>StatusResult</display_name>
+      <description>StatusResult</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">874</id>
+      <class>data_type</class>
+      <browse_name>SubscriptionDiagnosticsDataType</browse_name>
+      <display_name>SubscriptionDiagnosticsDataType</display_name>
+      <description>SubscriptionDiagnosticsDataType</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">316</id>
+      <class>data_type</class>
+      <browse_name>UserIdentifyToken</browse_name>
+      <display_name>UserIdentifyToken</display_name>
+      <description>UserIdentifyToken</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">316</id>
+      <class>data_type</class>
+      <browse_name>UserIdentifyToken</browse_name>
+      <display_name>UserIdentifyToken</display_name>
+      <description>UserIdentifyToken</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>true</is_abstract>
+    </attributes>
+    <references>
+      <has_subtype node="319" name="AnonymousIdentifyToken"/>
+      <has_subtype node="322" name="UserNameIdentifyToken"/>
+      <has_subtype node="325" name="X509IdentifyToken"/>
+    </references>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">319</id>
+      <class>data_type</class>
+      <browse_name>AnonymousIdentifyToken</browse_name>
+      <display_name>AnonymousIdentifyToken</display_name>
+      <description>AnonymousIdentifyToken</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">322</id>
+      <class>data_type</class>
+      <browse_name>UserNameIdentifyToken</browse_name>
+      <display_name>UserNameIdentifyToken</display_name>
+      <description>UserNameIdentifyToken</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+  
+  <node>
+    <attributes>
+      <id type="numeric">325</id>
+      <class>data_type</class>
+      <browse_name>X509IdentifyToken</browse_name>
+      <display_name>X509IdentifyToken</display_name>
+      <description>X509IdentifyToken</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric">16</id>
+      <class>data_type</class>
+      <browse_name>XmlElement</browse_name>
+      <display_name>XmlElement</display_name>
+      <description>XmlElement</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+    </attributes>
+  </node>
+-->
+</address_space>

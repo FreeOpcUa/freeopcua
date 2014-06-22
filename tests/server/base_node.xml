@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<address_space version="1">
+
+  <node>
+    <attributes>
+      <!-- 
+         Node ID value can be either read from value xml attribute of text content.
+         It will be exception thrown if content and value are not empty both. 
+      -->
+      <id type="numeric" ns="10">84</id>
+      <class>object</class>
+      <browse_name>Root</browse_name>
+      <display_name>Root</display_name>
+      <description>Root</description>
+      <write_mask>10</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <is_abstract>false</is_abstract>
+      <symmetric>false</symmetric>
+      <inverse_name>inverse_name</inverse_name>
+      <contains_no_loops>false</contains_no_loops>
+      <event_notifier>notifier</event_notifier>
+      <!-- User can define a tag data_type. This type can be a enum. -->
+      <data_type>uint32</data_type>
+      <!--Data type attribute is defined by type of value  -->
+      <value type="uint32">55</value>
+      <value_rank>0</value_rank>
+      <array_dimensions>0</array_dimensions>
+      <access_level>0</access_level>
+      <user_access_level>0</user_access_level>
+      <minimum_sampling_interval>100</minimum_sampling_interval>
+      <historizing>true</historizing>
+      <executable>false</executable>
+      <user_executable>false</user_executable>
+    </attributes>
+  </node>
+
+</address_space>

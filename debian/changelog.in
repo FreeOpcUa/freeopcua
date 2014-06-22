@@ -1,0 +1,5 @@
+opcuaserver (@PACKAGE_VERSION@) unstable; urgency=low
+
+  * Release @PACKAGE_VERSION@
+
+ -- Alexander Rykovanov <rykovanov.as@gmail.com>  @RELEASE_DATE@
