@@ -30,7 +30,7 @@ opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 clientincludedir = $(opcuaincludedir)/client
 serverincludedir = $(opcuaincludedir)/server
-addonsincludedir = $(uaserverincludedir)/addons
+addonsincludedir = $(serverincludedir)/addons
 protocolincludedir = $(opcuaincludedir)/protocol
 binaryincludedir = $(protocolincludedir)/binary
 
@@ -70,7 +70,9 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/endpoints_services.h \
 	include/opc/ua/server/tcp_server.h \
 	include/opc/ua/server/services_registry.h \
-	include/opc/ua/server/builtin_server.h \
+	include/opc/ua/server/builtin_server.h
+	
+addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/standard_namespace.h \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/address_space.h \

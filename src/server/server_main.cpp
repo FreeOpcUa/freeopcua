@@ -9,12 +9,24 @@
 ///
 
 #include <opc/common/application.h>
+#include <opc/ua/server/addons/services_registry.h>
 
 #include "daemon.h"
 #include "server_options.h"
 
 #include <iostream>
 
+
+namespace
+{
+  void RegisterServicesRegistry(Common::AddonsManager& addons)
+  {
+    Common::AddonInformation services;
+    services.Factory.reset(new OpcUa::UaServer::ServicesRegistryFactory());
+    services.ID = OpcUa::UaServer::ServicesRegistryAddonID;
+    addons.Register(services);
+  }
+}
 
 int main(int argc, char** argv)
 {

@@ -74,13 +74,14 @@ TESTS = test_opcuaserver$(EXEEXT) test_opcuaprotocol$(EXEEXT) \
 check_PROGRAMS = $(am__EXEEXT_1)
 noinst_PROGRAMS = example_client$(EXEEXT)
 subdir = .
-DIST_COMMON = README $(addonscore_HEADERS) $(am__configure_deps) \
-	$(binaryinclude_HEADERS) $(clientinclude_HEADERS) \
-	$(common_HEADERS) $(opcuainclude_HEADERS) \
-	$(protocolinclude_HEADERS) $(serverinclude_HEADERS) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in $(srcdir)/libopcuaclient.pc.in \
-	$(srcdir)/libopcuacore.pc.in $(srcdir)/libopcuaprotocol.pc.in \
+DIST_COMMON = README $(addonscore_HEADERS) $(addonsinclude_HEADERS) \
+	$(am__configure_deps) $(binaryinclude_HEADERS) \
+	$(clientinclude_HEADERS) $(common_HEADERS) \
+	$(opcuainclude_HEADERS) $(protocolinclude_HEADERS) \
+	$(serverinclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
+	$(srcdir)/libopcuaclient.pc.in $(srcdir)/libopcuacore.pc.in \
+	$(srcdir)/libopcuaprotocol.pc.in \
 	$(srcdir)/libopcuaserver.pc.in $(top_srcdir)/configure \
 	$(top_srcdir)/debian/changelog.in AUTHORS COPYING ChangeLog \
 	INSTALL NEWS ar-lib config.guess config.sub depcomp install-sh \
@@ -127,6 +128,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(clientconfigdir)" "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(pkgsharedir)" "$(DESTDIR)$(serverconfigdir)" \
 	"$(DESTDIR)$(sysvdir)" "$(DESTDIR)$(addonscoredir)" \
+	"$(DESTDIR)$(addonsincludedir)" \
 	"$(DESTDIR)$(binaryincludedir)" \
 	"$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)" \
 	"$(DESTDIR)$(opcuaincludedir)" \
@@ -329,10 +331,10 @@ am__can_run_installinfo = \
   esac
 DATA = $(clientconfig_DATA) $(pkgconfig_DATA) $(pkgshare_DATA) \
 	$(serverconfig_DATA) $(sysv_DATA)
-HEADERS = $(addonscore_HEADERS) $(binaryinclude_HEADERS) \
-	$(clientinclude_HEADERS) $(common_HEADERS) \
-	$(opcuainclude_HEADERS) $(protocolinclude_HEADERS) \
-	$(serverinclude_HEADERS)
+HEADERS = $(addonscore_HEADERS) $(addonsinclude_HEADERS) \
+	$(binaryinclude_HEADERS) $(clientinclude_HEADERS) \
+	$(common_HEADERS) $(opcuainclude_HEADERS) \
+	$(protocolinclude_HEADERS) $(serverinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
@@ -492,7 +494,7 @@ opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 clientincludedir = $(opcuaincludedir)/client
 serverincludedir = $(opcuaincludedir)/server
-addonsincludedir = $(uaserverincludedir)/addons
+addonsincludedir = $(serverincludedir)/addons
 protocolincludedir = $(opcuaincludedir)/protocol
 binaryincludedir = $(protocolincludedir)/binary
 configdir = ${sysconfdir}/opcua
@@ -521,7 +523,9 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/endpoints_services.h \
 	include/opc/ua/server/tcp_server.h \
 	include/opc/ua/server/services_registry.h \
-	include/opc/ua/server/builtin_server.h \
+	include/opc/ua/server/builtin_server.h
+
+addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/standard_namespace.h \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/address_space.h \
@@ -2229,6 +2233,27 @@ uninstall-addonscoreHEADERS:
 	@list='$(addonscore_HEADERS)'; test -n "$(addonscoredir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(addonscoredir)'; $(am__uninstall_files_from_dir)
+install-addonsincludeHEADERS: $(addonsinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(addonsincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(addonsincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(addonsincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(addonsincludedir)" || exit $$?; \
+	done
+
+uninstall-addonsincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(addonsinclude_HEADERS)'; test -n "$(addonsincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(addonsincludedir)'; $(am__uninstall_files_from_dir)
 install-binaryincludeHEADERS: $(binaryinclude_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(binaryinclude_HEADERS)'; test -n "$(binaryincludedir)" || list=; \
@@ -2672,7 +2697,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(clientconfigdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgsharedir)" "$(DESTDIR)$(serverconfigdir)" "$(DESTDIR)$(sysvdir)" "$(DESTDIR)$(addonscoredir)" "$(DESTDIR)$(binaryincludedir)" "$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(protocolincludedir)" "$(DESTDIR)$(serverincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(clientconfigdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgsharedir)" "$(DESTDIR)$(serverconfigdir)" "$(DESTDIR)$(sysvdir)" "$(DESTDIR)$(addonscoredir)" "$(DESTDIR)$(addonsincludedir)" "$(DESTDIR)$(binaryincludedir)" "$(DESTDIR)$(clientincludedir)" "$(DESTDIR)$(commondir)" "$(DESTDIR)$(opcuaincludedir)" "$(DESTDIR)$(protocolincludedir)" "$(DESTDIR)$(serverincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -2732,12 +2757,12 @@ info: info-am
 info-am:
 
 install-data-am: install-addonscoreHEADERS \
-	install-binaryincludeHEADERS install-clientconfigDATA \
-	install-clientincludeHEADERS install-commonHEADERS \
-	install-opcuaincludeHEADERS install-pkgconfigDATA \
-	install-pkgshareDATA install-protocolincludeHEADERS \
-	install-serverconfigDATA install-serverincludeHEADERS \
-	install-sysvDATA
+	install-addonsincludeHEADERS install-binaryincludeHEADERS \
+	install-clientconfigDATA install-clientincludeHEADERS \
+	install-commonHEADERS install-opcuaincludeHEADERS \
+	install-pkgconfigDATA install-pkgshareDATA \
+	install-protocolincludeHEADERS install-serverconfigDATA \
+	install-serverincludeHEADERS install-sysvDATA
 
 install-dvi: install-dvi-am
 
@@ -2785,7 +2810,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-addonscoreHEADERS uninstall-binPROGRAMS \
+uninstall-am: uninstall-addonscoreHEADERS \
+	uninstall-addonsincludeHEADERS uninstall-binPROGRAMS \
 	uninstall-binaryincludeHEADERS uninstall-clientconfigDATA \
 	uninstall-clientincludeHEADERS uninstall-commonHEADERS \
 	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
@@ -2804,27 +2830,28 @@ uninstall-am: uninstall-addonscoreHEADERS uninstall-binPROGRAMS \
 	distclean-hdr distclean-libtool distclean-local distclean-tags \
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-addonscoreHEADERS \
-	install-am install-binPROGRAMS install-binaryincludeHEADERS \
-	install-clientconfigDATA install-clientincludeHEADERS \
-	install-commonHEADERS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-opcuaincludeHEADERS \
-	install-pdf install-pdf-am install-pkgconfigDATA \
-	install-pkgshareDATA install-protocolincludeHEADERS install-ps \
-	install-ps-am install-serverconfigDATA \
-	install-serverincludeHEADERS install-strip install-sysvDATA \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-addonscoreHEADERS uninstall-am \
-	uninstall-binPROGRAMS uninstall-binaryincludeHEADERS \
-	uninstall-clientconfigDATA uninstall-clientincludeHEADERS \
-	uninstall-commonHEADERS uninstall-libLTLIBRARIES \
-	uninstall-opcuaincludeHEADERS uninstall-pkgconfigDATA \
-	uninstall-pkgshareDATA uninstall-protocolincludeHEADERS \
-	uninstall-serverconfigDATA uninstall-serverincludeHEADERS \
-	uninstall-sysvDATA
+	install-addonsincludeHEADERS install-am install-binPROGRAMS \
+	install-binaryincludeHEADERS install-clientconfigDATA \
+	install-clientincludeHEADERS install-commonHEADERS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
+	install-man install-opcuaincludeHEADERS install-pdf \
+	install-pdf-am install-pkgconfigDATA install-pkgshareDATA \
+	install-protocolincludeHEADERS install-ps install-ps-am \
+	install-serverconfigDATA install-serverincludeHEADERS \
+	install-strip install-sysvDATA installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-addonscoreHEADERS uninstall-addonsincludeHEADERS \
+	uninstall-am uninstall-binPROGRAMS \
+	uninstall-binaryincludeHEADERS uninstall-clientconfigDATA \
+	uninstall-clientincludeHEADERS uninstall-commonHEADERS \
+	uninstall-libLTLIBRARIES uninstall-opcuaincludeHEADERS \
+	uninstall-pkgconfigDATA uninstall-pkgshareDATA \
+	uninstall-protocolincludeHEADERS uninstall-serverconfigDATA \
+	uninstall-serverincludeHEADERS uninstall-sysvDATA
 
 
 #custom shared libraries required for testing

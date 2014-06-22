@@ -17,9 +17,36 @@ using namespace testing;
 
 TEST(ModulesConfiguration, ParsesConfigurationFile)
 {
-  Common::ModulesConfiguration modules = Common::ParseConfiguration("./tests/core/configs/test.conf");
-  ASSERT_EQ(modules.size(), 1);
-  const Common::ModuleConfiguration module = modules.front();
+  Common::Configuration config = Common::ParseConfiguration("./tests/core/configs/test.conf");
+  ASSERT_EQ(config.Modules.size(), 1);
+
+  ASSERT_EQ(config.Parameters.Parameters.size(), 2);
+  const std::vector<Common::Parameter> standaloneParams = config.Parameters.Parameters;
+  EXPECT_EQ(standaloneParams[0].Name, "param1");
+  EXPECT_EQ(standaloneParams[0].Value, "value1");
+  EXPECT_EQ(standaloneParams[1].Name, "param2");
+  EXPECT_EQ(standaloneParams[1].Value, "value2");
+
+  const std::vector<Common::ParametersGroup> standaloneGroups = config.Parameters.Groups;
+  ASSERT_EQ(standaloneGroups.size(), 2);
+  ASSERT_EQ(standaloneGroups[0].Name, "group1");
+  const std::vector<Common::Parameter> group1Params = standaloneGroups[0].Parameters;
+  ASSERT_EQ(group1Params.size(), 2);
+  ASSERT_EQ(group1Params[0].Name, "param1");
+  ASSERT_EQ(group1Params[0].Value, "value1");
+  ASSERT_EQ(group1Params[1].Name, "param2");
+  ASSERT_EQ(group1Params[1].Value, "value2");
+
+  ASSERT_EQ(standaloneGroups[1].Name, "group2");
+  const std::vector<Common::Parameter> group2Params = standaloneGroups[1].Parameters;
+  ASSERT_EQ(group2Params.size(), 2);
+  ASSERT_EQ(group2Params[0].Name, "param1");
+  ASSERT_EQ(group2Params[0].Value, "value1");
+  ASSERT_EQ(group2Params[1].Name, "param2");
+  ASSERT_EQ(group2Params[1].Value, "value2");
+
+
+  const Common::ModuleConfiguration module = config.Modules.front();
   ASSERT_EQ(module.ID, "child_module");
   ASSERT_EQ(module.Path, "child_module.so");
   ASSERT_EQ(module.Dependencies.size(), 2);
@@ -53,28 +80,28 @@ TEST(ModulesConfiguration, SavesConfigurationFile)
   addon.Parameters.Groups.push_back(group);
 
   Common::SaveConfiguration(Common::ModulesConfiguration({addon}), "test_config.config");
-  const Common::ModulesConfiguration& modules = Common::ParseConfiguration("test_config.config");
-  ASSERT_EQ(modules.size(), 1);
-  const Common::ModuleConfiguration& config = modules[0];
-  ASSERT_EQ(config.ID, "test_addon");
-  ASSERT_EQ(config.Path, "path");
-  ASSERT_EQ(config.Dependencies.size(), 2);
-  ASSERT_EQ(config.Dependencies[0], "id1");
-  ASSERT_EQ(config.Dependencies[1], "id2");
-  ASSERT_EQ(config.Parameters.Parameters.size(), 1);
-  ASSERT_EQ(config.Parameters.Parameters[0].Name, "parameter");
-  ASSERT_EQ(config.Parameters.Parameters[0].Value, "value");
-  ASSERT_EQ(config.Parameters.Groups.size(), 1);
-  ASSERT_EQ(config.Parameters.Groups[0].Name, "group");
-  ASSERT_EQ(config.Parameters.Groups[0].Parameters.size(), 1);
-  ASSERT_EQ(config.Parameters.Groups[0].Parameters[0].Name, "parameter");
-  ASSERT_EQ(config.Parameters.Groups[0].Parameters[0].Value, "value");
+  const Common::Configuration& config = Common::ParseConfiguration("test_config.config");
+  ASSERT_EQ(config.Modules.size(), 1);
+  const Common::ModuleConfiguration& module = config.Modules[0];
+  ASSERT_EQ(module.ID, "test_addon");
+  ASSERT_EQ(module.Path, "path");
+  ASSERT_EQ(module.Dependencies.size(), 2);
+  ASSERT_EQ(module.Dependencies[0], "id1");
+  ASSERT_EQ(module.Dependencies[1], "id2");
+  ASSERT_EQ(module.Parameters.Parameters.size(), 1);
+  ASSERT_EQ(module.Parameters.Parameters[0].Name, "parameter");
+  ASSERT_EQ(module.Parameters.Parameters[0].Value, "value");
+  ASSERT_EQ(module.Parameters.Groups.size(), 1);
+  ASSERT_EQ(module.Parameters.Groups[0].Name, "group");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters.size(), 1);
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Name, "parameter");
+  ASSERT_EQ(module.Parameters.Groups[0].Parameters[0].Value, "value");
 }
 
 TEST(ModulesConfiguration, ParsesConfigurationFilesInDirectory)
 {
-  Common::ModulesConfiguration modules = Common::ParseConfigurationFiles("./tests/core/configs");
-  ASSERT_EQ(modules.size(), 1);
-  ASSERT_EQ(modules[0].ID, "child_module");
+  Common::Configuration config = Common::ParseConfigurationFiles("./tests/core/configs");
+  ASSERT_EQ(config.Modules.size(), 1);
+  ASSERT_EQ(config.Modules[0].ID, "child_module");
 }
 
