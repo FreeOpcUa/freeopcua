@@ -4,22 +4,58 @@ Priority: extra
 Maintainer: Alexander Rykovanov <rykovanov.as@gmail.com>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev
 Standards-Version: 3.9.4
-Homepage: https://github.com/treww/opcua-server
-Vcs-Git: https://github.com/treww/opcua-server.git
+Homepage: https://github.com/freeopcua/opcua-server
+Vcs-Git: https://github.com/freeopcua/opcua-server.git
 
 Package: opcuaserver-dev
 Section: libdevel
 Architecture: amd64 i386
-Depends: opcuaserver (= ${binary:Version}), opcuaclient-dev (>= 0.1.3), libopcuacore-dev (>= 0.1.3), opcuamappings-dev (>= 0.2.0) 
+Depends: opcuaserver (= ${binary:Version}), opcuaclient-dev (>= 0.1.3), libopcuacore-dev (>= 0.1.3), opcuaprotocol-dev (>= 0.2.0) 
 Description: OPCUA server developer files.
 
 Package: opcuaserver
 Section: net
 Architecture: amd64 i386
-Depends: ${shlibs:Depends}, ${misc:Depends}, opcuaclient (>= 0.1.3), libopcuacore (= 0.1.3), opcuamappings (>= 0.2.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, opcuaclient (>= 0.1.3), libopcuacore (= 0.1.3), opcuaprotocol (>= 0.2.0)
 Description: OPCUA server.
 
 Package: opcuaserver-doc
 Architecture: any
 Description: documentation for opcuaserver
+
+Package: opcuaprotocol-dev
+Section: libdevel
+Architecture: amd64 i386
+Depends: opcuaprotocol (= ${binary:Version})
+Description: OPCUA protocol developer files.
+
+Package: opcuaprotocol
+Section: libs
+Architecture: amd64 i386
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OPCUA protocols.
+
+Package: libopcuacore-dev
+Section: libdevel
+Architecture: amd64 i386
+Depends: libopcuacore (= ${binary:Version}), libboost-system-dev, libboost-filesystem-dev, opcuaprotocol-dev (>= 0.2.0)
+Description: OPCUA core infrastructure developer files.
+
+Package: libopcuacore
+Section: libs
+Architecture: amd64 i386
+Depends: ${shlibs:Depends}, ${misc:Depends}, opcuaprotocol (>= 0.2.0)
+Description: OPCUA core infrastructure.
+
+Package: opcuaclient-dev
+Section: libdevel
+Architecture: amd64 i386
+Depends: opcuaclient (= ${binary:Version}), libopcuacore-dev (>= 0.1.3), opcuaprotocol-dev (>= 0.2.0), libboost-system-dev
+Description: OPCUA client developer files.
+
+Package: opcuaclient
+Section: libs
+Architecture: amd64 i386
+Depends: ${shlibs:Depends}, ${misc:Depends}, libopcuacore (>= 0.1.3), opcuaprotocol (>= 0.2.0)
+Description: OPCUA client.
 

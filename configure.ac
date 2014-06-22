@@ -8,10 +8,10 @@
 
 AC_INIT([opcuaserver], [0.1.3], [rykovanov.as@gmail.com])
 AC_CONFIG_AUX_DIR([.])
-AC_CONFIG_SRCDIR([exe/src/server_main.cpp])
+AC_CONFIG_SRCDIR([src/server/server_main.cpp])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 
-CXXFLAGS="-O0 -g -std=c++0x"
+CXXFLAGS="-O0 -g -std=c++11"
 
 AC_PROG_CXX
 AM_PROG_AR
@@ -21,66 +21,21 @@ PKG_PROG_PKG_CONFIG
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
 
+AC_ARG_ENABLE([gcov],
+              [AS_HELP_STRING([--enable-gcov],[Enable support of coverage analize with gcov.])],
+              [
+                AC_SUBST([GCOV_FLAGS], ["-fprofile-arcs -ftest-coverage"])
+                AC_SUBST([GCOV_LIBS], [-lgcov])
+                AC_MSG_NOTICE([Enabled support of code coverage analize.])
+              ],
+              [
+              ])
 
-AC_ARG_WITH([gtest], 
-            [AS_HELP_STRING([--with-gtest=DIR], [defines path to gtest root directory])],
-            [ 
-              AC_SUBST([GTEST_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest.a,--no-whole-archive])
-              AC_SUBST([GTEST_MAIN_LIB], [-Wl,--whole-archive,$with_gtest/lib/.libs/libgtest_main.a,--no-whole-archive])
-              AC_SUBST([GTEST_INCLUDES], [-I$with_gtest/include])
-              AC_MSG_NOTICE([Gtest path: $GTEST_INCLUDES]) 
-            ], 
-            [ 
-              AC_SUBST([GTEST_LIB], [-lgtest])
-              AC_SUBST([GTEST_MAIN_LIB], [-lgtest_main])
-            ])
-
-AC_ARG_WITH([gmock], 
-            [AS_HELP_STRING([--with-gmock=DIR], [defines path to gmock root directory])],
-            [ 
-              AC_SUBST([GMOCK_LIBS], [-Wl,--whole-archive,$with_gmock/lib/.libs/libgmock.a,--no-whole-archive ])
-              AC_SUBST([GMOCK_INCLUDES], [-I$with_gmock/include])
-              AC_MSG_NOTICE([Gmock path: $GMOCK_INCLUDES]) 
-            ], 
-            [ 
-              AC_SUBST([GMOCK_LIBS], [-lgmock])
-            ])
-
-AC_ARG_WITH([uamappings], 
-            [AS_HELP_STRING([--with-uamappings=DIR], [defines path to uamappings root directory])],
-            [ 
-              AC_SUBST([UAMAPPINGS_LIBS], ["-L$with_uamappings/.libs -lopcuabinary"])
-              AC_SUBST([UAMAPPINGS_INCLUDES], [-I$with_uamappings/include])
-              AC_MSG_NOTICE([ua mappings path: $with_uamappings]) 
-            ], 
-            [ 
-              AC_SUBST([UAMAPPING_LIBS], [-lopcuabinary])
-            ])
-
-AC_ARG_WITH([opccore],
-            [AS_HELP_STRING([--with-opccore=DIR], [defines path to the root directory of libopccore library.])],
-            [ 
-              AC_SUBST([OPC_CORE_LIBS], ["-L$with_opccore/.libs -lopcuacore -lxml2"])
-              AC_SUBST([OPC_CORE_INCLUDES], ["-I$with_opccore/include -I/usr/include/libxml2"])
-              AC_MSG_NOTICE([opccore path: $with_opccore]) 
-            ], 
-            [ 
-              AC_SUBST([OPC_CORE_INCLUDES], ["-I/usr/include/libxml2"])
-              AC_SUBST([OPC_CORE_LIBS], [-lopcuacore])
-            ])
-
-
-AC_ARG_WITH([libopcuaclient], 
-            [AS_HELP_STRING([--with-libopcuaclient=DIR], [defines path to the root directory of libopcua_client library.])],
-            [ 
-              AC_SUBST([OPC_CLIENT_LIBS], ["-L$with_libopcuaclient/.libs -lopc_tcp_client"])
-              AC_SUBST([OPC_CLIENT_INCLUDES], [-I$with_libopcuaclient/include])
-              AC_MSG_NOTICE([libopcuaclient path: $with_libopcuaclient]) 
-            ], 
-            [ 
-              AC_SUBST([OPC_CLIENT_LIBS], [-lopcua_client])
-            ])
-
+AC_SUBST([GTEST_LIB], [-Wl,--whole-archive,$srcdir/tests/gtest/lib/.libs/libgtest.a,--no-whole-archive])
+AC_SUBST([GTEST_MAIN_LIB], [-Wl,--whole-archive,$srcdir/tests/gtest/lib/.libs/libgtest_main.a,--no-whole-archive])
+AC_SUBST([GTEST_INCLUDES], [-I$srcdir/tests/gtest/include])
+AC_SUBST([GMOCK_LIBS], [-Wl,--whole-archive,$srcdir/tests/gmock/lib/.libs/libgmock.a,--no-whole-archive ])
+AC_SUBST([GMOCK_INCLUDES], [-I$srcdir/tests/gmock/include])
 
 AC_SUBST([RELEASE_DATE], [$(date -R)])
 
@@ -88,17 +43,15 @@ AC_SUBST([RELEASE_DATE], [$(date -R)])
 AC_CHECK_HEADERS([unistd.h])
 
 #################################################################
+AC_CONFIG_SUBDIRS([tests/gtest])
+AC_CONFIG_SUBDIRS([tests/gmock])
+
+#################################################################
 AC_CONFIG_FILES([debian/changelog])
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([address_space/Makefile])
-AC_CONFIG_FILES([binary_protocol/Makefile])
-AC_CONFIG_FILES([builtin_server/Makefile])
-AC_CONFIG_FILES([endpoint_services/Makefile])
-AC_CONFIG_FILES([exe/Makefile])
-AC_CONFIG_FILES([services_registry/Makefile])
-AC_CONFIG_FILES([standard_namespace/Makefile])
-AC_CONFIG_FILES([tcp_server/Makefile])
-AC_CONFIG_FILES([xml_address_space_loader/Makefile])
-AC_CONFIG_FILES([server/Makefile])
+AC_CONFIG_FILES([libopcuacore.pc])
+AC_CONFIG_FILES([libopcuaprotocol.pc])
+AC_CONFIG_FILES([libopcuaserver.pc])
+AC_CONFIG_FILES([libopcuaclient.pc])
 AC_OUTPUT
 
