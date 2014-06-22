@@ -1,6 +1,6 @@
 language: cpp
 compiler: clang
 before_install:
-	- sudo apt-get install libboost-all-dev
+  - sudo apt-get install libboost-all-dev
 script: ./configure && make && make check
 
