@@ -567,7 +567,7 @@ namespace OpcUa
         NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);
         if ( node_it != Nodes.end() )
         {
-          std::cout << "Error: NodeID allready exist" << std::endl;
+          std::cout << "Error: NodeID allready exist: " << node_it->first << std::endl;
           result.Status = StatusCode::BadAttributeIdInvalid;
           return result;
         }

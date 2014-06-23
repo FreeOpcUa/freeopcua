@@ -72,7 +72,7 @@ bin_PROGRAMS = opcuaserver$(EXEEXT) opcua$(EXEEXT)
 TESTS = test_opcuaserver$(EXEEXT) test_opcuaprotocol$(EXEEXT) \
 	common_gtest$(EXEEXT) common_test$(EXEEXT)
 check_PROGRAMS = $(am__EXEEXT_1)
-noinst_PROGRAMS = example_client$(EXEEXT)
+noinst_PROGRAMS = example_client$(EXEEXT) example_server$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(addonscore_HEADERS) $(addonsinclude_HEADERS) \
 	$(am__configure_deps) $(binaryinclude_HEADERS) \
@@ -227,14 +227,20 @@ common_test_DEPENDENCIES = libopcuacore.la
 common_test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(common_test_LDFLAGS) $(LDFLAGS) -o $@
-am_example_client_OBJECTS = example_client-client.$(OBJEXT) \
-	example_client-example_main.$(OBJEXT)
+am_example_client_OBJECTS = example_client-example_client.$(OBJEXT)
 example_client_OBJECTS = $(am_example_client_OBJECTS)
 example_client_DEPENDENCIES = libopcuaclient.la libopcuaprotocol.la \
 	libopcuacore.la
 example_client_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(example_client_LDFLAGS) $(LDFLAGS) -o $@
+am_example_server_OBJECTS = example_server-example_server.$(OBJEXT)
+example_server_OBJECTS = $(am_example_server_OBJECTS)
+example_server_DEPENDENCIES = libopcuaserver.la libopcuaprotocol.la \
+	libopcuacore.la
+example_server_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(example_server_LDFLAGS) $(LDFLAGS) -o $@
 am_opcua_OBJECTS = opcua-opcua_main.$(OBJEXT) \
 	opcua-opcua_options.$(OBJEXT)
 opcua_OBJECTS = $(am_opcua_OBJECTS)
@@ -315,15 +321,15 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 SOURCES = $(libopcuaclient_la_SOURCES) $(libopcuacore_la_SOURCES) \
 	$(libopcuaprotocol_la_SOURCES) $(libopcuaserver_la_SOURCES) \
 	$(common_gtest_SOURCES) $(common_test_SOURCES) \
-	$(example_client_SOURCES) $(opcua_SOURCES) \
-	$(opcuaserver_SOURCES) $(test_opcuaprotocol_SOURCES) \
-	$(test_opcuaserver_SOURCES)
+	$(example_client_SOURCES) $(example_server_SOURCES) \
+	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
+	$(test_opcuaprotocol_SOURCES) $(test_opcuaserver_SOURCES)
 DIST_SOURCES = $(libopcuaclient_la_SOURCES) $(libopcuacore_la_SOURCES) \
 	$(libopcuaprotocol_la_SOURCES) $(libopcuaserver_la_SOURCES) \
 	$(common_gtest_SOURCES) $(common_test_SOURCES) \
-	$(example_client_SOURCES) $(opcua_SOURCES) \
-	$(opcuaserver_SOURCES) $(test_opcuaprotocol_SOURCES) \
-	$(test_opcuaserver_SOURCES)
+	$(example_client_SOURCES) $(example_server_SOURCES) \
+	$(opcua_SOURCES) $(opcuaserver_SOURCES) \
+	$(test_opcuaprotocol_SOURCES) $(test_opcuaserver_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -561,7 +567,7 @@ libopcuaserver_la_SOURCES = \
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaserver_la_LIBADD = libopcuaprotocol.la libopcuacore.la
-libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_program_options -lboost_filesystem $(GCOV_LIBS) -lxml2 -Wl,--no-undefined
+libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_program_options -lboost_system -lboost_filesystem $(GCOV_LIBS) -lxml2 -Wl,--no-undefined
 
 ####################################################
 # OPCUA server executable
@@ -801,12 +807,17 @@ opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 opcua_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
 opcua_LDFLAGS = -ldl -lboost_program_options -lpthread -lxml2
 example_client_SOURCES = \
-  src/client/client.cpp \
-  src/client/example_main.cpp
+  src/examples/example_client.cpp
 
 example_client_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_client_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
 example_client_LDFLAGS = -ldl -lpthread -lxml2
+example_server_SOURCES = \
+  src/examples/example_server.cpp
+
+example_server_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
+example_server_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
+example_server_LDFLAGS = -ldl -lpthread -lxml2
 
 #############################################################
 # Extra configs and sources have to be in the distribution.
@@ -1019,6 +1030,9 @@ common_test$(EXEEXT): $(common_test_OBJECTS) $(common_test_DEPENDENCIES) $(EXTRA
 example_client$(EXEEXT): $(example_client_OBJECTS) $(example_client_DEPENDENCIES) $(EXTRA_example_client_DEPENDENCIES) 
 	@rm -f example_client$(EXEEXT)
 	$(example_client_LINK) $(example_client_OBJECTS) $(example_client_LDADD) $(LIBS)
+example_server$(EXEEXT): $(example_server_OBJECTS) $(example_server_DEPENDENCIES) $(EXTRA_example_server_DEPENDENCIES) 
+	@rm -f example_server$(EXEEXT)
+	$(example_server_LINK) $(example_server_OBJECTS) $(example_server_LDADD) $(LIBS)
 opcua$(EXEEXT): $(opcua_OBJECTS) $(opcua_DEPENDENCIES) $(EXTRA_opcua_DEPENDENCIES) 
 	@rm -f opcua$(EXEEXT)
 	$(opcua_LINK) $(opcua_OBJECTS) $(opcua_LDADD) $(LIBS)
@@ -1047,8 +1061,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-error_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common_test-value_test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_client-client.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_client-example_main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_client-example_client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_server-example_server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaclient_la-binary_computer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaclient_la-binary_computer_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaclient_la-binary_connection.Plo@am__quote@
@@ -1651,33 +1665,33 @@ common_test-value_test.obj: tests/core/common/value_test.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(common_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o common_test-value_test.obj `if test -f 'tests/core/common/value_test.cpp'; then $(CYGPATH_W) 'tests/core/common/value_test.cpp'; else $(CYGPATH_W) '$(srcdir)/tests/core/common/value_test.cpp'; fi`
 
-example_client-client.o: src/client/client.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-client.o -MD -MP -MF $(DEPDIR)/example_client-client.Tpo -c -o example_client-client.o `test -f 'src/client/client.cpp' || echo '$(srcdir)/'`src/client/client.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-client.Tpo $(DEPDIR)/example_client-client.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/client/client.cpp' object='example_client-client.o' libtool=no @AMDEPBACKSLASH@
+example_client-example_client.o: src/examples/example_client.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-example_client.o -MD -MP -MF $(DEPDIR)/example_client-example_client.Tpo -c -o example_client-example_client.o `test -f 'src/examples/example_client.cpp' || echo '$(srcdir)/'`src/examples/example_client.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-example_client.Tpo $(DEPDIR)/example_client-example_client.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/examples/example_client.cpp' object='example_client-example_client.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-client.o `test -f 'src/client/client.cpp' || echo '$(srcdir)/'`src/client/client.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-example_client.o `test -f 'src/examples/example_client.cpp' || echo '$(srcdir)/'`src/examples/example_client.cpp
 
-example_client-client.obj: src/client/client.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-client.obj -MD -MP -MF $(DEPDIR)/example_client-client.Tpo -c -o example_client-client.obj `if test -f 'src/client/client.cpp'; then $(CYGPATH_W) 'src/client/client.cpp'; else $(CYGPATH_W) '$(srcdir)/src/client/client.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-client.Tpo $(DEPDIR)/example_client-client.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/client/client.cpp' object='example_client-client.obj' libtool=no @AMDEPBACKSLASH@
+example_client-example_client.obj: src/examples/example_client.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-example_client.obj -MD -MP -MF $(DEPDIR)/example_client-example_client.Tpo -c -o example_client-example_client.obj `if test -f 'src/examples/example_client.cpp'; then $(CYGPATH_W) 'src/examples/example_client.cpp'; else $(CYGPATH_W) '$(srcdir)/src/examples/example_client.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-example_client.Tpo $(DEPDIR)/example_client-example_client.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/examples/example_client.cpp' object='example_client-example_client.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-client.obj `if test -f 'src/client/client.cpp'; then $(CYGPATH_W) 'src/client/client.cpp'; else $(CYGPATH_W) '$(srcdir)/src/client/client.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-example_client.obj `if test -f 'src/examples/example_client.cpp'; then $(CYGPATH_W) 'src/examples/example_client.cpp'; else $(CYGPATH_W) '$(srcdir)/src/examples/example_client.cpp'; fi`
 
-example_client-example_main.o: src/client/example_main.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-example_main.o -MD -MP -MF $(DEPDIR)/example_client-example_main.Tpo -c -o example_client-example_main.o `test -f 'src/client/example_main.cpp' || echo '$(srcdir)/'`src/client/example_main.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-example_main.Tpo $(DEPDIR)/example_client-example_main.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/client/example_main.cpp' object='example_client-example_main.o' libtool=no @AMDEPBACKSLASH@
+example_server-example_server.o: src/examples/example_server.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_server_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_server-example_server.o -MD -MP -MF $(DEPDIR)/example_server-example_server.Tpo -c -o example_server-example_server.o `test -f 'src/examples/example_server.cpp' || echo '$(srcdir)/'`src/examples/example_server.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_server-example_server.Tpo $(DEPDIR)/example_server-example_server.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/examples/example_server.cpp' object='example_server-example_server.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-example_main.o `test -f 'src/client/example_main.cpp' || echo '$(srcdir)/'`src/client/example_main.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_server_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_server-example_server.o `test -f 'src/examples/example_server.cpp' || echo '$(srcdir)/'`src/examples/example_server.cpp
 
-example_client-example_main.obj: src/client/example_main.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_client-example_main.obj -MD -MP -MF $(DEPDIR)/example_client-example_main.Tpo -c -o example_client-example_main.obj `if test -f 'src/client/example_main.cpp'; then $(CYGPATH_W) 'src/client/example_main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/client/example_main.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_client-example_main.Tpo $(DEPDIR)/example_client-example_main.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/client/example_main.cpp' object='example_client-example_main.obj' libtool=no @AMDEPBACKSLASH@
+example_server-example_server.obj: src/examples/example_server.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_server_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT example_server-example_server.obj -MD -MP -MF $(DEPDIR)/example_server-example_server.Tpo -c -o example_server-example_server.obj `if test -f 'src/examples/example_server.cpp'; then $(CYGPATH_W) 'src/examples/example_server.cpp'; else $(CYGPATH_W) '$(srcdir)/src/examples/example_server.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/example_server-example_server.Tpo $(DEPDIR)/example_server-example_server.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/examples/example_server.cpp' object='example_server-example_server.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_client_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_client-example_main.obj `if test -f 'src/client/example_main.cpp'; then $(CYGPATH_W) 'src/client/example_main.cpp'; else $(CYGPATH_W) '$(srcdir)/src/client/example_main.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(example_server_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o example_server-example_server.obj `if test -f 'src/examples/example_server.cpp'; then $(CYGPATH_W) 'src/examples/example_server.cpp'; else $(CYGPATH_W) '$(srcdir)/src/examples/example_server.cpp'; fi`
 
 opcua-opcua_main.o: src/client/opcua_main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(opcua_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT opcua-opcua_main.o -MD -MP -MF $(DEPDIR)/opcua-opcua_main.Tpo -c -o opcua-opcua_main.o `test -f 'src/client/opcua_main.cpp' || echo '$(srcdir)/'`src/client/opcua_main.cpp
