@@ -106,7 +106,7 @@ libopcuaserver_la_SOURCES = \
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaserver_la_LIBADD = libopcuaprotocol.la libopcuacore.la
-libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_program_options -lboost_filesystem $(GCOV_LIBS) -lxml2 -Wl,--no-undefined
+libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_program_options -lboost_system -lboost_filesystem $(GCOV_LIBS) -lxml2 -Wl,--no-undefined
 
 
 ####################################################
@@ -373,14 +373,27 @@ opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 opcua_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
 opcua_LDFLAGS =  -ldl -lboost_program_options -lpthread -lxml2
 
+#########################################################
+# OPCUA examples
+#########################################################
+
 noinst_PROGRAMS = example_client
 example_client_SOURCES = \
-  src/client/client.cpp \
-  src/client/example_main.cpp
+  src/examples/example_client.cpp
 
 example_client_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_client_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
 example_client_LDFLAGS = -ldl -lpthread -lxml2
+
+noinst_PROGRAMS += example_server
+example_server_SOURCES = \
+  src/examples/example_server.cpp
+
+example_server_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
+example_server_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
+example_server_LDFLAGS = -ldl -lpthread -lxml2
+
+
 
 #############################################################
 # Extra configs and sources have to be in the distribution.
