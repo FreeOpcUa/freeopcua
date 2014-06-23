@@ -11,10 +11,10 @@
 #include <opc/ua/client/client.h>
 #include <opc/ua/client/remote_server.h>
 #include <opc/ua/node.h>
-#include <opc/ua/opcuaserver.h>
+#include <opc/ua/server/opcuaserver.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/server.h>
-#include <opc/ua/string_utils.h>
+#include <opc/ua/protocol/string_utils.h>
 
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
