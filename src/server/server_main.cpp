@@ -9,7 +9,12 @@
 ///
 
 #include <opc/common/application.h>
+#include <opc/ua/server/addons/address_space.h>
+#include <opc/ua/server/addons/endpoints_services.h>
+#include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server/addons/standard_namespace.h>
+#include <opc/ua/server/addons/tcp_server.h>
 
 #include "daemon.h"
 #include "server_options.h"
@@ -19,13 +24,87 @@
 
 namespace
 {
-  void RegisterServicesRegistry(Common::AddonsManager& addons)
+
+  Common::AddonInformation CreateServicesRegistry()
   {
     Common::AddonInformation services;
-    services.Factory.reset(new OpcUa::UaServer::ServicesRegistryFactory());
+    services.Factory = std::make_shared<OpcUa::UaServer::ServicesRegistryFactory>();
     services.ID = OpcUa::UaServer::ServicesRegistryAddonID;
-    addons.Register(services);
+    return services;
   }
+
+  Common::AddonInformation CreateTcpServer()
+  {
+    Common::AddonInformation services;
+    services.Factory = std::make_shared<OpcUa::UaServer::TcpServerAddonFactory>();
+    services.ID = OpcUa::UaServer::TcpServerAddonID;
+    return services;
+  }
+
+  Common::AddonInformation CreateAddressSpace()
+  {
+    Common::AddonInformation config;
+    config.Factory = std::make_shared<OpcUa::UaServer::AddressSpaceAddonFactory>();
+    config.ID = OpcUa::UaServer::AddressSpaceRegistryAddonID;
+    config.Dependencies.push_back(OpcUa::UaServer::ServicesRegistryAddonID);
+    return config;
+  }
+
+  Common::AddonInformation CreateStandardNamespace()
+  {
+    Common::AddonInformation config;
+    config.Factory = std::make_shared<OpcUa::UaServer::AddressSpaceAddonFactory>();
+    config.ID = OpcUa::UaServer::StandardNamespaceAddonID;
+    config.Dependencies.push_back(OpcUa::UaServer::AddressSpaceRegistryAddonID);
+    return config;
+  }
+
+  Common::AddonInformation CreateEndpointsRegistry()
+  {
+    Common::AddonInformation endpoints;
+    endpoints.Factory = std::make_shared<OpcUa::UaServer::EndpointsRegistryAddonFactory>();
+    endpoints.ID = OpcUa::UaServer::EndpointsRegistryAddonID;
+    endpoints.Dependencies.push_back(OpcUa::UaServer::ServicesRegistryAddonID);
+    return endpoints;
+  }
+
+  Common::AddonInformation CreateBinaryServer()
+  {
+    Common::AddonInformation opcTcp;
+    opcTcp.Factory = std::make_shared<OpcUa::UaServer::OpcUaProtocolAddonFactory>();
+    opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
+    opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
+    opcTcp.Dependencies.push_back(OpcUa::UaServer::TcpServerAddonID);
+    return opcTcp;
+  }
+
+  void AddStandardModules(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
+  {
+    Common::AddonInformation endpointsRegistry = CreateEndpointsRegistry();
+
+    for (const Common::ParametersGroup& group : params.Groups)
+    {
+      if (group.Name == OpcUa::UaServer::EndpointsRegistryAddonID)
+      {
+        endpointsRegistry.Parameters.Groups = group.Groups;
+        endpointsRegistry.Parameters.Parameters = group.Parameters;
+      }
+      if (group.Name == OpcUa::UaServer::OpcUaProtocolAddonID)
+      {
+        Common::AddonInformation binaryProtocol = CreateBinaryServer();
+        binaryProtocol.Parameters.Groups = group.Groups;
+        binaryProtocol.Parameters.Parameters = group.Parameters;
+        addons.push_back(binaryProtocol);
+      }
+    }
+
+    addons.push_back(endpointsRegistry);
+    addons.push_back(CreateServicesRegistry());
+    addons.push_back(CreateTcpServer());
+    addons.push_back(CreateAddressSpace());
+    addons.push_back(CreateStandardNamespace());
+  }
+
 }
 
 int main(int argc, char** argv)
@@ -45,9 +124,13 @@ int main(int argc, char** argv)
       daemon.Daemonize(options.GetLogFile());
     }
 
+    std::vector<Common::AddonInformation> addons = options.GetModules();
+    AddStandardModules(options.GetParameters(), addons);
+
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
-    application->Start(options.GetModules());
+    application->Start(addons);
     daemon.WaitForTerminate();
+
     application->Stop();
     return 0;
   }
