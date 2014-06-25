@@ -16,10 +16,7 @@
 
 //macro adapted from http://blogs.msdn.com/b/oldnewthing/archive/2006/11/03/942851.aspx
 #define FACILITY_WIN32 0
-#define HRESULT(x) (x <= 0 ? (x) :\
-    ((x & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000))
-//FIXME: Probably wrong
-//#define HRESULT(x) (x & 0x0000FFFF) << 16 | 0x80000000
+#define HRESULT(x) (x <= 0 ? (x) : ((x & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000))
 
 namespace OpcUa
 {
