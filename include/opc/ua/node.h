@@ -134,5 +134,7 @@ namespace OpcUa
 
   ObjectID VariantTypeToDataType(VariantType vt);
 
+  void CheckStatusCode(StatusCode code);
+
 } // namespace OpcUa
 

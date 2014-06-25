@@ -196,16 +196,10 @@ namespace OpcUa
     params.BrowsePaths = bpaths;
 
     std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params);
+    CheckStatusCode(result.front().Status);
 
-    if ( result.front().Status == OpcUa::StatusCode::Good )
-    {
-      NodeID node =result.front().Targets.front().Node ;
-      return Node(Server, node);
-    }
-    else
-    {
-      throw NodeNotFoundException();
-    }
+    NodeID node =result.front().Targets.front().Node ;
+    return Node(Server, node);
   }
 
   std::string Node::ToString() const
@@ -249,10 +243,8 @@ namespace OpcUa
 
     std::vector<AddNodesResult> addnodesresults = Server->NodeManagement()->AddNodes(std::vector<AddNodesItem>({item}));
     AddNodesResult res = addnodesresults.front(); //This should always work
-    if ( res.Status != StatusCode::Good )
-    {
-      throw std::runtime_error("Error while adding node"); //FIXME: Should return exception with better explanation
-    }
+    CheckStatusCode(res.Status);
+
     AddReferencesItem refitem;
     refitem.SourceNodeID = res.AddedNodeID;
     refitem.TargetNodeID = ObjectID::FolderType;
@@ -300,10 +292,7 @@ namespace OpcUa
     std::vector<AddNodesResult> addnodesresults = Server->NodeManagement()->AddNodes(std::vector<AddNodesItem>({item}));
 
     AddNodesResult res = addnodesresults.front(); //This should always work
-    if ( res.Status != StatusCode::Good )
-    {
-      throw std::runtime_error("Error while adding node"); //FIXME: Should return exception with better explanation
-    }
+    CheckStatusCode(res.Status);
 
     AddReferencesItem refitem;
     refitem.SourceNodeID = res.AddedNodeID;
@@ -360,10 +349,8 @@ namespace OpcUa
     std::vector<AddNodesResult> addnodesresults = Server->NodeManagement()->AddNodes(std::vector<AddNodesItem>({item}));
 
     AddNodesResult res = addnodesresults.front(); //This should always work
-    if ( res.Status != StatusCode::Good )
-    {
-      throw std::runtime_error("Error while adding node"); //FIXME: Should return exception with better explanation
-    }
+    CheckStatusCode(res.Status);
+
     AddReferencesItem refitem;
     refitem.SourceNodeID = res.AddedNodeID;
     refitem.TargetNodeID = ObjectID::BaseDataVariableType;
@@ -421,10 +408,8 @@ namespace OpcUa
     std::vector<AddNodesResult> addnodesresults = Server->NodeManagement()->AddNodes(std::vector<AddNodesItem>({item}));
 
     AddNodesResult res = addnodesresults.front(); //This should always work
-    if ( res.Status != StatusCode::Good )
-    {
-      throw std::runtime_error("Error while adding node"); //FIXME: Should return exception with better explanation
-    }
+    CheckStatusCode(res.Status);
+
     AddReferencesItem refitem;
     refitem.SourceNodeID = res.AddedNodeID;
     refitem.TargetNodeID = ObjectID::PropertyType;
@@ -482,9 +467,44 @@ OpcUa::ObjectID OpcUa::VariantTypeToDataType(OpcUa::VariantType vt)
     case VariantType::EXTENSION_OBJECT:
     case VariantType::VARIANT:
     default:
-      throw std::logic_error("Unknown variant type.");
+      throw std::runtime_error("Unknown variant type.");
+  }
+
+}
+
+
+//raise appropriate exception if StatusCode is not Good
+//FIXME: Where should this method be?
+void OpcUa::CheckStatusCode(StatusCode code)
+{
+  switch (code)
+  {
+    case StatusCode::Good:
+      return;
+    case StatusCode::BadNodeIdExists:
+      throw std::runtime_error("Error NodeId allready exist");
+      break;
+    case StatusCode::BadSourceNodeIdInvalid:
+      throw std::runtime_error("Error source NodeId invalid");
+      break;
+    case StatusCode::BadNodeIdUnknown:
+      throw std::runtime_error("Error NodeId unknown");
+      break;
+    case StatusCode::BadParentNodeIdInvalid:
+      throw std::runtime_error("Error parent NodeId invalid");
+      break;
+    case StatusCode::BadAttributeIdInvalid:
+      throw std::runtime_error("Error attribute id invalid");
+      break;
+    case StatusCode::BadSubscriptionIdInvalid:
+      throw std::runtime_error("Error subscription id invalid");
+      break;
+    default:
+      throw std::runtime_error("Error: " + std::to_string((uint32_t)code));
   }
 }
+
+
 
 std::ostream& OpcUa::operator<<(std::ostream& os, const Node& node)
 {
