@@ -1,12 +1,11 @@
 opcua-python
 ============
 
-opcua python bindings
+OPC-UA Python bindings
 
 Writting an OPC-UA server is as simple as:
 
     s = opcua.Server()
-    s.load_cpp_addressspace(True)
     s.set_endpoint("opc.tcp://192.168.56.1:4841")
     s.start()
     try;
