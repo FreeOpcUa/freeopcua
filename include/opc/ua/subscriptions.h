@@ -35,7 +35,7 @@ namespace OpcUa
     public:
       //virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, SubscriptionClient& callback) = 0; //will only be supported for client at begynning
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters) = 0;
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions) = 0;
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions) = 0;
   
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds) = 0;
       virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements) = 0;

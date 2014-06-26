@@ -136,7 +136,7 @@ namespace OpcUa
     {
     public:
 
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
