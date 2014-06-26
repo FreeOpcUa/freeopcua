@@ -53,7 +53,7 @@ namespace
   Common::AddonInformation CreateStandardNamespace()
   {
     Common::AddonInformation config;
-    config.Factory = std::make_shared<OpcUa::UaServer::AddressSpaceAddonFactory>();
+    config.Factory = std::make_shared<OpcUa::UaServer::StandardNamespaceAddonFactory>();
     config.ID = OpcUa::UaServer::StandardNamespaceAddonID;
     config.Dependencies.push_back(OpcUa::UaServer::AddressSpaceRegistryAddonID);
     return config;
@@ -81,6 +81,7 @@ namespace
   void AddStandardModules(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
   {
     Common::AddonInformation endpointsRegistry = CreateEndpointsRegistry();
+    Common::AddonInformation addressSpaceRegistry = CreateAddressSpace();
 
     for (const Common::ParametersGroup& group : params.Groups)
     {
@@ -96,12 +97,17 @@ namespace
         binaryProtocol.Parameters.Parameters = group.Parameters;
         addons.push_back(binaryProtocol);
       }
+      if (group.Name == OpcUa::UaServer::AddressSpaceRegistryAddonID)
+      {
+        addressSpaceRegistry.Parameters.Groups = group.Groups;
+        addressSpaceRegistry.Parameters.Parameters = group.Parameters;
+      }
     }
 
     addons.push_back(endpointsRegistry);
+    addons.push_back(addressSpaceRegistry);
     addons.push_back(CreateServicesRegistry());
     addons.push_back(CreateTcpServer());
-    addons.push_back(CreateAddressSpace());
     addons.push_back(CreateStandardNamespace());
   }
 

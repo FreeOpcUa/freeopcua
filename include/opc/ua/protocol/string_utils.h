@@ -20,6 +20,7 @@
 #pragma once
 
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/view.h>
 #include <ostream>
 
 namespace OpcUa
@@ -27,6 +28,7 @@ namespace OpcUa
 
   std::string ToString(const NodeID& id);
   std::string ToString(const Guid& guid);
+  std::string ToString(const BrowseDirection& direction);
 
   Guid ToGuid(const std::string& str);
   NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
@@ -44,5 +46,10 @@ namespace OpcUa
      return os;
   }
 
+  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
+  {
+     os << OpcUa::ToString(direction);
+     return os;
+  }
 }
 

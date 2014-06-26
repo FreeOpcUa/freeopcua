@@ -100,7 +100,7 @@ namespace
         }
         else
         {
-          SendPublishResponse(*clientChannel);
+          //SendPublishResponse(*clientChannel);
         }
       }
     }
@@ -125,6 +125,11 @@ namespace
       std::vector<char> buffer(hdr.MessageSize());
       OpcUa::Binary::RawBuffer buf(&buffer[0], buffer.size());
       iStream >> buf;
+      if (Debug)
+      {
+        std::clog << "Received message." << std::endl;
+        PrintBlob(buffer);
+      }
 
       // restrict server size code only with current message.
       OpcUa::InputFromBuffer messageChannel(&buffer[0], buffer.size());
@@ -332,11 +337,11 @@ namespace
           NodesQuery query;
           istream >> query;
 
-          BrowseResponse response;
-          FillResponseHeader(requestHeader, response.Header);
-
           OpcUa::BrowseResult result;
           result.Referencies = Server->Views()->Browse(query);
+
+          BrowseResponse response;
+          FillResponseHeader(requestHeader, response.Header);
           response.Results.push_back(result);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -687,7 +692,7 @@ namespace
       for (const SubscriptionBinaryData& data: Subscriptions)
       {
         std::chrono::duration<double> tmp =  data.last_check + data.period;
-        //std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        if (Debug) std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
         if (tmp < next_fire)
         {
           next_fire = tmp;
@@ -696,7 +701,7 @@ namespace
       auto diff = next_fire - now;
       if ( diff.count() < 0 ) 
       {
-        //std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        if (Debug)  std::cout << "Event should allrady have been fired returning 0"<< std::endl;
         return 0;
       }
       return diff.count() ;
@@ -716,7 +721,7 @@ namespace
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
         if ((now - subdata.last_check) <= subdata.period)
         {
-          std::cout << " No need to process subscription yet" << std::endl;
+          if (Debug) std::cout << " No need to process subscription yet" << std::endl;
           continue;
         } 
         subdata.last_check = now;
@@ -724,7 +729,7 @@ namespace
         std::vector<IntegerID> sub_query;
         sub_query.push_back(subdata.SubscriptionID);
         std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
+        if (Debug) std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
 
         for (const PublishResult& publishResult: res_list)
         {
@@ -750,6 +755,29 @@ namespace
           stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
         }
       }
+    }
+
+
+    void PrintBlob(const std::vector<char>& buf)
+    {
+      unsigned pos = 0;
+      std::cout << "length: " << buf.size() << std::endl;
+      for (const auto it : buf)
+      {
+        if (pos)
+          printf((pos % 16 == 0) ? "\n" : " ");
+
+        printf("%02x", (unsigned)it & 0x000000FF);
+
+        if (it > ' ')
+          std::cout << "(" << it << ")";
+        else
+          std::cout << "   ";
+
+        ++pos;
+      }
+
+      std::cout << std::endl << std::flush;
     }
 
   private:

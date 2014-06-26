@@ -41,7 +41,7 @@ namespace OpcUa
     Registry = UaServer::CreateServicesRegistry();
     Registry->RegisterEndpointsServices(EndpointsServices);
 
-    AddressSpace = UaServer::CreateAddressSpace(); 
+    AddressSpace = UaServer::CreateAddressSpace(Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);

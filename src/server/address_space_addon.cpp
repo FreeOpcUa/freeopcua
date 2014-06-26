@@ -15,12 +15,13 @@
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/address_space.h>
 
+#include <iostream>
+
 namespace OpcUa
 {
   namespace Internal
   {
     AddressSpaceAddon::AddressSpaceAddon()
-      : Registry(UaServer::CreateAddressSpace())
     {
     }
 
@@ -28,8 +29,24 @@ namespace OpcUa
     {
     }
 
+    AddressSpaceAddon::Options AddressSpaceAddon::GetOptions(const Common::AddonParameters& addonParams)
+    {
+      AddressSpaceAddon::Options options;
+      for (const Common::Parameter& param : addonParams.Parameters)
+      {
+        if (param.Name == "debug" && !param.Value.empty() && param.Value != "0")
+        {
+          std::cout << "Enabled debug mode for address space addon." << std::endl;
+          options.Debug = true;
+        }
+      }
+      return options;
+    }
+
     void AddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
+      Options options = GetOptions(params);
+      Registry = UaServer::CreateAddressSpace(options.Debug);
       InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
@@ -44,6 +61,7 @@ namespace OpcUa
       InternalServer->UnregisterNodeManagementServices();
       InternalServer->UnregisterSubscriptionServices();
       InternalServer.reset();
+      Registry.reset();
     }
 
     std::vector<AddNodesResult> AddressSpaceAddon::AddNodes(const std::vector<AddNodesItem>& items)

@@ -61,6 +61,15 @@ namespace OpcUa
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
 
     private:
+      struct Options
+      {
+        bool Debug = false;
+      };
+
+    private:
+      Options GetOptions(const Common::AddonParameters& addonParams);
+
+    private:
       OpcUa::UaServer::AddressSpace::SharedPtr Registry;
       std::shared_ptr<OpcUa::UaServer::ServicesRegistry> InternalServer;
     };
