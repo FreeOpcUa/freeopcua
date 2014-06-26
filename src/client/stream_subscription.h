@@ -46,8 +46,14 @@ namespace OpcUa
       
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
-        //FIXME: implement _:-)
-        return std::vector<StatusCode>();
+        DeleteSubscriptionRequest request;
+        request.SubscriptionsIds = subscriptions;
+
+        Stream << request << OpcUa::Binary::flush;
+
+        DeleteSubscriptionResponse response;
+        Stream >> response;
+        return response.Results;
       }
  
 

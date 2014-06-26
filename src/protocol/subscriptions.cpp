@@ -202,6 +202,81 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////
+    // DelteSubscriptionRequest
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const DeleteSubscriptionRequest& request)
+    {
+      return RawSize(request.TypeID) +
+        RawSize(request.Header) +
+        RawSizeContainer(request.SubscriptionsIds);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<DeleteSubscriptionRequest>(DeleteSubscriptionRequest& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.SubscriptionsIds;
+    }
+
+    template<>
+    void DataSerializer::Serialize<DeleteSubscriptionRequest>(const DeleteSubscriptionRequest& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.SubscriptionsIds;
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<IntegerID>>(const std::vector<IntegerID>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<IntegerID>>(std::vector<IntegerID>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
+
+
+
+    ////////////////////////////////////////////////////////
+    // DeleteSubscriptionResponse
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const DeleteSubscriptionResponse& request)
+    {
+      return RawSize(request.TypeID) +
+        RawSize(request.Header) +
+        RawSizeContainer(request.Results) +
+        RawSize(request.Diagnostic);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<DeleteSubscriptionResponse>(DeleteSubscriptionResponse& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.Results;
+      *this >> request.Diagnostic;
+    }
+
+    template<>
+    void DataSerializer::Serialize<DeleteSubscriptionResponse>(const DeleteSubscriptionResponse& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.Results;
+      *this << request.Diagnostic;
+    }
+
+
+    ////////////////////////////////////////////////////////
     // CreateSubscriptionRequest
     ////////////////////////////////////////////////////////
 
