@@ -244,6 +244,9 @@ namespace OpcUa
     BadShelvingTimeOutOfRange = HRESULT(211)
         
   };
+
+  //raise appropriate exception if StatusCode is not Good
+  void CheckStatusCode(StatusCode code);
 }
 
 #endif // opc_ua_errors_h

@@ -130,11 +130,10 @@ namespace OpcUa
 
   std::ostream& operator<<(std::ostream& os, const Node& node);
 
-  //FIXME: These 2 methods should be moved somewhere else!!!
+  //FIXME: The following methods should be moved somewhere else!!!
 
   ObjectID VariantTypeToDataType(VariantType vt);
 
-  void CheckStatusCode(StatusCode code);
 
 } // namespace OpcUa
 
