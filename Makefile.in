@@ -178,7 +178,8 @@ am_libopcuaprotocol_la_OBJECTS =  \
 	libopcuaprotocol_la-nodeid.lo \
 	libopcuaprotocol_la-subscriptions.lo \
 	libopcuaprotocol_la-string_utils.lo \
-	libopcuaprotocol_la-types.lo
+	libopcuaprotocol_la-types.lo \
+	libopcuaprotocol_la-status_codes.lo
 libopcuaprotocol_la_OBJECTS = $(am_libopcuaprotocol_la_OBJECTS)
 libopcuaprotocol_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -661,7 +662,8 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/nodeid.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
-  src/protocol/types.cpp
+  src/protocol/types.cpp \
+  src/protocol/status_codes.cpp
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaprotocol_la_LDFLAGS = $(GCOV_LIBS)
@@ -1096,6 +1098,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-input_from_buffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-monitored_items.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-nodeid.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-status_codes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-string_utils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-subscriptions.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-types.Plo@am__quote@
@@ -1419,6 +1422,13 @@ libopcuaprotocol_la-types.lo: src/protocol/types.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/protocol/types.cpp' object='libopcuaprotocol_la-types.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaprotocol_la-types.lo `test -f 'src/protocol/types.cpp' || echo '$(srcdir)/'`src/protocol/types.cpp
+
+libopcuaprotocol_la-status_codes.lo: src/protocol/status_codes.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaprotocol_la-status_codes.lo -MD -MP -MF $(DEPDIR)/libopcuaprotocol_la-status_codes.Tpo -c -o libopcuaprotocol_la-status_codes.lo `test -f 'src/protocol/status_codes.cpp' || echo '$(srcdir)/'`src/protocol/status_codes.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuaprotocol_la-status_codes.Tpo $(DEPDIR)/libopcuaprotocol_la-status_codes.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/protocol/status_codes.cpp' object='libopcuaprotocol_la-status_codes.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaprotocol_la-status_codes.lo `test -f 'src/protocol/status_codes.cpp' || echo '$(srcdir)/'`src/protocol/status_codes.cpp
 
 libopcuaserver_la-xml_address_space_loader.lo: src/server/xml_address_space_loader.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaserver_la-xml_address_space_loader.lo -MD -MP -MF $(DEPDIR)/libopcuaserver_la-xml_address_space_loader.Tpo -c -o libopcuaserver_la-xml_address_space_loader.lo `test -f 'src/server/xml_address_space_loader.cpp' || echo '$(srcdir)/'`src/server/xml_address_space_loader.cpp

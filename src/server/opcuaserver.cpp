@@ -54,7 +54,7 @@ namespace OpcUa
     Protocol->StartEndpoints(Endpoints, Registry->GetServer());
   }
   
-  Node OPCUAServer::GetNode(NodeID nodeid)
+  Node OPCUAServer::GetNode(const NodeID& nodeid)
   {
     return Node(Registry->GetServer(), nodeid);
   }

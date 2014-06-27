@@ -140,7 +140,7 @@ namespace OpcUa
       {
       }
 
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
@@ -153,7 +153,7 @@ namespace OpcUa
           }
           else
           {
-            result.push_back(StatusCode::BadAttributeIdInvalid);
+            result.push_back(StatusCode::BadSubscriptionIdInvalid);
           }
         }
         return result;
@@ -186,7 +186,7 @@ namespace OpcUa
           for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
           {
             CreateMonitoredItemsResult res;
-            res.Status = StatusCode::BadAttributeIdInvalid;
+            res.Status = StatusCode::BadSubscriptionIdInvalid;
             data.Results.push_back(res);
           }
           return data;
@@ -443,7 +443,7 @@ namespace OpcUa
         NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
         if ( node_it == Nodes.end() )
         {
-          res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
+          res.Status = OpcUa::StatusCode::BadNodeIdUnknown;
           std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
           return res;
         }
@@ -598,7 +598,7 @@ namespace OpcUa
         if ( node_it != Nodes.end() )
         {
           std::cout << "Error: NodeID allready exist: " << node_it->first << std::endl;
-          result.Status = StatusCode::BadAttributeIdInvalid;
+          result.Status = StatusCode::BadNodeIdExists;
           return result;
         }
 
@@ -606,7 +606,7 @@ namespace OpcUa
         if ( parent_node_it == Nodes.end() )
         {
           std::cout << "Error: Parent node does not exist" << std::endl;
-          result.Status = StatusCode::BadAttributeIdInvalid; //FiXME return correct error type
+          result.Status = StatusCode::BadParentNodeIdInvalid; 
           return result;
         }
 
@@ -652,7 +652,7 @@ namespace OpcUa
         NodesMap::iterator node_it = Nodes.find(item.SourceNodeID);
         if ( node_it == Nodes.end() )
         {
-          return StatusCode::BadAttributeIdInvalid;
+          return StatusCode::BadSourceNodeIdInvalid;
         }
         ReferenceDescription desc;
         desc.ReferenceTypeID = item.ReferenceTypeId;

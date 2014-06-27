@@ -563,6 +563,25 @@ namespace
           return;
         }
 
+        case DELETE_SUBSCRIPTION_REQUEST:
+        {
+          if (Debug) std::clog << "Processing delete subscription request." << std::endl;
+          std::vector<IntegerID> ids;
+          istream >> ids;
+
+          DeleteSubscriptionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          response.Results = Server->Subscriptions()->DeleteSubscriptions(ids);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+          
         case CREATE_MONITORED_ITEMS_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
