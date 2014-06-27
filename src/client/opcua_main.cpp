@@ -635,20 +635,20 @@ namespace
     std::cout << "Path: " << modulePath << std::endl;
     std::cout << "Configuration file: " << configFile << std::endl;
 
-    Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
-    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
-    if (moduleIt != modules.end())
+    Common::Configuration config = Common::ParseConfiguration(configFile);
+    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
+    if (moduleIt != config.Modules.end())
     {
       std::cerr << "Module already registered." << std::endl;
       return -1;
     }
 
-    Common::ModuleConfiguration config;
-    config.ID = addonID;
-    config.Path = modulePath;
+    Common::ModuleConfiguration module;
+    module.ID = addonID;
+    module.Path = modulePath;
 
-    modules.push_back(config);
-    Common::SaveConfiguration(modules, configFile);
+    config.Modules.push_back(module);
+    Common::SaveConfiguration(config.Modules, configFile);
     std::cout << "Successfully registered." << std::endl;
     return 0;
   }
@@ -661,15 +661,15 @@ namespace
     std::cout << "ID: " << addonID << std::endl;
     std::cout << "Configuration file: " << configFile << std::endl;
 
-    Common::ModulesConfiguration modules = Common::ParseConfiguration(configFile);
-    Common::ModulesConfiguration::iterator moduleIt = std::find_if(modules.begin(), modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
-    if (moduleIt == modules.end())
+    Common::Configuration config = Common::ParseConfiguration(configFile);
+    Common::ModulesConfiguration::iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
+    if (moduleIt == config.Modules.end())
     {
       std::cerr << "Module not found" << std::endl;
       return -1;
     }
-    modules.erase(moduleIt);
-    Common::SaveConfiguration(modules, configFile);
+    config.Modules.erase(moduleIt);
+    Common::SaveConfiguration(config.Modules, configFile);
 
     std::cout << "Successfully unregistered." << std::endl;
     return 0;
@@ -697,11 +697,11 @@ int main(int argc, char** argv)
     }
 
     const std::string configDir = cmd.GetConfigDir();
-    const Common::ModulesConfiguration& modules = Common::ParseConfigurationFiles(configDir);
+    const Common::Configuration& config = Common::ParseConfigurationFiles(configDir);
 
     OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
-    std::vector<Common::AddonInformation> infos(modules.size());
-    std::transform(modules.begin(), modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
+    std::vector<Common::AddonInformation> infos(config.Modules.size());
+    std::transform(config.Modules.begin(), config.Modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
     application->Start(infos);
     const Common::AddonsManager& addons = application->GetAddonsManager();
 

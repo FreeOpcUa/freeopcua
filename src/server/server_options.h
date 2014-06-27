@@ -38,6 +38,11 @@ namespace OpcUa
         return IsDaemon;
       }
 
+      Common::AddonParameters GetParameters() const
+      {
+        return Parameters;
+      }
+
       std::vector<Common::AddonInformation> GetModules() const
       {
         return Modules;
@@ -51,6 +56,7 @@ namespace OpcUa
     private:
       bool StartPossible;
       bool IsDaemon;
+      Common::AddonParameters Parameters;
       std::vector<Common::AddonInformation> Modules;
       std::string LogFile;
     };

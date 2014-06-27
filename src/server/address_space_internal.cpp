@@ -135,6 +135,10 @@ namespace OpcUa
     class AddressSpaceInMemory : public UaServer::AddressSpace
     {
     public:
+      AddressSpaceInMemory(bool debug)
+        : Debug(debug)
+      {
+      }
 
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
@@ -256,6 +260,11 @@ namespace OpcUa
         {
           node_it->second.References.push_back(reference);
         }
+        else if (Debug)
+        {
+          std::cout << "Reference was not added. Source node '" << sourceNode << "'not found:" << std::endl;
+          std::cout << "Target Node '" << reference.TargetNodeID << "' (" << reference.BrowseName << ")."<< std::endl;
+        }
       }
 
       virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
@@ -274,22 +283,36 @@ namespace OpcUa
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
+        if (Debug) std::cout << "Browsing." << std::endl;
         std::vector<ReferenceDescription> result;
         for ( BrowseDescription browseDescription: query.NodesToBrowse)
         {
-          NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
-          if ( node_it != Nodes.end() )
+          if(Debug)
           {
-            for (auto reference : node_it->second.References)
-            {
-              if (IsSuitableReference(browseDescription, reference))
-              {
-                result.push_back(reference);
-              }
-            }
+            std::cout << "Browsing ";
+            std::cout << " NodeID: '" << browseDescription.NodeToBrowse << "'";
+            std::cout << ", ReferenceID: '" << browseDescription.ReferenceTypeID << "'";
+            std::cout << ", Direction: " << browseDescription.Direction;
+            std::cout << ", NodeClasses: 0x" << std::hex << (unsigned)browseDescription.NodeClasses;
+            std::cout << ", ResultMask: '0x" << std::hex << (unsigned)browseDescription.ResultMask << std::endl;
           }
-          break; //FIXME: It looks like we only support browsing one node at a time!!!
+
+          NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
+          if ( node_it == Nodes.end() )
+          {
+            if (Debug) std::cout << "Node not found in the address space." << std::endl;
+            continue;
+          }
+
+          if(Debug)
+          {
+            std::cout << "Node found in the address space." << std::endl;
+            std::cout << "Finding reference." << std::endl;
+          }
+
+          std::copy_if(node_it->second.References.begin(), node_it->second.References.end(), std::back_inserter(result),
+              std::bind(&AddressSpaceInMemory::IsSuitableReference, this, std::cref(browseDescription), std::placeholders::_1)
+          );
         }
         return result;
       }
@@ -510,18 +533,25 @@ namespace OpcUa
 
       bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
       {
+        if (Debug)
+          std::cout << "Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
+
         if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
         {
+          if (Debug) std::cout << "Reference in different direction." << std::endl;
           return false;
         }
         if (desc.ReferenceTypeID != ObjectID::Null && !IsSuitableReferenceType(reference, desc.ReferenceTypeID, desc.IncludeSubtypes))
         {
+          if (Debug) std::cout << "Reference has wrong type." << std::endl;
           return false;
         }
         if (desc.NodeClasses && (desc.NodeClasses & static_cast<int32_t>(reference.TargetNodeClass)) == 0)
         {
+          if (Debug) std::cout << "Reference has wrong class." << std::endl;
           return false;
         }
+        if (Debug) std::cout << "Reference suitable." << std::endl;
         return true;
       }
 
@@ -636,6 +666,7 @@ namespace OpcUa
       }
 
     private:
+      bool Debug = false;
       mutable boost::shared_mutex DbMutex;
       NodesMap Nodes;
       SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
@@ -645,9 +676,9 @@ namespace OpcUa
 
   namespace UaServer
   {
-    AddressSpace::UniquePtr CreateAddressSpace()
+    AddressSpace::UniquePtr CreateAddressSpace(bool debug)
     {
-      return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory());
+      return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory(debug));
     }
   }
 }

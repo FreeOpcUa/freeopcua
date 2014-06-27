@@ -58,63 +58,81 @@ namespace
 } // namespace
 
 
-Common::ModulesConfiguration Common::ParseConfiguration(const std::string& configPath)
+Common::Configuration Common::ParseConfiguration(const std::string& configPath)
 {
   ptree pt;
   read_xml(configPath, pt);
-  ModulesConfiguration configuration;
-  const boost::optional<ptree&> modules = pt.get_child_optional("config.modules");
-  if (modules)
+  Configuration configuration;
+  BOOST_FOREACH(const ptree::value_type& config, pt)
   {
-    BOOST_FOREACH(const ptree::value_type& module, modules.get())
+    if (config.first != "config")
     {
-      if (module.first != "module")
+      std::cerr << "Unknown root tag " << config.first << " in the config file '" << configPath << "'" << std::endl;
+      continue;
+    }
+
+    BOOST_FOREACH(const ptree::value_type& param, config.second)
+    {
+      if (param.first != "modules")
       {
+        AddParameter(configuration.Parameters, param.first, param.second);
         continue;
       }
 
-      Common::ModuleConfiguration moduleConfig;
-      moduleConfig.ID = module.second.get<std::string>("id");
-      moduleConfig.Path = module.second.get<std::string>("path");
-      if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
+      BOOST_FOREACH(const ptree::value_type& module, param.second)
       {
-        BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
+        if (module.first != "module")
         {
-          if (depend.first != "id")
+          std::cerr << "Unknown tag " << module.first << " inside 'modules' in the config file '" << configPath << "'" << std::endl;
+          continue;
+        }
+
+        Common::ModuleConfiguration moduleConfig;
+        moduleConfig.ID = module.second.get<std::string>("id");
+        moduleConfig.Path = module.second.get<std::string>("path");
+        if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
+        {
+          BOOST_FOREACH(const ptree::value_type& depend, dependsOn.get())
           {
-            continue;
+            if (depend.first != "id")
+            {
+              continue;
+            }
+            moduleConfig.Dependencies.push_back(depend.second.data());
           }
-          moduleConfig.Dependencies.push_back(depend.second.data());
         }
-      }
 
-      if (boost::optional<const ptree&> parameters = module.second.get_child_optional("parameters"))
-      {
-        BOOST_FOREACH(const ptree::value_type& parameter, parameters.get())
+        if (boost::optional<const ptree&> parameters = module.second.get_child_optional("parameters"))
         {
-          AddParameter(moduleConfig.Parameters, parameter.first, parameter.second);
+          BOOST_FOREACH(const ptree::value_type& parameter, parameters.get())
+          {
+            AddParameter(moduleConfig.Parameters, parameter.first, parameter.second);
+          }
         }
-      }
 
-      configuration.push_back(moduleConfig);
+        configuration.Modules.push_back(moduleConfig);
+      }
     }
   }
   return configuration;
 }
 
-Common::ModulesConfiguration Common::ParseConfigurationFiles(const std::string& directory)
+Common::Configuration Common::ParseConfigurationFiles(const std::string& directory)
 {
   using namespace boost::filesystem;
-  Common::ModulesConfiguration modules;
-  std::for_each(directory_iterator(directory), directory_iterator(), [&modules](const directory_entry& entry){
-  if  (entry.path().filename().extension() == ".conf")
+  Common::Configuration configuration;
+  std::for_each(directory_iterator(directory), directory_iterator(), [&configuration](const directory_entry& entry)
   {
-    std::cout << "Parsing config file: " << entry.path().native() << std::endl;
-    Common::ModulesConfiguration tmp = Common::ParseConfiguration(entry.path().native());
-    modules.insert(modules.end(), tmp.begin(), tmp.end());
-  }
+    if  (entry.path().filename().extension() == ".conf")
+    {
+      std::cout << "Parsing config file: " << entry.path().native() << std::endl;
+      Common::Configuration tmp = Common::ParseConfiguration(entry.path().native());
+      configuration.Modules.insert(configuration.Modules.end(), tmp.Modules.begin(), tmp.Modules.end());
+      configuration.Parameters.Groups.insert(configuration.Parameters.Groups.end(), tmp.Parameters.Groups.begin(), tmp.Parameters.Groups.end());
+      configuration.Parameters.Parameters.insert(configuration.Parameters.Parameters.end(), tmp.Parameters.Parameters.begin(), tmp.Parameters.Parameters.end());
+    }
   });
-  return modules;
+  return configuration;
 }
 
 

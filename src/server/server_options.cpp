@@ -89,8 +89,9 @@ namespace OpcUa
 
       IsDaemon = GetDaemonMode(vm);
       const std::string configDir = GetConfigOptionValue(vm);
-      const Common::ModulesConfiguration modules = Common::ParseConfigurationFiles(configDir);
-      std::transform(modules.begin(), modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
+      const Common::Configuration& configuration = Common::ParseConfigurationFiles(configDir);
+      std::transform(configuration.Modules.begin(), configuration.Modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
+      Parameters = configuration.Parameters;
       LogFile = ::GetLogFile(vm);
     }
 

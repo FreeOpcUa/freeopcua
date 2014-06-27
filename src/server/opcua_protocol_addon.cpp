@@ -82,7 +82,7 @@ namespace
       if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
       {
         Debug = true;
-        std::cout << "Enabled debug mod." << std::endl;
+        std::cout << "Enabled debug mode in the binary protocol addon." << std::endl;
       }
     }
   }

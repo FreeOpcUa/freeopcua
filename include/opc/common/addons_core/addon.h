@@ -42,7 +42,7 @@ namespace Common
     DEFINE_CLASS_POINTERS(AddonFactory);
 
   public:
-    /// @brief Create instance of addon
+    /// @brief Create instance of addon.
     virtual Addon::UniquePtr CreateAddon() = 0;
   };
 

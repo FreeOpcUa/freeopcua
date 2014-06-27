@@ -24,14 +24,20 @@ namespace Common
     AddonParameters Parameters;
   };
 
-  Common::AddonInformation GetAddonInfomation(const ModuleConfiguration& config);
-
   typedef std::vector<Common::ModuleConfiguration> ModulesConfiguration;
 
-  ModulesConfiguration ParseConfiguration(const std::string& configPath);
+  struct Configuration
+  {
+    Common::AddonParameters Parameters;
+    std::vector<ModuleConfiguration> Modules;
+  };
+
+  Common::AddonInformation GetAddonInfomation(const ModuleConfiguration& config);
+
+  Configuration ParseConfiguration(const std::string& configPath);
   void SaveConfiguration(const ModulesConfiguration& configuration, const std::string& configPath);
 
-  ModulesConfiguration ParseConfigurationFiles(const std::string& directory);
+  Configuration ParseConfigurationFiles(const std::string& directory);
 
 }
 

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <opc/common/addons_core/config_file.h>
+#include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/standard_namespace.h>
 
 
@@ -11,6 +12,7 @@
 
 namespace OpcUa
 {
+
   OPCUAServer::OPCUAServer()
   {
   }
@@ -39,7 +41,7 @@ namespace OpcUa
     Registry = UaServer::CreateServicesRegistry();
     Registry->RegisterEndpointsServices(EndpointsServices);
 
-    AddressSpace = UaServer::CreateAddressSpace(); 
+    AddressSpace = UaServer::CreateAddressSpace(Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);

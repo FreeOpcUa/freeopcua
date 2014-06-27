@@ -210,3 +210,18 @@ OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint16_t def
 
   return QualifiedName(default_ns, str);
 }
+
+std::string OpcUa::ToString(const OpcUa::BrowseDirection& direction)
+{
+  switch (direction)
+  {
+    case OpcUa::BrowseDirection::Forward:
+      return "forward";
+    case OpcUa::BrowseDirection::Inverse:
+      return "inverse";
+    case OpcUa::BrowseDirection::Both:
+      return "both";
+    default:
+      return "unknown";
+  }
+}

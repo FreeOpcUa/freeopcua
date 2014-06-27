@@ -213,7 +213,7 @@ namespace OpcUa
 
       (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
-      (OPTION_NODE_ID, po::value<unsigned>(), "NodeId in the form 'nsu=uri;srv=1;ns=0;i=84.")
+      (OPTION_NODE_ID, po::value<std::string>(), "NodeId in the form 'nsu=uri;srv=1;ns=0;i=84.")
       (OPTION_VALUE_BYTE, po::value<uint8_t>(), "Byte value.")
       (OPTION_VALUE_SBYTE, po::value<int8_t>(), "Signed byte value.")
       (OPTION_VALUE_UINT16, po::value<uint16_t>(), "UInt16 value.")

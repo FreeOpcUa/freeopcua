@@ -31,7 +31,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(AddressSpace);
     };
 
-    AddressSpace::UniquePtr CreateAddressSpace();
+    AddressSpace::UniquePtr CreateAddressSpace(bool debug);
 
   } // namespace UaServer
 } // nmespace OpcUa
