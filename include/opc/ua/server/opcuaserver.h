@@ -21,10 +21,10 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
-      void SetEndpoint(const std::string endpoint){this->Endpoint = endpoint;}
-      void SetURI(const std::string uri){this->Uri = uri;}
-      void SetServerName(const std::string name){this->Name = name;}
-      void AddAddressSpace(const std::string path) {xml_address_spaces.push_back(path);}
+      void SetEndpoint(const std::string& endpoint){this->Endpoint = endpoint;}
+      void SetURI(const std::string& uri){this->Uri = uri;}
+      void SetServerName(const std::string& name){this->Name = name;}
+      void AddAddressSpace(const std::string& path) {xml_address_spaces.push_back(path);}
       void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
 
       void Start();
@@ -33,7 +33,7 @@ namespace OpcUa
       //Node GetNode(std::vector<std::string> browsepath);
       Node GetRootNode();
       Node GetObjectsNode();
-      Node GetNode(NodeID nodeid);
+      Node GetNode(const NodeID& nodeid);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
 

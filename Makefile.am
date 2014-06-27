@@ -209,7 +209,8 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/nodeid.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
-  src/protocol/types.cpp
+  src/protocol/types.cpp \
+  src/protocol/status_codes.cpp
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

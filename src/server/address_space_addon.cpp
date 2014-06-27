@@ -94,7 +94,7 @@ namespace OpcUa
       return Registry->CreateSubscription(parameters);
     }
 
-    std::vector<StatusCode> AddressSpaceAddon::DeleteSubscriptions(const std::vector<IntegerID> subscriptions)
+    std::vector<StatusCode> AddressSpaceAddon::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
     {
       return Registry->DeleteSubscriptions(subscriptions);
     }

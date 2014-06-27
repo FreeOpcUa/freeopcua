@@ -198,7 +198,7 @@ namespace
      return static_cast<bool>(addonData.Addon);
    }
 
-   bool IsAllAddonsStarted(const std::vector<Common::AddonID> ids) const
+   bool IsAllAddonsStarted(const std::vector<Common::AddonID>& ids) const
    {
      for (std::vector<Common::AddonID>::const_iterator it = ids.begin(); it != ids.end(); ++it)
      {
