@@ -114,7 +114,7 @@ namespace
       return std::vector<PublishResult>();
     }
 
-    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters)
+    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
     {
       return SubscriptionData();
     }
@@ -129,7 +129,7 @@ namespace
       return MonitoredItemsData();
     }
 
-    virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
     }
     

@@ -49,12 +49,13 @@ namespace OpcUa
     struct DataSubscription
     {
       SubscriptionData Data;
+      std::function<void (PublishResult)> Callback;
       uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
       uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
       time_t lastNotificationTime = 0;
       uint32_t LastMonitoredItemID = 2;
       std::map <uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
-      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to resent
+      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
       std::list<MonitoredItems> MonitoredItemsTriggered; 
       std::list<EventFieldList> EventTriggered; 
 
@@ -159,7 +160,7 @@ namespace OpcUa
         return result;
       }
 
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params, std::function<void (PublishResult)> callback)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -172,6 +173,7 @@ namespace OpcUa
 
         DataSubscription db;
         db.Data = data;
+        db.Callback = callback;
         SubscriptionsMap[data.ID] = db;
         return data;
       }
@@ -373,7 +375,7 @@ namespace OpcUa
         return result;
       }
 
-      virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -389,7 +391,6 @@ namespace OpcUa
 
 
     private:
-
 
       std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {

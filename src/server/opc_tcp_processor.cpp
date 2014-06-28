@@ -100,7 +100,7 @@ namespace
         }
         else
         {
-          //SendPublishResponse(*clientChannel);
+          SendPublishResponse(*clientChannel);
         }
       }
     }
@@ -613,7 +613,7 @@ namespace
           data.algorithmHeader = algorithmHeader;
           data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
-          Server->Subscriptions()->CreatePublishRequest(params.Acknowledgements);
+          Server->Subscriptions()->Publish(params.Acknowledgements);
           return;
         }
 
