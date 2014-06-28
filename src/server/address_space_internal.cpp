@@ -361,6 +361,10 @@ namespace OpcUa
         std::vector<PublishResult> result;
         for (const IntegerID& subscription: subscriptionsIds)
         {
+          if ( PublishRequestsQueue == 0)
+          {
+            break;
+          }
           std::map <IntegerID, DataSubscription>::iterator sub_it =  SubscriptionsMap.find(subscription); 
           {
             if ( sub_it != SubscriptionsMap.end() )
@@ -378,6 +382,12 @@ namespace OpcUa
       virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+        
+        if ( PublishRequestsQueue > 10000 )
+        {
+          return; //FIXME: spec says we should return error to warn client
+        }
+        ++ PublishRequestsQueue; 
 
         for (SubscriptionAcknowledgement ack: acknowledgements)
         {
@@ -672,6 +682,7 @@ namespace OpcUa
       NodesMap Nodes;
       SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
       uint32_t LastSubscriptionID = 2;
+      uint32_t PublishRequestsQueue = 0;
     };
   }
 
