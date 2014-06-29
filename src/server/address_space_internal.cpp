@@ -62,23 +62,16 @@ namespace OpcUa
       std::vector<PublishResult> PopPublishResult()
       {
         std::cout << "PopPublishresult for subscription: " << Data.ID << " with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
-        std::vector<PublishResult> resultlist;
         PublishResult result;
         result.SubscriptionID = Data.ID;
         result.Message.PublishTime = CurrentDateTime();
 
-        DataChangeNotification notification;
-        for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
+        if ( MonitoredItemsTriggered.size() > 0 )
         {
-          notification.Notification.push_back(monitoreditem);
-        }
-        if (notification.Notification.size() > 0) 
-        {
-          NotificationData data(notification);
+          NotificationData data = GetNotificationData();
           result.Message.Data.push_back(data);
           result.Statuses.push_back(StatusCode::Good);
         }
-        MonitoredItemsTriggered.clear();
         
         // FIXME: parse events and statuschange notification since they can be send in same result
 
@@ -86,7 +79,7 @@ namespace OpcUa
         {
           std::cout << "No event and not need to send keep-alive notification" << std::endl;
           ++KeepAliveCount;
-          return  resultlist; //No event and we do not need to send keepalive notification yet so return empty list
+          return  std::vector<PublishResult>(); //No event and we do not need to send keepalive notification yet so return empty list
         }
         KeepAliveCount = 0;
         result.Message.SequenceID = NotificationSequence;
@@ -98,9 +91,24 @@ namespace OpcUa
         }
         NotAcknowledgedResults.push_back(result);
         std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
+        std::vector<PublishResult> resultlist;
         resultlist.push_back(result);
         return resultlist;
       };
+
+      private:
+        NotificationData GetNotificationData()
+        {
+          DataChangeNotification notification;
+          for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
+          {
+            notification.Notification.push_back(monitoreditem);
+          }
+          MonitoredItemsTriggered.clear();
+          NotificationData data(notification);
+          return data;
+        }
+          
     };
 
     typedef std::map <IntegerID, DataSubscription> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
@@ -383,7 +391,7 @@ namespace OpcUa
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
         
-        if ( PublishRequestsQueue > 10000 )
+        if ( PublishRequestsQueue > 10000 ) //FIXME: It this number defined by spec?
         {
           return; //FIXME: spec says we should return error to warn client
         }
