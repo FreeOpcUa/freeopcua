@@ -165,24 +165,6 @@ OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace
     ns = GetInteger(nsString);
   }
 
-  const std::string integer = GetNodeField(data, "i=");
-  if (!integer.empty())
-  {
-    result = OpcUa::NumericNodeID(GetInteger(integer), ns);
-  }
-
-  const std::string str = GetNodeField(data, "s=");
-  if (!str.empty())
-  {
-    result = OpcUa::StringNodeID(str, ns);
-  }
-
-  const std::string g = GetNodeField(data, "g=");
-  if (!g.empty())
-  {
-    result = OpcUa::GuidNodeID(ToGuid(g), ns);
-  }
-
   const std::string srv = GetNodeField(data, "srv=");
   if (!srv.empty())
   {
@@ -195,7 +177,25 @@ OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace
     result.SetNamespaceURI(nsu);
   }
 
-  return result;
+  const std::string integer = GetNodeField(data, "i=");
+  if (!integer.empty())
+  {
+    return OpcUa::NumericNodeID(GetInteger(integer), ns);
+  }
+
+  const std::string str = GetNodeField(data, "s=");
+  if (!str.empty())
+  {
+    return OpcUa::StringNodeID(str, ns);
+  }
+
+  const std::string g = GetNodeField(data, "g=");
+  if (!g.empty())
+  {
+    return OpcUa::GuidNodeID(ToGuid(g), ns);
+  }
+
+  throw(std::runtime_error("No identifier found in string: '" + data +"'"));
 }
 
 OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint16_t default_ns)
