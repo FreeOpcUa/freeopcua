@@ -191,6 +191,9 @@ am_libopcuaserver_la_OBJECTS =  \
 	libopcuaserver_la-services_registry_impl.lo \
 	libopcuaserver_la-endpoints_parameters.lo \
 	libopcuaserver_la-endpoints_services_addon.lo \
+	libopcuaserver_la-opc_tcp_async_addon.lo \
+	libopcuaserver_la-opc_tcp_async.lo \
+	libopcuaserver_la-opc_tcp_async_parameters.lo \
 	libopcuaserver_la-tcp_server.lo \
 	libopcuaserver_la-standard_namespace_addon.lo \
 	libopcuaserver_la-tcp_server_factory.lo \
@@ -528,6 +531,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/address_space.h \
 	include/opc/ua/server/opcuaserver.h \
 	include/opc/ua/server/endpoints_services.h \
+	include/opc/ua/server/opc_tcp_async.h \
 	include/opc/ua/server/tcp_server.h \
 	include/opc/ua/server/services_registry.h \
 	include/opc/ua/server/builtin_server.h
@@ -538,6 +542,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/address_space.h \
 	include/opc/ua/server/addons/xml_ns.h \
 	include/opc/ua/server/addons/endpoints_services.h \
+	include/opc/ua/server/addons/opc_tcp_async.h \
 	include/opc/ua/server/addons/tcp_server.h \
 	include/opc/ua/server/addons/services_registry.h \
 	include/opc/ua/server/addons/builtin_server.h
@@ -549,6 +554,10 @@ libopcuaserver_la_SOURCES = \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_services_addon.cpp \
 	src/server/address_space_addon.h \
+	src/server/opc_tcp_async_addon.cpp \
+	src/server/opc_tcp_async.cpp \
+	src/server/opc_tcp_async_parameters.cpp \
+	src/server/opc_tcp_async_parameters.h \
 	src/server/tcp_server.cpp \
 	src/server/xml_address_space_loader.h \
 	src/server/standard_namespace_addon.cpp \
@@ -1107,6 +1116,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-endpoints_parameters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-endpoints_registry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-endpoints_services_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opc_tcp_async.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opc_tcp_async_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opc_tcp_async_parameters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opc_tcp_processor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opcua_protocol_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaserver_la-opcuaserver.Plo@am__quote@
@@ -1464,6 +1476,27 @@ libopcuaserver_la-endpoints_services_addon.lo: src/server/endpoints_services_add
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/endpoints_services_addon.cpp' object='libopcuaserver_la-endpoints_services_addon.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaserver_la-endpoints_services_addon.lo `test -f 'src/server/endpoints_services_addon.cpp' || echo '$(srcdir)/'`src/server/endpoints_services_addon.cpp
+
+libopcuaserver_la-opc_tcp_async_addon.lo: src/server/opc_tcp_async_addon.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaserver_la-opc_tcp_async_addon.lo -MD -MP -MF $(DEPDIR)/libopcuaserver_la-opc_tcp_async_addon.Tpo -c -o libopcuaserver_la-opc_tcp_async_addon.lo `test -f 'src/server/opc_tcp_async_addon.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async_addon.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuaserver_la-opc_tcp_async_addon.Tpo $(DEPDIR)/libopcuaserver_la-opc_tcp_async_addon.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/opc_tcp_async_addon.cpp' object='libopcuaserver_la-opc_tcp_async_addon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaserver_la-opc_tcp_async_addon.lo `test -f 'src/server/opc_tcp_async_addon.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async_addon.cpp
+
+libopcuaserver_la-opc_tcp_async.lo: src/server/opc_tcp_async.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaserver_la-opc_tcp_async.lo -MD -MP -MF $(DEPDIR)/libopcuaserver_la-opc_tcp_async.Tpo -c -o libopcuaserver_la-opc_tcp_async.lo `test -f 'src/server/opc_tcp_async.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuaserver_la-opc_tcp_async.Tpo $(DEPDIR)/libopcuaserver_la-opc_tcp_async.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/opc_tcp_async.cpp' object='libopcuaserver_la-opc_tcp_async.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaserver_la-opc_tcp_async.lo `test -f 'src/server/opc_tcp_async.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async.cpp
+
+libopcuaserver_la-opc_tcp_async_parameters.lo: src/server/opc_tcp_async_parameters.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaserver_la-opc_tcp_async_parameters.lo -MD -MP -MF $(DEPDIR)/libopcuaserver_la-opc_tcp_async_parameters.Tpo -c -o libopcuaserver_la-opc_tcp_async_parameters.lo `test -f 'src/server/opc_tcp_async_parameters.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async_parameters.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuaserver_la-opc_tcp_async_parameters.Tpo $(DEPDIR)/libopcuaserver_la-opc_tcp_async_parameters.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/server/opc_tcp_async_parameters.cpp' object='libopcuaserver_la-opc_tcp_async_parameters.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaserver_la-opc_tcp_async_parameters.lo `test -f 'src/server/opc_tcp_async_parameters.cpp' || echo '$(srcdir)/'`src/server/opc_tcp_async_parameters.cpp
 
 libopcuaserver_la-tcp_server.lo: src/server/tcp_server.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaserver_la-tcp_server.lo -MD -MP -MF $(DEPDIR)/libopcuaserver_la-tcp_server.Tpo -c -o libopcuaserver_la-tcp_server.lo `test -f 'src/server/tcp_server.cpp' || echo '$(srcdir)/'`src/server/tcp_server.cpp
