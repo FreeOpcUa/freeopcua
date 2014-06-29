@@ -50,7 +50,7 @@ TEST_F(MonitoredItemsSerialization, MonitoredItemsData)
 
   const std::vector<char> expectedData = {
     1,0,0,0,         // Results count
-    0,0,(char)0x44,(char)0x80,   // StatusCode
+    0,0,(char)0x40,(char)0x80,   // StatusCode
     1,0,0,0,         // MonitoredItemID
     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
     3,0,0,0,         // RevizedQueueSize
@@ -100,7 +100,7 @@ TEST_F(MonitoredItemsSerialization, CreateMonitoredItemsResponse)
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
     1,0,0,0,         // Results count
-    0,0,(char)0x44,(char)0x80,   // StatusCode
+    0,0,(char)0x40,(char)0x80,   // StatusCode
     1,0,0,0,         // MonitoredItemID
     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
     3,0,0,0,         // RevizedQueueSize
