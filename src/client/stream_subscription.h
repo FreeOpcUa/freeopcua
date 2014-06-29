@@ -31,7 +31,7 @@ namespace OpcUa
       }
 
     public:
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
       {
         CreateSubscriptionRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
@@ -75,9 +75,10 @@ namespace OpcUa
         return std::vector<PublishResult>();
       }
 
-      virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         PublishRequest request;
+        request.Parameters.Acknowledgements = acknowledgements;
         Stream << request << OpcUa::Binary::flush;
       }
 

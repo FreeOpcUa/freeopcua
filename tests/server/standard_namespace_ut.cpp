@@ -27,9 +27,9 @@ class StandardNamespaceStructure : public Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = OpcUa::UaServer::CreateAddressSpace();
     const bool debug = false;
-    OpcUa::UaServer::FillStandardNamespace(*NameSpace, false);
+    NameSpace = OpcUa::UaServer::CreateAddressSpace(debug);
+    OpcUa::UaServer::FillStandardNamespace(*NameSpace, debug);
   }
 
   virtual void TearDown()
