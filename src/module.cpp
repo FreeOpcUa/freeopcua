@@ -14,6 +14,7 @@
 #include <opc/ua/server/opcuaserver.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/server.h>
+#include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
 #include <boost/python.hpp>
@@ -944,7 +945,18 @@ namespace OpcUa
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
   };
 
-
+  class PySubscription
+  {
+    public:
+      PySubscription (const Subscription& other): Sub(other) { }
+      void Delete() { Sub.Delete(); }
+      void Subscribe(PyNode node) {Sub.Subscribe(node, AttributeID::VALUE);}
+      void Subscribe2(PyNode node, AttributeID attr) {Sub.Subscribe(node, attr);}
+      
+      //PySubscription(Remote::Server server, SubscriptionParameters params): Server(server), Data(params) { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
+    private:
+      Subscription Sub;
+  };
 
   class PyOPCUAServer: public OPCUAServer
   {
@@ -954,6 +966,10 @@ namespace OpcUa
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
+      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      {
+        return PySubscription(OPCUAServer::CreateSubscription(period, callback));
+      }
   };
 }
 
@@ -1225,11 +1241,22 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("get_security_policy", &PyClient::GetSecurityPolicy)
       ;
 
+    class_<SubscriptionClient, boost::noncopyable>("SubscriptionClient")
+          .def("data_change_event", &SubscriptionClient::DataChangeEvent)
+      ;
 
-    //Node (OPCUAServer::*NodeFromPathString)(const std::vector<std::string>&) = &OPCUAServer::GetNodeFromPath;
-    //Node (OPCUAServer::*NodeFromPathQN)(const std::vector<QualifiedName>&) = &OPCUAServer::GetNodeFromPath;
+    //uint32_t (Subscription::*Subscribe)(const Node&, AttributeID) = &Subscription::Subscribe;
+    //BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(Subscribe_o, Subscribe, 2, 3)
+    //class_<Subscription, boost::noncopyable >("Subscription", init<Remote::Server::SharedPtr, SubscriptionParameters, SubscriptionClient&>())
+    class_<PySubscription>("Subscription", init<const Subscription&>())
+          //.def("subscribe", Subscribe)
+          .def("subscribe", &PySubscription::Subscribe)
+          .def("subscribe", &PySubscription::Subscribe2)
+          .def("delete", &PySubscription::Delete)
+          //.def("unsubscribe", &PySubscription::UnSubscribe)
+      ;
 
-    class_<PyOPCUAServer, boost::noncopyable >("Server" )
+    class_<PyOPCUAServer, boost::noncopyable >("Server")
           .def("start", &PyOPCUAServer::Start)
           .def("stop", &PyOPCUAServer::Stop)
           .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
@@ -1242,6 +1269,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("set_server_name", &PyOPCUAServer::SetServerName)
           .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
           .def("load_cpp_addressspace", &PyOPCUAServer::SetLoadCppAddressSpace)
+          .def("create_subscription", &PyOPCUAServer::CreateSubscription)
       ;
 
 }
