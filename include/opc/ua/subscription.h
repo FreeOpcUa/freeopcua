@@ -25,7 +25,6 @@
 
 #include <boost/asio.hpp>
 #include <sstream>
-#include <queue>
 #include <map>
 
 
@@ -45,12 +44,16 @@ namespace OpcUa
   class Subscription
   {
     public:
-      Subscription(Remote::SubscriptionServices::SharedPtr service, const SubscriptionParameters& params, SubscriptionClient& callback);
+      //Create a new subscription on server
+      //callback will be called everytime an event is received from the server
+      //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
+      Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback); 
       //OpcUa::IntegerID GetId() { return Data.ID; }
       SubscriptionData GetData() { return Data; }
 
-      //Monitor node for DataChange events
+      //Subscribe to a Node for its value to change
       void Subscribe(Node node, AttributeID attr=AttributeID::VALUE);
+      // Subscribe to nodes for specified attribute change
       void Subscribe(std::vector<AttributeValueID> attributes);
       void UnSubscribe(Node node, AttributeID attr=AttributeID::VALUE);
       void UnSubscribe(std::vector<AttributeValueID> attributes);
@@ -62,9 +65,9 @@ namespace OpcUa
     private:
       void Publish();
 
-      Remote::SubscriptionServices::SharedPtr Service;
+      Remote::Server::SharedPtr Server;
       SubscriptionData Data;
-      std::queue<uint32_t> Acknowledgments;
+      std::vector<uint32_t> Acknowledgments;
       SubscriptionClient& Client;
       uint32_t LastMonitoredItemHandle = 1;
       AttValMap Map; //I do not understand why I need this but event only send handles..

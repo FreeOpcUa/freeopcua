@@ -20,12 +20,6 @@ namespace OpcUa
 {
   namespace Remote
   {
-    /*
-    class SubscriptionClient
-    {
-      virtual void newPublishResponse(PublishResult result);
-    };
-    */
 
     class SubscriptionServices : private Common::Interface
     {

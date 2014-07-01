@@ -26,9 +26,9 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Remote::SubscriptionServices::SharedPtr service, const SubscriptionParameters& params, SubscriptionClient& callback): Service(service), Client(callback)
+  Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback): Server(server), Client(callback)
   {
-    Data = Service->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
+    Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
     //After creating the subscription, it is expected to send a few publishRequests
     Publish();
     Publish();
@@ -45,7 +45,7 @@ namespace OpcUa
           AttValMap::iterator mapit = Map.find(item.ClientHandle);
           if ( mapit != Map.end() )
           {
-            Client.DataChangeEvent(Node(mapit->second.Node, Server), item.Value, mapit->second.Attribute);
+            Client.DataChangeEvent( Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
           }
         }
       }
@@ -54,22 +54,22 @@ namespace OpcUa
         std::cout << "Error not implemented" << std::endl;
       }
     }
-    Acknowledgments.push(result.Message.SequenceID);
+    Acknowledgments.push_back(result.Message.SequenceID);
     Publish();
   }
 
   void Subscription::Publish()
   {
-    PublishParameters params;
-    if (Acknowledgments.size() > 0 )
+    std::vector<SubscriptionAcknowledgement> acknowledgements;
+    for (uint32_t ackid: Acknowledgments)
     {
       SubscriptionAcknowledgement ack;
       ack.SubscriptionID = Data.ID;
-      ack.SequenceNumber = Acknowledgments.front();
-      params.Acknowledgements.push_back(ack);
-      Acknowledgments.pop();
+      ack.SequenceNumber = ackid;
+      acknowledgements.push_back(ack);
     }
-    Service->Publish(params);
+    Acknowledgments.empty();
+    Server->Subscriptions()->Publish(acknowledgements);
   }
 
   void Subscription::Subscribe(Node node, AttributeID attr)
@@ -99,7 +99,7 @@ namespace OpcUa
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
-    Service->CreateMonitoredItems(itemsParams);
+    Server->Subscriptions()->CreateMonitoredItems(itemsParams);
   }
 
 }
