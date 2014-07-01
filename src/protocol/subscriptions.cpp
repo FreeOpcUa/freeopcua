@@ -102,21 +102,21 @@ namespace OpcUa
     NotificationData::NotificationData(DataChangeNotification notification)
     {
       //Header.TypeID  = ObjectID::DataChangeNotification; 
-      Header.TypeID  = FourByteNodeID(811, 0); 
+      Header.TypeID  = ExpandedObjectID::DataChangeNotification;
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
       DataChange = notification;
     }
 
     NotificationData::NotificationData(EventNotificationList notification)
     {
-      Header.TypeID  = ObjectID::EventNotificationList; 
+      Header.TypeID  = ExpandedObjectID::EventNotificationList; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
       Events = notification;
     }
 
     NotificationData::NotificationData(StatusChangeNotification notification)
     {
-      Header.TypeID  = ObjectID::StatusChangeNotification; 
+      Header.TypeID  = ExpandedObjectID::StatusChangeNotification; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
       StatusChange = notification;
     }
@@ -530,9 +530,13 @@ namespace OpcUa
     {
       size_t total = 0;
       total += RawSize(data.Header);
-      if ( data.Header.TypeID == FourByteNodeID(811, 0) )
+      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification) 
       {
         total += RawSize(data.DataChange);
+      }
+      else
+      {
+        throw std::runtime_error("NotificationData type not implemented");
       }
       return total;
     }
@@ -541,19 +545,36 @@ namespace OpcUa
     void DataDeserializer::Deserialize<NotificationData>(NotificationData& data)
     {
       *this >> data.Header;
-      if ( data.Header.TypeID == FourByteNodeID(811, 0) ) 
+      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification ) 
       {
           *this >> data.DataChange;
       }
+      else
+      {
+        throw std::runtime_error("FIXME: Notification data type not supported");
+      }
+        /*
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      {
+          *this >> data.Events;
+      }
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      {
+          *this >> data.StatusChange;
+      }
+      */
     }
 
     template<>
     void DataSerializer::Serialize<NotificationData>(const NotificationData& data)
     {
       *this << data.Header;
-      if (data.Header.TypeID == FourByteNodeID(811, 0) )
+      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification ) 
       {
         *this << data.DataChange;
+      }
+      {
+        throw std::runtime_error( "Error Notification Data type not implemented yet!!: "); // + itos(data.Header.TypeID.FourByteData.Identifier) );
       }
     }
 

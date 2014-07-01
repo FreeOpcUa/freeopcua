@@ -27,6 +27,9 @@ namespace OpcUa
     DataTypeAttribute = 372,
     ViewAttribute = 375,
  
+    DataChangeNotification = 811,
+    EventNotificationList = 812,
+    StatusChangeNotification = 813,
   };
 }
 
