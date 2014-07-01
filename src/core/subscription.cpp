@@ -29,9 +29,18 @@ namespace OpcUa
   Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback): Server(server), Client(callback)
   {
     Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
-    //After creating the subscription, it is expected to send a few publishRequests
+    //After creating the subscription, it is expected to send at least one publish request
     Publish();
     Publish();
+  }
+
+  void Subscription::Delete()
+  {
+    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<IntegerID>({Data.ID}));
+    for (auto res: results)
+    {
+      CheckStatusCode(res);
+    }
   }
 
   void Subscription::PublishCallback(PublishResult result)
@@ -45,13 +54,14 @@ namespace OpcUa
           AttValMap::iterator mapit = Map.find(item.ClientHandle);
           if ( mapit != Map.end() )
           {
+            //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
             Client.DataChangeEvent( Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
           }
         }
       }
       else
       {
-        std::cout << "Error not implemented" << std::endl;
+        std::cout << "Error not implemented notification type (only DataChange currently)" << std::endl;
       }
     }
     Acknowledgments.push_back(result.Message.SequenceID);
@@ -72,19 +82,23 @@ namespace OpcUa
     Server->Subscriptions()->Publish(acknowledgements);
   }
 
-  void Subscription::Subscribe(Node node, AttributeID attr)
+  uint32_t Subscription::Subscribe(const Node& node, AttributeID attr)
   {
     AttributeValueID avid;
     avid.Node = node.GetId();
     avid.Attribute = attr;
     //avid.IndexRange //We leave it null, then the entire array is returned
-    return Subscribe(std::vector<AttributeValueID>({avid}));
+    std::vector<CreateMonitoredItemsResult> results = Subscribe(std::vector<AttributeValueID>({avid}));
+    if (results.size() == 0) { throw std::runtime_error("Protocol Error"); }
+    CheckStatusCode(results.front().Status);
+    return results.front().MonitoredItemID;
   }
 
-  void Subscription::Subscribe(std::vector<AttributeValueID> attributes)
+  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(const std::vector<AttributeValueID>& attributes)
   {
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
+
     for (auto attr : attributes)
     {
       MonitoredItemRequest req;
@@ -99,7 +113,7 @@ namespace OpcUa
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
-    Server->Subscriptions()->CreateMonitoredItems(itemsParams);
+    return Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
   }
 
 }

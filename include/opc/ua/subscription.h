@@ -35,7 +35,7 @@ namespace OpcUa
   class SubscriptionClient
   {
     public:
-      virtual void DataChangeEvent(const Node& node, const Variant& val, AttributeID attribute);
+      virtual void DataChangeEvent(const Node& node, const Variant& val, AttributeID attribute){};
       //virtual void Event(Event result); FIXME: Not implemented
       //virtual void StatusChange(Event result); FIXME: Not implemented
   };
@@ -48,15 +48,16 @@ namespace OpcUa
       //callback will be called everytime an event is received from the server
       //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
       Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback); 
-      //OpcUa::IntegerID GetId() { return Data.ID; }
-      SubscriptionData GetData() { return Data; }
+      IntegerID GetId() const { return Data.ID; } 
+      Duration GetPeriode() const { return Data.RevisedPublishingInterval; } 
+      //Delete the subscription from server
+      void Delete();
 
-      //Subscribe to a Node for its value to change
-      void Subscribe(Node node, AttributeID attr=AttributeID::VALUE);
+      //Subscribe to a Node attribute for its value to change
+      uint32_t Subscribe(const Node& node, AttributeID attr=AttributeID::VALUE);
       // Subscribe to nodes for specified attribute change
-      void Subscribe(std::vector<AttributeValueID> attributes);
-      void UnSubscribe(Node node, AttributeID attr=AttributeID::VALUE);
-      void UnSubscribe(std::vector<AttributeValueID> attributes);
+      std::vector<CreateMonitoredItemsResult> Subscribe(const std::vector<AttributeValueID>& attributes);
+      void UnSubscribe(std::vector<uint32_t> handles){}; //Not implemented in interface and server
       //Monitor for events FIXME: Event support not implemented
       //void SubscribeEvents(Node node); //As far as I remember the only allowed node is Server in most SDKs
       //void Unsubscribe(Node node);
