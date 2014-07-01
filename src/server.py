@@ -21,12 +21,17 @@ if __name__ == "__main__":
         print("I got root folder: ", root)
         objects = s.get_objects_node()
         print("I got objects folder: ", objects)
-        test = objects.add_folder("testfolder")
-        v = test.add_variable("myvar", [16, 56])
-        p = test.add_property("myprop", 9.9)
 
+        #Now adding some object to our addresse space from server side
+        test = objects.add_folder("testfolder")
+        myvarv = test.add_variable("myvar", [16, 56])
+        myprop = test.add_property("myprop", 9.9)
+       
+        #Now subscribing to changes on server side
+        # callback does not work yet.. but soon
         sclt = SubClient()
         sub = s.create_subscription(100, sclt)
+        sub.subscribe(myvar)
 
         embed()
     finally:
