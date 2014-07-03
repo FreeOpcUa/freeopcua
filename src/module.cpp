@@ -936,6 +936,19 @@ namespace OpcUa
 
   };
 
+  class PySubscription
+  {
+    public:
+      PySubscription (const Subscription& other): Sub(other) { }
+      void Delete() { Sub.Delete(); }
+      uint32_t Subscribe(PyNode node) { return Sub.Subscribe(node, AttributeID::VALUE);}
+      uint32_t Subscribe2(PyNode node, AttributeID attr) { return Sub.Subscribe(node, attr);}
+      
+      //PySubscription(Remote::Server server, SubscriptionParameters params): Server(server), Data(params) { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
+    private:
+      Subscription Sub;
+  };
+
   class PyClient: public RemoteClient
   {
     public:
@@ -943,19 +956,10 @@ namespace OpcUa
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
-  };
-
-  class PySubscription
-  {
-    public:
-      PySubscription (const Subscription& other): Sub(other) { }
-      void Delete() { Sub.Delete(); }
-      void Subscribe(PyNode node) {Sub.Subscribe(node, AttributeID::VALUE);}
-      void Subscribe2(PyNode node, AttributeID attr) {Sub.Subscribe(node, attr);}
-      
-      //PySubscription(Remote::Server server, SubscriptionParameters params): Server(server), Data(params) { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
-    private:
-      Subscription Sub;
+      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      {
+        return PySubscription(RemoteClient::CreateSubscription(period, callback));
+      }
   };
 
   class PyOPCUAServer: public OPCUAServer
@@ -1224,6 +1228,17 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
         .def(vector_indexing_suite<std::vector<std::string> >())
     ;
 
+    class_<SubscriptionClient, boost::noncopyable>("SubscriptionClient")
+          .def("data_change_event", &SubscriptionClient::DataChangeEvent)
+      ;
+
+    class_<PySubscription>("Subscription", init<const Subscription&>())
+          //.def("subscribe", Subscribe)
+          .def("subscribe", &PySubscription::Subscribe)
+          .def("subscribe", &PySubscription::Subscribe2)
+          .def("delete", &PySubscription::Delete)
+          //.def("unsubscribe", &PySubscription::UnSubscribe)
+      ;
 
     class_<PyClient, boost::noncopyable>("Client")
           .def("connect", &PyClient::Connect)
@@ -1239,21 +1254,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("set_uri", &PyClient::SetURI)
           .def("set_security_policy", &PyClient::SetSecurityPolicy)
           .def("get_security_policy", &PyClient::GetSecurityPolicy)
-      ;
-
-    class_<SubscriptionClient, boost::noncopyable>("SubscriptionClient")
-          .def("data_change_event", &SubscriptionClient::DataChangeEvent)
-      ;
-
-    //uint32_t (Subscription::*Subscribe)(const Node&, AttributeID) = &Subscription::Subscribe;
-    //BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(Subscribe_o, Subscribe, 2, 3)
-    //class_<Subscription, boost::noncopyable >("Subscription", init<Remote::Server::SharedPtr, SubscriptionParameters, SubscriptionClient&>())
-    class_<PySubscription>("Subscription", init<const Subscription&>())
-          //.def("subscribe", Subscribe)
-          .def("subscribe", &PySubscription::Subscribe)
-          .def("subscribe", &PySubscription::Subscribe2)
-          .def("delete", &PySubscription::Delete)
-          //.def("unsubscribe", &PySubscription::UnSubscribe)
+          .def("create_subscription", &PyClient::CreateSubscription)
       ;
 
     class_<PyOPCUAServer, boost::noncopyable >("Server")
