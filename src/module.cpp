@@ -1233,7 +1233,6 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
       ;
 
     class_<PySubscription>("Subscription", init<const Subscription&>())
-          //.def("subscribe", Subscribe)
           .def("subscribe", &PySubscription::Subscribe)
           .def("subscribe", &PySubscription::Subscribe2)
           .def("delete", &PySubscription::Delete)
