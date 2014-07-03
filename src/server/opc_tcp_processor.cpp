@@ -526,6 +526,7 @@ namespace
               subs.push_back(data.SubscriptionID);
             }
             Server->Subscriptions()->DeleteSubscriptions(subs);
+            Subscriptions.clear();
           }
 
           CloseSessionResponse response;
@@ -536,7 +537,7 @@ namespace
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
-          if (Debug) std::clog << "Closed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+          if (Debug) std::clog << "Session Closed " << std::endl;
           return;
         }
 
