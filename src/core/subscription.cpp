@@ -26,7 +26,8 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback): Server(server), Client(callback)
+  Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback)
+    : Server(server), Client(callback)
   {
     Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
     //After creating the subscription, it is expected to send at least one publish request
@@ -65,7 +66,7 @@ namespace OpcUa
       }
     }
     Acknowledgments.push_back(result.Message.SequenceID);
-    Publish();
+    Publish(); //send new publish request to server, to its queue does not get empty
   }
 
   void Subscription::Publish()
@@ -78,7 +79,7 @@ namespace OpcUa
       ack.SequenceNumber = ackid;
       acknowledgements.push_back(ack);
     }
-    Acknowledgments.empty();
+    Acknowledgments.clear();
     Server->Subscriptions()->Publish(acknowledgements);
   }
 
