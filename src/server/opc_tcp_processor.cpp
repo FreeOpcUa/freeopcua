@@ -69,7 +69,7 @@ namespace
       , ChannelID(1)
       , TokenID(2)
     {
-      SessionID = NumericNodeID(5, 0);
+      SessionID = GenerateSessionId();//NumericNodeID(5, 0);
     }
 
     virtual void Process(OpcUa::IOChannel::SharedPtr clientChannel)
