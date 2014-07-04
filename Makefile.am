@@ -209,6 +209,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/input_from_buffer.cpp \
   src/protocol/monitored_items.cpp \
   src/protocol/nodeid.cpp \
+  src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
   src/protocol/types.cpp \
@@ -256,6 +257,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/server.h \
   include/opc/ua/socket_channel.h \
   include/opc/ua/subscriptions.h \
+  include/opc/ua/subscription.h \
   include/opc/ua/view.h
 
 commondir = $(opcincludedir)/common
@@ -296,7 +298,8 @@ libopcuacore_la_SOURCES = \
                   src/core/common/common_errors.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
-                  src/core/socket_channel.cpp
+                  src/core/socket_channel.cpp \
+                  src/core/subscription.cpp
 
 libopcuacore_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuacore_la_LIBADD = libopcuaprotocol.la
@@ -386,7 +389,7 @@ example_client_SOURCES = \
 
 example_client_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_client_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
-example_client_LDFLAGS = -ldl -lpthread -lxml2
+example_client_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
 
 noinst_PROGRAMS += example_server
 example_server_SOURCES = \
@@ -394,7 +397,7 @@ example_server_SOURCES = \
 
 example_server_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_server_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
-example_server_LDFLAGS = -ldl -lpthread -lxml2
+example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
 
 
 
