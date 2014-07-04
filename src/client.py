@@ -26,9 +26,9 @@ if __name__ == "__main__":
         myvar = root.get_child(["0:Objects", "0:testfolder", "0:myvar"])
         print("yvar is: ", myvar)
         
-        #sclt = SubClient()
-        #sub = client.create_subscription(100, sclt)
-        #handle = sub.subscribe(myvar)
+        sclt = SubClient()
+        sub = client.create_subscription(100, sclt)
+        handle = sub.subscribe(myvar)
 
 
         embed()

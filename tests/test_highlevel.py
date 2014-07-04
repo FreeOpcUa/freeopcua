@@ -6,6 +6,12 @@ import time
 
 import opcua
 
+
+class SubClient(opcua.SubscriptionClient):
+    def data_change_event(node, val, attr):
+        print("New data change event", node, val, attr)
+
+
 class Unit(unittest.TestCase):
     def test_zero_nodeid(self):
         nid = opcua.NodeID()
@@ -131,6 +137,12 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual([1], val) 
 
+    def test_subscription(self):
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:SubscriptioinVariable", [1,2,3])
+        sub = self.opc.create_subscription(100, sclt)
+        handle = sub.subscribe(v)
+
 
 class ServerProcess(Process):
 
@@ -191,5 +203,6 @@ class TestServer(unittest.TestCase, CommonTests):
 
 
 if __name__ == "__main__":
+    sclt = SubClient()
     unittest.main(verbosity=2)
 
