@@ -61,7 +61,7 @@ namespace OpcUa
   {
   public:
     IntegerID();
-    explicit IntegerID(const IntegerID& id);
+    IntegerID(const IntegerID& id);
     explicit IntegerID(uint32_t num);
     IntegerID& operator= (const IntegerID& id);
     IntegerID& operator= (uint32_t value);

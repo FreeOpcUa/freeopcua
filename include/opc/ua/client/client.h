@@ -22,6 +22,7 @@
 
 #include <opc/ua/node.h>
 #include <opc/ua/server.h>
+#include <opc/ua/subscription.h>
 #include <opc/ua/client/remote_server.h>
 
 
@@ -64,6 +65,8 @@ namespace OpcUa
 
     void Connect();
     void Disconnect();
+
+    Subscription CreateSubscription(uint period, SubscriptionClient& client);
 
   private:
     std::string Endpoint = "opc.tcp:://localhost:4841";

@@ -110,22 +110,6 @@ namespace OpcUa
       *this >> params.Results;
       *this >> params.Diagnostics;
     }
-    
-    template<>
-    void DataSerializer::Serialize<std::vector<MonitoredItemsData>>(const std::vector<MonitoredItemsData>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<MonitoredItemsData>>(std::vector<MonitoredItemsData>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
-
-
 
     ////////////////////////////////////////////////////////////////
 

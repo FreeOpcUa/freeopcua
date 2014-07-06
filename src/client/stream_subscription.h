@@ -16,6 +16,8 @@
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/binary/stream.h>
 
+#include <opc/ua/protocol/string_utils.h>
+
 namespace OpcUa
 {
   namespace Internal
@@ -65,9 +67,11 @@ namespace OpcUa
 
         Stream << request << OpcUa::Binary::flush;
 
-        CreateMonitoredItemsResponse response;
-        Stream >> response;
-        return response.Data;
+        ProcessPublishResults();
+
+        MonitoredItemsData data;
+        Stream >> data;
+        return data;
       }
 
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
@@ -83,6 +87,27 @@ namespace OpcUa
       }
 
     private:
+      void ProcessPublishResults()
+      {
+        NodeID typeId;
+        ResponseHeader header;
+        for(;;)
+        {
+          Stream >> typeId;
+          Stream >> header;
+          std::cout << " got header with type: " << typeId << std::endl;
+          if (typeId == NodeID(829, 0) )
+          {
+            PublishResult result;
+            Stream >> result;
+            std::cout << " got one publish result " << typeId << std::endl;
+          }
+          else
+          {
+            break;
+          }
+        }
+      }
       mutable StreamType Stream;
       NodeID AuthenticationToken;
     };
