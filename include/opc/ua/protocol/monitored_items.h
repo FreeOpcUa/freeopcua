@@ -172,6 +172,32 @@ namespace OpcUa
     CreateMonitoredItemsRequest();
   };
 
+
+  struct DeleteMonitoredItemsParameters
+  {
+    IntegerID SubscriptionId;
+    std::vector<IntegerID> MonitoredItemsIds;
+  };
+
+  struct DeleteMonitoredItemsRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    DeleteMonitoredItemsParameters Parameters;
+
+    DeleteMonitoredItemsRequest();
+  };
+
+  struct DeleteMonitoredItemsResponse
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    std::vector<StatusCode> Results;
+
+    DeleteMonitoredItemsResponse();
+  };
+
+
   ///////////////////////////////////////////////////////////////////////
   struct CreateMonitoredItemsResult
   {

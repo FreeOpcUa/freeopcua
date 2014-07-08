@@ -59,6 +59,7 @@ namespace OpcUa
 
     public: // MonitoredItemsServices
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params); 
 
     private:
       struct Options

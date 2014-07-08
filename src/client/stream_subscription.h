@@ -81,6 +81,22 @@ namespace OpcUa
         return data;
       }
 
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+      {
+        DeleteMonitoredItemsRequest request;
+        request.Header.SessionAuthenticationToken = AuthenticationToken;
+        request.Parameters = params;
+
+        Stream << request << OpcUa::Binary::flush;
+
+        ProcessPublishResults();
+
+        DeleteMonitoredItemsResponse response;
+        Stream >> response;
+        return response.Results;
+      }
+
+
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
       {
         return std::vector<PublishResult>();

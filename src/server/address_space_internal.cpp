@@ -54,7 +54,7 @@ namespace OpcUa
       uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
       time_t lastNotificationTime = 0;
       uint32_t LastMonitoredItemID = 2;
-      std::map <uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
+      std::map<uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
       std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
       std::list<MonitoredItems> MonitoredItemsTriggered; 
       std::list<EventFieldList> EventTriggered; 
@@ -211,6 +211,40 @@ namespace OpcUa
         return data;
      
       }
+
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+      {
+        std::vector<StatusCode> results;
+
+        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
+        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+        {
+          for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
+          {
+            results.push_back(StatusCode::BadSubscriptionIdInvalid);
+          }
+          return results;
+        }
+
+        for (const uint32_t handle: params.MonitoredItemsIds)
+        {
+          itsub->second.MonitoredItemsMap.erase(handle);
+          std::map<uint32_t, DataMonitoredItems>::iterator it_monitoreditem = itsub->second.MonitoredItemsMap.find(handle);
+          if ( it_monitoreditem == itsub->second.MonitoredItemsMap.end()) 
+          {
+            results.push_back(StatusCode::BadMonitoredItemIdInvalid);
+          }
+          else
+          {
+            itsub->second.MonitoredItemsMap.erase(it_monitoreditem); //FIXME: check it is correct syntax!!!!!!!!!!
+            results.push_back(StatusCode::Good);
+          }
+        }
+
+        return results;
+      }
+
+
 
       virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
       {

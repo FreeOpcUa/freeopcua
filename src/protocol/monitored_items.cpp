@@ -22,16 +22,10 @@ namespace OpcUa
   {
   }
 
-
   CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
     : TypeID(MessageID::CREATE_MONITORED_ITEMS_RESPONSE)
   {
   }
-
-  MonitoredItemsData::MonitoredItemsData()
-  {
-  }
-
 
   CreateMonitoredItemsResult::CreateMonitoredItemsResult()
     : Status(StatusCode::BadNotImplemented)
@@ -41,6 +35,19 @@ namespace OpcUa
   {
   }
 
+  DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
+    : TypeID(MessageID::DELETE_MONITORED_ITEMS_REQUEST)
+  {
+  }
+
+  DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
+    : TypeID(MessageID::DELETE_MONITORED_ITEMS_RESPONSE)
+  {
+  }
+
+  MonitoredItemsData::MonitoredItemsData()
+  {
+  }
   namespace Binary
   {
     ////////////////////////////////////////////////////////////////
@@ -135,7 +142,70 @@ namespace OpcUa
       *this >> params.Data;
     }
 
+    template <>
+    std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
+    {
+      return RawSize(data.SubscriptionId) + RawSizeContainer(data.MonitoredItemsIds);
+    }
 
+    template<>
+    void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
+    {
+      *this << data.SubscriptionId;
+      *this << data.MonitoredItemsIds;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<DeleteMonitoredItemsParameters>(DeleteMonitoredItemsParameters& data)
+    {
+      *this >> data.SubscriptionId;
+      *this >> data.MonitoredItemsIds;
+    }
+
+    template <>
+    std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
+    {
+      return RawSize(data.TypeID) + RawSize(data.Header) + RawSize(data.Parameters);
+    }
+
+    template<>
+    void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
+    {
+      *this << data.TypeID;
+      *this << data.Header;
+      *this << data.Parameters;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest& data)
+    {
+      *this >> data.TypeID;
+      *this >> data.Header;
+      *this >> data.Parameters;
+    }
+
+
+    template <>
+    std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
+    {
+      return RawSize(data.TypeID) + RawSize(data.Header) + RawSizeContainer(data.Results);
+    }
+
+    template<>
+    void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
+    {
+      *this << data.TypeID;
+      *this << data.Header;
+      *this << data.Results;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse& data)
+    {
+      *this >> data.TypeID;
+      *this >> data.Header;
+      *this >> data.Results;
+    }
 
   }
 }
