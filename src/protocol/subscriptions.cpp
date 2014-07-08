@@ -133,7 +133,6 @@ namespace OpcUa
     }
 
 
-
   ////////////////////////////////////////////////////////
   // NotificationMessage
   ////////////////////////////////////////////////////////
@@ -239,19 +238,6 @@ namespace OpcUa
       *this << request.Header;
       *this << request.SubscriptionsIds;
     }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<IntegerID>>(const std::vector<IntegerID>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<IntegerID>>(std::vector<IntegerID>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
 
 
 
@@ -501,6 +487,91 @@ namespace OpcUa
       DeserializeContainer(*this, targets);
     }
 
+    ////////////////////////////////////////////////////////
+    // StatusChangeNotification
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const StatusChangeNotification& request)
+    {
+      return 4 + RawSize(request.Status) + RawSize(request.Diagnostic);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<StatusChangeNotification>(StatusChangeNotification& request)
+    {
+      uint32_t tmp;
+      *this >> tmp; //it seems we do not need the size
+      *this >> request.Status;
+      *this >> request.Diagnostic;
+    }
+
+    template<>
+    void DataSerializer::Serialize<StatusChangeNotification>(const StatusChangeNotification& request)
+    {
+      *this << (uint32_t) RawSize(request);
+      *this << request.Status;
+      *this << request.Diagnostic;
+    }
+
+
+    ////////////////////////////////////////////////////////
+    // EventNotificationList
+    ////////////////////////////////////////////////////////
+
+    template<>
+    void DataSerializer::Serialize<std::vector<EventFieldList>>(const std::vector<EventFieldList>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<EventFieldList>>(std::vector<EventFieldList>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
+    template<>
+    std::size_t RawSize(const EventFieldList& request)
+    {
+      return RawSize(request.ClientHandle) + RawSizeContainer(request.EventFields); 
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<EventFieldList>(EventFieldList& request)
+    {
+      *this >> request.ClientHandle; 
+      *this >> request.EventFields;
+    }
+
+    template<>
+    void DataSerializer::Serialize<EventFieldList>(const EventFieldList& request)
+    {
+      *this << request.ClientHandle;
+      *this << request.EventFields;
+    }
+
+    template<>
+    std::size_t RawSize(const EventNotificationList& request)
+    {
+      return 4 + RawSizeContainer(request.Events); 
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<EventNotificationList>(EventNotificationList& request)
+    {
+      uint32_t tmp;
+      *this >> tmp; //it seems we do not need the size
+      *this >> request.Events;
+    }
+
+    template<>
+    void DataSerializer::Serialize<EventNotificationList>(const EventNotificationList& request)
+    {
+      *this << (uint32_t) RawSize(request);
+      *this << request.Events;
+    }
+
 
 
     ////////////////////////////////////////////////////////
@@ -545,6 +616,14 @@ namespace OpcUa
       {
         total += RawSize(data.DataChange);
       }
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList) 
+      {
+        total += RawSize(data.Events);
+      }
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification) 
+      {
+        total += RawSize(data.StatusChange);
+      }
       else
       {
         throw std::runtime_error("NotificationData type not implemented");
@@ -560,20 +639,18 @@ namespace OpcUa
       {
           *this >> data.DataChange;
       }
-      else
-      {
-        throw std::runtime_error("FIXME: Notification data type not supported");
-      }
-        /*
       else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
       {
           *this >> data.Events;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
       {
           *this >> data.StatusChange;
       }
-      */
+      else
+      {
+        throw std::runtime_error("FIXME: Notification data type not supported");
+      }
     }
 
     template<>
@@ -584,6 +661,15 @@ namespace OpcUa
       {
         *this << data.DataChange;
       }
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      {
+        *this << data.Events;
+      }
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
+      {
+        *this << data.StatusChange;
+      }
+      else
       {
         throw std::runtime_error( "Error Notification Data type not implemented yet!!: "); // + itos(data.Header.TypeID.FourByteData.Identifier) );
       }

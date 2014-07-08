@@ -140,7 +140,7 @@ namespace OpcUa
   struct EventFieldList
   {
     IntegerID ClientHandle;
-    //std::vector<BaseDataType> EventFields; FIXME
+    std::vector<Variant> EventFields; 
   };
 
   struct EventNotificationList

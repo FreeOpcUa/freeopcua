@@ -56,7 +56,7 @@ namespace OpcUa
           if ( mapit != Map.end() )
           {
             //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
-            Client.DataChangeEvent( Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
+            Client.DataChange( Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
           }
         }
       }
@@ -83,19 +83,18 @@ namespace OpcUa
     Server->Subscriptions()->Publish(acknowledgements);
   }
 
-  uint32_t Subscription::Subscribe(const Node& node, AttributeID attr)
+  uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
   {
     AttributeValueID avid;
     avid.Node = node.GetId();
     avid.Attribute = attr;
     //avid.IndexRange //We leave it null, then the entire array is returned
-    std::vector<CreateMonitoredItemsResult> results = Subscribe(std::vector<AttributeValueID>({avid}));
+    std::vector<uint32_t> results = SubscribeDataChange(std::vector<AttributeValueID>({avid}));
     if (results.size() == 0) { throw std::runtime_error("Protocol Error"); }
-    CheckStatusCode(results.front().Status);
-    return results.front().MonitoredItemID;
+    return results.front();
   }
 
-  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(const std::vector<AttributeValueID>& attributes)
+  std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<AttributeValueID>& attributes)
   {
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
@@ -114,7 +113,43 @@ namespace OpcUa
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
-    return Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    std::vector<uint32_t> handles;
+    for (auto res : results)
+    {
+      CheckStatusCode(res.Status);
+      handles.push_back(res.MonitoredItemID);
+    }
+    return handles;
   }
+
+  void Subscription::SubscribeEvents()
+  {
+    MonitoredItemsParameters itemsParams;
+    itemsParams.SubscriptionID = Data.ID;
+
+    AttributeValueID avid;
+    avid.Node = ObjectID::Server;
+    avid.Attribute = AttributeID::EVENT_NOTIFIER;
+
+    MonitoredItemRequest req;
+    req.ItemToMonitor = avid;
+    req.Mode = MonitoringMode::Reporting;
+    MonitoringParameters params;
+    params.SamplingInterval = Data.RevisedPublishingInterval;
+    params.QueueSize = std::numeric_limits<double>::max();
+    params.DiscardOldest = true;
+    params.ClientHandle = IntegerID(++LastMonitoredItemHandle);
+    Map[params.ClientHandle] = avid;
+    req.Parameters = params;
+    itemsParams.ItemsToCreate.push_back(req);
+
+    std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    for (auto res : results)
+    {
+      CheckStatusCode(res.Status);
+    }
+  }
+  //void UnSubscribeEvents(){}; 
 
 }

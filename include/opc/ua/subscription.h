@@ -35,9 +35,9 @@ namespace OpcUa
   class SubscriptionClient
   {
     public:
-      virtual void DataChangeEvent(const Node& node, const Variant& val, AttributeID attribute){};
-      //virtual void Event(Event result); FIXME: Not implemented
-      //virtual void StatusChange(Event result); FIXME: Not implemented
+      virtual void DataChange(const Node& node, const Variant& val, AttributeID attribute) {};
+      virtual void Event(std::vector<Variant> xx) {}; 
+      virtual void StatusChange(StatusCode newstatus) {}; 
   };
 
 
@@ -54,13 +54,18 @@ namespace OpcUa
       void Delete();
 
       //Subscribe to a Node attribute for its value to change
-      uint32_t Subscribe(const Node& node, AttributeID attr=AttributeID::VALUE);
+      uint32_t SubscribeDataChange(const Node& node, AttributeID attr=AttributeID::VALUE);
       // Subscribe to nodes for specified attribute change
-      std::vector<CreateMonitoredItemsResult> Subscribe(const std::vector<AttributeValueID>& attributes);
-      void UnSubscribe(std::vector<uint32_t> handles){}; //Not implemented in interface and server
-      //Monitor for events FIXME: Event support not implemented
+      std::vector<uint32_t> SubscribeDataChange(const std::vector<AttributeValueID>& attributes);
+      void UnSubscribeDataChange(std::vector<uint32_t> handles){}; //Not implemented in interface and server
+      //Monitor for events
+      void SubscribeEvents(); //As far as I remember the only allowed node is Server in most SDKs
       //void SubscribeEvents(Node node); //As far as I remember the only allowed node is Server in most SDKs
-      //void Unsubscribe(Node node);
+      void UnsubscribeEvents(){};
+      //Subscribe to server status change
+      //void SubscribeStatusChange(); //Not sure we need to subscribe, maybe it is automatic ....
+      //void UnSubscribeStatusChange(){}; 
+
       void PublishCallback(PublishResult); //Not sure it needs to be public
 
     private:

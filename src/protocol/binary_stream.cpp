@@ -1127,6 +1127,18 @@ namespace OpcUa
       id = value;
     }
 
+    template<>
+    void DataSerializer::Serialize<std::vector<IntegerID>>(const std::vector<IntegerID>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<IntegerID>>(std::vector<IntegerID>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
     ////////////////////////////////////////////////////////////////////
     // StatusCode
     ////////////////////////////////////////////////////////////////////

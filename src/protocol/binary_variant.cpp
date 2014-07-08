@@ -1020,6 +1020,19 @@ namespace OpcUa
         DeserializeContainer(*this, var.Dimensions);
       }
     }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<Variant>>(const std::vector<Variant>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<Variant>>(std::vector<Variant>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
   } // namespace Binary
 } // namespace OpcUa
 

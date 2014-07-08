@@ -33,8 +33,13 @@ namespace OpcUa
       }
 
     public:
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
       {
+        std::cout << "Creating Subcsription !!!!!!!!! " << (bool)Callback << std::endl;
+        Callback = callback;
+        if (Callback) { std::cout << "Callback is defined!!!!!!!!!!!!!!!!!!!!!!!\n";}
+        std::cout << "Callback is " << (bool)Callback << std::endl;
+
         CreateSubscriptionRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
         request.Parameters = parameters;
@@ -43,6 +48,7 @@ namespace OpcUa
 
         CreateSubscriptionResponse response;
         Stream >> response;
+        std::cout << "Callback is " << (bool)Callback << std::endl;
         return response.Data;
       }
       
@@ -58,9 +64,9 @@ namespace OpcUa
         return response.Results;
       }
  
-
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
       {
+        std::cout << "Callback is " << (bool)Callback << std::endl;
         CreateMonitoredItemsRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
         request.Parameters = parameters;
@@ -68,6 +74,7 @@ namespace OpcUa
         Stream << request << OpcUa::Binary::flush;
 
         ProcessPublishResults();
+        std::cout << "Callback is " << (bool)Callback << std::endl;
 
         MonitoredItemsData data;
         Stream >> data;
@@ -95,21 +102,32 @@ namespace OpcUa
         {
           Stream >> typeId;
           Stream >> header;
-          std::cout << " got header with type: " << typeId << std::endl;
           if (typeId == NodeID(829, 0) )
           {
             PublishResult result;
             Stream >> result;
-            std::cout << " got one publish result " << typeId << std::endl;
+            if (this->Callback)
+            {
+              std::cout << " Calling callback for one publish result " << std::endl;
+              Callback(result);
+            }
+            else
+            {
+              std::cout << " PublishResult received but no callback defined" << std::endl;
+            }
           }
           else
           {
+            std::cout << " got response from server with type: " << typeId << std::endl;
             break;
           }
         }
       }
+
+    private:
       mutable StreamType Stream;
       NodeID AuthenticationToken;
+      std::function<void (PublishResult)> Callback;
     };
 
   }
