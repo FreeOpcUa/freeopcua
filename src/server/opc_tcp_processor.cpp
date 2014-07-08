@@ -604,6 +604,27 @@ namespace
           return;
         }
 
+        case DELETE_MONITORED_ITEMS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Delete Monitored Items' request." << std::endl;
+          DeleteMonitoredItemsParameters params;
+          istream >> params;
+
+          DeleteMonitoredItemsResponse response;
+
+          response.Results = Server->Subscriptions()->DeleteMonitoredItems(params);
+
+          FillResponseHeader(requestHeader, response.Header);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to Delete Monitored Items Request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
         case PUBLISH_REQUEST:
         {
           if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;

@@ -191,7 +191,7 @@ namespace OpcUa
   struct DeleteMonitoredItemsResponse
   {
     NodeID TypeID;
-    RequestHeader Header;
+    ResponseHeader Header;
     std::vector<StatusCode> Results;
 
     DeleteMonitoredItemsResponse();
