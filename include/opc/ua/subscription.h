@@ -48,22 +48,29 @@ namespace OpcUa
       //callback will be called everytime an event is received from the server
       //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
       Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback); 
-      IntegerID GetId() const { return Data.ID; } 
-      Duration GetPeriode() const { return Data.RevisedPublishingInterval; } 
       //Delete the subscription from server
       void Delete();
 
+      //Get information about the subscription
+      IntegerID GetId() const { return Data.ID; } 
+      Duration GetPeriode() const { return Data.RevisedPublishingInterval; } 
+
       //Subscribe to a Node attribute for its value to change
-      uint32_t SubscribeDataChange(const Node& node, AttributeID attr=AttributeID::VALUE);
       // Subscribe to nodes for specified attribute change
+      uint32_t SubscribeDataChange(const Node& node, AttributeID attr=AttributeID::VALUE);
       std::vector<uint32_t> SubscribeDataChange(const std::vector<AttributeValueID>& attributes);
-      void UnSubscribeDataChange(std::vector<uint32_t> handles){}; //Not implemented in interface and server
-      //Monitor for events
+      void UnSubscribeDataChange(uint32_t handle); 
+      void UnSubscribeDataChange(std::vector<uint32_t> handles); 
+
+      //Subscribe to events 
+      //FIXME: need to support filtering!!
       void SubscribeEvents(); //As far as I remember the only allowed node is Server in most SDKs
       //void SubscribeEvents(Node node); //As far as I remember the only allowed node is Server in most SDKs
-      void UnsubscribeEvents(){};
+      void UnSubscribeEvents();
+
       //Subscribe to server status change
-      //void SubscribeStatusChange(); //Not sure we need to subscribe, maybe it is automatic ....
+      // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
+      //void SubscribeStatusChange(); 
       //void UnSubscribeStatusChange(){}; 
 
       void PublishCallback(PublishResult); //Not sure it needs to be public
@@ -77,6 +84,7 @@ namespace OpcUa
       SubscriptionClient& Client;
       uint32_t LastMonitoredItemHandle = 1;
       AttValMap Map; //I do not understand why I need this but event only send handles..
+      uint32_t EventHandle = 0;
   };
 }
 

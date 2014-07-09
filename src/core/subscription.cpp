@@ -123,6 +123,28 @@ namespace OpcUa
     return handles;
   }
 
+  void Subscription::UnSubscribeDataChange(uint32_t handle)
+  {
+    return UnSubscribeDataChange(std::vector<uint32_t>({handle}));
+  }
+
+  void Subscription::UnSubscribeDataChange(std::vector<uint32_t> handles) 
+  {
+    DeleteMonitoredItemsParameters params;
+    params.SubscriptionId = Data.ID;
+    std::vector<IntegerID> newhandles;
+    for (auto id : handles)
+    {
+      newhandles.push_back(IntegerID(id));
+    }
+    params.MonitoredItemsIds = newhandles;
+    auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
+    for (auto res : results)
+    {
+      CheckStatusCode(res);
+    }
+  }
+
   void Subscription::SubscribeEvents()
   {
     MonitoredItemsParameters itemsParams;
@@ -145,11 +167,21 @@ namespace OpcUa
     itemsParams.ItemsToCreate.push_back(req);
 
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
-    for (auto res : results)
+    if ( results.size()  != 0 )
     {
-      CheckStatusCode(res.Status);
+      throw(std::runtime_error("Protocol Error CreateMonitoredItems should return one result"));
     }
+    EventHandle = results.front().MonitoredItemID;
+    CheckStatusCode(results.front().Status);
   }
-  //void UnSubscribeEvents(){}; 
+
+  void Subscription::UnSubscribeEvents()
+  {
+    if ( EventHandle == 0 )
+    {
+      throw(std::runtime_error("Error not siubscribed"));
+    }
+    UnSubscribeDataChange(EventHandle);
+  }
 
 }

@@ -124,7 +124,6 @@ namespace OpcUa
     bool SteppedSlopedExtrapolation;
   };
 
-/* that one is wrong this paramter if of type extensible
   struct MonitoringFilter
   {
     ExtensionObjectHeader Header;
@@ -132,19 +131,20 @@ namespace OpcUa
     EventFilter Event;
     AggregateFilter Aggregate;
   };
-*/
+  /*
   struct ExtensionObjectMonitoringFilter
   {
     NodeID typeID;
     ExtensionObjectEncoding Encoding;
   };
+  */
 
 
   struct MonitoringParameters
   {
     IntegerID ClientHandle;
     Duration SamplingInterval;
-    ExtensionObjectMonitoringFilter Filter;
+    MonitoringFilter Filter;
     uint32_t QueueSize;
     bool DiscardOldest;
   };
