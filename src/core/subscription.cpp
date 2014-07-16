@@ -179,7 +179,7 @@ namespace OpcUa
   {
     if ( EventHandle == 0 )
     {
-      throw(std::runtime_error("Error not siubscribed"));
+      throw(std::runtime_error("Error not subscribed"));
     }
     UnSubscribeDataChange(EventHandle);
   }

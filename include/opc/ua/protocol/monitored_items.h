@@ -48,8 +48,8 @@ namespace OpcUa
   struct SimpleAttributeOperand
   {
     NodeID TypeID;
-    QualifiedName BrowsePath;
-    IntegerID AttributeID;
+    std::vector<QualifiedName> BrowsePath;
+    AttributeID Attribute;
     std::vector<std::string> IndexRange; 
   };
 
@@ -131,14 +131,6 @@ namespace OpcUa
     EventFilter Event;
     AggregateFilter Aggregate;
   };
-  /*
-  struct ExtensionObjectMonitoringFilter
-  {
-    NodeID typeID;
-    ExtensionObjectEncoding Encoding;
-  };
-  */
-
 
   struct MonitoringParameters
   {
@@ -205,7 +197,7 @@ namespace OpcUa
     uint32_t MonitoredItemID;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
-    ExtensionObjectHeader FilterResult;
+    MonitoringFilter Filter;
 
     CreateMonitoredItemsResult();
   };

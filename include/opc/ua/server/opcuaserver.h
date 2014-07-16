@@ -8,6 +8,7 @@
 #include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <opc/ua/node.h>
 #include <opc/ua/server.h>
+#include <opc/ua/event.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/server/tcp_server.h>
 #include <opc/ua/server/address_space.h>
@@ -37,6 +38,7 @@ namespace OpcUa
       Node GetNode(const NodeID& nodeid);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
+      void TriggerEvent(Event event);
 
       Subscription CreateSubscription(uint period, SubscriptionClient& callback);
 

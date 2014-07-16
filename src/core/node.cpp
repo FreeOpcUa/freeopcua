@@ -62,7 +62,7 @@ namespace OpcUa
     return Id;
   }
 
-  Variant Node::GetAttribute(const OpcUa::AttributeID attr) const
+  Variant Node::GetAttribute(const AttributeID attr) const
   {
     ReadParameters params;
     AttributeValueID attribute;
@@ -81,36 +81,36 @@ namespace OpcUa
     }
   }
 
-  StatusCode Node::SetAttribute(const OpcUa::AttributeID attr, const Variant &value)
+  StatusCode Node::SetAttribute(const AttributeID attr, const Variant &value)
   {
-    OpcUa::WriteValue attribute;
+    WriteValue attribute;
     attribute.Node = Id;
     attribute.Attribute = attr;
     attribute.Data = value;
-    std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<OpcUa::WriteValue>(1, attribute));
+    std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<WriteValue>(1, attribute));
     return codes.front();
   }
 
   StatusCode Node::SetValue(const Variant& value)
   {
-    return SetAttribute(OpcUa::AttributeID::VALUE, value);
+    return SetAttribute(AttributeID::VALUE, value);
   }
 
-  std::vector<Node> Node::GetChildren(const OpcUa::ReferenceID& refid) const
+  std::vector<Node> Node::GetChildren(const ReferenceID& refid) const
   {
-    OpcUa::BrowseDescription description;
+    BrowseDescription description;
     description.NodeToBrowse = Id;
-    description.Direction = OpcUa::BrowseDirection::Forward;
+    description.Direction = BrowseDirection::Forward;
     description.IncludeSubtypes = true;
-    description.NodeClasses = OpcUa::NODE_CLASS_ALL;
-    description.ResultMask = OpcUa::REFERENCE_ALL;
+    description.NodeClasses = NODE_CLASS_ALL;
+    description.ResultMask = REFERENCE_ALL;
     description.ReferenceTypeID =  refid;
 
-    OpcUa::NodesQuery query;
+    NodesQuery query;
     query.NodesToBrowse.push_back(description);
     query.MaxReferenciesPerNode = 100;
     std::vector<Node> nodes;
-    std::vector<OpcUa::ReferenceDescription> refs = Server->Views()->Browse(query);
+    std::vector<ReferenceDescription> refs = Server->Views()->Browse(query);
     while(!refs.empty())
     {
       for (auto refIt : refs)
@@ -130,8 +130,8 @@ namespace OpcUa
 
   QualifiedName Node::GetName() const
   {
-    Variant var = GetAttribute(OpcUa::AttributeID::BROWSE_NAME);
-    if (var.Type == OpcUa::VariantType::QUALIFIED_NAME)
+    Variant var = GetAttribute(AttributeID::BROWSE_NAME);
+    if (var.Type == VariantType::QUALIFIED_NAME)
     {
       return var.Value.Name.front();
     }
@@ -139,12 +139,12 @@ namespace OpcUa
     return QualifiedName(); // TODO Exception!
   }
 
-  void Node::AddAttribute(OpcUa::AttributeID attr, const OpcUa::Variant& val)
+  void Node::AddAttribute(AttributeID attr, const Variant& val)
   {
     return Server->NodeManagement()->AddAttribute(Id, attr, val);
   }
 
-  void Node::AddReference(const OpcUa::ReferenceDescription desc)
+  void Node::AddReference(const ReferenceDescription desc)
   {
     return Server->NodeManagement()->AddReference(Id, desc);
   }
@@ -170,7 +170,7 @@ namespace OpcUa
     uint16_t ns = BrowseName.NamespaceIndex;
     for (std::string str: path)
     {
-      QualifiedName qname = OpcUa::ToQualifiedName(str, ns);
+      QualifiedName qname = ToQualifiedName(str, ns);
       ns = qname.NamespaceIndex;
       vec.push_back(qname);
     }
@@ -218,7 +218,7 @@ namespace OpcUa
 
   Node Node::AddFolder(const std::string& name)
   {
-    NodeID nodeid = OpcUa::NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
     QualifiedName qn = ToQualifiedName(name, BrowseName.NamespaceIndex);
     return AddFolder(nodeid, qn);
   }
@@ -308,8 +308,8 @@ namespace OpcUa
 
   Node Node::AddVariable(const std::string& name, const Variant& val)
   {
-    NodeID nodeid = OpcUa::NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = OpcUa::ToQualifiedName(name, BrowseName.NamespaceIndex);
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
+    QualifiedName qn = ToQualifiedName(name, BrowseName.NamespaceIndex);
     return AddVariable(nodeid, qn, val);
   }
 

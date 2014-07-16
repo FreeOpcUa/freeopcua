@@ -14,6 +14,8 @@
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/binary/stream.h>
 
+#include <iostream>
+
 namespace OpcUa
 {
 
@@ -50,51 +52,6 @@ namespace OpcUa
   }
   namespace Binary
   {
-    ////////////////////////////////////////////////////////////////
-
-    template <>
-    std::size_t RawSize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
-    {
-      return RawSize(result.Status) +
-        RawSize(result.MonitoredItemID) +
-        RawSize(result.RevisedSamplingInterval) +
-        RawSize(result.RevizedQueueSize) +
-        RawSize(result.FilterResult);
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
-    {
-      *this << result.Status;
-      *this << result.MonitoredItemID;
-      *this << result.RevisedSamplingInterval;
-      *this << result.RevizedQueueSize;
-      *this << result.FilterResult;
-    }
-
-   template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsResult>(CreateMonitoredItemsResult& params)
-    {
-      *this >> params.Status;
-      *this >> params.MonitoredItemID;
-      *this >> params.RevisedSamplingInterval;
-      *this >> params.RevizedQueueSize;
-      *this >> params.FilterResult;
-    }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<CreateMonitoredItemsResult>>(const std::vector<CreateMonitoredItemsResult>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<CreateMonitoredItemsResult>>(std::vector<CreateMonitoredItemsResult>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
 
     ////////////////////////////////////////////////////////////////
 
@@ -348,8 +305,8 @@ namespace OpcUa
     std::size_t RawSize<SimpleAttributeOperand>(const OpcUa::SimpleAttributeOperand& params)
     {
       return RawSize(params.TypeID) +
-          RawSize(params.BrowsePath) +
-          RawSize(params.AttributeID) +
+          RawSizeContainer(params.BrowsePath) +
+          RawSize(params.Attribute) +
           RawSizeContainer(params.IndexRange); 
     }
 
@@ -358,7 +315,7 @@ namespace OpcUa
     {
       *this >> params.TypeID;
       *this >> params.BrowsePath;
-      *this >> params.AttributeID;
+      *this >> params.Attribute;
       *this >> params.IndexRange;
     }
 
@@ -367,7 +324,7 @@ namespace OpcUa
     {
       *this << params.TypeID;
       *this << params.BrowsePath;
-      *this << params.AttributeID;
+      *this << params.Attribute;
       *this << params.IndexRange;
     }
 
@@ -585,7 +542,7 @@ namespace OpcUa
     ////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<MonitoringFilter>(const OpcUa::MonitoringFilter& data)
+    std::size_t RawSize<MonitoringFilter>(const MonitoringFilter& data)
     {
       size_t total = 0;
       total += RawSize(data.Header);
@@ -601,6 +558,10 @@ namespace OpcUa
       {
         total += RawSize(data.Aggregate);
       }
+      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      {
+        //No filter is used
+      }
       else
       {
         throw std::runtime_error("MonitoringFilter type not implemented");
@@ -608,6 +569,7 @@ namespace OpcUa
 
       return total; 
     }
+    
 
     template<>
     void DataDeserializer::Deserialize<MonitoringFilter>(MonitoringFilter& data)
@@ -625,9 +587,13 @@ namespace OpcUa
       {
           *this >> data.Aggregate;
       }
+      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      {
+        //No filter is used
+      }
       else
       {
-        throw std::runtime_error("Filter data type not supported");
+        throw std::runtime_error("Filter data type not supported in deserialization");
       }
     }
 
@@ -647,9 +613,13 @@ namespace OpcUa
       {
         *this << data.Aggregate;
       }
+      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      {
+        //No filter is used
+      }
       else
       {
-        throw std::runtime_error("Filter data type not supported");
+        throw std::runtime_error("Filter data type not supported in serialization");
       }
     }
 
@@ -783,6 +753,51 @@ namespace OpcUa
       *this << params.Header;
       *this << params.Parameters;
     }
+
+    ////////////////////////////////////////////////////////////////
+
+    template <>
+    std::size_t RawSize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
+    {
+      return RawSize(result.Status) +
+        RawSize(result.MonitoredItemID) +
+        RawSize(result.RevisedSamplingInterval) +
+        RawSize(result.RevizedQueueSize) +
+        RawSize(result.Filter);
+    }
+
+    template<>
+    void DataSerializer::Serialize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
+    {
+      *this << result.Status;
+      *this << result.MonitoredItemID;
+      *this << result.RevisedSamplingInterval;
+      *this << result.RevizedQueueSize;
+      *this << result.Filter;
+    }
+
+   template<>
+    void DataDeserializer::Deserialize<CreateMonitoredItemsResult>(CreateMonitoredItemsResult& params)
+    {
+      *this >> params.Status;
+      *this >> params.MonitoredItemID;
+      *this >> params.RevisedSamplingInterval;
+      *this >> params.RevizedQueueSize;
+      *this >> params.Filter;
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<CreateMonitoredItemsResult>>(const std::vector<CreateMonitoredItemsResult>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<CreateMonitoredItemsResult>>(std::vector<CreateMonitoredItemsResult>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
 
 
 

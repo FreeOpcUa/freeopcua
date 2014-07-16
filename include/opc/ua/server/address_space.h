@@ -12,6 +12,7 @@
 
 #include <opc/ua/view.h>
 #include <opc/ua/attributes.h>
+#include <opc/ua/event.h>
 #include <opc/ua/node_management.h>
 #include <opc/ua/subscriptions.h>
 
@@ -29,6 +30,8 @@ namespace OpcUa
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpace);
+
+      virtual void TriggerEvent(NodeID node, Event event) = 0;
     };
 
     AddressSpace::UniquePtr CreateAddressSpace(bool debug);

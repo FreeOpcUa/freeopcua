@@ -138,6 +138,10 @@ namespace OpcUa
       return Registry->Publish(acknowledgements);
     }
 
+    void AddressSpaceAddon::TriggerEvent(NodeID node, Event event)
+    {
+      return Registry->TriggerEvent(node, event);
+    }
   } // namespace Internal
 } // namespace OpcUa
 

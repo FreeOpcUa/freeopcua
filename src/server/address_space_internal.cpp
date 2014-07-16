@@ -17,6 +17,7 @@
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/view.h>
+#include <opc/ua/event.h>
 
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
@@ -442,8 +443,82 @@ namespace OpcUa
         }
       }
 
+      void TriggerEvent(NodeID node, Event event)
+      {
+        //find node
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it == Nodes.end() )
+        {
+          std::cout << "NodeID does not exist, raise exception\n";
+        }
+        else
+        {
+          //find event_notifier attribute of node
+          AttributesMap::iterator ait = it->second.Attributes.find(AttributeID::EVENT_NOTIFIER);
+          if ( ait == it->second.Attributes.end() )
+          {
+            std::cout << "attempt o trigger node which has not event_notifier attribute, should raise exception\n";
+          }
+          else
+          {
+            EnqueueEvent(ait->second, event);
+          }
+        }
+      }
 
     private:
+
+
+      void EnqueueEvent(AttributeValue& attval, const Event& event)
+      {
+        //go through all subscription of attribute and add new event
+        for (auto attsub = attval.AttSubscriptions.begin(); attsub != attval.AttSubscriptions.end() ;)
+        {
+          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
+          if ( itsub == SubscriptionsMap.end() )
+          {
+            //Subscription or monitoreditem id does not exist any more so remove it
+            attsub = attval.AttSubscriptions.erase(attsub);
+          }
+          else
+          {
+            //Find monitoredItem referensed in subscription
+            std::map<uint32_t, DataMonitoredItems>::iterator mii_it =  itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId );
+            if  (mii_it == itsub->second.MonitoredItemsMap.end() ) 
+            {
+              std::cout << "monitoreditem is deleted" << std::endl;
+            }
+            else
+            {
+              //Check filter against event data and create EventFieldList to send
+              //FIXME: Here we should also check event agains WhereClause of filter
+              EventFieldList fieldlist;
+              fieldlist.ClientHandle = attsub->Parameters.ClientHandle;
+              fieldlist.EventFields = GetEventFields(mii_it->second.Parameters.Filter.Event, event);
+              itsub->second.EventTriggered.push_back(fieldlist);
+            }
+          }
+        }
+      }
+
+      std::vector<Variant> GetEventFields(EventFilter filter, Event event)
+      {
+        //Go through filter and add value og matches as in spec
+        std::vector<Variant> fields;
+        for (SimpleAttributeOperand sattr : filter.SelectClauses)
+        {
+          if ( sattr.BrowsePath.size() == 0 )
+          {
+            fields.push_back(event.GetValue(sattr.Attribute));
+          }
+          else
+          {
+            fields.push_back(event.GetValue(sattr.BrowsePath));
+          }
+        }
+        return fields;
+      }
+
 
       std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
@@ -472,7 +547,7 @@ namespace OpcUa
           auto res = FindElementInNode(current, element);
           if ( std::get<0>(res) == false )
           {
-            result.Status = OpcUa::StatusCode::BadNotReadable;
+            result.Status = OpcUa::StatusCode::BadNoMatch;
             return result;
           }
           current = std::get<1>(res);
@@ -566,7 +641,7 @@ namespace OpcUa
 
       void UpdateSubscriptions(AttributeValue& val)
       {
-        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end() ;)
+        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
         {
           SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
           if ( itsub == SubscriptionsMap.end() || (itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId ) == itsub->second.MonitoredItemsMap.end() ) )
