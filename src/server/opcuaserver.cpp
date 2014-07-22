@@ -21,21 +21,23 @@ namespace OpcUa
   {
     EndpointsServices = UaServer::CreateEndpointsRegistry();
    
-    std::vector<ApplicationDescription> Applications;
+    std::vector<ApplicationDescription> Apps;
     ApplicationDescription appdesc;
     appdesc.Name = LocalizedText(Name);
-    appdesc.URI = Uri;
+    appdesc.URI = ServerUri;
     appdesc.Type = ApplicationType::SERVER;
-    Applications.push_back(appdesc);
+    appdesc.ProductURI = ProductUri;
+    Apps.push_back(appdesc);
     std::vector<EndpointDescription> Endpoints;
     EndpointDescription ed;
+    ed.ServerDescription = appdesc;
     ed.EndpointURL = Endpoint;
     ed.SecurityMode = SecurityMode;
     ed.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
     ed.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
     Endpoints.push_back(ed);
 
-    EndpointsServices->AddApplications(Applications);
+    EndpointsServices->AddApplications(Apps);
     EndpointsServices->AddEndpoints(Endpoints);
 
     Registry = UaServer::CreateServicesRegistry();

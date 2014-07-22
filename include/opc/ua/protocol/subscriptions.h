@@ -50,7 +50,9 @@ namespace OpcUa
     NodeID TypeID;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
-    DiagnosticInfo Diagnostic;
+    DiagnosticInfoList Diagnostic;
+
+    DeleteSubscriptionResponse();
   };
 
   ////////////////////////////////////////////////////////

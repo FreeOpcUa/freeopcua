@@ -238,7 +238,8 @@ namespace
         //FIXME:Should check that channel has been issued first
         ++TokenID;
       }
-
+      
+      sequence.SequenceNumber = ++SequenceNb;
       OpenSecureChannelResponse response;
       FillResponseHeader(request.Header, response.Header);
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
@@ -284,6 +285,8 @@ namespace
 
       RequestHeader requestHeader;
       istream >> requestHeader;
+
+      sequence.SequenceNumber = ++SequenceNb;
 
       const std::size_t receivedSize =
         RawSize(channelID) +
@@ -579,6 +582,8 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to Delete Subscription Request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
@@ -627,7 +632,7 @@ namespace
 
         case PUBLISH_REQUEST:
         {
-          if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
+          if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
           PublishParameters params;
           istream >> params;
           PublishRequestElement data;
@@ -636,6 +641,7 @@ namespace
           data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
           Server->Subscriptions()->Publish(params.Acknowledgements);
+          --SequenceNb; //We do not send response, so do not increase sequence
           return;
         }
 
@@ -782,6 +788,8 @@ namespace
           FillResponseHeader(requestData.requestHeader, response.Header);
           response.Result = publishResult;
 
+          requestData.sequence.SequenceNumber = ++SequenceNb;
+
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(requestData.algorithmHeader));
           secureHeader.AddSize(RawSize(requestData.sequence));
@@ -831,6 +839,7 @@ namespace
     NodeID AuthenticationToken;
     std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
     std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
+    uint32_t SequenceNb;
   };
 
   class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol

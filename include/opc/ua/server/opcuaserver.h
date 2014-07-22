@@ -23,8 +23,10 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
+      OPCUAServer(bool debug) : Debug(debug) {} 
       void SetEndpoint(const std::string& endpoint){this->Endpoint = endpoint;}
-      void SetURI(const std::string& uri){this->Uri = uri;}
+      void SetProductURI(const std::string& uri){this->ProductUri = uri;}
+      void SetURI(const std::string& uri){this->ServerUri = uri;}
       void SetServerName(const std::string& name){this->Name = name;}
       void AddAddressSpace(const std::string& path) {xml_address_spaces.push_back(path);}
       void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
@@ -46,7 +48,8 @@ namespace OpcUa
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine
-      std::string Uri = "freeopcua.github.io";
+      std::string ServerUri = "FreeOpcua"; //This is the expected address of an OPC-UA server on a machine
+      std::string ProductUri = "freeopcua.github.io";
       std::string Name = "Open Source OPC-UA Server";
       bool Debug = false;
       OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;

@@ -48,6 +48,11 @@ namespace OpcUa
   {
   }
 
+  DeleteSubscriptionResponse::DeleteSubscriptionResponse()
+    : TypeID(DELETE_SUBSCRIPTION_RESPONSE)
+  {
+  }
+
 
   ////////////////////////////////////////////////////////
   // SubscriptionData
@@ -251,7 +256,7 @@ namespace OpcUa
       return RawSize(request.TypeID) +
         RawSize(request.Header) +
         RawSizeContainer(request.Results) +
-        RawSize(request.Diagnostic);
+        RawSizeContainer(request.Diagnostic);
     }
 
     template<>
@@ -410,7 +415,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishParameters& params)
     {
-      return RawSize(params.Acknowledgements);
+      return RawSizeContainer(params.Acknowledgements);
     }
 
     template<>
