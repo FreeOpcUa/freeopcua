@@ -220,14 +220,13 @@ namespace
         break;
       }
 
-/*
       case OpcUa::Binary::MessageType::MT_SECURE_OPEN:
       {
         if (Debug) std::clog << "Opening securechannel." << std::endl;
         OpenChannel(messageStream, oStream);
         break;
       }
-
+/*
       case OpcUa::Binary::MessageType::MT_SECURE_CLOSE:
       {
         if (Debug) std::clog << "Closing secure channel." << std::endl;
@@ -287,6 +286,49 @@ namespace
     if (Debug) std::clog << "Sending answer to client." << std::endl;
 
     OStream << ackHeader << ack << flush;
+  }
+
+  void OpenChannel(IStreamBinary& istream)
+  {
+    uint32_t channelID = 0;
+    istream >> channelID;
+    OpcUa::Binary::AsymmetricAlgorithmHeader algorithmHeader;
+    istream >> algorithmHeader;
+
+    if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
+    {
+      throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+    }
+
+    OpcUa::Binary::SequenceHeader sequence;
+    istream >> sequence;
+
+    OpenSecureChannelRequest request;
+    istream >> request;
+
+    if (request.SecurityMode != MSM_NONE)
+    {
+      throw std::logic_error("Unsupported security mode.");
+    }
+
+    if (request.RequestType == STR_RENEW)
+    {
+      //FIXME:Should check that channel has been issued first
+      ++TokenID;
+    }
+
+    OpenSecureChannelResponse response;
+    FillResponseHeader(request.Header, response.Header);
+    response.ChannelSecurityToken.SecureChannelID = ChannelID;
+    response.ChannelSecurityToken.TokenID = TokenID;
+    response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
+    response.ChannelSecurityToken.RevisedLifetime = request.RequestLifeTime;
+
+    OpcUa::Binary::SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
+    responseHeader.AddSize(RawSize(algorithmHeader));
+    responseHeader.AddSize(RawSize(sequence));
+    responseHeader.AddSize(RawSize(response));
+    OStream << responseHeader << algorithmHeader << sequence << response << flush;
   }
 
   void OpcTcpClient::GoodBye()

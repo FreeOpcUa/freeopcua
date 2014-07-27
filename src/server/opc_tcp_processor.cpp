@@ -227,7 +227,7 @@ namespace
 
       OpenSecureChannelRequest request;
       istream >> request;
-      
+
       if (request.SecurityMode != MSM_NONE)
       {
         throw std::logic_error("Unsupported security mode.");
@@ -360,7 +360,7 @@ namespace
           if (Debug)
           {
             std::clog << "Processing read request for Node:";
-            for (AttributeValueID id : params.AttributesToRead) 
+            for (AttributeValueID id : params.AttributesToRead)
             {
               std::clog << " " << id.Node;
             }
@@ -428,7 +428,7 @@ namespace
           TranslateBrowsePathsParameters params;
           istream >> params;
 
-          if (Debug) 
+          if (Debug)
           {
             for ( BrowsePath path : params.BrowsePaths)
             {
@@ -437,11 +437,11 @@ namespace
               {
                 std::cout << "/" << el.TargetName ;
               }
-              std::cout << std::endl; 
+              std::cout << std::endl;
             }
           }
 
-          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params); 
+          std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params);
 
           if (Debug)
           {
@@ -581,7 +581,7 @@ namespace
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
-          
+
         case CREATE_MONITORED_ITEMS_REQUEST:
         {
           if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
@@ -622,7 +622,7 @@ namespace
           if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
           PublishingModeParameters params;
           istream >> params;
-          
+
           //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -643,7 +643,7 @@ namespace
           if (Debug) std::clog << "Processing 'Add Nodes' request." << std::endl;
           AddNodesParameters params;
           istream >> params;
-          
+
           std::vector<AddNodesResult> results = Server->NodeManagement()->AddNodes(params.NodesToAdd);
 
           AddNodesResponse response;
@@ -665,7 +665,7 @@ namespace
           if (Debug) std::clog << "Processing 'Add References' request." << std::endl;
           AddReferencesParameters params;
           istream >> params;
-          
+
           std::vector<StatusCode> results = Server->NodeManagement()->AddReferences(params.ReferencesToAdd);
 
           AddReferencesResponse response;
@@ -705,9 +705,9 @@ namespace
       {
         return  9999;
       }
-      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); 
+      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch();
       std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
-      
+
       for (const SubscriptionBinaryData& data: Subscriptions)
       {
         std::chrono::duration<double> tmp =  data.last_check + data.period;
@@ -718,7 +718,7 @@ namespace
         }
       }
       auto diff = next_fire - now;
-      if ( diff.count() < 0 ) 
+      if ( diff.count() < 0 )
       {
         if (Debug)  std::cout << "Event should allrady have been fired returning 0"<< std::endl;
         return 0;
@@ -736,13 +736,13 @@ namespace
           std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
           return;
         }
-       
+
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
         if ((now - subdata.last_check) <= subdata.period)
         {
           if (Debug) std::cout << " No need to process subscription yet" << std::endl;
           continue;
-        } 
+        }
         subdata.last_check = now;
 
         std::vector<IntegerID> sub_query;
@@ -754,7 +754,7 @@ namespace
         {
 
           PublishRequestElement requestData = PublishRequestQueue.front();
-          PublishRequestQueue.pop(); 
+          PublishRequestQueue.pop();
 
           PublishResponse response;
           FillResponseHeader(requestData.requestHeader, response.Header);
