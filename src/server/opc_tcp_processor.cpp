@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include "opc_tcp_processor.h"
+
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/opcua_protocol.h>
 
@@ -40,36 +42,37 @@ namespace
   using namespace OpcUa::Binary;
   using namespace OpcUa::UaServer;
 
-  typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
-
-  typedef OpcUa::Binary::IStream<OpcUa::InputChannel> IStreamBinary;
-  typedef OpcUa::Binary::OStream<OpcUa::OutputChannel> OStreamBinary;
-
-  struct SubscriptionBinaryData
+  void PrintBlob(const std::vector<char>& buf)
   {
-    IntegerID SubscriptionID;
-    std::chrono::duration<double> period;
-    std::chrono::duration<double> last_check;
-  };
+    unsigned pos = 0;
+    std::cout << "length: " << buf.size() << std::endl;
+    for (const auto it : buf)
+    {
+      if (pos)
+        printf((pos % 16 == 0) ? "\n" : " ");
 
-  struct PublishRequestElement
-  {
-    SequenceHeader sequence;
-    RequestHeader requestHeader;
-    SymmetricAlgorithmHeader algorithmHeader;
-  };
+      printf("%02x", (unsigned)it & 0x000000FF);
+
+      if (it > ' ')
+        std::cout << "(" << it << ")";
+      else
+        std::cout << "   ";
+
+      ++pos;
+    }
+
+    std::cout << std::endl << std::flush;
+  }
+
 
 
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
     OpcTcp(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
-      : Server(computer)
+      : MessageProcessor(computer, debug)
       , Debug(debug)
-      , ChannelID(1)
-      , TokenID(2)
     {
-      SessionID = NumericNodeID(5, 0);
     }
 
     virtual void Process(OpcUa::IOChannel::SharedPtr clientChannel)
@@ -84,7 +87,7 @@ namespace
 
       for(;;)
       {
-        double period = GetNextSleepPeriod();
+        double period = MessageProcessor.GetNextSleepPeriod();
         int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
@@ -92,11 +95,7 @@ namespace
         }
         else if (res == 1)
         {
-          bool ret = ProcessChunk(*clientChannel);
-          if ( ! ret)
-          {
-            return;
-          }
+          ProcessData(*clientChannel);
         }
         else
         {
@@ -110,13 +109,19 @@ namespace
     }
 
   private:
-    bool ProcessChunk(OpcUa::IOChannel& clientChannel)
+    void ProcessData(OpcUa::IOChannel& clientChannel)
     {
       using namespace OpcUa::Binary;
 
-      if (Debug) std::cout << "Processing new chunk." << std::endl;
       IStreamBinary iStream(clientChannel);
       OStreamBinary oStream(clientChannel);
+      ProcessChunk(iStream, oStream);
+    }
+
+    // TODO implement collecting full message from chunks before processing.
+    void ProcessChunk(IStreamBinary& iStream, OStreamBinary& oStream)
+    {
+      if (Debug) std::cout << "Processing new chunk." << std::endl;
       Header hdr;
       // Receive message header.
       iStream >> hdr;
@@ -134,13 +139,87 @@ namespace
       // restrict server size code only with current message.
       OpcUa::InputFromBuffer messageChannel(&buffer[0], buffer.size());
       IStreamBinary messageStream(messageChannel);
+      MessageProcessor.ProcessMessage(hdr.Type, messageStream, oStream);
 
-      switch (hdr.Type)
+      if (messageChannel.GetRemainSize())
+      {
+        std::cerr << "ERROR!!! Message from client has been processed partially." << std::endl;
+      }
+    }
+
+  private:
+    OpcTcpMessages MessageProcessor;
+    bool Debug;
+  };
+
+  class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol
+  {
+  public:
+    DEFINE_CLASS_POINTERS(OpcUaProtocol);
+
+  public:
+    OpcUaProtocol(OpcUa::UaServer::TcpServer::SharedPtr tcpServer, bool debug)
+      : Debug(debug)
+      , TcpAddon(tcpServer)
+    {
+    }
+
+    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Server::SharedPtr server) override
+    {
+      for (const EndpointDescription endpoint : endpoints)
+      {
+        const Common::Uri uri(endpoint.EndpointURL);
+        if (uri.Scheme() == "opc.tcp")
+        {
+          std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
+          TcpParameters tcpParams;
+          tcpParams.Port = uri.Port();
+          if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
+          TcpAddon->Listen(tcpParams, processor);
+          Ports.push_back(tcpParams);
+        }
+      }
+    }
+
+    virtual void StopEndpoints() override
+    {
+      for (const TcpParameters& params : Ports)
+      {
+        TcpAddon->StopListen(params);
+      }
+      TcpAddon.reset();
+    }
+
+  private:
+    OpcUa::UaServer::TcpServer::SharedPtr TcpAddon;
+    std::vector<TcpParameters> Ports;
+    bool Debug;
+  };
+
+}
+
+namespace OpcUa
+{
+  namespace UaServer
+  {
+
+    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
+      : Server(computer)
+      , Debug(debug)
+      , ChannelID(1)
+      , TokenID(2)
+    {
+      SessionID = NumericNodeID(5, 0);
+    }
+
+    void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream, OStreamBinary& oStream)
+    {
+      switch (msgType)
       {
         case MT_HELLO:
         {
           if (Debug) std::clog << "Accepted hello message." << std::endl;
-          HelloClient(messageStream, oStream);
+          HelloClient(iStream, oStream);
           break;
         }
 
@@ -148,20 +227,20 @@ namespace
         case MT_SECURE_OPEN:
         {
           if (Debug) std::clog << "Opening securechannel." << std::endl;
-          OpenChannel(messageStream, oStream);
+          OpenChannel(iStream, oStream);
           break;
         }
 
         case MT_SECURE_CLOSE:
         {
           if (Debug) std::clog << "Closing secure channel." << std::endl;
-          CloseChannel(messageStream);
-          return false;
+          CloseChannel(iStream);
+          return;
         }
 
         case MT_SECURE_MESSAGE:
         {
-          ProcessMessage(messageStream, oStream);
+          ProcessRequest(iStream, oStream);
           break;
         }
 
@@ -177,20 +256,90 @@ namespace
         }
         default:
         {
-          if (Debug) std::clog << "Unknown message type '" << hdr.Type << "' received!" << std::endl;
+          if (Debug) std::clog << "Unknown message type '" << msgType << "' received!" << std::endl;
           throw std::logic_error("Invalid message type received.");
         }
       }
-
-      if (messageChannel.GetRemainSize())
-      {
-        std::cerr << "ERROR!!! Message from client has been processed partially." << std::endl;
-      }
-
-      return true;
     }
 
-    void HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
+    void OpcTcpMessages::SendPublishResponse(OpcUa::OutputChannel& clientChannel)
+    {
+      OStreamBinary stream(clientChannel);
+      for (SubscriptionBinaryData& subdata: Subscriptions)
+      {
+        if ( PublishRequestQueue.size() == 0)
+        {
+          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
+          return;
+        }
+
+        std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
+        if ((now - subdata.last_check) <= subdata.period)
+        {
+          if (Debug) std::cout << " No need to process subscription yet" << std::endl;
+          continue;
+        }
+        subdata.last_check = now;
+
+        std::vector<IntegerID> sub_query;
+        sub_query.push_back(subdata.SubscriptionID);
+        std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
+        if (Debug) std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
+
+        for (const PublishResult& publishResult: res_list)
+        {
+
+          PublishRequestElement requestData = PublishRequestQueue.front();
+          PublishRequestQueue.pop();
+
+          PublishResponse response;
+          FillResponseHeader(requestData.requestHeader, response.Header);
+          response.Result = publishResult;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(requestData.algorithmHeader));
+          secureHeader.AddSize(RawSize(requestData.sequence));
+          secureHeader.AddSize(RawSize(response));
+          if (Debug) {
+            std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+            for  ( NotificationData d: response.Result.Message.Data )
+            {
+              std::cout << "     " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+            }
+          }
+          stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+        }
+      }
+    }
+
+    double OpcTcpMessages::GetNextSleepPeriod()
+    {
+      if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
+      {
+        return  9999;
+      }
+      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch();
+      std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
+
+      for (const SubscriptionBinaryData& data: Subscriptions)
+      {
+        std::chrono::duration<double> tmp =  data.last_check + data.period;
+        if (Debug) std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        if (tmp < next_fire)
+        {
+          next_fire = tmp;
+        }
+      }
+      auto diff = next_fire - now;
+      if ( diff.count() < 0 )
+      {
+        if (Debug)  std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        return 0;
+      }
+      return diff.count() ;
+    }
+
+    void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
     {
       using namespace OpcUa::Binary;
 
@@ -210,7 +359,7 @@ namespace
       ostream << ackHeader << ack << flush;
     }
 
-    void OpenChannel(IStreamBinary& istream, OStreamBinary& ostream)
+    void OpcTcpMessages::OpenChannel(IStreamBinary& istream, OStreamBinary& ostream)
     {
       uint32_t channelID = 0;
       istream >> channelID;
@@ -253,7 +402,7 @@ namespace
       ostream << responseHeader << algorithmHeader << sequence << response << flush;
     }
 
-    void CloseChannel(IStreamBinary& istream)
+    void OpcTcpMessages::CloseChannel(IStreamBinary& istream)
     {
       uint32_t channelID = 0;
       istream >> channelID;
@@ -268,7 +417,7 @@ namespace
       istream >> request;
     }
 
-    void ProcessMessage(IStreamBinary& istream, OStreamBinary& ostream)
+    void OpcTcpMessages::ProcessRequest(IStreamBinary& istream, OStreamBinary& ostream)
     {
       uint32_t channelID = 0;
       istream >> channelID;
@@ -691,173 +840,20 @@ namespace
       }
     }
 
-  private:
-    void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
+    void OpcTcpMessages::FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
        responseHeader.Timestamp = CurrentDateTime();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
-    double GetNextSleepPeriod()
-    {
-      if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
-      {
-        return  9999;
-      }
-      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch();
-      std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
 
-      for (const SubscriptionBinaryData& data: Subscriptions)
-      {
-        std::chrono::duration<double> tmp =  data.last_check + data.period;
-        if (Debug) std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
-        if (tmp < next_fire)
-        {
-          next_fire = tmp;
-        }
-      }
-      auto diff = next_fire - now;
-      if ( diff.count() < 0 )
-      {
-        if (Debug)  std::cout << "Event should allrady have been fired returning 0"<< std::endl;
-        return 0;
-      }
-      return diff.count() ;
-    }
-
-    void SendPublishResponse(OpcUa::OutputChannel& clientChannel)
-    {
-      OStreamBinary stream(clientChannel);
-      for (SubscriptionBinaryData& subdata: Subscriptions)
-      {
-        if ( PublishRequestQueue.size() == 0)
-        {
-          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
-          return;
-        }
-
-        std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
-        if ((now - subdata.last_check) <= subdata.period)
-        {
-          if (Debug) std::cout << " No need to process subscription yet" << std::endl;
-          continue;
-        }
-        subdata.last_check = now;
-
-        std::vector<IntegerID> sub_query;
-        sub_query.push_back(subdata.SubscriptionID);
-        std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        if (Debug) std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
-
-        for (const PublishResult& publishResult: res_list)
-        {
-
-          PublishRequestElement requestData = PublishRequestQueue.front();
-          PublishRequestQueue.pop();
-
-          PublishResponse response;
-          FillResponseHeader(requestData.requestHeader, response.Header);
-          response.Result = publishResult;
-
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(requestData.algorithmHeader));
-          secureHeader.AddSize(RawSize(requestData.sequence));
-          secureHeader.AddSize(RawSize(response));
-          if (Debug) {
-            std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
-            for  ( NotificationData d: response.Result.Message.Data )
-            {
-              std::cout << "     " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
-            }
-          }
-          stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
-        }
-      }
-    }
-
-
-    void PrintBlob(const std::vector<char>& buf)
-    {
-      unsigned pos = 0;
-      std::cout << "length: " << buf.size() << std::endl;
-      for (const auto it : buf)
-      {
-        if (pos)
-          printf((pos % 16 == 0) ? "\n" : " ");
-
-        printf("%02x", (unsigned)it & 0x000000FF);
-
-        if (it > ' ')
-          std::cout << "(" << it << ")";
-        else
-          std::cout << "   ";
-
-        ++pos;
-      }
-
-      std::cout << std::endl << std::flush;
-    }
-
-  private:
-    std::mutex ProcessMutex;
-    std::shared_ptr<OpcUa::Remote::Server> Server;
-    bool Debug;
-    uint32_t ChannelID;
-    uint32_t TokenID;
-    NodeID SessionID;
-    NodeID AuthenticationToken;
-    std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
-    std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
-  };
-
-  class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol
-  {
-  public:
-    DEFINE_CLASS_POINTERS(OpcUaProtocol);
-
-  public:
-    OpcUaProtocol(OpcUa::UaServer::TcpServer::SharedPtr tcpServer, bool debug)
-      : Debug(debug)
-      , TcpAddon(tcpServer)
-    {
-    }
-
-    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Server::SharedPtr server) override
-    {
-      for (const EndpointDescription endpoint : endpoints)
-      {
-        const Common::Uri uri(endpoint.EndpointURL);
-        if (uri.Scheme() == "opc.tcp")
-        {
-          std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
-          TcpParameters tcpParams;
-          tcpParams.Port = uri.Port();
-          if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
-          TcpAddon->Listen(tcpParams, processor);
-          Ports.push_back(tcpParams);
-        }
-      }
-    }
-
-    virtual void StopEndpoints() override
-    {
-      for (const TcpParameters& params : Ports)
-      {
-        TcpAddon->StopListen(params);
-      }
-      TcpAddon.reset();
-    }
-
-  private:
-    OpcUa::UaServer::TcpServer::SharedPtr TcpAddon;
-    std::vector<TcpParameters> Ports;
-    bool Debug;
-  };
-
-}
+  } // namespace UaServer
+} // namespace OpcUa
 
 OpcUa::UaServer::OpcUaProtocol::UniquePtr OpcUa::UaServer::CreateOpcUaProtocol(OpcUa::UaServer::TcpServer::SharedPtr tcpServer, bool debug)
 {
   return OpcUaProtocol::UniquePtr(new ::OpcUaProtocol(tcpServer, debug));
 }
+
+

@@ -13,6 +13,7 @@
 #ifndef __OPC_UA_MAPPING_SERIALIZE_H__
 #define __OPC_UA_MAPPING_SERIALIZE_H__
 
+#include <opc/ua/protocol/channel.h>
 #include <opc/ua/protocol/binary/common.h>
 
 #include <memory>
@@ -224,6 +225,10 @@ namespace OpcUa
       {
       }
     };
+
+    typedef OpcUa::Binary::IOStream<OpcUa::IOChannel> IOStreamBinary;
+    typedef OpcUa::Binary::IStream<OpcUa::InputChannel> IStreamBinary;
+    typedef OpcUa::Binary::OStream<OpcUa::OutputChannel> OStreamBinary;
 
   } // namespace Binary
 } // namespace OpcUa
