@@ -15,6 +15,7 @@
 #include <chrono>   
 
 #include <opc/ua/node.h>
+#include <opc/ua/subscription.h>
 #include <opc/ua/server/opcuaserver.h>
 #include "src/server/daemon.h"
 
@@ -23,13 +24,21 @@
 
 using namespace OpcUa;
 
+class SubClient : public SubscriptionClient
+{
+  void DataChangeEvent(const Node& node, const Variant& val, AttributeID attr) override
+  {
+    std::cout << "Received DataChange event, value of Node " << node << " is now: "  << std::endl;
+  }
+};
+
 int main(int argc, char** argv)
 {
   OpcUa::OPCUAServer server;
   try
   {
-    server.SetLoadCppAddressSpace(true);
     server.SetEndpoint("opc.tcp://localhost:4841");
+    server.SetLoadCppAddressSpace(true);
     //server.AddAddressSpace("standard_address_space.xml");
     //server.AddAddressSpace("user_address_space.xml");
     server.Start();
@@ -43,6 +52,9 @@ int main(int argc, char** argv)
     NodeID nid(99, 1);
     QualifiedName qn("NewObject", 2);
     root.AddObject(nid, qn);
+   
+    SubClient clt; 
+    server.CreateSubscription(100, clt);
 
     std::cout << "Ctrl-C to exit" << std::endl;
     for(;;)

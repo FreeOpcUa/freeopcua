@@ -41,6 +41,8 @@ namespace OpcUa
     NodeID TypeID;
     RequestHeader Header;
     std::vector<IntegerID> SubscriptionsIds;
+
+    DeleteSubscriptionRequest();
   };
 
   struct DeleteSubscriptionResponse

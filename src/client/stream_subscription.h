@@ -16,6 +16,8 @@
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/binary/stream.h>
 
+#include <opc/ua/protocol/string_utils.h>
+
 namespace OpcUa
 {
   namespace Internal
@@ -31,7 +33,7 @@ namespace OpcUa
       }
 
     public:
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
       {
         CreateSubscriptionRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
@@ -65,9 +67,11 @@ namespace OpcUa
 
         Stream << request << OpcUa::Binary::flush;
 
-        CreateMonitoredItemsResponse response;
-        Stream >> response;
-        return response.Data;
+        ProcessPublishResults();
+
+        MonitoredItemsData data;
+        Stream >> data;
+        return data;
       }
 
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
@@ -75,13 +79,35 @@ namespace OpcUa
         return std::vector<PublishResult>();
       }
 
-      virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         PublishRequest request;
+        request.Parameters.Acknowledgements = acknowledgements;
         Stream << request << OpcUa::Binary::flush;
       }
 
     private:
+      void ProcessPublishResults()
+      {
+        NodeID typeId;
+        ResponseHeader header;
+        for(;;)
+        {
+          Stream >> typeId;
+          Stream >> header;
+          std::cout << " got header with type: " << typeId << std::endl;
+          if (typeId == NodeID(829, 0) )
+          {
+            PublishResult result;
+            Stream >> result;
+            std::cout << " got one publish result " << typeId << std::endl;
+          }
+          else
+          {
+            break;
+          }
+        }
+      }
       mutable StreamType Stream;
       NodeID AuthenticationToken;
     };

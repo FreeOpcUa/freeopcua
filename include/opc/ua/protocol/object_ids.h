@@ -122,9 +122,6 @@ namespace OpcUa
     StructureDeleteNodesItem = 382,
     StructureDeleteReferencesItem = 385,
 
-    DataChangeNotification = 811,
-    EventNotificationList = 812,
-    StatusChangeNotification = 813,
 
     RedundancySupport = 851,
     ServerState    = 852,

@@ -71,5 +71,11 @@ namespace OpcUa
     return Node(Server, OpcUa::ObjectID::ObjectsFolder);
   }
 
+  Subscription RemoteClient::CreateSubscription(uint period, SubscriptionClient& callback)
+  {
+    SubscriptionParameters params;
+    params.RequestedPublishingInterval = period;
+    return Subscription(Server, params, callback);
+  }
 } // namespace OpcUa
 

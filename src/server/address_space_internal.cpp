@@ -49,35 +49,29 @@ namespace OpcUa
     struct DataSubscription
     {
       SubscriptionData Data;
+      std::function<void (PublishResult)> Callback;
       uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
       uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
       time_t lastNotificationTime = 0;
       uint32_t LastMonitoredItemID = 2;
       std::map <uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
-      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to resent
+      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
       std::list<MonitoredItems> MonitoredItemsTriggered; 
       std::list<EventFieldList> EventTriggered; 
 
       std::vector<PublishResult> PopPublishResult()
       {
         std::cout << "PopPublishresult for subscription: " << Data.ID << " with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
-        std::vector<PublishResult> resultlist;
         PublishResult result;
         result.SubscriptionID = Data.ID;
         result.Message.PublishTime = CurrentDateTime();
 
-        DataChangeNotification notification;
-        for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
+        if ( MonitoredItemsTriggered.size() > 0 )
         {
-          notification.Notification.push_back(monitoreditem);
-        }
-        if (notification.Notification.size() > 0) 
-        {
-          NotificationData data(notification);
+          NotificationData data = GetNotificationData();
           result.Message.Data.push_back(data);
           result.Statuses.push_back(StatusCode::Good);
         }
-        MonitoredItemsTriggered.clear();
         
         // FIXME: parse events and statuschange notification since they can be send in same result
 
@@ -85,7 +79,7 @@ namespace OpcUa
         {
           std::cout << "No event and not need to send keep-alive notification" << std::endl;
           ++KeepAliveCount;
-          return  resultlist; //No event and we do not need to send keepalive notification yet so return empty list
+          return  std::vector<PublishResult>(); //No event and we do not need to send keepalive notification yet so return empty list
         }
         KeepAliveCount = 0;
         result.Message.SequenceID = NotificationSequence;
@@ -97,9 +91,24 @@ namespace OpcUa
         }
         NotAcknowledgedResults.push_back(result);
         std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
+        std::vector<PublishResult> resultlist;
         resultlist.push_back(result);
         return resultlist;
       };
+
+      private:
+        NotificationData GetNotificationData()
+        {
+          DataChangeNotification notification;
+          for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
+          {
+            notification.Notification.push_back(monitoreditem);
+          }
+          MonitoredItemsTriggered.clear();
+          NotificationData data(notification);
+          return data;
+        }
+          
     };
 
     typedef std::map <IntegerID, DataSubscription> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
@@ -145,21 +154,22 @@ namespace OpcUa
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
-          std::cout << "Delete Subscription: " << subid << std::endl;
           size_t count = SubscriptionsMap.erase(subid);
           if ( count == 1)
           {
+            std::cout << "Delete Subscription: " << subid << std::endl;
             result.push_back(StatusCode::Good);
           }
           else
           {
+            std::cout << "Error, got request to delete non existing Subscription: " << subid << std::endl;
             result.push_back(StatusCode::BadSubscriptionIdInvalid);
           }
         }
         return result;
       }
 
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params, std::function<void (PublishResult)> callback)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -172,6 +182,7 @@ namespace OpcUa
 
         DataSubscription db;
         db.Data = data;
+        db.Callback = callback;
         SubscriptionsMap[data.ID] = db;
         return data;
       }
@@ -359,6 +370,10 @@ namespace OpcUa
         std::vector<PublishResult> result;
         for (const IntegerID& subscription: subscriptionsIds)
         {
+          if ( PublishRequestsQueue == 0)
+          {
+            break;
+          }
           std::map <IntegerID, DataSubscription>::iterator sub_it =  SubscriptionsMap.find(subscription); 
           {
             if ( sub_it != SubscriptionsMap.end() )
@@ -373,9 +388,15 @@ namespace OpcUa
         return result;
       }
 
-      virtual void CreatePublishRequest(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+        
+        if ( PublishRequestsQueue > 10000 ) //FIXME: It this number defined by spec?
+        {
+          return; //FIXME: spec says we should return error to warn client
+        }
+        ++ PublishRequestsQueue; 
 
         for (SubscriptionAcknowledgement ack: acknowledgements)
         {
@@ -389,7 +410,6 @@ namespace OpcUa
 
 
     private:
-
 
       std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
@@ -671,6 +691,7 @@ namespace OpcUa
       NodesMap Nodes;
       SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
       uint32_t LastSubscriptionID = 2;
+      uint32_t PublishRequestsQueue = 0;
     };
   }
 

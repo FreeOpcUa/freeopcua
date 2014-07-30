@@ -1040,23 +1040,23 @@ namespace OpcUa
 
   const char* GetObjectIdName(const NodeID& id)
   {
-    if ( id == NodeID(ObjectID::FolderType) )
+    if ( id == ObjectID::FolderType )
     {
       return Names::FolderType;
     }
-    else if ( id == NodeID(ObjectID::BaseVariableType) )
+    else if ( id == ObjectID::BaseVariableType )
     {
       return Names::BaseVariableType;
     }
-    else if ( id == NodeID(ObjectID::BaseDataVariableType) )
+    else if ( id == ObjectID::BaseDataVariableType )
     {
       return Names::BaseDataVariableType;
     }
-    else if ( id == NodeID(ObjectID::PropertyType) )
+    else if ( id == ObjectID::PropertyType )
     {
       return Names::PropertyType;
     }
-    else if ( id == NodeID(ObjectID::BaseObjectType) )
+    else if ( id == ObjectID::BaseObjectType )
     {
       return Names::BaseObjectType;
     }

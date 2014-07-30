@@ -139,6 +139,9 @@ namespace OpcUa
     CloseSessionResponse();
   };
 
+  NodeID GenerateSessionId();
+  
+
 } // namespace OpcUa
 
 #endif // __OPC_UA_BINARY_SESSIONS_H__
