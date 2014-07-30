@@ -631,7 +631,8 @@ namespace OpcUa
       }
       else
       {
-        throw std::runtime_error("NotificationData type not implemented");
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notificationData type" );
       }
       return total;
     }
@@ -654,7 +655,8 @@ namespace OpcUa
       }
       else
       {
-        throw std::runtime_error("FIXME: Notification data type not supported");
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notification data type found in NotificationData");
       }
     }
 
@@ -676,7 +678,8 @@ namespace OpcUa
       }
       else
       {
-        throw std::runtime_error( "Error Notification Data type not implemented yet!!: "); // + itos(data.Header.TypeID.FourByteData.Identifier) );
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notification data type found in NotificationData");// + itos(data.Header.TypeID.FourByteData.Identifier) );
       }
     }
 

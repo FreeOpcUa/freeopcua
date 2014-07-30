@@ -19,20 +19,20 @@
 
 
 #include <opc/ua/subscription.h>
+#include <opc/ua/protocol/string_utils.h>
 
 #include <iostream>
-
-
 
 namespace OpcUa
 {
   Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback)
     : Server(server), Client(callback)
   {
-    Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
+    //Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
+    Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );
     //After creating the subscription, it is expected to send at least one publish request
-    Publish();
-    Publish();
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
   }
 
   void Subscription::Delete()
@@ -46,41 +46,46 @@ namespace OpcUa
 
   void Subscription::PublishCallback(PublishResult result)
   {
+    std::cout << "Suscription::PublishCallback called" << std::endl;
     for (NotificationData data: result.Message.Data )
     {
+      std::cout << "notfif type\n";
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
         for ( MonitoredItems item: data.DataChange.Notification)
         {
-          AttValMap::iterator mapit = Map.find(item.ClientHandle);
-          if ( mapit != Map.end() )
+          AttValMap::iterator mapit = AttributeValueMap.find((uint32_t)item.ClientHandle);
+          if ( mapit == AttributeValueMap.end() )
+          {
+            std::cout << "Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
+          }
+          else
           {
             //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
-            Client.DataChange( Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
+            std::cout << "Debug: Calling client callback\n";
+            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
           }
         }
       }
+      else if (data.Header.TypeID == ExpandedObjectID::EventNotificationList)
+      {
+        std::cout << "event type\n";
+        for ( EventFieldList ef :  data.Events.Events)
+        {
+          Client.Event(ef.ClientHandle, ef.EventFields);
+        }
+      }
+      else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)
+      {
+        std::cout << "status type\n";
+        Client.StatusChange(data.StatusChange.Status);
+      }
       else
       {
-        std::cout << "Error not implemented notification type (only DataChange currently)" << std::endl;
+        std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    Acknowledgments.push_back(result.Message.SequenceID);
-    Publish(); //send new publish request to server, to its queue does not get empty
-  }
-
-  void Subscription::Publish()
-  {
-    std::vector<SubscriptionAcknowledgement> acknowledgements;
-    for (uint32_t ackid: Acknowledgments)
-    {
-      SubscriptionAcknowledgement ack;
-      ack.SubscriptionID = Data.ID;
-      ack.SequenceNumber = ackid;
-      acknowledgements.push_back(ack);
-    }
-    Acknowledgments.clear();
-    Server->Subscriptions()->Publish(acknowledgements);
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
@@ -99,7 +104,7 @@ namespace OpcUa
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
 
-    for (auto attr : attributes)
+    for (AttributeValueID attr : attributes)
     {
       MonitoredItemRequest req;
       req.ItemToMonitor = attr;
@@ -109,26 +114,33 @@ namespace OpcUa
       params.QueueSize = 1;
       params.DiscardOldest = true;
       params.ClientHandle = IntegerID(++LastMonitoredItemHandle);
-      Map[params.ClientHandle] = attr;
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
     std::vector<uint32_t> handles;
+
+    if ( results.size() != attributes.size() ) 
+    {
+      throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
+    }
+    uint i = 0;
     for (auto res : results)
     {
       CheckStatusCode(res.Status);
+      AttributeValueMap[res.MonitoredItemID] = attributes[i];
+      ++i;
       handles.push_back(res.MonitoredItemID);
     }
     return handles;
   }
 
-  void Subscription::UnSubscribeDataChange(uint32_t handle)
+  void Subscription::UnSubscribe(uint32_t handle)
   {
-    return UnSubscribeDataChange(std::vector<uint32_t>({handle}));
+    return UnSubscribe(std::vector<uint32_t>({handle}));
   }
 
-  void Subscription::UnSubscribeDataChange(std::vector<uint32_t> handles) 
+  void Subscription::UnSubscribe(std::vector<uint32_t> handles) 
   {
     DeleteMonitoredItemsParameters params;
     params.SubscriptionId = Data.ID;
@@ -145,13 +157,29 @@ namespace OpcUa
     }
   }
 
-  void Subscription::SubscribeEvents()
+  uint32_t Subscription::SubscribeEvents(const Node& eventtype)
+  {
+    EventFilter filter;
+    //We only subscribe to variabes, since properties are supposed not to change
+    //FIXME: order of variables might not be constant on all servers, we should order variables
+    for ( Node child: eventtype.GetVariables() )
+    {
+      SimpleAttributeOperand op;
+      op.TypeID = eventtype.GetId();
+      op.Attribute = AttributeID::VALUE;
+      op.BrowsePath = std::vector<QualifiedName>({child.GetName()});
+      filter.SelectClauses.push_back(op);
+    }
+    return SubscribeEvents(Node(Server, ObjectID::Server), filter);
+  }
+
+  uint32_t Subscription::SubscribeEvents(const Node& node, const EventFilter& eventfilter)
   {
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
 
     AttributeValueID avid;
-    avid.Node = ObjectID::Server;
+    avid.Node = node.GetId();
     avid.Attribute = AttributeID::EVENT_NOTIFIER;
 
     MonitoredItemRequest req;
@@ -162,26 +190,23 @@ namespace OpcUa
     params.QueueSize = std::numeric_limits<double>::max();
     params.DiscardOldest = true;
     params.ClientHandle = IntegerID(++LastMonitoredItemHandle);
-    Map[params.ClientHandle] = avid;
+
+    MonitoringFilter filter;
+    filter.Event = eventfilter;
+    params.Filter = filter;
+    AttributeValueMap[params.ClientHandle] = avid;
     req.Parameters = params;
     itemsParams.ItemsToCreate.push_back(req);
 
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
-    if ( results.size()  != 0 )
+    if ( results.size()  != 1 )
     {
       throw(std::runtime_error("Protocol Error CreateMonitoredItems should return one result"));
     }
-    EventHandle = results.front().MonitoredItemID;
-    CheckStatusCode(results.front().Status);
-  }
-
-  void Subscription::UnSubscribeEvents()
-  {
-    if ( EventHandle == 0 )
-    {
-      throw(std::runtime_error("Error not subscribed"));
-    }
-    UnSubscribeDataChange(EventHandle);
+    CreateMonitoredItemsResult res = results[0];
+    CheckStatusCode(res.Status);
+    SimpleAttributeOperandMap[res.MonitoredItemID] = eventfilter; //Not used
+    return res.MonitoredItemID;
   }
 
 }

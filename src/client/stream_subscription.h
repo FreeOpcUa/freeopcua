@@ -35,10 +35,7 @@ namespace OpcUa
     public:
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
       {
-        std::cout << "Creating Subcsription !!!!!!!!! " << (bool)Callback << std::endl;
         Callback = callback;
-        if (Callback) { std::cout << "Callback is defined!!!!!!!!!!!!!!!!!!!!!!!\n";}
-        std::cout << "Callback is " << (bool)Callback << std::endl;
 
         CreateSubscriptionRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
@@ -48,7 +45,6 @@ namespace OpcUa
 
         CreateSubscriptionResponse response;
         Stream >> response;
-        std::cout << "Callback is " << (bool)Callback << std::endl;
         return response.Data;
       }
       
@@ -66,7 +62,6 @@ namespace OpcUa
  
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
       {
-        std::cout << "Callback is " << (bool)Callback << std::endl;
         CreateMonitoredItemsRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
         request.Parameters = parameters;
@@ -74,7 +69,6 @@ namespace OpcUa
         Stream << request << OpcUa::Binary::flush;
 
         ProcessPublishResults();
-        std::cout << "Callback is " << (bool)Callback << std::endl;
 
         MonitoredItemsData data;
         Stream >> data;
@@ -122,7 +116,7 @@ namespace OpcUa
           {
             PublishResult result;
             Stream >> result;
-            if (this->Callback)
+            if (Callback)
             {
               std::cout << " Calling callback for one publish result " << std::endl;
               Callback(result);
@@ -131,10 +125,12 @@ namespace OpcUa
             {
               std::cout << " PublishResult received but no callback defined" << std::endl;
             }
+            //debug
+            //Publish(std::vector<SubscriptionAcknowledgement>()); //This works fine but this is not the right place to send ack
+
           }
           else
           {
-            std::cout << " got response from server with type: " << typeId << std::endl;
             break;
           }
         }
@@ -144,6 +140,7 @@ namespace OpcUa
       mutable StreamType Stream;
       NodeID AuthenticationToken;
       std::function<void (PublishResult)> Callback;
+      int debug = 0;
     };
 
   }
