@@ -70,6 +70,8 @@ namespace
       , TokenID(2)
     {
       SessionID = GenerateSessionId();//NumericNodeID(5, 0);
+      std::cout << "Debug is " << Debug << std::endl;
+      std::cout << "SessionID is " << Debug << std::endl;
     }
 
     virtual void Process(OpcUa::IOChannel::SharedPtr clientChannel)
@@ -732,7 +734,6 @@ namespace
       }
     }
 
-
     void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
@@ -774,9 +775,10 @@ namespace
       {
         if ( PublishRequestQueue.size() == 0)
         {
-          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
+          std::cerr << "RequestQueueSize is empty we are waiting for pubilshrequest from server" << std::endl;
           return;
         }
+        std::cout << "We have x publishrequest in queue "<<  PublishRequestQueue.size() << std::endl;
        
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
         if ((now - subdata.last_check) <= subdata.period)

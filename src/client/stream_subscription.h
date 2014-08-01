@@ -55,9 +55,14 @@ namespace OpcUa
 
         Stream << request << OpcUa::Binary::flush;
 
+        ProcessPublishResults();
+
         DeleteSubscriptionResponse response;
-        Stream >> response;
-        return response.Results;
+        std::vector<StatusCode> results;
+        DiagnosticInfoList diags;
+        Stream >> results;
+        Stream >> diags;
+        return results;
       }
  
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
@@ -85,9 +90,9 @@ namespace OpcUa
 
         ProcessPublishResults();
 
-        DeleteMonitoredItemsResponse response;
-        Stream >> response;
-        return response.Results;
+        std::vector<StatusCode> results;
+        Stream >> results;
+        return results;
       }
 
 
