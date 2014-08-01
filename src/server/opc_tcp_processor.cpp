@@ -524,7 +524,7 @@ namespace
           if (deleteSubscriptions)
           {
             std::vector<IntegerID> subs;
-            for (SubscriptionBinaryData data: Subscriptions)
+            for (const SubscriptionBinaryData& data: Subscriptions)
             {
               subs.push_back(data.SubscriptionID);
             }
@@ -572,6 +572,9 @@ namespace
           if (Debug) std::clog << "Processing delete subscription request." << std::endl;
           std::vector<IntegerID> ids;
           istream >> ids;
+
+
+          DeleteSubscriptions(ids); //remove from locale subscription list
 
           DeleteSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -720,6 +723,16 @@ namespace
     }
 
   private:
+    void DeleteSubscriptions(const std::vector<IntegerID>& ids)
+    {
+      for ( auto id : ids )
+      {
+        Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(), 
+                      [&](const SubscriptionBinaryData d) { return ( d.SubscriptionID == id) ; }), Subscriptions.end());
+      }
+    }
+
+
     void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());

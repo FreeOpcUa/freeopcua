@@ -155,10 +155,10 @@ namespace OpcUa
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
+          std::cout << "Deleting Subscription: " << subid << std::endl;
           size_t count = SubscriptionsMap.erase(subid);
-          if ( count == 1)
+          if ( count > 0)
           {
-            std::cout << "Delete Subscription: " << subid << std::endl;
             result.push_back(StatusCode::Good);
           }
           else
