@@ -252,6 +252,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/connection_listener.h \
   include/opc/ua/endpoints.h \
   include/opc/ua/errors.h \
+  include/opc/ua/event.h \
   include/opc/ua/node.h \
   include/opc/ua/node_management.h \
   include/opc/ua/server.h \
@@ -296,6 +297,7 @@ libopcuacore_la_SOURCES = \
                   src/core/common/value.cpp \
                   src/core/common/exception.cpp \
                   src/core/common/common_errors.cpp \
+                  src/core/event.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \

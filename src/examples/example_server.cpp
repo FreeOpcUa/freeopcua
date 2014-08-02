@@ -26,7 +26,7 @@ using namespace OpcUa;
 
 class SubClient : public SubscriptionClient
 {
-  void DataChangeEvent(const Node& node, const Variant& val, AttributeID attr) override
+  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) override
   {
     std::cout << "Received DataChange event, value of Node " << node << " is now: "  << std::endl;
   }
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     root.AddObject(nid, qn);
    
     SubClient clt; 
-    server.CreateSubscription(100, clt);
+    Subscription sub = server.CreateSubscription(100, clt);
 
     std::cout << "Ctrl-C to exit" << std::endl;
     for(;;)

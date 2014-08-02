@@ -70,6 +70,8 @@ namespace
       , TokenID(2)
     {
       SessionID = GenerateSessionId();//NumericNodeID(5, 0);
+      std::cout << "Debug is " << Debug << std::endl;
+      std::cout << "SessionID is " << Debug << std::endl;
     }
 
     virtual void Process(OpcUa::IOChannel::SharedPtr clientChannel)
@@ -238,7 +240,8 @@ namespace
         //FIXME:Should check that channel has been issued first
         ++TokenID;
       }
-
+      
+      sequence.SequenceNumber = ++SequenceNb;
       OpenSecureChannelResponse response;
       FillResponseHeader(request.Header, response.Header);
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
@@ -284,6 +287,8 @@ namespace
 
       RequestHeader requestHeader;
       istream >> requestHeader;
+
+      sequence.SequenceNumber = ++SequenceNb;
 
       const std::size_t receivedSize =
         RawSize(channelID) +
@@ -521,7 +526,7 @@ namespace
           if (deleteSubscriptions)
           {
             std::vector<IntegerID> subs;
-            for (SubscriptionBinaryData data: Subscriptions)
+            for (const SubscriptionBinaryData& data: Subscriptions)
             {
               subs.push_back(data.SubscriptionID);
             }
@@ -570,6 +575,9 @@ namespace
           std::vector<IntegerID> ids;
           istream >> ids;
 
+
+          DeleteSubscriptions(ids); //remove from locale subscription list
+
           DeleteSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
@@ -579,6 +587,8 @@ namespace
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to Delete Subscription Request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
@@ -604,9 +614,30 @@ namespace
           return;
         }
 
+        case DELETE_MONITORED_ITEMS_REQUEST:
+        {
+          if (Debug) std::clog << "Processing 'Delete Monitored Items' request." << std::endl;
+          DeleteMonitoredItemsParameters params;
+          istream >> params;
+
+          DeleteMonitoredItemsResponse response;
+
+          response.Results = Server->Subscriptions()->DeleteMonitoredItems(params);
+
+          FillResponseHeader(requestHeader, response.Header);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "Sending response to Delete Monitored Items Request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
         case PUBLISH_REQUEST:
         {
-          if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
+          if (Debug) std::clog << "Processing 'Publish' request." << std::endl;
           PublishParameters params;
           istream >> params;
           PublishRequestElement data;
@@ -615,6 +646,7 @@ namespace
           data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
           Server->Subscriptions()->Publish(params.Acknowledgements);
+          --SequenceNb; //We do not send response, so do not increase sequence
           return;
         }
 
@@ -693,6 +725,15 @@ namespace
     }
 
   private:
+    void DeleteSubscriptions(const std::vector<IntegerID>& ids)
+    {
+      for ( auto id : ids )
+      {
+        Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(), 
+                      [&](const SubscriptionBinaryData d) { return ( d.SubscriptionID == id) ; }), Subscriptions.end());
+      }
+    }
+
     void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
@@ -734,9 +775,10 @@ namespace
       {
         if ( PublishRequestQueue.size() == 0)
         {
-          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
+          std::cerr << "RequestQueueSize is empty we are waiting for pubilshrequest from server" << std::endl;
           return;
         }
+        std::cout << "We have x publishrequest in queue "<<  PublishRequestQueue.size() << std::endl;
        
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
         if ((now - subdata.last_check) <= subdata.period)
@@ -760,6 +802,8 @@ namespace
           PublishResponse response;
           FillResponseHeader(requestData.requestHeader, response.Header);
           response.Result = publishResult;
+
+          requestData.sequence.SequenceNumber = ++SequenceNb;
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(requestData.algorithmHeader));
@@ -810,6 +854,7 @@ namespace
     NodeID AuthenticationToken;
     std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
     std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and 
+    uint32_t SequenceNb;
   };
 
   class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol

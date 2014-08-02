@@ -35,6 +35,7 @@ namespace OpcUa
 
       //FIXME: Spec says MonitoredItems methods should be in their own service
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters) = 0; 
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params) = 0; 
     };
 
   }

@@ -30,14 +30,19 @@
 
 namespace OpcUa
 {
-  typedef std::map<IntegerID, AttributeValueID> AttValMap;
+  typedef std::map<uint32_t, AttributeValueID> AttValMap;
+  typedef std::map<uint32_t, EventFilter> SimpleAttOpMap;
 
   class SubscriptionClient
   {
     public:
-      virtual void DataChangeEvent(const Node& node, const Variant& val, AttributeID attribute){};
-      //virtual void Event(Event result); FIXME: Not implemented
-      //virtual void StatusChange(Event result); FIXME: Not implemented
+      //Called for each datachange events
+      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) {};
+      //Called for every events receive from server
+      // order and value of variants depend on event subscription and applied filter
+      virtual void Event(uint32_t handle, std::vector<Variant> xx) {}; 
+      //Called at server state changed
+      virtual void StatusChange(StatusCode newstatus) {}; 
   };
 
 
@@ -45,33 +50,48 @@ namespace OpcUa
   {
     public:
       //Create a new subscription on server
-      //callback will be called everytime an event is received from the server
+      //methods of callback object will be called everytime an event is received from the server
       //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
+      //Alternative could be
+      //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
+      //AddEventCallback(std::function<std::vector<Variant>> callback);
       Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback); 
-      IntegerID GetId() const { return Data.ID; } 
-      Duration GetPeriode() const { return Data.RevisedPublishingInterval; } 
       //Delete the subscription from server
       void Delete();
 
+      //Get information about the subscription
+      uint32_t GetId() const { return Data.ID; } 
+      double GetPeriode() const { return Data.RevisedPublishingInterval; } 
+
       //Subscribe to a Node attribute for its value to change
-      uint32_t Subscribe(const Node& node, AttributeID attr=AttributeID::VALUE);
       // Subscribe to nodes for specified attribute change
-      std::vector<CreateMonitoredItemsResult> Subscribe(const std::vector<AttributeValueID>& attributes);
-      void UnSubscribe(std::vector<uint32_t> handles){}; //Not implemented in interface and server
-      //Monitor for events FIXME: Event support not implemented
-      //void SubscribeEvents(Node node); //As far as I remember the only allowed node is Server in most SDKs
-      //void Unsubscribe(Node node);
+      uint32_t SubscribeDataChange(const Node& node, AttributeID attr=AttributeID::VALUE);
+      std::vector<uint32_t> SubscribeDataChange(const std::vector<AttributeValueID>& attributes);
+      
+      //Unsubscribe to datachange or events
+      void UnSubscribe(uint32_t handle); 
+      void UnSubscribe(std::vector<uint32_t> handles); 
+
+      //Subscribe to Events for given node
+      //As far as I remember the only allowed node is Server in most SDKs
+      uint32_t SubscribeEvents(const Node& node, const EventFilter& eventfilter); 
+      uint32_t SubscribeEvents(const Node& eventype); //subscribe to all variables og given event type at the server node
+
+      //Subscribe to server status change
+      // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
+      //uint32_t SubscribeStatusChange(); 
+
       void PublishCallback(PublishResult); //Not sure it needs to be public
 
     private:
-      void Publish();
+      //void Publish();
 
       Remote::Server::SharedPtr Server;
       SubscriptionData Data;
-      std::vector<uint32_t> Acknowledgments;
       SubscriptionClient& Client;
       uint32_t LastMonitoredItemHandle = 1;
-      AttValMap Map; //I do not understand why I need this but event only send handles..
+      AttValMap AttributeValueMap; 
+      SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently
   };
 }
 

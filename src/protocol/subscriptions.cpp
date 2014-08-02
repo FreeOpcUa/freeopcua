@@ -48,6 +48,11 @@ namespace OpcUa
   {
   }
 
+  DeleteSubscriptionResponse::DeleteSubscriptionResponse()
+    : TypeID(DELETE_SUBSCRIPTION_RESPONSE)
+  {
+  }
+
 
   ////////////////////////////////////////////////////////
   // SubscriptionData
@@ -131,7 +136,6 @@ namespace OpcUa
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
       StatusChange = notification;
     }
-
 
 
   ////////////////////////////////////////////////////////
@@ -240,19 +244,6 @@ namespace OpcUa
       *this << request.SubscriptionsIds;
     }
 
-    template<>
-    void DataSerializer::Serialize<std::vector<IntegerID>>(const std::vector<IntegerID>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<IntegerID>>(std::vector<IntegerID>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
 
 
     ////////////////////////////////////////////////////////
@@ -265,7 +256,7 @@ namespace OpcUa
       return RawSize(request.TypeID) +
         RawSize(request.Header) +
         RawSizeContainer(request.Results) +
-        RawSize(request.Diagnostic);
+        RawSizeContainer(request.Diagnostic);
     }
 
     template<>
@@ -424,7 +415,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishParameters& params)
     {
-      return RawSize(params.Acknowledgements);
+      return RawSizeContainer(params.Acknowledgements);
     }
 
     template<>
@@ -501,6 +492,91 @@ namespace OpcUa
       DeserializeContainer(*this, targets);
     }
 
+    ////////////////////////////////////////////////////////
+    // StatusChangeNotification
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize(const StatusChangeNotification& request)
+    {
+      return 4 + RawSize(request.Status) + RawSize(request.Diagnostic);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<StatusChangeNotification>(StatusChangeNotification& request)
+    {
+      uint32_t tmp;
+      *this >> tmp; //it seems we do not need the size
+      *this >> request.Status;
+      *this >> request.Diagnostic;
+    }
+
+    template<>
+    void DataSerializer::Serialize<StatusChangeNotification>(const StatusChangeNotification& request)
+    {
+      *this << (uint32_t) RawSize(request);
+      *this << request.Status;
+      *this << request.Diagnostic;
+    }
+
+
+    ////////////////////////////////////////////////////////
+    // EventNotificationList
+    ////////////////////////////////////////////////////////
+
+    template<>
+    void DataSerializer::Serialize<std::vector<EventFieldList>>(const std::vector<EventFieldList>& targets)
+    {
+      SerializeContainer(*this, targets);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<EventFieldList>>(std::vector<EventFieldList>& targets)
+    {
+      DeserializeContainer(*this, targets);
+    }
+
+    template<>
+    std::size_t RawSize(const EventFieldList& request)
+    {
+      return RawSize(request.ClientHandle) + RawSizeContainer(request.EventFields); 
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<EventFieldList>(EventFieldList& request)
+    {
+      *this >> request.ClientHandle; 
+      *this >> request.EventFields;
+    }
+
+    template<>
+    void DataSerializer::Serialize<EventFieldList>(const EventFieldList& request)
+    {
+      *this << request.ClientHandle;
+      *this << request.EventFields;
+    }
+
+    template<>
+    std::size_t RawSize(const EventNotificationList& request)
+    {
+      return 4 + RawSizeContainer(request.Events); 
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<EventNotificationList>(EventNotificationList& request)
+    {
+      uint32_t tmp;
+      *this >> tmp; //it seems we do not need the size
+      *this >> request.Events;
+    }
+
+    template<>
+    void DataSerializer::Serialize<EventNotificationList>(const EventNotificationList& request)
+    {
+      *this << (uint32_t) RawSize(request);
+      *this << request.Events;
+    }
+
 
 
     ////////////////////////////////////////////////////////
@@ -545,9 +621,18 @@ namespace OpcUa
       {
         total += RawSize(data.DataChange);
       }
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList) 
+      {
+        total += RawSize(data.Events);
+      }
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification) 
+      {
+        total += RawSize(data.StatusChange);
+      }
       else
       {
-        throw std::runtime_error("NotificationData type not implemented");
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notificationData type" );
       }
       return total;
     }
@@ -560,20 +645,19 @@ namespace OpcUa
       {
           *this >> data.DataChange;
       }
-      else
-      {
-        throw std::runtime_error("FIXME: Notification data type not supported");
-      }
-        /*
       else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
       {
           *this >> data.Events;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
       {
           *this >> data.StatusChange;
       }
-      */
+      else
+      {
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notification data type found in NotificationData");
+      }
     }
 
     template<>
@@ -584,8 +668,18 @@ namespace OpcUa
       {
         *this << data.DataChange;
       }
+      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
       {
-        throw std::runtime_error( "Error Notification Data type not implemented yet!!: "); // + itos(data.Header.TypeID.FourByteData.Identifier) );
+        *this << data.Events;
+      }
+      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
+      {
+        *this << data.StatusChange;
+      }
+      else
+      {
+        //Unknown type, we just ignore it
+        //throw std::runtime_error("Uknown notification data type found in NotificationData");// + itos(data.Header.TypeID.FourByteData.Identifier) );
       }
     }
 
@@ -779,540 +873,6 @@ namespace OpcUa
       *this << response.Header;
       *this << response.Result;
     }
-    ////////////////////////////////////////////////////////////////
-    // FilterOperator
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<FilterOperator>(const FilterOperator&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<FilterOperator>(const FilterOperator& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<FilterOperator>(FilterOperator& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<FilterOperator>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // DeadbandType
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DeadbandType>(const DeadbandType&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeadbandType>(const DeadbandType& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeadbandType>(DeadbandType& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DeadbandType>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // DataChangeTrigger
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DataChangeTrigger>(tmp);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // MonitoringMode
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoringMode>(const MonitoringMode&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<MonitoringMode>(tmp);
-    }
-    ////////////////////////////////////////////////////////
-    // AttributeOperand
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<AttributeOperand>(const OpcUa::AttributeOperand& params)
-    {
-      return RawSize(params.Node) +
-          RawSize(params.Alias) +
-          RawSize(params.Path) +
-          RawSize(params.AttributeID) +
-          RawSizeContainer(params.IndexRange); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<AttributeOperand>(AttributeOperand& params)
-    {
-      *this >> params.Node;
-      *this >> params.Alias;
-      *this >> params.Path;
-      *this >> params.AttributeID;
-      *this >> params.IndexRange;
-    }
-
-    template<>
-    void DataSerializer::Serialize<AttributeOperand>(const AttributeOperand& params)
-    {
-      *this << params.Node;
-      *this << params.Alias;
-      *this << params.Path;
-      *this << params.AttributeID;
-      *this << params.IndexRange;
-    }
-
-    ////////////////////////////////////////////////////////
-    // SimpleAttributeOperand
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<SimpleAttributeOperand>(const OpcUa::SimpleAttributeOperand& params)
-    {
-      return RawSize(params.TypeID) +
-          RawSize(params.BrowsePath) +
-          RawSize(params.AttributeID) +
-          RawSizeContainer(params.IndexRange); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SimpleAttributeOperand>(SimpleAttributeOperand& params)
-    {
-      *this >> params.TypeID;
-      *this >> params.BrowsePath;
-      *this >> params.AttributeID;
-      *this >> params.IndexRange;
-    }
-
-    template<>
-    void DataSerializer::Serialize<SimpleAttributeOperand>(const SimpleAttributeOperand& params)
-    {
-      *this << params.TypeID;
-      *this << params.BrowsePath;
-      *this << params.AttributeID;
-      *this << params.IndexRange;
-    }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<SimpleAttributeOperand>>(const std::vector<SimpleAttributeOperand>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<SimpleAttributeOperand>>(std::vector<SimpleAttributeOperand>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // ElementOperand
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<ElementOperand>(const OpcUa::ElementOperand& params)
-    {
-      return RawSize(params.Index);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<ElementOperand>(ElementOperand& params)
-    {
-      *this >> params.Index;
-    }
-
-    template<>
-    void DataSerializer::Serialize<ElementOperand>(const ElementOperand& params)
-    {
-      *this << params.Index;
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // FilterOperand
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<FilterOperand>(const OpcUa::FilterOperand& params)
-    {
-      return RawSize(params.TypeID) +
-          RawSize(params.Element) +
-          RawSize(params.Attribute) +
-          RawSize(params.SimpleAttribute); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<FilterOperand>(FilterOperand& params)
-    {
-      *this >> params.TypeID;
-      *this >> params.Element;
-      *this >> params.Attribute;
-      *this >> params.SimpleAttribute;
-    }
-
-    template<>
-    void DataSerializer::Serialize<FilterOperand>(const FilterOperand& params)
-    {
-      *this << params.TypeID;
-      *this << params.Element;
-      *this << params.Attribute;
-      *this << params.SimpleAttribute;
-    }
-    
-    template<>
-    void DataSerializer::Serialize<std::vector<FilterOperand>>(const std::vector<FilterOperand>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<FilterOperand>>(std::vector<FilterOperand>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
-
-    ////////////////////////////////////////////////////////
-    // ContentFilter
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<ContentFilter>(const OpcUa::ContentFilter& params)
-    {
-      return RawSize(params.Operator) +
-          RawSizeContainer(params.FilterOperands); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<ContentFilter>(ContentFilter& params)
-    {
-      *this >> params.Operator;
-      *this >> params.FilterOperands;
-    }
-
-    template<>
-    void DataSerializer::Serialize<ContentFilter>(const ContentFilter& params)
-    {
-      *this << params.Operator;
-      *this << params.FilterOperands;
-    }
-
-
-
-
-    ////////////////////////////////////////////////////////
-    // AggregateFilter
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<AggregateFilter>(const OpcUa::AggregateFilter& params)
-    {
-      return RawSize(params.StartTime) +
-          RawSize(params.AggregateType) +
-          RawSize(params.ProcessingInterval) +
-          RawSize(params.UseServerCapabilitiesDefaults) +
-          RawSize(params.TreatUncertainAsBad) +
-          RawSize(params.PercentDataBad) +
-          RawSize(params.PercentDataGood) +
-          RawSize(params.SteppedSlopedExtrapolation);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<AggregateFilter>(AggregateFilter& params)
-    {
-      *this >> params.StartTime;
-      *this >> params.AggregateType;
-      *this >> params.ProcessingInterval;
-      *this >> params.UseServerCapabilitiesDefaults;
-      *this >> params.TreatUncertainAsBad;
-      *this >> params.PercentDataBad;
-      *this >> params.PercentDataGood;
-      *this >> params.SteppedSlopedExtrapolation;
-    }
-
-    template<>
-    void DataSerializer::Serialize<AggregateFilter>(const AggregateFilter& params)
-    {
-      *this << params.StartTime;
-      *this << params.AggregateType;
-      *this << params.ProcessingInterval;
-      *this << params.UseServerCapabilitiesDefaults;
-      *this << params.TreatUncertainAsBad;
-      *this << params.PercentDataBad;
-      *this << params.PercentDataGood;
-      *this << params.SteppedSlopedExtrapolation;
-    }
-
-
-
-    ////////////////////////////////////////////////////////
-    // EventFilter
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<EventFilter>(const OpcUa::EventFilter& params)
-    {
-      return RawSizeContainer(params.SelectClauses) +
-          RawSize(params.WhereClause);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<EventFilter>(EventFilter& params)
-    {
-      *this >> params.SelectClauses;
-      *this >> params.WhereClause;
-    }
-
-    template<>
-    void DataSerializer::Serialize<EventFilter>(const EventFilter& params)
-    {
-      *this << params.SelectClauses;
-      *this << params.WhereClause;
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // DataChangeFilter
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DataChangeFilter>(const OpcUa::DataChangeFilter& params)
-    {
-      return RawSize(params.Trigger) +
-          RawSize(params.Deadband) +
-          RawSize(params.DeadbandValue);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DataChangeFilter>(DataChangeFilter& params)
-    {
-      *this >> params.Trigger;
-      *this >> params.Deadband;
-      *this >> params.DeadbandValue;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DataChangeFilter>(const DataChangeFilter& params)
-    {
-      *this << params.Trigger;
-      *this << params.Deadband;
-      *this << params.DeadbandValue;
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // ExtensionObjectMonitoringFilter
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<ExtensionObjectMonitoringFilter>(const OpcUa::ExtensionObjectMonitoringFilter& params)
-    {
-     const std::size_t sizeofEncoding = 1;
-      return RawSize(params.typeID) +
-          RawSize(sizeofEncoding); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<ExtensionObjectMonitoringFilter>(ExtensionObjectMonitoringFilter& params)
-    {
-      *this >> params.typeID;
-      uint8_t tmp = 0;
-      *this >> tmp;
-      params.Encoding = static_cast<ExtensionObjectEncoding>(tmp);
-    }
-
-    template<>
-    void DataSerializer::Serialize<ExtensionObjectMonitoringFilter>(const ExtensionObjectMonitoringFilter& params)
-    {
-      *this << params.typeID;
-      *this << static_cast<uint8_t>(params.Encoding);
-    }
-
- 
-
-    ////////////////////////////////////////////////////////
-    // MonitoringParameters
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoringParameters>(const OpcUa::MonitoringParameters& params)
-    {
-      return RawSize(params.ClientHandle) +
-          RawSize(params.SamplingInterval) +
-          RawSize(params.Filter) +
-          RawSize(params.QueueSize) +
-          RawSize(params.DiscardOldest); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoringParameters>(MonitoringParameters& params)
-    {
-      *this >> params.ClientHandle;
-      *this >> params.SamplingInterval;
-      *this >> params.Filter;
-      *this >> params.QueueSize;
-      *this >> params.DiscardOldest;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters& params)
-    {
-      *this << params.ClientHandle;
-      *this << params.SamplingInterval;
-      *this << params.Filter;
-      *this << params.QueueSize;
-      *this << params.DiscardOldest;
-    }
-
-    ////////////////////////////////////////////////////////
-    // MonitoredItemRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoredItemRequest>(const OpcUa::MonitoredItemRequest& params)
-    {
-      return RawSize(params.ItemToMonitor) +
-          RawSize(params.Mode) +
-          RawSize(params.Parameters); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemRequest>(MonitoredItemRequest& params)
-    {
-      *this >> params.ItemToMonitor;
-      *this >> params.Mode;
-      *this >> params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoredItemRequest>(const MonitoredItemRequest& params)
-    {
-      *this << params.ItemToMonitor;
-      *this << params.Mode;
-      *this << params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<MonitoredItemRequest>>(const std::vector<MonitoredItemRequest>& targets)
-    {
-      SerializeContainer(*this, targets);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<std::vector<MonitoredItemRequest>>(std::vector<MonitoredItemRequest>& targets)
-    {
-      DeserializeContainer(*this, targets);
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // MonitoredItemsParameters
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoredItemsParameters>(const OpcUa::MonitoredItemsParameters& params)
-    {
-      return RawSize(params.SubscriptionID) +
-          RawSize(params.Timestamps) +
-          RawSizeContainer(params.ItemsToCreate); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters& params)
-    {
-      *this >> params.SubscriptionID;
-      *this >> params.Timestamps;
-      *this >> params.ItemsToCreate;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& params)
-    {
-      *this << params.SubscriptionID;
-      *this << params.Timestamps;
-      *this << params.ItemsToCreate;
-    }
-
-    ////////////////////////////////////////////////////////
-    // CreateMonitoredItemsRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<CreateMonitoredItemsRequest>(const OpcUa::CreateMonitoredItemsRequest& params)
-    {
-      return RawSize(params.TypeID) +
-          RawSize(params.Header) +
-          RawSize(params.Parameters); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsRequest>(CreateMonitoredItemsRequest& params)
-    {
-      *this >> params.TypeID;
-      *this >> params.Header;
-      *this >> params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& params)
-    {
-      *this << params.TypeID;
-      *this << params.Header;
-      *this << params.Parameters;
-    }
-
-
-
 
 
 

@@ -122,6 +122,12 @@ namespace OpcUa
       return Registry->CreateMonitoredItems(parameters);
     }
 
+    std::vector<StatusCode> AddressSpaceAddon::DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+    {
+      return Registry->DeleteMonitoredItems(params);
+    }
+
+
     std::vector<PublishResult> AddressSpaceAddon::PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
     {
       return Registry->PopPublishResults(subscriptionsIds);
@@ -132,6 +138,10 @@ namespace OpcUa
       return Registry->Publish(acknowledgements);
     }
 
+    void AddressSpaceAddon::TriggerEvent(NodeID node, Event event)
+    {
+      return Registry->TriggerEvent(node, event);
+    }
   } // namespace Internal
 } // namespace OpcUa
 

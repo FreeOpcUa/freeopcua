@@ -154,8 +154,10 @@ am_libopcuacore_la_OBJECTS = libopcuacore_la-application.lo \
 	libopcuacore_la-dynamic_addon_factory.lo \
 	libopcuacore_la-dynamic_library.lo libopcuacore_la-value.lo \
 	libopcuacore_la-exception.lo libopcuacore_la-common_errors.lo \
-	libopcuacore_la-node.lo libopcuacore_la-opcua_errors.lo \
-	libopcuacore_la-socket_channel.lo
+	libopcuacore_la-event.lo libopcuacore_la-node.lo \
+	libopcuacore_la-opcua_errors.lo \
+	libopcuacore_la-socket_channel.lo \
+	libopcuacore_la-subscription.lo
 libopcuacore_la_OBJECTS = $(am_libopcuacore_la_OBJECTS)
 libopcuacore_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -175,7 +177,7 @@ am_libopcuaprotocol_la_OBJECTS =  \
 	libopcuaprotocol_la-binary_secure_channel.lo \
 	libopcuaprotocol_la-input_from_buffer.lo \
 	libopcuaprotocol_la-monitored_items.lo \
-	libopcuaprotocol_la-nodeid.lo \
+	libopcuaprotocol_la-nodeid.lo libopcuaprotocol_la-session.lo \
 	libopcuaprotocol_la-subscriptions.lo \
 	libopcuaprotocol_la-string_utils.lo \
 	libopcuaprotocol_la-types.lo \
@@ -660,6 +662,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/input_from_buffer.cpp \
   src/protocol/monitored_items.cpp \
   src/protocol/nodeid.cpp \
+  src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
   src/protocol/types.cpp \
@@ -698,11 +701,13 @@ opcuainclude_HEADERS = \
   include/opc/ua/connection_listener.h \
   include/opc/ua/endpoints.h \
   include/opc/ua/errors.h \
+  include/opc/ua/event.h \
   include/opc/ua/node.h \
   include/opc/ua/node_management.h \
   include/opc/ua/server.h \
   include/opc/ua/socket_channel.h \
   include/opc/ua/subscriptions.h \
+  include/opc/ua/subscription.h \
   include/opc/ua/view.h
 
 commondir = $(opcincludedir)/common
@@ -741,9 +746,11 @@ libopcuacore_la_SOURCES = \
                   src/core/common/value.cpp \
                   src/core/common/exception.cpp \
                   src/core/common/common_errors.cpp \
+                  src/core/event.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
-                  src/core/socket_channel.cpp
+                  src/core/socket_channel.cpp \
+                  src/core/subscription.cpp
 
 libopcuacore_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuacore_la_LIBADD = libopcuaprotocol.la
@@ -813,13 +820,13 @@ example_client_SOURCES = \
 
 example_client_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_client_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
-example_client_LDFLAGS = -ldl -lpthread -lxml2
+example_client_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
 example_server_SOURCES = \
   src/examples/example_server.cpp
 
 example_server_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_server_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
-example_server_LDFLAGS = -ldl -lpthread -lxml2
+example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
 
 #############################################################
 # Extra configs and sources have to be in the distribution.
@@ -1077,11 +1084,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-dynamic_addon_factory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-dynamic_library.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-errors_addon_manager.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-exception.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-node.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-object_id.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-opcua_errors.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-socket_channel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-subscription.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuacore_la-value.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-binary_attribute.Plo@am__quote@
@@ -1098,6 +1107,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-input_from_buffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-monitored_items.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-nodeid.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-session.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-status_codes.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-string_utils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libopcuaprotocol_la-subscriptions.Plo@am__quote@
@@ -1283,6 +1293,13 @@ libopcuacore_la-common_errors.lo: src/core/common/common_errors.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuacore_la-common_errors.lo `test -f 'src/core/common/common_errors.cpp' || echo '$(srcdir)/'`src/core/common/common_errors.cpp
 
+libopcuacore_la-event.lo: src/core/event.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuacore_la-event.lo -MD -MP -MF $(DEPDIR)/libopcuacore_la-event.Tpo -c -o libopcuacore_la-event.lo `test -f 'src/core/event.cpp' || echo '$(srcdir)/'`src/core/event.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuacore_la-event.Tpo $(DEPDIR)/libopcuacore_la-event.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/core/event.cpp' object='libopcuacore_la-event.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuacore_la-event.lo `test -f 'src/core/event.cpp' || echo '$(srcdir)/'`src/core/event.cpp
+
 libopcuacore_la-node.lo: src/core/node.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuacore_la-node.lo -MD -MP -MF $(DEPDIR)/libopcuacore_la-node.Tpo -c -o libopcuacore_la-node.lo `test -f 'src/core/node.cpp' || echo '$(srcdir)/'`src/core/node.cpp
 @am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuacore_la-node.Tpo $(DEPDIR)/libopcuacore_la-node.Plo
@@ -1303,6 +1320,13 @@ libopcuacore_la-socket_channel.lo: src/core/socket_channel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/core/socket_channel.cpp' object='libopcuacore_la-socket_channel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuacore_la-socket_channel.lo `test -f 'src/core/socket_channel.cpp' || echo '$(srcdir)/'`src/core/socket_channel.cpp
+
+libopcuacore_la-subscription.lo: src/core/subscription.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuacore_la-subscription.lo -MD -MP -MF $(DEPDIR)/libopcuacore_la-subscription.Tpo -c -o libopcuacore_la-subscription.lo `test -f 'src/core/subscription.cpp' || echo '$(srcdir)/'`src/core/subscription.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuacore_la-subscription.Tpo $(DEPDIR)/libopcuacore_la-subscription.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/core/subscription.cpp' object='libopcuacore_la-subscription.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuacore_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuacore_la-subscription.lo `test -f 'src/core/subscription.cpp' || echo '$(srcdir)/'`src/core/subscription.cpp
 
 libopcuaprotocol_la-binary_variant.lo: src/protocol/binary_variant.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaprotocol_la-binary_variant.lo -MD -MP -MF $(DEPDIR)/libopcuaprotocol_la-binary_variant.Tpo -c -o libopcuaprotocol_la-binary_variant.lo `test -f 'src/protocol/binary_variant.cpp' || echo '$(srcdir)/'`src/protocol/binary_variant.cpp
@@ -1401,6 +1425,13 @@ libopcuaprotocol_la-nodeid.lo: src/protocol/nodeid.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/protocol/nodeid.cpp' object='libopcuaprotocol_la-nodeid.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaprotocol_la-nodeid.lo `test -f 'src/protocol/nodeid.cpp' || echo '$(srcdir)/'`src/protocol/nodeid.cpp
+
+libopcuaprotocol_la-session.lo: src/protocol/session.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaprotocol_la-session.lo -MD -MP -MF $(DEPDIR)/libopcuaprotocol_la-session.Tpo -c -o libopcuaprotocol_la-session.lo `test -f 'src/protocol/session.cpp' || echo '$(srcdir)/'`src/protocol/session.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libopcuaprotocol_la-session.Tpo $(DEPDIR)/libopcuaprotocol_la-session.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/protocol/session.cpp' object='libopcuaprotocol_la-session.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libopcuaprotocol_la-session.lo `test -f 'src/protocol/session.cpp' || echo '$(srcdir)/'`src/protocol/session.cpp
 
 libopcuaprotocol_la-subscriptions.lo: src/protocol/subscriptions.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaprotocol_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libopcuaprotocol_la-subscriptions.lo -MD -MP -MF $(DEPDIR)/libopcuaprotocol_la-subscriptions.Tpo -c -o libopcuaprotocol_la-subscriptions.lo `test -f 'src/protocol/subscriptions.cpp' || echo '$(srcdir)/'`src/protocol/subscriptions.cpp

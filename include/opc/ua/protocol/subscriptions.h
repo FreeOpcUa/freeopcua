@@ -50,7 +50,9 @@ namespace OpcUa
     NodeID TypeID;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
-    DiagnosticInfo Diagnostic;
+    DiagnosticInfoList Diagnostic;
+
+    DeleteSubscriptionResponse();
   };
 
   ////////////////////////////////////////////////////////
@@ -140,7 +142,7 @@ namespace OpcUa
   struct EventFieldList
   {
     IntegerID ClientHandle;
-    //std::vector<BaseDataType> EventFields; FIXME
+    std::vector<Variant> EventFields; 
   };
 
   struct EventNotificationList

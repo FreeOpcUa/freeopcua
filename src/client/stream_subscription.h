@@ -33,8 +33,10 @@ namespace OpcUa
       }
 
     public:
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
+      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
       {
+        Callback = callback;
+
         CreateSubscriptionRequest request;
         request.Header.SessionAuthenticationToken = AuthenticationToken;
         request.Parameters = parameters;
@@ -53,12 +55,16 @@ namespace OpcUa
 
         Stream << request << OpcUa::Binary::flush;
 
+        ProcessPublishResults();
+
         DeleteSubscriptionResponse response;
-        Stream >> response;
-        return response.Results;
+        std::vector<StatusCode> results;
+        DiagnosticInfoList diags;
+        Stream >> results;
+        Stream >> diags;
+        return results;
       }
  
-
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
       {
         CreateMonitoredItemsRequest request;
@@ -73,6 +79,22 @@ namespace OpcUa
         Stream >> data;
         return data;
       }
+
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+      {
+        DeleteMonitoredItemsRequest request;
+        request.Header.SessionAuthenticationToken = AuthenticationToken;
+        request.Parameters = params;
+
+        Stream << request << OpcUa::Binary::flush;
+
+        ProcessPublishResults();
+
+        std::vector<StatusCode> results;
+        Stream >> results;
+        return results;
+      }
+
 
       virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
       {
@@ -95,12 +117,22 @@ namespace OpcUa
         {
           Stream >> typeId;
           Stream >> header;
-          std::cout << " got header with type: " << typeId << std::endl;
           if (typeId == NodeID(829, 0) )
           {
             PublishResult result;
             Stream >> result;
-            std::cout << " got one publish result " << typeId << std::endl;
+            if (Callback)
+            {
+              std::cout << " Calling callback for one publish result " << std::endl;
+              Callback(result);
+            }
+            else
+            {
+              std::cout << " PublishResult received but no callback defined" << std::endl;
+            }
+            //debug
+            //Publish(std::vector<SubscriptionAcknowledgement>()); //This works fine but this is not the right place to send ack
+
           }
           else
           {
@@ -108,8 +140,12 @@ namespace OpcUa
           }
         }
       }
+
+    private:
       mutable StreamType Stream;
       NodeID AuthenticationToken;
+      std::function<void (PublishResult)> Callback;
+      int debug = 0;
     };
 
   }

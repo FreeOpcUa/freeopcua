@@ -17,6 +17,7 @@
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/view.h>
+#include <opc/ua/event.h>
 
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
@@ -54,7 +55,7 @@ namespace OpcUa
       uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
       time_t lastNotificationTime = 0;
       uint32_t LastMonitoredItemID = 2;
-      std::map <uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
+      std::map<uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
       std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
       std::list<MonitoredItems> MonitoredItemsTriggered; 
       std::list<EventFieldList> EventTriggered; 
@@ -154,10 +155,10 @@ namespace OpcUa
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
+          std::cout << "Deleting Subscription: " << subid << std::endl;
           size_t count = SubscriptionsMap.erase(subid);
-          if ( count == 1)
+          if ( count > 0)
           {
-            std::cout << "Delete Subscription: " << subid << std::endl;
             result.push_back(StatusCode::Good);
           }
           else
@@ -211,6 +212,40 @@ namespace OpcUa
         return data;
      
       }
+
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+      {
+        std::vector<StatusCode> results;
+
+        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
+        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+        {
+          for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
+          {
+            results.push_back(StatusCode::BadSubscriptionIdInvalid);
+          }
+          return results;
+        }
+
+        for (const uint32_t handle: params.MonitoredItemsIds)
+        {
+          itsub->second.MonitoredItemsMap.erase(handle);
+          std::map<uint32_t, DataMonitoredItems>::iterator it_monitoreditem = itsub->second.MonitoredItemsMap.find(handle);
+          if ( it_monitoreditem == itsub->second.MonitoredItemsMap.end()) 
+          {
+            results.push_back(StatusCode::BadMonitoredItemIdInvalid);
+          }
+          else
+          {
+            itsub->second.MonitoredItemsMap.erase(it_monitoreditem); //FIXME: check it is correct syntax!!!!!!!!!!
+            results.push_back(StatusCode::Good);
+          }
+        }
+
+        return results;
+      }
+
+
 
       virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
       {
@@ -408,8 +443,82 @@ namespace OpcUa
         }
       }
 
+      void TriggerEvent(NodeID node, Event event)
+      {
+        //find node
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it == Nodes.end() )
+        {
+          std::cout << "NodeID does not exist, raise exception\n";
+        }
+        else
+        {
+          //find event_notifier attribute of node
+          AttributesMap::iterator ait = it->second.Attributes.find(AttributeID::EVENT_NOTIFIER);
+          if ( ait == it->second.Attributes.end() )
+          {
+            std::cout << "attempt o trigger node which has not event_notifier attribute, should raise exception\n";
+          }
+          else
+          {
+            EnqueueEvent(ait->second, event);
+          }
+        }
+      }
 
     private:
+
+
+      void EnqueueEvent(AttributeValue& attval, const Event& event)
+      {
+        //go through all subscription of attribute and add new event
+        for (auto attsub = attval.AttSubscriptions.begin(); attsub != attval.AttSubscriptions.end() ;)
+        {
+          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
+          if ( itsub == SubscriptionsMap.end() )
+          {
+            //Subscription or monitoreditem id does not exist any more so remove it
+            attsub = attval.AttSubscriptions.erase(attsub);
+          }
+          else
+          {
+            //Find monitoredItem referensed in subscription
+            std::map<uint32_t, DataMonitoredItems>::iterator mii_it =  itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId );
+            if  (mii_it == itsub->second.MonitoredItemsMap.end() ) 
+            {
+              std::cout << "monitoreditem is deleted" << std::endl;
+            }
+            else
+            {
+              //Check filter against event data and create EventFieldList to send
+              //FIXME: Here we should also check event agains WhereClause of filter
+              EventFieldList fieldlist;
+              fieldlist.ClientHandle = attsub->Parameters.ClientHandle;
+              fieldlist.EventFields = GetEventFields(mii_it->second.Parameters.Filter.Event, event);
+              itsub->second.EventTriggered.push_back(fieldlist);
+            }
+          }
+        }
+      }
+
+      std::vector<Variant> GetEventFields(EventFilter filter, Event event)
+      {
+        //Go through filter and add value og matches as in spec
+        std::vector<Variant> fields;
+        for (SimpleAttributeOperand sattr : filter.SelectClauses)
+        {
+          if ( sattr.BrowsePath.size() == 0 )
+          {
+            fields.push_back(event.GetValue(sattr.Attribute));
+          }
+          else
+          {
+            fields.push_back(event.GetValue(sattr.BrowsePath));
+          }
+        }
+        return fields;
+      }
+
 
       std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
@@ -438,7 +547,7 @@ namespace OpcUa
           auto res = FindElementInNode(current, element);
           if ( std::get<0>(res) == false )
           {
-            result.Status = OpcUa::StatusCode::BadNotReadable;
+            result.Status = OpcUa::StatusCode::BadNoMatch;
             return result;
           }
           current = std::get<1>(res);
@@ -532,7 +641,7 @@ namespace OpcUa
 
       void UpdateSubscriptions(AttributeValue& val)
       {
-        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end() ;)
+        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
         {
           SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
           if ( itsub == SubscriptionsMap.end() || (itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId ) == itsub->second.MonitoredItemsMap.end() ) )

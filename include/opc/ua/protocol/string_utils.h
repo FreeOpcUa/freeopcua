@@ -32,7 +32,7 @@ namespace OpcUa
 
   Guid ToGuid(const std::string& str);
   NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns);
+  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
 
   inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
   {

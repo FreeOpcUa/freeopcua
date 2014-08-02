@@ -48,8 +48,8 @@ namespace OpcUa
   struct SimpleAttributeOperand
   {
     NodeID TypeID;
-    QualifiedName BrowsePath;
-    IntegerID AttributeID;
+    std::vector<QualifiedName> BrowsePath;
+    AttributeID Attribute;
     std::vector<std::string> IndexRange; 
   };
 
@@ -124,7 +124,6 @@ namespace OpcUa
     bool SteppedSlopedExtrapolation;
   };
 
-/* that one is wrong this paramter if of type extensible
   struct MonitoringFilter
   {
     ExtensionObjectHeader Header;
@@ -132,19 +131,12 @@ namespace OpcUa
     EventFilter Event;
     AggregateFilter Aggregate;
   };
-*/
-  struct ExtensionObjectMonitoringFilter
-  {
-    NodeID typeID;
-    ExtensionObjectEncoding Encoding;
-  };
-
 
   struct MonitoringParameters
   {
     IntegerID ClientHandle;
     Duration SamplingInterval;
-    ExtensionObjectMonitoringFilter Filter;
+    MonitoringFilter Filter;
     uint32_t QueueSize;
     bool DiscardOldest;
   };
@@ -172,6 +164,32 @@ namespace OpcUa
     CreateMonitoredItemsRequest();
   };
 
+
+  struct DeleteMonitoredItemsParameters
+  {
+    IntegerID SubscriptionId;
+    std::vector<IntegerID> MonitoredItemsIds;
+  };
+
+  struct DeleteMonitoredItemsRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    DeleteMonitoredItemsParameters Parameters;
+
+    DeleteMonitoredItemsRequest();
+  };
+
+  struct DeleteMonitoredItemsResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    std::vector<StatusCode> Results;
+
+    DeleteMonitoredItemsResponse();
+  };
+
+
   ///////////////////////////////////////////////////////////////////////
   struct CreateMonitoredItemsResult
   {
@@ -179,7 +197,7 @@ namespace OpcUa
     uint32_t MonitoredItemID;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
-    ExtensionObjectHeader FilterResult;
+    MonitoringFilter Filter;
 
     CreateMonitoredItemsResult();
   };

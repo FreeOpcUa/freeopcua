@@ -18,3 +18,16 @@
  ******************************************************************************/
 
 #include<opc/ua/protocol/types.h>
+
+namespace OpcUa
+{
+    bool QualifiedName::operator < (const QualifiedName& name) const
+    {
+      if (NamespaceIndex != name.NamespaceIndex)
+      {
+        return NamespaceIndex < name.NamespaceIndex;
+      }
+      return Name < name.Name;
+    }
+
+}
