@@ -35,6 +35,12 @@ namespace OpcUa
         , Stream(channel)
         , RequestHandle(0)
       {
+
+          EndpointsServices = std::shared_ptr<Remote::EndpointServices>( new Internal::EndpointServices<StreamType>(Channel, AuthenticationToken));
+          ViewsServices = std::shared_ptr<Remote::ViewServices>(new Internal::ViewServices<StreamType>(Channel, AuthenticationToken));
+          SubscriptionsServices = std::shared_ptr<Remote::SubscriptionServices>( new Internal::SubscriptionServices<StreamType>(Channel, AuthenticationToken));
+          AttributesServices = std::shared_ptr<Remote::AttributeServices>(new Internal::AttributeServices<StreamType>(Channel, AuthenticationToken));
+          NodeManagementsServices = std::shared_ptr<Remote::NodeManagementServices>(new Internal::NodeManagementServices<StreamType>(Channel, AuthenticationToken));
       }
 
       virtual void CreateSession(const Remote::SessionParameters& parameters)
@@ -93,27 +99,27 @@ namespace OpcUa
 
       virtual std::shared_ptr<Remote::EndpointServices> Endpoints() const
       {
-        return std::shared_ptr<Remote::EndpointServices>(new Internal::EndpointServices<StreamType>(Channel, AuthenticationToken));
+        return EndpointsServices;
       }
 
       virtual std::shared_ptr<Remote::ViewServices> Views() const
       {
-        return std::shared_ptr<Remote::ViewServices>(new Internal::ViewServices<StreamType>(Channel, AuthenticationToken));
+        return ViewsServices;
       }
 
       virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() const
       {
-        return std::shared_ptr<Remote::NodeManagementServices>(new Internal::NodeManagementServices<StreamType>(Channel, AuthenticationToken));
+        return NodeManagementsServices;
       }
 
       virtual std::shared_ptr<Remote::AttributeServices> Attributes() const
       {
-        return std::shared_ptr<Remote::AttributeServices>(new Internal::AttributeServices<StreamType>(Channel, AuthenticationToken));
+        return AttributesServices;
       }
 
       virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() const
       {
-        return std::shared_ptr<Remote::SubscriptionServices>(new Internal::SubscriptionServices<StreamType>(Channel, AuthenticationToken));
+        return SubscriptionsServices;
       }
 
    private:
@@ -123,6 +129,13 @@ namespace OpcUa
       }
 
     private:
+      OpcUa::Remote::AttributeServices::SharedPtr AttributesServices;
+      OpcUa::Remote::ViewServices::SharedPtr ViewsServices;
+      OpcUa::Remote::NodeManagementServices::SharedPtr NodeServices;
+      OpcUa::Remote::EndpointServices::SharedPtr EndpointsServices;
+      OpcUa::Remote::SubscriptionServices::SharedPtr SubscriptionsServices;
+      OpcUa::Remote::NodeManagementServices::SharedPtr NodeManagementsServices;
+ 
       std::shared_ptr<IOChannel> Channel;
       StreamType Stream;
       NodeID AuthenticationToken;

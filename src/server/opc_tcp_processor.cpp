@@ -79,11 +79,11 @@ namespace
     {
       if (!clientChannel)
       {
-        if (Debug) std::cerr << "Empty channel passed to endpoints opc binary protocol processor." << std::endl;
+        if (Debug) std::cerr << "opc_tcp_processor| Empty channel passed to endpoints opc binary protocol processor." << std::endl;
         return;
       }
 
-      if (Debug) std::clog << "Hello client!" << std::endl;
+      if (Debug) std::clog << "opc_tcp_processor| Hello client!" << std::endl;
 
       for(;;)
       {
@@ -121,7 +121,7 @@ namespace
     // TODO implement collecting full message from chunks before processing.
     void ProcessChunk(IStreamBinary& iStream, OStreamBinary& oStream)
     {
-      if (Debug) std::cout << "Processing new chunk." << std::endl;
+      if (Debug) std::cout << "opc_tcp_processor| Processing new chunk." << std::endl;
       Header hdr;
       // Receive message header.
       iStream >> hdr;
@@ -132,7 +132,7 @@ namespace
       iStream >> buf;
       if (Debug)
       {
-        std::clog << "Received message." << std::endl;
+        std::clog << "opc_tcp_processor| Received message." << std::endl;
         PrintBlob(buffer);
       }
 
@@ -143,7 +143,7 @@ namespace
 
       if (messageChannel.GetRemainSize())
       {
-        std::cerr << "ERROR!!! Message from client has been processed partially." << std::endl;
+        std::cerr << "opc_tcp_processor| ERROR!!! Message from client has been processed partially." << std::endl;
       }
     }
 
@@ -174,7 +174,7 @@ namespace
           std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
           TcpParameters tcpParams;
           tcpParams.Port = uri.Port();
-          if (Debug) std::clog << "Starting listen port " << tcpParams.Port << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Starting listen port " << tcpParams.Port << std::endl;
           TcpAddon->Listen(tcpParams, processor);
           Ports.push_back(tcpParams);
         }
@@ -210,6 +210,8 @@ namespace OpcUa
       , TokenID(2)
     {
       SessionID = NumericNodeID(5, 0);
+      std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
+      std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
     }
 
     void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream, OStreamBinary& oStream)
@@ -218,7 +220,7 @@ namespace OpcUa
       {
         case MT_HELLO:
         {
-          if (Debug) std::clog << "Accepted hello message." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Accepted hello message." << std::endl;
           HelloClient(iStream, oStream);
           break;
         }
@@ -226,14 +228,14 @@ namespace OpcUa
 
         case MT_SECURE_OPEN:
         {
-          if (Debug) std::clog << "Opening securechannel." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Opening secure channel." << std::endl;
           OpenChannel(iStream, oStream);
           break;
         }
 
         case MT_SECURE_CLOSE:
         {
-          if (Debug) std::clog << "Closing secure channel." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Closing secure channel." << std::endl;
           CloseChannel(iStream);
           return;
         }
@@ -246,22 +248,22 @@ namespace OpcUa
 
         case MT_ACKNOWLEDGE:
         {
-          if (Debug) std::clog << "Received acknowledge from client. This should not have happend..." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Received acknowledge from client. This should not have happend..." << std::endl;
           throw std::logic_error("Thank to client about acknowledge.");
         }
         case MT_ERROR:
         {
-          if (Debug) std::clog << "There is an error happend in the client!" << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| There is an error happend in the client!" << std::endl;
           throw std::logic_error("It is very nice get to know server about error in the client.");
         }
         default:
         {
-          if (Debug) std::clog << "Unknown message type '" << msgType << "' received!" << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Unknown message type '" << msgType << "' received!" << std::endl;
           throw std::logic_error("Invalid message type received.");
         }
       }
     }
-
+/*
     void OpcTcpMessages::SendPublishResponse(OpcUa::OutputChannel& clientChannel)
     {
       OStreamBinary stream(clientChannel);
@@ -269,14 +271,15 @@ namespace OpcUa
       {
         if ( PublishRequestQueue.size() == 0)
         {
-          std::cerr << "RequestQueueSize is empty we cannot process more subscriptions, this is a client error" << std::endl;
+          std::cerr << "opc_tcp_processor| RequestQueueSize is empty we are waiting for pubilshrequest from server" << std::endl;
           return;
         }
+        std::cout << "opc_tcp_processor| We have x publishrequest in queue "<<  PublishRequestQueue.size() << std::endl;
 
         std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
         if ((now - subdata.last_check) <= subdata.period)
         {
-          if (Debug) std::cout << " No need to process subscription yet" << std::endl;
+          if (Debug) std::cout << "opc_tcp_processor| No need to process subscription yet" << std::endl;
           continue;
         }
         subdata.last_check = now;
@@ -284,7 +287,6 @@ namespace OpcUa
         std::vector<IntegerID> sub_query;
         sub_query.push_back(subdata.SubscriptionID);
         std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-        if (Debug) std::cout << "got " << res_list.size() << " notifications from server " << subdata.SubscriptionID << std::endl;
 
         for (const PublishResult& publishResult: res_list)
         {
@@ -296,22 +298,23 @@ namespace OpcUa
           FillResponseHeader(requestData.requestHeader, response.Header);
           response.Result = publishResult;
 
+
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(requestData.algorithmHeader));
           secureHeader.AddSize(RawSize(requestData.sequence));
           secureHeader.AddSize(RawSize(response));
           if (Debug) {
-            std::cout << "Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+            std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
             for  ( NotificationData d: response.Result.Message.Data )
             {
-              std::cout << "     " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+              std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
             }
           }
           stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
         }
       }
     }
-
+*/
     double OpcTcpMessages::GetNextSleepPeriod()
     {
       if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
@@ -324,7 +327,7 @@ namespace OpcUa
       for (const SubscriptionBinaryData& data: Subscriptions)
       {
         std::chrono::duration<double> tmp =  data.last_check + data.period;
-        if (Debug) std::cout << "Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
+        if (Debug) std::cout << "opc_tcp_processor| Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
         if (tmp < next_fire)
         {
           next_fire = tmp;
@@ -333,7 +336,7 @@ namespace OpcUa
       auto diff = next_fire - now;
       if ( diff.count() < 0 )
       {
-        if (Debug)  std::cout << "Event should allrady have been fired returning 0"<< std::endl;
+        if (Debug)  std::cout << "opc_tcp_processor| Event should allrady have been fired returning 0"<< std::endl;
         return 0;
       }
       return diff.count() ;
@@ -343,7 +346,7 @@ namespace OpcUa
     {
       using namespace OpcUa::Binary;
 
-      if (Debug) std::clog << "Reading hello message." << std::endl;
+      if (Debug) std::clog << "opc_tcp_processor| Reading hello message." << std::endl;
       Hello hello;
       istream >> hello;
 
@@ -355,7 +358,7 @@ namespace OpcUa
 
       Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
       ackHeader.AddSize(RawSize(ack));
-      if (Debug) std::clog << "Sending answer to client." << std::endl;
+      if (Debug) std::clog << "opc_tcp_processor| Sending answer to client." << std::endl;
       ostream << ackHeader << ack << flush;
     }
 
@@ -387,6 +390,8 @@ namespace OpcUa
         //FIXME:Should check that channel has been issued first
         ++TokenID;
       }
+
+      sequence.SequenceNumber = ++SequenceNb;
 
       OpenSecureChannelResponse response;
       FillResponseHeader(request.Header, response.Header);
@@ -434,6 +439,8 @@ namespace OpcUa
       RequestHeader requestHeader;
       istream >> requestHeader;
 
+      sequence.SequenceNumber = ++SequenceNb;
+
       const std::size_t receivedSize =
         RawSize(channelID) +
         RawSize(algorithmHeader) +
@@ -446,7 +453,7 @@ namespace OpcUa
       {
         case OpcUa::GET_ENDPOINTS_REQUEST:
         {
-          if (Debug) std::clog << "Processing get endpoints request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing get endpoints request." << std::endl;
           EndpointsFilter filter;
           istream >> filter;
 
@@ -464,7 +471,7 @@ namespace OpcUa
 
         case OpcUa::FIND_SERVERS_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Find Servers' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Find Servers' request." << std::endl;
           FindServersParameters params;
           istream >> params;
 
@@ -482,7 +489,7 @@ namespace OpcUa
 
         case OpcUa::BROWSE_REQUEST:
         {
-          if (Debug) std::clog << "Processing browse request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing browse request." << std::endl;
           NodesQuery query;
           istream >> query;
 
@@ -508,10 +515,10 @@ namespace OpcUa
 
           if (Debug)
           {
-            std::clog << "Processing read request for Node:";
+            std::clog << "opc_tcp_processor| Processing read request for Node:";
             for (AttributeValueID id : params.AttributesToRead)
             {
-              std::clog << " " << id.Node;
+              std::clog << "opc_tcp_processor|  " << id.Node;
             }
             std::cout << std::endl;
           }
@@ -546,7 +553,7 @@ namespace OpcUa
 
         case OpcUa::WRITE_REQUEST:
         {
-          if (Debug) std::clog << "Processing write request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing write request." << std::endl;
           WriteParameters params;
           istream >> params;
 
@@ -573,7 +580,7 @@ namespace OpcUa
 
         case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
           TranslateBrowsePathsParameters params;
           istream >> params;
 
@@ -581,7 +588,7 @@ namespace OpcUa
           {
             for ( BrowsePath path : params.BrowsePaths)
             {
-              std::cout << "Requested path is: " << path.StartingNode << " : " ;
+              std::cout << "opc_tcp_processor| Requested path is: " << path.StartingNode << " : " ;
               for ( RelativePathElement el : path.Path.Elements)
               {
                 std::cout << "/" << el.TargetName ;
@@ -596,7 +603,7 @@ namespace OpcUa
           {
             for (BrowsePathResult res: result)
             {
-              std::cout << "Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              std::cout << "opc_tcp_processor| Result of browsePath is: " << (uint) res.Status << ". Target is: ";
               for ( BrowsePathTarget path : res.Targets)
               {
                 std::cout << path.Node ;
@@ -613,7 +620,7 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
@@ -621,7 +628,7 @@ namespace OpcUa
 
         case CREATE_SESSION_REQUEST:
         {
-          if (Debug) std::clog << "Processing create session request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing create session request." << std::endl;
           SessionParameters params;
           istream >> params;
 
@@ -646,7 +653,7 @@ namespace OpcUa
         }
         case ACTIVATE_SESSION_REQUEST:
         {
-          if (Debug) std::clog << "Processing activate session request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing activate session request." << std::endl;
           UpdatedSessionParameters params;
           istream >> params;
 
@@ -663,18 +670,19 @@ namespace OpcUa
 
         case CLOSE_SESSION_REQUEST:
         {
-          if (Debug) std::clog << "Processing close session request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing close session request." << std::endl;
           bool deleteSubscriptions = false;
           istream >> deleteSubscriptions;
 
           if (deleteSubscriptions)
           {
             std::vector<IntegerID> subs;
-            for (SubscriptionBinaryData data: Subscriptions)
+            for (const SubscriptionBinaryData& data: Subscriptions)
             {
               subs.push_back(data.SubscriptionID);
             }
             Server->Subscriptions()->DeleteSubscriptions(subs);
+            Subscriptions.clear();
           }
 
           CloseSessionResponse response;
@@ -685,13 +693,13 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
-          if (Debug) std::clog << "Closed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Session Closed " << std::endl;
           return;
         }
 
         case CREATE_SUBSCRIPTION_REQUEST:
         {
-          if (Debug) std::clog << "Processing create subscription request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing create subscription request." << std::endl;
           SubscriptionParameters params;
           istream >> params;
 
@@ -714,9 +722,11 @@ namespace OpcUa
 
         case DELETE_SUBSCRIPTION_REQUEST:
         {
-          if (Debug) std::clog << "Processing delete subscription request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl;
           std::vector<IntegerID> ids;
           istream >> ids;
+
+          DeleteSubscriptions(ids); //remove from locale subscription lis
 
           DeleteSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
@@ -727,13 +737,15 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to Delete Subscription Request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
         case CREATE_MONITORED_ITEMS_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Create Monitored Items' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Create Monitored Items' request." << std::endl;
           MonitoredItemsParameters params;
           istream >> params;
 
@@ -747,14 +759,35 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "Sending response to Create Monitored Items Request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to Create Monitored Items Request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case DELETE_MONITORED_ITEMS_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Delete Monitored Items' request." << std::endl;
+          DeleteMonitoredItemsParameters params;
+          istream >> params;
+
+          DeleteMonitoredItemsResponse response;
+
+          response.Results = Server->Subscriptions()->DeleteMonitoredItems(params);
+
+          FillResponseHeader(requestHeader, response.Header);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to Delete Monitored Items Request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
         case PUBLISH_REQUEST:
         {
-          if (Debug) std::clog << "Processing and queuing 'Publish' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl;
           PublishParameters params;
           istream >> params;
           PublishRequestElement data;
@@ -763,12 +796,15 @@ namespace OpcUa
           data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
           Server->Subscriptions()->Publish(params.Acknowledgements);
+
+          --SequenceNb; //We do not send response, so do not increase sequence
+
           return;
         }
 
         case SET_PUBLISHING_MODE_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Set Publishing Mode' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Set Publishing Mode' request." << std::endl;
           PublishingModeParameters params;
           istream >> params;
 
@@ -782,14 +818,14 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "Sending response to 'Set Publishing Mode' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Set Publishing Mode' request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
         case ADD_NODES_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Add Nodes' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Add Nodes' request." << std::endl;
           AddNodesParameters params;
           istream >> params;
 
@@ -804,14 +840,14 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "Sending response to 'Add Nodes' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Add Nodes' request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
 
         case ADD_REFERENCES_REQUEST:
         {
-          if (Debug) std::clog << "Processing 'Add References' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Add References' request." << std::endl;
           AddReferencesParameters params;
           istream >> params;
 
@@ -826,7 +862,7 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "Sending response to 'Add References' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Add References' request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
@@ -834,7 +870,7 @@ namespace OpcUa
         default:
         {
           std::stringstream ss;
-          ss << "ERROR: Unknown message with id '" << message << "' was recieved.";
+          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved.";
           throw std::logic_error(ss.str());
         }
       }
@@ -847,6 +883,14 @@ namespace OpcUa
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 
+    void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerID>& ids)
+    {
+      for ( auto id : ids )
+      {
+        Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(),
+                      [&](const SubscriptionBinaryData d) { return ( d.SubscriptionID == id) ; }), Subscriptions.end());
+      }
+    }
 
   } // namespace UaServer
 } // namespace OpcUa
@@ -855,5 +899,3 @@ OpcUa::UaServer::OpcUaProtocol::UniquePtr OpcUa::UaServer::CreateOpcUaProtocol(O
 {
   return OpcUaProtocol::UniquePtr(new ::OpcUaProtocol(tcpServer, debug));
 }
-
-

@@ -103,6 +103,15 @@ namespace OpcUa
     {
       return NamespaceIndex == name.NamespaceIndex && Name == name.Name;
     }
+
+    bool operator < (const QualifiedName& name) const
+    {
+      if (NamespaceIndex != name.NamespaceIndex)
+      {
+        return NamespaceIndex < name.NamespaceIndex;
+      }
+      return Name < name.Name;
+    }
   };
 
   struct RelativePathElement

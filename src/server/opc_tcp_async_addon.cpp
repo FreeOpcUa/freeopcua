@@ -54,14 +54,17 @@ namespace
     const AsyncOpcTcp::Parameters& params = GetOpcTcpParameters(addonParams);
     if (params.DebugMode)
     {
-      std::cout << "Enabled debug mode at async opc tcp addon." << std::endl;
+      std::cout << "opc_tcp_async| Enabled debug mode at async opc tcp addon." << std::endl;
+      std::cout << "opc_tcp_async| Parameters:" << std::endl;
+      std::cout << "opc_tcp_async|   Port:" << params.Port << std::endl;
+      std::cout << "opc_tcp_async|   ThreadsNumber:" << params.ThreadsNumber << std::endl;
     }
     const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, params.DebugMode);
     if (params.DebugMode)
     {
       for (OpcUa::UaServer::ApplicationData d: applications)
       {
-        std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+        std::cout << "opc_tcp_async| Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
       }
     }
 
@@ -87,7 +90,7 @@ namespace
     OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
     if (!endpointsAddon)
     {
-      std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
+      std::cerr << "Cannot publish information about endpoints. Endpoints services addon didn't' registered." << std::endl;
       return;
     }
     endpointsAddon->AddEndpoints(endpoints);

@@ -15,6 +15,7 @@
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/server/services_registry.h>
 #include <opc/ua/view.h>
+#include <opc/ua/event.h>
 #include <opc/ua/subscriptions.h>
 
 namespace OpcUa
@@ -59,6 +60,11 @@ namespace OpcUa
 
     public: // MonitoredItemsServices
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params); 
+      
+
+    public: // Server internal methods
+      virtual void TriggerEvent(NodeID node, Event event);
 
     private:
       struct Options

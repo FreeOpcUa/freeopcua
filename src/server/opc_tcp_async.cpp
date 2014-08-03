@@ -30,6 +30,7 @@
 #include <array>
 #include <boost/asio.hpp>
 #include <iostream>
+#include <set>
 
 
 
@@ -96,7 +97,7 @@ namespace
   private:
     Parameters Params;
     Remote::Server::SharedPtr Server;
-    std::vector<std::shared_ptr<OpcTcpConnection>> Clients;
+    std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
     io_service io;
     tcp::acceptor acceptor;
@@ -113,10 +114,12 @@ namespace
     OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Remote::Server::SharedPtr uaServer, bool debug);
     ~OpcTcpConnection();
 
-  private:
     void Start();
+
+  private:
+    void ReadNextData();
     void ProcessHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
-    void ProcessMessage(OpcUa::Binary::MessageType type, const boost::system::error_code& error, std::size_t bytes_transferred);
+    void ProcessMessage(OpcUa::Binary::MessageType type, const boost::system::error_code& error, std::size_t bytesTransferred);
     void GoodBye();
 
     std::size_t GetHeaderSize() const;
@@ -143,14 +146,19 @@ namespace
     , Debug(debug)
     , Buffer(8192)
   {
-    Start();
   }
 
   OpcTcpConnection::~OpcTcpConnection()
   {
+    TcpServer.RemoveClient(shared_from_this());
   }
 
   void OpcTcpConnection::Start()
+  {
+    ReadNextData();
+  }
+
+  void OpcTcpConnection::ReadNextData()
   {
     async_read(Socket, buffer(Buffer), transfer_exactly(GetHeaderSize()),
       [this](const boost::system::error_code& error, std::size_t bytes_transferred)
@@ -181,23 +189,31 @@ namespace
     OpcUa::Binary::Header header;
     messageStream >> header;
 
+    const std::size_t messageSize = header.Size - GetHeaderSize();
+
     if (Debug)
     {
       std::cout << "opc_tcp_async| Message type: " << header.Type << std::endl;
       std::cout << "opc_tcp_async| Chunk type: " << header.Chunk << std::endl;
       std::cout << "opc_tcp_async| MessageSize: " << header.Size << std::endl;
+      std::cout << "opc_tcp_async| Waiting " << messageSize << " bytes from client." << std::endl;
     }
 
-    async_read(Socket, buffer(Buffer), transfer_exactly(header.Size - GetHeaderSize()),
-        [this, &header](const boost::system::error_code& error, std::size_t bytes_transferred)
+    async_read(Socket, buffer(Buffer), transfer_exactly(messageSize),
+        [this, &header](const boost::system::error_code& error, std::size_t bytesTransferred)
         {
-          ProcessMessage(header.Type, error, bytes_transferred);
+          if (error)
+          {
+            if (Debug) std::cout << "opc_tcp_async| Error during receiving message body." << std::endl;
+            return;
+          }
+          ProcessMessage(header.Type, error, bytesTransferred);
         }
     );
 
   }
 
-  void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boost::system::error_code& error, std::size_t bytes_transferred)
+  void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boost::system::error_code& error, std::size_t bytesTransferred)
   {
     if (error)
     {
@@ -208,12 +224,12 @@ namespace
 
     if (Debug)
     {
-      std::cout << "opc_tcp_async| Received new data from client." << std::endl;
-      PrintBlob(Buffer, bytes_transferred);
+      if (Debug) std::cout << "opc_tcp_async| Received " << bytesTransferred << " bytes from client:" << std::endl;
+      PrintBlob(Buffer, bytesTransferred);
     }
 
     // restrict server size code only with current message.
-    OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytes_transferred);
+    OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytesTransferred);
     IStreamBinary messageStream(messageChannel);
 
     try
@@ -232,15 +248,13 @@ namespace
       std::cerr << "opc_tcp_async| ERROR!!! Message from client has been processed partially." << std::endl;
     }
 
-    Start();
+    ReadNextData();
   }
 
 
   void OpcTcpConnection::GoodBye()
   {
     if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
-    Socket.close();
-    OnDisconnect();
   }
 
   void OpcTcpConnection::Send(const char* message, std::size_t size)
@@ -293,27 +307,36 @@ namespace
 
   void OpcTcpServer::Accept()
   {
+    std::cout << "opc_tcp_async| Waiting for client connection." << std::endl;
     acceptor.async_accept(socket, [this](boost::system::error_code errorCode){
-      std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
       if (!errorCode)
       {
-        Clients.emplace_back(std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode));
-        Accept();
+        std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
+        std::shared_ptr<OpcTcpConnection> connection = std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode);
+        Clients.insert(connection);
+        connection->Start();
       }
+      else
+      {
+        std::cout << "opc_tcp_async| Error during client connection: "<< errorCode.message() << std::endl;
+      }
+      Accept();
     });
   }
 
   void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)
   {
+/*
     auto clientIt = std::find(Clients.begin(), Clients.end(), client);
     if (clientIt == Clients.end())
     {
-      std::cout << "opc_tcp_async| Internal error: failed to find client for removing." << std::endl;
       return;
     }
 
-    if (Params.DebugMode) std::cout << "Client disconnected." << std::endl;
-    Clients.erase(clientIt);
+    if (Params.DebugMode) std::cout << "opc_tcp_async| Client disconnected." << std::endl;
+    //Clients.erase(clientIt);
+*/
+    Clients.erase(client);
   }
 
 } // namespace
@@ -322,4 +345,3 @@ OpcUa::UaServer::AsyncOpcTcp::UniquePtr OpcUa::UaServer::CreateAsyncOpcTcp(const
 {
   return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server));
 }
-

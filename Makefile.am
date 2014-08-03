@@ -13,6 +13,7 @@
 # list of binaries.
 #######################################################
 
+AUTOMAKE_OPTIONS = subdir-objects
 
 bin_PROGRAMS = opcuaserver opcua
 lib_LTLIBRARIES = libopcuaprotocol.la libopcuacore.la libopcuaserver.la libopcuaclient.la
@@ -218,7 +219,6 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
-  src/protocol/types.cpp \
   src/protocol/status_codes.cpp
 
 
@@ -258,6 +258,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/connection_listener.h \
   include/opc/ua/endpoints.h \
   include/opc/ua/errors.h \
+  include/opc/ua/event.h \
   include/opc/ua/node.h \
   include/opc/ua/node_management.h \
   include/opc/ua/server.h \
@@ -302,6 +303,7 @@ libopcuacore_la_SOURCES = \
                   src/core/common/value.cpp \
                   src/core/common/exception.cpp \
                   src/core/common/common_errors.cpp \
+                  src/core/event.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \

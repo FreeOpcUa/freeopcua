@@ -1,5 +1,4 @@
-/// @author Alexander Rykovanov 2013
-/// @email rykovanov.as@gmail.com
+/// @author Olivier Roulet-Dubonnet 2013
 /// @brief Well known attributes identifiers.
 /// @license GNU LGPL
 ///
@@ -30,6 +29,11 @@ namespace OpcUa
     DataChangeNotification = 811,
     EventNotificationList = 812,
     StatusChangeNotification = 813,
+
+    DataChangeFilter = 724,
+    EventFilter = 727,
+    AggregateFilter = 730
+
   };
 }
 

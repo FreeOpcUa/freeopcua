@@ -37,6 +37,8 @@ namespace OpcUa
       void CloseChannel(Binary::IStreamBinary& istream);
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
+      void DeleteSubscriptions(const std::vector<IntegerID>& ids);
+      //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
 
     private:
       std::mutex ProcessMutex;
@@ -46,6 +48,7 @@ namespace OpcUa
       uint32_t TokenID;
       NodeID SessionID;
       NodeID AuthenticationToken;
+      uint32_t SequenceNb;
 
       struct SubscriptionBinaryData
       {
