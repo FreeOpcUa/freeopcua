@@ -38,7 +38,7 @@ namespace OpcUa
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
       void DeleteSubscriptions(const std::vector<IntegerID>& ids);
-      //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
+      void SendPublishResponse();
 
     private:
       std::mutex ProcessMutex;

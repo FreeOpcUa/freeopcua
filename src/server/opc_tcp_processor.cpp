@@ -265,10 +265,9 @@ namespace OpcUa
         }
       }
     }
-/*
-    void OpcTcpMessages::SendPublishResponse(OpcUa::OutputChannel& clientChannel)
+
+    void OpcTcpMessages::SendPublishResponse()
     {
-      OStreamBinary stream(clientChannel);
       for (SubscriptionBinaryData& subdata: Subscriptions)
       {
         if ( PublishRequestQueue.size() == 0)
@@ -312,11 +311,11 @@ namespace OpcUa
               std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
             }
           }
-          stream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+          OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
         }
       }
     }
-*/
+
     double OpcTcpMessages::GetNextSleepPeriod()
     {
       if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
