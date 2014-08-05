@@ -30,8 +30,6 @@ namespace OpcUa
       AsyncOpcTcp::Parameters result;
       for (const Common::Parameter& param : addonParams.Parameters)
       {
-        if (param.Name == "port")
-          result.Port = std::stoi(param.Value);
         if (param.Name == "threads_number")
           result.ThreadsNumber = std::stoi(param.Value);
         if (param.Name == "debug")

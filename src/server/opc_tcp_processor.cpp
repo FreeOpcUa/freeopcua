@@ -69,8 +69,8 @@ namespace
   class OpcTcp : public IncomingConnectionProcessor
   {
   public:
-    OpcTcp(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
-      : MessageProcessor(computer, debug)
+    OpcTcp(OpcUa::Remote::Server::SharedPtr computer, bool debug)
+      : Server(computer)
       , Debug(debug)
     {
     }
@@ -85,9 +85,11 @@ namespace
 
       if (Debug) std::clog << "opc_tcp_processor| Hello client!" << std::endl;
 
+      std::auto_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, *clientChannel, Debug));
+
       for(;;)
       {
-        double period = MessageProcessor.GetNextSleepPeriod();
+        double period = messageProcessor->GetNextSleepPeriod();
         int res = clientChannel->WaitForData(period); //double to float cast
         if (res < 0)
         {
@@ -95,7 +97,7 @@ namespace
         }
         else if (res == 1)
         {
-          ProcessData(*clientChannel);
+          ProcessData(*clientChannel, *messageProcessor);
         }
         else
         {
@@ -109,17 +111,16 @@ namespace
     }
 
   private:
-    void ProcessData(OpcUa::IOChannel& clientChannel)
+    void ProcessData(OpcUa::IOChannel& clientChannel, OpcTcpMessages& messageProcessor)
     {
       using namespace OpcUa::Binary;
 
       IStreamBinary iStream(clientChannel);
-      OStreamBinary oStream(clientChannel);
-      ProcessChunk(iStream, oStream);
+      ProcessChunk(iStream, messageProcessor);
     }
 
     // TODO implement collecting full message from chunks before processing.
-    void ProcessChunk(IStreamBinary& iStream, OStreamBinary& oStream)
+    void ProcessChunk(IStreamBinary& iStream, OpcTcpMessages& messageProcessor)
     {
       if (Debug) std::cout << "opc_tcp_processor| Processing new chunk." << std::endl;
       Header hdr;
@@ -139,7 +140,7 @@ namespace
       // restrict server size code only with current message.
       OpcUa::InputFromBuffer messageChannel(&buffer[0], buffer.size());
       IStreamBinary messageStream(messageChannel);
-      MessageProcessor.ProcessMessage(hdr.Type, messageStream, oStream);
+      messageProcessor.ProcessMessage(hdr.Type, messageStream);
 
       if (messageChannel.GetRemainSize())
       {
@@ -148,7 +149,7 @@ namespace
     }
 
   private:
-    OpcTcpMessages MessageProcessor;
+    OpcUa::Remote::Server::SharedPtr Server;
     bool Debug;
   };
 
@@ -203,8 +204,9 @@ namespace OpcUa
   namespace UaServer
   {
 
-    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug)
+    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug)
       : Server(computer)
+      , OutputStream(outputChannel)
       , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
@@ -214,14 +216,14 @@ namespace OpcUa
       std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
     }
 
-    void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream, OStreamBinary& oStream)
+    void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
       switch (msgType)
       {
         case MT_HELLO:
         {
           if (Debug) std::clog << "opc_tcp_processor| Accepted hello message." << std::endl;
-          HelloClient(iStream, oStream);
+          HelloClient(iStream, OutputStream);
           break;
         }
 
@@ -229,7 +231,7 @@ namespace OpcUa
         case MT_SECURE_OPEN:
         {
           if (Debug) std::clog << "opc_tcp_processor| Opening secure channel." << std::endl;
-          OpenChannel(iStream, oStream);
+          OpenChannel(iStream, OutputStream);
           break;
         }
 
@@ -242,7 +244,7 @@ namespace OpcUa
 
         case MT_SECURE_MESSAGE:
         {
-          ProcessRequest(iStream, oStream);
+          ProcessRequest(iStream, OutputStream);
           break;
         }
 

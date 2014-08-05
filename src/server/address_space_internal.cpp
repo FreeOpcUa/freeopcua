@@ -56,7 +56,7 @@ namespace OpcUa
       time_t lastNotificationTime = 0;
       uint32_t LastMonitoredItemID = 2;
       std::map<uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
-      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
+      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledged and may have to be resent
       std::list<MonitoredItems> MonitoredItemsTriggered; 
       std::list<EventFieldList> EventTriggered; 
 
