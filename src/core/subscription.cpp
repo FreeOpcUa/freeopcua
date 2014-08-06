@@ -54,7 +54,7 @@ namespace OpcUa
       {
         for ( MonitoredItems item: data.DataChange.Notification)
         {
-          AttValMap::iterator mapit = AttributeValueMap.find((uint32_t)item.ClientHandle);
+          AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
             std::cout << "Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
@@ -118,22 +118,25 @@ namespace OpcUa
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
+
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
-    std::vector<uint32_t> handles;
 
     if ( results.size() != attributes.size() ) 
     {
       throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
     }
+
+    std::vector<uint32_t> mids;
     uint i = 0;
     for (auto res : results)
     {
       CheckStatusCode(res.Status);
-      AttributeValueMap[res.MonitoredItemID] = attributes[i];
+      std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl; 
+      AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = attributes[i];
       ++i;
-      handles.push_back(res.MonitoredItemID);
+      mids.push_back(res.MonitoredItemID);
     }
-    return handles;
+    return mids;
   }
 
   void Subscription::UnSubscribe(uint32_t handle)

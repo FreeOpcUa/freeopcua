@@ -46,7 +46,7 @@ namespace OpcUa
     struct AttSubscription
     {
       IntegerID SubscriptionId;
-      uint32_t MonitoredItemId;
+      IntegerID MonitoredItemId;
       MonitoringParameters Parameters;
     };
 

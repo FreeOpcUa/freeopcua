@@ -21,10 +21,10 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   SubscriptionParameters::SubscriptionParameters()
-    : RequestedPublishingInterval(0)
-    , RequestedLifetimeCount(1)
-    , RequestedMaxKeepAliveCount(1)
-    , MaxNotificationsPerPublish(1)
+    : RequestedPublishingInterval(100)
+    , RequestedLifetimeCount(std::numeric_limits<uint32_t>::max())
+    , RequestedMaxKeepAliveCount(100)
+    , MaxNotificationsPerPublish(0)
     , PublishingEnabled(true)
     , Priority(0)
   {
