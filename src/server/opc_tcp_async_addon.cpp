@@ -20,12 +20,14 @@
 #include "opc_tcp_async_parameters.h"
 #include "endpoints_parameters.h"
 
+#include <opc/common/uri_facade.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/opc_tcp_async.h>
 
 #include <iostream>
+#include <vector>
 
 namespace
 {
@@ -44,19 +46,18 @@ namespace
     void PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
 
   private:
-    AsyncOpcTcp::UniquePtr OpcTcp;
-    Common::Thread::UniquePtr ListenThread;
+    AsyncOpcTcp::SharedPtr Endpoint;
+    Common::Thread::SharedPtr ServerThread;
   };
 
 
   void AsyncOpcTcpAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& addonParams)
   {
-    const AsyncOpcTcp::Parameters& params = GetOpcTcpParameters(addonParams);
+    AsyncOpcTcp::Parameters params = GetOpcTcpParameters(addonParams);
     if (params.DebugMode)
     {
-      std::cout << "opc_tcp_async| Enabled debug mode at async opc tcp addon." << std::endl;
       std::cout << "opc_tcp_async| Parameters:" << std::endl;
-      std::cout << "opc_tcp_async|   Port:" << params.Port << std::endl;
+      std::cout << "opc_tcp_async|   Debug mode: " << params.DebugMode << std::endl;
       std::cout << "opc_tcp_async|   ThreadsNumber:" << params.ThreadsNumber << std::endl;
     }
     const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, params.DebugMode);
@@ -76,12 +77,25 @@ namespace
       endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
     }
 
+    if (endpointDescriptions.empty())
+    {
+      std::cerr << "opc_tcp_async| Endpoints parameters does not present in the configuration file." << std::endl;
+      return;
+    }
+    if (endpointDescriptions.size() > 1)
+    {
+      std::cerr << "opc_tcp_async| Too many endpoints specified in the configuration file." << std::endl;
+      return;
+    }
+
     PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
     OpcUa::UaServer::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
-    OpcTcp = CreateAsyncOpcTcp(params, internalServer->GetServer());
 
-    ListenThread.reset(new Common::Thread([this](){
-          OpcTcp->Listen();
+    params.Port = Common::Uri(endpointDescriptions[0].EndpointURL).Port();
+    Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer());
+
+    ServerThread.reset(new Common::Thread([this](){
+          Endpoint->Listen();
      }));
   }
 
@@ -99,9 +113,9 @@ namespace
 
   void AsyncOpcTcpAddon::Stop()
   {
-    OpcTcp->Shutdown();
-    ListenThread->Join();
-    OpcTcp.reset();
+    Endpoint->Shutdown();
+    ServerThread->Join();
+    Endpoint.reset();
   }
 
 }

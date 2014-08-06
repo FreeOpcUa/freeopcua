@@ -25,9 +25,9 @@ namespace OpcUa
     class OpcTcpMessages
     {
     public:
-      OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, bool debug);
+      OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug);
 
-      void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream, Binary::OStreamBinary& oStream);
+      void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
       void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
       double GetNextSleepPeriod();
 
@@ -38,11 +38,12 @@ namespace OpcUa
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
       void DeleteSubscriptions(const std::vector<IntegerID>& ids);
-      //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
+      void SendPublishResponse();
 
     private:
       std::mutex ProcessMutex;
       std::shared_ptr<OpcUa::Remote::Server> Server;
+      OpcUa::Binary::OStreamBinary OutputStream;
       bool Debug;
       uint32_t ChannelID;
       uint32_t TokenID;

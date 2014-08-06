@@ -99,7 +99,7 @@ namespace
     Remote::Server::SharedPtr Server;
     std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
-    io_service io;
+    boost::asio::io_service io;
     tcp::socket socket;
     tcp::acceptor acceptor;
   };
@@ -129,7 +129,6 @@ namespace
     void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader) const;
 
   private:
-    std::function<void()> OnDisconnect;
     tcp::socket Socket;
     OpcTcpServer& TcpServer;
     UaServer::OpcTcpMessages MessageProcessor;
@@ -141,7 +140,7 @@ namespace
   OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Remote::Server::SharedPtr uaServer, bool debug)
     : Socket(std::move(socket))
     , TcpServer(tcpServer)
-    , MessageProcessor(uaServer, debug)
+    , MessageProcessor(uaServer, *this, debug)
     , OStream(*this)
     , Debug(debug)
     , Buffer(8192)
@@ -150,7 +149,6 @@ namespace
 
   OpcTcpConnection::~OpcTcpConnection()
   {
-    TcpServer.RemoveClient(shared_from_this());
   }
 
   void OpcTcpConnection::Start()
@@ -234,7 +232,7 @@ namespace
 
     try
     {
-      MessageProcessor.ProcessMessage(type, messageStream, OStream);
+      MessageProcessor.ProcessMessage(type, messageStream);
     }
     catch(const std::exception& exc)
     {
@@ -254,6 +252,7 @@ namespace
 
   void OpcTcpConnection::GoodBye()
   {
+    TcpServer.RemoveClient(shared_from_this());
     if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
   }
 
