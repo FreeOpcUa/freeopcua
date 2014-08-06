@@ -1,5 +1,5 @@
-/// @author Alexander Rykovanov 2013
-/// @email rykovanov.as@gmail.com
+/// @author Alexander Rykovanov 2013-2014
+/// @author Olivier Roulet-dubonnet 2014
 /// @brief Endpoints addon.
 /// @license GNU LGPL
 ///
@@ -9,6 +9,7 @@
 ///
 
 #include "address_space_addon.h"
+#include "internal_subscription.h"
 
 #include <opc/ua/attributes.h>
 #include <opc/ua/node_management.h>
@@ -19,6 +20,8 @@
 #include <opc/ua/protocol/view.h>
 #include <opc/ua/event.h>
 
+#include <boost/thread.hpp>
+#include <boost/asio.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
 #include <limits>
@@ -37,82 +40,8 @@ namespace OpcUa
 
     using namespace OpcUa::Remote;
 
-    //Structure to store in memory description of current MonitoredItems
-    struct DataMonitoredItems
-    {
-      IntegerID SubscriptionID;
-      MonitoringMode Mode;
-      time_t LastTrigger;
-      CreateMonitoredItemsResult Parameters;
-    };
 
-    //Structure to store in memory description of current Subscriptions
-    struct DataSubscription
-    {
-      SubscriptionData Data;
-      std::function<void (PublishResult)> Callback;
-      uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
-      uint32_t KeepAliveCount = std::numeric_limits<uint32_t>::max(); //High at startup in order to force the message, required by spec
-      time_t lastNotificationTime = 0;
-      uint32_t LastMonitoredItemID = 2;
-      std::map<uint32_t, DataMonitoredItems> MonitoredItemsMap; //Map MonitoredItemID, DataMonitoredItems
-      std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
-      std::list<MonitoredItems> MonitoredItemsTriggered; 
-      std::list<EventFieldList> EventTriggered; 
-
-      std::vector<PublishResult> PopPublishResult()
-      {
-        std::cout << "PopPublishresult for subscription: " << Data.ID << " with " << MonitoredItemsTriggered.size() << " triggered items in queue" << std::endl;
-        PublishResult result;
-        result.SubscriptionID = Data.ID;
-        result.Message.PublishTime = CurrentDateTime();
-
-        if ( MonitoredItemsTriggered.size() > 0 )
-        {
-          NotificationData data = GetNotificationData();
-          result.Message.Data.push_back(data);
-          result.Statuses.push_back(StatusCode::Good);
-        }
-        
-        // FIXME: parse events and statuschange notification since they can be send in same result
-
-        if ( result.Statuses.size() == 0 && ( KeepAliveCount < Data.RevizedMaxKeepAliveCount ) ) 
-        {
-          std::cout << "No event and not need to send keep-alive notification" << std::endl;
-          ++KeepAliveCount;
-          return  std::vector<PublishResult>(); //No event and we do not need to send keepalive notification yet so return empty list
-        }
-        KeepAliveCount = 0;
-        result.Message.SequenceID = NotificationSequence;
-        ++NotificationSequence;
-        result.MoreNotifications = false;
-        for (const PublishResult& res: NotAcknowledgedResults)
-        {
-          result.AvailableSequenceNumber.push_back(res.Message.SequenceID);
-        }
-        NotAcknowledgedResults.push_back(result);
-        std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
-        std::vector<PublishResult> resultlist;
-        resultlist.push_back(result);
-        return resultlist;
-      };
-
-      private:
-        NotificationData GetNotificationData()
-        {
-          DataChangeNotification notification;
-          for ( const MonitoredItems& monitoreditem: MonitoredItemsTriggered)
-          {
-            notification.Notification.push_back(monitoreditem);
-          }
-          MonitoredItemsTriggered.clear();
-          NotificationData data(notification);
-          return data;
-        }
-          
-    };
-
-    typedef std::map <IntegerID, DataSubscription> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
+    typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
     
     //store subscription for one attribute
     struct AttSubscription
@@ -146,8 +75,15 @@ namespace OpcUa
     {
     public:
       AddressSpaceInMemory(bool debug)
-        : Debug(debug)
+        : Debug(debug), work(io)
       {
+        //Initialize the worker thread for subscriptions
+        boost::thread thread(boost::bind(&boost::asio::io_service::run, &io));
+      }
+
+     ~AddressSpaceInMemory()
+      {
+        io.stop();
       }
 
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
@@ -181,10 +117,8 @@ namespace OpcUa
         data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
         std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
 
-        DataSubscription db;
-        db.Data = data;
-        db.Callback = callback;
-        SubscriptionsMap[data.ID] = db;
+        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(data, io, callback));
+        SubscriptionsMap[data.ID] = sub;
         return data;
       }
 
@@ -227,21 +161,7 @@ namespace OpcUa
           return results;
         }
 
-        for (const uint32_t handle: params.MonitoredItemsIds)
-        {
-          itsub->second.MonitoredItemsMap.erase(handle);
-          std::map<uint32_t, DataMonitoredItems>::iterator it_monitoreditem = itsub->second.MonitoredItemsMap.find(handle);
-          if ( it_monitoreditem == itsub->second.MonitoredItemsMap.end()) 
-          {
-            results.push_back(StatusCode::BadMonitoredItemIdInvalid);
-          }
-          else
-          {
-            itsub->second.MonitoredItemsMap.erase(it_monitoreditem); //FIXME: check it is correct syntax!!!!!!!!!!
-            results.push_back(StatusCode::Good);
-          }
-        }
-
+        results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
         return results;
       }
 
@@ -409,11 +329,11 @@ namespace OpcUa
           {
             break;
           }
-          std::map <IntegerID, DataSubscription>::iterator sub_it =  SubscriptionsMap.find(subscription); 
+          SubscriptionsIDMap::iterator sub_it =  SubscriptionsMap.find(subscription); 
           {
             if ( sub_it != SubscriptionsMap.end() )
             {
-              for ( const PublishResult& res: sub_it->second.PopPublishResult() )
+              for ( const PublishResult& res: sub_it->second->PopPublishResult() )
               {
                 result.push_back(res);
               }
@@ -438,7 +358,7 @@ namespace OpcUa
           SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
           if ( sub_it != SubscriptionsMap.end())
           {
-            sub_it->second.NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceID; });
+            sub_it->second->NewAcknowlegment(ack); 
           }
         }
       }
@@ -477,46 +397,15 @@ namespace OpcUa
           SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
           if ( itsub == SubscriptionsMap.end() )
           {
-            //Subscription or monitoreditem id does not exist any more so remove it
             attsub = attval.AttSubscriptions.erase(attsub);
           }
-          else
+          bool res = itsub->second->EnqueueEvent(attsub->MonitoredItemId, event);
+          if ( ! res )
           {
-            //Find monitoredItem referensed in subscription
-            std::map<uint32_t, DataMonitoredItems>::iterator mii_it =  itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId );
-            if  (mii_it == itsub->second.MonitoredItemsMap.end() ) 
-            {
-              std::cout << "monitoreditem is deleted" << std::endl;
-            }
-            else
-            {
-              //Check filter against event data and create EventFieldList to send
-              //FIXME: Here we should also check event agains WhereClause of filter
-              EventFieldList fieldlist;
-              fieldlist.ClientHandle = attsub->Parameters.ClientHandle;
-              fieldlist.EventFields = GetEventFields(mii_it->second.Parameters.Filter.Event, event);
-              itsub->second.EventTriggered.push_back(fieldlist);
-            }
+            attsub = attval.AttSubscriptions.erase(attsub);
           }
+          ++attsub;
         }
-      }
-
-      std::vector<Variant> GetEventFields(EventFilter filter, Event event)
-      {
-        //Go through filter and add value og matches as in spec
-        std::vector<Variant> fields;
-        for (SimpleAttributeOperand sattr : filter.SelectClauses)
-        {
-          if ( sattr.BrowsePath.size() == 0 )
-          {
-            fields.push_back(event.GetValue(sattr.Attribute));
-          }
-          else
-          {
-            fields.push_back(event.GetValue(sattr.BrowsePath));
-          }
-        }
-        return fields;
       }
 
 
@@ -567,11 +456,11 @@ namespace OpcUa
       CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
       {
         std::cout << "Creating monitored request for one item" << std::endl;
-        CreateMonitoredItemsResult res;
 
         NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
         if ( node_it == Nodes.end() )
         {
+          CreateMonitoredItemsResult res;
           res.Status = OpcUa::StatusCode::BadNodeIdUnknown;
           std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
           return res;
@@ -580,29 +469,21 @@ namespace OpcUa
         AttributesMap::iterator attrit = node_it->second.Attributes.find(request.ItemToMonitor.Attribute);
         if ( attrit == node_it->second.Attributes.end() )
         {
+          CreateMonitoredItemsResult res;
           res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
           std::cout << "attribute not found" << std::endl;
           return res;
         }
-
-        res.Status = OpcUa::StatusCode::Good;
-        subscription_it->second.LastMonitoredItemID += 1;
-        res.MonitoredItemID = subscription_it->second.LastMonitoredItemID ;
-        res.RevisedSamplingInterval = subscription_it->second.Data.RevisedPublishingInterval;
-        res.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
-        //res.FilterResult = //We can omit that one if we do not change anything in filter
-        DataMonitoredItems mdata;
-        mdata.SubscriptionID = subscription_it->first;
-        mdata.Parameters = res;
-        mdata.Mode = request.Mode;
-        subscription_it->second.MonitoredItemsMap[res.MonitoredItemID] = mdata;
-        AttSubscription attsub;
+      
         std::cout << "creating monitored item with sub: " << subscription_it->first << std::endl;
+        CreateMonitoredItemsResult res = subscription_it->second->AddMonitoredItem(request);
+
+        AttSubscription attsub;
         attsub.SubscriptionId = subscription_it->first;
         attsub.MonitoredItemId = res.MonitoredItemID;
         attsub.Parameters = request.Parameters;
         attrit->second.AttSubscriptions.push_back(attsub); 
-        //data.Diagnostics =  Not necessary
+
         return res;
       }
 
@@ -644,18 +525,18 @@ namespace OpcUa
         for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
         {
           SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-          if ( itsub == SubscriptionsMap.end() || (itsub->second.MonitoredItemsMap.find( attsub->MonitoredItemId ) == itsub->second.MonitoredItemsMap.end() ) )
+          if ( itsub == SubscriptionsMap.end() )
           {
             attsub = val.AttSubscriptions.erase(attsub);
             continue;
           }
-
-          MonitoredItems event;
-          event.ClientHandle = attsub->Parameters.ClientHandle;
-          event.Value = val.Value;
-          std::cout << "Adding triggered item for sub: " << attsub->SubscriptionId << " and clienthandle: " << attsub->Parameters.ClientHandle << std::endl;
-          itsub->second.MonitoredItemsTriggered.push_back(event);
-
+          bool res = itsub->second->EnqueueDataChange(attsub->MonitoredItemId, val.Value);
+          if ( ! res ) 
+          {
+            attsub = val.AttSubscriptions.erase(attsub);
+            continue;
+          }
+  
           ++attsub;
         }
       }
@@ -801,6 +682,9 @@ namespace OpcUa
       SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
       uint32_t LastSubscriptionID = 2;
       uint32_t PublishRequestsQueue = 0;
+      boost::asio::io_service io;
+      boost::asio::io_service::work work; //work object prevent worker thread to exist even whenre there are no subsciptions
+
     };
   }
 
