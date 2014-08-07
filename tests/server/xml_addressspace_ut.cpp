@@ -33,7 +33,8 @@ class XmlAddressSpace : public testing::Test
 protected:
   virtual void SetUp()
   {
-    NameSpace = OpcUa::UaServer::CreateAddressSpace(false);
+    const bool debug = false;
+    NameSpace = OpcUa::UaServer::CreateAddressSpace(debug);
   }
 
   virtual void TearDown()

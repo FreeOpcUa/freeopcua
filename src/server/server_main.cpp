@@ -12,6 +12,7 @@
 #include <opc/ua/server/addons/address_space.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
+#include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/standard_namespace.h>
 #include <opc/ua/server/addons/tcp_server.h>
@@ -24,6 +25,12 @@
 
 namespace
 {
+
+  void AddParameters(Common::AddonInformation& info, const Common::ParametersGroup& params)
+  {
+    info.Parameters.Groups = params.Groups;
+    info.Parameters.Parameters = params.Parameters;
+  }
 
   Common::AddonInformation CreateServicesRegistry()
   {
@@ -78,6 +85,16 @@ namespace
     return opcTcp;
   }
 
+  Common::AddonInformation CreateOpcTcpAsync(const Common::ParametersGroup& params)
+  {
+    Common::AddonInformation opcTcp;
+    opcTcp.Factory = std::make_shared<OpcUa::UaServer::AsyncOpcTcpAddonFactory>();
+    opcTcp.ID = OpcUa::UaServer::AsyncOpcTcpAddonID;
+    opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
+    AddParameters(opcTcp, params);
+    return opcTcp;
+  }
+
   void AddStandardModules(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
   {
     Common::AddonInformation endpointsRegistry = CreateEndpointsRegistry();
@@ -87,27 +104,28 @@ namespace
     {
       if (group.Name == OpcUa::UaServer::EndpointsRegistryAddonID)
       {
-        endpointsRegistry.Parameters.Groups = group.Groups;
-        endpointsRegistry.Parameters.Parameters = group.Parameters;
+        AddParameters(endpointsRegistry, group);
       }
-      if (group.Name == OpcUa::UaServer::OpcUaProtocolAddonID)
+      else if (group.Name == OpcUa::UaServer::OpcUaProtocolAddonID)
       {
         Common::AddonInformation binaryProtocol = CreateBinaryServer();
-        binaryProtocol.Parameters.Groups = group.Groups;
-        binaryProtocol.Parameters.Parameters = group.Parameters;
-        addons.push_back(binaryProtocol);
+        AddParameters(binaryProtocol, group);
+        addons.push_back(std::move(binaryProtocol));
+        addons.push_back(CreateTcpServer());
       }
-      if (group.Name == OpcUa::UaServer::AddressSpaceRegistryAddonID)
+      else if (group.Name == OpcUa::UaServer::AddressSpaceRegistryAddonID)
       {
-        addressSpaceRegistry.Parameters.Groups = group.Groups;
-        addressSpaceRegistry.Parameters.Parameters = group.Parameters;
+        AddParameters(addressSpaceRegistry, group);
+      }
+      else if (group.Name == OpcUa::UaServer::AsyncOpcTcpAddonID)
+      {
+        addons.push_back(CreateOpcTcpAsync(group));
       }
     }
 
     addons.push_back(endpointsRegistry);
     addons.push_back(addressSpaceRegistry);
     addons.push_back(CreateServicesRegistry());
-    addons.push_back(CreateTcpServer());
     addons.push_back(CreateStandardNamespace());
   }
 
