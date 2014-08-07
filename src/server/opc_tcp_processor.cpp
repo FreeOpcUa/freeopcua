@@ -295,84 +295,7 @@ namespace OpcUa
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };
-/*
-    void OpcTcpMessages::SendPublishResponse()
-    {
-      for (SubscriptionBinaryData& subdata: Subscriptions)
-      {
-        if ( PublishRequestQueue.size() == 0)
-        {
-          std::cerr << "opc_tcp_processor| RequestQueueSize is empty we are waiting for pubilshrequest from server" << std::endl;
-          return;
-        }
-        std::cout << "opc_tcp_processor| We have x publishrequest in queue "<<  PublishRequestQueue.size() << std::endl;
-
-        std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch(); //make sure it is in milliseconds
-        if ((now - subdata.last_check) <= subdata.period)
-        {
-          if (Debug) std::cout << "opc_tcp_processor| No need to process subscription yet" << std::endl;
-          continue;
-        }
-        subdata.last_check = now;
-
-        std::vector<IntegerID> sub_query;
-        sub_query.push_back(subdata.SubscriptionID);
-        std::vector<PublishResult> res_list = Server->Subscriptions()->PopPublishResults(sub_query);
-
-        for (const PublishResult& publishResult: res_list)
-        {
-
-          PublishRequestElement requestData = PublishRequestQueue.front();
-          PublishRequestQueue.pop();
-
-          PublishResponse response;
-          FillResponseHeader(requestData.requestHeader, response.Header);
-          response.Result = publishResult;
-
-
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
-          secureHeader.AddSize(RawSize(requestData.algorithmHeader));
-          secureHeader.AddSize(RawSize(requestData.sequence));
-          secureHeader.AddSize(RawSize(response));
-          if (Debug) {
-            std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
-            for  ( NotificationData d: response.Result.Message.Data )
-            {
-              std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
-            }
-          }
-          OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
-        }
-      }
-    }
-
-    double OpcTcpMessages::GetNextSleepPeriod()
-    {
-      if ( Subscriptions.size() == 0 || PublishRequestQueue.size() == 0)
-      {
-        return  9999;
-      }
-      std::chrono::duration<double> now =  std::chrono::system_clock::now().time_since_epoch();
-      std::chrono::duration<double>  next_fire = std::chrono::duration<double>(std::numeric_limits<double>::max() ) ;
-
-      for (const SubscriptionBinaryData& data: Subscriptions)
-      {
-        std::chrono::duration<double> tmp =  data.last_check + data.period;
-        if (Debug) std::cout << "opc_tcp_processor| Time since last check : " << (now - data.last_check).count() << " Period: " << data.period.count() << " time to next fire: " << (tmp - now).count() << std::endl;
-        if (tmp < next_fire)
-        {
-          next_fire = tmp;
-        }
-      }
-      auto diff = next_fire - now;
-      if ( diff.count() < 0 )
-      {
-        if (Debug)  std::cout << "opc_tcp_processor| Event should allrady have been fired returning 0"<< std::endl;
-        return 0;
-      }
-      return diff.count() ;
-    }
-*/
+    
     void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
     {
       using namespace OpcUa::Binary;
@@ -738,10 +661,8 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
 
           response.Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->ForwardPublishResponse(i); });
-          //SubscriptionBinaryData SubData;
-          //SubData.SubscriptionID = response.Data.ID;
-          //SubData.period =  std::chrono::duration<double>(response.Data.RevisedPublishingInterval/1000); //seconds
-          //Subscriptions.push_back(SubData);
+
+          Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

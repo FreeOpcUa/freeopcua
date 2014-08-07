@@ -87,7 +87,6 @@ namespace OpcUa
 
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
-        //io.post([&](const std::vector<IntegerID> sub_ids){ this->_DeleteSubscriptions(sub_ids); }, subscriptions );
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
@@ -105,29 +104,6 @@ namespace OpcUa
         }
         return result;
       }
-
-/*
-     virtual std::vector<StatusCode> _DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        std::vector<StatusCode> result;
-        for (const IntegerID& subid: subscriptions)
-        {
-          std::cout << "Deleting Subscription: " << subid << std::endl;
-          size_t count = SubscriptionsMap.erase(subid);
-          if ( count > 0)
-          {
-            result.push_back(StatusCode::Good);
-          }
-          else
-          {
-            std::cout << "Error, got request to delete non existing Subscription: " << subid << std::endl;
-            result.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-        }
-        return result;
-      }
-   */
-
 
       virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params, std::function<void (PublishResult)> callback)
       {
