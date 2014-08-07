@@ -111,6 +111,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/opc_tcp_processor.cpp \
 	src/server/address_space_addon.cpp \
 	src/server/xml_processor.h \
+    src/server/internal_subscription.h \
+    src/server/internal_subscription.cpp \
 	src/server/opcuaserver.cpp
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

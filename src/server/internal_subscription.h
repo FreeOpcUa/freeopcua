@@ -44,6 +44,7 @@ namespace OpcUa
         bool EnqueueDataChange(IntegerID monitoreditemid, const DataValue& value);
         CreateMonitoredItemsResult AddMonitoredItem(const MonitoredItemRequest& request);
         bool HasExpired();
+        void Stop();
 
       private:
         mutable boost::shared_mutex DbMutex;

@@ -251,6 +251,7 @@ am_libopcuaserver_la_OBJECTS =  \
 	src/server/libopcuaserver_la-services_registry_factory.lo \
 	src/server/libopcuaserver_la-opc_tcp_processor.lo \
 	src/server/libopcuaserver_la-address_space_addon.lo \
+	src/server/libopcuaserver_la-internal_subscription.lo \
 	src/server/libopcuaserver_la-opcuaserver.lo
 libopcuaserver_la_OBJECTS = $(am_libopcuaserver_la_OBJECTS)
 libopcuaserver_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
@@ -855,6 +856,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/opc_tcp_processor.cpp \
 	src/server/address_space_addon.cpp \
 	src/server/xml_processor.h \
+    src/server/internal_subscription.h \
+    src/server/internal_subscription.cpp \
 	src/server/opcuaserver.cpp
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
@@ -1461,6 +1464,9 @@ src/server/libopcuaserver_la-opc_tcp_processor.lo:  \
 src/server/libopcuaserver_la-address_space_addon.lo:  \
 	src/server/$(am__dirstamp) \
 	src/server/$(DEPDIR)/$(am__dirstamp)
+src/server/libopcuaserver_la-internal_subscription.lo:  \
+	src/server/$(am__dirstamp) \
+	src/server/$(DEPDIR)/$(am__dirstamp)
 src/server/libopcuaserver_la-opcuaserver.lo:  \
 	src/server/$(am__dirstamp) \
 	src/server/$(DEPDIR)/$(am__dirstamp)
@@ -1788,6 +1794,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-endpoints_parameters.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-endpoints_registry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-endpoints_services_addon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-internal_subscription.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-opc_tcp_async.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-opc_tcp_async_addon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/server/$(DEPDIR)/libopcuaserver_la-opc_tcp_async_parameters.Plo@am__quote@
@@ -2270,6 +2277,13 @@ src/server/libopcuaserver_la-address_space_addon.lo: src/server/address_space_ad
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/server/address_space_addon.cpp' object='src/server/libopcuaserver_la-address_space_addon.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/server/libopcuaserver_la-address_space_addon.lo `test -f 'src/server/address_space_addon.cpp' || echo '$(srcdir)/'`src/server/address_space_addon.cpp
+
+src/server/libopcuaserver_la-internal_subscription.lo: src/server/internal_subscription.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/server/libopcuaserver_la-internal_subscription.lo -MD -MP -MF src/server/$(DEPDIR)/libopcuaserver_la-internal_subscription.Tpo -c -o src/server/libopcuaserver_la-internal_subscription.lo `test -f 'src/server/internal_subscription.cpp' || echo '$(srcdir)/'`src/server/internal_subscription.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/server/$(DEPDIR)/libopcuaserver_la-internal_subscription.Tpo src/server/$(DEPDIR)/libopcuaserver_la-internal_subscription.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/server/internal_subscription.cpp' object='src/server/libopcuaserver_la-internal_subscription.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/server/libopcuaserver_la-internal_subscription.lo `test -f 'src/server/internal_subscription.cpp' || echo '$(srcdir)/'`src/server/internal_subscription.cpp
 
 src/server/libopcuaserver_la-opcuaserver.lo: src/server/opcuaserver.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libopcuaserver_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/server/libopcuaserver_la-opcuaserver.lo -MD -MP -MF src/server/$(DEPDIR)/libopcuaserver_la-opcuaserver.Tpo -c -o src/server/libopcuaserver_la-opcuaserver.lo `test -f 'src/server/opcuaserver.cpp' || echo '$(srcdir)/'`src/server/opcuaserver.cpp

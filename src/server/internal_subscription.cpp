@@ -19,6 +19,11 @@ namespace OpcUa
     
     InternalSubscription::~InternalSubscription()
     {
+      Stop();
+    }
+
+    void InternalSubscription::Stop()
+    {
       timer.cancel();
     }
 

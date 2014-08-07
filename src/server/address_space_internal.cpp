@@ -20,7 +20,7 @@
 #include <opc/ua/protocol/view.h>
 #include <opc/ua/event.h>
 
-#include <boost/thread.hpp>
+#include <thread>
 #include <boost/asio.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
@@ -77,15 +77,54 @@ namespace OpcUa
         : Debug(debug), work(io)
       {
         //Initialize the worker thread for subscriptions
-        boost::thread thread(boost::bind(&boost::asio::io_service::run, &io));
+        service_thread = std::thread([&](){ io.run(); });
       }
 
      ~AddressSpaceInMemory()
       {
+        DeleteAllSubscriptions();
         io.stop();
+        service_thread.join();
       }
 
+
+      void DeleteAllSubscriptions()
+      {
+        std::vector<IntegerID> ids;
+        for ( auto i: SubscriptionsMap)
+        {
+          ids.push_back(i.first);
+        }
+        DeleteSubscriptions(ids);
+      }
+
+      
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+      {
+        //We need to stop the subscriptions and then delete them in io_service to make sure their are stopped before they are deleted
+        for (auto id: subscriptions)
+        {
+          std::cout << "Stopping Subscription (part 1): " << id << std::endl;
+          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(id);
+          if ( itsub != SubscriptionsMap.end()) 
+          {
+            itsub->second->Stop();
+          }
+        }
+
+        io.dispatch([=](){ this->_DeleteSubscriptions(subscriptions); });
+        //Now return good for everything, we do not care :-)
+        std::vector<StatusCode> codes;
+        for ( auto _ : subscriptions)
+        {
+          codes.push_back(StatusCode::Good);
+        }
+        return codes;
+      }
+      
+      
+
+      virtual std::vector<StatusCode> _DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
@@ -683,6 +722,7 @@ namespace OpcUa
       uint32_t PublishRequestsQueue = 0;
       boost::asio::io_service io;
       boost::asio::io_service::work work; //work object prevent worker thread to exist even whenre there are no subsciptions
+      std::thread service_thread;
 
     };
   }
