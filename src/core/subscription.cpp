@@ -54,6 +54,7 @@ namespace OpcUa
       {
         for ( MonitoredItems item: data.DataChange.Notification)
         {
+          std::cout << "looking for clienhandle: " << item.ClientHandle << std::endl;
           AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {

@@ -86,23 +86,23 @@ namespace
       if (Debug) std::clog << "opc_tcp_processor| Hello client!" << std::endl;
 
       std::auto_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, *clientChannel, Debug));
-
+      
       for(;;)
       {
-        double period = messageProcessor->GetNextSleepPeriod();
-        int res = clientChannel->WaitForData(period); //double to float cast
-        if (res < 0)
-        {
-          return;
-        }
-        else if (res == 1)
-        {
+        //double period = messageProcessor->GetNextSleepPeriod();
+        //int res = clientChannel->WaitForData(period); //double to float cast
+        //if (res < 0)
+        //{
+          //return;
+        //}
+        //else if (res == 1)
+        //{
           ProcessData(*clientChannel, *messageProcessor);
-        }
-        else
-        {
+        //}
+        //else
+        //{
           //SendPublishResponse(*clientChannel);
-        }
+        //}
       }
     }
 
@@ -218,6 +218,8 @@ namespace OpcUa
 
     void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
+      boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
+
       switch (msgType)
       {
         case MT_HELLO:
@@ -266,6 +268,34 @@ namespace OpcUa
       }
     }
 
+    void OpcTcpMessages::ForwardPublishResponse(PublishResult publishResult)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
+
+      if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
+      PublishRequestElement requestData = PublishRequestQueue.front();
+      PublishRequestQueue.pop();
+
+      PublishResponse response;
+      FillResponseHeader(requestData.requestHeader, response.Header);
+      response.Result = publishResult;
+
+      requestData.sequence.SequenceNumber = ++SequenceNb;
+
+      SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+      secureHeader.AddSize(RawSize(requestData.algorithmHeader));
+      secureHeader.AddSize(RawSize(requestData.sequence));
+      secureHeader.AddSize(RawSize(response));
+      if (Debug) {
+        std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+        for  ( NotificationData d: response.Result.Message.Data )
+        {
+          std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
+        }
+      }
+      OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+    };
+/*
     void OpcTcpMessages::SendPublishResponse()
     {
       for (SubscriptionBinaryData& subdata: Subscriptions)
@@ -342,7 +372,7 @@ namespace OpcUa
       }
       return diff.count() ;
     }
-
+*/
     void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
     {
       using namespace OpcUa::Binary;
@@ -678,9 +708,9 @@ namespace OpcUa
           if (deleteSubscriptions)
           {
             std::vector<IntegerID> subs;
-            for (const SubscriptionBinaryData& data: Subscriptions)
+            for (const IntegerID& subid: Subscriptions)
             {
-              subs.push_back(data.SubscriptionID);
+              subs.push_back(subid);
             }
             Server->Subscriptions()->DeleteSubscriptions(subs);
             Subscriptions.clear();
@@ -707,11 +737,11 @@ namespace OpcUa
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params);
-          SubscriptionBinaryData SubData;
-          SubData.SubscriptionID = response.Data.ID;
-          SubData.period =  std::chrono::duration<double>(response.Data.RevisedPublishingInterval/1000); //seconds
-          Subscriptions.push_back(SubData);
+          response.Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->ForwardPublishResponse(i); });
+          //SubscriptionBinaryData SubData;
+          //SubData.SubscriptionID = response.Data.ID;
+          //SubData.period =  std::chrono::duration<double>(response.Data.RevisedPublishingInterval/1000); //seconds
+          //Subscriptions.push_back(SubData);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -889,7 +919,7 @@ namespace OpcUa
       for ( auto id : ids )
       {
         Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(),
-                      [&](const SubscriptionBinaryData d) { return ( d.SubscriptionID == id) ; }), Subscriptions.end());
+                      [&](const IntegerID d) { return ( d == id) ; }), Subscriptions.end());
       }
     }
 
