@@ -90,6 +90,8 @@ namespace OpcUa
 
       void DeleteAllSubscriptions()
       {
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<IntegerID> ids;
         for ( auto i: SubscriptionsMap)
         {
@@ -101,6 +103,8 @@ namespace OpcUa
       
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
         //We need to stop the subscriptions and then delete them in io_service to make sure their are stopped before they are deleted
         for (auto id: subscriptions)
         {
@@ -126,6 +130,8 @@ namespace OpcUa
 
       virtual std::vector<StatusCode> _DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
@@ -162,6 +168,8 @@ namespace OpcUa
 
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         MonitoredItemsData data;
 
         SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
@@ -187,6 +195,8 @@ namespace OpcUa
 
       virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> results;
 
         SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
