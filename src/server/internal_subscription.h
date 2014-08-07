@@ -35,6 +35,7 @@ namespace OpcUa
     {
       public:
         InternalSubscription(SubscriptionData data, boost::asio::io_service& serverio, std::function<void (PublishResult)> Callback);
+        ~InternalSubscription();
 
         std::vector<PublishResult> PopPublishResult(); //FIXME: To move to private
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);

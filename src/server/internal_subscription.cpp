@@ -16,6 +16,11 @@ namespace OpcUa
       std::cout << "Should now sleep for " << Data.RevisedPublishingInterval << " milliseonds" << std::endl;
       timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
+    
+    InternalSubscription::~InternalSubscription()
+    {
+      timer.cancel();
+    }
 
     bool InternalSubscription::HasExpired()
     {
@@ -29,6 +34,10 @@ namespace OpcUa
 
     void InternalSubscription::PublishResults(const boost::system::error_code& error)
     {
+      if (error)
+      {
+        return; //It is very important to return, instance of InternalSubscription may have been deleted!
+      }
 
       if ( HasExpired() )
       {
