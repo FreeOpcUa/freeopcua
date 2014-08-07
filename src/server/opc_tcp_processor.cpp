@@ -216,6 +216,13 @@ namespace OpcUa
       std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
     }
 
+
+    OpcTcpMessages::~OpcTcpMessages()
+    {
+      // This is a hack, we cannot leave subcsriptoins running since they have a cllback to us
+      DeleteAllSubscriptions();
+    }
+
     void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
@@ -630,13 +637,7 @@ namespace OpcUa
 
           if (deleteSubscriptions)
           {
-            std::vector<IntegerID> subs;
-            for (const IntegerID& subid: Subscriptions)
-            {
-              subs.push_back(subid);
-            }
-            Server->Subscriptions()->DeleteSubscriptions(subs);
-            Subscriptions.clear();
+            DeleteAllSubscriptions();
           }
 
           CloseSessionResponse response;
@@ -833,6 +834,17 @@ namespace OpcUa
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
        responseHeader.Timestamp = CurrentDateTime();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
+    }
+
+    void OpcTcpMessages::DeleteAllSubscriptions()
+    {
+      std::vector<IntegerID> subs;
+      for (const IntegerID& subid: Subscriptions)
+      {
+        subs.push_back(subid);
+      }
+      Server->Subscriptions()->DeleteSubscriptions(subs);
+      Subscriptions.clear();
     }
 
     void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerID>& ids)

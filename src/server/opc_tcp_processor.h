@@ -27,6 +27,7 @@ namespace OpcUa
     {
     public:
       OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug);
+      ~OpcTcpMessages();
 
       void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
       //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
@@ -39,7 +40,7 @@ namespace OpcUa
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
       void DeleteSubscriptions(const std::vector<IntegerID>& ids);
-      //void SendPublishResponse();
+      void DeleteAllSubscriptions();
       void ForwardPublishResponse(PublishResult result);
 
     private:
@@ -52,13 +53,6 @@ namespace OpcUa
       NodeID SessionID;
       NodeID AuthenticationToken;
       uint32_t SequenceNb;
-
-      //struct SubscriptionBinaryData
-      //{
-        //IntegerID SubscriptionID;
-        //std::chrono::duration<double> period;
-        //std::chrono::duration<double> last_check;
-      //};
 
       struct PublishRequestElement
       {
