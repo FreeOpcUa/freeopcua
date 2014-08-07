@@ -74,7 +74,7 @@ namespace OpcUa
     {
     public:
       AddressSpaceInMemory(bool debug)
-        : Debug(debug), work(io)
+        : Debug(debug), work(new boost::asio::io_service::work(io))
       {
         //Initialize the worker thread for subscriptions
         service_thread = std::thread([&](){ io.run(); });
@@ -83,7 +83,7 @@ namespace OpcUa
      ~AddressSpaceInMemory()
       {
         DeleteAllSubscriptions();
-        io.stop();
+        work.reset();//This will delete worker thread and let io_service end
         service_thread.join();
       }
 
@@ -100,7 +100,7 @@ namespace OpcUa
         DeleteSubscriptions(ids);
       }
 
-      
+  /*    
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
@@ -126,9 +126,9 @@ namespace OpcUa
         return codes;
       }
       
-      
+ */     
 
-      virtual std::vector<StatusCode> _DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -731,7 +731,7 @@ namespace OpcUa
       uint32_t LastSubscriptionID = 2;
       uint32_t PublishRequestsQueue = 0;
       boost::asio::io_service io;
-      boost::asio::io_service::work work; //work object prevent worker thread to exist even whenre there are no subsciptions
+      std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
       std::thread service_thread;
 
     };

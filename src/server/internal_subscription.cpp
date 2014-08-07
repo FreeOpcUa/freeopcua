@@ -39,14 +39,9 @@ namespace OpcUa
 
     void InternalSubscription::PublishResults(const boost::system::error_code& error)
     {
-      if (error)
+      if ( error || HasExpired() )
       {
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
-      }
-
-      if ( HasExpired() )
-      {
-        return; //This stops the timer FIXME: we should also delete subscription from addressespace
       }
 
       std::vector<PublishResult> results = PopPublishResult();
