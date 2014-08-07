@@ -21,10 +21,10 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   SubscriptionParameters::SubscriptionParameters()
-    : RequestedPublishingInterval(0)
-    , RequestedLifetimeCount(1)
-    , RequestedMaxKeepAliveCount(1)
-    , MaxNotificationsPerPublish(1)
+    : RequestedPublishingInterval(500)
+    , RequestedLifetimeCount(300)
+    , RequestedMaxKeepAliveCount(100)
+    , MaxNotificationsPerPublish(0)
     , PublishingEnabled(true)
     , Priority(0)
   {
@@ -59,9 +59,9 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   SubscriptionData::SubscriptionData()
-    : RevisedPublishingInterval(0)
-    , RevisedLifetimeCount(1)
-    , RevizedMaxKeepAliveCount(1)
+    : RevisedPublishingInterval(100)
+    , RevisedLifetimeCount(30) //Should be 3 times keepalive
+    , RevizedMaxKeepAliveCount(10)
   {
   }
 

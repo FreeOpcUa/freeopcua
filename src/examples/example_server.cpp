@@ -28,15 +28,15 @@ class SubClient : public SubscriptionClient
 {
   void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) override
   {
-    std::cout << "Received DataChange event, value of Node " << node << " is now: "  << std::endl;
+    std::cout << "Received DataChange event for Node " << node << std::endl;
   }
 };
 
 int main(int argc, char** argv)
 {
   OpcUa::OPCUAServer server;
-  try
-  {
+  //try
+  //{
     server.SetEndpoint("opc.tcp://localhost:4841");
     server.SetLoadCppAddressSpace(true);
     //server.AddAddressSpace("standard_address_space.xml");
@@ -49,12 +49,20 @@ int main(int argc, char** argv)
     {
       std::cout << "    " << node << std::endl;
     }
+
+    Node objects = server.GetObjectsNode();
+
+    //create a new object in addressspace
     NodeID nid(99, 1);
     QualifiedName qn("NewObject", 2);
-    root.AddObject(nid, qn);
+    Node newobject = objects.AddObject(nid, qn);
+    //Add a virable to objevt
+    Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
    
     SubClient clt; 
     Subscription sub = server.CreateSubscription(100, clt);
+    sub.SubscribeDataChange(myvar);
+    myvar.SetValue(Variant(10)); //will change value and trigger datachange event
 
     std::cout << "Ctrl-C to exit" << std::endl;
     for(;;)
@@ -62,15 +70,16 @@ int main(int argc, char** argv)
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
-  }
-  catch (const std::exception& exc)
-  {
-    std::cout << exc.what() << std::endl;
-  }
-  catch (...)
-  {
-    std::cout << "Unknown error." << std::endl;
-  }
+  //}
+  //catch (const std::exception& exc)
+  //{
+    //std::cout << "Exception: " << exc.what() << std::endl;
+    //throw(exc);
+  //}
+  //catch (...)
+  //{
+    //std::cout << "Unknown error." << std::endl;
+  //}
   server.Stop();
   return 0;
 }

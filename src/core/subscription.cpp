@@ -47,14 +47,15 @@ namespace OpcUa
   void Subscription::PublishCallback(PublishResult result)
   {
     std::cout << "Suscription::PublishCallback called" << std::endl;
-    for (NotificationData data: result.Message.Data )
+    for (const NotificationData& data: result.Message.Data )
     {
       std::cout << "notfif type\n";
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
-        for ( MonitoredItems item: data.DataChange.Notification)
+        for ( const MonitoredItems& item: data.DataChange.Notification)
         {
-          AttValMap::iterator mapit = AttributeValueMap.find((uint32_t)item.ClientHandle);
+          std::cout << "looking for clienhandle: " << item.ClientHandle << std::endl;
+          AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
             std::cout << "Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
@@ -85,8 +86,7 @@ namespace OpcUa
         std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    //FIXME; Makes python bindings to crash
-    //Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
@@ -118,22 +118,25 @@ namespace OpcUa
       req.Parameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
+
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
-    std::vector<uint32_t> handles;
 
     if ( results.size() != attributes.size() ) 
     {
       throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
     }
+
+    std::vector<uint32_t> mids;
     uint i = 0;
-    for (auto res : results)
+    for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
-      AttributeValueMap[res.MonitoredItemID] = attributes[i];
+      std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl; 
+      AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = attributes[i];
       ++i;
-      handles.push_back(res.MonitoredItemID);
+      mids.push_back(res.MonitoredItemID);
     }
-    return handles;
+    return mids;
   }
 
   void Subscription::UnSubscribe(uint32_t handle)
@@ -163,7 +166,7 @@ namespace OpcUa
     EventFilter filter;
     //We only subscribe to variabes, since properties are supposed not to change
     //FIXME: order of variables might not be constant on all servers, we should order variables
-    for ( Node child: eventtype.GetVariables() )
+    for ( const Node& child: eventtype.GetVariables() )
     {
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();

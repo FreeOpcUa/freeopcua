@@ -27,9 +27,9 @@ namespace OpcUa
     return SetValue(path, value);
   }
 
-  Variant Event::GetValue(const std::vector<QualifiedName>& path)
+  Variant Event::GetValue(const std::vector<QualifiedName>& path) const
   {
-    PathMap::iterator it = PathValues.find(path);
+    PathMap::const_iterator it = PathValues.find(path);
     if ( it == PathValues.end() )
     {
       return Variant();
@@ -40,15 +40,16 @@ namespace OpcUa
     }
   }
 
-  Variant Event::GetValue(const std::string& qualifiedname)
+  Variant Event::GetValue(const std::string& qualifiedname) const
   {
     std::vector<QualifiedName> path;
     path.push_back(ToQualifiedName(qualifiedname));
     return GetValue(path);
   }
-  Variant Event::GetValue(AttributeID attribute)
+
+  Variant Event::GetValue(AttributeID attribute) const
   {
-    AttributeMap::iterator it = AttributeValues.find(attribute);
+    AttributeMap::const_iterator it = AttributeValues.find(attribute);
     if ( it == AttributeValues.end() )
     {
       return Variant();

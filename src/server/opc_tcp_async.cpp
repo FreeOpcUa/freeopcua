@@ -100,8 +100,8 @@ namespace
     std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
     boost::asio::io_service io;
-    tcp::acceptor acceptor;
     tcp::socket socket;
+    tcp::acceptor acceptor;
   };
 
 
@@ -138,9 +138,9 @@ namespace
   };
 
   OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Remote::Server::SharedPtr uaServer, bool debug)
-    : MessageProcessor(uaServer, *this, debug)
-    , Socket(std::move(socket))
+    : Socket(std::move(socket))
     , TcpServer(tcpServer)
+    , MessageProcessor(uaServer, *this, debug)
     , OStream(*this)
     , Debug(debug)
     , Buffer(8192)

@@ -6,6 +6,7 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/dynamic_addon_factory.h>
+#include <opc/common/thread.h>
 #include <opc/ua/node.h>
 #include <opc/ua/server.h>
 #include <opc/ua/event.h>
@@ -14,6 +15,7 @@
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/server/endpoints_services.h>
 #include <opc/ua/server/opcua_protocol.h>
+#include <opc/ua/server/opc_tcp_async.h>
 #include <opc/ua/server/services_registry.h>
 
 
@@ -56,10 +58,13 @@ namespace OpcUa
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
 
       UaServer::ServicesRegistry::SharedPtr Registry;
-      UaServer::TcpServer::SharedPtr TcpServer;
+      //UaServer::TcpServer::SharedPtr TcpServer;
       UaServer::EndpointsRegistry::SharedPtr EndpointsServices;
       UaServer::AddressSpace::SharedPtr AddressSpace;
-      UaServer::OpcUaProtocol::SharedPtr Protocol;
+      //UaServer::OpcUaProtocol::SharedPtr Protocol;
+      UaServer::AsyncOpcTcp::SharedPtr AsyncServer;
+      Common::Thread::UniquePtr ListenThread;
+
   };
 
 }

@@ -12,6 +12,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/server.h>
 
+#include <boost/thread/shared_mutex.hpp>
 #include <chrono>
 #include <list>
 #include <mutex>
@@ -26,10 +27,11 @@ namespace OpcUa
     {
     public:
       OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug);
+      ~OpcTcpMessages();
 
       void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
-      void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
-      double GetNextSleepPeriod();
+      //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
+      //double GetNextSleepPeriod();
 
     private:
       void HelloClient(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
@@ -38,10 +40,11 @@ namespace OpcUa
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
       void DeleteSubscriptions(const std::vector<IntegerID>& ids);
-      void SendPublishResponse();
+      void DeleteAllSubscriptions();
+      void ForwardPublishResponse(PublishResult result);
 
     private:
-      std::mutex ProcessMutex;
+      boost::shared_mutex ProcessMutex;
       std::shared_ptr<OpcUa::Remote::Server> Server;
       OpcUa::Binary::OStreamBinary OutputStream;
       bool Debug;
@@ -51,13 +54,6 @@ namespace OpcUa
       NodeID AuthenticationToken;
       uint32_t SequenceNb;
 
-      struct SubscriptionBinaryData
-      {
-        IntegerID SubscriptionID;
-        std::chrono::duration<double> period;
-        std::chrono::duration<double> last_check;
-      };
-
       struct PublishRequestElement
       {
         Binary::SequenceHeader sequence;
@@ -65,7 +61,8 @@ namespace OpcUa
         Binary::SymmetricAlgorithmHeader algorithmHeader;
       };
 
-      std::list<SubscriptionBinaryData> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
+      std::list<IntegerID> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
+      std::mutex PublishRequestQueueMutex;
       std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and
     };
 

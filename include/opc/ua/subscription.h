@@ -30,8 +30,8 @@
 
 namespace OpcUa
 {
-  typedef std::map<uint32_t, AttributeValueID> AttValMap;
-  typedef std::map<uint32_t, EventFilter> SimpleAttOpMap;
+  typedef std::map<IntegerID, AttributeValueID> AttValMap;
+  typedef std::map<IntegerID, EventFilter> SimpleAttOpMap;
 
   class SubscriptionClient
   {

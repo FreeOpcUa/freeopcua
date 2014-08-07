@@ -31,7 +31,7 @@ namespace OpcUa
 
   CreateMonitoredItemsResult::CreateMonitoredItemsResult()
     : Status(StatusCode::BadNotImplemented)
-    , MonitoredItemID(0)
+    , MonitoredItemID(1) // 0 is not allowed for integerID
     , RevisedSamplingInterval(0)
     , RevizedQueueSize(0)
   {
