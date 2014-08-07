@@ -20,7 +20,6 @@
 #include <opc/ua/protocol/view.h>
 #include <opc/ua/event.h>
 
-#include <thread>
 #include <boost/asio.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
@@ -30,6 +29,7 @@
 #include <queue>
 #include <deque>
 #include <set>
+#include <thread>
 
 
 
