@@ -21,6 +21,7 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
+#include <boost/asio.hpp>
 #include <iostream>
 
 namespace OpcUa

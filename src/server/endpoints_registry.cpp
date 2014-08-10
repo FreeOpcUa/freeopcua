@@ -14,7 +14,7 @@
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/endpoints.h>
+#include <opc/ua/services/endpoints.h>
 
 using namespace OpcUa;
 using namespace OpcUa::UaServer;

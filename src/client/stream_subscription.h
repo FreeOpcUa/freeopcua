@@ -11,12 +11,12 @@
 #ifndef OPC_UA_REMOTE_STREAM_SUBSCRIPTION_H_
 #define OPC_UA_REMOTE_STREAM_SUBSCRIPTION_H_
 
-#include <opc/ua/view.h>
 #include <opc/ua/protocol/attribute.h>
-#include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/binary/stream.h>
-
+#include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/string_utils.h>
+#include <opc/ua/services/view.h>
+
 
 namespace OpcUa
 {

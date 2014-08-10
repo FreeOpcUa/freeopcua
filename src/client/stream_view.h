@@ -9,11 +9,12 @@
 ///
 
 
-#include <opc/ua/view.h>
-#include <opc/ua/protocol/binary/stream.h>
-
 #ifndef OPC_UA_CLIENT_INTERNAL_STREAM_VIEW_H
 #define OPC_UA_CLIENT_INTERNAL_STREAM_VIEW_H
+
+#include <opc/ua/services/view.h>
+
+#include <opc/ua/protocol/binary/stream.h>
 
 
 namespace OpcUa

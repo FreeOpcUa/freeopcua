@@ -11,14 +11,14 @@
 #include "address_space_addon.h"
 #include "internal_subscription.h"
 
-#include <opc/ua/attributes.h>
-#include <opc/ua/node_management.h>
-#include <opc/ua/protocol/subscriptions.h>
+#include <opc/ua/event.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/view.h>
-#include <opc/ua/event.h>
+#include <opc/ua/services/attributes.h>
+#include <opc/ua/services/node_management.h>
 
 #include <boost/asio.hpp>
 #include <boost/thread/shared_mutex.hpp>
@@ -74,7 +74,7 @@ namespace OpcUa
     {
     public:
       AddressSpaceInMemory(bool debug)
-        : Debug(debug), work(new boost::asio::io_service::work(io))
+        : Debug(debug)
       {
         //Initialize the worker thread for subscriptions
         service_thread = std::thread([&](){ io.run(); });
@@ -82,21 +82,20 @@ namespace OpcUa
 
      ~AddressSpaceInMemory()
       {
-        DeleteAllSubscriptions();
-        work.reset();//This will delete worker thread and let io_service end
+        if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
+        io.stop();
+        if (Debug) std::cout << "address_space_in_memory| Joining serivice thread." << std::endl;
         service_thread.join();
       }
 
 
       void DeleteAllSubscriptions()
       {
+        if (Debug) std::cout << "Deleting all subscriptions." << std::endl;
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-        std::vector<IntegerID> ids;
-        for ( auto i: SubscriptionsMap)
-        {
-          ids.push_back(i.first);
-        }
+        std::vector<IntegerID> ids(SubscriptionsMap.size());\
+        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
         DeleteSubscriptions(ids);
       }
 
@@ -731,7 +730,6 @@ namespace OpcUa
       uint32_t LastSubscriptionID = 2;
       uint32_t PublishRequestsQueue = 0;
       boost::asio::io_service io;
-      std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
       std::thread service_thread;
 
     };

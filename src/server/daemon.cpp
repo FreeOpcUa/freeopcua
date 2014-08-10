@@ -114,6 +114,7 @@ namespace OpcUa
     {
       std::cout << "unable to set SIGSTOP handler" << std::endl;
     }
+
     std::condition_variable event;
     ExitEvent = & event;
     event.wait(lock);
