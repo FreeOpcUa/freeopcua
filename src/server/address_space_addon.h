@@ -12,11 +12,11 @@
 #pragma once
 
 #include <opc/common/addons_core/addon.h>
+#include <opc/ua/event.h>
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/server/services_registry.h>
-#include <opc/ua/view.h>
-#include <opc/ua/event.h>
-#include <opc/ua/subscriptions.h>
+#include <opc/ua/services/view.h>
+#include <opc/ua/services/subscriptions.h>
 
 namespace OpcUa
 {

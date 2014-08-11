@@ -35,9 +35,9 @@ namespace OpcUa
       //Return value og variable identified by its relative path
       //or value of attribute identified by its ID
       //returns null variant if no match
-      Variant GetValue(const std::vector<QualifiedName>& path);
-      Variant GetValue(AttributeID attribute);
-      Variant GetValue(const std::string& qualifiedname); //helper method for the most common case
+      Variant GetValue(const std::vector<QualifiedName>& path) const;
+      Variant GetValue(AttributeID attribute) const;
+      Variant GetValue(const std::string& qualifiedname) const; //helper method for the most common case
 
     protected:
       NodeID Type;

@@ -8,13 +8,13 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server/addons/endpoints_services.h>
-
 #include "endpoints_parameters.h"
+
+#include <opc/ua/server/addons/endpoints_services.h>
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/endpoints.h>
+#include <opc/ua/services/endpoints.h>
 
 using namespace OpcUa;
 using namespace OpcUa::UaServer;

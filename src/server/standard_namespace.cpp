@@ -11,15 +11,16 @@
 // TODO Add EventNotifier Attribute to all requred nodes.
 
 #include <opc/ua/server/standard_namespace.h>
+
 #include <opc/common/addons_core/addon.h>
-#include <opc/ua/node_management.h>
 #include <opc/ua/protocol/node_classes.h>
-#include <opc/ua/protocol/variable_access_level.h>
 #include <opc/ua/protocol/strings.h>
+#include <opc/ua/protocol/variable_access_level.h>
+#include <opc/ua/services/node_management.h>
 
 #include <algorithm>
-#include <map>
 #include <iostream>
+#include <map>
 
 namespace
 {

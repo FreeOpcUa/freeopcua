@@ -138,7 +138,7 @@ namespace OpcUa
   {
     if (!Value)
     {
-      throw std::invalid_argument("IntergerId cannot be zero");
+      throw std::invalid_argument("IntegerId cannot be zero");
     }
   }
 
@@ -152,7 +152,7 @@ namespace OpcUa
   {
     if (!Value)
     {
-      throw std::invalid_argument("IntergerId cannot be zero");
+      throw std::invalid_argument("IntegerId cannot be zero");
     }
 
     Value = value;

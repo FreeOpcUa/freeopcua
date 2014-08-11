@@ -19,19 +19,18 @@
 
 #pragma once
 
-#include <opc/ua/subscriptions.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/node.h>
+#include <opc/ua/protocol/subscriptions.h>
+#include <opc/ua/services/subscriptions.h>
 
-#include <boost/asio.hpp>
 #include <sstream>
 #include <map>
 
 
 namespace OpcUa
 {
-  typedef std::map<uint32_t, AttributeValueID> AttValMap;
-  typedef std::map<uint32_t, EventFilter> SimpleAttOpMap;
+  typedef std::map<IntegerID, AttributeValueID> AttValMap;
+  typedef std::map<IntegerID, EventFilter> SimpleAttOpMap;
 
   class SubscriptionClient
   {

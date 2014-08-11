@@ -13,6 +13,7 @@
 # list of binaries.
 #######################################################
 
+AUTOMAKE_OPTIONS = subdir-objects
 
 bin_PROGRAMS = opcuaserver opcua
 lib_LTLIBRARIES = libopcuaprotocol.la libopcuacore.la libopcuaserver.la libopcuaclient.la
@@ -68,6 +69,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/address_space.h \
 	include/opc/ua/server/opcuaserver.h \
 	include/opc/ua/server/endpoints_services.h \
+	include/opc/ua/server/opc_tcp_async.h \
 	include/opc/ua/server/tcp_server.h \
 	include/opc/ua/server/services_registry.h \
 	include/opc/ua/server/builtin_server.h
@@ -78,6 +80,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/address_space.h \
 	include/opc/ua/server/addons/xml_ns.h \
 	include/opc/ua/server/addons/endpoints_services.h \
+	include/opc/ua/server/addons/opc_tcp_async.h \
 	include/opc/ua/server/addons/tcp_server.h \
 	include/opc/ua/server/addons/services_registry.h \
 	include/opc/ua/server/addons/builtin_server.h
@@ -89,6 +92,10 @@ libopcuaserver_la_SOURCES = \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_services_addon.cpp \
 	src/server/address_space_addon.h \
+	src/server/opc_tcp_async_addon.cpp \
+	src/server/opc_tcp_async.cpp \
+	src/server/opc_tcp_async_parameters.cpp \
+	src/server/opc_tcp_async_parameters.h \
 	src/server/tcp_server.cpp \
 	src/server/xml_address_space_loader.h \
 	src/server/standard_namespace_addon.cpp \
@@ -104,6 +111,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/opc_tcp_processor.cpp \
 	src/server/address_space_addon.cpp \
 	src/server/xml_processor.h \
+	src/server/internal_subscription.h \
+	src/server/internal_subscription.cpp \
 	src/server/opcuaserver.cpp
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
@@ -212,7 +221,6 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/string_utils.cpp \
-  src/protocol/types.cpp \
   src/protocol/status_codes.cpp
 
 
@@ -248,18 +256,18 @@ test_opcuaprotocol_LDFLAGS = -ldl -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAI
 ###########################################################
 
 opcuainclude_HEADERS = \
-  include/opc/ua/attributes.h \
   include/opc/ua/connection_listener.h \
-  include/opc/ua/endpoints.h \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
-  include/opc/ua/node_management.h \
   include/opc/ua/server.h \
+  include/opc/ua/services/attributes.h \
+  include/opc/ua/services/endpoints.h \
+  include/opc/ua/services/node_management.h \
+  include/opc/ua/services/subscriptions.h \
+  include/opc/ua/services/view.h \
   include/opc/ua/socket_channel.h \
-  include/opc/ua/subscriptions.h \
-  include/opc/ua/subscription.h \
-  include/opc/ua/view.h
+  include/opc/ua/subscription.h
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \

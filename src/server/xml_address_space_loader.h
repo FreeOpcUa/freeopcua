@@ -13,7 +13,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/ua/node_management.h>
+#include <opc/ua/services/node_management.h>
 #include <opc/ua/server/addons/xml_ns.h>
 
 

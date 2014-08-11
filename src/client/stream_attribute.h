@@ -11,9 +11,9 @@
 #ifndef OPC_UA_CLIENT_INTERNAL_STREAM_ATTRIBUTE_H
 #define OPC_UA_CLIENT_INTERNAL_STREAM_ATTRIBUTE_H
 
-#include <opc/ua/view.h>
 #include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/services/view.h>
 
 
 namespace OpcUa

@@ -194,7 +194,7 @@ namespace OpcUa
   struct CreateMonitoredItemsResult
   {
     OpcUa::StatusCode Status;
-    uint32_t MonitoredItemID;
+    IntegerID MonitoredItemID;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
     MonitoringFilter Filter;

@@ -18,8 +18,9 @@
  ******************************************************************************/
 
 #include <opc/ua/protocol/string_utils.h>
-#include <sstream>
 #include <cstring>
+#include <stdexcept>
+#include <sstream>
 
 std::string OpcUa::ToString(const NodeID& id)
 {
