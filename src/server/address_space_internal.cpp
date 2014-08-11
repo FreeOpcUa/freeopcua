@@ -74,7 +74,7 @@ namespace OpcUa
     {
     public:
       AddressSpaceInMemory(bool debug)
-        : Debug(debug)
+        : Debug(debug), work(new boost::asio::io_service::work(io))
       {
         //Initialize the worker thread for subscriptions
         service_thread = std::thread([&](){ io.run(); });
@@ -730,6 +730,7 @@ namespace OpcUa
       uint32_t LastSubscriptionID = 2;
       uint32_t PublishRequestsQueue = 0;
       boost::asio::io_service io;
+      std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
       std::thread service_thread;
 
     };
