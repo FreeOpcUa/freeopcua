@@ -9,7 +9,7 @@
 ///
 
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/endpoints.h>
+#include <opc/ua/services/endpoints.h>
 
 namespace OpcUa
 {

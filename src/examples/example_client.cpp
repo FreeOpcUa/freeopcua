@@ -9,13 +9,15 @@
 ///
 
 
-#include <iostream>
-#include <opc/ua/node.h>
-
-#include <stdexcept>
 
 #include <opc/ua/client/client.h>
+#include <opc/ua/node.h>
 #include <opc/ua/subscription.h>
+
+#include <iostream>
+#include <stdexcept>
+#include <unistd.h>
+
 
 using namespace OpcUa;
 

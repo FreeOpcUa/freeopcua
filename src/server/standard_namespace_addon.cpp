@@ -9,10 +9,11 @@
 ///
 
 #include <opc/ua/server/addons/standard_namespace.h>
-#include <opc/ua/server/standard_namespace.h>
+
 
 #include <opc/ua/server/addons/address_space.h>
-#include <opc/ua/node_management.h>
+#include <opc/ua/server/standard_namespace.h>
+#include <opc/ua/services/node_management.h>
 
 
 namespace

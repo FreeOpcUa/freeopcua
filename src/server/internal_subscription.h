@@ -1,19 +1,19 @@
 
 #pragma once
 
-#include <boost/thread/shared_mutex.hpp>
-#include <boost/asio.hpp>
-#include <opc/ua/attributes.h>
 #include <opc/ua/event.h>
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
+#include <opc/ua/services/attributes.h>
 
-#include<iostream>
-#include<list>
-#include<vector>
+#include <boost/asio.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #include <chrono>
+#include <iostream>
+#include <list>
+#include <vector>
 
 
 namespace OpcUa

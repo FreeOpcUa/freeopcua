@@ -19,11 +19,10 @@
 
 #pragma once
 
-#include <opc/ua/subscriptions.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/node.h>
+#include <opc/ua/protocol/subscriptions.h>
+#include <opc/ua/services/subscriptions.h>
 
-#include <boost/asio.hpp>
 #include <sstream>
 #include <map>
 

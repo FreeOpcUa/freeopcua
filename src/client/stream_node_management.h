@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include <opc/ua/node_management.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/services/node_management.h>
 
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace OpcUa
 {

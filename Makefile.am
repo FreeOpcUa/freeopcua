@@ -256,18 +256,18 @@ test_opcuaprotocol_LDFLAGS = -ldl -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAI
 ###########################################################
 
 opcuainclude_HEADERS = \
-  include/opc/ua/attributes.h \
   include/opc/ua/connection_listener.h \
-  include/opc/ua/endpoints.h \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
-  include/opc/ua/node_management.h \
   include/opc/ua/server.h \
+  include/opc/ua/services/attributes.h \
+  include/opc/ua/services/endpoints.h \
+  include/opc/ua/services/node_management.h \
+  include/opc/ua/services/subscriptions.h \
+  include/opc/ua/services/view.h \
   include/opc/ua/socket_channel.h \
-  include/opc/ua/subscriptions.h \
-  include/opc/ua/subscription.h \
-  include/opc/ua/view.h
+  include/opc/ua/subscription.h
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \

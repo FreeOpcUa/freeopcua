@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <opc/ua/node_management.h>
+#include <opc/ua/services/node_management.h>
 
 namespace OpcUa
 {

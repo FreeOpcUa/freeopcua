@@ -12,11 +12,11 @@
 #define OPC_UA_SERVER_H
 
 #include <opc/common/class_pointers.h>
-#include <opc/ua/attributes.h>
-#include <opc/ua/endpoints.h>
-#include <opc/ua/subscriptions.h>
-#include <opc/ua/view.h>
-#include <opc/ua/node_management.h>
+#include <opc/ua/services/attributes.h>
+#include <opc/ua/services/endpoints.h>
+#include <opc/ua/services/node_management.h>
+#include <opc/ua/services/subscriptions.h>
+#include <opc/ua/services/view.h>
 
 #include <memory>
 #include <vector>
