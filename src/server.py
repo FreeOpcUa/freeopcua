@@ -10,7 +10,7 @@ class SubClient(opcua.SubscriptionClient):
         print("New data change event", node, val, attr)
 
 if __name__ == "__main__":
-    server = opcua.Server()
+    server = opcua.Server(True)
     server.set_endpoint("opc.tcp://localhost:4841")
     server.load_cpp_addressspace(True)
     #s.add_xml_address_space("standard_address_space.xml")
@@ -30,8 +30,8 @@ if __name__ == "__main__":
         #Now subscribing to changes on server side
         # callback does not work yet.. but soon
         sclt = SubClient()
-        sub = server.create_subscription(100, sclt)
-        handle = sub.subscribe(myvar) #keep handle if you want to delete the particular subscription later
+        #sub = server.create_subscription(100, sclt)
+        #handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
 
         embed()
     finally:
