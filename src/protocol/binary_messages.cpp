@@ -142,7 +142,6 @@ namespace OpcUa
   {
     const int64_t secsFrom1600To1970 = 11676096000LL;
     int64_t t1 = (usec * 10) + (secsFrom1600To1970 * 10000000LL);
-
     return DateTime(t1);
   }
 
