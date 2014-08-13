@@ -14,7 +14,8 @@
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/binary/stream.h>
 
-#include <iostream>
+#include <iostream> //for debug
+#include <opc/ua/protocol/string_utils.h> //for debug
 
 namespace OpcUa
 {
@@ -190,7 +191,6 @@ namespace OpcUa
       mode = static_cast<FilterOperator>(tmp);
     }
 
-
     ////////////////////////////////////////////////////////////////
     // DeadbandType
     ////////////////////////////////////////////////////////////////
@@ -342,6 +342,30 @@ namespace OpcUa
 
 
     ////////////////////////////////////////////////////////
+    // LiteralOperand
+    ////////////////////////////////////////////////////////
+
+    template<>
+    std::size_t RawSize<LiteralOperand>(const OpcUa::LiteralOperand& params)
+    {
+      return RawSize(params.Value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<LiteralOperand>(LiteralOperand& params)
+    {
+      *this >> params.Value;
+    }
+
+    template<>
+    void DataSerializer::Serialize<LiteralOperand>(const LiteralOperand& params)
+    {
+      *this << params.Value;
+    }
+
+
+
+    ////////////////////////////////////////////////////////
     // ElementOperand
     ////////////////////////////////////////////////////////
 
@@ -371,28 +395,83 @@ namespace OpcUa
     template<>
     std::size_t RawSize<FilterOperand>(const OpcUa::FilterOperand& params)
     {
-      return RawSize(params.TypeID) +
-          RawSize(params.Element) +
-          RawSize(params.Attribute) +
-          RawSize(params.SimpleAttribute); 
+      size_t total = RawSize(params.Header);
+      if (params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      {
+        total += 4;
+        total += RawSize(params.Element);
+      }
+      else if (params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      {
+        total += 4;
+        total += RawSize(params.Literal);
+      }
+      else if (params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      {
+        total += 4;
+        total += RawSize(params.Attribute);
+      }
+      else if (params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      {
+        total += 4;
+        total += RawSize(params.SimpleAttribute);
+      }
+
+      return total;
     }
 
     template<>
     void DataDeserializer::Deserialize<FilterOperand>(FilterOperand& params)
     {
-      *this >> params.TypeID;
-      *this >> params.Element;
-      *this >> params.Attribute;
-      *this >> params.SimpleAttribute;
+      *this >> params.Header;
+      uint32_t size;
+      *this >> size;
+      if ( params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      {
+        *this >> params.Element;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      {
+        *this >> params.Literal;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      {
+        *this >> params.Attribute;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      {
+        *this >> params.SimpleAttribute;
+      }
     }
 
     template<>
     void DataSerializer::Serialize<FilterOperand>(const FilterOperand& params)
     {
-      *this << params.TypeID;
-      *this << params.Element;
-      *this << params.Attribute;
-      *this << params.SimpleAttribute;
+      *this << params.Header;
+      if ( params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      {
+        uint32_t size = RawSize(params.Element);
+        *this << size;
+        *this << params.Element;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      {
+        uint32_t size = RawSize(params.Literal);
+        *this << size;
+        *this << params.Literal;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      {
+        uint32_t size = RawSize(params.Attribute);
+        *this << size;
+        *this << params.Attribute;
+      }
+      else if ( params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      {
+        uint32_t size = RawSize(params.SimpleAttribute);
+        *this << size;
+        *this << params.SimpleAttribute;
+      }
     }
     
     template<>
@@ -410,28 +489,30 @@ namespace OpcUa
 
 
     ////////////////////////////////////////////////////////
-    // ContentFilter
+    // ContentFilterElement
     ////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<ContentFilter>(const OpcUa::ContentFilter& params)
+    std::size_t RawSize<ContentFilterElement>(const OpcUa::ContentFilterElement& params)
     {
       return RawSize(params.Operator) +
           RawSizeContainer(params.FilterOperands); 
     }
 
     template<>
-    void DataDeserializer::Deserialize<ContentFilter>(ContentFilter& params)
+    void DataDeserializer::Deserialize<ContentFilterElement>(ContentFilterElement& params)
     {
       *this >> params.Operator;
-      *this >> params.FilterOperands;
+      //*this >> params.FilterOperands;
+      DeserializeContainer(*this, params.FilterOperands);
     }
 
     template<>
-    void DataSerializer::Serialize<ContentFilter>(const ContentFilter& params)
+    void DataSerializer::Serialize<ContentFilterElement>(const ContentFilterElement& params)
     {
       *this << params.Operator;
-      *this << params.FilterOperands;
+      //*this << params.FilterOperands;
+      SerializeContainer(*this, params.FilterOperands);
     }
 
 
@@ -490,21 +571,21 @@ namespace OpcUa
     std::size_t RawSize<EventFilter>(const OpcUa::EventFilter& params)
     {
       return RawSizeContainer(params.SelectClauses) +
-          RawSize(params.WhereClause);
+          RawSizeContainer(params.WhereClause);
     }
 
     template<>
     void DataDeserializer::Deserialize<EventFilter>(EventFilter& params)
     {
       *this >> params.SelectClauses;
-      *this >> params.WhereClause;
+      DeserializeContainer(*this, params.WhereClause);
     }
 
     template<>
     void DataSerializer::Serialize<EventFilter>(const EventFilter& params)
     {
       *this << params.SelectClauses;
-      *this << params.WhereClause;
+      SerializeContainer(*this, params.WhereClause);
     }
 
 
@@ -548,14 +629,17 @@ namespace OpcUa
       total += RawSize(data.Header);
       if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter) 
       {
+        total += 4;
         total += RawSize(data.DataChange);
       }
       else if ( data.Header.TypeID == ExpandedObjectID::EventFilter) 
       {
+        total += 4;
         total += RawSize(data.Event);
       }
       else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter) 
       {
+        total += 4;
         total += RawSize(data.Aggregate);
       }
       else if ( data.Header.TypeID == NodeID(0, 0) ) 
@@ -575,17 +659,21 @@ namespace OpcUa
     void DataDeserializer::Deserialize<MonitoringFilter>(MonitoringFilter& data)
     {
       *this >> data.Header;
+      int32_t size;
       if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter ) 
       {
-          *this >> data.DataChange;
+        *this >> size; //not used yet
+        *this >> data.DataChange;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::EventFilter ) 
       {
-          *this >> data.Event;
+        *this >> size; //not used yet
+        *this >> data.Event;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter ) 
       {
-          *this >> data.Aggregate;
+        *this >> size; //not used yet
+        *this >> data.Aggregate;
       }
       else if ( data.Header.TypeID == NodeID(0, 0) ) 
       {
@@ -603,14 +691,17 @@ namespace OpcUa
       *this << data.Header;
       if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter ) 
       {
+        *this << RawSize(data.DataChange);
         *this << data.DataChange;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::EventFilter ) 
       {
+        *this << RawSize(data.Event);
         *this << data.Event;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter ) 
       {
+        *this << RawSize(data.Aggregate);
         *this << data.Aggregate;
       }
       else if ( data.Header.TypeID == NodeID(0, 0) ) 

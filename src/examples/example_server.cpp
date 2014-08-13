@@ -62,12 +62,13 @@ int main(int argc, char** argv)
     SubClient clt; 
     Subscription sub = server.CreateSubscription(100, clt);
     sub.SubscribeDataChange(myvar);
-    myvar.SetValue(Variant(10)); //will change value and trigger datachange event
-
+    uint32_t counter = 0;
+    myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
     std::cout << "Ctrl-C to exit" << std::endl;
     for(;;)
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
     }
 
   //}
