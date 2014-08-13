@@ -32,7 +32,13 @@ namespace OpcUa
 
     DataChangeFilter = 724,
     EventFilter = 727,
-    AggregateFilter = 730
+    AggregateFilter = 730,
+
+    ElementOperand = 594,
+    LiteralOperand = 597,
+    AttributeOperand = 600,
+    SimpleAttributeOperand = 603
+      
 
   };
 }
