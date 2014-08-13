@@ -10,6 +10,10 @@
 
 #include "builtin_server_impl.h"
 
+#include <opc/ua/server/addons/endpoints_services.h>
+#include <opc/ua/server/endpoints_services.h>
+#include <src/server/endpoints_parameters.h>
+
 #include <iostream>
 
 using namespace OpcUa::Impl;
@@ -219,10 +223,38 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
       Debug = true;
     }
   }
+
+  const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+  for (OpcUa::UaServer::ApplicationData d: applications) {
+    std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+  }
+
+  std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
+  std::vector<OpcUa::EndpointDescription> endpointDescriptions;
+  for (const OpcUa::UaServer::ApplicationData application : applications)
+  {
+    applicationDescriptions.push_back(application.Application);
+    endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
+  }
+
+  OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+  if (!endpointsAddon)
+  {
+    std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
+    return;
+  }
+  endpointsAddon->AddEndpoints(endpointDescriptions);
+  endpointsAddon->AddApplications(applicationDescriptions);
+
+  OpcUa::UaServer::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+
+  Protocol = OpcUa::UaServer::CreateOpcUaProtocol(*this, Debug);
+  Protocol->StartEndpoints(endpointDescriptions, internalServer->GetServer());
 }
 
 void BuiltinServerAddon::Stop()
 {
+  Protocol.reset();
   if (ClientInput)
   {
     ClientInput->Stop();

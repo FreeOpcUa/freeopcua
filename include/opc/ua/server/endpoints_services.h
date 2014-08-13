@@ -8,6 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#pragma once
+
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/services/endpoints.h>
 

@@ -11,10 +11,8 @@
 #include <opc/ua/server.h>
 #include <opc/ua/event.h>
 #include <opc/ua/subscription.h>
-#include <opc/ua/server/tcp_server.h>
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/server/endpoints_services.h>
-#include <opc/ua/server/opcua_protocol.h>
 #include <opc/ua/server/opc_tcp_async.h>
 #include <opc/ua/server/services_registry.h>
 

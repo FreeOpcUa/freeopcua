@@ -13,7 +13,6 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/addons/tcp_server.h>
 
 
 namespace OpcUa

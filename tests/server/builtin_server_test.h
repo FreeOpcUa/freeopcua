@@ -10,21 +10,46 @@
 
 #pragma once
 
-#include <opc/ua/server/addons/builtin_server.h>
-#include <opc/ua/server/builtin_server.h>
+#include "builtin_server_addon.h"
+#include "builtin_server.h"
 #include <opc/common/addons_core/addon_manager.h>
 
 namespace OpcUa
 {
   namespace Test
   {
+    // This is a addon that emulates network connection and therefore no real tcp connection is required for testing.
+    // It provides communication between client and server in one process
+    // With exchanging data through memory.
 
     void RegisterBuiltinServerAddon(Common::AddonsManager& addons)
     {
-      Common::AddonInformation config;
-      config.Factory.reset(new OpcUa::UaServer::BuiltingServerFactory());
-      config.ID = OpcUa::UaServer::TcpServerAddonID;
-      addons.Register(config);
+      Common::AddonInformation opcTcp;
+      opcTcp.Factory.reset(new OpcUa::UaServer::BuiltingServerFactory());
+      opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
+
+      Common::ParametersGroup application("application");
+      application.Parameters.push_back(Common::Parameter("application_name","Test OPC UA Server"));
+      application.Parameters.push_back(Common::Parameter("application_uri","opcua.treww.org"));
+      application.Parameters.push_back(Common::Parameter("application_type","server"));
+
+      Common::ParametersGroup userTokenPolicy("user_token_policy");
+      userTokenPolicy.Parameters.push_back(Common::Parameter("id", "anonymous"));
+      userTokenPolicy.Parameters.push_back(Common::Parameter("type", "anonymous"));
+      userTokenPolicy.Parameters.push_back(Common::Parameter("uri", "http://opcfoundation.org/UA/SecurityPolicy#None"));
+      application.Groups.push_back(userTokenPolicy);
+
+      Common::ParametersGroup endpoint("endpoint");
+      endpoint.Parameters.push_back(Common::Parameter("url", "opc.tcp://localhost:4841"));
+      endpoint.Parameters.push_back(Common::Parameter("security_mode","none"));
+      endpoint.Parameters.push_back(Common::Parameter("transport_profile_uri","http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary"));
+      application.Groups.push_back(endpoint);
+
+      opcTcp.Parameters.Groups.push_back(application);
+      //opcTcp.Parameters.Parameters.push_back(Common::Parameter("debug", "1"));
+
+      addons.Register(opcTcp);
     }
 
   } // namespace Test
