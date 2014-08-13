@@ -77,9 +77,10 @@ namespace OpcUa
     uint32_t Index;
   };
 
-  struct LiteralAttribute
+  struct LiteralOperand
   {
     // BaseDataType Value; // TODO
+    Variant Value;
   };
 
   struct AttributeOperand
@@ -93,13 +94,14 @@ namespace OpcUa
 
   struct FilterOperand
   {
-    NodeID TypeID;
+    ExtensionObjectHeader Header;
     ElementOperand Element;
+    LiteralOperand Literal;
     AttributeOperand Attribute;
     SimpleAttributeOperand SimpleAttribute;
   };
 
-  struct ContentFilter
+  struct ContentFilterElement
   {
     FilterOperator Operator;
     std::vector<FilterOperand> FilterOperands;
@@ -108,7 +110,7 @@ namespace OpcUa
   struct EventFilter
   {
     std::vector<SimpleAttributeOperand> SelectClauses;
-    ContentFilter WhereClause;
+    std::vector<ContentFilterElement> WhereClause;
   };
 
   struct AggregateFilter
