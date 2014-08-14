@@ -27,11 +27,6 @@ public:
   void AddBuffer(const char* buf, std::size_t size);
   void Stop();
 
-  virtual int WaitForData(float second)
-  {
-    return 1;
-  }
-
 private:
   void ThrowIfStopped();
 
@@ -143,16 +138,6 @@ namespace
       if (input)
       {
         return input->Receive(data, size);
-      }
-      return 0;
-    }
-
-    virtual int WaitForData(float second)
-    {
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
-      {
-        return input->WaitForData(second);
       }
       return 0;
     }

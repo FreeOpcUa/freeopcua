@@ -37,9 +37,6 @@ namespace OpcUa
     /// @param size size of data
     /// @return size of received data
     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-    /// @brief Wait for Data
-    /// @return 1 if data, 0 if timetout and <0 if error
-    virtual int WaitForData(float second) = 0;
   };
 
   class OutputChannel
