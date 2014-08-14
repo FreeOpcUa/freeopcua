@@ -1,9 +1,28 @@
+/******************************************************************************
+ *   Copyright (C) 2013-2014 by Olivier Roulet-Dubonnet                       *
+ *                                                                            *
+ *   This library is free software; you can redistribute it and/or modify     *
+ *   it under the terms of the GNU Lesser General Public License as           *
+ *   published by the Free Software Foundation; version 3 of the License.     *
+ *                                                                            *
+ *   This library is distributed in the hope that it will be useful,          *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
+ *   GNU Lesser General Public License for more details.                      *
+ *                                                                            *
+ *   You should have received a copy of the GNU Lesser General Public License *
+ *   along with this library; if not, write to the                            *
+ *   Free Software Foundation, Inc.,                                          *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
+ ******************************************************************************/
+
+#include "opc_tcp_async_parameters.h"
+
+#include <opc/common/uri_facade.h>
 #include <opc/common/addons_core/config_file.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/standard_namespace.h>
-#include "opc_tcp_async_parameters.h"
 #include <opc/ua/node.h>
-
 #include <opc/ua/server/opcuaserver.h>
 
 #include <iostream>
@@ -55,7 +74,7 @@ namespace OpcUa
 
 
     UaServer::AsyncOpcTcp::Parameters asyncparams;
-    asyncparams.Port = 4841; //FIXME!!!!
+    asyncparams.Port = Common::Uri(Endpoints[0].EndpointURL).Port();
     asyncparams.ThreadsNumber = 2;
     asyncparams.DebugMode = true;
     AsyncServer = UaServer::CreateAsyncOpcTcp(asyncparams, Registry->GetServer());
