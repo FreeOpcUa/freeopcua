@@ -962,7 +962,10 @@ namespace OpcUa
   class PySubscription
   {
     public:
-      PySubscription (const Subscription& other): Sub(other) { }
+      PySubscription (std::shared_ptr<Subscription> other): Sub(other) { } //converting to shared pointer, should be ok
+      //PySubscription (std::unique_ptr<Subscription> other): Sub(std::move(other)) { }
+      //PySubscription (std::unique_ptr<Subscription> other): Sub(boost::ref(other)) { }
+      PySubscription () { throw std::runtime_error("Subscription cannot be instanciated from Python"); }
       void Delete() { Sub->Delete(); }
       uint32_t SubscribeDataChange(PyNode node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
       uint32_t SubscribeDataChange2(PyNode node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
@@ -971,7 +974,8 @@ namespace OpcUa
       
       //PySubscription(Remote::Server server, SubscriptionParameters params): Server(server), Data(params) { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
     private:
-      Subscription Sub;
+      std::shared_ptr<Subscription> Sub;
+      //std::unique_ptr<Subscription> Sub;
   };
 
   class PyClient: public RemoteClient
@@ -1265,7 +1269,12 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("set_value", &PyEvent::PySetValue)
       ;
 
-    class_<PySubscription>("Subscription", init<const Subscription&>())
+    //class_<PySubscription>("Subscription", init<const Subscription&>())
+    //class_<PySubscription, boost::noncopyable>("Subscription", init<std::shared_ptr<Subscription>>())
+    class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())
+    //class_<PySubscription, boost::noncopyable>("Subscription", init<std::unique_ptr<Subscription>>())
+    //class_<PySubscription, boost::noncopyable>("Subscription", init<>())
+    //class_<PySubscription, boost::noncopyable>("Subscription", init<>())
           .def("subscribe_data_change", &PySubscription::SubscribeDataChange)
           .def("subscribe_data_change", &PySubscription::SubscribeDataChange2)
           .def("delete", &PySubscription::Delete)
