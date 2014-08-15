@@ -66,7 +66,7 @@ namespace OpcUa
     void Connect();
     void Disconnect();
 
-    Subscription CreateSubscription(uint period, SubscriptionClient& client);
+    std::unique_ptr<Subscription> CreateSubscription(uint period, SubscriptionClient& client);
 
   private:
     std::string Endpoint = "opc.tcp:://localhost:4841";

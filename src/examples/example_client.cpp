@@ -80,8 +80,8 @@ int main(int argc, char** argv)
       OpcUa::Node myvar = root.GetChild(varpath);
       std::cout << "got node: " << myvar << std::endl;
       SubClient sclt; 
-      Subscription sub = client.CreateSubscription(100, sclt);
-      uint32_t handle = sub.SubscribeDataChange(myvar);
+      std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
+      uint32_t handle = sub->SubscribeDataChange(myvar);
       std::cout << "Got sub handle: " << handle << ", sleeping Xs" << std::endl;
       sleep(10);
 

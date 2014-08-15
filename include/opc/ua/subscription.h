@@ -25,6 +25,7 @@
 
 #include <sstream>
 #include <map>
+#include <mutex>
 
 
 namespace OpcUa
@@ -91,6 +92,7 @@ namespace OpcUa
       uint32_t LastMonitoredItemHandle = 1;
       AttValMap AttributeValueMap; 
       SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently
+      std::mutex Mutex;
   };
 }
 

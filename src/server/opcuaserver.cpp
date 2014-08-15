@@ -114,11 +114,11 @@ namespace OpcUa
     return GetNode(ObjectID::ObjectsFolder);
   }
 
-  Subscription OPCUAServer::CreateSubscription(uint period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(uint period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;
-    return Subscription(Registry->GetServer(), params, callback);
+    return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback));
   }
 
 
