@@ -63,7 +63,7 @@ namespace OpcUa
           {
             //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
             std::cout << "Debug: Calling client callback\n";
-            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node), item.Value, mapit->second.Attribute);
+            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node), item.Value.Value, mapit->second.Attribute);
           }
         }
       }
