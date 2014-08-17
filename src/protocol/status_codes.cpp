@@ -44,6 +44,9 @@ void OpcUa::CheckStatusCode(StatusCode code)
     case StatusCode::BadNoMatch:
       throw std::runtime_error("No match for request");
       break;
+    case StatusCode::BadMonitoredItemIdInvalid:
+      throw std::runtime_error("MonitoredItemID is invalid");
+      break;
     default:
       throw std::runtime_error("Please report, CheckStatusCode does not have yet handler implemented for error: " + std::to_string((uint32_t)code));
   }

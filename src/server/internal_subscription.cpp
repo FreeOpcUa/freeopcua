@@ -126,15 +126,13 @@ namespace OpcUa
       std::vector<StatusCode> results;
       for (const IntegerID handle: monitoreditemsids)
       {
-        MonitoredItemsMap.erase(handle);
-        std::map<IntegerID, DataMonitoredItems>::iterator it_monitoreditem = MonitoredItemsMap.find(handle);
-        if ( it_monitoreditem == MonitoredItemsMap.end()) 
+        size_t nb = MonitoredItemsMap.erase(handle);
+        if ( nb != 1 )
         {
           results.push_back(StatusCode::BadMonitoredItemIdInvalid);
         }
         else
         {
-          MonitoredItemsMap.erase(it_monitoreditem); //FIXME: check it is correct syntax!!!!!!!!!!
           results.push_back(StatusCode::Good);
         }
       }
@@ -197,6 +195,7 @@ namespace OpcUa
       mdata.Mode = request.Mode;
       mdata.ClientHandle = request.Parameters.ClientHandle;
       MonitoredItemsMap[res.MonitoredItemID] = mdata;
+          std::cout << "nb of items  in db : " << MonitoredItemsMap.size() << std::endl;
 
       return res;
     }
