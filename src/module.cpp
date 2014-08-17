@@ -975,7 +975,6 @@ namespace OpcUa
       void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
       {
         PyGILState_STATE state = PyGILState_Ensure();
-        //python::call_method<void>(self, "data_change", handle, PyNode(node), python::object() , (uint32_t) attribute);
         python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
         PyGILState_Release(state);
       };

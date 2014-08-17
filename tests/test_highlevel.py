@@ -142,7 +142,9 @@ class CommonTests(object):
         o = self.opc.get_objects_node()
         v = o.add_variable("3:SubscriptioinVariable", [1,2,3])
         sub = self.opc.create_subscription(100, sclt)
-        #handle = sub.subscribe_data_change(v)
+        handle = sub.subscribe_data_change(v)
+        time.sleep(0.1)
+        sub.unsubscribe(handle)
         sub.delete()
 
 
@@ -200,6 +202,19 @@ class TestServer(unittest.TestCase, CommonTests):
     @classmethod
     def tearDownClass(self):
         self.srv.stop()
+
+
+    def _test_subscription_data_change(self):
+        class SubClient(opcua.SubscriptionClient):
+            def data_change(node, val, attr):
+                print("New data change event", node, val, attr)
+
+
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:SubscriptionVariable2", [1,2,3])
+        sub = self.opc.create_subscription(100, sclt)
+        handle = sub.subscribe_data_change(v)
+        sub.delete()
 
 
 
