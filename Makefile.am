@@ -164,7 +164,6 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
-  include/opc/ua/protocol/binary/secure_connection.h \
   include/opc/ua/protocol/binary/stream.h
 
 protocolinclude_HEADERS = \

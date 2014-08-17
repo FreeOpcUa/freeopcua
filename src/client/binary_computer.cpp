@@ -93,6 +93,24 @@ namespace
   };
 
 
+  class BufferOutputChannel : public OpcUa::OutputChannel
+  {
+   public:
+     virtual void Send(const char* message, std::size_t size) override
+     {
+       std::copy(message, message + size, std::back_inserter(Buffer));
+     }
+
+     const std::vector<char>& GetBuffer() const
+     {
+       return Buffer;
+     }
+
+  private:
+    std::vector<char> Buffer;
+  };
+
+
   class BinaryServer
     : public Remote::Server
     , public Remote::EndpointServices
@@ -176,10 +194,9 @@ namespace
       Stream >> closeResponse;
     }
 
-    virtual std::shared_ptr<Remote::EndpointServices> Endpoints() const
+    virtual std::shared_ptr<Remote::EndpointServices> Endpoints() override
     {
-      return std::shared_ptr<Remote::EndpointServices>();
-      //return std::static_pointer_cast<Remote::EndpointServices>(shared_from_this());
+      return shared_from_this();
     }
 
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
@@ -200,10 +217,15 @@ namespace
       request.Filter.EndpointURL = filter.EndpointURL;
       request.Filter.LocaleIDs = filter.LocaleIDs;
       request.Filter.ProfileUries = filter.ProfileUries;
-      Stream << request << flush;
+      BufferOutputChannel out;
+      OStreamBinary os(out);
+      os << request << flush;
+      Send(&out.GetBuffer()[0], out.GetBuffer().size());
 
+      ReceiveNewData();
       OpcUa::GetEndpointsResponse response;
-      Stream >> response;
+      IStreamBinary in(BufferInput);
+      in >> response;
       return response.Endpoints;
     }
 
@@ -212,10 +234,9 @@ namespace
     }
 
     // ViewServices
-    virtual std::shared_ptr<Remote::ViewServices> Views() const
+    virtual std::shared_ptr<Remote::ViewServices> Views() override
     {
-      return std::shared_ptr<Remote::ViewServices>();
-      //return std::static_pointer_cast<Remote::ViewServices>(shared_from_this());
+      return shared_from_this();
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
@@ -295,7 +316,7 @@ namespace
     }
 
   public:
-    virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() const
+    virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() override
     {
       return std::shared_ptr<Remote::NodeManagementServices>();
       //return std::static_pointer_cast<Remote::NodeManagementServices>(shared_from_this());
@@ -330,10 +351,9 @@ namespace
       return response.Results;
     }
 
-    virtual std::shared_ptr<Remote::AttributeServices> Attributes() const
+    virtual std::shared_ptr<Remote::AttributeServices> Attributes() override
     {
-      return std::shared_ptr<Remote::AttributeServices>();
-      //return std::static_pointer_cast<Remote::AttributeServices>(shared_from_this());
+      return shared_from_this();
     }
 
   public:
@@ -365,10 +385,9 @@ namespace
       return response.Result.StatusCodes;
     }
 
-    virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() const
+    virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() override
     {
-      return std::shared_ptr<Remote::SubscriptionServices>();
-      //return std::static_pointer_cast<Remote::SubscriptionServices>(shared_from_this());
+      return shared_from_this();
     }
 
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
@@ -501,7 +520,7 @@ private:
       return totalReceived;
     }
 
-    virtual void Send(const char* message, std::size_t size)
+    virtual void Send(const char* message, std::size_t size) const
     {
       // TODO add support for breaking message into multiple chunks
       SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
@@ -516,7 +535,7 @@ private:
     }
 
   private:
-    void ReceiveNewData()
+    void ReceiveNewData() const
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
@@ -537,10 +556,10 @@ private:
 
       const std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
       Buffer.resize(dataSize);
-      Binary::RawBuffer raw(&Buffer[0], dataSize);
-      Stream >> raw;
-
       BufferInput.Reset();
+      Binary::RawBuffer raw(&Buffer[0], dataSize);
+
+      Stream >> raw;
     }
 
     Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)
@@ -647,8 +666,8 @@ private:
 
   private:
     Remote::SecureConnectionParams Params;
-    std::vector<char> Buffer;
-    BufferInputChannel BufferInput;
+    mutable std::vector<char> Buffer;
+    mutable BufferInputChannel BufferInput;
 
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
@@ -663,7 +682,7 @@ private:
 } // namespace
 
 
-OpcUa::Remote::Server::UniquePtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params)
+OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params)
 {
-  return OpcUa::Remote::Server::UniquePtr(new BinaryServer(channel, params));
+  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params));
 }

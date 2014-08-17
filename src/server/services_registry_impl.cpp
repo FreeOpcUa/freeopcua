@@ -164,27 +164,27 @@ namespace
     {
     }
 
-    virtual EndpointServices::SharedPtr Endpoints() const override
+    virtual EndpointServices::SharedPtr Endpoints() override
     {
       return EndpointsServices;
     }
 
-    virtual std::shared_ptr<ViewServices> Views() const override
+    virtual std::shared_ptr<ViewServices> Views() override
     {
       return ViewsServices;
     }
 
-    virtual std::shared_ptr<NodeManagementServices> NodeManagement() const  override
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return NodeServices;
     }
 
-    virtual std::shared_ptr<AttributeServices> Attributes() const  override
+    virtual std::shared_ptr<AttributeServices> Attributes() override
     {
       return AttributesServices;
     }
 
-    virtual std::shared_ptr<SubscriptionServices> Subscriptions() const  override
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() override
     {
       return SubscriptionsServices;
     }
