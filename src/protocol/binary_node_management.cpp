@@ -111,6 +111,8 @@ namespace OpcUa
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
   }
 
+
+
   AddNodesRequest::AddNodesRequest()
     : TypeID(ADD_NODES_REQUEST)
   {
@@ -445,6 +447,8 @@ namespace OpcUa
       *this << val.UserWriteMask;
     }
 
+    // TODO Seems doesn't required because there is serialization of NodeAttributes
+    // TODO Exact attributes have to be initialized from node attributes which will serialize.
     template<>
     void DataDeserializer::Deserialize<ViewAttributes>(ViewAttributes& val)
     {

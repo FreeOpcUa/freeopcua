@@ -237,9 +237,10 @@ namespace
       }
 
     private:
+
       void NewValue(NodeID node, AttributeID attribute, Variant value)
       {
-        Registry.AddAttribute(node, attribute, value);
+        //Registry.AddAttribute(node, attribute, value);
       }
 
       void NewValue(ObjectID node, AttributeID attribute, Variant value)
@@ -256,6 +257,7 @@ namespace
         NodeClass targetNodeClass,
         ObjectID targetNodeTypeDefinition)
       {
+/*
         ReferenceDescription desc;
         desc.ReferenceTypeID = referenceType;
         desc.IsForward = isForward;
@@ -264,41 +266,53 @@ namespace
         desc.DisplayName = LocalizedText(name);
         desc.TargetNodeClass = targetNodeClass;
         desc.TargetNodeTypeDefinition = targetNodeTypeDefinition;
+*/
+        AddReferencesItem ref;
+        ref.IsForward = isForward;
+        ref.ReferenceTypeId = referenceType;
+        ref.SourceNodeID = sourceNode;
+        ref.TargetNodeClass = targetNodeClass;
+        ref.TargetNodeID = targetNode;
 
-        Registry.AddReference(NodeID(sourceNode), desc);
+        //Registry.AddReference(NodeID(sourceNode), desc);
+        Registry.AddReferences(std::vector<AddReferencesItem>{ref});
       }
 
 
       void Root()
       {
-        // Attributes
-        NewValue(ObjectID::RootFolder, AttributeID::NODE_ID,      NodeID(ObjectID::RootFolder));
-        NewValue(ObjectID::RootFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
-        NewValue(ObjectID::RootFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Root));
-        NewValue(ObjectID::RootFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Root));
-        NewValue(ObjectID::RootFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Root));
-        NewValue(ObjectID::RootFolder, AttributeID::WRITE_MASK,   0);
-        NewValue(ObjectID::RootFolder, AttributeID::USER_WRITE_MASK, 0);
-        NewValue(ObjectID::RootFolder, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
+        ObjectAttributes attrs;
+        attrs.Description = LocalizedText(OpcUa::Names::Root);
+        attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
+
+        AddNodesItem node;
+        node.BrowseName = QualifiedName(0, OpcUa::Names::Root);
+        node.Class = NodeClass::Object;
+        node.RequestedNewNodeID = ObjectID::RootFolder;
+        node.Attributes = attrs;
+        Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // Referencies
         AddReference(ObjectID::RootFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);
-        AddReference(ObjectID::RootFolder,  forward, ReferenceID::Organizes, ObjectID::ObjectsFolder, Names::Objects,    NodeClass::Object,     ObjectID::FolderType);
         AddReference(ObjectID::RootFolder,  forward, ReferenceID::Organizes, ObjectID::TypesFolder,   Names::Types,      NodeClass::Object,     ObjectID::FolderType);
         AddReference(ObjectID::RootFolder,  forward, ReferenceID::Organizes, ObjectID::ViewsFolder,   Names::Views,      NodeClass::Object,     ObjectID::FolderType);
       }
 
       void Objects()
       {
-        // Attributes
-        NewValue(ObjectID::ObjectsFolder, AttributeID::NODE_ID,      NodeID(ObjectID::ObjectsFolder));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::Objects));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::Objects));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::Objects));
-        NewValue(ObjectID::ObjectsFolder, AttributeID::WRITE_MASK,   0);
-        NewValue(ObjectID::ObjectsFolder, AttributeID::USER_WRITE_MASK, 0);
-        NewValue(ObjectID::ObjectsFolder, AttributeID::EVENT_NOTIFIER, (uint8_t)0);
+
+        AddNodesItem node;
+        node.RequestedNewNodeID = ObjectID::ObjectsFolder;
+        node.BrowseName = QualifiedName(0, OpcUa::Names::Objects);
+        node.Class = NodeClass::Object;
+        node.ParentNodeId = ObjectID::RootFolder;
+        node.ReferenceTypeId = ReferenceID::Organizes;
+        node.TypeDefinition = ObjectID::FolderType;
+        ObjectAttributes attrs;
+        attrs.Description = LocalizedText(OpcUa::Names::Objects);
+        attrs.DisplayName = LocalizedText(OpcUa::Names::Objects);
+        node.Attributes = attrs;
+        Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         AddReference(ObjectID::ObjectsFolder, forward, ReferenceID::Organizes, ObjectID::Server, Names::Server, NodeClass::Object, ObjectID::ServerType);
         AddReference(ObjectID::ObjectsFolder,  forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType,    Names::FolderType, NodeClass::ObjectType, ObjectID::Null);

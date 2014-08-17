@@ -141,12 +141,12 @@ namespace OpcUa
 
   void Node::AddAttribute(AttributeID attr, const Variant& val)
   {
-    return Server->NodeManagement()->AddAttribute(Id, attr, val);
+    //return Server->NodeManagement()->AddAttribute(Id, attr, val);
   }
 
   void Node::AddReference(const ReferenceDescription desc)
   {
-    return Server->NodeManagement()->AddReference(Id, desc);
+    //return Server->NodeManagement()->AddReference(Id, desc);
   }
 
   std::vector<AddNodesResult> Node::AddNodes(std::vector<AddNodesItem> items)

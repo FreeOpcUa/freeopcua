@@ -10,8 +10,13 @@
 
 
 #include <opc/ua/client/addon.h>
-#include <opc/ua/client/remote_server.h>
+#include <opc/ua/client/binary_server.h>
 #include <opc/common/addons_core/addon_manager.h>
+
+#include <opc/common/uri_facade.h>
+#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/remote_connection.h>
+
 
 
 namespace
@@ -36,7 +41,13 @@ namespace
 
     virtual OpcUa::Remote::Server::SharedPtr Connect(const std::string& url)
     {
-      return OpcUa::Remote::Connect(url);
+      const Common::Uri serverUri(url);
+      OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+
+      OpcUa::Remote::SecureConnectionParams params;
+      params.EndpointUrl = url;
+      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+      return CreateBinaryServer(channel, params);
     }
 
   private:

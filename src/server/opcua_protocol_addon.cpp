@@ -57,20 +57,7 @@ namespace
 
       for(;;)
       {
-        //double period = messageProcessor->GetNextSleepPeriod();
-        //int res = clientChannel->WaitForData(period); //double to float cast
-        //if (res < 0)
-        //{
-          //return;
-        //}
-        //else if (res == 1)
-        //{
-          ProcessData(*clientChannel, *messageProcessor);
-        //}
-        //else
-        //{
-          //SendPublishResponse(*clientChannel);
-        //}
+        ProcessData(*clientChannel, *messageProcessor);
       }
     }
 

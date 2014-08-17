@@ -11,11 +11,13 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <memory>
-
+#include <system_error>
 
 namespace OpcUa
 {
+
   class InputChannel
   {
   public:
@@ -24,7 +26,6 @@ namespace OpcUa
 
   public:
     virtual ~InputChannel(){}
-
 
     InputChannel(){}
     InputChannel(const InputChannel&) = delete;
@@ -37,10 +38,27 @@ namespace OpcUa
     /// @param size size of data
     /// @return size of received data
     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-    /// @brief Wait for Data
-    /// @return 1 if data, 0 if timetout and <0 if error
-    virtual int WaitForData(float second) = 0;
   };
+
+
+  typedef std::function<void(const char* buffer, const std::system_error& err)> ReceiveCallback;
+
+  class AsyncInputChannel
+  {
+  public:
+    typedef std::shared_ptr<InputChannel> SharedPtr;
+    typedef std::unique_ptr<InputChannel> UniquePtr;
+
+  public:
+    virtual ~AsyncInputChannel(){}
+    AsyncInputChannel(){}
+    AsyncInputChannel(const AsyncInputChannel&) = delete;
+    AsyncInputChannel(AsyncInputChannel&&) = delete;
+    AsyncInputChannel& operator=(const AsyncInputChannel&) = delete;
+
+    virtual void Receive(std::size_t size, ReceiveCallback) = 0;
+  };
+
 
   class OutputChannel
   {
@@ -60,6 +78,28 @@ namespace OpcUa
     virtual void Send(const char* message, std::size_t size) = 0;
   };
 
+
+  typedef std::function<void(const std::system_error& err)> SendDataCallback;
+
+  class AsyncOutputChannel
+  {
+  public:
+    typedef std::shared_ptr<AsyncOutputChannel> SharedPtr;
+    typedef std::unique_ptr<AsyncOutputChannel> UniquePtr;
+
+  public:
+    virtual ~AsyncOutputChannel(){}
+
+    AsyncOutputChannel(){}
+    AsyncOutputChannel(const OutputChannel&) = delete;
+    AsyncOutputChannel(OutputChannel&&) = delete;
+    AsyncOutputChannel& operator=(const OutputChannel&) = delete;
+
+   public:
+    virtual void Send(const char* message, std::size_t size, SendDataCallback callback) = 0;
+  };
+
+
   class IOChannel :
     public InputChannel,
     public OutputChannel
@@ -67,6 +107,15 @@ namespace OpcUa
   public:
     typedef std::shared_ptr<IOChannel> SharedPtr;
     typedef std::unique_ptr<IOChannel> UniquePtr;
+  };
+
+  class AsyncIO :
+    public AsyncInputChannel,
+    public AsyncOutputChannel
+  {
+  public:
+    typedef std::shared_ptr<AsyncIO> SharedPtr;
+    typedef std::unique_ptr<AsyncIO> UniquePtr;
   };
 
 }

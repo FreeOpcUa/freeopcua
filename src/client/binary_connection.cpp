@@ -75,11 +75,6 @@ namespace
       return Channel.Receive(data, size);
     }
 
-    virtual int WaitForData(float second)
-    {
-      return Channel.WaitForData(second);
-    }
-
     virtual void Send(const char* message, std::size_t size)
     {
       return Channel.Send(message, size);

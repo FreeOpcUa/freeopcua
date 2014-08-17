@@ -47,7 +47,7 @@ namespace OpcUa
       application.Groups.push_back(endpoint);
 
       opcTcp.Parameters.Groups.push_back(application);
-      //opcTcp.Parameters.Parameters.push_back(Common::Parameter("debug", "1"));
+      opcTcp.Parameters.Parameters.push_back(Common::Parameter("debug", "1"));
 
       addons.Register(opcTcp);
     }

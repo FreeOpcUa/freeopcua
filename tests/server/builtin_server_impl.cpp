@@ -27,11 +27,6 @@ public:
   void AddBuffer(const char* buf, std::size_t size);
   void Stop();
 
-  virtual int WaitForData(float second)
-  {
-    return 1;
-  }
-
 private:
   void ThrowIfStopped();
 
@@ -147,16 +142,6 @@ namespace
       return 0;
     }
 
-    virtual int WaitForData(float second)
-    {
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
-      {
-        return input->WaitForData(second);
-      }
-      return 0;
-    }
-
     virtual void Send(const char* message, std::size_t size)
     {
       if (Debug) std::clog << ID << ": send data." << std::endl;
@@ -196,11 +181,10 @@ std::shared_ptr<OpcUa::Remote::Server> BuiltinServerAddon::GetServer() const
     throw std::logic_error("Cannot access builtin computer. No endpoints was created. You have to configure endpoints.");
   }
 
-  OpcUa::Binary::SecureConnectionParams params;
+  OpcUa::Remote::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  std::shared_ptr<OpcUa::IOChannel> secureChannel = OpcUa::Binary::CreateSecureChannel(ClientChannel, params);
-  return OpcUa::Remote::CreateBinaryServer(secureChannel);
+  return OpcUa::Remote::CreateBinaryServer(ClientChannel, params);
 }
 
 BuiltinServerAddon::~BuiltinServerAddon()
