@@ -964,41 +964,19 @@ namespace OpcUa
       Event Evt;
   };
 
-  /*
-  class PySubscriptionClient: public SubscriptionClient
-  {
-    public:
-      PySubscriptionClient() {}
-    
-      void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
-      {
-        std::cout << "overriden  dc !!!!!!!!!!!!" << std::endl;
-      };
-
-      void Prt() const //Debug
-      {
-        std::cout << "CALLLED " << std::endl;
-      }
-
-  };
-
-*/
   class PySubscriptionClient: public SubscriptionClient
   {
     public:
       PySubscriptionClient(PyObject* p) : self(p) {
         std::cout << "got constructed" << std::endl;
       }
-      //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {}
+      //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {} //copy construct
 
       void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
       {
         PyGILState_STATE state = PyGILState_Ensure();
-        PyNode n(node);
-        Variant v(val);
-        uint32_t u = (uint32_t) attribute;
-
-        python::call_method<void>(self, "data_change", handle, n, v , u);
+        //python::call_method<void>(self, "data_change", handle, PyNode(node), python::object() , (uint32_t) attribute);
+        python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
         PyGILState_Release(state);
       };
 

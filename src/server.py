@@ -6,11 +6,15 @@ from IPython import embed
 import opcua
 
 class SubClient(opcua.SubscriptionClient):
+    def __init_(self, *args):
+        self.val = None
     def data_change(self, handle, node, val, attr):
         print("New data change event", handle, node, val, attr)
+        self.val = val
 
     def prt(self):
         print("prt called")
+
 
 if __name__ == "__main__":
     server = opcua.Server(True)
