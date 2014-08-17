@@ -29,7 +29,6 @@ namespace OpcUa
   Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback)
     : Server(server), Client(callback)
   {
-    //Data = Server->Subscriptions()->CreateSubscription(params, std::bind(&Subscription::PublishCallback, this, std::placeholders::_1));
     Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );
     //After creating the subscription, it is expected to send at least one publish request
     Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
@@ -50,16 +49,15 @@ namespace OpcUa
     std::cout << "Suscription::PublishCallback called" << std::endl;
     for (const NotificationData& data: result.Message.Data )
     {
-      std::cout << "notfif type\n";
+      std::cout << "Notification is of type DataChange\n";
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
         for ( const MonitoredItems& item: data.DataChange.Notification)
         {
-          std::cout << "looking for clienhandle: " << item.ClientHandle << std::endl;
           AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
-            std::cout << "Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
+            std::cout << "Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
           }
           else
           {
@@ -71,7 +69,7 @@ namespace OpcUa
       }
       else if (data.Header.TypeID == ExpandedObjectID::EventNotificationList)
       {
-        std::cout << "event type\n";
+        std::cout << "Notification is of type Event\n";
         for ( EventFieldList ef :  data.Events.Events)
         {
           Client.Event(ef.ClientHandle, ef.EventFields);
@@ -79,7 +77,7 @@ namespace OpcUa
       }
       else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)
       {
-        std::cout << "status type\n";
+        std::cout << "Notification is of type StatusChange\n";
         Client.StatusChange(data.StatusChange.Status);
       }
       else
