@@ -18,6 +18,8 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
+//#include <python3.4/Python.h> //FIXME
+#include <Python.h> //FIXME
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -350,6 +352,11 @@ namespace OpcUa
     }
   };
 
+  //python::object ToObject(const OpcUa::AttributeID& attr)
+  //{
+    //return python::object((uint32_t) attr);
+//
+  //}
   python::object ToObject(const OpcUa::Variant& var)
   {
     if (var.IsNul())
@@ -957,7 +964,95 @@ namespace OpcUa
       Event Evt;
   };
 
+  /*
+  class PySubscriptionClient: public SubscriptionClient
+  {
+    public:
+      PySubscriptionClient() {}
+    
+      void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
+      {
+        std::cout << "overriden  dc !!!!!!!!!!!!" << std::endl;
+      };
 
+      void Prt() const //Debug
+      {
+        std::cout << "CALLLED " << std::endl;
+      }
+
+  };
+
+*/
+  class PySubscriptionClient: public SubscriptionClient
+  {
+    public:
+      PySubscriptionClient(PyObject* p) : self(p) {
+        std::cout << "got constructed" << std::endl;
+      }
+      //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {}
+
+      void Test(std::string name)
+      {
+        //python::call_method<void>(self, "ptr");
+        //boost::python::object obj = python::object(python::handle<>(self));
+        //std::cout << "ptr: " << obj.ptr() << std::endl;
+        std::cout << "ptr: " <<  self << std::endl;
+        return python::call_method<void>(self, name.c_str());
+      }
+    
+      void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
+      {
+        std::cout << "overriden  dc !!!!!!!!!!!!" << std::endl;
+        //return python::call_method<void>(self, "DataChange", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        std::cout << handle << std::endl;
+        std::cout << PyNode(node) << std::endl;
+        //std::cout << oObject(val) << std::endl;
+        std::cout << (uint32_t ) attribute << std::endl;
+        std::cout << "ref count: " << self->ob_refcnt << std::endl;
+        /*
+        //PyEval_InitThreads();
+        std::cout << "test " << PyObject_IsTrue(self) << std::endl;
+        boost::python::object obj = python::object(python::handle<>(self));
+        std::cout << "ptr: " << obj.ptr() << std::endl;
+        if (obj == boost::python::object())
+        {
+          std::cout << "Self is object" << std::endl;
+        }
+        if (obj.ptr() == Py_None)
+        {
+          std::cout << "self is None" << std::endl;
+        }
+        */
+        
+        PyGILState_STATE state = PyGILState_Ensure();
+        std::cout << "ptr: " << self << std::endl;
+        //python::call_method<void>(self, "prt");
+        PyNode n(node);
+        Variant v(val);
+        uint32_t u = (uint32_t) attribute;
+
+        python::call_method<void>(self, "data_change", handle, n, v , u);
+        //return python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        //return python::call_method<void>(self, "data_change", handle); //, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        //python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        PyGILState_Release(state);
+      };
+
+      void Prt() const //Debug
+      {
+        std::cout << "CALLLED " << std::endl;
+      }
+
+      static void DefaultDataChange(const SubscriptionClient& self_, uint32_t handle, const PyNode& node, const python::object& val, uint32_t attribute)  
+      {
+        std::cout << "No callback defined in python" << std::endl;
+      }
+      //static void DefaultDataChange(const SubscriptionClient& self_, uint32_t handle, const Node& node, const Variant& val, AttributeID attribute)  
+        //{ return self_.SubscriptionClient::DataChange(handle, node, val, attribute); }
+
+    private:
+      PyObject* const self;
+  };
 
   class PySubscription
   {
@@ -985,7 +1080,7 @@ namespace OpcUa
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
-      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
       {
         return PySubscription(RemoteClient::CreateSubscription(period, callback));
       }
@@ -1000,7 +1095,7 @@ namespace OpcUa
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
-      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
       {
         return PySubscription(OPCUAServer::CreateSubscription(period, callback));
       }
@@ -1014,6 +1109,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   using namespace OpcUa;
 
   using self_ns::str; //hack to enable __str__ in python classes with str(self)
+
+  PyEval_InitThreads(); //Debug
 
   RegisterCommonObjectIDs();
 
@@ -1258,9 +1355,13 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
         .def(vector_indexing_suite<std::vector<std::string> >())
     ;
 
-    class_<SubscriptionClient, boost::noncopyable>("SubscriptionClient")
-          .def("data_change", &SubscriptionClient::DataChange)
-          .def("event", &SubscriptionClient::Event)
+    //class_<PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
+    class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
+          .def("data_change", &PySubscriptionClient::DefaultDataChange)
+          //.def("data_change", &PySubscriptionClient::DataChange)
+          .def("event", &PySubscriptionClient::Event)
+          .def("prt", &PySubscriptionClient::Prt) //debug
+          .def("test", &PySubscriptionClient::Test) //debug
       ;
 
 
