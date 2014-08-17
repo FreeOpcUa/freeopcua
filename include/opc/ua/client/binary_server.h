@@ -22,12 +22,26 @@ namespace OpcUa
   namespace Remote
   {
 
+    struct SecureConnectionParams
+    {
+      std::string EndpointUrl;
+      std::string SecurePolicy;
+      std::vector<uint8_t> SenderCertificate;
+      std::vector<uint8_t> ReceiverCertificateThumbPrint;
+      uint32_t SecureChannelID;
+
+      SecureConnectionParams()
+        : SecureChannelID(0)
+      {
+      }
+    };
+
     /// @brief Create server based on opc ua binary protocol.
     /// @param channel channel wich will be used for sending requests data.
-    std::unique_ptr<Server> CreateBinaryServer(std::shared_ptr<IOChannel> channel);
+    Server::UniquePtr CreateBinaryServer(IOChannel::SharedPtr channel, const SecureConnectionParams& params);
 
-  }
-}
+  } // namespace Remote
+} // namespace OpcUa
 
 #endif //  OPC_UA_BINARY_server_H
 

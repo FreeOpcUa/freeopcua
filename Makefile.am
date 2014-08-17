@@ -209,7 +209,6 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/binary_raw_size.cpp \
   src/protocol/binary_session.cpp \
   src/protocol/binary_view.cpp \
-  src/protocol/binary_secure_channel.cpp \
   src/protocol/input_from_buffer.cpp \
   src/protocol/monitored_items.cpp \
   src/protocol/nodeid.cpp \
@@ -351,21 +350,13 @@ clientinclude_HEADERS = \
   include/opc/ua/client/addon.h \
   include/opc/ua/client/binary_server.h \
   include/opc/ua/client/client.h \
-  include/opc/ua/client/remote_server.h \
   include/opc/ua/client/remote_connection.h
 
 libopcuaclient_la_SOURCES = \
-  src/client/computer.cpp \
   src/client/client.cpp \
   src/client/binary_computer_addon.cpp \
   src/client/binary_computer.cpp \
-  src/client/binary_connection.cpp \
-  src/client/endpoints.h \
-  src/client/stream_attribute.h \
-  src/client/stream_node_management.h \
-  src/client/stream_server.h \
-  src/client/stream_subscription.h \
-  src/client/stream_view.h
+  src/client/binary_connection.cpp
 
 libopcuaclient_la_CPPFLAGS =  -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaclient_la_LIBADD = libopcuaprotocol.la libopcuacore.la

@@ -30,8 +30,6 @@ namespace OpcUa
       ~OpcTcpMessages();
 
       void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
-      //void SendPublishResponse(OpcUa::OutputChannel& clientChannel);
-      //double GetNextSleepPeriod();
 
     private:
       void HelloClient(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);

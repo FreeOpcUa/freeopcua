@@ -235,50 +235,6 @@ namespace OpcUa
         }
         return results;
       }
-      
-      // Deprecated method, remove when not called anymore
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        NodesMap::iterator node_it = Nodes.find(node);
-        if ( node_it == Nodes.end() )
-        {
-          if ( attribute == AttributeID::NODE_ID ) // create node
-          {
-            NodeStruct ns;
-            Nodes[node] = ns;
-            node_it =  Nodes.find(node);//should always be good since we just created it
-          }
-          else
-          {
-            std::cerr << "Error trying to sett attribute to non existing node: " << node << std::endl; 
-            return;
-          }
-        }
-
-        AttributeValue attrval;
-        attrval.Value.Encoding = DATA_VALUE;
-        attrval.Value = value;
-        node_it->second.Attributes[attribute] = attrval;
-      }
-
-      // Deprecated method, remove when not called anymore
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        NodesMap::iterator node_it = Nodes.find(sourceNode);
-        if ( node_it != Nodes.end() )
-        {
-          node_it->second.References.push_back(reference);
-        }
-        else if (Debug)
-        {
-          std::cout << "Reference was not added. Source node '" << sourceNode << "'not found:" << std::endl;
-          std::cout << "Target Node '" << reference.TargetNodeID << "' (" << reference.BrowseName << ")."<< std::endl;
-        }
-      }
 
       virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
       {

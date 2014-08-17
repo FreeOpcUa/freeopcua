@@ -23,7 +23,7 @@
 #include <opc/ua/node.h>
 #include <opc/ua/server.h>
 #include <opc/ua/subscription.h>
-#include <opc/ua/client/remote_server.h>
+#include <opc/ua/client/binary_server.h>
 
 
 namespace OpcUa

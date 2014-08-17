@@ -964,10 +964,10 @@ namespace
   private:
     void RegisterNode(const Node& node)
     {
-      Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
+      //Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
       for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
       {
-        Registry.AddAttribute(node.ID, attr.first, attr.second);
+        //Registry.AddAttribute(node.ID, attr.first, attr.second);
       }
     }
 
@@ -983,7 +983,7 @@ namespace
         desc.TargetNodeClass = ref.TargetClass;
         desc.TargetNodeID = ref.TargetNode;
         desc.TargetNodeTypeDefinition = ref.TargetType;
-        Registry.AddReference(node.ID, desc);
+        //Registry.AddReference(node.ID, desc);
       }
     }
 

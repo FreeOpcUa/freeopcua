@@ -23,9 +23,9 @@
 namespace OpcUa
 {
 
-  /*
-   * AaddNode Message definition
-  */
+  //
+  // AddNode Message definition
+  //
   
   enum SpecifiedAttributesEncoding : uint32_t
   {
@@ -57,10 +57,9 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    uint8_t EventNotifier;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    uint8_t EventNotifier = 0;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct VariableAttributes
@@ -70,15 +69,14 @@ namespace OpcUa
     LocalizedText Description;
     Variant Value;
     NodeID Type;
-    int32_t Rank;
+    int32_t Rank = 0;
     std::vector<uint32_t> Dimensions;
-    uint8_t AccessLevel;
-    uint8_t UserAccessLevel;
-    Duration MinimumSamplingInterval;
-    bool Historizing;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    uint8_t AccessLevel = 0;
+    uint8_t UserAccessLevel = 0;
+    Duration MinimumSamplingInterval = 0;
+    bool Historizing = false;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct MethodAttributes
@@ -86,11 +84,10 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    bool Executable;
-    bool UserExecutable;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    bool Executable = false;
+    bool UserExecutable = false;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct ObjectTypeAttributes
@@ -98,10 +95,9 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    bool IsAbstract;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    bool IsAbstract = false;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct VariableTypeAttributes
@@ -111,12 +107,11 @@ namespace OpcUa
     LocalizedText Description;
     Variant Value;
     NodeID Type;
-    int32_t Rank;
+    int32_t Rank = 0;
     std::vector<uint32_t> Dimensions;
-    bool IsAbstract;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    bool IsAbstract = false;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct ReferenceTypeAttributes
@@ -124,12 +119,11 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    bool IsAbstract;
-    bool Symmetric;
+    bool IsAbstract = false;
+    bool Symmetric = false;
     LocalizedText InverseName;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct DataTypeAttributes
@@ -137,10 +131,9 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    bool IsAbstract;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    bool IsAbstract = false;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct ViewAttributes
@@ -148,10 +141,9 @@ namespace OpcUa
     uint32_t SpecifiedAttributes;
     LocalizedText DisplayName;
     LocalizedText Description;
-    bool ContainsNoLoops;
-    uint32_t WriteMask;
-    uint32_t UserWriteMask;
-
+    bool ContainsNoLoops = true;
+    uint32_t WriteMask = 0;
+    uint32_t UserWriteMask = 0;
   };
 
   struct NodeAttributes
@@ -169,9 +161,9 @@ namespace OpcUa
     NodeAttributes(const ReferenceTypeAttributes&);
     NodeAttributes(const DataTypeAttributes&);
     NodeAttributes(const ViewAttributes&);
-
   };
 
+  // TODO Rename to NodeParameters
   struct AddNodesItem
   {
     NodeID ParentNodeId;
@@ -181,8 +173,8 @@ namespace OpcUa
     NodeClass Class;
     NodeAttributes Attributes;
     NodeID TypeDefinition;
-
   };
+
 
   struct AddNodesParameters
   {
