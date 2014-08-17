@@ -1,10 +1,17 @@
 from IPython import embed
+import sys
 import unittest
 from multiprocessing import Process, Event
 import time
 
 
 import opcua
+
+
+class SubClient(opcua.SubscriptionClient):
+    def data_change(node, val, attr):
+        print("New data change event", node, val, attr)
+
 
 class Unit(unittest.TestCase):
     def test_zero_nodeid(self):
@@ -131,9 +138,17 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual([1], val) 
 
+    def test_create_delete_subscription(self):
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:SubscriptioinVariable", [1,2,3])
+        sub = self.opc.create_subscription(100, sclt)
+        handle = sub.subscribe_data_change(v)
+        time.sleep(0.1)
+        sub.unsubscribe(handle)
+        sub.delete()
+
 
 class ServerProcess(Process):
-
     def __init__(self):
         Process.__init__(self)
         self._exit = Event()
@@ -189,7 +204,21 @@ class TestServer(unittest.TestCase, CommonTests):
         self.srv.stop()
 
 
+    def _test_subscription_data_change(self):
+        class SubClient(opcua.SubscriptionClient):
+            def data_change(node, val, attr):
+                print("New data change event", node, val, attr)
+
+
+        o = self.opc.get_objects_node()
+        v = o.add_variable("3:SubscriptionVariable2", [1,2,3])
+        sub = self.opc.create_subscription(100, sclt)
+        handle = sub.subscribe_data_change(v)
+        sub.delete()
+
+
 
 if __name__ == "__main__":
+    sclt = SubClient()
     unittest.main(verbosity=2)
 

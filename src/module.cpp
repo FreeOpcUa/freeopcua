@@ -11,12 +11,15 @@
 #include <opc/ua/client/client.h>
 #include <opc/ua/client/remote_server.h>
 #include <opc/ua/node.h>
+#include <opc/ua/event.h>
 #include <opc/ua/server/opcuaserver.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/server.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
+//#include <python3.4/Python.h> //FIXME
+#include <Python.h> //FIXME
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -349,6 +352,11 @@ namespace OpcUa
     }
   };
 
+  //python::object ToObject(const OpcUa::AttributeID& attr)
+  //{
+    //return python::object((uint32_t) attr);
+//
+  //}
   python::object ToObject(const OpcUa::Variant& var)
   {
     if (var.IsNul())
@@ -936,17 +944,63 @@ namespace OpcUa
 
   };
 
+
+  class PyEvent 
+  {
+    public:
+      PyEvent (const NodeID& type) : Evt(type) { }
+      PyEvent() : Evt() {}
+
+      void PySetValue(const std::string& name, const python::object& val)
+      {
+        Evt.SetValue(name, ToVariant(val));
+      }
+
+      python::object PyGetValue(const std::string& name) 
+      {
+        return ToObject(Evt.GetValue(name));
+      }
+
+      Event Evt;
+  };
+
+  class PySubscriptionClient: public SubscriptionClient
+  {
+    public:
+      PySubscriptionClient(PyObject* p) : self(p) {
+        std::cout << "got constructed" << std::endl;
+      }
+      //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {} //copy construct
+
+      void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
+      {
+        PyGILState_STATE state = PyGILState_Ensure();
+        python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        PyGILState_Release(state);
+      };
+
+      static void DefaultDataChange(const SubscriptionClient& self_, uint32_t handle, const PyNode& node, const python::object& val, uint32_t attribute)  
+      {
+        std::cout << "No callback defined in python" << std::endl;
+      }
+
+    private:
+      PyObject* const self;
+  };
+
   class PySubscription
   {
     public:
-      PySubscription (const Subscription& other): Sub(other) { }
-      void Delete() { Sub.Delete(); }
-      uint32_t Subscribe(PyNode node) { return Sub.Subscribe(node, AttributeID::VALUE);}
-      uint32_t Subscribe2(PyNode node, AttributeID attr) { return Sub.Subscribe(node, attr);}
+      PySubscription (std::shared_ptr<Subscription> other): Sub(other) { } //converting to shared pointer, should be ok
+      PySubscription () { throw std::runtime_error("Subscription cannot be instanciated from Python"); }
+      void Delete() { Sub->Delete(); }
+      uint32_t SubscribeDataChange(PyNode node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
+      uint32_t SubscribeDataChange2(PyNode node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
+      void UnSubscribe(uint32_t id) { Sub->UnSubscribe(id); }
+      void SubscribeEvents(const Node& eventtype) { Sub->SubscribeEvents(eventtype); }
       
-      //PySubscription(Remote::Server server, SubscriptionParameters params): Server(server), Data(params) { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
     private:
-      Subscription Sub;
+      std::shared_ptr<Subscription> Sub;
   };
 
   class PyClient: public RemoteClient
@@ -956,7 +1010,7 @@ namespace OpcUa
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
-      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
       {
         return PySubscription(RemoteClient::CreateSubscription(period, callback));
       }
@@ -965,12 +1019,13 @@ namespace OpcUa
   class PyOPCUAServer: public OPCUAServer
   {
     public:
+      using OPCUAServer::OPCUAServer;
       PyNode PyGetRootNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder); }
       //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
-      PySubscription CreateSubscription(uint period, SubscriptionClient& callback) 
+      PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
       {
         return PySubscription(OPCUAServer::CreateSubscription(period, callback));
       }
@@ -984,6 +1039,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   using namespace OpcUa;
 
   using self_ns::str; //hack to enable __str__ in python classes with str(self)
+
+  PyEval_InitThreads(); //Seems to be necessary for callback from another thread
 
   RegisterCommonObjectIDs();
 
@@ -1228,15 +1285,23 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
         .def(vector_indexing_suite<std::vector<std::string> >())
     ;
 
-    class_<SubscriptionClient, boost::noncopyable>("SubscriptionClient")
-          .def("data_change_event", &SubscriptionClient::DataChangeEvent)
+    class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
+          .def("data_change", &PySubscriptionClient::DefaultDataChange)
+          .def("event", &PySubscriptionClient::Event)
       ;
 
-    class_<PySubscription>("Subscription", init<const Subscription&>())
-          .def("subscribe", &PySubscription::Subscribe)
-          .def("subscribe", &PySubscription::Subscribe2)
+
+    class_<PyEvent>("Event", init<const NodeID&>())
+          .def("get_value", &PyEvent::PyGetValue)
+          .def("set_value", &PyEvent::PySetValue)
+      ;
+
+    class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())
+          .def("subscribe_data_change", &PySubscription::SubscribeDataChange)
+          .def("subscribe_data_change", &PySubscription::SubscribeDataChange2)
           .def("delete", &PySubscription::Delete)
-          //.def("unsubscribe", &PySubscription::UnSubscribe)
+          .def("unsubscribe", &PySubscription::UnSubscribe)
+          .def("subscribe_events", &PySubscription::SubscribeEvents)
       ;
 
     class_<PyClient, boost::noncopyable>("Client")
@@ -1256,7 +1321,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("create_subscription", &PyClient::CreateSubscription)
       ;
 
-    class_<PyOPCUAServer, boost::noncopyable >("Server")
+    class_<PyOPCUAServer, boost::noncopyable >("Server", init<>())
+          .def(init<bool>())
           .def("start", &PyOPCUAServer::Start)
           .def("stop", &PyOPCUAServer::Stop)
           .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
