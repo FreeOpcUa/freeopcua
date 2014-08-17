@@ -25,7 +25,9 @@
 
 #include <sstream>
 #include <map>
+#include <mutex>
 
+#include <iostream> //debug
 
 namespace OpcUa
 {
@@ -36,12 +38,12 @@ namespace OpcUa
   {
     public:
       //Called for each datachange events
-      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) {};
+      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const {std::cout << "default dc" << std::endl;};
       //Called for every events receive from server
       // order and value of variants depend on event subscription and applied filter
-      virtual void Event(uint32_t handle, std::vector<Variant> xx) {}; 
+      virtual void Event(uint32_t handle, std::vector<Variant> xx) const {}; 
       //Called at server state changed
-      virtual void StatusChange(StatusCode newstatus) {}; 
+      virtual void StatusChange(StatusCode newstatus) const  {}; 
   };
 
 
@@ -91,6 +93,7 @@ namespace OpcUa
       uint32_t LastMonitoredItemHandle = 1;
       AttValMap AttributeValueMap; 
       SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently
+      std::mutex Mutex;
   };
 }
 

@@ -42,7 +42,7 @@ namespace OpcUa
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
       void TriggerEvent(Event event);
 
-      Subscription CreateSubscription(uint period, SubscriptionClient& callback);
+      std::unique_ptr<Subscription> CreateSubscription(uint period, SubscriptionClient& callback);
 
     protected:
       std::vector<std::string> xml_address_spaces;

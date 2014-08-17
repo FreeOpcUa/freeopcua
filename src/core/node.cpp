@@ -72,7 +72,7 @@ namespace OpcUa
     std::vector<DataValue> vec =  Server->Attributes()-> Read(params); 
     if ( vec.size() > 0 )
     {
-      DataValue dv =  Server->Attributes()->Read(params).front(); 
+      DataValue dv =  vec.front(); 
       return dv.Value;
     }
     else

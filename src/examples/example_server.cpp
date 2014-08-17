@@ -26,7 +26,7 @@ using namespace OpcUa;
 
 class SubClient : public SubscriptionClient
 {
-  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) override
+  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) const override
   {
     std::cout << "Received DataChange event for Node " << node << std::endl;
   }
@@ -39,8 +39,6 @@ int main(int argc, char** argv)
   //{
     server.SetEndpoint("opc.tcp://localhost:4841");
     server.SetLoadCppAddressSpace(true);
-    //server.AddAddressSpace("standard_address_space.xml");
-    //server.AddAddressSpace("user_address_space.xml");
     server.Start();
     Node root = server.GetRootNode();
     std::cout << "Root node is: " << root << std::endl;
@@ -60,8 +58,8 @@ int main(int argc, char** argv)
     Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
    
     SubClient clt; 
-    Subscription sub = server.CreateSubscription(100, clt);
-    sub.SubscribeDataChange(myvar);
+    std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
+    sub->SubscribeDataChange(myvar);
     uint32_t counter = 0;
     myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
     std::cout << "Ctrl-C to exit" << std::endl;
