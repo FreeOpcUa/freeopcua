@@ -121,14 +121,14 @@ namespace
     , public std::enable_shared_from_this<BinaryServer>
   {
   public:
-    explicit BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params)
+    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
       : Stream(channel)
       , RequestHandle(0)
       , Params(params)
       , Buffer(8192)
-      , BufferInput(Buffer)
       , SequenceNumber(1)
       , RequestNumber(1)
+      , Debug(debug)
     {
       const Acknowledge& ack = HelloServer(params);
       const OpenSecureChannelResponse& response = OpenChannel();
@@ -161,11 +161,9 @@ namespace
       request.Parameters.ClientCertificate = parameters.ClientCertificate;
       request.Parameters.RequestedSessionTimeout = parameters.Timeout;
       request.Parameters.MaxResponseMessageSize = 65536;
+      Send(request);
 
-      Stream << request << flush;
-
-      CreateSessionResponse response;
-      Stream >> response;
+      const CreateSessionResponse response = Receive<CreateSessionResponse>();
       AuthenticationToken = response.Session.AuthenticationToken;
     }
 
@@ -176,10 +174,9 @@ namespace
       activate.Header.RequestHandle = GetRequestHandle();
       activate.Header.Timeout = 10000;
       activate.Parameters.LocaleIDs.push_back("en");
-      Stream << activate << flush;
+      Send(activate);
 
-      ActivateSessionResponse response;
-      Stream >> response;
+      const ActivateSessionResponse response = Receive<ActivateSessionResponse>();
     }
 
     virtual void CloseSession()
@@ -188,10 +185,9 @@ namespace
       closeSession.Header.SessionAuthenticationToken = AuthenticationToken;
       closeSession.Header.RequestHandle = GetRequestHandle();
       closeSession.Header.Timeout = 10000;
-      Stream << closeSession << flush;
+      Send(closeSession);
 
-      CloseSessionResponse closeResponse;
-      Stream >> closeResponse;
+      const CloseSessionResponse closeResponse = Receive<CloseSessionResponse>();
     }
 
     virtual std::shared_ptr<Remote::EndpointServices> Endpoints() override
@@ -203,10 +199,9 @@ namespace
     {
       OpcUa::FindServersRequest request;
       request.Parameters = params;
-      Stream << request << flush;
+      Send(request);
 
-      OpcUa::FindServersResponse response;
-      Stream >> response;
+      const FindServersResponse response = Receive<OpcUa::FindServersResponse>();
       return response.Data.Descriptions;
     }
 
@@ -217,15 +212,9 @@ namespace
       request.Filter.EndpointURL = filter.EndpointURL;
       request.Filter.LocaleIDs = filter.LocaleIDs;
       request.Filter.ProfileUries = filter.ProfileUries;
-      BufferOutputChannel out;
-      OStreamBinary os(out);
-      os << request << flush;
-      Send(&out.GetBuffer()[0], out.GetBuffer().size());
+      Send(request);
 
-      ReceiveNewData();
-      OpcUa::GetEndpointsResponse response;
-      IStreamBinary in(BufferInput);
-      in >> response;
+      const GetEndpointsResponse response = Receive<OpcUa::GetEndpointsResponse>();
       return response.Endpoints;
     }
 
@@ -244,12 +233,9 @@ namespace
       TranslateBrowsePathsToNodeIDsRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = params;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      TranslateBrowsePathsToNodeIDsResponse response;
-      Stream >> response;
-
+      const TranslateBrowsePathsToNodeIDsResponse response = Receive<TranslateBrowsePathsToNodeIDsResponse>();
       return response.Result.Paths;
     }
 
@@ -259,11 +245,9 @@ namespace
       BrowseRequest browse;
       browse.Header.SessionAuthenticationToken = AuthenticationToken;
       browse.Query = query;
+      Send(browse);
 
-      Stream << browse << OpcUa::Binary::flush;
-
-      BrowseResponse response;
-      Stream >> response;
+      BrowseResponse response = Receive<BrowseResponse>();
 
       if (!response.Results.empty())
       {
@@ -307,19 +291,16 @@ namespace
       browseNext.Header.SessionAuthenticationToken = AuthenticationToken;
       browseNext.ReleaseContinuationPoints= false;
       browseNext.ContinuationPoints.push_back(ContinuationPoint);
+      Send(browseNext);
 
-      Stream << browseNext << OpcUa::Binary::flush;
-
-      BrowseNextResponse response;
-      Stream >> response;
+      const BrowseNextResponse response = Receive<BrowseNextResponse>();
       return !response.Results.empty() ? response.Results.begin()->Referencies :  std::vector<ReferenceDescription>();
     }
 
   public:
     virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() override
     {
-      return std::shared_ptr<Remote::NodeManagementServices>();
-      //return std::static_pointer_cast<Remote::NodeManagementServices>(shared_from_this());
+      return shared_from_this();
     }
 
   public:
@@ -328,12 +309,9 @@ namespace
       AddNodesRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.NodesToAdd = items;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      AddNodesResponse response;
-      Stream >> response;
-
+      const AddNodesResponse response = Receive<AddNodesResponse>();
       return response.results;
     }
 
@@ -342,12 +320,9 @@ namespace
       AddReferencesRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.ReferencesToAdd = items;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      AddReferencesResponse response;
-      Stream >> response;
-
+      const AddReferencesResponse response = Receive<AddReferencesResponse>();
       return response.Results;
     }
 
@@ -362,12 +337,9 @@ namespace
       ReadRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = params;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      ReadResponse response;
-      Stream >> response;
-
+      const ReadResponse response = Receive<ReadResponse>();
       return response.Result.Results;
     }
 
@@ -376,12 +348,9 @@ namespace
       WriteRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.NodesToWrite = values;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      WriteResponse response;
-      Stream >> response;
-
+      const WriteResponse response = Receive<WriteResponse>();
       return response.Result.StatusCodes;
     }
 
@@ -393,15 +362,12 @@ namespace
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
     {
       Callback = callback;
-
       CreateSubscriptionRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = parameters;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      CreateSubscriptionResponse response;
-      Stream >> response;
+      const CreateSubscriptionResponse response = Receive<CreateSubscriptionResponse>();
       return response.Data;
     }
 
@@ -409,17 +375,10 @@ namespace
     {
       DeleteSubscriptionRequest request;
       request.SubscriptionsIds = subscriptions;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      DeleteSubscriptionResponse response;
-      std::vector<StatusCode> results;
-      DiagnosticInfoList diags;
-      Stream >> results;
-      Stream >> diags;
-      return results;
+      const DeleteSubscriptionResponse response = Receive<DeleteSubscriptionResponse>();
+      return response.Results;
     }
 
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
@@ -427,14 +386,10 @@ namespace
       CreateMonitoredItemsRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = parameters;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      MonitoredItemsData data;
-      Stream >> data;
-      return data;
+      const CreateMonitoredItemsResponse response = Receive<CreateMonitoredItemsResponse>();
+      return response.Data;
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
@@ -442,14 +397,10 @@ namespace
       DeleteMonitoredItemsRequest request;
       request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = params;
+      Send(request);
 
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      std::vector<StatusCode> results;
-      Stream >> results;
-      return results;
+      const DeleteMonitoredItemsResponse response = Receive<DeleteMonitoredItemsResponse>();
+      return response.Results;
     }
 
 
@@ -462,66 +413,15 @@ namespace
     {
       PublishRequest request;
       request.Parameters.Acknowledgements = acknowledgements;
-      Stream << request << OpcUa::Binary::flush;
-    }
-
-  private:
-    void ProcessPublishResults()
-    {
-      NodeID typeId;
-      ResponseHeader header;
-      for(;;)
-      {
-        Stream >> typeId;
-        Stream >> header;
-        if (typeId == NodeID(829, 0) )
-        {
-          PublishResult result;
-          Stream >> result;
-          if (Callback)
-          {
-            std::cout << " Calling callback for one publish result " << std::endl;
-            Callback(result);
-          }
-          else
-          {
-            std::cout << " PublishResult received but no callback defined" << std::endl;
-          }
-          //debug
-          //Publish(std::vector<SubscriptionAcknowledgement>()); //This works fine but this is not the right place to send ack
-
-        }
-        else
-        {
-          break;
-        }
-      }
+      Send(request);
     }
 
 private:
-    virtual std::size_t Receive(char* data, std::size_t size)
+    template <typename Request>
+    void Send(Request request) const
     {
-      if (size == 0)
-      {
-        return 0;
-      }
-
-      std::size_t totalReceived = 0;
-      while(totalReceived < size)
-      {
-        const std::size_t received = BufferInput.Receive(data, size);
-        if (received != 0)
-        {
-          totalReceived += received;
-          continue;
-        }
-        ReceiveNewData();
-      }
-      return totalReceived;
-    }
-
-    virtual void Send(const char* message, std::size_t size) const
-    {
+      request.Header.RequestHandle = GetRequestHandle();
+      request.Header.Timeout = 10000;
       // TODO add support for breaking message into multiple chunks
       SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
       const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
@@ -529,13 +429,13 @@ private:
 
       const SequenceHeader sequence = CreateSequenceHeader();
       hdr.AddSize(RawSize(sequence));
-      hdr.AddSize(size);
+      hdr.AddSize(RawSize(request));
 
-      Stream << hdr << algorithmHeader << sequence << OpcUa::Binary::RawMessage(message, size) << flush;
+      Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
-  private:
-    void ReceiveNewData() const
+    template<typename ResponseType>
+    ResponseType Receive() const
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
@@ -556,10 +456,14 @@ private:
 
       const std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
       Buffer.resize(dataSize);
-      BufferInput.Reset();
+      BufferInputChannel bufferInput(Buffer);
       Binary::RawBuffer raw(&Buffer[0], dataSize);
-
       Stream >> raw;
+
+      IStreamBinary in(bufferInput);
+      ResponseType response;
+      in >> response;
+      return response;
     }
 
     Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)
@@ -667,7 +571,6 @@ private:
   private:
     Remote::SecureConnectionParams Params;
     mutable std::vector<char> Buffer;
-    mutable BufferInputChannel BufferInput;
 
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
@@ -677,12 +580,14 @@ private:
     mutable std::atomic<uint32_t> RequestHandle;
     std::function<void (PublishResult)> Callback;
     mutable std::vector<uint8_t> ContinuationPoint;
+    std::map<uint32_t, std::function<void()>> RequestsCallbacks;
+    const bool Debug = false;
   };
 
 } // namespace
 
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params)
+OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params));
+  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
 }

@@ -26,7 +26,13 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
     {
-
+      for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
+      {
+        if (param->Name == "debug" && param->Value != "false" && param->Value != "0")
+        {
+          Debug = true;
+        }
+      }
     }
 
     virtual void Stop()
