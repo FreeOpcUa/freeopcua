@@ -502,8 +502,6 @@ namespace OpcUa
 
       CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
       {
-        std::cout << "Creating monitored request for one item" << std::endl;
-
         NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
         if ( node_it == Nodes.end() )
         {

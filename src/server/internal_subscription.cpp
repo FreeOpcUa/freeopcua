@@ -195,7 +195,6 @@ namespace OpcUa
       mdata.Mode = request.Mode;
       mdata.ClientHandle = request.Parameters.ClientHandle;
       MonitoredItemsMap[res.MonitoredItemID] = mdata;
-          std::cout << "nb of items  in db : " << MonitoredItemsMap.size() << std::endl;
 
       return res;
     }
