@@ -73,14 +73,15 @@ namespace OpcUa
     {
       return Registry->AddReferences(items);
     }
+
     void AddressSpaceAddon::AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
     {
-      Registry->AddAttribute(node, attribute, value);
+      //Registry->AddAttribute(node, attribute, value);
     }
 
     void AddressSpaceAddon::AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
     {
-      Registry->AddReference(sourceNode, reference);
+      //Registry->AddReference(sourceNode, reference);
     }
 
     std::vector<ReferenceDescription> AddressSpaceAddon::Browse(const OpcUa::NodesQuery& query) const

@@ -10,6 +10,10 @@
 
 #include "builtin_server_impl.h"
 
+#include <opc/ua/server/addons/endpoints_services.h>
+#include <opc/ua/server/endpoints_services.h>
+#include <src/server/endpoints_parameters.h>
+
 #include <iostream>
 
 using namespace OpcUa::Impl;
@@ -22,11 +26,6 @@ public:
   virtual std::size_t Receive(char* data, std::size_t size);
   void AddBuffer(const char* buf, std::size_t size);
   void Stop();
-
-  virtual int WaitForData(float second)
-  {
-    return 1;
-  }
 
 private:
   void ThrowIfStopped();
@@ -143,16 +142,6 @@ namespace
       return 0;
     }
 
-    virtual int WaitForData(float second)
-    {
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
-      {
-        return input->WaitForData(second);
-      }
-      return 0;
-    }
-
     virtual void Send(const char* message, std::size_t size)
     {
       if (Debug) std::clog << ID << ": send data." << std::endl;
@@ -192,11 +181,10 @@ std::shared_ptr<OpcUa::Remote::Server> BuiltinServerAddon::GetServer() const
     throw std::logic_error("Cannot access builtin computer. No endpoints was created. You have to configure endpoints.");
   }
 
-  OpcUa::Binary::SecureConnectionParams params;
+  OpcUa::Remote::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  std::shared_ptr<OpcUa::IOChannel> secureChannel = OpcUa::Binary::CreateSecureChannel(ClientChannel, params);
-  return OpcUa::Remote::CreateBinaryServer(secureChannel);
+  return OpcUa::Remote::CreateBinaryServer(ClientChannel, params);
 }
 
 BuiltinServerAddon::~BuiltinServerAddon()
@@ -219,10 +207,38 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
       Debug = true;
     }
   }
+
+  const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+  for (OpcUa::UaServer::ApplicationData d: applications) {
+    std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+  }
+
+  std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
+  std::vector<OpcUa::EndpointDescription> endpointDescriptions;
+  for (const OpcUa::UaServer::ApplicationData application : applications)
+  {
+    applicationDescriptions.push_back(application.Application);
+    endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
+  }
+
+  OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+  if (!endpointsAddon)
+  {
+    std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
+    return;
+  }
+  endpointsAddon->AddEndpoints(endpointDescriptions);
+  endpointsAddon->AddApplications(applicationDescriptions);
+
+  OpcUa::UaServer::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+
+  Protocol = OpcUa::UaServer::CreateOpcUaProtocol(*this, Debug);
+  Protocol->StartEndpoints(endpointDescriptions, internalServer->GetServer());
 }
 
 void BuiltinServerAddon::Stop()
 {
+  Protocol.reset();
   if (ClientInput)
   {
     ClientInput->Stop();

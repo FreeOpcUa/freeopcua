@@ -10,15 +10,15 @@
 
 #pragma once
 
-#include <opc/ua/server/addons/builtin_server.h>
-#include <opc/ua/server/builtin_server.h>
+#include "builtin_server_addon.h"
+#include "builtin_server.h"
 
 #include <opc/ua/connection_listener.h>
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/thread.h>
 #include <opc/ua/client/binary_server.h>
-#include <opc/ua/protocol/binary/secure_connection.h>
+#include <src/server/opcua_protocol.h>
 
 #include <atomic>
 #include <condition_variable>
@@ -63,6 +63,8 @@ namespace OpcUa
       std::shared_ptr<OpcUa::IOChannel> ClientChannel;
       std::shared_ptr<OpcUa::IOChannel> ServerChannel;
       std::unique_ptr<Common::Thread> Thread;
+
+      OpcUa::UaServer::OpcUaProtocol::SharedPtr Protocol;
       bool Debug;
     };
 

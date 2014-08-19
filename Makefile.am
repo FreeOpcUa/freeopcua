@@ -64,56 +64,52 @@ all-local : test_addon.so libtest_dynamic_addon.so tests/gtest/lib/.libs/libgtes
 ####################################################
 
 serverinclude_HEADERS = \
-	include/opc/ua/server/standard_namespace.h \
-	include/opc/ua/server/opcua_protocol.h \
 	include/opc/ua/server/address_space.h \
-	include/opc/ua/server/opcuaserver.h \
 	include/opc/ua/server/endpoints_services.h \
 	include/opc/ua/server/opc_tcp_async.h \
-	include/opc/ua/server/tcp_server.h \
+	include/opc/ua/server/opcuaserver.h \
 	include/opc/ua/server/services_registry.h \
-	include/opc/ua/server/builtin_server.h
+	include/opc/ua/server/standard_namespace.h
 	
 addonsinclude_HEADERS = \
-	include/opc/ua/server/addons/standard_namespace.h \
-	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/address_space.h \
-	include/opc/ua/server/addons/xml_ns.h \
 	include/opc/ua/server/addons/endpoints_services.h \
 	include/opc/ua/server/addons/opc_tcp_async.h \
-	include/opc/ua/server/addons/tcp_server.h \
+	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/services_registry.h \
-	include/opc/ua/server/addons/builtin_server.h
+	include/opc/ua/server/addons/standard_namespace.h \
+	include/opc/ua/server/addons/xml_ns.h
 
 libopcuaserver_la_SOURCES = \
-	src/server/xml_address_space_loader.cpp \
-	src/server/opcua_protocol_addon.cpp \
-	src/server/services_registry_impl.cpp \
-	src/server/endpoints_parameters.cpp \
-	src/server/endpoints_services_addon.cpp \
+	src/server/address_space_addon.cpp \
 	src/server/address_space_addon.h \
+	src/server/address_space_internal.cpp \
+	src/server/endpoints_parameters.cpp \
+	src/server/endpoints_parameters.h \
+	src/server/endpoints_services_addon.cpp \
+	src/server/endpoints_registry.cpp \
+	src/server/internal_subscription.h \
+	src/server/internal_subscription.cpp \
 	src/server/opc_tcp_async_addon.cpp \
 	src/server/opc_tcp_async.cpp \
 	src/server/opc_tcp_async_parameters.cpp \
 	src/server/opc_tcp_async_parameters.h \
-	src/server/tcp_server.cpp \
-	src/server/xml_address_space_loader.h \
-	src/server/standard_namespace_addon.cpp \
-	src/server/tcp_server_factory.cpp \
-	src/server/standard_namespace.cpp \
-	src/server/endpoints_parameters.h \
-	src/server/xml_address_space_addon.cpp \
-	src/server/endpoints_registry.cpp \
-	src/server/address_space_internal.cpp \
+	src/server/opc_tcp_processor.cpp \
+	src/server/opcua_protocol.h \
+	src/server/opcua_protocol_addon.cpp \
+	src/server/opcuaserver.cpp \
 	src/server/server_options.cpp \
 	src/server/server_options.h \
+	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
-	src/server/opc_tcp_processor.cpp \
-	src/server/address_space_addon.cpp \
-	src/server/xml_processor.h \
-	src/server/internal_subscription.h \
-	src/server/internal_subscription.cpp \
-	src/server/opcuaserver.cpp
+	src/server/standard_namespace_addon.cpp \
+	src/server/standard_namespace.cpp \
+	src/server/tcp_server.cpp \
+	src/server/tcp_server.h \
+	src/server/xml_address_space_loader.cpp \
+	src/server/xml_address_space_loader.h \
+	src/server/xml_address_space_addon.cpp \
+	src/server/xml_processor.h
 
 libopcuaserver_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaserver_la_LIBADD = libopcuaprotocol.la libopcuacore.la
@@ -139,6 +135,8 @@ test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacor
 	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.so
 
 test_opcuaserver_SOURCES = \
+	tests/server/builtin_server_addon.h \
+	tests/server/builtin_server.h \
 	tests/server/address_space_registry_test.h \
 	tests/server/builtin_server_factory.cpp \
 	tests/server/builtin_server_impl.cpp \
@@ -154,10 +152,7 @@ test_opcuaserver_SOURCES = \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
 	tests/server/xml_addressspace_ut.cpp \
-	tests/server/xml_address_space_addon_ut.cpp \
-	tests/server/tcp_server_addon_test.cpp \
-	tests/server/tcp_server_addon_test.h \
-	tests/server/tcp_server_test.cpp
+	tests/server/xml_address_space_addon_ut.cpp
 
 test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
@@ -168,39 +163,38 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 ####################################################
 
 binaryinclude_HEADERS = \
-  include/opc/ua/protocol/binary/stream.h \
   include/opc/ua/protocol/binary/common.h \
-  include/opc/ua/protocol/binary/secure_connection.h
+  include/opc/ua/protocol/binary/stream.h
 
 protocolinclude_HEADERS = \
   include/opc/ua/protocol/attribute.h \
-  include/opc/ua/protocol/node_management.h \
+  include/opc/ua/protocol/attribute_ids.h \
+  include/opc/ua/protocol/channel.h \
   include/opc/ua/protocol/data_value.h \
   include/opc/ua/protocol/datetime.h \
-  include/opc/ua/protocol/endpoints.h \
-  include/opc/ua/protocol/guid.h \
-  include/opc/ua/protocol/monitored_items.h \
-  include/opc/ua/protocol/nodeid.h \
-  include/opc/ua/protocol/secure_channel.h \
-  include/opc/ua/protocol/session.h \
-  include/opc/ua/protocol/subscriptions.h \
-  include/opc/ua/protocol/types.h \
-  include/opc/ua/protocol/variant.h \
-  include/opc/ua/protocol/view.h \
   include/opc/ua/protocol/describe.h \
-  include/opc/ua/protocol/channel.h \
-  include/opc/ua/protocol/input_from_buffer.h \
+  include/opc/ua/protocol/endpoints.h \
+  include/opc/ua/protocol/expanded_object_ids.h \
   include/opc/ua/protocol/extension_identifiers.h \
-  include/opc/ua/protocol/attribute_ids.h \
+  include/opc/ua/protocol/guid.h \
+  include/opc/ua/protocol/input_from_buffer.h \
   include/opc/ua/protocol/message_identifiers.h \
+  include/opc/ua/protocol/monitored_items.h \
+  include/opc/ua/protocol/node_management.h \
+  include/opc/ua/protocol/nodeid.h \
   include/opc/ua/protocol/node_classes.h \
   include/opc/ua/protocol/object_ids.h \
-  include/opc/ua/protocol/expanded_object_ids.h \
   include/opc/ua/protocol/reference_ids.h \
+  include/opc/ua/protocol/secure_channel.h \
+  include/opc/ua/protocol/session.h \
+  include/opc/ua/protocol/status_codes.h \
   include/opc/ua/protocol/strings.h \
   include/opc/ua/protocol/string_utils.h \
-  include/opc/ua/protocol/status_codes.h \
-  include/opc/ua/protocol/variable_access_level.h
+  include/opc/ua/protocol/subscriptions.h \
+  include/opc/ua/protocol/types.h \
+  include/opc/ua/protocol/variable_access_level.h \
+  include/opc/ua/protocol/variant.h \
+  include/opc/ua/protocol/view.h
 
 libopcuaprotocol_la_SOURCES = \
   src/protocol/binary_variant.cpp \
@@ -214,14 +208,13 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/binary_raw_size.cpp \
   src/protocol/binary_session.cpp \
   src/protocol/binary_view.cpp \
-  src/protocol/binary_secure_channel.cpp \
   src/protocol/input_from_buffer.cpp \
   src/protocol/monitored_items.cpp \
   src/protocol/nodeid.cpp \
   src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
-  src/protocol/string_utils.cpp \
-  src/protocol/status_codes.cpp
+  src/protocol/status_codes.cpp \
+  src/protocol/string_utils.cpp
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
@@ -294,7 +287,6 @@ addonscore_HEADERS = \
 
 libopcuacore_la_SOURCES = \
                   src/core/common/application.cpp \
-                  src/core/common/object_id.cpp \
                   src/core/common/thread.cpp \
                   src/core/common/addons_core/addon_manager.cpp \
                   src/core/common/addons_core/config_file.cpp \
@@ -302,9 +294,10 @@ libopcuacore_la_SOURCES = \
                   src/core/common/addons_core/dynamic_addon_factory.cpp \
                   src/core/common/addons_core/dynamic_library.cpp \
                   src/core/common/addons_core/dynamic_library.h \
-                  src/core/common/value.cpp \
-                  src/core/common/exception.cpp \
                   src/core/common/common_errors.cpp \
+                  src/core/common/exception.cpp \
+                  src/core/common/object_id.cpp \
+                  src/core/common/value.cpp \
                   src/core/event.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
@@ -356,21 +349,13 @@ clientinclude_HEADERS = \
   include/opc/ua/client/addon.h \
   include/opc/ua/client/binary_server.h \
   include/opc/ua/client/client.h \
-  include/opc/ua/client/remote_server.h \
   include/opc/ua/client/remote_connection.h
 
 libopcuaclient_la_SOURCES = \
-  src/client/computer.cpp \
   src/client/client.cpp \
   src/client/binary_computer_addon.cpp \
   src/client/binary_computer.cpp \
-  src/client/binary_connection.cpp \
-  src/client/endpoints.h \
-  src/client/stream_attribute.h \
-  src/client/stream_node_management.h \
-  src/client/stream_server.h \
-  src/client/stream_subscription.h \
-  src/client/stream_view.h
+  src/client/binary_connection.cpp
 
 libopcuaclient_la_CPPFLAGS =  -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuaclient_la_LIBADD = libopcuaprotocol.la libopcuacore.la
@@ -416,8 +401,8 @@ example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 #############################################################
 
 EXTRA_DIST = \
-  src/server/configs/opcuaserver \
   src/server/configs/main.conf \
+  src/server/configs/opcuaserver \
   src/server/configs/opcuaserver.conf \
   tests/client/configs \
   tests/core/configs \
