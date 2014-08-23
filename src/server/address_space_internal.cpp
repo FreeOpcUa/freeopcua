@@ -78,6 +78,17 @@ namespace OpcUa
       {
         //Initialize the worker thread for subscriptions
         service_thread = std::thread([&](){ io.run(); });
+
+        ObjectAttributes attrs;
+        attrs.Description = LocalizedText(OpcUa::Names::Root);
+        attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
+
+        AddNodesItem rootNode;
+        rootNode.BrowseName = QualifiedName(0, OpcUa::Names::Root);
+        rootNode.Class = NodeClass::Object;
+        rootNode.RequestedNewNodeID = ObjectID::RootFolder;
+        rootNode.Attributes = attrs;
+        AddNode(rootNode);
       }
 
      ~AddressSpaceInMemory()
@@ -606,21 +617,25 @@ namespace OpcUa
       AddNodesResult AddNode( const AddNodesItem& item )
       {
         AddNodesResult result;
+        if (Debug) std::cout << "address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
 
-        NodesMap::iterator node_it = Nodes.find(item.RequestedNewNodeID);
-        if ( node_it != Nodes.end() )
+        if (!Nodes.empty() && Nodes.find(item.RequestedNewNodeID) != Nodes.end())
         {
-          std::cout << "Error: NodeID allready exist: " << node_it->first << std::endl;
+          std::cout << "Error: NodeID '"<< item.RequestedNewNodeID << "' allready exist: " << std::endl;
           result.Status = StatusCode::BadNodeIdExists;
           return result;
         }
 
-        NodesMap::iterator parent_node_it = Nodes.find(item.ParentNodeId);
-        if ( parent_node_it == Nodes.end() )
+        NodesMap::iterator parent_node_it = Nodes.end();
+        if (item.ParentNodeId != NodeID())
         {
-          std::cout << "Error: Parent node does not exist" << std::endl;
-          result.Status = StatusCode::BadParentNodeIdInvalid; 
-          return result;
+          parent_node_it = Nodes.find(item.ParentNodeId);
+          if ( parent_node_it == Nodes.end() )
+          {
+            std::cout << "Error: Parent node '"<< item.ParentNodeId << "'does not exist" << std::endl;
+            result.Status = StatusCode::BadParentNodeIdInvalid;
+            return result;
+          }
         }
 
         NodeStruct nodestruct;
@@ -643,20 +658,37 @@ namespace OpcUa
         }
         Nodes.insert(std::make_pair(item.RequestedNewNodeID, nodestruct));
 
-        // Link to parent
-        ReferenceDescription desc;
-        desc.ReferenceTypeID = item.ReferenceTypeId;
-        desc.TargetNodeID = item.RequestedNewNodeID;
-        desc.TargetNodeClass = item.Class;
-        desc.BrowseName = item.BrowseName;
-        desc.DisplayName = LocalizedText(item.BrowseName.Name);
-        desc.TargetNodeTypeDefinition = item.TypeDefinition;
-        desc.IsForward = true; // should this be in constructor?
-        
-        parent_node_it->second.References.push_back(desc);
+
+        if (parent_node_it != Nodes.end())
+        {
+          // Link to parent
+          ReferenceDescription desc;
+          desc.ReferenceTypeID = item.ReferenceTypeId;
+          desc.TargetNodeID = item.RequestedNewNodeID;
+          desc.TargetNodeClass = item.Class;
+          desc.BrowseName = item.BrowseName;
+          desc.DisplayName = LocalizedText(item.BrowseName.Name);
+          desc.TargetNodeTypeDefinition = item.TypeDefinition;
+          desc.IsForward = true; // should this be in constructor?
+
+          parent_node_it->second.References.push_back(desc);
+        }
+
+        if (item.TypeDefinition != ObjectID::Null)
+        {
+          // Link to parent
+          AddReferencesItem typeRef;
+          typeRef.SourceNodeID = item.RequestedNewNodeID;
+          typeRef.IsForward = true;
+          typeRef.ReferenceTypeId = ObjectID::HasTypeDefinition;
+          typeRef.TargetNodeID = item.TypeDefinition;
+          typeRef.TargetNodeClass = NodeClass::DataType; // FIXME: Take from node with ID item.TypeDefinition
+          AddReference(typeRef);
+        }
 
         result.Status = StatusCode::Good;
         result.AddedNodeID = item.RequestedNewNodeID;
+        if (Debug) std::cout << "address_space| node added." << std::endl;
         return result;
       }
 
@@ -672,6 +704,8 @@ namespace OpcUa
         desc.IsForward = item.IsForward;
         desc.TargetNodeID = item.TargetNodeID;
         desc.TargetNodeClass = item.TargetNodeClass;
+        // FIXME: these fields have to be filled from address space dynamically.
+        // FIXME: note! Target node ID can be absent according standard.
         desc.BrowseName = QualifiedName(GetObjectIdName(item.TargetNodeID));
         desc.DisplayName = LocalizedText(GetObjectIdName(item.TargetNodeID));
         node_it->second.References.push_back(desc);
