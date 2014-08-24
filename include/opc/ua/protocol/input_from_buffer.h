@@ -31,9 +31,9 @@ namespace OpcUa
 
     virtual std::size_t Receive(char* data, std::size_t size) override;
 
-    virtual int WaitForData(float second){return 1;}
-
     size_t GetRemainSize() const;
+
+    virtual void Stop(){}
 
   private:
     const char* Buffer;

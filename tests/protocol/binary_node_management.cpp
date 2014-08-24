@@ -54,8 +54,8 @@ TEST_F(AddNodesSerialization, AddNodesItem)
   attr.Type = ObjectID::UInt32;
   attr.Rank  = 0;
   //attr.Dimensions = 0;
-  attr.AccessLevel = 1;
-  attr.UserAccessLevel = 2;
+  attr.AccessLevel = VariableAccessLevel::CurrentRead;
+  attr.UserAccessLevel = VariableAccessLevel::CurrentWrite;
   attr.MinimumSamplingInterval = 1;
   attr.Historizing = true;
   item.Attributes = attr;

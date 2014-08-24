@@ -116,6 +116,12 @@ namespace
 
     void Start();
 
+    virtual void Stop()
+    {
+      Socket.close();
+    }
+
+
   private:
     void ReadNextData();
     void ProcessHeader(const boost::system::error_code& error, std::size_t bytes_transferred);

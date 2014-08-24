@@ -15,7 +15,7 @@
 #include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/standard_namespace.h>
-#include <opc/ua/server/addons/tcp_server.h>
+#include "tcp_server.h"
 
 #include "daemon.h"
 #include "server_options.h"
@@ -37,14 +37,6 @@ namespace
     Common::AddonInformation services;
     services.Factory = std::make_shared<OpcUa::UaServer::ServicesRegistryFactory>();
     services.ID = OpcUa::UaServer::ServicesRegistryAddonID;
-    return services;
-  }
-
-  Common::AddonInformation CreateTcpServer()
-  {
-    Common::AddonInformation services;
-    services.Factory = std::make_shared<OpcUa::UaServer::TcpServerAddonFactory>();
-    services.ID = OpcUa::UaServer::TcpServerAddonID;
     return services;
   }
 
@@ -81,7 +73,6 @@ namespace
     opcTcp.Factory = std::make_shared<OpcUa::UaServer::OpcUaProtocolAddonFactory>();
     opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
     opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
-    opcTcp.Dependencies.push_back(OpcUa::UaServer::TcpServerAddonID);
     return opcTcp;
   }
 
@@ -111,7 +102,6 @@ namespace
         Common::AddonInformation binaryProtocol = CreateBinaryServer();
         AddParameters(binaryProtocol, group);
         addons.push_back(std::move(binaryProtocol));
-        addons.push_back(CreateTcpServer());
       }
       else if (group.Name == OpcUa::UaServer::AddressSpaceRegistryAddonID)
       {

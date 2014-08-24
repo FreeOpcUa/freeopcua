@@ -10,8 +10,13 @@
 
 
 #include <opc/ua/client/addon.h>
-#include <opc/ua/client/remote_server.h>
+#include <opc/ua/client/binary_server.h>
 #include <opc/common/addons_core/addon_manager.h>
+
+#include <opc/common/uri_facade.h>
+#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/remote_connection.h>
+
 
 
 namespace
@@ -21,7 +26,13 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
     {
-
+      for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
+      {
+        if (param->Name == "debug" && param->Value != "false" && param->Value != "0")
+        {
+          Debug = true;
+        }
+      }
     }
 
     virtual void Stop()
@@ -36,7 +47,7 @@ namespace
 
     virtual OpcUa::Remote::Server::SharedPtr Connect(const std::string& url)
     {
-      return OpcUa::Remote::Connect(url);
+      return OpcUa::Remote::CreateBinaryServer(url, Debug);
     }
 
   private:

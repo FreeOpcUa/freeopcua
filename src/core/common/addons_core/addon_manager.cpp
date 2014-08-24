@@ -74,7 +74,10 @@ namespace
     {
       try
       {
-        Stop();
+        if (ManagerStarted)
+        {
+          Stop();
+        }
       }
       catch(const Common::Error& err)
       {

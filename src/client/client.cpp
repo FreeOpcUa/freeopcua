@@ -17,11 +17,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  ******************************************************************************/
 
-#include <opc/ua/server.h>
 #include <opc/ua/client/client.h>
-#include <opc/ua/node.h>
+
 #include <opc/common/uri_facade.h>
+#include <opc/ua/client/remote_connection.h>
 #include <opc/ua/server.h>
+#include <opc/ua/node.h>
 
 
 namespace OpcUa
@@ -29,7 +30,14 @@ namespace OpcUa
 
   void RemoteClient::Connect()
   {
-    Server = OpcUa::Remote::Connect(Endpoint);
+    const Common::Uri serverUri(Endpoint);
+    OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+
+    OpcUa::Remote::SecureConnectionParams params;
+    params.EndpointUrl = Endpoint;
+    params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+
+    Server = OpcUa::Remote::CreateBinaryServer(channel, params);
 
     OpcUa::Remote::SessionParameters session;
     session.ClientDescription.URI = Uri;

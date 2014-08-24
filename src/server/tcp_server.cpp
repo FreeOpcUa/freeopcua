@@ -8,9 +8,19 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+
+#include "tcp_server.h"
+
+#include "opcua_protocol.h"
+#include "opc_tcp_processor.h"
+#include "utils.h"
+
 #include <opc/common/thread.h>
-#include <opc/ua/server/tcp_server.h>
+#include <opc/common/uri_facade.h>
+#include <opc/ua/server.h>
 #include <opc/ua/socket_channel.h>
+#include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/input_from_buffer.h>
 
 #include <arpa/inet.h>
 #include <errno.h>
@@ -28,6 +38,7 @@
 namespace
 {
   using namespace OpcUa;
+  using namespace OpcUa::Binary;
   using namespace OpcUa::UaServer;
 
  
