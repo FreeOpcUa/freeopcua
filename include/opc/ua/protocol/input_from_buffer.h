@@ -33,6 +33,8 @@ namespace OpcUa
 
     size_t GetRemainSize() const;
 
+    virtual void Stop(){}
+
   private:
     const char* Buffer;
     std::size_t Size;

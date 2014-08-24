@@ -80,6 +80,12 @@ namespace
       return Channel.Send(message, size);
     }
 
+
+    virtual void Stop()
+    {
+      Channel.Stop();
+    }
+
     virtual std::string GetHost() const
     {
       return HostName;

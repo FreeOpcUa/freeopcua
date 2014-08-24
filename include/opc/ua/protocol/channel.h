@@ -18,7 +18,21 @@
 namespace OpcUa
 {
 
-  class InputChannel
+  class BreakableChannel
+  {
+  public:
+    virtual ~BreakableChannel(){}
+    BreakableChannel(){}
+    BreakableChannel(const BreakableChannel&) = delete;
+    BreakableChannel(BreakableChannel&&) = delete;
+    BreakableChannel& operator=(const BreakableChannel&) = delete;
+
+  public:
+    virtual void Stop() = 0;
+  };
+
+
+  class InputChannel : public virtual BreakableChannel
   {
   public:
     typedef std::shared_ptr<InputChannel> SharedPtr;
@@ -26,7 +40,6 @@ namespace OpcUa
 
   public:
     virtual ~InputChannel(){}
-
     InputChannel(){}
     InputChannel(const InputChannel&) = delete;
     InputChannel(InputChannel&&) = delete;
@@ -41,26 +54,7 @@ namespace OpcUa
   };
 
 
-  typedef std::function<void(const char* buffer, const std::system_error& err)> ReceiveCallback;
-
-  class AsyncInputChannel
-  {
-  public:
-    typedef std::shared_ptr<InputChannel> SharedPtr;
-    typedef std::unique_ptr<InputChannel> UniquePtr;
-
-  public:
-    virtual ~AsyncInputChannel(){}
-    AsyncInputChannel(){}
-    AsyncInputChannel(const AsyncInputChannel&) = delete;
-    AsyncInputChannel(AsyncInputChannel&&) = delete;
-    AsyncInputChannel& operator=(const AsyncInputChannel&) = delete;
-
-    virtual void Receive(std::size_t size, ReceiveCallback) = 0;
-  };
-
-
-  class OutputChannel
+  class OutputChannel : public virtual BreakableChannel
   {
   public:
     typedef std::shared_ptr<OutputChannel> SharedPtr;
@@ -79,27 +73,6 @@ namespace OpcUa
   };
 
 
-  typedef std::function<void(const std::system_error& err)> SendDataCallback;
-
-  class AsyncOutputChannel
-  {
-  public:
-    typedef std::shared_ptr<AsyncOutputChannel> SharedPtr;
-    typedef std::unique_ptr<AsyncOutputChannel> UniquePtr;
-
-  public:
-    virtual ~AsyncOutputChannel(){}
-
-    AsyncOutputChannel(){}
-    AsyncOutputChannel(const OutputChannel&) = delete;
-    AsyncOutputChannel(OutputChannel&&) = delete;
-    AsyncOutputChannel& operator=(const OutputChannel&) = delete;
-
-   public:
-    virtual void Send(const char* message, std::size_t size, SendDataCallback callback) = 0;
-  };
-
-
   class IOChannel :
     public InputChannel,
     public OutputChannel
@@ -107,15 +80,6 @@ namespace OpcUa
   public:
     typedef std::shared_ptr<IOChannel> SharedPtr;
     typedef std::unique_ptr<IOChannel> UniquePtr;
-  };
-
-  class AsyncIO :
-    public AsyncInputChannel,
-    public AsyncOutputChannel
-  {
-  public:
-    typedef std::shared_ptr<AsyncIO> SharedPtr;
-    typedef std::unique_ptr<AsyncIO> UniquePtr;
   };
 
 }
