@@ -47,13 +47,7 @@ namespace
 
     virtual OpcUa::Remote::Server::SharedPtr Connect(const std::string& url)
     {
-      const Common::Uri serverUri(url);
-      OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-
-      OpcUa::Remote::SecureConnectionParams params;
-      params.EndpointUrl = url;
-      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-      return CreateBinaryServer(channel, params);
+      return OpcUa::Remote::CreateBinaryServer(url, Debug);
     }
 
   private:

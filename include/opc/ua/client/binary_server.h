@@ -39,6 +39,7 @@ namespace OpcUa
     /// @brief Create server based on opc ua binary protocol.
     /// @param channel channel wich will be used for sending requests data.
     Server::SharedPtr CreateBinaryServer(IOChannel::SharedPtr channel, const SecureConnectionParams& params, bool debug = false);
+    Server::SharedPtr CreateBinaryServer(const std::string& endpointUrl, bool debug = false);
 
   } // namespace Remote
 } // namespace OpcUa

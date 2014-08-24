@@ -9,6 +9,7 @@
 ///
 
 #include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/remote_connection.h>
 
 #include <opc/common/uri_facade.h>
 #include <opc/ua/protocol/binary/stream.h>
@@ -590,4 +591,14 @@ private:
 OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
 {
   return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
+}
+
+OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+{
+  const Common::Uri serverUri(endpointUrl);
+  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+  OpcUa::Remote::SecureConnectionParams params;
+  params.EndpointUrl = endpointUrl;
+  params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+  return CreateBinaryServer(channel, params, debug);
 }
