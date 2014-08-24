@@ -31,7 +31,14 @@
 
 namespace OpcUa
 {
-  typedef std::map<IntegerID, AttributeValueID> AttValMap;
+  struct MonitoredItemData
+  {
+    IntegerID MonitoredItemID;
+    NodeID Node;
+    AttributeID Attribute;
+  };
+
+  typedef std::map<IntegerID, MonitoredItemData> AttValMap;
   typedef std::map<IntegerID, EventFilter> SimpleAttOpMap;
 
   class SubscriptionClient

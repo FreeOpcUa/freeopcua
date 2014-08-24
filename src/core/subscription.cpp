@@ -125,17 +125,21 @@ namespace OpcUa
       throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
     }
 
-    std::vector<uint32_t> mids;
+    std::vector<uint32_t> handles;
     uint i = 0;
     for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
       std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl; 
-      AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = attributes[i];
+      MonitoredItemData mdata;
+      mdata.MonitoredItemID = res.MonitoredItemID;
+      mdata.Attribute =  attributes[i].Attribute;
+      mdata.Node =  attributes[i].Node;
+      AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
+      handles.push_back(itemsParams.ItemsToCreate[i].Parameters.ClientHandle);
       ++i;
-      mids.push_back(res.MonitoredItemID);
     }
-    return mids;
+    return handles;
   }
 
   void Subscription::UnSubscribe(uint32_t handle)
@@ -147,12 +151,22 @@ namespace OpcUa
   {
     DeleteMonitoredItemsParameters params;
     params.SubscriptionId = Data.ID;
-    std::vector<IntegerID> newhandles;
+    std::vector<IntegerID> mids;
     for (auto id : handles)
     {
-      newhandles.push_back(IntegerID(id));
+      AttValMap::iterator mapit = AttributeValueMap.find(IntegerID(id));
+      if ( mapit != AttributeValueMap.end() )
+      {
+        mids.push_back(mapit->second.MonitoredItemID);
+      }
+      else
+      {
+        //To no not confuse client we send to the server the last id it may use... but will this id one day exist?
+        mids.push_back(IntegerID(std::numeric_limits<uint32_t>::max()));
+      }
+
     }
-    params.MonitoredItemsIds = newhandles;
+    params.MonitoredItemsIds = mids;
     auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
     for (auto res : results)
     {
@@ -197,7 +211,6 @@ namespace OpcUa
     MonitoringFilter filter;
     filter.Event = eventfilter;
     params.Filter = filter;
-    AttributeValueMap[params.ClientHandle] = avid;
     req.Parameters = params;
     itemsParams.ItemsToCreate.push_back(req);
 
@@ -206,6 +219,14 @@ namespace OpcUa
     {
       throw(std::runtime_error("Protocol Error CreateMonitoredItems should return one result"));
     }
+
+    MonitoredItemData mdata;
+    mdata.Node = avid.Node;
+    mdata.Attribute = avid.Attribute;
+    mdata.MonitoredItemID = results[0].MonitoredItemID;
+    AttributeValueMap[params.ClientHandle] = mdata;
+
+
     CreateMonitoredItemsResult res = results[0];
     CheckStatusCode(res.Status);
     SimpleAttributeOperandMap[res.MonitoredItemID] = eventfilter; //Not used
