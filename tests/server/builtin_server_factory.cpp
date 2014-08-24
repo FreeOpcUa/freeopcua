@@ -9,7 +9,6 @@
 ///
 
 #include "builtin_server_addon.h"
-
 #include "builtin_server_impl.h"
 
 Common::Addon::UniquePtr OpcUa::UaServer::BuiltingServerFactory::CreateAddon()
