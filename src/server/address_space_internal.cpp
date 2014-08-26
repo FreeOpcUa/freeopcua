@@ -680,7 +680,7 @@ namespace OpcUa
           typeRef.IsForward = true;
           typeRef.ReferenceTypeId = ObjectID::HasTypeDefinition;
           typeRef.TargetNodeID = item.TypeDefinition;
-          typeRef.TargetNodeClass = NodeClass::DataType; // FIXME: Take from node with ID item.TypeDefinition
+          typeRef.TargetNodeClass = NodeClass::DataType;
           AddReference(typeRef);
         }
 
