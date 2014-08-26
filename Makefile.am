@@ -30,6 +30,7 @@ check_PROGRAMS = $(TESTS)
 opcincludedir = $(includedir)/opc
 opcuaincludedir = $(opcincludedir)/ua
 clientincludedir = $(opcuaincludedir)/client
+servicesincludedir = $(opcuaincludedir)/services
 serverincludedir = $(opcuaincludedir)/server
 addonsincludedir = $(serverincludedir)/addons
 protocolincludedir = $(opcuaincludedir)/protocol
@@ -95,6 +96,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/opc_tcp_async_parameters.cpp \
 	src/server/opc_tcp_async_parameters.h \
 	src/server/opc_tcp_processor.cpp \
+	src/server/opc_tcp_processor.h \
 	src/server/opcua_protocol.h \
 	src/server/opcua_protocol_addon.cpp \
 	src/server/opcuaserver.cpp \
@@ -106,6 +108,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/standard_namespace.cpp \
 	src/server/tcp_server.cpp \
 	src/server/tcp_server.h \
+	src/server/utils.h \
 	src/server/xml_address_space_loader.cpp \
 	src/server/xml_address_space_loader.h \
 	src/server/xml_address_space_addon.cpp \
@@ -135,9 +138,9 @@ test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacor
 	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.so
 
 test_opcuaserver_SOURCES = \
-	tests/server/builtin_server_addon.h \
-	tests/server/builtin_server.h \
 	tests/server/address_space_registry_test.h \
+	tests/server/builtin_server.h \
+	tests/server/builtin_server_addon.h \
 	tests/server/builtin_server_factory.cpp \
 	tests/server/builtin_server_impl.cpp \
 	tests/server/builtin_server_impl.h \
@@ -254,13 +257,15 @@ opcuainclude_HEADERS = \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
   include/opc/ua/server.h \
+  include/opc/ua/socket_channel.h \
+  include/opc/ua/subscription.h
+
+servicesinclude_HEADERS = \
   include/opc/ua/services/attributes.h \
   include/opc/ua/services/endpoints.h \
   include/opc/ua/services/node_management.h \
   include/opc/ua/services/subscriptions.h \
-  include/opc/ua/services/view.h \
-  include/opc/ua/socket_channel.h \
-  include/opc/ua/subscription.h
+  include/opc/ua/services/view.h
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \
@@ -401,15 +406,16 @@ example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 #############################################################
 
 EXTRA_DIST = \
-  src/server/configs/main.conf \
+  src/client/configs/opc_tcp.conf \
+  src/server/configs/server.conf \
   src/server/configs/opcuaserver \
   src/server/configs/opcuaserver.conf \
-  tests/client/configs \
   tests/core/configs \
   tests/gtest \
   tests/gmock \
   tests/server/common.cpp \
   tests/server/common.h \
+  tests/server/configs \
   tests/server/test_addon.cpp \
   tests/server/test_addon.h \
   tests/server/base_node.xml \

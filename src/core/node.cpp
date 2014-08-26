@@ -340,8 +340,8 @@ namespace OpcUa
     attr.Type = datatype;
     attr.Rank  = 0;
     attr.Dimensions = val.Dimensions;
-    attr.AccessLevel = 0;
-    attr.UserAccessLevel = 0;
+    attr.AccessLevel = VariableAccessLevel::CurrentRead;
+    attr.UserAccessLevel = VariableAccessLevel::CurrentRead;
     attr.MinimumSamplingInterval = 1;
     attr.Historizing = 0;
     item.Attributes = attr;
@@ -399,8 +399,8 @@ namespace OpcUa
     attr.Type = datatype;
     attr.Rank  = 0;
     attr.Dimensions = val.Dimensions;
-    attr.AccessLevel = 0;
-    attr.UserAccessLevel = 0;
+    attr.AccessLevel = VariableAccessLevel::CurrentRead;
+    attr.UserAccessLevel = VariableAccessLevel::CurrentRead;
     attr.MinimumSamplingInterval = 0;
     attr.Historizing = 0;
     item.Attributes = attr;

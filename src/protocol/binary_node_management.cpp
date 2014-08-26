@@ -72,8 +72,8 @@ namespace OpcUa
     Attributes[AttributeID::DATA_TYPE] = attr.Type;
     Attributes[AttributeID::VALUE_RANK] = attr.Rank;
     Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
-    Attributes[AttributeID::ACCESS_LEVEL] = attr.AccessLevel;
-    Attributes[AttributeID::USER_ACCESS_LEVEL] = attr.UserAccessLevel;
+    Attributes[AttributeID::ACCESS_LEVEL] = static_cast<uint8_t>(attr.AccessLevel);
+    Attributes[AttributeID::USER_ACCESS_LEVEL] = static_cast<uint8_t>(attr.UserAccessLevel);
     Attributes[AttributeID::MINIMUM_SAMPLING_INTERVAL] = attr.MinimumSamplingInterval;
     Attributes[AttributeID::HISTORIZING] = attr.Historizing;
     Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
@@ -184,8 +184,8 @@ namespace OpcUa
         RawSize(val.Type) + 
         RawSize(val.Rank) + 
         RawSizeContainer(val.Dimensions) + 
-        RawSize(val.AccessLevel) + 
-        RawSize(val.UserAccessLevel) + 
+        RawSize((uint8_t)val.AccessLevel) +
+        RawSize((uint8_t)val.UserAccessLevel) +
         RawSize(val.MinimumSamplingInterval) + 
         RawSize(val.Historizing) + 
         RawSize(val.WriteMask) + 
@@ -203,8 +203,8 @@ namespace OpcUa
       *this << val.Type;
       *this << val.Rank;
       *this << val.Dimensions;
-      *this << val.AccessLevel;
-      *this << val.UserAccessLevel;
+      *this << (uint8_t)val.AccessLevel; // TODO
+      *this << (uint8_t)val.UserAccessLevel; //TODO
       *this << val.MinimumSamplingInterval;
       *this << val.Historizing;
       *this << val.WriteMask;
@@ -221,8 +221,9 @@ namespace OpcUa
       *this >> val.Type;
       *this >> val.Rank;
       *this >> val.Dimensions;
-      *this >> val.AccessLevel;
-      *this >> val.UserAccessLevel;
+      uint8_t tmp = 0;
+      *this >> tmp; val.AccessLevel = static_cast<VariableAccessLevel>(tmp);
+      *this >> tmp; val.UserAccessLevel = static_cast<VariableAccessLevel>(tmp);
       *this >> val.MinimumSamplingInterval;
       *this >> val.Historizing;
       *this >> val.WriteMask;

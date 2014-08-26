@@ -30,6 +30,11 @@ OpcUa::SocketChannel::SocketChannel(int sock)
 
 OpcUa::SocketChannel::~SocketChannel()
 {
+  Stop();
+}
+
+void OpcUa::SocketChannel::Stop()
+{
   int error = close(Socket);
   if (error < 0)
   {

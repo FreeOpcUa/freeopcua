@@ -8,17 +8,22 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/common/uri_facade.h>
 #include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/remote_connection.h>
 
+#include <opc/common/uri_facade.h>
+#include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/channel.h>
 #include <opc/ua/protocol/secure_channel.h>
-#include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/session.h>
-#include <opc/ua/client/binary_server.h>
 #include <opc/ua/server.h>
 
 #include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+
 
 namespace
 {
@@ -26,42 +31,9 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-
-  class ResponseProcessor
-  {
-  public:
-    DEFINE_CLASS_POINTERS(ResponseProcessor);
-
-  public:
-    virtual void OnCreateSession(const CreateSessionResponse& response) = 0;
-    virtual void OnActivateSession(const ActivateSessionResponse& response) = 0;
-    virtual void OnCloseSession(const CloseSessionResponse& response) = 0;
-    virtual void OnGetEndpoints(const GetEndpointsResponse& response) = 0;
-    virtual void OnFindServers(const FindServersResponse& response) = 0;
-    virtual void OnBrowse(const BrowseResponse& response) = 0;
-    virtual void OnRead(const ReadResponse& response) = 0;
-    virtual void OnWrite(const WriteResponse& response) = 0;
-    virtual void OnTranslateBrowsePathsToNodeIDs(const TranslateBrowsePathsToNodeIDsResponse& response) = 0;
-    virtual void OnCreateSubscription(const CreateSubscriptionResponse& response) = 0;
-    virtual void OnDeleteSubscription(const DeleteSubscriptionResponse& response) = 0;
-    virtual void OnCreateMonitoredItems(const CreateMonitoredItemsResponse& response) = 0;
-    virtual void OnDeleteMonitoredItems(const DeleteMonitoredItemsResponse& response) = 0;
-    virtual void OnPublish(const PublishResponse& response) = 0;
-    virtual void OnSetPublishingMode(const SetPublishingModeResponse& response) = 0;
-    virtual void OnAddNodes(const AddNodesResponse& response) = 0;
-    virtual void OnAddReferenciesNodes(const AddReferencesResponse& response) = 0;
-
-    virtual ~ResponseProcessor(){}
-
-    ResponseProcessor(){}
-    ResponseProcessor(const ResponseProcessor&) = delete;
-    ResponseProcessor(ResponseProcessor&&) = delete;
-    ResponseProcessor& operator=(const ResponseProcessor&) = delete;
-  };
-
   class BufferInputChannel : public OpcUa::InputChannel
   {
-   public:
+  public:
      BufferInputChannel(const std::vector<char>& buffer)
        : Buffer(buffer)
        , Pos(0)
@@ -87,29 +59,47 @@ namespace
        Pos = 0;
      }
 
+     virtual void Stop()
+     {
+     }
+
   private:
     const std::vector<char>& Buffer;
     std::size_t Pos;
   };
 
 
-  class BufferOutputChannel : public OpcUa::OutputChannel
+  template <typename T>
+  class RequestCallback
   {
-   public:
-     virtual void Send(const char* message, std::size_t size) override
-     {
-       std::copy(message, message + size, std::back_inserter(Buffer));
-     }
+  public:
+    RequestCallback()
+      : lock(m)
+    {
+    }
 
-     const std::vector<char>& GetBuffer() const
-     {
-       return Buffer;
-     }
+    void OnData(std::vector<char> data)
+    {
+      Data = std::move(data);
+      doneEvent.notify_all();
+    }
+
+    T WaitForData(std::chrono::milliseconds msec)
+    {
+      doneEvent.wait_for(lock, msec);
+      T result;
+      BufferInputChannel bufferInput(Data);
+      IStreamBinary in(bufferInput);
+      in >> result;
+      return result;
+    }
 
   private:
-    std::vector<char> Buffer;
+    std::vector<char> Data;
+    std::mutex m;
+    std::unique_lock<std::mutex> lock;
+    std::condition_variable doneEvent;
   };
-
 
   class BinaryServer
     : public Remote::Server
@@ -120,31 +110,48 @@ namespace
     , public Remote::NodeManagementServices
     , public std::enable_shared_from_this<BinaryServer>
   {
+  private:
+    typedef std::function<void(std::vector<char>)> ResponseCallback;
+    typedef std::map<uint32_t, ResponseCallback> CallbackMap;
+
   public:
-    explicit BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params)
-      : Stream(channel)
+    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
+      : Channel(channel)
+      , Stream(channel)
       , RequestHandle(0)
       , Params(params)
-      , Buffer(8192)
-      , BufferInput(Buffer)
       , SequenceNumber(1)
       , RequestNumber(1)
+      , Debug(debug)
     {
       const Acknowledge& ack = HelloServer(params);
       const OpenSecureChannelResponse& response = OpenChannel();
       ChannelSecurityToken = response.ChannelSecurityToken;
+      ReceiveThread = std::move(std::thread([this](){
+        try
+        {
+          while(!Finished)
+            Receive();
+        }
+        catch (const std::exception& exc)
+        {
+          std::cerr << exc.what() << std::endl;
+        }
+      }));
     }
 
     ~BinaryServer()
     {
+      Finished = true;
       CloseSecureChannel();
+      Channel->Stop();
+      ReceiveThread.join();
     }
 
     virtual void CreateSession(const Remote::SessionParameters& parameters)
     {
       CreateSessionRequest request;
-      request.Header.RequestHandle = GetRequestHandle();
-      request.Header.Timeout = 10000;
+      request.Header = CreateRequestHeader();
 
       request.Parameters.ClientDescription.URI = parameters.ClientDescription.URI;
       request.Parameters.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
@@ -161,37 +168,21 @@ namespace
       request.Parameters.ClientCertificate = parameters.ClientCertificate;
       request.Parameters.RequestedSessionTimeout = parameters.Timeout;
       request.Parameters.MaxResponseMessageSize = 65536;
-
-      Stream << request << flush;
-
-      CreateSessionResponse response;
-      Stream >> response;
+      CreateSessionResponse response = Send<CreateSessionResponse>(request);
       AuthenticationToken = response.Session.AuthenticationToken;
     }
 
     virtual void ActivateSession()
     {
-      ActivateSessionRequest activate;
-      activate.Header.SessionAuthenticationToken = AuthenticationToken;
-      activate.Header.RequestHandle = GetRequestHandle();
-      activate.Header.Timeout = 10000;
-      activate.Parameters.LocaleIDs.push_back("en");
-      Stream << activate << flush;
-
-      ActivateSessionResponse response;
-      Stream >> response;
+      ActivateSessionRequest request;
+      request.Parameters.LocaleIDs.push_back("en");
+      ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
     }
 
     virtual void CloseSession()
     {
-      CloseSessionRequest closeSession;
-      closeSession.Header.SessionAuthenticationToken = AuthenticationToken;
-      closeSession.Header.RequestHandle = GetRequestHandle();
-      closeSession.Header.Timeout = 10000;
-      Stream << closeSession << flush;
-
-      CloseSessionResponse closeResponse;
-      Stream >> closeResponse;
+      CloseSessionRequest request;
+      CloseSessionResponse response = Send<CloseSessionResponse>(request);
     }
 
     virtual std::shared_ptr<Remote::EndpointServices> Endpoints() override
@@ -203,29 +194,18 @@ namespace
     {
       OpcUa::FindServersRequest request;
       request.Parameters = params;
-      Stream << request << flush;
-
-      OpcUa::FindServersResponse response;
-      Stream >> response;
+      FindServersResponse response = Send<FindServersResponse>(request);
       return response.Data.Descriptions;
     }
 
     virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
     {
       OpcUa::GetEndpointsRequest request;
-      request.Header.RequestHandle = GetRequestHandle();
+      request.Header = CreateRequestHeader();
       request.Filter.EndpointURL = filter.EndpointURL;
       request.Filter.LocaleIDs = filter.LocaleIDs;
       request.Filter.ProfileUries = filter.ProfileUries;
-      BufferOutputChannel out;
-      OStreamBinary os(out);
-      os << request << flush;
-      Send(&out.GetBuffer()[0], out.GetBuffer().size());
-
-      ReceiveNewData();
-      OpcUa::GetEndpointsResponse response;
-      IStreamBinary in(BufferInput);
-      in >> response;
+      const GetEndpointsResponse response = Send<GetEndpointsResponse>(request);
       return response.Endpoints;
     }
 
@@ -242,29 +222,19 @@ namespace
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
       TranslateBrowsePathsToNodeIDsRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
+      request.Header = CreateRequestHeader();
       request.Parameters = params;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      TranslateBrowsePathsToNodeIDsResponse response;
-      Stream >> response;
-
+      const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
       return response.Result.Paths;
     }
 
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
-      BrowseRequest browse;
-      browse.Header.SessionAuthenticationToken = AuthenticationToken;
-      browse.Query = query;
-
-      Stream << browse << OpcUa::Binary::flush;
-
-      BrowseResponse response;
-      Stream >> response;
-
+      BrowseRequest request;
+      request.Header = CreateRequestHeader();
+      request.Query = query;
+      const BrowseResponse response = Send<BrowseResponse>(request);
       if (!response.Results.empty())
       {
         const BrowseResult& result = *response.Results.begin();
@@ -303,51 +273,33 @@ namespace
 
     std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint) const
     {
-      BrowseNextRequest browseNext;
-      browseNext.Header.SessionAuthenticationToken = AuthenticationToken;
-      browseNext.ReleaseContinuationPoints= false;
-      browseNext.ContinuationPoints.push_back(ContinuationPoint);
-
-      Stream << browseNext << OpcUa::Binary::flush;
-
-      BrowseNextResponse response;
-      Stream >> response;
+      BrowseNextRequest request;
+      request.ReleaseContinuationPoints= false;
+      request.ContinuationPoints.push_back(ContinuationPoint);
+      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
       return !response.Results.empty() ? response.Results.begin()->Referencies :  std::vector<ReferenceDescription>();
     }
 
   public:
     virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() override
     {
-      return std::shared_ptr<Remote::NodeManagementServices>();
-      //return std::static_pointer_cast<Remote::NodeManagementServices>(shared_from_this());
+      return shared_from_this();
     }
 
   public:
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
       AddNodesRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.NodesToAdd = items;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      AddNodesResponse response;
-      Stream >> response;
-
+      const AddNodesResponse response = Send<AddNodesResponse>(request);
       return response.results;
     }
 
     virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
     {
       AddReferencesRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.ReferencesToAdd = items;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      AddReferencesResponse response;
-      Stream >> response;
-
+      const AddReferencesResponse response = Send<AddReferencesResponse>(request);
       return response.Results;
     }
 
@@ -360,28 +312,16 @@ namespace
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
       ReadRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = params;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      ReadResponse response;
-      Stream >> response;
-
+      const ReadResponse response = Send<ReadResponse>(request);
       return response.Result.Results;
     }
 
     virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
     {
       WriteRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters.NodesToWrite = values;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      WriteResponse response;
-      Stream >> response;
-
+      const WriteResponse response = Send<WriteResponse>(request);
       return response.Result.StatusCodes;
     }
 
@@ -392,16 +332,10 @@ namespace
 
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
     {
-      Callback = callback;
-
+      PublishCallback = callback;// TODO Pass calback to the Publish method.
       CreateSubscriptionRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = parameters;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      CreateSubscriptionResponse response;
-      Stream >> response;
+      const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       return response.Data;
     }
 
@@ -409,47 +343,24 @@ namespace
     {
       DeleteSubscriptionRequest request;
       request.SubscriptionsIds = subscriptions;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      DeleteSubscriptionResponse response;
-      std::vector<StatusCode> results;
-      DiagnosticInfoList diags;
-      Stream >> results;
-      Stream >> diags;
-      return results;
+      const DeleteSubscriptionResponse response = Send<DeleteSubscriptionResponse>(request);
+      return response.Results;
     }
 
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
       CreateMonitoredItemsRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = parameters;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      MonitoredItemsData data;
-      Stream >> data;
-      return data;
+      const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
+      return response.Data;
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
     {
       DeleteMonitoredItemsRequest request;
-      request.Header.SessionAuthenticationToken = AuthenticationToken;
       request.Parameters = params;
-
-      Stream << request << OpcUa::Binary::flush;
-
-      ProcessPublishResults();
-
-      std::vector<StatusCode> results;
-      Stream >> results;
-      return results;
+      const DeleteMonitoredItemsResponse response = Send<DeleteMonitoredItemsResponse>(request);
+      return response.Results;
     }
 
 
@@ -461,66 +372,39 @@ namespace
     virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
       PublishRequest request;
+      request.Header = CreateRequestHeader();
       request.Parameters.Acknowledgements = acknowledgements;
-      Stream << request << OpcUa::Binary::flush;
-    }
 
-  private:
-    void ProcessPublishResults()
-    {
-      NodeID typeId;
-      ResponseHeader header;
-      for(;;)
-      {
-        Stream >> typeId;
-        Stream >> header;
-        if (typeId == NodeID(829, 0) )
-        {
-          PublishResult result;
-          Stream >> result;
-          if (Callback)
-          {
-            std::cout << " Calling callback for one publish result " << std::endl;
-            Callback(result);
-          }
-          else
-          {
-            std::cout << " PublishResult received but no callback defined" << std::endl;
-          }
-          //debug
-          //Publish(std::vector<SubscriptionAcknowledgement>()); //This works fine but this is not the right place to send ack
-
-        }
-        else
-        {
-          break;
-        }
-      }
+      ResponseCallback responseCallback = [this](std::vector<char> buffer){
+        BufferInputChannel bufferInput(buffer);
+        IStreamBinary in(bufferInput);
+        PublishResponse response;
+        in >> response;
+        PublishCallback(response.Result);
+      };
+      Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      Send(request);
     }
 
 private:
-    virtual std::size_t Receive(char* data, std::size_t size)
+    template <typename Response, typename Request>
+    Response Send(Request request) const
     {
-      if (size == 0)
-      {
-        return 0;
-      }
+      request.Header = CreateRequestHeader();
 
-      std::size_t totalReceived = 0;
-      while(totalReceived < size)
-      {
-        const std::size_t received = BufferInput.Receive(data, size);
-        if (received != 0)
-        {
-          totalReceived += received;
-          continue;
-        }
-        ReceiveNewData();
-      }
-      return totalReceived;
+      RequestCallback<Response> requestCallback;
+      ResponseCallback responseCallback = [&requestCallback](std::vector<char> buffer){
+        requestCallback.OnData(std::move(buffer));
+      };
+      Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+
+      Send(request);
+
+      return requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
     }
 
-    virtual void Send(const char* message, std::size_t size) const
+    template <typename Request>
+    void Send(Request request) const
     {
       // TODO add support for breaking message into multiple chunks
       SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
@@ -529,13 +413,12 @@ private:
 
       const SequenceHeader sequence = CreateSequenceHeader();
       hdr.AddSize(RawSize(sequence));
-      hdr.AddSize(size);
+      hdr.AddSize(RawSize(request));
 
-      Stream << hdr << algorithmHeader << sequence << OpcUa::Binary::RawMessage(message, size) << flush;
+      Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
-  private:
-    void ReceiveNewData() const
+    void Receive() const
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
@@ -555,11 +438,23 @@ private:
       }
 
       const std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
-      Buffer.resize(dataSize);
-      BufferInput.Reset();
-      Binary::RawBuffer raw(&Buffer[0], dataSize);
-
+      std::vector<char> buffer(dataSize);
+      BufferInputChannel bufferInput(buffer);
+      Binary::RawBuffer raw(&buffer[0], dataSize);
       Stream >> raw;
+
+      IStreamBinary in(bufferInput);
+      NodeID id;
+      in >> id;
+      ResponseHeader header;
+      in >> header;
+
+      CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
+      if (callbackIt == Callbacks.end())
+      {
+        return;
+      }
+      callbackIt->second(std::move(buffer));
     }
 
     Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)
@@ -658,6 +553,14 @@ private:
       }
     }
 
+    RequestHeader CreateRequestHeader() const
+    {
+      RequestHeader header;
+      header.SessionAuthenticationToken = AuthenticationToken;
+      header.RequestHandle = GetRequestHandle();
+      header.Timeout = 10000;
+      return header;
+    }
 
     unsigned GetRequestHandle() const
     {
@@ -665,24 +568,37 @@ private:
     }
 
   private:
+    std::shared_ptr<IOChannel> Channel;
     Remote::SecureConnectionParams Params;
-    mutable std::vector<char> Buffer;
-    mutable BufferInputChannel BufferInput;
+    std::thread ReceiveThread;
 
+    std::function<void (PublishResult)> PublishCallback;
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
     mutable uint32_t RequestNumber;
     mutable IOStreamBinary Stream;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
-    std::function<void (PublishResult)> Callback;
     mutable std::vector<uint8_t> ContinuationPoint;
+    mutable CallbackMap Callbacks;
+    const bool Debug = false;
+    bool Finished = false;
   };
 
 } // namespace
 
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params)
+OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params));
+  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
+}
+
+OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+{
+  const Common::Uri serverUri(endpointUrl);
+  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+  OpcUa::Remote::SecureConnectionParams params;
+  params.EndpointUrl = endpointUrl;
+  params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+  return CreateBinaryServer(channel, params, debug);
 }

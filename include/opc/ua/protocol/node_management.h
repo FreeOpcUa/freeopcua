@@ -17,6 +17,7 @@
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/node_classes.h>
+#include <opc/ua/protocol/variable_access_level.h>
 #include <map>
 #include <bitset>
 
@@ -71,8 +72,8 @@ namespace OpcUa
     NodeID Type;
     int32_t Rank = 0;
     std::vector<uint32_t> Dimensions;
-    uint8_t AccessLevel = 0;
-    uint8_t UserAccessLevel = 0;
+    VariableAccessLevel AccessLevel = VariableAccessLevel::CurrentRead;
+    VariableAccessLevel UserAccessLevel = VariableAccessLevel::CurrentRead;
     Duration MinimumSamplingInterval = 0;
     bool Historizing = false;
     uint32_t WriteMask = 0;

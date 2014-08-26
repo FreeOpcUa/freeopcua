@@ -134,8 +134,7 @@ namespace
     {
       if (Debug) std::clog << ID << ": receive data." << std::endl;
 
-      std::shared_ptr<InputChannel> input = Input.lock();
-      if (input)
+      if (std::shared_ptr<InputChannel> input = Input.lock())
       {
         return input->Receive(data, size);
       }
@@ -146,11 +145,19 @@ namespace
     {
       if (Debug) std::clog << ID << ": send data." << std::endl;
 
-      std::shared_ptr<BufferedInput> output = Output.lock();
-      if (output)
+      if (std::shared_ptr<BufferedInput> output = Output.lock())
       {
         output->AddBuffer(message, size);
       }
+    }
+
+    virtual void Stop()
+    {
+      if (std::shared_ptr<BufferedInput> output = Output.lock())
+        output->Stop();
+
+      if (std::shared_ptr<InputChannel> input = Input.lock())
+        return input->Stop();
     }
 
   private:

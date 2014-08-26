@@ -26,7 +26,13 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
     {
-
+      for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
+      {
+        if (param->Name == "debug" && param->Value != "false" && param->Value != "0")
+        {
+          Debug = true;
+        }
+      }
     }
 
     virtual void Stop()
@@ -41,13 +47,7 @@ namespace
 
     virtual OpcUa::Remote::Server::SharedPtr Connect(const std::string& url)
     {
-      const Common::Uri serverUri(url);
-      OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-
-      OpcUa::Remote::SecureConnectionParams params;
-      params.EndpointUrl = url;
-      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-      return CreateBinaryServer(channel, params);
+      return OpcUa::Remote::CreateBinaryServer(url, Debug);
     }
 
   private:
