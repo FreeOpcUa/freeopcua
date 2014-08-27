@@ -87,6 +87,7 @@ namespace OpcUa
         rootNode.BrowseName = QualifiedName(0, OpcUa::Names::Root);
         rootNode.Class = NodeClass::Object;
         rootNode.RequestedNewNodeID = ObjectID::RootFolder;
+        rootNode.TypeDefinition = ObjectID::FolderType;
         rootNode.Attributes = attrs;
         AddNode(rootNode);
       }

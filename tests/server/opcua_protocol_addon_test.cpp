@@ -38,7 +38,7 @@ public:
 
     OpcUa::Test::RegisterServicesRegistry(*Addons);
     OpcUa::Test::RegisterAddressSpace(*Addons);
-    //OpcUa::Test::RegisterStandardNamespace(*Addons);
+    OpcUa::Test::RegisterStandardNamespace(*Addons);
     OpcUa::Test::RegisterBuiltinServerAddon(*Addons);
     //OpcUa::Test::RegisterOpcTcpAddon(*Addons);
     OpcUa::Test::RegisterEndpointsServicesAddon(*Addons);

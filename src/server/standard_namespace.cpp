@@ -45,22 +45,10 @@ namespace
 
          Objects();
          Views();
-         //Server();
          Types();
       }
 
     private:
-
-      void NewValue(NodeID node, AttributeID attribute, Variant value)
-      {
-        //Registry.AddAttribute(node, attribute, value);
-      }
-
-      void NewValue(ObjectID node, AttributeID attribute, Variant value)
-      {
-        NewValue(NodeID(node), attribute, value);
-      }
-
       void AddReference(
         ObjectID sourceNode,
         bool isForward,
@@ -94,7 +82,7 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        AddReference(ObjectID::ObjectsFolder, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
+        Server();
       }
 
       void Views()
@@ -112,11 +100,8 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::Views);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        AddReference(ObjectID::ViewsFolder, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
       }
 
-/*
       // Server object have to be created based on Server type in the some addon;
       void Server()
       {
@@ -133,40 +118,25 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::Server);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        AddReference(ObjectID::Server, forward, ReferenceID::HasComponent, ObjectID::NamespaceArray, Names::NamespaceArray, NodeClass::Variable, ObjectID::PropertyType);
-        AddReference(ObjectID::Server, forward, ReferenceID::HasProperty,  ObjectID::ServerStatus, Names::ServerStatus, NodeClass::Variable, ObjectID::ServerStatusType);
-        AddReference(ObjectID::Server, forward, ReferenceID::HasProperty,  ObjectID::ServerArray, Names::ServerArray, NodeClass::Variable, ObjectID::PropertyType);
       }
 /*
-    void ServerCapabilities()
+      void ServerCapabilities()
       {
-        // Attributes
-        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_ID,      NodeID(ObjectID::));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::Object));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::BROWSE_NAME,  QualifiedName(0, OpcUa::Names::ServerCapabilities));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::DISPLAY_NAME, LocalizedText(OpcUa::Names::ServerCapabilities));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::DESCRIPTION,  LocalizedText(OpcUa::Names::ServerCapabilities));
-        NewValue(ObjectID::ServerCapabilities, AttributeID::WRITE_MASK,   0);
-        NewValue(ObjectID::ServerCapabilities, AttributeID::USER_WRITE_MASK, 0);
-
         // Attributes
         AddNodesItem node;
         node.RequestedNewNodeID = ObjectID::ServerCapabilities;
         node.BrowseName = QualifiedName(0, OpcUa::Names::ServerCapabilities);
-        node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::Server;
+        node.Class = NodeClass::Object;
+        node.ParentNodeId = ObjectID::ServerType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::PropertyType;
+        node.TypeDefinition = ObjectID::ServerCapabilitiesType;
         ObjectAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::ServerCapabilities);
         attrs.DisplayName = LocalizedText(OpcUa::Names::ServerCapabilities);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
-
 */
-
       void Types()
       {
         // Attributes
@@ -183,18 +153,11 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        // References
-        AddReference(ObjectID::TypesFolder, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
-
         DataTypes();
         EventTypes();
         ObjectTypes();
-/*
         ReferenceTypes();
-*/
-/*
         VariableTypes();
-*/
       }
 
       void DataTypes()
@@ -212,9 +175,6 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::DataTypes);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        // References
-        AddReference(ObjectID::DataTypes, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
 
         BaseDataType();
       }
@@ -300,7 +260,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::Image;
         node.BrowseName = QualifiedName(0, OpcUa::Names::Image);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::BaseDataType;
+        node.ParentNodeId = ObjectID::ByteString;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -495,7 +455,7 @@ namespace
         node.BrowseName = QualifiedName(0, Names::EnumStrings);
         node.Class = NodeClass::Variable;
         node.ParentNodeId = parentNode;
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ReferenceTypeId = ReferenceID::HasProperty;
         node.TypeDefinition = ObjectID::PropertyType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(Names::EnumStrings);
@@ -509,9 +469,6 @@ namespace
         attrs.Value = values;
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        // References
-        AddReference(nodeID, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
       }
 
       void IdType()
@@ -571,7 +528,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::NodeClass;
         node.BrowseName = QualifiedName(0, Names::NodeClass);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::BaseDataType;
+        node.ParentNodeId = ObjectID::Enumeration;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -580,9 +537,6 @@ namespace
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        // References
-        AddReference(ObjectID::Enumeration, forward, ReferenceID::HasSubtype, ObjectID::NodeClass, NodeClass::DataType);
       }
 
       void RedundancySupportType()
@@ -917,7 +871,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::UInteger;
         node.BrowseName = QualifiedName(0, Names::UInteger);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::Integer;
+        node.ParentNodeId = ObjectID::Number;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -1620,7 +1574,7 @@ namespace
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ObjectID::EventTypes;
         node.ReferenceTypeId = ReferenceID::Organizes;
-        node.TypeDefinition = ObjectID::FolderType;
+        node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::BaseEventType);
         attrs.DisplayName = LocalizedText(OpcUa::Names::BaseEventType);
@@ -1793,7 +1747,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::EventID, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::EventID, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1817,7 +1770,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::EventType, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::EventType, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1841,7 +1793,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::LocalTime, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::LocalTime, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1865,7 +1816,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::Message, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::Message, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1889,7 +1839,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ReceiveTime, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::ReceiveTime, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1913,7 +1862,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::Severity, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::Severity, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1937,7 +1885,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::SourceName, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::SourceName, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1961,7 +1908,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::SourceNode, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::SourceNode, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -1985,7 +1931,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::Time, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::Time, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2004,9 +1949,6 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::ObjectTypes);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        // References
-        AddReference(ObjectID::ObjectTypes, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
 
         BaseObjectType();
       }
@@ -2028,7 +1970,7 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        AddReference(ObjectID::ObjectTypes, forward, ReferenceID::HasSubtype, ObjectID::BaseEventType, NodeClass::ObjectType);
+        AddReference(ObjectID::BaseObjectType, forward, ReferenceID::HasSubtype, ObjectID::BaseEventType, NodeClass::ObjectType);
 
         DataTypeEncodingType();
         DataTypeSystemType();
@@ -2104,7 +2046,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::FolderType;
+        node.RequestedNewNodeID = ObjectID::HistoricalEventConfigurationType;
         node.BrowseName = QualifiedName(0, OpcUa::Names::HistoricalEventConfigurationType);
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ObjectID::BaseObjectType;
@@ -2201,7 +2143,6 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
         //References
-        AddReference(ObjectID::AggregateFunctions, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::DataType);
         AddReference(ObjectID::AggregateFunctions, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2221,7 +2162,6 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
         //References
-        AddReference(ObjectID::ModellingRules, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::DataType);
         AddReference(ObjectID::ModellingRules, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2246,7 +2186,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::LocaleIDArray, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::LocaleIDArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2270,7 +2209,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::MaxBrowseContinuationPoints, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::MaxBrowseContinuationPoints, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2294,7 +2232,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::MaxHistoryContinuationPoints, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::MaxHistoryContinuationPoints, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2318,7 +2255,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::MinSupportedSampleRate, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::MinSupportedSampleRate, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2342,7 +2278,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ServerProfileArray, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::ServerProfileArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2367,7 +2302,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::SoftwareCertificates, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::SoftwareCertificates, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2416,7 +2350,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::EnableFlag, forward, ReferenceID::HasTypeDefinition, ObjectID::PropertyType, NodeClass::DataType);
         AddReference(ObjectID::EnableFlag, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2424,7 +2357,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::EnableFlag;
+        node.RequestedNewNodeID = ObjectID::SamplingIntervalDiagnosticsArray;
         node.BrowseName = QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsArray);
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::ServerDiagnosticsType;
@@ -2441,7 +2374,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::SamplingIntervalDiagnosticsArray, forward, ReferenceID::HasTypeDefinition, ObjectID::SamplingIntervalDiagnosticsArrayType, NodeClass::DataType);
         AddReference(ObjectID::SamplingIntervalDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2466,7 +2398,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ServerDiagnosticsSummary, forward, ReferenceID::HasTypeDefinition, ObjectID::ServerDiagnosticsSummaryType, NodeClass::DataType);
         AddReference(ObjectID::ServerDiagnosticsSummary, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2478,7 +2409,7 @@ namespace
         node.BrowseName = QualifiedName(0, OpcUa::Names::SessionDiagnosticsSummary);
         node.Class = NodeClass::Object;
         node.ParentNodeId = ObjectID::ServerDiagnosticsType;
-        node.ReferenceTypeId = ReferenceID::HasProperty;
+        node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::SessionDiagnosticsSummaryType;
         ObjectAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::SessionDiagnosticsSummary);
@@ -2487,7 +2418,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ServerDiagnosticsSummary, forward, ReferenceID::HasTypeDefinition, ObjectID::SessionDiagnosticsSummaryType, NodeClass::DataType);
         AddReference(ObjectID::SessionsDiagnosticsSummary, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -2512,7 +2442,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::SubscriptionDiagnosticsArray, forward, ReferenceID::HasTypeDefinition, ObjectID::SubscriptionDiagnosticsArrayType, NodeClass::DataType);
         AddReference(ObjectID::SubscriptionDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
@@ -3168,8 +3097,6 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        AddReference(ObjectID::ReferenceTypes, forward, ReferenceID::HasTypeDefinition, ObjectID::FolderType, NodeClass::ObjectType);
-
         Refs();
       }
 
@@ -3442,6 +3369,7 @@ namespace
         FromState();
         GeneratesEvent();
         HasCause();
+        HasCondition();
         HasDescription();
         HasEffect();
         HasEncoding();
@@ -3505,6 +3433,26 @@ namespace
         attrs.Description = LocalizedText(OpcUa::Names::HasCause);
         attrs.DisplayName = LocalizedText(OpcUa::Names::HasCause);
         attrs.InverseName = LocalizedText("MayBeCausedBy");
+        attrs.IsAbstract = false;
+        attrs.Symmetric = false;
+        node.Attributes = attrs;
+        Registry.AddNodes(std::vector<AddNodesItem>{node});
+      }
+
+      void HasCondition()
+      {
+        // Attributes
+        AddNodesItem node;
+        node.RequestedNewNodeID = ObjectID::HasCondition;
+        node.BrowseName = QualifiedName(0, OpcUa::Names::HasCondition);
+        node.Class = NodeClass::ReferenceType;
+        node.ParentNodeId = ObjectID::NonHierarchicalReferences;
+        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.TypeDefinition = ObjectID::Null;
+        ReferenceTypeAttributes attrs;
+        attrs.Description = LocalizedText(OpcUa::Names::HasCondition);
+        attrs.DisplayName = LocalizedText(OpcUa::Names::HasCondition);
+        attrs.InverseName = LocalizedText("IsConditionOf");
         attrs.IsAbstract = false;
         attrs.Symmetric = false;
         node.Attributes = attrs;
@@ -3678,7 +3626,7 @@ namespace
         node.BrowseName = QualifiedName(0, OpcUa::Names::BaseVariableType);
         node.Class = NodeClass::VariableType;
         node.ParentNodeId = ObjectID::VariableTypes;
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ReferenceTypeId = ReferenceID::Organizes;
         node.TypeDefinition = ObjectID::Null;
         VariableTypeAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::BaseVariableType);
@@ -3730,24 +3678,21 @@ namespace
       void AddVariableType(ObjectID id, const char* name, ObjectID parentId)
       {
         // Attributes
-        NewValue(id, AttributeID::NODE_ID,      NodeID(id));
-        NewValue(id, AttributeID::NODE_CLASS,   static_cast<int32_t>(NodeClass::VariableType));
-        NewValue(id, AttributeID::BROWSE_NAME,  QualifiedName(0, name));
-        NewValue(id, AttributeID::DISPLAY_NAME, LocalizedText(name));
-        NewValue(id, AttributeID::DESCRIPTION,  LocalizedText(name));
-        NewValue(id, AttributeID::WRITE_MASK,   0);
-        NewValue(id, AttributeID::USER_WRITE_MASK, 0);
-        // Type Attributes
-        NewValue(id, AttributeID::IS_ABSTRACT, false);
-        // Variable Attributes
-        NewValue(id, AttributeID::VALUE, NodeID());
-        NewValue(id, AttributeID::DATA_TYPE, NodeID(ObjectID::BaseDataType));
-        NewValue(id, AttributeID::ARRAY_DIMENSIONS, std::vector<uint32_t>());
-        NewValue(id, AttributeID::ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
-        NewValue(id, AttributeID::USER_ACCESS_LEVEL, static_cast<uint8_t>(VariableAccessLevel::CurrentRead));
-        NewValue(id, AttributeID::MINIMUM_SAMPLING_INTERVAL, Duration(0));
-        NewValue(id, AttributeID::HISTORIZING, false);
-        NewValue(id, AttributeID::VALUE_RANK, int32_t(0));
+        AddNodesItem node;
+        node.RequestedNewNodeID = id;
+        node.BrowseName = QualifiedName(0, name);
+        node.Class = NodeClass::VariableType;
+        node.ParentNodeId = parentId;
+        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.TypeDefinition = ObjectID::Null;
+        VariableTypeAttributes attrs;
+        attrs.Description = LocalizedText(name);
+        attrs.DisplayName = LocalizedText(name);
+        attrs.IsAbstract = false;
+        attrs.Type = ObjectID::BaseDataType;
+        attrs.Rank = 0;
+        node.Attributes = attrs;
+        Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
 
