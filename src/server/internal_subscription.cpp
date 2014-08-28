@@ -40,7 +40,7 @@ namespace OpcUa
     {
       if ( error || HasExpired() )
       {
-        std::cout << "Subscription has ended with error code :" <<  error.value() << std::endl;
+        std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl;
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
 
