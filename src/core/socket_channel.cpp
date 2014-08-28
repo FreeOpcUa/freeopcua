@@ -35,7 +35,7 @@ OpcUa::SocketChannel::~SocketChannel()
 
 void OpcUa::SocketChannel::Stop()
 {
-  int error = close(Socket);
+  int error = shutdown(Socket, 2);
   if (error < 0)
   {
     std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
