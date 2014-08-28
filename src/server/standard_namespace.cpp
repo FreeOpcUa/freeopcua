@@ -118,6 +118,17 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::Server);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
+
+        //Auditing();
+        NamespaceArray(ObjectID::Server);
+        //ServerArray();
+        ServerCapabilities(ObjectID::Server);
+        //ServerDiagnostics();
+        //ServerRedundancy();
+        //ServerStatus();
+        //ServiceLevel();
+        //VendorServerInfo();
+
       }
 /*
       void ServerCapabilities()
@@ -2504,9 +2515,9 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         Auditing();
-        NamespaceArray();
+        NamespaceArray(ObjectID::ServerType);
         ServerArray();
-        ServerCapabilities();
+        ServerCapabilities(ObjectID::ServerType);
         ServerDiagnostics();
         ServerRedundancy();
         ServerStatus();
@@ -2538,21 +2549,22 @@ namespace
         AddReference(ObjectID::Auditing, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory, NodeClass::DataType);
       }
 
-      void NamespaceArray()
+      void NamespaceArray(ObjectID parent)
       {
+        std::cout << "Creating namepsace array" << std::endl;
         // Attributes
         AddNodesItem node;
         node.RequestedNewNodeID = ObjectID::NamespaceArray;
         node.BrowseName = QualifiedName(0, OpcUa::Names::NamespaceArray);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::ServerType;
+        node.ParentNodeId = parent;
         node.ReferenceTypeId = ReferenceID::HasProperty;
         node.TypeDefinition = ObjectID::PropertyType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::NamespaceArray);
         attrs.DisplayName = LocalizedText(OpcUa::Names::NamespaceArray);
         attrs.Type = ObjectID::String;
-        attrs.Value = std::vector<std::string>{"http://opcfoundation.org/UA/", "http://treww.github.com"};
+        attrs.Value = std::vector<std::string>{"http://opcfoundation.org/UA/", "http://freeopcua.github.io"};
         attrs.Dimensions = {0};
         attrs.Rank = 1;
         node.Attributes = attrs;
@@ -2581,14 +2593,14 @@ namespace
       }
 
 
-      void ServerCapabilities()
+      void ServerCapabilities(ObjectID parent)
       {
         // Attributes
         AddNodesItem node;
         node.RequestedNewNodeID = ObjectID::ServerCapabilities;
         node.BrowseName = QualifiedName(0, OpcUa::Names::ServerCapabilities);
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ObjectID::ServerType;
+        node.ParentNodeId = parent;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::ServerCapabilitiesType;
         ObjectAttributes attrs;

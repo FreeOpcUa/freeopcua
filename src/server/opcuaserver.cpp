@@ -76,7 +76,7 @@ namespace OpcUa
     UaServer::AsyncOpcTcp::Parameters asyncparams;
     asyncparams.Port = Common::Uri(Endpoints[0].EndpointURL).Port();
     asyncparams.ThreadsNumber = 2;
-    asyncparams.DebugMode = true;
+    asyncparams.DebugMode = Debug;
     AsyncServer = UaServer::CreateAsyncOpcTcp(asyncparams, Registry->GetServer());
     
 
