@@ -9,7 +9,7 @@
 ///
 
 #include <opc/ua/client/client.h>
-#include <opc/ua/client/remote_server.h>
+#include <opc/ua/client/binary_server.h>
 #include <opc/ua/node.h>
 #include <opc/ua/event.h>
 #include <opc/ua/server/opcuaserver.h>
@@ -578,7 +578,7 @@ namespace OpcUa
     }
     return result;
   }
-
+/* FIXME broken
   class PyServer
   {
   public:
@@ -586,7 +586,7 @@ namespace OpcUa
       : Impl(OpcUa::Remote::Connect(endpointUrl))
     {
     }
-/*
+
     python::list FindServers() const
     {
       const OpcUa::FindServersParameters params;
@@ -600,7 +600,6 @@ namespace OpcUa
       const std::vector<EndpointDescription> endpoints = Impl->Endpoints()->GetEndpoints(filter);
       return ToList(endpoints);
     }
-*/
     python::list Browse(const PyBrowseParameters& p) const
     {
       OpcUa::BrowseDescription description;
@@ -660,6 +659,7 @@ namespace OpcUa
     OpcUa::Remote::Server::SharedPtr Impl;
   };
 
+*/
   void RegisterCommonObjectIDs()
   {
     python::enum_<OpcUa::ObjectID>("ObjectID")
@@ -1215,6 +1215,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("numeric_range", &PyWriteValue::NumericRange)
     .def_readwrite("data", &PyWriteValue::Data);
 
+  /*
     class_<PyServer>("Server", "Interface for remote opc ua server.", init<std::string>())
     //.def("find_servers", &PyServer::FindServers)
     //.def("get_endpoints", &PyServer::GetEndpoints)
@@ -1225,7 +1226,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
     def("VariantToObject", ToObject);
     def("ObjectToVariant", ToVariant);
-
+*/
     class_<Variant>("Variant")
         .def_readonly("value", &Variant::Value)
         .def_readonly("type", &Variant::Type)
