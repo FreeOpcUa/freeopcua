@@ -84,31 +84,135 @@ namespace OpcUa
   {
     Header.TypeID = ExpandedObjectID::MethodAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::Executable);
+    specattr.set(SpecifiedAttributesEncoding::UserExecutable);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::EXECUTABLE] = attr.Executable;
+    Attributes[AttributeID::USER_EXECUTABLE] = attr.UserExecutable;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
   NodeAttributes::NodeAttributes(const ObjectTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ObjectTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const VariableTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::VariableTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::Value);
+    specattr.set(SpecifiedAttributesEncoding::DataType);
+    specattr.set(SpecifiedAttributesEncoding::ValueRank);
+    specattr.set(SpecifiedAttributesEncoding::ArrayDimensions);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::VALUE] = attr.Value;
+    Attributes[AttributeID::DATA_TYPE] = attr.Type;
+    Attributes[AttributeID::VALUE_RANK] = attr.Rank;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const ReferenceTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ReferenceTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::Symmetric);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    if (!attr.IsAbstract)
+      specattr.set(SpecifiedAttributesEncoding::InverseName);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::SYMMETRIC] = attr.Symmetric;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    if (!attr.IsAbstract)
+      Attributes[AttributeID::INVERSE_NAME] = attr.InverseName;
   }
+
   NodeAttributes::NodeAttributes(const DataTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::DataTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const ViewAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ViewAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::ContainsNoLoops);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::CONTAINS_NO_LOOPS] = attr.ContainsNoLoops;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
 
 
@@ -139,7 +243,7 @@ namespace OpcUa
     //
     //AddNodeRequest
     //
-
+/*
     template<>
     std::size_t RawSize<ObjectAttributes>(const ObjectAttributes& val)
     {
@@ -460,7 +564,7 @@ namespace OpcUa
       *this >> val.WriteMask;
       *this >> val.UserWriteMask;
     }
-
+*/
 
 
     std::size_t RawSizeBodyNodeAttributes(const NodeAttributes& val)

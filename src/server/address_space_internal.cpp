@@ -87,6 +87,7 @@ namespace OpcUa
         rootNode.BrowseName = QualifiedName(0, OpcUa::Names::Root);
         rootNode.Class = NodeClass::Object;
         rootNode.RequestedNewNodeID = ObjectID::RootFolder;
+        rootNode.TypeDefinition = ObjectID::FolderType;
         rootNode.Attributes = attrs;
         AddNode(rootNode);
       }
@@ -680,7 +681,7 @@ namespace OpcUa
           typeRef.IsForward = true;
           typeRef.ReferenceTypeId = ObjectID::HasTypeDefinition;
           typeRef.TargetNodeID = item.TypeDefinition;
-          typeRef.TargetNodeClass = NodeClass::DataType; // FIXME: Take from node with ID item.TypeDefinition
+          typeRef.TargetNodeClass = NodeClass::DataType;
           AddReference(typeRef);
         }
 
