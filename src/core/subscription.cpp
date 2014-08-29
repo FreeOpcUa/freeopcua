@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 
+#include <opc/ua/event.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
@@ -72,7 +73,23 @@ namespace OpcUa
         std::cout << "Notification is of type Event\n";
         for ( EventFieldList ef :  data.Events.Events)
         {
-          Client.Event(ef.ClientHandle, ef.EventFields);
+
+
+          AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
+          if ( mapit == AttributeValueMap.end() )
+          {
+            std::cout << "Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
+          }
+          else
+          {
+            //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
+            //mapit->second.
+            //FIXME: think about event format!! should we havae paires? or better create an event object
+            Event ev;
+            //ev.
+            std::cout << "Debug: Calling client callback\n";
+            Client.Event(ef.ClientHandle, ef.EventFields);
+          }
         }
       }
       else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)

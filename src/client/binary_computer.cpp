@@ -363,12 +363,6 @@ namespace
       return response.Results;
     }
 
-
-    virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
-    {
-      return std::vector<PublishResult>();
-    }
-
     virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
       PublishRequest request;

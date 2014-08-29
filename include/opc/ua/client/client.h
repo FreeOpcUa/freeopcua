@@ -39,8 +39,8 @@ namespace OpcUa
   class RemoteClient
   {
   public:
-    RemoteClient() {}
-    explicit RemoteClient(const std::string& endpoint) : Endpoint(endpoint) {}
+    RemoteClient(bool debug=false) :Debug(debug) {}
+    explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug) {}
     ~RemoteClient() {}
 
     RemoteClient(const RemoteClient&&) = delete;
@@ -74,6 +74,7 @@ namespace OpcUa
     std::string Uri = "https://freeopcua.github.io/opcua-client";
     std::string ConfigPath=".";
     std::string SecurityPolicy = "none";
+    bool Debug = false; 
 
   protected:
     Remote::Server::SharedPtr Server;

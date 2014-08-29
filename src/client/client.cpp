@@ -37,7 +37,7 @@ namespace OpcUa
     params.EndpointUrl = Endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::Remote::CreateBinaryServer(channel, params);
+    Server = OpcUa::Remote::CreateBinaryServer(channel, params, Debug);
 
     OpcUa::Remote::SessionParameters session;
     session.ClientDescription.URI = Uri;

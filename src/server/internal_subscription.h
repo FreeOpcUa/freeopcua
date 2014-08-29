@@ -37,7 +37,6 @@ namespace OpcUa
         InternalSubscription(SubscriptionData data, boost::asio::io_service& serverio, std::function<void (PublishResult)> Callback);
         ~InternalSubscription();
 
-        std::vector<PublishResult> PopPublishResult(); //FIXME: To move to private
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
         std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerID>& ids);
         bool EnqueueEvent(IntegerID monitoreditemid, const Event& event);
@@ -47,6 +46,8 @@ namespace OpcUa
         void Stop();
 
       private:
+        std::vector<PublishResult> PopPublishResult(); //FIXME: To move to private
+
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
         std::function<void (PublishResult)> Callback;
