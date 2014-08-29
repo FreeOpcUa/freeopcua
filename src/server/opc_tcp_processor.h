@@ -29,7 +29,7 @@ namespace OpcUa
       OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug);
       ~OpcTcpMessages();
 
-      void ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
+      bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
 
     private:
       void HelloClient(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);

@@ -61,7 +61,7 @@ namespace OpcUa
       DeleteAllSubscriptions();
     }
 
-    void OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
+    bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
@@ -86,7 +86,7 @@ namespace OpcUa
         {
           if (Debug) std::clog << "opc_tcp_processor| Closing secure channel." << std::endl;
           CloseChannel(iStream);
-          return;
+          return false;
         }
 
         case MT_SECURE_MESSAGE:
@@ -100,17 +100,20 @@ namespace OpcUa
           if (Debug) std::clog << "opc_tcp_processor| Received acknowledge from client. This should not have happend..." << std::endl;
           throw std::logic_error("Thank to client about acknowledge.");
         }
+
         case MT_ERROR:
         {
           if (Debug) std::clog << "opc_tcp_processor| There is an error happend in the client!" << std::endl;
           throw std::logic_error("It is very nice get to know server about error in the client.");
         }
+
         default:
         {
           if (Debug) std::clog << "opc_tcp_processor| Unknown message type '" << msgType << "' received!" << std::endl;
           throw std::logic_error("Invalid message type received.");
         }
       }
+      return true;
     }
 
     void OpcTcpMessages::ForwardPublishResponse(PublishResult publishResult)

@@ -109,11 +109,6 @@ namespace
       return std::vector<OpcUa::StatusCode>(filter.size(), StatusCode::BadNotImplemented);
     }
 
-    virtual std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIDs)
-    {
-      return std::vector<PublishResult>();
-    }
-
     virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
     {
       return SubscriptionData();

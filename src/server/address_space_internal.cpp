@@ -333,31 +333,6 @@ namespace OpcUa
         return statuses;
       }
 
-      std::vector<PublishResult> PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<PublishResult> result;
-        for (const IntegerID& subscription: subscriptionsIds)
-        {
-          if ( PublishRequestsQueue == 0)
-          {
-            break;
-          }
-          SubscriptionsIDMap::iterator sub_it =  SubscriptionsMap.find(subscription); 
-          {
-            if ( sub_it != SubscriptionsMap.end() )
-            {
-              for ( const PublishResult& res: sub_it->second->PopPublishResult() )
-              {
-                result.push_back(res);
-              }
-            }
-          }
-        }
-        return result;
-      }
-
       virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
