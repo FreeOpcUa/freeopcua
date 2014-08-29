@@ -32,9 +32,6 @@ namespace OpcUa
     public:
       virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items) = 0;
       virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items) = 0;
-      //FIXME: Remove the 2 following methods, they are not as in spec
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value) = 0;
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference) = 0;
     };
 
   } // namespace Remote

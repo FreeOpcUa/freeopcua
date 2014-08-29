@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server/addons/builtin_server.h>
-
+#include "builtin_server_addon.h"
 #include "builtin_server_impl.h"
 
 Common::Addon::UniquePtr OpcUa::UaServer::BuiltingServerFactory::CreateAddon()

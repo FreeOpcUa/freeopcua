@@ -81,6 +81,11 @@ protected:
     EXPECT_TRUE(HasAttribute(id, AttributeID::USER_WRITE_MASK));
   }
 
+  void ExpectHasObjectAttributes(ObjectID id)
+  {
+    EXPECT_TRUE(HasAttribute(id, AttributeID::EVENT_NOTIFIER));
+  }
+
   void ExpectHasTypeAttributes(ObjectID id)
   {
     EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
@@ -96,6 +101,15 @@ protected:
     EXPECT_TRUE(HasAttribute(id, AttributeID::USER_ACCESS_LEVEL));
     EXPECT_TRUE(HasAttribute(id, AttributeID::MINIMUM_SAMPLING_INTERVAL));
     EXPECT_TRUE(HasAttribute(id, AttributeID::HISTORIZING));
+  }
+
+  void ExpectHasVariableTypeAttributes(ObjectID id)
+  {
+    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::DATA_TYPE));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE_RANK));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ARRAY_DIMENSIONS));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
   }
 
   void ExpectHasReferenceTypeAttributes(ObjectID id)
@@ -1326,7 +1340,7 @@ TEST_F(StandardNamespaceStructure, ServerRedundancyType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerRedundancyType);
   EXPECT_EQ(SizeOf(refs), 1);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::RedundancySupport));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::RedundancySupportTypeRedundancySupport));
 
   ExpectHasBaseAttributes(ObjectID::ServerRedundancyType);
   ExpectHasTypeAttributes(ObjectID::ServerRedundancyType);
@@ -1345,11 +1359,10 @@ TEST_F(StandardNamespaceStructure, RedundancySupportTypeRedundancySupport)
 TEST_F(StandardNamespaceStructure, ServerType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerType);
-  EXPECT_EQ(SizeOf(refs), 10);
+  EXPECT_EQ(SizeOf(refs), 9);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::Auditing));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::NamespaceArray));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerArray));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerProfileArray));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerCapabilities));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerDiagnostics));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerRedundancy));
@@ -1395,13 +1408,13 @@ TEST_F(StandardNamespaceStructure, ServerArray)
 TEST_F(StandardNamespaceStructure, ServerCapabilities)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerCapabilities);
-  EXPECT_EQ(SizeOf(refs), 3);
+  EXPECT_EQ(SizeOf(refs), 2);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::ServerCapabilitiesType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule,  ObjectID::ModellingRuleMandatory));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerProfileArray));
+  //EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerProfileArray));
 
   ExpectHasBaseAttributes(ObjectID::ServerCapabilities);
-  ExpectHasTypeAttributes(ObjectID::ServerCapabilities);
+  ExpectHasObjectAttributes(ObjectID::ServerCapabilities);
 }
 
 TEST_F(StandardNamespaceStructure, ServerDiagnostics)
@@ -1412,7 +1425,7 @@ TEST_F(StandardNamespaceStructure, ServerDiagnostics)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule,  ObjectID::ModellingRuleMandatory));
 
   ExpectHasBaseAttributes(ObjectID::ServerDiagnostics);
-  ExpectHasTypeAttributes(ObjectID::ServerDiagnostics);
+  ExpectHasObjectAttributes(ObjectID::ServerDiagnostics);
 }
 
 TEST_F(StandardNamespaceStructure, ServerRedundancy)
@@ -1423,16 +1436,16 @@ TEST_F(StandardNamespaceStructure, ServerRedundancy)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule,  ObjectID::ModellingRuleMandatory));
 
   ExpectHasBaseAttributes(ObjectID::ServerRedundancy);
-  ExpectHasTypeAttributes(ObjectID::ServerRedundancy);
+  ExpectHasObjectAttributes(ObjectID::ServerRedundancy);
 }
 
 TEST_F(StandardNamespaceStructure, ServerStatus)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerStatus);
   EXPECT_EQ(SizeOf(refs), 8);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::StructureServerStatusDataType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::ServerStatusType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule,  ObjectID::ModellingRuleMandatory));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::StructureBuildInfo));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfo));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::CurrentTime));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::SecondsTillShutdown));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::ShutdownReason));
@@ -1588,6 +1601,7 @@ TEST_F(StandardNamespaceStructure, VendorServerInfo)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule, ObjectID::ModellingRuleMandatory));
 
   ExpectHasBaseAttributes(ObjectID::VendorServerInfo);
+  ExpectHasObjectAttributes(ObjectID::VendorServerInfo);
 }
 
 TEST_F(StandardNamespaceStructure, SessionDiagnosticsObjectType)
@@ -1904,7 +1918,7 @@ TEST_F(StandardNamespaceStructure, BaseVariableType)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::PropertyType));
 
   ExpectHasBaseAttributes(ObjectID::BaseVariableType);
-  ExpectHasVariableAttributes(ObjectID::BaseVariableType);
+  ExpectHasVariableTypeAttributes(ObjectID::BaseVariableType);
 }
 
 TEST_F(StandardNamespaceStructure, BaseDataVariableType)
@@ -1926,7 +1940,7 @@ TEST_F(StandardNamespaceStructure, BaseDataVariableType)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SubscriptionDiagnosticsType));
 
   ExpectHasBaseAttributes(ObjectID::BaseDataVariableType);
-  ExpectHasVariableAttributes(ObjectID::BaseDataVariableType);
+  ExpectHasVariableTypeAttributes(ObjectID::BaseDataVariableType);
 }
 
 TEST_F(StandardNamespaceStructure, DataTypeDescriptionType)
@@ -1935,7 +1949,7 @@ TEST_F(StandardNamespaceStructure, DataTypeDescriptionType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::DataTypeDescriptionType);
-  ExpectHasVariableAttributes(ObjectID::DataTypeDescriptionType);
+  ExpectHasVariableTypeAttributes(ObjectID::DataTypeDescriptionType);
 }
 
 TEST_F(StandardNamespaceStructure, DataTypeDictionaryType)
@@ -1944,7 +1958,7 @@ TEST_F(StandardNamespaceStructure, DataTypeDictionaryType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::DataTypeDictionaryType);
-  ExpectHasVariableAttributes(ObjectID::DataTypeDictionaryType);
+  ExpectHasVariableTypeAttributes(ObjectID::DataTypeDictionaryType);
 }
 
 TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsArrayType)
@@ -1953,7 +1967,7 @@ TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsArrayType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SamplingIntervalDiagnosticsArrayType);
-  ExpectHasVariableAttributes(ObjectID::SamplingIntervalDiagnosticsArrayType);
+  ExpectHasVariableTypeAttributes(ObjectID::SamplingIntervalDiagnosticsArrayType);
 }
 
 TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsType)
@@ -1962,7 +1976,7 @@ TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SamplingIntervalDiagnosticsType);
-  ExpectHasVariableAttributes(ObjectID::SamplingIntervalDiagnosticsType);
+  ExpectHasVariableTypeAttributes(ObjectID::SamplingIntervalDiagnosticsType);
 }
 
 TEST_F(StandardNamespaceStructure, ServerDiagnosticsSummaryType)
@@ -1971,7 +1985,7 @@ TEST_F(StandardNamespaceStructure, ServerDiagnosticsSummaryType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::ServerDiagnosticsSummaryType);
-  ExpectHasVariableAttributes(ObjectID::ServerDiagnosticsSummaryType);
+  ExpectHasVariableTypeAttributes(ObjectID::ServerDiagnosticsSummaryType);
 }
 
 TEST_F(StandardNamespaceStructure, ServerStatusType)
@@ -1980,7 +1994,7 @@ TEST_F(StandardNamespaceStructure, ServerStatusType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::ServerStatusType);
-  ExpectHasVariableAttributes(ObjectID::ServerStatusType);
+  ExpectHasVariableTypeAttributes(ObjectID::ServerStatusType);
 }
 
 TEST_F(StandardNamespaceStructure, ServerVendorCapabilityType)
@@ -1989,7 +2003,7 @@ TEST_F(StandardNamespaceStructure, ServerVendorCapabilityType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::ServerVendorCapabilityType);
-  ExpectHasVariableAttributes(ObjectID::ServerVendorCapabilityType);
+  ExpectHasVariableTypeAttributes(ObjectID::ServerVendorCapabilityType);
 }
 
 TEST_F(StandardNamespaceStructure, SessionsDiagnosticsArrayType)
@@ -1998,7 +2012,7 @@ TEST_F(StandardNamespaceStructure, SessionsDiagnosticsArrayType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SessionsDiagnosticsArrayType);
-  ExpectHasVariableAttributes(ObjectID::SessionsDiagnosticsArrayType);
+  ExpectHasVariableTypeAttributes(ObjectID::SessionsDiagnosticsArrayType);
 }
 
 TEST_F(StandardNamespaceStructure, ServerDiagnosticsVariableType)
@@ -2007,7 +2021,7 @@ TEST_F(StandardNamespaceStructure, ServerDiagnosticsVariableType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::ServerDiagnosticsVariableType);
-  ExpectHasVariableAttributes(ObjectID::ServerDiagnosticsVariableType);
+  ExpectHasVariableTypeAttributes(ObjectID::ServerDiagnosticsVariableType);
 }
 
 TEST_F(StandardNamespaceStructure, SessionSecurityDiagnosticsArrayType)
@@ -2016,7 +2030,7 @@ TEST_F(StandardNamespaceStructure, SessionSecurityDiagnosticsArrayType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SessionSecurityDiagnosticsArrayType);
-  ExpectHasVariableAttributes(ObjectID::SessionSecurityDiagnosticsArrayType);
+  ExpectHasVariableTypeAttributes(ObjectID::SessionSecurityDiagnosticsArrayType);
 }
 
 TEST_F(StandardNamespaceStructure, SessionSecurityDiagnosticsType)
@@ -2025,7 +2039,7 @@ TEST_F(StandardNamespaceStructure, SessionSecurityDiagnosticsType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SessionSecurityDiagnosticsType);
-  ExpectHasVariableAttributes(ObjectID::SessionSecurityDiagnosticsType);
+  ExpectHasVariableTypeAttributes(ObjectID::SessionSecurityDiagnosticsType);
 }
 
 TEST_F(StandardNamespaceStructure, SubscriptionDiagnosticsArrayType)
@@ -2034,7 +2048,7 @@ TEST_F(StandardNamespaceStructure, SubscriptionDiagnosticsArrayType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SubscriptionDiagnosticsArrayType);
-  ExpectHasVariableAttributes(ObjectID::SubscriptionDiagnosticsArrayType);
+  ExpectHasVariableTypeAttributes(ObjectID::SubscriptionDiagnosticsArrayType);
 }
 
 TEST_F(StandardNamespaceStructure, SubscriptionDiagnosticsType)
@@ -2043,7 +2057,7 @@ TEST_F(StandardNamespaceStructure, SubscriptionDiagnosticsType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::SubscriptionDiagnosticsType);
-  ExpectHasVariableAttributes(ObjectID::SubscriptionDiagnosticsType);
+  ExpectHasVariableTypeAttributes(ObjectID::SubscriptionDiagnosticsType);
 }
 
 TEST_F(StandardNamespaceStructure, PropertyType)
@@ -2052,5 +2066,5 @@ TEST_F(StandardNamespaceStructure, PropertyType)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasBaseAttributes(ObjectID::PropertyType);
-  ExpectHasVariableAttributes(ObjectID::PropertyType);
+  ExpectHasVariableTypeAttributes(ObjectID::PropertyType);
 }

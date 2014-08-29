@@ -72,8 +72,8 @@ namespace OpcUa
     Attributes[AttributeID::DATA_TYPE] = attr.Type;
     Attributes[AttributeID::VALUE_RANK] = attr.Rank;
     Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
-    Attributes[AttributeID::ACCESS_LEVEL] = attr.AccessLevel;
-    Attributes[AttributeID::USER_ACCESS_LEVEL] = attr.UserAccessLevel;
+    Attributes[AttributeID::ACCESS_LEVEL] = static_cast<uint8_t>(attr.AccessLevel);
+    Attributes[AttributeID::USER_ACCESS_LEVEL] = static_cast<uint8_t>(attr.UserAccessLevel);
     Attributes[AttributeID::MINIMUM_SAMPLING_INTERVAL] = attr.MinimumSamplingInterval;
     Attributes[AttributeID::HISTORIZING] = attr.Historizing;
     Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
@@ -84,32 +84,138 @@ namespace OpcUa
   {
     Header.TypeID = ExpandedObjectID::MethodAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::Executable);
+    specattr.set(SpecifiedAttributesEncoding::UserExecutable);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::EXECUTABLE] = attr.Executable;
+    Attributes[AttributeID::USER_EXECUTABLE] = attr.UserExecutable;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
   NodeAttributes::NodeAttributes(const ObjectTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ObjectTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const VariableTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::VariableTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::Value);
+    specattr.set(SpecifiedAttributesEncoding::DataType);
+    specattr.set(SpecifiedAttributesEncoding::ValueRank);
+    specattr.set(SpecifiedAttributesEncoding::ArrayDimensions);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::VALUE] = attr.Value;
+    Attributes[AttributeID::DATA_TYPE] = attr.Type;
+    Attributes[AttributeID::VALUE_RANK] = attr.Rank;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const ReferenceTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ReferenceTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::Symmetric);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    if (!attr.IsAbstract)
+      specattr.set(SpecifiedAttributesEncoding::InverseName);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::SYMMETRIC] = attr.Symmetric;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    if (!attr.IsAbstract)
+      Attributes[AttributeID::INVERSE_NAME] = attr.InverseName;
   }
+
   NodeAttributes::NodeAttributes(const DataTypeAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::DataTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::IsAbstract);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
   NodeAttributes::NodeAttributes(const ViewAttributes& attr)
   {
     Header.TypeID = ExpandedObjectID::ViewAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+
+    std::bitset<32> specattr;
+    specattr.set(SpecifiedAttributesEncoding::DisplayName);
+    specattr.set(SpecifiedAttributesEncoding::Description);
+    specattr.set(SpecifiedAttributesEncoding::ContainsNoLoops);
+    specattr.set(SpecifiedAttributesEncoding::WriteMask);
+    specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
+    SpecifiedAttributes = (uint32_t) specattr.to_ulong();
+
+    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
+    Attributes[AttributeID::DESCRIPTION] = attr.Description;
+    Attributes[AttributeID::CONTAINS_NO_LOOPS] = attr.ContainsNoLoops;
+    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
+    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
   }
+
+
 
   AddNodesRequest::AddNodesRequest()
     : TypeID(ADD_NODES_REQUEST)
@@ -137,7 +243,7 @@ namespace OpcUa
     //
     //AddNodeRequest
     //
-
+/*
     template<>
     std::size_t RawSize<ObjectAttributes>(const ObjectAttributes& val)
     {
@@ -182,8 +288,8 @@ namespace OpcUa
         RawSize(val.Type) + 
         RawSize(val.Rank) + 
         RawSizeContainer(val.Dimensions) + 
-        RawSize(val.AccessLevel) + 
-        RawSize(val.UserAccessLevel) + 
+        RawSize((uint8_t)val.AccessLevel) +
+        RawSize((uint8_t)val.UserAccessLevel) +
         RawSize(val.MinimumSamplingInterval) + 
         RawSize(val.Historizing) + 
         RawSize(val.WriteMask) + 
@@ -201,8 +307,8 @@ namespace OpcUa
       *this << val.Type;
       *this << val.Rank;
       *this << val.Dimensions;
-      *this << val.AccessLevel;
-      *this << val.UserAccessLevel;
+      *this << (uint8_t)val.AccessLevel; // TODO
+      *this << (uint8_t)val.UserAccessLevel; //TODO
       *this << val.MinimumSamplingInterval;
       *this << val.Historizing;
       *this << val.WriteMask;
@@ -219,8 +325,9 @@ namespace OpcUa
       *this >> val.Type;
       *this >> val.Rank;
       *this >> val.Dimensions;
-      *this >> val.AccessLevel;
-      *this >> val.UserAccessLevel;
+      uint8_t tmp = 0;
+      *this >> tmp; val.AccessLevel = static_cast<VariableAccessLevel>(tmp);
+      *this >> tmp; val.UserAccessLevel = static_cast<VariableAccessLevel>(tmp);
       *this >> val.MinimumSamplingInterval;
       *this >> val.Historizing;
       *this >> val.WriteMask;
@@ -445,6 +552,8 @@ namespace OpcUa
       *this << val.UserWriteMask;
     }
 
+    // TODO Seems doesn't required because there is serialization of NodeAttributes
+    // TODO Exact attributes have to be initialized from node attributes which will serialize.
     template<>
     void DataDeserializer::Deserialize<ViewAttributes>(ViewAttributes& val)
     {
@@ -455,7 +564,7 @@ namespace OpcUa
       *this >> val.WriteMask;
       *this >> val.UserWriteMask;
     }
-
+*/
 
 
     std::size_t RawSizeBodyNodeAttributes(const NodeAttributes& val)

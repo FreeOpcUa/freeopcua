@@ -19,25 +19,38 @@
 
 #pragma once
 
-#include <opc/ua/protocol/channel.h>
+
+#include <iostream>
+#include <vector>
+
 
 namespace OpcUa
 {
-
-  class InputFromBuffer : public OpcUa::InputChannel
+  namespace UaServer
   {
-  public:
-    InputFromBuffer(const char* buf, std::size_t bufSize);
 
-    virtual std::size_t Receive(char* data, std::size_t size) override;
+    inline void PrintBlob(const std::vector<char>& buf)
+    {
+      unsigned pos = 0;
+      std::cout << "length: " << buf.size() << std::endl;
+      for (const auto it : buf)
+      {
+        if (pos)
+          printf((pos % 16 == 0) ? "\n" : " ");
 
-    size_t GetRemainSize() const;
+        printf("%02x", (unsigned)it & 0x000000FF);
 
-    virtual void Stop(){}
+        if (it > ' ')
+          std::cout << "(" << it << ")";
+        else
+          std::cout << "   ";
 
-  private:
-    const char* Buffer;
-    std::size_t Size;
-  };
+        ++pos;
+      }
 
+      std::cout << std::endl << std::flush;
+    }
+
+
+  }
 }

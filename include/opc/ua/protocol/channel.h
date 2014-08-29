@@ -11,12 +11,28 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <memory>
-
+#include <system_error>
 
 namespace OpcUa
 {
-  class InputChannel
+
+  class BreakableChannel
+  {
+  public:
+    virtual ~BreakableChannel(){}
+    BreakableChannel(){}
+    BreakableChannel(const BreakableChannel&) = delete;
+    BreakableChannel(BreakableChannel&&) = delete;
+    BreakableChannel& operator=(const BreakableChannel&) = delete;
+
+  public:
+    virtual void Stop() = 0;
+  };
+
+
+  class InputChannel : public virtual BreakableChannel
   {
   public:
     typedef std::shared_ptr<InputChannel> SharedPtr;
@@ -24,8 +40,6 @@ namespace OpcUa
 
   public:
     virtual ~InputChannel(){}
-
-
     InputChannel(){}
     InputChannel(const InputChannel&) = delete;
     InputChannel(InputChannel&&) = delete;
@@ -37,12 +51,10 @@ namespace OpcUa
     /// @param size size of data
     /// @return size of received data
     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-    /// @brief Wait for Data
-    /// @return 1 if data, 0 if timetout and <0 if error
-    virtual int WaitForData(float second) = 0;
   };
 
-  class OutputChannel
+
+  class OutputChannel : public virtual BreakableChannel
   {
   public:
     typedef std::shared_ptr<OutputChannel> SharedPtr;
@@ -59,6 +71,7 @@ namespace OpcUa
    public:
     virtual void Send(const char* message, std::size_t size) = 0;
   };
+
 
   class IOChannel :
     public InputChannel,

@@ -30,7 +30,12 @@ OpcUa::SocketChannel::SocketChannel(int sock)
 
 OpcUa::SocketChannel::~SocketChannel()
 {
-  int error = close(Socket);
+  Stop();
+}
+
+void OpcUa::SocketChannel::Stop()
+{
+  int error = shutdown(Socket, 2);
   if (error < 0)
   {
     std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
@@ -58,19 +63,4 @@ void OpcUa::SocketChannel::Send(const char* message, std::size_t size)
   {
     THROW_OS_ERROR("unable to send data to the host. ");
   }
-}
-
-//Return 1 id data, 0 if timeout and <0 if error
-int OpcUa::SocketChannel::WaitForData(float second)
-{
-    fd_set          readSet;
-    struct timeval  timeout;
-    timeout.tv_sec = 0; 
-    timeout.tv_usec = second*1000000; 
-
-    FD_ZERO(&readSet);
-    //FD_SET((unsigned int) Socket, &readSet);
-    FD_SET(Socket, &readSet);
-
-    return select(Socket+1, &readSet, NULL, NULL, &timeout);
 }

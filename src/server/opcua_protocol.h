@@ -11,9 +11,11 @@
 
 #pragma once
 
+#include "opcua_protocol.h"
+#include "tcp_server.h"
+
 #include <opc/common/interface.h>
 #include <opc/ua/server/services_registry.h>
-#include <opc/ua/server/tcp_server.h>
 
 
 namespace OpcUa
@@ -30,7 +32,7 @@ namespace OpcUa
       virtual void StopEndpoints() = 0;
     };
 
-    OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer::SharedPtr tcpServer, bool debug = false);
+    OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer& tcpServer, bool debug);
 
   } // namespace UaServer
 } // nmespace OpcUa

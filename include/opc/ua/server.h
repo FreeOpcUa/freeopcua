@@ -46,11 +46,11 @@ namespace OpcUa
       virtual void ActivateSession() = 0;
       virtual void CloseSession() = 0;
 
-      virtual EndpointServices::SharedPtr Endpoints() const = 0;
-      virtual ViewServices::SharedPtr Views() const = 0;
-      virtual NodeManagementServices::SharedPtr NodeManagement() const = 0;
-      virtual AttributeServices::SharedPtr Attributes() const = 0;
-      virtual SubscriptionServices::SharedPtr Subscriptions() const = 0;
+      virtual EndpointServices::SharedPtr Endpoints() = 0;
+      virtual ViewServices::SharedPtr Views() = 0;
+      virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
+      virtual AttributeServices::SharedPtr Attributes() = 0;
+      virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
     };
 
   }

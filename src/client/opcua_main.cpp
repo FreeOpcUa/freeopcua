@@ -302,7 +302,7 @@ namespace
 //    std::vector<UserTokenPolicy> ;
   }
 
-  void PrintEndpoints(const OpcUa::Remote::Server& computer)
+  void PrintEndpoints(OpcUa::Remote::Server& computer)
   {
     std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
     OpcUa::EndpointsFilter filter;
@@ -314,7 +314,7 @@ namespace
     }
   }
 
-  void PrintServers(const OpcUa::Remote::Server& computer)
+  void PrintServers(OpcUa::Remote::Server& computer)
   {
     std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
     OpcUa::FindServersParameters filter;
