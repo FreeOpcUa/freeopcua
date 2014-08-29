@@ -245,15 +245,6 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    AddReferencesItem refitem;
-    refitem.SourceNodeID = res.AddedNodeID;
-    refitem.TargetNodeID = ObjectID::FolderType;
-    refitem.TargetNodeClass = NodeClass::ObjectType;
-    refitem.IsForward = true;
-    refitem.ReferenceTypeId = ReferenceID::HasTypeDefinition;
-    //refitem.TargetServerUri =  //Necessary in case the ref is on another server, not supported
-    Server->NodeManagement()->AddReferences(std::vector<AddReferencesItem>({refitem}));
-
     return Node(Server, res.AddedNodeID, browsename);
   }
 
@@ -294,15 +285,6 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    AddReferencesItem refitem;
-    refitem.SourceNodeID = res.AddedNodeID;
-    refitem.TargetNodeID = ObjectID::BaseObjectType;
-    refitem.TargetNodeClass = NodeClass::ObjectType;
-    refitem.IsForward = true;
-    refitem.ReferenceTypeId = ReferenceID::HasTypeDefinition;
-    //refitem.TargetServerUri =  //Necessary in case the ref is on another server, not supported
-    Server->NodeManagement()->AddReferences(std::vector<AddReferencesItem>({refitem}));
-
     return Node(Server, res.AddedNodeID, browsename);
   }
 
@@ -330,7 +312,7 @@ namespace OpcUa
     item.RequestedNewNodeID = nodeid;
     item.Class = NodeClass::Variable;
     item.ReferenceTypeId = ReferenceID::HasComponent; 
-    item.TypeDefinition = ObjectID::BaseVariableType; 
+    item.TypeDefinition = ObjectID::BaseDataVariableType; 
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -350,15 +332,6 @@ namespace OpcUa
 
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
-
-    AddReferencesItem refitem;
-    refitem.SourceNodeID = res.AddedNodeID;
-    refitem.TargetNodeID = ObjectID::BaseDataVariableType;
-    refitem.TargetNodeClass = NodeClass::DataType;
-    refitem.IsForward = true;
-    refitem.ReferenceTypeId = ReferenceID::HasTypeDefinition;
-    //refitem.TargetServerUri =  //Necessary in case the ref is on another server, not supported
-    Server->NodeManagement()->AddReferences(std::vector<AddReferencesItem>({refitem}));
 
     return Node(Server, res.AddedNodeID, browsename);
   }
@@ -409,15 +382,6 @@ namespace OpcUa
 
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
-
-    AddReferencesItem refitem;
-    refitem.SourceNodeID = res.AddedNodeID;
-    refitem.TargetNodeID = ObjectID::PropertyType;
-    refitem.TargetNodeClass = NodeClass::DataType;
-    refitem.IsForward = true;
-    refitem.ReferenceTypeId = ReferenceID::HasTypeDefinition;
-    //refitem.TargetServerUri =  //Necessary in case the ref is on another server, not supported
-    Server->NodeManagement()->AddReferences(std::vector<AddReferencesItem>({refitem}));
 
     return Node(Server, res.AddedNodeID, browsename);
 

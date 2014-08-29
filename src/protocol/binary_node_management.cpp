@@ -1169,8 +1169,16 @@ namespace OpcUa
     {
       return Names::BaseObjectType;
     }
+    else if ( id == ObjectID::ModellingRuleMandatory )
+    {
+      return Names::ModellingRuleMandatory;
+    }
+    else if ( id == ObjectID::ServerType )
+    {
+      return Names::ServerType;
+    }
     std::cerr << "Error no Node name defined for ObjectID: " << id << std::endl;
-    return "";
+    return "NoNameFound";
   }
 
 }

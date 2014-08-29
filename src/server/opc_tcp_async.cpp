@@ -236,9 +236,11 @@ namespace
     OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytesTransferred);
     IStreamBinary messageStream(messageChannel);
 
+    bool cont = true;
+
     try
     {
-      MessageProcessor.ProcessMessage(type, messageStream);
+      cont = MessageProcessor.ProcessMessage(type, messageStream);
     }
     catch(const std::exception& exc)
     {
@@ -250,6 +252,12 @@ namespace
     if (messageChannel.GetRemainSize())
     {
       std::cerr << "opc_tcp_async| ERROR!!! Message from client has been processed partially." << std::endl;
+    }
+
+    if ( ! cont )
+    {
+      GoodBye();
+      return;
     }
 
     ReadNextData();

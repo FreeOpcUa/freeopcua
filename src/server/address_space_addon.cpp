@@ -128,12 +128,6 @@ namespace OpcUa
       return Registry->DeleteMonitoredItems(params);
     }
 
-
-    std::vector<PublishResult> AddressSpaceAddon::PopPublishResults(const std::vector<IntegerID>& subscriptionsIds)
-    {
-      return Registry->PopPublishResults(subscriptionsIds);
-    }
-
     void AddressSpaceAddon::Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
     {
       return Registry->Publish(acknowledgements);
