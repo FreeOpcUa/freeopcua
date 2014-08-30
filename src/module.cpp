@@ -1006,6 +1006,7 @@ namespace OpcUa
   class PyClient: public RemoteClient
   {
     public:
+      using RemoteClient::RemoteClient;
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
@@ -1305,7 +1306,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("subscribe_events", &PySubscription::SubscribeEvents)
       ;
 
-    class_<PyClient, boost::noncopyable>("Client")
+    class_<PyClient, boost::noncopyable>("Client", init<>())
+          .def(init<bool>())
           .def("connect", &PyClient::Connect)
           .def("disconnect", &PyClient::Disconnect)
           .def("get_root_node", &PyClient::PyGetRootNode)
