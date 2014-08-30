@@ -11,8 +11,10 @@
 #include <opc/ua/socket_channel.h>
 #include <opc/ua/errors.h>
 
+#include <arpa/inet.h>
 #include <errno.h>
 #include <iostream>
+#include <netinet/tcp.h>
 #include <stdexcept>
 #include <string.h>
 #include <sys/socket.h>
@@ -22,6 +24,8 @@
 OpcUa::SocketChannel::SocketChannel(int sock)
   : Socket(sock)
 {
+  int flag = 1;
+  setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));
   if (Socket < 0)
   {
     THROW_ERROR(CannotCreateChannelOnInvalidSocket);
@@ -35,7 +39,7 @@ OpcUa::SocketChannel::~SocketChannel()
 
 void OpcUa::SocketChannel::Stop()
 {
-  int error = close(Socket);
+  int error = shutdown(Socket, 2);
   if (error < 0)
   {
     std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
