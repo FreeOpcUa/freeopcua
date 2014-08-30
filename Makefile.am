@@ -9,12 +9,17 @@ EXTRA_DIST = \
   setup.py
 
 opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
+opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
+libraries_path =$(OPCUA_SERVER_PATH)/lib
+TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find ./build -name \*.so -exec dirname {} + )
+
 
 all:
 	$(opcua_paths) python setup.py build
 
 check:
 	$(opcua_paths) $(MAKE) -C tests check
+	$(TEST_VARS) python ./tests/test_highlevel.py
 	
 clean:
 	$(MAKE) -C tests clean

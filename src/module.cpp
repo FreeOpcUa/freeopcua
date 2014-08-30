@@ -583,7 +583,7 @@ namespace OpcUa
   {
   public:
     explicit PyServer(const std::string& endpointUrl)
-      : Impl(OpcUa::Remote::Connect(endpointUrl))
+      : Impl(OpcUa::Remote::CreateBinaryServer(endpointUrl))
     {
     }
 
