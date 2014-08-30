@@ -19,8 +19,8 @@ cpp_flags = [
 ]
 
 libs = [
-	'opc_tcp_client',
-	'opcua_server',
+	'opcuaclient',
+	'opcuaserver',
 	'stdc++',
 	'pthread',
 	'boost_python'

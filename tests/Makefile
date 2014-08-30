@@ -7,8 +7,7 @@ all:
 TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find . -name \*.so -exec dirname {} + )
 
 check: all
-	$(TEST_VARS) python test_highlevel.py
-#	$(TEST_VARS) python test.py
+	$(TEST_VARS) python test.py
 	
 clean:
 	rm -rvf build dist

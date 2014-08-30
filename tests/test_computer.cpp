@@ -220,27 +220,27 @@ namespace
       throw std::logic_error("not implemented.");
     }
 
-    virtual std::shared_ptr<EndpointServices> Endpoints() const
+    virtual std::shared_ptr<EndpointServices> Endpoints()
     {
       return EndpointsImpl;
     }
 
-    virtual std::shared_ptr<ViewServices> Views() const
+    virtual std::shared_ptr<ViewServices> Views()
     {
       return ViewsImpl;
     }
 
-    virtual std::shared_ptr<AttributeServices> Attributes() const
+    virtual std::shared_ptr<AttributeServices> Attributes()
     {
       return AttributesImpl;
     }
 
-    virtual std::shared_ptr<SubscriptionServices> Subscriptions() const
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions()
     {
       throw std::logic_error("not implemented.");
     }
 
-    virtual std::shared_ptr<NodeManagementServices> NodeManagement() const
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement()
     {
       throw std::logic_error("not implemented.");
     }

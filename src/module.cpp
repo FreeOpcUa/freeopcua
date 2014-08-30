@@ -9,7 +9,7 @@
 ///
 
 #include <opc/ua/client/client.h>
-#include <opc/ua/client/remote_server.h>
+#include <opc/ua/client/binary_server.h>
 #include <opc/ua/node.h>
 #include <opc/ua/event.h>
 #include <opc/ua/server/opcuaserver.h>
@@ -583,7 +583,7 @@ namespace OpcUa
   {
   public:
     explicit PyServer(const std::string& endpointUrl)
-      : Impl(OpcUa::Remote::Connect(endpointUrl))
+      : Impl(OpcUa::Remote::CreateBinaryServer(endpointUrl))
     {
     }
 /*
