@@ -627,15 +627,15 @@ namespace
   int RegisterNewModule(const OpcUa::CommandLine& cmd)
   {
     std::cout << "Registering new module." << std::endl;
-    const std::string& configFile = cmd.GetConfigDir();
+    const std::string& configDir = cmd.GetConfigDir();
     const std::string& addonID = cmd.GetModuleID();
     const std::string& modulePath = cmd.GetModulePath();
 
     std::cout << "ID: " << addonID << std::endl;
     std::cout << "Path: " << modulePath << std::endl;
-    std::cout << "Configuration file: " << configFile << std::endl;
+    std::cout << "Configuration file: " << configDir << std::endl;
 
-    Common::Configuration config = Common::ParseConfiguration(configFile);
+    Common::Configuration config = Common::ParseConfigurationFiles(configDir);
     const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
     if (moduleIt != config.Modules.end())
     {
@@ -648,7 +648,7 @@ namespace
     module.Path = modulePath;
 
     config.Modules.push_back(module);
-    Common::SaveConfiguration(config.Modules, configFile);
+    Common::SaveConfiguration(config.Modules, configDir);
     std::cout << "Successfully registered." << std::endl;
     return 0;
   }
@@ -656,12 +656,12 @@ namespace
   int UnregisterModule(const OpcUa::CommandLine& cmd)
   {
     const Common::AddonID addonID = cmd.GetModuleID();
-    const std::string& configFile = cmd.GetConfigDir();
+    const std::string& configDir = cmd.GetConfigDir();
     std::cout << "Unregistering module." << std::endl;
     std::cout << "ID: " << addonID << std::endl;
-    std::cout << "Configuration file: " << configFile << std::endl;
+    std::cout << "Configuration file: " << configDir << std::endl;
 
-    Common::Configuration config = Common::ParseConfiguration(configFile);
+    Common::Configuration config = Common::ParseConfigurationFiles(configDir);
     Common::ModulesConfiguration::iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
     if (moduleIt == config.Modules.end())
     {
@@ -669,7 +669,7 @@ namespace
       return -1;
     }
     config.Modules.erase(moduleIt);
-    Common::SaveConfiguration(config.Modules, configFile);
+    Common::SaveConfiguration(config.Modules, configDir);
 
     std::cout << "Successfully unregistered." << std::endl;
     return 0;

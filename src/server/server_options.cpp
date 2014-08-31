@@ -18,6 +18,10 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
+#ifndef CONFIG_PATH
+#define CONFIG_PATH "/etc/opcua/server"
+#endif
+
 namespace
 {
   namespace po = boost::program_options;
@@ -25,9 +29,8 @@ namespace
 
   const char* DefaultLogFilePath = "/var/log/opcua/server.log";
 
-
   const char* OPTION_HELP = "help";
-  const char* OPTION_CONFIG = "config";
+  const char* OPTION_CONFIG = "config-dir";
   const char* OPTION_DAEMON = "daemon";
   const char* OPTION_LOGFILE = "log-file";
 
@@ -37,7 +40,7 @@ namespace
     {
       return vm[OPTION_CONFIG].as<std::string>();
     }
-    return "/etc/opcua/server";
+    return CONFIG_PATH;
   }
 
 
