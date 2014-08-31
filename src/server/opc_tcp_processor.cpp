@@ -121,13 +121,8 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
-      PublishRequestElement requestData;
-
-      {
-        std::unique_lock<std::mutex> lock(PublishRequestQueueMutex);
-        requestData = PublishRequestQueue.front();
-        PublishRequestQueue.pop();
-      }
+      PublishRequestElement requestData = PublishRequestQueue.front();
+      PublishRequestQueue.pop();
 
       PublishResponse response;
       FillResponseHeader(requestData.requestHeader, response.Header);
@@ -594,10 +589,8 @@ namespace OpcUa
           data.algorithmHeader = algorithmHeader;
           data.requestHeader = requestHeader;
 
-          {
-            std::unique_lock<std::mutex> lock(PublishRequestQueueMutex);
-            PublishRequestQueue.push(data);
-          }
+          std::unique_lock<std::mutex> lock(PublishRequestQueueMutex);
+          PublishRequestQueue.push(data);
 
           Server->Subscriptions()->Publish(params.Acknowledgements);
 

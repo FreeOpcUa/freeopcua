@@ -371,13 +371,11 @@ namespace
       request.Parameters.Acknowledgements = acknowledgements;
 
       ResponseCallback responseCallback = [this](std::vector<char>&& buffer){
-        std::thread([this, buffer](){
-          BufferInputChannel bufferInput(std::move(buffer));
-          IStreamBinary in(bufferInput);
-          PublishResponse response;
-          in >> response;
-          PublishCallback(response.Result);
-        });
+        BufferInputChannel bufferInput(std::move(buffer));
+        IStreamBinary in(bufferInput);
+        PublishResponse response;
+        in >> response;
+        PublishCallback(response.Result);
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);

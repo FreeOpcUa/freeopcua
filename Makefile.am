@@ -155,9 +155,11 @@ test_opcuaserver_SOURCES = \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
 	tests/server/xml_addressspace_ut.cpp \
-	tests/server/xml_address_space_addon_ut.cpp
+	tests/server/xml_address_space_addon_ut.cpp \
+	src/server/server_options.cpp \
+	src/server/server_options.h
 
-test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la
+test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la -lboost_program_options
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
 test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS)
 
