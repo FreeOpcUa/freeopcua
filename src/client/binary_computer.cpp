@@ -112,13 +112,14 @@ namespace
   {
   private:
     typedef std::function<void(std::vector<char>)> ResponseCallback;
-    typedef std::map<uint32_t, ResponseCallback> CallbackMap;
+    typedef uint32_t RequestHandle;
+    typedef std::map<RequestHandle, ResponseCallback> CallbackMap;
 
   public:
     BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
-      , RequestHandle(0)
+      , RequestHandleCounter(0)
       , Params(params)
       , SequenceNumber(1)
       , RequestNumber(1)
@@ -369,12 +370,14 @@ namespace
       request.Header = CreateRequestHeader();
       request.Parameters.Acknowledgements = acknowledgements;
 
-      ResponseCallback responseCallback = [this](std::vector<char> buffer){
-        BufferInputChannel bufferInput(buffer);
-        IStreamBinary in(bufferInput);
-        PublishResponse response;
-        in >> response;
-        PublishCallback(response.Result);
+      ResponseCallback responseCallback = [this](std::vector<char>&& buffer){
+        std::thread([this, buffer](){
+          BufferInputChannel bufferInput(std::move(buffer));
+          IStreamBinary in(bufferInput);
+          PublishResponse response;
+          in >> response;
+          PublishCallback(response.Result);
+        });
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);
@@ -558,7 +561,7 @@ private:
 
     unsigned GetRequestHandle() const
     {
-      return ++RequestHandle;
+      return ++RequestHandleCounter;
     }
 
   private:
@@ -572,7 +575,7 @@ private:
     mutable uint32_t RequestNumber;
     mutable IOStreamBinary Stream;
     NodeID AuthenticationToken;
-    mutable std::atomic<uint32_t> RequestHandle;
+    mutable std::atomic<uint32_t> RequestHandleCounter;
     mutable std::vector<uint8_t> ContinuationPoint;
     mutable CallbackMap Callbacks;
     const bool Debug = false;
