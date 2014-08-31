@@ -375,7 +375,7 @@ opcua_SOURCES = \
   src/client/opcua_options.cpp \
   src/client/opcua_options.h
 
-opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
+opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCLIENT_CONFIG_PATH=\"$(sysconfigdir)/opcua/client\"
 opcua_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
 opcua_LDFLAGS =  -ldl -lboost_program_options -lpthread -lxml2
 
@@ -453,6 +453,8 @@ clean-local:
 	$(MAKE) -C $(top_srcdir)/tests/gmock clean
 	$(MAKE) -C $(top_srcdir)/tests/gtest clean
 
+install-data-local:
+	install -d $(DESTDIR)/$(localstatedir)/log/opcua
 
 tests/gtest/lib/.libs/libgmock.a:
 	$(MAKE) -C $(top_srcdir)/tests/gmock

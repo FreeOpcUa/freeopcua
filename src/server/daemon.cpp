@@ -84,15 +84,17 @@ namespace OpcUa
 
     if (!logFile.empty())
     {
-      close(STDIN_FILENO);
-      close(STDOUT_FILENO);
-      close(STDERR_FILENO);
-
       FILE* tmp = fopen(logFile.c_str(), "w");
       if (!tmp)
       {
         std::cerr << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
+        exit(EXIT_FAILURE);
       }
+
+      close(STDIN_FILENO);
+      close(STDOUT_FILENO);
+      close(STDERR_FILENO);
+
       dup2(fileno(tmp), STDOUT_FILENO);
       dup2(fileno(tmp), STDERR_FILENO);
     }
