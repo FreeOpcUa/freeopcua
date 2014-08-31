@@ -135,7 +135,7 @@ opcuaserver_LDFLAGS = -ldl -lpthread -lboost_filesystem -lboost_program_options 
 
 test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacore.la
 	gcc -o0 -g -Wall -std=c++0x -fPIC -c tests/server/test_addon.cpp -I$(top_srcdir)/include -o test_addon.o
-	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.so
+	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.a
 
 test_opcuaserver_SOURCES = \
 	tests/server/address_space_registry_test.h \
