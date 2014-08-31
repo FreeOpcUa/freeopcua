@@ -316,6 +316,7 @@ namespace
   {
     std::clog << "opc_tcp_async| Shutdowning server." << std::endl;
     io.stop();
+    Clients.clear();
   }
 
   void OpcTcpServer::Accept()
@@ -339,16 +340,6 @@ namespace
 
   void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)
   {
-/*
-    auto clientIt = std::find(Clients.begin(), Clients.end(), client);
-    if (clientIt == Clients.end())
-    {
-      return;
-    }
-
-    if (Params.DebugMode) std::cout << "opc_tcp_async| Client disconnected." << std::endl;
-    //Clients.erase(clientIt);
-*/
     Clients.erase(client);
   }
 

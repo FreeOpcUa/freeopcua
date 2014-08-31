@@ -588,7 +588,10 @@ namespace OpcUa
           data.sequence = sequence;
           data.algorithmHeader = algorithmHeader;
           data.requestHeader = requestHeader;
+
+          std::unique_lock<std::mutex> lock(PublishRequestQueueMutex);
           PublishRequestQueue.push(data);
+
           Server->Subscriptions()->Publish(params.Acknowledgements);
 
           --SequenceNb; //We do not send response, so do not increase sequence
