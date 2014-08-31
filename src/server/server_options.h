@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+
 namespace OpcUa
 {
   namespace UaServer
