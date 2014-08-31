@@ -18,6 +18,8 @@
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/server.h>
 
+#include <boost/asio.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -118,12 +120,17 @@ namespace
     BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
-      , RequestHandle(0)
       , Params(params)
       , SequenceNumber(1)
       , RequestNumber(1)
+      , RequestHandle(0)
       , Debug(debug)
+      , work(new boost::asio::io_service::work(callback_service))
+
     {
+      //Initialize the worker thread for subscriptions
+      callback_thread = std::thread([&](){ callback_service.run(); });
+
       const Acknowledge& ack = HelloServer(params);
       const OpenSecureChannelResponse& response = OpenChannel();
       ChannelSecurityToken = response.ChannelSecurityToken;
@@ -143,9 +150,17 @@ namespace
     ~BinaryServer()
     {
       Finished = true;
+
       CloseSecureChannel();
       Channel->Stop();
+      if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
+
+      if (Debug) std::cout << "binary_client| Stopping boost io service." << std::endl;
+      callback_service.stop();
+      if (Debug) std::cout << "binary_client| Joining service thread." << std::endl;
+      callback_thread.join();
+
     }
 
     virtual void CreateSession(const Remote::SessionParameters& parameters)
@@ -374,7 +389,8 @@ namespace
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
-        PublishCallback(response.Result);
+        callback_service.post([this, response]() { this->PublishCallback( response.Result);});
+        //PublishCallback(response.Result);
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);
@@ -562,7 +578,10 @@ private:
     }
 
   private:
+    mutable boost::shared_mutex DbMutex;
+
     std::shared_ptr<IOChannel> Channel;
+    mutable IOStreamBinary Stream;
     Remote::SecureConnectionParams Params;
     std::thread ReceiveThread;
 
@@ -570,13 +589,17 @@ private:
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
     mutable uint32_t RequestNumber;
-    mutable IOStreamBinary Stream;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<uint8_t> ContinuationPoint;
     mutable CallbackMap Callbacks;
     const bool Debug = false;
     bool Finished = false;
+
+    boost::asio::io_service callback_service;
+    std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
+    std::thread callback_thread;
+
   };
 
 } // namespace

@@ -47,6 +47,9 @@ namespace OpcUa
 
   void Subscription::PublishCallback(PublishResult result)
   {
+    std::unique_lock<std::mutex> lock(Mutex); //To be finished
+    //FIXME: finish to handle all types of publishresults!
+
     std::cout << "Suscription::PublishCallback called" << std::endl;
     for (const NotificationData& data: result.Message.Data )
     {
@@ -62,9 +65,8 @@ namespace OpcUa
           }
           else
           {
-            //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
-            std::cout << "Debug: Calling client callback\n";
-            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node), item.Value.Value, mapit->second.Attribute);
+            std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << Node(Server, mapit->second.Node) << std::endl;
+            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node, QualifiedName()), item.Value.Value, mapit->second.Attribute);
           }
         }
       }
@@ -89,6 +91,7 @@ namespace OpcUa
             //ev.
             std::cout << "Debug: Calling client callback\n";
             Client.Event(ef.ClientHandle, ef.EventFields);
+            std::cout << "Debug: callback call finished\n";
           }
         }
       }
@@ -102,7 +105,7 @@ namespace OpcUa
         std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    //Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)

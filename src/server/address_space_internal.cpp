@@ -96,7 +96,7 @@ namespace OpcUa
       {
         if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
         io.stop();
-        if (Debug) std::cout << "address_space_in_memory| Joining serivice thread." << std::endl;
+        if (Debug) std::cout << "address_space_in_memory| Joining service thread." << std::endl;
         service_thread.join();
       }
 
