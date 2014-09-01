@@ -34,7 +34,7 @@ class SubClient : public SubscriptionClient
 
 int main(int argc, char** argv)
 {
-  OpcUa::OPCUAServer server;
+  OpcUa::OPCUAServer server(true);
   //try
   //{
     server.SetEndpoint("opc.tcp://localhost:4841");
