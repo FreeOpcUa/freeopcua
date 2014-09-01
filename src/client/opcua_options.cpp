@@ -16,8 +16,8 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#ifndef CLIENT_CONFIG_PATH
-#define CLIENT_CONFIG_PATH "/etc/opcua/client"
+#ifndef CONFIG_PATH
+#define CONFIG_PATH "/etc/opcua/client"
 #endif
 
 namespace
@@ -227,7 +227,7 @@ namespace OpcUa
       (OPTION_VALUE_STRING, po::value<std::string>(), "String value.")
       (OPTION_MODULE_ID, po::value<std::string>(), "ID of the new module.")
       (OPTION_MODULE_PATH, po::value<std::string>(), "Path to the new module shared library.")
-      (OPTION_CONFIG_DIR, po::value<std::string>(), "Path to the directory with modules configuration files. By default '" CLIENT_CONFIG_PATH "'.");
+      (OPTION_CONFIG_DIR, po::value<std::string>(), "Path to the directory with modules configuration files. By default '" CONFIG_PATH "'.");
 
 
     po::variables_map vm;
@@ -282,7 +282,7 @@ namespace OpcUa
     }
     else
     {
-      ConfigDir = CLIENT_CONFIG_PATH;
+      ConfigDir = CONFIG_PATH;
     }
   }
 }
