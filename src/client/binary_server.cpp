@@ -105,7 +105,7 @@ namespace
   class CallbackThread
   {
     public:
-      CallbackThread(uint32_t period=10) : Period(period)
+      CallbackThread() 
       {
 
       }
@@ -114,22 +114,32 @@ namespace
         std::cout << "callback posted" << std::endl;
         std::unique_lock<std::mutex> lock(Mutex);
         Queue.push(callback);
+        Condition.notify_one();
       }
 
       void Run()
       {
         std::cout << "starting thread" << std::endl;
-        while (!StopRequest)
+        while (true)
         {
-          std::this_thread::sleep_for(std::chrono::milliseconds(Period));
           std::unique_lock<std::mutex> lock(Mutex);
-          if ( ! Queue.empty() )
+          std::cout << "waiting for queue" << std::endl;
+          Condition.wait(lock, [&]() { return StopRequest || (Queue.size() > 0) ;} );
+          std::cout << "finished wait" << std::endl;
+          if (StopRequest)
           {
+          std::cout << "return" << std::endl;
+            return;
+          }
+          //std::this_thread::sleep_for(std::chrono::milliseconds(Period));
+          //std::unique_lock<std::mutex> lock(Mutex);
+          //if ( ! Queue.empty() )
+          //{
             std::cout << "CallbackQueue not empty, calling first" << std::endl;
             Queue.front()();
             Queue.pop();
             std::cout << "Callback call done" << std::endl;
-          }
+          //}
         }
       }
 
@@ -142,6 +152,7 @@ namespace
     private:
       uint32_t Period;
       std::mutex Mutex;
+      std::condition_variable Condition;
       bool StopRequest = false;
       std::queue<std::function<void()>> Queue;
   };
