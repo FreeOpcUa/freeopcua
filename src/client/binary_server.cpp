@@ -18,12 +18,11 @@
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/server.h>
 
-#include <boost/asio.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
+#include <queue>
 #include <thread>
 
 
@@ -103,6 +102,50 @@ namespace
     std::condition_variable doneEvent;
   };
 
+  class CallbackThread
+  {
+    public:
+      CallbackThread(uint32_t period=10) : Period(period)
+      {
+
+      }
+      void post(std::function<void()> callback)
+      {
+        std::cout << "callback posted" << std::endl;
+        std::unique_lock<std::mutex> lock(Mutex);
+        Queue.push(callback);
+      }
+
+      void Run()
+      {
+        std::cout << "starting thread" << std::endl;
+        while (!StopRequest)
+        {
+          std::this_thread::sleep_for(std::chrono::milliseconds(Period));
+          std::unique_lock<std::mutex> lock(Mutex);
+          if ( ! Queue.empty() )
+          {
+            std::cout << "CallbackQueue not empty, calling first" << std::endl;
+            Queue.front()();
+            Queue.pop();
+            std::cout << "Callback call done" << std::endl;
+          }
+        }
+      }
+
+      void Stop()
+      {
+        std::cout << "stop called" << std::endl;
+        StopRequest = true;
+      }
+
+    private:
+      uint32_t Period;
+      std::mutex Mutex;
+      bool StopRequest = false;
+      std::queue<std::function<void()>> Queue;
+  };
+
   class BinaryServer
     : public Remote::Server
     , public Remote::EndpointServices
@@ -117,7 +160,7 @@ namespace
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
-    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
+    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, uint32_t callbackPeriod, bool debug)
       : Channel(channel)
       , Stream(channel)
       , Params(params)
@@ -125,11 +168,13 @@ namespace
       , RequestNumber(1)
       , RequestHandle(0)
       , Debug(debug)
-      , work(new boost::asio::io_service::work(callback_service))
+      //, work(new boost::asio::io_service::work(callback_service))
+      , CallbackService(callbackPeriod)
 
     {
       //Initialize the worker thread for subscriptions
-      callback_thread = std::thread([&](){ callback_service.run(); });
+      //callback_thread = std::thread([&](){ callback_service.run(); });
+      callback_thread = std::thread([&](){ CallbackService.Run(); });
 
       const Acknowledge& ack = HelloServer(params);
       const OpenSecureChannelResponse& response = OpenChannel();
@@ -151,15 +196,16 @@ namespace
     {
       Finished = true;
 
+      if (Debug) std::cout << "binary_client| Stopping callback thread." << std::endl;
+      CallbackService.Stop();
+      if (Debug) std::cout << "binary_client| Joining service thread." << std::endl;
+      callback_thread.join(); //Not sure it is necessary
+
       CloseSecureChannel();
       Channel->Stop();
       if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
 
-      if (Debug) std::cout << "binary_client| Stopping boost io service." << std::endl;
-      callback_service.stop();
-      if (Debug) std::cout << "binary_client| Joining service thread." << std::endl;
-      callback_thread.join();
 
     }
 
@@ -389,7 +435,7 @@ namespace
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
-        callback_service.post([this, response]() { this->PublishCallback( response.Result);});
+        CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
         //PublishCallback(response.Result);
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
@@ -578,8 +624,6 @@ private:
     }
 
   private:
-    mutable boost::shared_mutex DbMutex;
-
     std::shared_ptr<IOChannel> Channel;
     mutable IOStreamBinary Stream;
     Remote::SecureConnectionParams Params;
@@ -596,9 +640,10 @@ private:
     const bool Debug = false;
     bool Finished = false;
 
-    boost::asio::io_service callback_service;
-    std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
+    //boost::asio::io_service callback_service;
+    //std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
     std::thread callback_thread;
+    CallbackThread CallbackService;
 
   };
 
@@ -607,7 +652,7 @@ private:
 
 OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, 10, debug));
 }
 
 OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
