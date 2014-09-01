@@ -502,7 +502,7 @@ namespace OpcUa
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->ForwardPublishResponse(i); });
+          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ this->ForwardPublishResponse(i); });
 
           Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
 
