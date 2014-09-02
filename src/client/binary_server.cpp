@@ -166,12 +166,10 @@ namespace
       , RequestNumber(1)
       , RequestHandle(0)
       , Debug(debug)
-      //, work(new boost::asio::io_service::work(callback_service))
       , CallbackService()
 
     {
       //Initialize the worker thread for subscriptions
-      //callback_thread = std::thread([&](){ callback_service.run(); });
       callback_thread = std::thread([&](){ CallbackService.Run(); });
 
       const Acknowledge& ack = HelloServer(params);
@@ -434,7 +432,6 @@ namespace
         PublishResponse response;
         in >> response;
         CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
-        //PublishCallback(response.Result);
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);
@@ -638,8 +635,6 @@ private:
     const bool Debug = false;
     bool Finished = false;
 
-    //boost::asio::io_service callback_service;
-    //std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
     std::thread callback_thread;
     CallbackThread CallbackService;
 

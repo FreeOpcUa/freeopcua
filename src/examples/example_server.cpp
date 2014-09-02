@@ -34,51 +34,40 @@ class SubClient : public SubscriptionClient
 
 int main(int argc, char** argv)
 {
-  OpcUa::OPCUAServer server(true);
-  //try
-  //{
-    server.SetEndpoint("opc.tcp://localhost:4841");
-    server.SetLoadCppAddressSpace(true);
-    server.Start();
-    Node root = server.GetRootNode();
-    std::cout << "Root node is: " << root << std::endl;
-    std::cout << "Childs are: " << std::endl;
-    for (Node node: root.GetChildren() )
-    {
-      std::cout << "    " << node << std::endl;
-    }
+  const bool debug = true;
+  OpcUa::OPCUAServer server(debug);
 
-    Node objects = server.GetObjectsNode();
+  server.SetEndpoint("opc.tcp://localhost:4841");
+  server.Start();
+  Node root = server.GetRootNode();
+  std::cout << "Root node is: " << root << std::endl;
+  std::cout << "Childs are: " << std::endl;
+  for (Node node: root.GetChildren() )
+  {
+    std::cout << "    " << node << std::endl;
+  }
 
-    //create a new object in addressspace
-    NodeID nid(99, 1);
-    QualifiedName qn("NewObject", 2);
-    Node newobject = objects.AddObject(nid, qn);
-    //Add a virable to objevt
-    Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
-   
-    SubClient clt; 
-    std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
-    sub->SubscribeDataChange(myvar);
-    uint32_t counter = 0;
-    myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
-    std::cout << "Ctrl-C to exit" << std::endl;
-    for(;;)
-    {
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-      myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
-    }
+  Node objects = server.GetObjectsNode();
 
-  //}
-  //catch (const std::exception& exc)
-  //{
-    //std::cout << "Exception: " << exc.what() << std::endl;
-    //throw(exc);
-  //}
-  //catch (...)
-  //{
-    //std::cout << "Unknown error." << std::endl;
-  //}
+  //create a new object in addressspace
+  NodeID nid(99, 1);
+  QualifiedName qn("NewObject", 2);
+  Node newobject = objects.AddObject(nid, qn);
+  //Add a virable to objevt
+  Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
+ 
+  SubClient clt; 
+  std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
+  sub->SubscribeDataChange(myvar);
+  uint32_t counter = 0;
+  myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
+  std::cout << "Ctrl-C to exit" << std::endl;
+  for(;;)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
+  }
+
   server.Stop();
   return 0;
 }
