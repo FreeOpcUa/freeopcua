@@ -155,6 +155,8 @@ namespace OpcUa
     IntegerID SubscriptionID;
     TimestampsToReturn Timestamps;
     std::vector<MonitoredItemRequest> ItemsToCreate;
+
+    MonitoredItemsParameters();
   };
 
   struct CreateMonitoredItemsRequest

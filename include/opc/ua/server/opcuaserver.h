@@ -23,7 +23,7 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
-      OPCUAServer(bool debug) : Debug(debug) {} 
+      OPCUAServer(const bool debug) : Debug(debug) {} 
       void SetEndpoint(const std::string& endpoint){this->Endpoint = endpoint;}
       void SetProductURI(const std::string& uri){this->ProductUri = uri;}
       void SetURI(const std::string& uri){this->ServerUri = uri;}

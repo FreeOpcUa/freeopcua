@@ -22,6 +22,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
+#include <queue>
 #include <thread>
 
 
@@ -101,6 +102,48 @@ namespace
     std::condition_variable doneEvent;
   };
 
+  class CallbackThread
+  {
+    public:
+      CallbackThread() 
+      {
+
+      }
+      void post(std::function<void()> callback)
+      {
+        std::unique_lock<std::mutex> lock(Mutex);
+        Queue.push(callback);
+        Condition.notify_one();
+      }
+
+      void Run()
+      {
+        while (true)
+        {
+          std::unique_lock<std::mutex> lock(Mutex);
+          Condition.wait(lock, [&]() { return (StopRequest == true) || (Queue.size() > 0) ;} );
+          if (StopRequest)
+          {
+            return;
+          }
+          Queue.front()();
+          Queue.pop();
+        }
+      }
+
+      void Stop()
+      {
+        StopRequest = true;
+        Condition.notify_all();
+      }
+
+    private:
+      std::mutex Mutex;
+      std::condition_variable Condition;
+      bool StopRequest = false;
+      std::queue<std::function<void()>> Queue;
+  };
+
   class BinaryServer
     : public Remote::Server
     , public Remote::EndpointServices
@@ -118,12 +161,17 @@ namespace
     BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
-      , RequestHandle(0)
       , Params(params)
       , SequenceNumber(1)
       , RequestNumber(1)
+      , RequestHandle(0)
       , Debug(debug)
+      , CallbackService()
+
     {
+      //Initialize the worker thread for subscriptions
+      callback_thread = std::thread([&](){ CallbackService.Run(); });
+
       const Acknowledge& ack = HelloServer(params);
       const OpenSecureChannelResponse& response = OpenChannel();
       ChannelSecurityToken = response.ChannelSecurityToken;
@@ -143,9 +191,18 @@ namespace
     ~BinaryServer()
     {
       Finished = true;
+
+      if (Debug) std::cout << "binary_client| Stopping callback thread." << std::endl;
+      CallbackService.Stop();
+      if (Debug) std::cout << "binary_client| Joining service thread." << std::endl;
+      callback_thread.join(); //Not sure it is necessary
+
       CloseSecureChannel();
       Channel->Stop();
+      if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
+
+
     }
 
     virtual void CreateSession(const Remote::SessionParameters& parameters)
@@ -374,7 +431,7 @@ namespace
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
-        PublishCallback(response.Result);
+        CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);
@@ -563,6 +620,7 @@ private:
 
   private:
     std::shared_ptr<IOChannel> Channel;
+    mutable IOStreamBinary Stream;
     Remote::SecureConnectionParams Params;
     std::thread ReceiveThread;
 
@@ -570,13 +628,16 @@ private:
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
     mutable uint32_t RequestNumber;
-    mutable IOStreamBinary Stream;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<uint8_t> ContinuationPoint;
     mutable CallbackMap Callbacks;
     const bool Debug = false;
     bool Finished = false;
+
+    std::thread callback_thread;
+    CallbackThread CallbackService;
+
   };
 
 } // namespace

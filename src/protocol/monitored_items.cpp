@@ -20,6 +20,11 @@
 namespace OpcUa
 {
 
+  MonitoredItemsParameters::MonitoredItemsParameters()
+    : Timestamps(TimestampsToReturn::NEITHER)
+  {
+  }
+
   CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
     : TypeID(MessageID::CREATE_MONITORED_ITEMS_REQUEST)
   {

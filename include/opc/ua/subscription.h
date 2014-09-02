@@ -63,7 +63,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback); 
+      Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false); 
       //Delete the subscription from server
       void Delete();
 
@@ -101,6 +101,7 @@ namespace OpcUa
       AttValMap AttributeValueMap; 
       SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently
       std::mutex Mutex;
+      bool Debug;
   };
 }
 

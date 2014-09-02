@@ -116,19 +116,17 @@ namespace OpcUa
       return true;
     }
 
-    void OpcTcpMessages::ForwardPublishResponse(PublishResult publishResult)
+    void OpcTcpMessages::ForwardPublishResponse(const PublishResult publishResult)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
-      PublishRequestElement requestData = PublishRequestQueue.front();
+      PublishRequestElement const requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
       PublishResponse response;
       FillResponseHeader(requestData.requestHeader, response.Header);
       response.Result = publishResult;
-
-      requestData.sequence.SequenceNumber = ++SequenceNb;
 
       SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
       secureHeader.AddSize(RawSize(requestData.algorithmHeader));
@@ -141,7 +139,7 @@ namespace OpcUa
           std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
         }
       }
-      OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
+      OutputStream << secureHeader << requestData.algorithmHeader << ++SequenceNb << response << flush;
     };
     
     void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
@@ -502,7 +500,7 @@ namespace OpcUa
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->ForwardPublishResponse(i); });
+          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ this->ForwardPublishResponse(i); });
 
           Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
 
