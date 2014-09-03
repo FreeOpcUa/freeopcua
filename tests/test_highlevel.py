@@ -164,65 +164,6 @@ class CommonTests(object):
         sub.unsubscribe(handle)
         sub.delete()
 
-
-class ServerProcess(Process):
-    def __init__(self):
-        Process.__init__(self)
-        self._exit = Event()
-        self.started = Event()
-
-    def run(self):
-        self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4841")
-        self.srv.start()
-        self.started.set()
-        while not self._exit.is_set():
-            time.sleep(0.1)
-        print("Stopping server")
-        self.srv.stop()
-        print("Server stopped")
-
-    def stop(self):
-        self._exit.set()
-
-class TestClient(unittest.TestCase, CommonTests):
-    @classmethod
-    def setUpClass(self):
-        #start server in its own process
-        self.srv = ServerProcess()
-        self.srv.start()
-        self.srv.started.wait() # let it initialize
-
-        #start client
-        self.clt = opcua.Client();
-        self.clt.set_endpoint("opc.tcp://localhost:4841")
-        self.clt.connect()
-        self.opc = self.clt
-
-    @classmethod
-    def tearDownClass(self):
-        print("Disconnecting")
-        self.clt.disconnect()
-        print("Trying to stop server")
-        self.srv.stop()
-
-
-
-class TestServer(unittest.TestCase, CommonTests):
-    @classmethod
-    def setUpClass(self):
-        self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4843")
-        self.srv.start()
-        self.opc = self.srv 
-
-    @classmethod
-    def tearDownClass(self):
-        self.srv.stop()
-
-
     def test_subscription_data_change(self):
 
         class MySubClient(opcua.SubscriptionClient):
@@ -287,11 +228,70 @@ class TestServer(unittest.TestCase, CommonTests):
         self.assertEqual(msclt.handle, handle2)
         self.assertEqual(msclt.node, v2)
 
-
-
         sub.unsubscribe(handle1)
         #sub.unsubscribe(handle2) #disabled to test one more case
         sub.delete()
+
+
+
+
+
+class ServerProcess(Process):
+    def __init__(self):
+        Process.__init__(self)
+        self._exit = Event()
+        self.started = Event()
+
+    def run(self):
+        self.srv = opcua.Server()
+        self.srv.load_cpp_addressspace(True)
+        self.srv.set_endpoint("opc.tcp://localhost:4841")
+        self.srv.start()
+        self.started.set()
+        while not self._exit.is_set():
+            time.sleep(0.1)
+        print("Stopping server")
+        self.srv.stop()
+        print("Server stopped")
+
+    def stop(self):
+        self._exit.set()
+
+class TestClient(unittest.TestCase, CommonTests):
+    @classmethod
+    def setUpClass(self):
+        #start server in its own process
+        self.srv = ServerProcess()
+        self.srv.start()
+        self.srv.started.wait() # let it initialize
+
+        #start client
+        self.clt = opcua.Client();
+        self.clt.set_endpoint("opc.tcp://localhost:4841")
+        self.clt.connect()
+        self.opc = self.clt
+
+    @classmethod
+    def tearDownClass(self):
+        print("Disconnecting")
+        self.clt.disconnect()
+        print("Trying to stop server")
+        self.srv.stop()
+
+
+
+class TestServer(unittest.TestCase, CommonTests):
+    @classmethod
+    def setUpClass(self):
+        self.srv = opcua.Server()
+        self.srv.load_cpp_addressspace(True)
+        self.srv.set_endpoint("opc.tcp://localhost:4843")
+        self.srv.start()
+        self.opc = self.srv 
+
+    @classmethod
+    def tearDownClass(self):
+        self.srv.stop()
 
 
 

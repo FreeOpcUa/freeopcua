@@ -578,7 +578,6 @@ namespace OpcUa
     }
     return result;
   }
-/* FIXME broken
   class PyServer
   {
   public:
@@ -586,7 +585,7 @@ namespace OpcUa
       : Impl(OpcUa::Remote::CreateBinaryServer(endpointUrl))
     {
     }
-
+/*
     python::list FindServers() const
     {
       const OpcUa::FindServersParameters params;
@@ -600,6 +599,7 @@ namespace OpcUa
       const std::vector<EndpointDescription> endpoints = Impl->Endpoints()->GetEndpoints(filter);
       return ToList(endpoints);
     }
+    */
     python::list Browse(const PyBrowseParameters& p) const
     {
       OpcUa::BrowseDescription description;
@@ -659,7 +659,6 @@ namespace OpcUa
     OpcUa::Remote::Server::SharedPtr Impl;
   };
 
-*/
   void RegisterCommonObjectIDs()
   {
     python::enum_<OpcUa::ObjectID>("ObjectID")
@@ -882,7 +881,7 @@ namespace OpcUa
   {
     public:
       PyNode(OpcUa::Remote::Server::SharedPtr srv, const NodeID& id) : Node(srv, id){}
-      PyNode (const Node& other): Node( other.GetServer(), other.GetId()) {}
+      PyNode (const Node& other): Node( other.GetServer(), other.GetId(), other.GetName() ) {} //, other.GetCachedName()) {}
       //PyNode (const Node& other): Server(other.Server), Id(other.Id), BrowseName(other.BrowseName) {}
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyGetValue() { return ToObject(Node::GetValue()); }
@@ -967,9 +966,7 @@ namespace OpcUa
   class PySubscriptionClient: public SubscriptionClient
   {
     public:
-      PySubscriptionClient(PyObject* p) : self(p) {
-        std::cout << "got constructed" << std::endl;
-      }
+      PySubscriptionClient(PyObject* p) : self(p) {}
       //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {} //copy construct
 
       void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
