@@ -34,7 +34,7 @@ namespace OpcUa
   struct MonitoredItemData
   {
     IntegerID MonitoredItemID;
-    NodeID Node;
+    Node Node;
     AttributeID Attribute;
   };
 

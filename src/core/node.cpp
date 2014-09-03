@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 
+#include <iostream>
 
 #include <opc/ua/node.h>
 
@@ -31,16 +32,15 @@ namespace OpcUa
 {
 
   Node::Node(Remote::Server::SharedPtr srv)
-    : Node(srv, ObjectID::RootFolder)
+    : Node(srv, ObjectID::RootFolder, QualifiedName("Root", 0))
   {
-    BrowseName = GetName();
   }
 
   Node::Node(Remote::Server::SharedPtr srv, const NodeID& id)
     : Server(srv)
     , Id(id)
-    , BrowseName(GetName())
   {
+    GetName();
   }
 
   Node::Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name)
@@ -81,7 +81,7 @@ namespace OpcUa
     }
   }
 
-  StatusCode Node::SetAttribute(const AttributeID attr, const Variant &value)
+  StatusCode Node::SetAttribute(const AttributeID attr, const Variant &value) const
   {
     WriteValue attribute;
     attribute.Node = Id;
@@ -91,7 +91,7 @@ namespace OpcUa
     return codes.front();
   }
 
-  StatusCode Node::SetValue(const Variant& value)
+  StatusCode Node::SetValue(const Variant& value) const
   {
     return SetAttribute(AttributeID::VALUE, value);
   }
@@ -128,33 +128,33 @@ namespace OpcUa
     return GetChildren(ReferenceID::HierarchicalReferences);
   }
 
-  QualifiedName Node::GetName() const
+  QualifiedName Node::GetName(bool force) const
   {
-    Variant var = GetAttribute(AttributeID::BROWSE_NAME);
-    if (var.Type == VariantType::QUALIFIED_NAME)
-    {
-      return var.Value.Name.front();
+    if ( force || BrowseName == QualifiedName() ){
+      Variant var = GetAttribute(AttributeID::BROWSE_NAME);
+      if (var.Type != VariantType::QUALIFIED_NAME)
+      {
+        throw std::runtime_error("Could not retrieve browse name.");
+      }
+      BrowseName = var.Value.Name.front();
     }
-
-    return QualifiedName(); // TODO Exception!
+    return BrowseName;
   }
 
-  void Node::AddAttribute(AttributeID attr, const Variant& val)
-  {
-    //return Server->NodeManagement()->AddAttribute(Id, attr, val);
-  }
+  //QualifiedName Node::GetName() const
+  //{
+    //if (BrowseName == QualifiedName()){
+      //GetName();
+    //}
+    //return BrowseName;
+  //} 
 
-  void Node::AddReference(const ReferenceDescription desc)
-  {
-    //return Server->NodeManagement()->AddReference(Id, desc);
-  }
-
-  std::vector<AddNodesResult> Node::AddNodes(std::vector<AddNodesItem> items)
+  std::vector<AddNodesResult> Node::AddNodes(std::vector<AddNodesItem> items) const
   {
     return Server->NodeManagement()->AddNodes(items);
   }
 
-  std::vector<StatusCode> Node::AddReferences(std::vector<AddReferencesItem> items)
+  std::vector<StatusCode> Node::AddReferences(std::vector<AddReferencesItem> items) const
   {
     return Server->NodeManagement()->AddReferences(items);
   }
@@ -167,7 +167,7 @@ namespace OpcUa
   Node Node::GetChild(const std::vector<std::string>& path) const
   {
     std::vector<QualifiedName> vec;
-    uint16_t ns = BrowseName.NamespaceIndex;
+    uint16_t ns = GetName().NamespaceIndex;
     for (std::string str: path)
     {
       QualifiedName qname = ToQualifiedName(str, ns);
@@ -205,25 +205,25 @@ namespace OpcUa
   std::string Node::ToString() const
   {
     std::ostringstream os;
-    os << "Node(" << BrowseName << ", " << Id << ")";
+    os << "Node(" << GetName() << ", " << Id << ")";
     return os.str();
   }
 
-  Node Node::AddFolder(const std::string& nodeid, const std::string& browsename)
+  Node Node::AddFolder(const std::string& nodeid, const std::string& browsename) const
    {
      NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, this->BrowseName.NamespaceIndex);
+     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
      return AddFolder(node, qn);
    }
 
-  Node Node::AddFolder(const std::string& name)
+  Node Node::AddFolder(const std::string& name) const
   {
     NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, BrowseName.NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
     return AddFolder(nodeid, qn);
   }
 
-  Node Node::AddFolder(const NodeID& nodeid, const QualifiedName& browsename)
+  Node Node::AddFolder(const NodeID& nodeid, const QualifiedName& browsename) const
   {
 
     AddNodesItem item;
@@ -248,22 +248,22 @@ namespace OpcUa
     return Node(Server, res.AddedNodeID, browsename);
   }
 
-  Node Node::AddObject(const std::string& nodeid, const std::string& browsename)
+  Node Node::AddObject(const std::string& nodeid, const std::string& browsename) const
    {
      NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, this->BrowseName.NamespaceIndex);
+     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
      return AddObject(node, qn);
    }
 
-  Node Node::AddObject(const std::string& name)
+  Node Node::AddObject(const std::string& name) const
   {
     //FIXME: should default namespace be the onde from the parent of the browsename?
     NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, BrowseName.NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
     return AddObject(nodeid, qn);
   }
 
-  Node Node::AddObject(const NodeID& nodeid, const QualifiedName& browsename)
+  Node Node::AddObject(const NodeID& nodeid, const QualifiedName& browsename) const
   {
     AddNodesItem item;
     item.BrowseName = browsename;
@@ -288,21 +288,21 @@ namespace OpcUa
     return Node(Server, res.AddedNodeID, browsename);
   }
 
-  Node Node::AddVariable(const std::string& name, const Variant& val)
+  Node Node::AddVariable(const std::string& name, const Variant& val) const
   {
     NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, BrowseName.NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
     return AddVariable(nodeid, qn, val);
   }
 
-  Node Node::AddVariable(const std::string& nodeid, const std::string& browsename, const Variant& val)
+  Node Node::AddVariable(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, this->BrowseName.NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
     return AddVariable(node, qn, val);
   }
 
-  Node Node::AddVariable(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val)
+  Node Node::AddVariable(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
     ObjectID datatype = VariantTypeToDataType(val.Type);
 
@@ -337,21 +337,21 @@ namespace OpcUa
   }
 
 
-  Node Node::AddProperty(const std::string& name, const Variant& val)
+  Node Node::AddProperty(const std::string& name, const Variant& val) const
   {
     NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    const QualifiedName& qname = ToQualifiedName(name, BrowseName.NamespaceIndex);
+    const QualifiedName& qname = ToQualifiedName(name, GetName().NamespaceIndex);
     return AddProperty(nodeid, qname, val);
   }
 
-  Node Node::AddProperty(const std::string& nodeid, const std::string& browsename, const Variant& val)
+  Node Node::AddProperty(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, this->BrowseName.NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
     return AddProperty(node, qn, val);
   }
 
-  Node Node::AddProperty(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val)
+  Node Node::AddProperty(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
 
     ObjectID datatype = VariantTypeToDataType(val.Type);
@@ -391,7 +391,8 @@ namespace OpcUa
   {
     return GetAttribute(AttributeID::VALUE);
   }
-  Variant Node::DataType() const
+
+  Variant Node::GetDataType() const
   {
     return GetAttribute(AttributeID::DATA_TYPE);
   }
