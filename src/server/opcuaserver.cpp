@@ -118,7 +118,7 @@ namespace OpcUa
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;
-    return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback));
+    return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback, Debug));
   }
 
 

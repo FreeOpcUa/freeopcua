@@ -27,8 +27,8 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback)
-    : Server(server), Client(callback)
+  Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
+    : Server(server), Client(callback), Debug(debug)
   {
     Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );
     //After creating the subscription, it is expected to send at least one publish request
@@ -47,10 +47,13 @@ namespace OpcUa
 
   void Subscription::PublishCallback(PublishResult result)
   {
-    std::cout << "Suscription::PublishCallback called" << std::endl;
+    std::unique_lock<std::mutex> lock(Mutex); //To be finished
+    //FIXME: finish to handle all types of publishresults!
+
+    if (Debug){ std::cout << "Suscription::PublishCallback called" << std::endl; }
     for (const NotificationData& data: result.Message.Data )
     {
-      std::cout << "Notification is of type DataChange\n";
+      if (Debug) { std::cout << "Notification is of type DataChange\n"; }
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
         for ( const MonitoredItems& item: data.DataChange.Notification)
@@ -62,15 +65,14 @@ namespace OpcUa
           }
           else
           {
-            //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
-            std::cout << "Debug: Calling client callback\n";
-            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node), item.Value.Value, mapit->second.Attribute);
+            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << Node(Server, mapit->second.Node) << std::endl; }
+            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node, QualifiedName()), item.Value.Value, mapit->second.Attribute);
           }
         }
       }
       else if (data.Header.TypeID == ExpandedObjectID::EventNotificationList)
       {
-        std::cout << "Notification is of type Event\n";
+        if (Debug) { std::cout << "Notification is of type Event\n"; }
         for ( EventFieldList ef :  data.Events.Events)
         {
 
@@ -87,14 +89,15 @@ namespace OpcUa
             //FIXME: think about event format!! should we havae paires? or better create an event object
             Event ev;
             //ev.
-            std::cout << "Debug: Calling client callback\n";
+            if (Debug) { std::cout << "Debug: Calling client callback\n"; }
             Client.Event(ef.ClientHandle, ef.EventFields);
+            if (Debug) { std::cout << "Debug: callback call finished\n"; }
           }
         }
       }
       else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)
       {
-        std::cout << "Notification is of type StatusChange\n";
+        if (Debug) { std::cout << "Notification is of type StatusChange\n"; }
         Client.StatusChange(data.StatusChange.Status);
       }
       else
@@ -102,7 +105,7 @@ namespace OpcUa
         std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    //Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
@@ -147,7 +150,7 @@ namespace OpcUa
     for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
-      std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl; 
+      if (Debug ) { std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl;  }
       MonitoredItemData mdata;
       mdata.MonitoredItemID = res.MonitoredItemID;
       mdata.Attribute =  attributes[i].Attribute;

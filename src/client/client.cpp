@@ -83,7 +83,7 @@ namespace OpcUa
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;
-    return std::unique_ptr<Subscription>(new Subscription (Server, params, callback));
+    return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));
   }
 } // namespace OpcUa
 
