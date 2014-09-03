@@ -105,7 +105,10 @@ namespace OpcUa
         std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
+    OpcUa::SubscriptionAcknowledgement ack;
+    ack.SubscriptionID = GetId();
+    ack.SequenceNumber = result.Message.SequenceID;
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({ack}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)

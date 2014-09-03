@@ -130,14 +130,15 @@ namespace
           {
             return;
           }
-          if ( Queue.size() > 0 ) //to avoid crashing on spurious events
+          while ( Queue.size() > 0 ) //to avoid crashing on spurious events
           {
-            if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping " << std::endl; }
+            if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
             std::function<void()> callbackcopy = Queue.front();
             Queue.pop();
             lock.unlock();
             if (Debug)  { std::cout << "CallbackThread | now calling callback" << std::endl; }
             callbackcopy();
+            lock.lock();
           }
         }
       }
@@ -446,6 +447,7 @@ namespace
         CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      if (Debug) {std::cout << "Sending publish request with " << request.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       Send(request);
     }
 
