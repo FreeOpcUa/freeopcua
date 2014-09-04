@@ -121,12 +121,14 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
-      PublishRequestElement const requestData = PublishRequestQueue.front();
+      PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
       PublishResponse response;
       FillResponseHeader(requestData.requestHeader, response.Header);
       response.Result = publishResult;
+      
+      requestData.sequence.SequenceNumber = ++SequenceNb;
 
       SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
       secureHeader.AddSize(RawSize(requestData.algorithmHeader));
@@ -139,7 +141,7 @@ namespace OpcUa
           std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
         }
       }
-      OutputStream << secureHeader << requestData.algorithmHeader << ++SequenceNb << response << flush;
+      OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };
     
     void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)

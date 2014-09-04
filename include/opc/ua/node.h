@@ -47,11 +47,12 @@ namespace OpcUa
     Node(Remote::Server::SharedPtr srv, const NodeID& id);
     Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name);
     Node(const Node& other); 
+    Node(){}
 
     NodeID GetId() const;
 
-    QualifiedName GetName() const;
-    void SetName(const QualifiedName& name);
+    QualifiedName GetName(bool force=false) const;
+    void SetName(const QualifiedName& name) const;
 
     /// @brief List childrenn nodes by specified reference
     /// @return One or zero chilren nodes.
@@ -67,7 +68,7 @@ namespace OpcUa
     //the same as the parent
     Node GetChild(const std::vector<OpcUa::QualifiedName>& path) const;
     Node GetChild(const std::vector<std::string>& path) const;
-    Node GetChild(const std::string& browsename) const;
+    Node GetChild(const std::string& browsename) const ;
 
     std::vector<Node> GetProperties() const {return GetChildren(OpcUa::ReferenceID::HasProperty);}
     std::vector<Node> GetVariables() const {return GetChildren(OpcUa::ReferenceID::HasComponent);} //Not correct should filter by variable type
@@ -79,52 +80,49 @@ namespace OpcUa
     //The Read and Write methods read or write attributes of the node
     //FIXME: add possibility to read and write several nodes at once
     Variant GetAttribute(AttributeID attr) const;
-    StatusCode SetAttribute(AttributeID attr, const Variant &val);
+    StatusCode SetAttribute(AttributeID attr, const Variant &val) const;
     //std::vector<StatusCode> WriteAttrs(OpcUa::AttributeID attr, const Variant &val);
-
+    
+    //Helper method to get/set VALUE attribute of a node (Not all nodes support VALUE attribute)
     Variant GetValue() const;
-    StatusCode SetValue(const Variant& value);
+    StatusCode SetValue(const Variant& value) const;
 
-    Variant DataType() const;
+    Variant GetDataType() const;
 
     //OpcUa low level methods to to modify address space model
-    void AddAttribute(OpcUa::AttributeID attr, const OpcUa::Variant& val); //FIXME: deprecated
-    void AddReference(const OpcUa::ReferenceDescription desc); //FIXME: deprecated
-    std::vector<AddNodesResult> AddNodes(std::vector<AddNodesItem> items);
-    std::vector<StatusCode> AddReferences(std::vector<AddReferencesItem> items);
+    std::vector<AddNodesResult> AddNodes(std::vector<AddNodesItem> items) const;
+    std::vector<StatusCode> AddReferences(std::vector<AddReferencesItem> items) const;
 
 
     //Helper classes to modify address space model
-    Node AddFolder(const NodeID& folderId, const QualifiedName& browseName);
-    Node AddFolder(const std::string& nodeid, const std::string& browseName); 
-    Node AddFolder(const std::string& browseName);
+    Node AddFolder(const NodeID& folderId, const QualifiedName& browseName) const;
+    Node AddFolder(const std::string& nodeid, const std::string& browseName) const; 
+    Node AddFolder(const std::string& browseName) const;
 
-    Node AddObject(const NodeID& folderId, const QualifiedName& browseName);
-    Node AddObject(const std::string& nodeid, const std::string& browseName); 
-    Node AddObject(const std::string& browseName);
+    Node AddObject(const NodeID& folderId, const QualifiedName& browseName) const;
+    Node AddObject(const std::string& nodeid, const std::string& browseName) const; 
+    Node AddObject(const std::string& browseName) const;
 
-    Node AddVariable(const NodeID& variableId, const QualifiedName& browsename, const Variant& val);
-    Node AddVariable(const std::string& BrowseName, const Variant& val);
-    Node AddVariable(const std::string& nodeId, const std::string& browseName, const Variant& val); 
+    Node AddVariable(const NodeID& variableId, const QualifiedName& browsename, const Variant& val) const;
+    Node AddVariable(const std::string& BrowseName, const Variant& val) const;
+    Node AddVariable(const std::string& nodeId, const std::string& browseName, const Variant& val) const; 
 
-    Node AddProperty(const NodeID& propertyId, const QualifiedName& browsename, const Variant& val);
-    Node AddProperty(const std::string& nodeid, const std::string& browseName, const Variant& val);
-    Node AddProperty(const std::string& browseName, const Variant& val);
+    Node AddProperty(const NodeID& propertyId, const QualifiedName& browsename, const Variant& val) const;
+    Node AddProperty(const std::string& nodeid, const std::string& browseName, const Variant& val) const;
+    Node AddProperty(const std::string& browseName, const Variant& val) const;
 
     std::string ToString() const;
 
     bool operator==(Node const& x) const { return Id == x.Id; }
     bool operator!=(Node const& x) const { return Id != x.Id; }
-    //Node& operator=(const Node& x) { Id = x.Id; BrowseName = x.BrowseName; Server = x.GetServer(); return *this; }
 
     //FIXME: I need this to create a copy for python binding, another way?
     OpcUa::Remote::Server::SharedPtr GetServer() const {return Server;} 
-    QualifiedName GetCachedName() const {return BrowseName;} 
 
   protected:
     OpcUa::Remote::Server::SharedPtr Server;
     NodeID Id;
-    QualifiedName BrowseName;
+    mutable QualifiedName BrowseName;
   };
 
 
