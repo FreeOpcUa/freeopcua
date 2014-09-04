@@ -158,12 +158,12 @@ namespace
   };
 
   class BinaryServer
-    : public Remote::Services
-    , public Remote::EndpointServices
-    , public Remote::ViewServices
-    , public Remote::SubscriptionServices
-    , public Remote::AttributeServices
-    , public Remote::NodeManagementServices
+    : public Services
+    , public EndpointServices
+    , public ViewServices
+    , public SubscriptionServices
+    , public AttributeServices
+    , public NodeManagementServices
     , public std::enable_shared_from_this<BinaryServer>
   {
   private:
@@ -171,7 +171,7 @@ namespace
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
-    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
+    BinaryServer(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
       , Params(params)
@@ -218,7 +218,7 @@ namespace
 
     }
 
-    virtual void CreateSession(const Remote::SessionParameters& parameters)
+    virtual void CreateSession(const RemoteSessionParameters& parameters)
     {
       CreateSessionRequest request;
       request.Header = CreateRequestHeader();
@@ -255,7 +255,7 @@ namespace
       CloseSessionResponse response = Send<CloseSessionResponse>(request);
     }
 
-    virtual std::shared_ptr<Remote::EndpointServices> Endpoints() override
+    virtual std::shared_ptr<EndpointServices> Endpoints() override
     {
       return shared_from_this();
     }
@@ -279,12 +279,12 @@ namespace
       return response.Endpoints;
     }
 
-    virtual void RegisterServer(const Remote::ServerParameters& parameters)
+    virtual void RegisterServer(const ServerParameters& parameters)
     {
     }
 
     // ViewServices
-    virtual std::shared_ptr<Remote::ViewServices> Views() override
+    virtual std::shared_ptr<ViewServices> Views() override
     {
       return shared_from_this();
     }
@@ -351,7 +351,7 @@ namespace
     }
 
   public:
-    virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() override
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return shared_from_this();
     }
@@ -373,7 +373,7 @@ namespace
       return response.Results;
     }
 
-    virtual std::shared_ptr<Remote::AttributeServices> Attributes() override
+    virtual std::shared_ptr<AttributeServices> Attributes() override
     {
       return shared_from_this();
     }
@@ -395,7 +395,7 @@ namespace
       return response.Result.StatusCodes;
     }
 
-    virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() override
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() override
     {
       return shared_from_this();
     }
@@ -522,7 +522,7 @@ private:
       callbackIt->second(std::move(buffer));
     }
 
-    Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)
+    Binary::Acknowledge HelloServer(const SecureConnectionParams& params)
     {
       Binary::Hello hello;
       hello.ProtocolVersion = 0;
@@ -635,7 +635,7 @@ private:
   private:
     std::shared_ptr<IOChannel> Channel;
     mutable IOStreamBinary Stream;
-    Remote::SecureConnectionParams Params;
+    SecureConnectionParams Params;
     std::thread ReceiveThread;
 
     std::function<void (PublishResult)> PublishCallback;
@@ -657,16 +657,16 @@ private:
 } // namespace
 
 
-OpcUa::Remote::Services::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Services::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Services::SharedPtr(new BinaryServer(channel, params, debug));
 }
 
-OpcUa::Remote::Services::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(const std::string& endpointUrl, bool debug)
 {
   const Common::Uri serverUri(endpointUrl);
   OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-  OpcUa::Remote::SecureConnectionParams params;
+  OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
   return CreateBinaryServer(channel, params, debug);

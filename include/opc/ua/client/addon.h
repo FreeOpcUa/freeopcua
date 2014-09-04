@@ -26,7 +26,7 @@ namespace OpcUa
 
     public:
       virtual std::string GetProtocol() const = 0;
-      virtual OpcUa::Remote::Services::SharedPtr Connect(const std::string& url) = 0;
+      virtual OpcUa::Services::SharedPtr Connect(const std::string& url) = 0;
     };
   }
 }

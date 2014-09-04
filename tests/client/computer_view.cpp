@@ -16,7 +16,6 @@
 #include <stdexcept>
 
 using namespace OpcUa;
-using namespace OpcUa::Remote;
 
 
 class View : public ::testing::Test
@@ -39,7 +38,7 @@ protected:
   {
     Server = Connect(GetEndpoint());
 
-    SessionParameters session;
+    RemoteSessionParameters session;
     session.ClientDescription.Name.Text = "opcua view service test";
     session.SessionName = "opua test";
     session.EndpointURL = GetEndpoint();

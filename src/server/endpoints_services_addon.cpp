@@ -18,7 +18,6 @@
 
 using namespace OpcUa;
 using namespace OpcUa::UaServer;
-using namespace OpcUa::Remote;
 
 
 namespace

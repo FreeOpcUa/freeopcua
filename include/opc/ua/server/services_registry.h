@@ -23,21 +23,21 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(ServicesRegistry);
 
     public:
-      virtual std::shared_ptr<OpcUa::Remote::Services> GetServer() const = 0;
+      virtual std::shared_ptr<OpcUa::Services> GetServer() const = 0;
 
-      virtual void RegisterEndpointsServices(OpcUa::Remote::EndpointServices::SharedPtr endpoints) = 0;
+      virtual void RegisterEndpointsServices(OpcUa::EndpointServices::SharedPtr endpoints) = 0;
       virtual void UnregisterEndpointsServices() = 0;
 
-      virtual void RegisterViewServices(OpcUa::Remote::ViewServices::SharedPtr views) = 0;
+      virtual void RegisterViewServices(OpcUa::ViewServices::SharedPtr views) = 0;
       virtual void UnregisterViewServices() = 0;
 
-      virtual void RegisterAttributeServices(OpcUa::Remote::AttributeServices::SharedPtr attributes) = 0;
+      virtual void RegisterAttributeServices(OpcUa::AttributeServices::SharedPtr attributes) = 0;
       virtual void UnregisterAttributeServices() = 0;
 
-      virtual void RegisterNodeManagementServices(OpcUa::Remote::NodeManagementServices::SharedPtr attributes) = 0;
+      virtual void RegisterNodeManagementServices(OpcUa::NodeManagementServices::SharedPtr attributes) = 0;
       virtual void UnregisterNodeManagementServices() = 0;
 
-      virtual void RegisterSubscriptionServices(OpcUa::Remote::SubscriptionServices::SharedPtr attributes) = 0;
+      virtual void RegisterSubscriptionServices(OpcUa::SubscriptionServices::SharedPtr attributes) = 0;
       virtual void UnregisterSubscriptionServices() = 0;
     };
 

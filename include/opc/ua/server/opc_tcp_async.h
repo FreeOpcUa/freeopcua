@@ -47,7 +47,7 @@ namespace OpcUa
       virtual void Shutdown() = 0;
     };
 
-    AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters& params, Remote::Services::SharedPtr server);
+    AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server);
 
   }
 }

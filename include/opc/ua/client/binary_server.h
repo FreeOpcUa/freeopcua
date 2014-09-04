@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_BINARY_server_H
-#define OPC_UA_BINARY_server_H
+#pragma once
 
 #include <opc/ua/protocol/channel.h>
 #include <opc/ua/server.h>
@@ -19,8 +18,6 @@
 
 namespace OpcUa
 {
-  namespace Remote
-  {
 
     struct SecureConnectionParams
     {
@@ -41,8 +38,4 @@ namespace OpcUa
     Services::SharedPtr CreateBinaryServer(IOChannel::SharedPtr channel, const SecureConnectionParams& params, bool debug = false);
     Services::SharedPtr CreateBinaryServer(const std::string& endpointUrl, bool debug = false);
 
-  } // namespace Remote
 } // namespace OpcUa
-
-#endif //  OPC_UA_BINARY_server_H
-

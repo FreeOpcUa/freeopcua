@@ -25,7 +25,6 @@
 namespace
 {
     using namespace OpcUa;
-    using namespace OpcUa::Remote;
 
     const bool forward = true;
     const bool reverse = true;
@@ -33,7 +32,7 @@ namespace
     class StandardNamespace
     {
     public:
-      StandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+      StandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)
         : Registry(registry)
         , Debug(debug)
       {
@@ -3732,7 +3731,7 @@ namespace
       }
 
     private:
-      OpcUa::Remote::NodeManagementServices& Registry;
+      OpcUa::NodeManagementServices& Registry;
       const bool Debug;
     };
 
@@ -3743,7 +3742,7 @@ namespace OpcUa
   namespace UaServer
   {
 
-    void FillStandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    void FillStandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)
     {
       StandardNamespace ns(registry, debug);
       ns.Fill();

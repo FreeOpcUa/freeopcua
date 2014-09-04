@@ -63,7 +63,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Remote::Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false); 
+      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false);
       //Delete the subscription from server
       void Delete();
 
@@ -94,7 +94,7 @@ namespace OpcUa
     private:
       //void Publish();
 
-      Remote::Services::SharedPtr Server;
+      Services::SharedPtr Server;
       SubscriptionData Data;
       SubscriptionClient& Client;
       uint32_t LastMonitoredItemHandle = 1;

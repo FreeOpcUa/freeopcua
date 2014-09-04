@@ -22,7 +22,7 @@ namespace OpcUa
 
     void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      Registry = addons.GetAddon<Remote::NodeManagementServices>(UaServer::AddressSpaceRegistryAddonID);
+      Registry = addons.GetAddon<NodeManagementServices>(UaServer::AddressSpaceRegistryAddonID);
       if (!Registry)
       {
         std::stringstream stream;
@@ -56,7 +56,7 @@ namespace OpcUa
       Load(path, *Registry);
     }
 
-    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::Remote::NodeManagementServices& registry)
+    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::NodeManagementServices& registry)
     {
       if (!Registry)
       {

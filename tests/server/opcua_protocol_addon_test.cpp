@@ -65,7 +65,7 @@ TEST_F(OpcUaProtocolAddonTest, CanGetServerWhichOpensAndClosesSecureChannel)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
   ASSERT_TRUE(static_cast<bool>(computer));
   computer.reset();
 }
@@ -73,8 +73,8 @@ TEST_F(OpcUaProtocolAddonTest, CanGetServerWhichOpensAndClosesSecureChannel)
 TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
   ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
   ASSERT_EQ(desc.size(), 1);
@@ -85,8 +85,8 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::ApplicationDescription> servers;
   ASSERT_NO_THROW(servers = endpoints->FindServers(OpcUa::FindServersParameters()));
   ASSERT_EQ(servers.size(), 1);
@@ -97,8 +97,8 @@ TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::ViewServices> views = computer->Views();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::ViewServices> views = computer->Views();
 
   OpcUa::BrowseDescription description;
   description.NodeToBrowse = OpcUa::ObjectID::RootFolder;
@@ -120,9 +120,9 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
 
-  OpcUa::Remote::SessionParameters session;
+  OpcUa::RemoteSessionParameters session;
   session.ClientDescription.Name.Text = "opcua client";
   session.SessionName = "opua command line";
   session.EndpointURL = "opc.tcp://localhost:4841";
@@ -138,8 +138,8 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
 {
   std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Services> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::SubscriptionServices> subscriptions = computer->Subscriptions();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::SubscriptionServices> subscriptions = computer->Subscriptions();
 
   OpcUa::SubscriptionParameters params;
   params.MaxNotificationsPerPublish = 3;

@@ -77,7 +77,7 @@ namespace OpcUa
     bool Debug = false; 
 
   protected:
-    Remote::Services::SharedPtr Server;
+    Services::SharedPtr Server;
 
   };
 

@@ -15,14 +15,13 @@
 #include <stdexcept>
 
 using namespace OpcUa;
-using namespace OpcUa::Remote;
 
 class Endpoints : public ::testing::Test
 {
 protected:
   virtual void SetUp()
   {
-    std::unique_ptr<OpcUa::Remote::Services> computer = OpcUa::Remote::Connect(GetEndpoint());
+    std::unique_ptr<OpcUa::Services> computer = OpcUa::Connect(GetEndpoint());
     Server = computer->Endpoints();
   }
 

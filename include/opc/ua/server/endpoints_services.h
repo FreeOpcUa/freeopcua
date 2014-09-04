@@ -24,7 +24,7 @@ namespace OpcUa
       std::vector<EndpointDescription> Endpoints;
     };
 
-    class EndpointsRegistry : public OpcUa::Remote::EndpointServices
+    class EndpointsRegistry : public OpcUa::EndpointServices
     {
     public:
       DEFINE_CLASS_POINTERS(EndpointsRegistry);

@@ -302,9 +302,9 @@ namespace
 //    std::vector<UserTokenPolicy> ;
   }
 
-  void PrintEndpoints(OpcUa::Remote::Services& computer)
+  void PrintEndpoints(OpcUa::Services& computer)
   {
-    std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
+    std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
     OpcUa::EndpointsFilter filter;
     std::vector<OpcUa::EndpointDescription> endpoints = service->GetEndpoints(filter);
     for(auto it = endpoints.begin(); it != endpoints.end(); ++it)
@@ -314,9 +314,9 @@ namespace
     }
   }
 
-  void PrintServers(OpcUa::Remote::Services& computer)
+  void PrintServers(OpcUa::Services& computer)
   {
-    std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
+    std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
     OpcUa::FindServersParameters filter;
     std::vector<OpcUa::ApplicationDescription> applications = service->FindServers(filter);
     for(const OpcUa::ApplicationDescription& desc : applications)
@@ -344,7 +344,7 @@ namespace
     Print(desc.TargetNodeTypeDefinition, tabs1);
   }
 
-  void Browse(OpcUa::Remote::ViewServices& view, OpcUa::NodeID nodeID)
+  void Browse(OpcUa::ViewServices& view, OpcUa::NodeID nodeID)
   {
     OpcUa::BrowseDescription description;
     description.NodeToBrowse = nodeID;
@@ -517,7 +517,7 @@ namespace
   }
 
 
-  void Read(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
+  void Read(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
   {
     ReadParameters params;
     AttributeValueID attribute;
@@ -534,7 +534,7 @@ namespace
     Print(values.front(), Tabs(2));
   }
 
-  void Write(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
+  void Write(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
   {
     OpcUa::WriteValue attribute;
     attribute.Node = nodeID;
@@ -547,7 +547,7 @@ namespace
     }
   }
 
-  void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)
+  void CreateSubscription(OpcUa::SubscriptionServices& subscriptions)
   {
     OpcUa::SubscriptionParameters params;
     params.MaxNotificationsPerPublish = 1;
@@ -568,7 +568,7 @@ namespace
     const std::string serverURI = cmd.GetServerURI();
     const Common::Uri uri(serverURI);
     OpcUa::Client::Addon::SharedPtr addon = addons.GetAddon<OpcUa::Client::Addon>(uri.Scheme());
-    std::shared_ptr<OpcUa::Remote::Services> computer = addon->Connect(serverURI);
+    std::shared_ptr<OpcUa::Services> computer = addon->Connect(serverURI);
 
     if (cmd.IsGetEndpointsOperation())
     {
@@ -580,7 +580,7 @@ namespace
       PrintServers(*computer);
     }
 
-    OpcUa::Remote::SessionParameters session;
+    OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.Name.Text = "opcua client";

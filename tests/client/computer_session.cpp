@@ -16,9 +16,9 @@
 
 TEST(Session, Works)
 {
-  std::unique_ptr<OpcUa::Remote::Services> computer = OpcUa::Remote::Connect(GetEndpoint());
+  std::unique_ptr<OpcUa::Services> computer = OpcUa::Connect(GetEndpoint());
 
-  OpcUa::Remote::SessionParameters session;
+  OpcUa::RemoteSessionParameters session;
   session.ClientDescription.Name.Text = "opcua client";
   session.SessionName = "test";
   session.EndpointURL = GetEndpoint();

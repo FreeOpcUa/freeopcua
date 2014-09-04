@@ -181,17 +181,17 @@ BuiltinServerAddon::BuiltinServerAddon()
 {
 }
 
-std::shared_ptr<OpcUa::Remote::Services> BuiltinServerAddon::GetServer() const
+std::shared_ptr<OpcUa::Services> BuiltinServerAddon::GetServer() const
 {
   if (!ClientChannel)
   {
     throw std::logic_error("Cannot access builtin computer. No endpoints was created. You have to configure endpoints.");
   }
 
-  OpcUa::Remote::SecureConnectionParams params;
+  OpcUa::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  return OpcUa::Remote::CreateBinaryServer(ClientChannel, params);
+  return OpcUa::CreateBinaryServer(ClientChannel, params);
 }
 
 BuiltinServerAddon::~BuiltinServerAddon()

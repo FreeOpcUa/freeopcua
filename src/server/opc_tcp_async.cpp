@@ -82,7 +82,7 @@ namespace
     DEFINE_CLASS_POINTERS(OpcTcpServer);
 
   public:
-    OpcTcpServer(const AsyncOpcTcp::Parameters& params, Remote::Services::SharedPtr server);
+    OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server);
 
     virtual void Listen() override;
     virtual void Shutdown() override;
@@ -96,7 +96,7 @@ namespace
 
   private:
     Parameters Params;
-    Remote::Services::SharedPtr Server;
+    Services::SharedPtr Server;
     std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
     boost::asio::io_service io;
@@ -111,7 +111,7 @@ namespace
     DEFINE_CLASS_POINTERS(OpcTcpConnection);
 
   public:
-    OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Remote::Services::SharedPtr uaServer, bool debug);
+    OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Services::SharedPtr uaServer, bool debug);
     ~OpcTcpConnection();
 
     void Start();
@@ -143,7 +143,7 @@ namespace
     std::vector<char> Buffer;
   };
 
-  OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Remote::Services::SharedPtr uaServer, bool debug)
+  OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Services::SharedPtr uaServer, bool debug)
     : Socket(std::move(socket))
     , TcpServer(tcpServer)
     , MessageProcessor(uaServer, *this, debug)
@@ -295,7 +295,7 @@ namespace
     });
   }
 
-  OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters& params, Remote::Services::SharedPtr server)
+  OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
     : Params(params)
     , Server(server)
     , io(params.ThreadsNumber)
@@ -365,7 +365,7 @@ namespace
 
 } // namespace
 
-OpcUa::UaServer::AsyncOpcTcp::UniquePtr OpcUa::UaServer::CreateAsyncOpcTcp(const OpcUa::UaServer::AsyncOpcTcp::Parameters& params, Remote::Services::SharedPtr server)
+OpcUa::UaServer::AsyncOpcTcp::UniquePtr OpcUa::UaServer::CreateAsyncOpcTcp(const OpcUa::UaServer::AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
 {
   return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server));
 }

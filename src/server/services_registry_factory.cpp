@@ -30,12 +30,12 @@ namespace
       Impl.reset();
     }
 
-    virtual OpcUa::Remote::Services::SharedPtr GetServer() const
+    virtual OpcUa::Services::SharedPtr GetServer() const
     {
       return Impl->GetServer();
     }
 
-    virtual void RegisterEndpointsServices(std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints)
+    virtual void RegisterEndpointsServices(std::shared_ptr<OpcUa::EndpointServices> endpoints)
     {
       Impl->RegisterEndpointsServices(endpoints);
     }
@@ -45,7 +45,7 @@ namespace
       Impl->UnregisterEndpointsServices();
     }
 
-    virtual void RegisterViewServices(std::shared_ptr<OpcUa::Remote::ViewServices> views)
+    virtual void RegisterViewServices(std::shared_ptr<OpcUa::ViewServices> views)
     {
       Impl->RegisterViewServices(views);
     }
@@ -55,7 +55,7 @@ namespace
       Impl->UnregisterViewServices();
     }
 
-    virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::Remote::AttributeServices> attributes)
+    virtual void RegisterAttributeServices(std::shared_ptr<OpcUa::AttributeServices> attributes)
     {
       Impl->RegisterAttributeServices(attributes);
     }
@@ -65,7 +65,7 @@ namespace
       Impl->UnregisterAttributeServices();
     }
 
-    virtual void RegisterNodeManagementServices(std::shared_ptr<OpcUa::Remote::NodeManagementServices> nodes)
+    virtual void RegisterNodeManagementServices(std::shared_ptr<OpcUa::NodeManagementServices> nodes)
     {
       Impl->RegisterNodeManagementServices(nodes);
     }
@@ -75,7 +75,7 @@ namespace
       Impl->UnregisterNodeManagementServices();
     }
 
-    virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::Remote::SubscriptionServices> subscriptions)
+    virtual void RegisterSubscriptionServices(std::shared_ptr<OpcUa::SubscriptionServices> subscriptions)
     {
       Impl->RegisterSubscriptionServices(subscriptions);
     }

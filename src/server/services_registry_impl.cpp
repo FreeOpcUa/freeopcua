@@ -15,7 +15,6 @@
 namespace
 {
   using namespace OpcUa;
-  using namespace OpcUa::Remote;
 
   class ServicesRegistry : public OpcUa::UaServer::ServicesRegistry
   {
@@ -23,7 +22,7 @@ namespace
     ServicesRegistry();
 
   public: // InternalServerAddon
-    virtual OpcUa::Remote::Services::SharedPtr GetServer() const;
+    virtual OpcUa::Services::SharedPtr GetServer() const;
     virtual void RegisterEndpointsServices(EndpointServices::SharedPtr endpoints) override;
     virtual void UnregisterEndpointsServices()  override;
     virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
@@ -147,7 +146,7 @@ namespace
       SetSubscriptions(Services);
     }
 
-    virtual void CreateSession(const SessionParameters& parameters)
+    virtual void CreateSession(const RemoteSessionParameters& parameters)
     {
     }
 
@@ -211,11 +210,11 @@ namespace
     }
 
   public:
-    OpcUa::Remote::AttributeServices::SharedPtr AttributesServices;
-    OpcUa::Remote::ViewServices::SharedPtr ViewsServices;
-    OpcUa::Remote::NodeManagementServices::SharedPtr NodeServices;
-    OpcUa::Remote::EndpointServices::SharedPtr EndpointsServices;
-    OpcUa::Remote::SubscriptionServices::SharedPtr SubscriptionsServices;
+    OpcUa::AttributeServices::SharedPtr AttributesServices;
+    OpcUa::ViewServices::SharedPtr ViewsServices;
+    OpcUa::NodeManagementServices::SharedPtr NodeServices;
+    OpcUa::EndpointServices::SharedPtr EndpointsServices;
+    OpcUa::SubscriptionServices::SharedPtr SubscriptionsServices;
     std::shared_ptr<DefaultServices> Services;
   };
 

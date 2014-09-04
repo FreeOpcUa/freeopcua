@@ -23,10 +23,10 @@ namespace OpcUa
   {
 
     class AddressSpace
-      : public Remote::ViewServices
-      , public Remote::AttributeServices
-      , public Remote::NodeManagementServices
-      , public Remote::SubscriptionServices 
+      : public ViewServices
+      , public AttributeServices
+      , public NodeManagementServices
+      , public SubscriptionServices
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpace);

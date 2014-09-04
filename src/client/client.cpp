@@ -33,13 +33,13 @@ namespace OpcUa
     const Common::Uri serverUri(Endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
 
-    OpcUa::Remote::SecureConnectionParams params;
+    OpcUa::SecureConnectionParams params;
     params.EndpointUrl = Endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::Remote::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
 
-    OpcUa::Remote::SessionParameters session;
+    OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = Uri;
     session.ClientDescription.ProductURI = Uri;
     session.ClientDescription.Name.Text = SessionName;

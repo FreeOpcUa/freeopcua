@@ -27,7 +27,7 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Remote::Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
+  Subscription::Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
     : Server(server), Client(callback), Debug(debug)
   {
     Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );

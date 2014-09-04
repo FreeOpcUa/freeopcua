@@ -18,8 +18,6 @@
 
 using namespace OpcUa;
 using namespace OpcUa::UaServer;
-using namespace OpcUa::Remote;
-
 
 namespace
 {
@@ -42,7 +40,7 @@ namespace
       return Endpoints;
     }
 
-    virtual void RegisterServer(const OpcUa::Remote::ServerParameters& parameters) override
+    virtual void RegisterServer(const OpcUa::ServerParameters& parameters) override
     {
     }
 

@@ -42,7 +42,7 @@ namespace OpcUa
 
     using namespace OpcUa::Binary;
 
-    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug)
+    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug)
       : Server(computer)
       , OutputStream(outputChannel)
       , Debug(debug)
@@ -328,7 +328,7 @@ namespace OpcUa
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
+          if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
             values = service->Read(params);
           }
@@ -362,7 +362,7 @@ namespace OpcUa
           WriteResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
+          if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
             response.Result.StatusCodes = service->Write(params.NodesToWrite);
           }

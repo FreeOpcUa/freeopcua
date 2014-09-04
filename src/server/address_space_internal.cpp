@@ -38,8 +38,6 @@ namespace OpcUa
   namespace Internal
   {
 
-    using namespace OpcUa::Remote;
-
     typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
     
     //store subscription for one attribute

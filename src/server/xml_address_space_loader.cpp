@@ -943,7 +943,7 @@ namespace
   class NodesRegistrator
   {
   public:
-    NodesRegistrator(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    NodesRegistrator(OpcUa::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {
@@ -988,7 +988,7 @@ namespace
     }
 
   private:
-    OpcUa::Remote::NodeManagementServices& Registry;
+    OpcUa::NodeManagementServices& Registry;
     const bool Debug;
   };
 } // namespace
@@ -998,7 +998,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {

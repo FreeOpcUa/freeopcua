@@ -23,37 +23,34 @@
 
 namespace OpcUa
 {
-  namespace Remote
+
+  struct RemoteSessionParameters
   {
+    ApplicationDescription ClientDescription;
+    std::vector<uint8_t> ClientCertificate;
+    std::string SessionName;
+    std::string ServerURI;
+    std::string EndpointURL;
+    Duration Timeout;
+  };
 
-    struct SessionParameters
-    {
-      ApplicationDescription ClientDescription;
-      std::vector<uint8_t> ClientCertificate;
-      std::string SessionName;
-      std::string ServerURI;
-      std::string EndpointURL;
-      Duration Timeout;
-    };
+  class Services : private Common::Interface
+  {
+  public:
+    DEFINE_CLASS_POINTERS(Services);
 
-    class Services : private Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(Services);
+  public:
+    virtual void CreateSession(const RemoteSessionParameters& parameters) = 0;
+    virtual void ActivateSession() = 0;
+    virtual void CloseSession() = 0;
 
-    public:
-      virtual void CreateSession(const SessionParameters& parameters) = 0;
-      virtual void ActivateSession() = 0;
-      virtual void CloseSession() = 0;
+    virtual EndpointServices::SharedPtr Endpoints() = 0;
+    virtual ViewServices::SharedPtr Views() = 0;
+    virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
+    virtual AttributeServices::SharedPtr Attributes() = 0;
+    virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
+  };
 
-      virtual EndpointServices::SharedPtr Endpoints() = 0;
-      virtual ViewServices::SharedPtr Views() = 0;
-      virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
-      virtual AttributeServices::SharedPtr Attributes() = 0;
-      virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
-    };
-
-  }
 }
 
 #endif //  OPC_UA_SERVER_H

@@ -17,20 +17,20 @@
 TEST(Server, EstablishValidConnection)
 {
   const std::string endpoint = GetEndpoint();
-  std::unique_ptr<OpcUa::Remote::Services> computer;
-  ASSERT_NO_THROW(computer = OpcUa::Remote::Connect(endpoint));
+  std::unique_ptr<OpcUa::Services> computer;
+  ASSERT_NO_THROW(computer = OpcUa::Connect(endpoint));
   ASSERT_TRUE(computer.get());
 }
 
 TEST(Server, ErrorIfInvalidUri)
 {
   const std::string endpoint = "invalid uri";
-  ASSERT_THROW(OpcUa::Remote::Connect(endpoint), std::logic_error);
+  ASSERT_THROW(OpcUa::Connect(endpoint), std::logic_error);
 }
 
 TEST(Server, ErrorIdUnknownHost)
 {
   const std::string endpoint = "opc.tcp://host.at.tne.mars:4840";
-  ASSERT_THROW(OpcUa::Remote::Connect(endpoint), std::logic_error);
+  ASSERT_THROW(OpcUa::Connect(endpoint), std::logic_error);
 }
 
