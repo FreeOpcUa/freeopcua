@@ -30,7 +30,7 @@ namespace
       Impl.reset();
     }
 
-    virtual OpcUa::Remote::Server::SharedPtr GetServer() const
+    virtual OpcUa::Remote::Services::SharedPtr GetServer() const
     {
       return Impl->GetServer();
     }

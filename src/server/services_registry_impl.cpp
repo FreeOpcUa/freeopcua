@@ -23,7 +23,7 @@ namespace
     ServicesRegistry();
 
   public: // InternalServerAddon
-    virtual OpcUa::Remote::Server::SharedPtr GetServer() const;
+    virtual OpcUa::Remote::Services::SharedPtr GetServer() const;
     virtual void RegisterEndpointsServices(EndpointServices::SharedPtr endpoints) override;
     virtual void UnregisterEndpointsServices()  override;
     virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
@@ -135,7 +135,7 @@ namespace
     
   };
 
-  class ServicesRegistry::InternalServer : public Server
+  class ServicesRegistry::InternalServer : public Services
   {
   public:
     InternalServer()
@@ -225,7 +225,7 @@ namespace
   {
   }
 
-  std::shared_ptr<Server> ServicesRegistry::GetServer() const
+  std::shared_ptr<Services> ServicesRegistry::GetServer() const
   {
     return Comp;
   }

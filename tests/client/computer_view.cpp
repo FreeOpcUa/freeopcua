@@ -63,7 +63,7 @@ protected:
 
 protected:
   OpcUa::NodesQuery Query;
-  std::unique_ptr<Server> Server;
+  std::unique_ptr<Services> Server;
   std::shared_ptr<ViewServices> Service;
 };
 

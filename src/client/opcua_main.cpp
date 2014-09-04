@@ -302,7 +302,7 @@ namespace
 //    std::vector<UserTokenPolicy> ;
   }
 
-  void PrintEndpoints(OpcUa::Remote::Server& computer)
+  void PrintEndpoints(OpcUa::Remote::Services& computer)
   {
     std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
     OpcUa::EndpointsFilter filter;
@@ -314,7 +314,7 @@ namespace
     }
   }
 
-  void PrintServers(OpcUa::Remote::Server& computer)
+  void PrintServers(OpcUa::Remote::Services& computer)
   {
     std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
     OpcUa::FindServersParameters filter;
@@ -568,7 +568,7 @@ namespace
     const std::string serverURI = cmd.GetServerURI();
     const Common::Uri uri(serverURI);
     OpcUa::Client::Addon::SharedPtr addon = addons.GetAddon<OpcUa::Client::Addon>(uri.Scheme());
-    std::shared_ptr<OpcUa::Remote::Server> computer = addon->Connect(serverURI);
+    std::shared_ptr<OpcUa::Remote::Services> computer = addon->Connect(serverURI);
 
     if (cmd.IsGetEndpointsOperation())
     {

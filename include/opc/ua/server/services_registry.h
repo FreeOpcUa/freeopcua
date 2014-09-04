@@ -23,7 +23,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(ServicesRegistry);
 
     public:
-      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const = 0;
+      virtual std::shared_ptr<OpcUa::Remote::Services> GetServer() const = 0;
 
       virtual void RegisterEndpointsServices(OpcUa::Remote::EndpointServices::SharedPtr endpoints) = 0;
       virtual void UnregisterEndpointsServices() = 0;

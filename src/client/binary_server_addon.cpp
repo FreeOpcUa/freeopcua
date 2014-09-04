@@ -45,7 +45,7 @@ namespace
       return "opc.tcp";
     }
 
-    virtual OpcUa::Remote::Server::SharedPtr Connect(const std::string& url)
+    virtual OpcUa::Remote::Services::SharedPtr Connect(const std::string& url)
     {
       return OpcUa::Remote::CreateBinaryServer(url, Debug);
     }

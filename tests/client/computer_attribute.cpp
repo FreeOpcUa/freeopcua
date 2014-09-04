@@ -57,7 +57,7 @@ protected:
   }
 
 protected:
-  std::unique_ptr<Server> Server;
+  std::unique_ptr<Services> Server;
   std::shared_ptr<AttributeServices> Service;
 };
 

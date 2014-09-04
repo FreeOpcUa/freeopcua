@@ -42,7 +42,7 @@ namespace OpcUa
 
     using namespace OpcUa::Binary;
 
-    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug)
+    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug)
       : Server(computer)
       , OutputStream(outputChannel)
       , Debug(debug)

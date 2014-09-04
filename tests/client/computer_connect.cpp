@@ -17,7 +17,7 @@
 TEST(Server, EstablishValidConnection)
 {
   const std::string endpoint = GetEndpoint();
-  std::unique_ptr<OpcUa::Remote::Server> computer;
+  std::unique_ptr<OpcUa::Remote::Services> computer;
   ASSERT_NO_THROW(computer = OpcUa::Remote::Connect(endpoint));
   ASSERT_TRUE(computer.get());
 }

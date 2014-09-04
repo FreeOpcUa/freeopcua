@@ -37,7 +37,7 @@ namespace
   class OpcTcp : public OpcUa::UaServer::IncomingConnectionProcessor
   {
   public:
-    OpcTcp(OpcUa::Remote::Server::SharedPtr computer, bool debug)
+    OpcTcp(OpcUa::Remote::Services::SharedPtr computer, bool debug)
       : Server(computer)
       , Debug(debug)
     {
@@ -104,7 +104,7 @@ namespace
     }
 
   private:
-    OpcUa::Remote::Server::SharedPtr Server;
+    OpcUa::Remote::Services::SharedPtr Server;
     bool Debug;
   };
 
@@ -120,7 +120,7 @@ namespace
     {
     }
 
-    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Server::SharedPtr server) override
+    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Services::SharedPtr server) override
     {
       for (const EndpointDescription endpoint : endpoints)
       {

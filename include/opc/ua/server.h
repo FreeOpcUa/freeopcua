@@ -36,10 +36,10 @@ namespace OpcUa
       Duration Timeout;
     };
 
-    class Server : private Common::Interface
+    class Services : private Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(Server);
+      DEFINE_CLASS_POINTERS(Services);
 
     public:
       virtual void CreateSession(const SessionParameters& parameters) = 0;

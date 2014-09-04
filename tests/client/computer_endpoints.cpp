@@ -22,7 +22,7 @@ class Endpoints : public ::testing::Test
 protected:
   virtual void SetUp()
   {
-    std::unique_ptr<OpcUa::Remote::Server> computer = OpcUa::Remote::Connect(GetEndpoint());
+    std::unique_ptr<OpcUa::Remote::Services> computer = OpcUa::Remote::Connect(GetEndpoint());
     Server = computer->Endpoints();
   }
 

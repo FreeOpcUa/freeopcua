@@ -158,7 +158,7 @@ namespace
   };
 
   class BinaryServer
-    : public Remote::Server
+    : public Remote::Services
     , public Remote::EndpointServices
     , public Remote::ViewServices
     , public Remote::SubscriptionServices
@@ -657,12 +657,12 @@ private:
 } // namespace
 
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
+OpcUa::Remote::Services::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Remote::Services::SharedPtr(new BinaryServer(channel, params, debug));
 }
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+OpcUa::Remote::Services::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
 {
   const Common::Uri serverUri(endpointUrl);
   OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());

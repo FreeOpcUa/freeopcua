@@ -43,9 +43,9 @@ namespace OpcUa
   {
   public:
     // Creating Root Node.
-    explicit Node(Remote::Server::SharedPtr srv);
-    Node(Remote::Server::SharedPtr srv, const NodeID& id);
-    Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name);
+    explicit Node(Remote::Services::SharedPtr srv);
+    Node(Remote::Services::SharedPtr srv, const NodeID& id);
+    Node(Remote::Services::SharedPtr srv, const NodeID& id, const QualifiedName& name);
     Node(const Node& other); 
     Node(){}
 
@@ -117,10 +117,10 @@ namespace OpcUa
     bool operator!=(Node const& x) const { return Id != x.Id; }
 
     //FIXME: I need this to create a copy for python binding, another way?
-    OpcUa::Remote::Server::SharedPtr GetServer() const {return Server;} 
+    OpcUa::Remote::Services::SharedPtr GetServer() const {return Server;} 
 
   protected:
-    OpcUa::Remote::Server::SharedPtr Server;
+    OpcUa::Remote::Services::SharedPtr Server;
     NodeID Id;
     mutable QualifiedName BrowseName;
   };

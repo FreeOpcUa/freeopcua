@@ -31,19 +31,19 @@
 namespace OpcUa
 {
 
-  Node::Node(Remote::Server::SharedPtr srv)
+  Node::Node(Remote::Services::SharedPtr srv)
     : Node(srv, ObjectID::RootFolder, QualifiedName("Root", 0))
   {
   }
 
-  Node::Node(Remote::Server::SharedPtr srv, const NodeID& id)
+  Node::Node(Remote::Services::SharedPtr srv, const NodeID& id)
     : Server(srv)
     , Id(id)
   {
     GetName();
   }
 
-  Node::Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name)
+  Node::Node(Remote::Services::SharedPtr srv, const NodeID& id, const QualifiedName& name)
     : Server(srv)
     , Id(id)
     , BrowseName(name)

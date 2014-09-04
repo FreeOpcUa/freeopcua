@@ -24,7 +24,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(BuiltingServerFactory);
 
     public:
-      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const = 0;
+      virtual std::shared_ptr<OpcUa::Remote::Services> GetServer() const = 0;
     };
 
 

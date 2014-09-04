@@ -56,7 +56,7 @@ TEST_F(EndpointsRegistry, RegisterEndpoints)
   endpoints->AddEndpoints(std::vector<OpcUa::EndpointDescription>(1, desc));
 
   OpcUa::UaServer::ServicesRegistry::SharedPtr services = Addons->GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
-  OpcUa::Remote::Server::SharedPtr computer = services->GetServer();
+  OpcUa::Remote::Services::SharedPtr computer = services->GetServer();
   std::vector<OpcUa::EndpointDescription> descriptions;
   ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::EndpointsFilter()));
   ASSERT_EQ(descriptions.size(), 1);
