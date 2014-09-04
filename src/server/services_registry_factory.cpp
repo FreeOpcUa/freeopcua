@@ -14,7 +14,7 @@
 namespace
 {
 
-  class ServicesRegistryAddon : public Common::Addon, public OpcUa::UaServer::ServicesRegistry
+  class ServicesRegistryAddon : public Common::Addon, public OpcUa::Server::ServicesRegistry
   {
   public:
     DEFINE_CLASS_POINTERS(ServicesRegistryAddon);
@@ -22,7 +22,7 @@ namespace
   public:
     virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)
     {
-      Impl = OpcUa::UaServer::CreateServicesRegistry();
+      Impl = OpcUa::Server::CreateServicesRegistry();
     }
 
     virtual void Stop()
@@ -94,7 +94,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
 

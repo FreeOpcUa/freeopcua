@@ -25,7 +25,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class AsyncOpcTcp : private Common::Interface

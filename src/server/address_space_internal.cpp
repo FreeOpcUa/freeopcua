@@ -68,7 +68,7 @@ namespace OpcUa
 
 
 
-    class AddressSpaceInMemory : public UaServer::AddressSpace
+    class AddressSpaceInMemory : public Server::AddressSpace
     {
     public:
       AddressSpaceInMemory(bool debug)
@@ -716,7 +716,7 @@ namespace OpcUa
     };
   }
 
-  namespace UaServer
+  namespace Server
   {
     AddressSpace::UniquePtr CreateAddressSpace(bool debug)
     {

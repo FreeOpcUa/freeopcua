@@ -55,12 +55,12 @@ namespace OpcUa
       OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
 
-      UaServer::ServicesRegistry::SharedPtr Registry;
+      Server::ServicesRegistry::SharedPtr Registry;
       //UaServer::TcpServer::SharedPtr TcpServer;
-      UaServer::EndpointsRegistry::SharedPtr EndpointsServices;
-      UaServer::AddressSpace::SharedPtr AddressSpace;
+      Server::EndpointsRegistry::SharedPtr EndpointsServices;
+      Server::AddressSpace::SharedPtr AddressSpace;
       //UaServer::OpcUaProtocol::SharedPtr Protocol;
-      UaServer::AsyncOpcTcp::SharedPtr AsyncServer;
+      Server::AsyncOpcTcp::SharedPtr AsyncServer;
       Common::Thread::UniquePtr ListenThread;
 
   };

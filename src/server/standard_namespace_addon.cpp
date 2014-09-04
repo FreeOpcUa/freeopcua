@@ -26,9 +26,9 @@ namespace
 
     void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::UaServer::AddressSpaceRegistryAddonID);
+      OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::Server::AddressSpaceRegistryAddonID);
       const bool debug = false;
-      OpcUa::UaServer::FillStandardNamespace(*registry, false);
+      OpcUa::Server::FillStandardNamespace(*registry, false);
     }
 
     void Stop()
@@ -40,7 +40,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     Common::Addon::UniquePtr StandardNamespaceAddonFactory::CreateAddon()

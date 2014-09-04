@@ -76,7 +76,7 @@ namespace
 
   class OpcTcpConnection;
 
-  class OpcTcpServer : public OpcUa::UaServer::AsyncOpcTcp
+  class OpcTcpServer : public OpcUa::Server::AsyncOpcTcp
   {
   public:
     DEFINE_CLASS_POINTERS(OpcTcpServer);
@@ -137,7 +137,7 @@ namespace
   private:
     tcp::socket Socket;
     OpcTcpServer& TcpServer;
-    UaServer::OpcTcpMessages MessageProcessor;
+    Server::OpcTcpMessages MessageProcessor;
     OStreamBinary OStream;
     const bool Debug = false;
     std::vector<char> Buffer;
@@ -365,7 +365,7 @@ namespace
 
 } // namespace
 
-OpcUa::UaServer::AsyncOpcTcp::UniquePtr OpcUa::UaServer::CreateAsyncOpcTcp(const OpcUa::UaServer::AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
+OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
 {
   return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server));
 }

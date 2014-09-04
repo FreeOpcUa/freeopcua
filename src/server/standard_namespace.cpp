@@ -3739,7 +3739,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     void FillStandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)

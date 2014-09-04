@@ -25,7 +25,7 @@ namespace OpcUa
 
     class AddressSpaceAddon
       : public Common::Addon
-      , public UaServer::AddressSpace
+      , public Server::AddressSpace
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpaceAddon);
@@ -75,8 +75,8 @@ namespace OpcUa
       Options GetOptions(const Common::AddonParameters& addonParams);
 
     private:
-      OpcUa::UaServer::AddressSpace::SharedPtr Registry;
-      std::shared_ptr<OpcUa::UaServer::ServicesRegistry> InternalServer;
+      OpcUa::Server::AddressSpace::SharedPtr Registry;
+      std::shared_ptr<OpcUa::Server::ServicesRegistry> InternalServer;
     };
 
   } // namespace UaServer

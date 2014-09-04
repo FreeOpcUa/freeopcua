@@ -20,7 +20,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class OpcUaProtocol : public Common::Interface

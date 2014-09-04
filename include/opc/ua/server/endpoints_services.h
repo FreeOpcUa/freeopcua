@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     struct ApplicationData

@@ -43,7 +43,7 @@ namespace OpcUa
     };
 
 
-    class XmlAddressSpaceAddon : public OpcUa::UaServer::XmlAddressSpace
+    class XmlAddressSpaceAddon : public OpcUa::Server::XmlAddressSpace
     {
     public:
       DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon);

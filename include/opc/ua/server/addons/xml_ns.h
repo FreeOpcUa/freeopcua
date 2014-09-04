@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char XmlAddressSpaceAddonID[] = "xml_address_space";

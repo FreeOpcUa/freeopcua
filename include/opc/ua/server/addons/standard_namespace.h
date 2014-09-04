@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class StandardNamespaceAddonFactory : public Common::AddonFactory

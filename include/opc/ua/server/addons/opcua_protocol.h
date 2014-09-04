@@ -17,7 +17,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char OpcUaProtocolAddonID[] = "opcua_protocol";

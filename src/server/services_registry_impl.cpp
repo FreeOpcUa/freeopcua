@@ -16,7 +16,7 @@ namespace
 {
   using namespace OpcUa;
 
-  class ServicesRegistry : public OpcUa::UaServer::ServicesRegistry
+  class ServicesRegistry : public OpcUa::Server::ServicesRegistry
   {
   public:
     ServicesRegistry();
@@ -285,9 +285,9 @@ namespace
 namespace OpcUa
 {
 
-  UaServer::ServicesRegistry::UniquePtr UaServer::CreateServicesRegistry()
+  Server::ServicesRegistry::UniquePtr Server::CreateServicesRegistry()
   {
-    return UaServer::ServicesRegistry::UniquePtr(new ::ServicesRegistry());
+    return Server::ServicesRegistry::UniquePtr(new ::ServicesRegistry());
   }
 
 }

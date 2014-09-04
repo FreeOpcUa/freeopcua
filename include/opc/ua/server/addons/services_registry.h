@@ -16,7 +16,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char ServicesRegistryAddonID[] = "services_registry";

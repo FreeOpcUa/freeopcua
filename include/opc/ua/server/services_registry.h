@@ -14,7 +14,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class ServicesRegistry : private Common::Interface

@@ -37,7 +37,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     using namespace OpcUa::Binary;

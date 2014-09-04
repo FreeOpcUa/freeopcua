@@ -28,8 +28,8 @@ protected:
   virtual void SetUp()
   {
     const bool debug = false;
-    NameSpace = OpcUa::UaServer::CreateAddressSpace(debug);
-    OpcUa::UaServer::FillStandardNamespace(*NameSpace, debug);
+    NameSpace = OpcUa::Server::CreateAddressSpace(debug);
+    OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
   }
 
   virtual void TearDown()
@@ -120,7 +120,7 @@ protected:
   }
 
 protected:
-  UaServer::AddressSpace::UniquePtr NameSpace;
+  Server::AddressSpace::UniquePtr NameSpace;
 };
 
 template <typename T>

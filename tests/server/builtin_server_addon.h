@@ -16,7 +16,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char BuiltinServerAddonID[] = "builtin_server_addon";

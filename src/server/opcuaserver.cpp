@@ -37,7 +37,7 @@ namespace OpcUa
 
   void OPCUAServer::Start()
   {
-    EndpointsServices = UaServer::CreateEndpointsRegistry();
+    EndpointsServices = Server::CreateEndpointsRegistry();
    
     std::vector<ApplicationDescription> Apps;
     ApplicationDescription appdesc;
@@ -61,24 +61,24 @@ namespace OpcUa
     EndpointsServices->AddApplications(Apps);
     EndpointsServices->AddEndpoints(Endpoints);
 
-    Registry = UaServer::CreateServicesRegistry();
+    Registry = Server::CreateServicesRegistry();
     Registry->RegisterEndpointsServices(EndpointsServices);
 
-    AddressSpace = UaServer::CreateAddressSpace(Debug);
+    AddressSpace = Server::CreateAddressSpace(Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);
     Registry->RegisterSubscriptionServices(AddressSpace);
 
-    UaServer::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
+    Server::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
 
 
-    UaServer::AsyncOpcTcp::Parameters asyncparams;
+    Server::AsyncOpcTcp::Parameters asyncparams;
     asyncparams.Port = Common::Uri(Endpoints[0].EndpointURL).Port();
     asyncparams.Host = Common::Uri(Endpoints[0].EndpointURL).Host();
     asyncparams.ThreadsNumber = 2;
     asyncparams.DebugMode = Debug;
-    AsyncServer = UaServer::CreateAsyncOpcTcp(asyncparams, Registry->GetServer());
+    AsyncServer = Server::CreateAsyncOpcTcp(asyncparams, Registry->GetServer());
     
 
     ListenThread.reset(new Common::Thread([this](){
