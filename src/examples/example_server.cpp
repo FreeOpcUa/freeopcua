@@ -55,10 +55,12 @@ int main(int argc, char** argv)
   Node newobject = objects.AddObject(nid, qn);
   //Add a virable to objevt
   Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
+  /*
  
   SubClient clt; 
   std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
   sub->SubscribeDataChange(myvar);
+  */
   uint32_t counter = 0;
   myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
   std::cout << "Ctrl-C to exit" << std::endl;

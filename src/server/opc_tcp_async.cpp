@@ -300,8 +300,27 @@ namespace
     , Server(server)
     , io(params.ThreadsNumber)
     , socket(io)
-    , acceptor(io, tcp::endpoint(tcp::v4(), params.Port))
+    //, acceptor(io, tcp::endpoint(tcp::v4(), params.Port))
+    , acceptor(io)
+    //, acceptor( io, tcp::endpoint( ip::address::from_string(params.Host), params.Port ) )
   {
+    tcp::endpoint ep;
+    if (params.Host.empty() )
+    {
+      std::cout << "opc_tcp_async| " << std::endl;
+      ep = tcp::endpoint( tcp::v4(), params.Port );
+    }
+    else if ( params.Host == "localhost" )
+    {
+      ep = tcp::endpoint( ip::address::from_string("127.0.0.1"), params.Port );
+    }
+    else
+    {
+      ep = tcp::endpoint( ip::address::from_string(params.Host), params.Port );
+    }
+    acceptor.open(ep.protocol());
+    //acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+    acceptor.bind(ep);
   }
 
   void OpcTcpServer::Listen()
@@ -321,7 +340,8 @@ namespace
 
   void OpcTcpServer::Accept()
   {
-    std::cout << "opc_tcp_async| Waiting for client connection." << std::endl;
+    std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
+    acceptor.listen();
     acceptor.async_accept(socket, [this](boost::system::error_code errorCode){
       if (!errorCode)
       {

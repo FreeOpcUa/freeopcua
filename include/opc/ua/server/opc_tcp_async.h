@@ -36,6 +36,7 @@ namespace OpcUa
     public:
       struct Parameters
       {
+        std::string Host;
         unsigned Port = 4840;
         std::size_t ThreadsNumber = 5;
         bool DebugMode = false;

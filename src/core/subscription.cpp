@@ -65,8 +65,8 @@ namespace OpcUa
           }
           else
           {
-            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << Node(Server, mapit->second.Node) << std::endl; }
-            Client.DataChange( item.ClientHandle, Node(Server, mapit->second.Node, QualifiedName()), item.Value.Value, mapit->second.Attribute);
+            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.Node << std::endl; }
+            Client.DataChange( item.ClientHandle, mapit->second.Node, item.Value.Value, mapit->second.Attribute);
           }
         }
       }
@@ -105,7 +105,10 @@ namespace OpcUa
         std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({result.Message.SequenceID}));
+    OpcUa::SubscriptionAcknowledgement ack;
+    ack.SubscriptionID = GetId();
+    ack.SequenceNumber = result.Message.SequenceID;
+    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({ack}));
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
@@ -151,10 +154,10 @@ namespace OpcUa
     {
       CheckStatusCode(res.Status);
       if (Debug ) { std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl;  }
-      MonitoredItemData mdata;
+      MonitoredItemData mdata; 
       mdata.MonitoredItemID = res.MonitoredItemID;
       mdata.Attribute =  attributes[i].Attribute;
-      mdata.Node =  attributes[i].Node;
+      mdata.Node =  Node(Server, attributes[i].Node);
       AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
       handles.push_back(itemsParams.ItemsToCreate[i].Parameters.ClientHandle);
       ++i;
@@ -199,7 +202,7 @@ namespace OpcUa
     EventFilter filter;
     //We only subscribe to variabes, since properties are supposed not to change
     //FIXME: order of variables might not be constant on all servers, we should order variables
-    for ( const Node& child: eventtype.GetVariables() )
+    for ( Node& child: eventtype.GetVariables() )
     {
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
@@ -241,7 +244,7 @@ namespace OpcUa
     }
 
     MonitoredItemData mdata;
-    mdata.Node = avid.Node;
+    mdata.Node = Node(Server, avid.Node);
     mdata.Attribute = avid.Attribute;
     mdata.MonitoredItemID = results[0].MonitoredItemID;
     AttributeValueMap[params.ClientHandle] = mdata;

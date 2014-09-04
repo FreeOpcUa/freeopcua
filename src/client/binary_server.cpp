@@ -24,6 +24,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <iostream>
 
 
 namespace
@@ -111,23 +112,34 @@ namespace
       }
       void post(std::function<void()> callback)
       {
+        if (Debug)  { std::cout << "CallbackThread | start post" << std::endl; }
         std::unique_lock<std::mutex> lock(Mutex);
         Queue.push(callback);
         Condition.notify_one();
+        if (Debug)  { std::cout << "CallbackThread | end post" << std::endl; }
       }
 
       void Run()
       {
         while (true)
         {
+          if (Debug)  { std::cout << "CallbackThread | waiting for nest post" << std::endl; }
           std::unique_lock<std::mutex> lock(Mutex);
           Condition.wait(lock, [&]() { return (StopRequest == true) || (Queue.size() > 0) ;} );
           if (StopRequest)
           {
             return;
           }
-          Queue.front()();
-          Queue.pop();
+          while ( Queue.size() > 0 ) //to avoid crashing on spurious events
+          {
+            if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
+            std::function<void()> callbackcopy = Queue.front();
+            Queue.pop();
+            lock.unlock();
+            if (Debug)  { std::cout << "CallbackThread | now calling callback" << std::endl; }
+            callbackcopy();
+            lock.lock();
+          }
         }
       }
 
@@ -142,6 +154,7 @@ namespace
       std::condition_variable Condition;
       bool StopRequest = false;
       std::queue<std::function<void()>> Queue;
+      bool Debug = false;
   };
 
   class BinaryServer
@@ -434,6 +447,7 @@ namespace
         CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      if (Debug) {std::cout << "Sending publish request with " << request.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       Send(request);
     }
 
