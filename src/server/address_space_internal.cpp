@@ -76,6 +76,8 @@ namespace OpcUa
       AddressSpaceInMemory(bool debug)
         : Debug(debug), work(new boost::asio::io_service::work(io))
       {
+        MaxNodeIDNum = 0;
+
         //Initialize the worker thread for subscriptions
         service_thread = std::thread([&](){ io.run(); });
 
@@ -593,7 +595,7 @@ namespace OpcUa
         AddNodesResult result;
         if (Debug) std::cout << "address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
 
-        if (!Nodes.empty() && Nodes.find(item.RequestedNewNodeID) != Nodes.end())
+        if (!Nodes.empty() && item.RequestedNewNodeID != ObjectID::Null && Nodes.find(item.RequestedNewNodeID) != Nodes.end())
         {
           std::cout << "Error: NodeID '"<< item.RequestedNewNodeID << "' allready exist: " << std::endl;
           result.Status = StatusCode::BadNodeIdExists;
@@ -612,15 +614,12 @@ namespace OpcUa
           }
         }
 
+        const NodeID resultID = GetNewNodeID(item.RequestedNewNodeID);
         NodeStruct nodestruct;
         //Add Common attributes
-        AttributeValue attv;
-        attv.Value = item.RequestedNewNodeID;
-        nodestruct.Attributes[AttributeID::NODE_ID] = attv;
-        attv.Value = item.BrowseName;
-        nodestruct.Attributes[AttributeID::BROWSE_NAME] = attv;
-        attv.Value = static_cast<int32_t>(item.Class);
-        nodestruct.Attributes[AttributeID::NODE_CLASS] = attv;
+        nodestruct.Attributes[AttributeID::NODE_ID].Value = resultID;
+        nodestruct.Attributes[AttributeID::BROWSE_NAME].Value = item.BrowseName;
+        nodestruct.Attributes[AttributeID::NODE_CLASS].Value = static_cast<int32_t>(item.Class);
 
         // Add requested attributes
         for (const auto& attr: item.Attributes.Attributes)
@@ -661,7 +660,7 @@ namespace OpcUa
         }
 
         result.Status = StatusCode::Good;
-        result.AddedNodeID = item.RequestedNewNodeID;
+        result.AddedNodeID = resultID;
         if (Debug) std::cout << "address_space| node added." << std::endl;
         return result;
       }
@@ -686,6 +685,22 @@ namespace OpcUa
         return StatusCode::Good;
       }
 
+      NodeID GetNewNodeID(const NodeID& id)
+      {
+        if (id == ObjectID::Null)
+        {
+          return OpcUa::NumericNodeID(++MaxNodeIDNum);
+        }
+
+        const uint64_t number = id.GetIntegerIdentifier();
+        if (MaxNodeIDNum < number)
+        {
+          MaxNodeIDNum = number;
+        }
+
+        return OpcUa::NumericNodeID(++MaxNodeIDNum);
+      }
+
     private:
       bool Debug = false;
       mutable boost::shared_mutex DbMutex;
@@ -697,6 +712,9 @@ namespace OpcUa
       std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
       std::thread service_thread;
 
+      // Maximum node ID is assigned when client does not specify id during adding.
+      // it is 64 bit, may be we can service such amount of data.
+      std::atomic<uint64_t> MaxNodeIDNum;
     };
   }
 

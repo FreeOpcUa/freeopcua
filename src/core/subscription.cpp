@@ -65,8 +65,8 @@ namespace OpcUa
           }
           else
           {
-            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.Node << std::endl; }
-            Client.DataChange( item.ClientHandle, mapit->second.Node, item.Value.Value, mapit->second.Attribute);
+            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.MonitoringNode << std::endl; }
+            Client.DataChange( item.ClientHandle, mapit->second.MonitoringNode, item.Value.Value, mapit->second.Attribute);
           }
         }
       }
@@ -157,7 +157,7 @@ namespace OpcUa
       MonitoredItemData mdata; 
       mdata.MonitoredItemID = res.MonitoredItemID;
       mdata.Attribute =  attributes[i].Attribute;
-      mdata.Node =  Node(Server, attributes[i].Node);
+      mdata.MonitoringNode =  Node(Server, attributes[i].Node);
       AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
       handles.push_back(itemsParams.ItemsToCreate[i].Parameters.ClientHandle);
       ++i;
@@ -244,7 +244,7 @@ namespace OpcUa
     }
 
     MonitoredItemData mdata;
-    mdata.Node = Node(Server, avid.Node);
+    mdata.MonitoringNode = Node(Server, avid.Node);
     mdata.Attribute = avid.Attribute;
     mdata.MonitoredItemID = results[0].MonitoredItemID;
     AttributeValueMap[params.ClientHandle] = mdata;

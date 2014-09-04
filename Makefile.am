@@ -139,6 +139,7 @@ test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacor
 
 test_opcuaserver_SOURCES = \
 	tests/server/address_space_registry_test.h \
+	tests/server/address_space_ut.cpp \
 	tests/server/builtin_server.h \
 	tests/server/builtin_server_addon.h \
 	tests/server/builtin_server_factory.cpp \
@@ -154,14 +155,17 @@ test_opcuaserver_SOURCES = \
 	tests/server/standard_namespace_test.h \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
-	tests/server/xml_addressspace_ut.cpp \
-	tests/server/xml_address_space_addon_ut.cpp \
 	src/server/server_options.cpp \
 	src/server/server_options.h
 
-test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la -lboost_program_options
+# temporary disabled until new format is discussed.
+#	tests/server/xml_addressspace_ut.cpp
+#	tests/server/xml_address_space_addon_ut.cpp
+
+
+test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS)
+test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS) -lboost_program_options
 
 ####################################################
 # Protocol library

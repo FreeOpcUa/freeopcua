@@ -177,16 +177,6 @@ TEST_F(StandardNamespaceStructure, CheckRoot)
   ExpectHasBaseAttributes(ObjectID::RootFolder);
 }
 
-TEST_F(StandardNamespaceStructure, CheckObjects)
-{
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ObjectsFolder);
-  EXPECT_EQ(SizeOf(refs), 2);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::Server));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
-
-  ExpectHasBaseAttributes(ObjectID::ObjectsFolder);
-}
-
 TEST_F(StandardNamespaceStructure, CheckTypes)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::TypesFolder);
