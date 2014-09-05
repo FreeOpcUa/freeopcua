@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 namespace OpcUa
 {

@@ -8,7 +8,7 @@
 #include <opc/common/addons_core/dynamic_addon_factory.h>
 #include <opc/common/thread.h>
 #include <opc/ua/node.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/event.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/server/address_space.h>

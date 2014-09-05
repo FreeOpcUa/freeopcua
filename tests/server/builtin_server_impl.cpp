@@ -181,7 +181,7 @@ BuiltinServerAddon::BuiltinServerAddon()
 {
 }
 
-std::shared_ptr<OpcUa::Services> BuiltinServerAddon::GetServer() const
+OpcUa::Services::SharedPtr BuiltinServerAddon::GetServices() const
 {
   if (!ClientChannel)
   {

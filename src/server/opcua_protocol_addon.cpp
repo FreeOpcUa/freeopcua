@@ -37,8 +37,8 @@ namespace
   class OpcTcp : public OpcUa::Server::IncomingConnectionProcessor
   {
   public:
-    OpcTcp(OpcUa::Services::SharedPtr computer, bool debug)
-      : Server(computer)
+    OpcTcp(OpcUa::Services::SharedPtr services, bool debug)
+      : Server(services)
       , Debug(debug)
     {
     }

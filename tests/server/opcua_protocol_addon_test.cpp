@@ -65,7 +65,7 @@ TEST_F(OpcUaProtocolAddonTest, CanGetServerWhichOpensAndClosesSecureChannel)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   ASSERT_TRUE(static_cast<bool>(computer));
   computer.reset();
 }
@@ -73,7 +73,7 @@ TEST_F(OpcUaProtocolAddonTest, CanGetServerWhichOpensAndClosesSecureChannel)
 TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
   ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
@@ -85,7 +85,7 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::ApplicationDescription> servers;
   ASSERT_NO_THROW(servers = endpoints->FindServers(OpcUa::FindServersParameters()));
@@ -97,7 +97,7 @@ TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::ViewServices> views = computer->Views();
 
   OpcUa::BrowseDescription description;
@@ -120,7 +120,7 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
 
   OpcUa::RemoteSessionParameters session;
   session.ClientDescription.Name.Text = "opcua client";
@@ -138,7 +138,7 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
 {
   std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::SubscriptionServices> subscriptions = computer->Subscriptions();
 
   OpcUa::SubscriptionParameters params;

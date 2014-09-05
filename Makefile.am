@@ -262,7 +262,6 @@ opcuainclude_HEADERS = \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
-  include/opc/ua/server.h \
   include/opc/ua/socket_channel.h \
   include/opc/ua/subscription.h
 
@@ -270,6 +269,7 @@ servicesinclude_HEADERS = \
   include/opc/ua/services/attributes.h \
   include/opc/ua/services/endpoints.h \
   include/opc/ua/services/node_management.h \
+  include/opc/ua/services/services.h \
   include/opc/ua/services/subscriptions.h \
   include/opc/ua/services/view.h
 

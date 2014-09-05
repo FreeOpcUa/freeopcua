@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/common/interface.h>
 
 

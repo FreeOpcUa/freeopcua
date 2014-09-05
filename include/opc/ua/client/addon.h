@@ -13,7 +13,7 @@
 
 #include <opc/common/addons_core/addon.h>
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 namespace OpcUa
 {

@@ -42,7 +42,7 @@ namespace OpcUa
       BuiltinServerAddon();
       ~BuiltinServerAddon();
 
-      virtual std::shared_ptr<OpcUa::Services> GetServer() const override;
+      OpcUa::Services::SharedPtr GetServices() const override;
 
     public: // Common::Addon
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);

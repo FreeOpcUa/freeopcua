@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <sstream>
 
@@ -117,7 +117,7 @@ namespace OpcUa
     bool operator!=(Node const& x) const { return Id != x.Id; }
 
     //FIXME: I need this to create a copy for python binding, another way?
-    OpcUa::Services::SharedPtr GetServer() const {return Server;}
+    OpcUa::Services::SharedPtr GetServices() const {return Server;}
 
   protected:
     OpcUa::Services::SharedPtr Server;

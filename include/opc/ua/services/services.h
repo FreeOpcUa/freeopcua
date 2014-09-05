@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_SERVER_H
-#define OPC_UA_SERVER_H
+#pragma once
 
 #include <opc/common/class_pointers.h>
 #include <opc/ua/services/attributes.h>
@@ -52,5 +51,3 @@ namespace OpcUa
   };
 
 }
-
-#endif //  OPC_UA_SERVER_H

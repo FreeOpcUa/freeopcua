@@ -10,7 +10,7 @@
 
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <boost/thread/shared_mutex.hpp>
 #include <chrono>

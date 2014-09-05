@@ -11,7 +11,7 @@
 #pragma once
 
 #include <opc/ua/protocol/channel.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 
 #include <memory>

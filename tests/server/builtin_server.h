@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <src/server/tcp_server.h>
 
 namespace OpcUa
@@ -24,7 +24,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(BuiltingServerFactory);
 
     public:
-      virtual std::shared_ptr<OpcUa::Services> GetServer() const = 0;
+      virtual OpcUa::Services::SharedPtr GetServices() const = 0;
     };
 
 
