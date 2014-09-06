@@ -7,8 +7,14 @@ from IPython import embed
 import opcua
 
 class SubClient(opcua.SubscriptionClient):
-    def data_change(node, val, attr):
-        print("New data change event", node, val, attr)
+    def __init__(self, *args):
+        opcua.SubscriptionClient.__init__(self, *args)
+        self.val = None
+
+    def data_change(self, handle, node, val, attr):
+        print("Python: New data change event", handle, node, val, attr)
+        self.val = val
+
 
 
 if __name__ == "__main__":
