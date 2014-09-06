@@ -169,7 +169,6 @@ class CommonTests(object):
         class MySubClient(opcua.SubscriptionClient):
             def setup(self, condition):
                 self.cond = condition
-                self.hack = False # Fixme should not be necessary, should use condition
                 self.node = None
                 self.handle = None
                 self.attribute = None
@@ -181,8 +180,8 @@ class CommonTests(object):
                 self.node = node
                 self.value = val
                 self.attribute = attr
-                #self.cond.notify_all()
-                self.hack = True
+                with self.cond:
+                    self.cond.notify_all()
 
         cond = Condition()
         msclt = MySubClient()
@@ -199,14 +198,8 @@ class CommonTests(object):
 
         v1.set_value([5])
         start = time.time()
-        ret = True
-        while msclt.hack != True:
-            time.sleep(0.05)
-            if (time.time() - start) > 0.5:
-                ret = False
-        msclt.hack = False
-        #with cond:
-        #    ret = cond.wait(0.5)
+        with cond:
+            ret = cond.wait(0.5)
 
         self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         self.assertEqual(msclt.value, [5])
@@ -214,15 +207,8 @@ class CommonTests(object):
         self.assertEqual(msclt.node, v1)
 
         v2.set_value(99)
-        ret = True
-        while msclt.hack != True:
-            time.sleep(0.05)
-            if (time.time() - start) > 0.5:
-                ret = False
-        msclt.hack = False
-        #with cond:
-        #with cond:
-        #    ret = cond.wait(0.5)
+        with cond:
+            ret = cond.wait(0.5)
         self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         self.assertEqual(msclt.value, 99)
         self.assertEqual(msclt.handle, handle2)
