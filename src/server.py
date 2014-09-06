@@ -6,20 +6,13 @@ from IPython import embed
 import opcua
 
 class SubClient(opcua.SubscriptionClient):
-    def __init_(self, *args):
-        self.val = None
-    def data_change(self, handle, node, val, attr):
-        print("New data change event", handle, node, val, attr)
-        self.val = val
-
-    def prt(self):
-        print("prt called")
+    #def data_change(self, handle, node, val, attr):
+        #print("New data change event", handle, node, val, attr)
 
 
 if __name__ == "__main__":
     server = opcua.Server(True)
-    server.set_endpoint("opc.tcp://localhost:4845")
-    server.load_cpp_addressspace(True)
+    server.set_endpoint("opc.tcp://localhost:4841")
     #s.add_xml_address_space("standard_address_space.xml")
     #s.add_xml_address_space("user_address_space.xml")
     server.start()
@@ -34,11 +27,10 @@ if __name__ == "__main__":
         myvar = test.add_variable("myvar", [16, 56])
         myprop = test.add_property("myprop", 9.9)
        
-        #Now subscribing to changes on server side
-        # callback does not work yet.. but soon
-        sclt = SubClient()
-        sub = server.create_subscription(100, sclt)
-        handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
+        # uncomment next lines to subscribe to changes on server side
+        #sclt = SubClient()
+        #sub = server.create_subscription(100, sclt)
+        #handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
 
         embed()
     finally:

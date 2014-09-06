@@ -164,6 +164,63 @@ class CommonTests(object):
         sub.unsubscribe(handle)
         sub.delete()
 
+    def test_subscription_data_change(self):
+
+        class MySubClient(opcua.SubscriptionClient):
+            def setup(self, condition):
+                self.cond = condition
+                self.node = None
+                self.handle = None
+                self.attribute = None
+                self.value = None
+
+            def data_change(self, handle, node, val, attr):
+                print("Data change event in python client", handle, node, val , attr)
+                self.handle = handle
+                self.node = node
+                self.value = val
+                self.attribute = attr
+                with self.cond:
+                    self.cond.notify_all()
+
+        cond = Condition()
+        msclt = MySubClient()
+        msclt.setup(cond)
+
+        o = self.opc.get_objects_node()
+        v1 = o.add_variable("3:SubscriptionVariableV1", [1, 2, 3])
+        v2 = o.add_variable("3:SubscriptionVariableV2", 1)
+        sub = self.opc.create_subscription(100, msclt)
+        handle1 = sub.subscribe_data_change(v1)
+        print("Got handle ", handle1)
+        handle2 = sub.subscribe_data_change(v2)
+        print("Got handle ", handle2)
+
+        v1.set_value([5])
+        start = time.time()
+        with cond:
+            ret = cond.wait(0.5)
+
+        self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        self.assertEqual(msclt.value, [5])
+        self.assertEqual(msclt.handle, handle1)
+        self.assertEqual(msclt.node, v1)
+
+        v2.set_value(99)
+        with cond:
+            ret = cond.wait(0.5)
+        self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        self.assertEqual(msclt.value, 99)
+        self.assertEqual(msclt.handle, handle2)
+        self.assertEqual(msclt.node, v2)
+
+        sub.unsubscribe(handle1)
+        #sub.unsubscribe(handle2) #disabled to test one more case
+        sub.delete()
+
+
+
+
 
 class ServerProcess(Process):
     def __init__(self):
@@ -221,77 +278,6 @@ class TestServer(unittest.TestCase, CommonTests):
     @classmethod
     def tearDownClass(self):
         self.srv.stop()
-
-
-    def test_subscription_data_change(self):
-
-        class MySubClient(opcua.SubscriptionClient):
-            def setup(self, condition):
-                self.cond = condition
-                self.hack = False # Fixme should not be necessary, should use condition
-                self.node = None
-                self.handle = None
-                self.attribute = None
-                self.value = None
-
-            def data_change(self, handle, node, val, attr):
-                print("Data change event in python client", handle, node, val , attr)
-                self.handle = handle
-                self.node = node
-                self.value = val
-                self.attribute = attr
-                #self.cond.notify_all()
-                self.hack = True
-
-        cond = Condition()
-        msclt = MySubClient()
-        msclt.setup(cond)
-
-        o = self.opc.get_objects_node()
-        v1 = o.add_variable("3:SubscriptionVariableV1", [1, 2, 3])
-        v2 = o.add_variable("3:SubscriptionVariableV2", 1)
-        sub = self.opc.create_subscription(100, msclt)
-        handle1 = sub.subscribe_data_change(v1)
-        print("Got handle ", handle1)
-        handle2 = sub.subscribe_data_change(v2)
-        print("Got handle ", handle2)
-
-        v1.set_value([5])
-        start = time.time()
-        ret = True
-        while msclt.hack != True:
-            time.sleep(0.05)
-            if (time.time() - start) > 0.5:
-                ret = False
-        msclt.hack = False
-        #with cond:
-        #    ret = cond.wait(0.5)
-
-        self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
-        self.assertEqual(msclt.value, [5])
-        self.assertEqual(msclt.handle, handle1)
-        self.assertEqual(msclt.node, v1)
-
-        v2.set_value(99)
-        ret = True
-        while msclt.hack != True:
-            time.sleep(0.05)
-            if (time.time() - start) > 0.5:
-                ret = False
-        msclt.hack = False
-        #with cond:
-        #with cond:
-        #    ret = cond.wait(0.5)
-        self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
-        self.assertEqual(msclt.value, 99)
-        self.assertEqual(msclt.handle, handle2)
-        self.assertEqual(msclt.node, v2)
-
-
-
-        sub.unsubscribe(handle1)
-        #sub.unsubscribe(handle2) #disabled to test one more case
-        sub.delete()
 
 
 
