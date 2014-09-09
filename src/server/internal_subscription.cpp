@@ -31,7 +31,7 @@ namespace OpcUa
       bool expired = KeepAliveCount > LifeTimeCount ;
       if ( expired )
       {
-        std::cout << "Subscription has expired " << KeepAliveCount << "  " << LifeTimeCount << std::endl;
+        if (Debug) { std::cout << "Subscription has expired " << KeepAliveCount << "  " << LifeTimeCount << std::endl; }
       }
       return expired;
     }
@@ -40,14 +40,14 @@ namespace OpcUa
     {
       if ( error || HasExpired() )
       {
-        std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl;
+        if (Debug) { std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
 
       std::vector<PublishResult> results = PopPublishResult();
       if (results.size() > 0 )
       {
-        std::cout << "Seems like subscription has a result, calling callback" << std::endl;
+        if (Debug) { std::cout << "Seems like subscription has a result, calling callback" << std::endl; }
         if ( Callback )
         {
           Callback(results[0]);
@@ -78,6 +78,19 @@ namespace OpcUa
       }
           
       // FIXME: parse events and statuschange notification since they can be send in same result
+      if ( EventTriggered.size() > 0 )
+      {
+        if (Debug) { std::cout << "Subscription " << Data.ID << " has " << EventTriggered.size() << " events to send to client" << std::endl; }
+        EventNotificationList notif;
+        for ( EventFieldList ef: EventTriggered )
+        {
+          notif.Events.push_back(ef);
+        }
+        EventTriggered.clear();
+        NotificationData data(notif);
+        result.Message.Data.push_back(data);
+        result.Statuses.push_back(StatusCode::Good);
+      }
       
       if ( (! Startup ) && result.Statuses.size() == 0 && (  Data.RevizedMaxKeepAliveCount > KeepAliveCount ) ) 
       {
@@ -93,7 +106,7 @@ namespace OpcUa
         result.AvailableSequenceNumber.push_back(res.Message.SequenceID);
       }
       NotAcknowledgedResults.push_back(result);
-      std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl;
+      if (Debug) { std::cout << "Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl; }
       std::vector<PublishResult> resultlist;
       resultlist.push_back(result);
 
@@ -148,7 +161,7 @@ namespace OpcUa
       std::map<IntegerID, DataMonitoredItems>::iterator mii_it =  MonitoredItemsMap.find( monitoreditemid );
       if  (mii_it == MonitoredItemsMap.end() ) 
       {
-        std::cout << "monitoreditem is deleted" << std::endl;
+        if (Debug) { std::cout << "monitoreditem is deleted" << std::endl; }
         return false;
       }
           
@@ -156,7 +169,7 @@ namespace OpcUa
       //FIXME: Here we should also check event agains WhereClause of filter
       EventFieldList fieldlist;
       fieldlist.ClientHandle = mii_it->second.ClientHandle; 
-      fieldlist.EventFields = GetEventFields(mii_it->second.Parameters. Filter.Event, event);
+      fieldlist.EventFields = GetEventFields(mii_it->second.Parameters.Filter.Event, event);
       EventTriggered.push_back(fieldlist);
       return true;
     }
@@ -165,15 +178,57 @@ namespace OpcUa
     {
       //Go through filter and add value og matches as in spec
       std::vector<Variant> fields;
+      std::cout << "GetEventField " << filter.SelectClauses.size() << std::endl;
       for (SimpleAttributeOperand sattr : filter.SelectClauses)
       {
+        std::cout << "BrowsePAth size " << sattr.BrowsePath.size() << std::endl;
         if ( sattr.BrowsePath.size() == 0 )
         {
           fields.push_back(event.GetValue(sattr.Attribute));
         }
         else
         {
-          fields.push_back(event.GetValue(sattr.BrowsePath));
+          std::cout << "sending value for : " << sattr.BrowsePath[0] << std::endl;
+          if ( sattr.BrowsePath[0] == QualifiedName("EventID", 0) )
+          {
+            fields.push_back(event.EventId);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("EventType", 0) )
+          {
+            fields.push_back(event.EventType);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("SourceNode", 0) )
+          {
+            fields.push_back(event.SourceNode);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("SourceName", 0) )
+          {
+            fields.push_back(event.SourceName);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("Message", 0) )
+          {
+            fields.push_back(event.Message);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("Severity", 0) )
+          {
+            fields.push_back(event.Severity);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("LocalTime", 0) )
+          {
+            fields.push_back(event.LocalTime);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
+          {
+            fields.push_back(event.ReceiveTime);
+          }
+          else if ( sattr.BrowsePath[0] == QualifiedName("Time", 0) )
+          {
+            fields.push_back(event.Time);
+          }
+          else
+          {
+            fields.push_back(event.GetValue(sattr.BrowsePath));
+          }
         }
       }
       return fields;
@@ -183,20 +238,21 @@ namespace OpcUa
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      CreateMonitoredItemsResult res;
-      res.Status = OpcUa::StatusCode::Good;
-      res.MonitoredItemID = ++LastMonitoredItemID ;
-      res.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
-      res.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
+      CreateMonitoredItemsResult result;
+      result.Status = OpcUa::StatusCode::Good;
+      result.MonitoredItemID = ++LastMonitoredItemID ;
+      result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
+      result.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
+      result.Filter = request.Parameters.Filter;
       //res.FilterResult = //We can omit that one if we do not change anything in filter
       DataMonitoredItems mdata;
       mdata.SubscriptionID = Data.ID;
-      mdata.Parameters = res;
+      mdata.Parameters = result;
       mdata.Mode = request.Mode;
       mdata.ClientHandle = request.Parameters.ClientHandle;
-      MonitoredItemsMap[res.MonitoredItemID] = mdata;
+      MonitoredItemsMap[result.MonitoredItemID] = mdata;
 
-      return res;
+      return result;
     }
 
 
@@ -213,7 +269,7 @@ namespace OpcUa
 
       event.ClientHandle = it_monitoreditem->second.ClientHandle; 
       event.Value = value;
-      std::cout << "Enqueued DataChange triggered item for sub: " << Data.ID << " and clienthandle: " << event.ClientHandle << std::endl;
+      if (Debug) { std::cout << "Enqueued DataChange triggered item for sub: " << Data.ID << " and clienthandle: " << event.ClientHandle << std::endl; }
       MonitoredItemsTriggered.push_back(event);
       return true;
     }

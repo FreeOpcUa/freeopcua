@@ -115,6 +115,20 @@ namespace OpcUa
     return GetNode(ObjectID::ObjectsFolder);
   }
 
+  Node OPCUAServer::GetServerNode()
+  {
+    return GetNode(ObjectID::Server);
+  }
+
+  void OPCUAServer::EnableEventNotification()
+  {
+    Node server = GetServerNode();
+    uint8_t notifierval = 0;
+    notifierval |= EventNotifier::SubscribeToEvents; 
+
+    server.SetAttribute(AttributeID::EVENT_NOTIFIER, notifierval);
+  }
+
   std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(uint period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;

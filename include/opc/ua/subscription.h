@@ -20,6 +20,7 @@
 #pragma once
 
 #include <opc/ua/node.h>
+#include <opc/ua/event.h>
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/services/subscriptions.h>
 
@@ -34,8 +35,9 @@ namespace OpcUa
   struct MonitoredItemData
   {
     IntegerID MonitoredItemID;
-    Node Node;
+    Node TargetNode;
     AttributeID Attribute;
+    MonitoringFilter Filter;
   };
 
   typedef std::map<IntegerID, MonitoredItemData> AttValMap;
@@ -48,9 +50,9 @@ namespace OpcUa
       virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const {std::cout << "default dc" << std::endl;};
       //Called for every events receive from server
       // order and value of variants depend on event subscription and applied filter
-      virtual void Event(uint32_t handle, std::vector<Variant> xx) const {}; 
+      virtual void Event(uint32_t handle, Event event) const {}; 
       //Called at server state changed
-      virtual void StatusChange(StatusCode newstatus) const  {}; 
+      virtual void StatusChange(StatusCode status) const  {}; 
   };
 
 

@@ -661,11 +661,20 @@ namespace OpcUa
           return;
         }
 
+        case CALL_REQUEST:
+        {
+          std::stringstream ss;
+          ss << "opc_tcp_processor| ERROR: Call Request not implemented";
+          return;
+        }
+
         default:
         {
           std::stringstream ss;
-          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved.";
-          throw std::logic_error(ss.str());
+          ss << std::endl << std::endl ;
+          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved." << std::endl;
+          ss << std::endl << std::endl;
+          //throw std::logic_error(ss.str());
         }
       }
     }

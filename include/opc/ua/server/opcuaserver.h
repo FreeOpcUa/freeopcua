@@ -30,6 +30,7 @@ namespace OpcUa
       void SetServerName(const std::string& name){this->Name = name;}
       void AddAddressSpace(const std::string& path) {xml_address_spaces.push_back(path);}
       void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
+      void EnableEventNotification();
 
       void Start();
       void Stop();
@@ -37,6 +38,7 @@ namespace OpcUa
       //Node GetNode(std::vector<std::string> browsepath);
       Node GetRootNode();
       Node GetObjectsNode();
+      Node GetServerNode();
       Node GetNode(const NodeID& nodeid);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}

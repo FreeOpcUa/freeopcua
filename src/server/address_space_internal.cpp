@@ -240,6 +240,8 @@ namespace OpcUa
 
       virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> results;
         for (const auto& item : items)
         {
@@ -264,6 +266,7 @@ namespace OpcUa
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
         if (Debug) std::cout << "Browsing." << std::endl;
         std::vector<ReferenceDescription> result;
         for ( BrowseDescription browseDescription: query.NodesToBrowse)
@@ -320,6 +323,7 @@ namespace OpcUa
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> statuses;
         for (WriteValue value : values)
         {
@@ -355,6 +359,8 @@ namespace OpcUa
 
       void TriggerEvent(NodeID node, Event event)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         //find node
         NodesMap::iterator it = Nodes.find(node);
         if ( it == Nodes.end() )
@@ -367,7 +373,7 @@ namespace OpcUa
           AttributesMap::iterator ait = it->second.Attributes.find(AttributeID::EVENT_NOTIFIER);
           if ( ait == it->second.Attributes.end() )
           {
-            std::cout << "attempt o trigger node which has not event_notifier attribute, should raise exception\n";
+            std::cout << "Attempt to trigger event for node " << it->first << " which has no event_notifier attribute. This should raise exception" << std::endl;;
           }
           else
           {
@@ -377,7 +383,6 @@ namespace OpcUa
       }
 
     private:
-
 
       void EnqueueEvent(AttributeValue& attval, const Event& event)
       {
@@ -389,10 +394,13 @@ namespace OpcUa
           {
             attsub = attval.AttSubscriptions.erase(attsub);
           }
-          bool res = itsub->second->EnqueueEvent(attsub->MonitoredItemId, event);
-          if ( ! res )
+          else
           {
-            attsub = attval.AttSubscriptions.erase(attsub);
+            bool res = itsub->second->EnqueueEvent(attsub->MonitoredItemId, event);
+            if ( ! res )
+            {
+              attsub = attval.AttSubscriptions.erase(attsub);
+            }
           }
           ++attsub;
         }
@@ -463,7 +471,7 @@ namespace OpcUa
           return res;
         }
       
-        std::cout << "creating monitored item with sub: " << subscription_it->first << std::endl;
+        std::cout << "creating monitored item using subscription: " << subscription_it->first << std::endl;
         CreateMonitoredItemsResult res = subscription_it->second->AddMonitoredItem(request);
 
         AttSubscription attsub;

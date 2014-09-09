@@ -63,11 +63,26 @@ int main(int argc, char** argv)
   */
   uint32_t counter = 0;
   myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
+
+  //Create event
+  server.EnableEventNotification();
+  Event ev(ObjectID::BaseEventType); //you should create your own type
+  ev.Message = LocalizedText("This is my message");
+  ev.Severity = 2;
+  ev.SourceNode = ObjectID::Server;
+  //AttributeID::1 what is it?
+
+  //uint8_t v = 1;
+  //server.GetServerNode().SetAttribute(AttributeID::EVENT_NOTIFIER, v);
+
+
   std::cout << "Ctrl-C to exit" << std::endl;
   for(;;)
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
+    ev.SetValue(AttributeID::VALUE, ++counter);
+    server.TriggerEvent(ev);
   }
 
   server.Stop();

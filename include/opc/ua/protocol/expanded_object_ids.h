@@ -27,8 +27,8 @@ namespace OpcUa
     ViewAttribute = 375,
  
     DataChangeNotification = 811,
-    EventNotificationList = 812,
-    StatusChangeNotification = 813,
+    EventNotificationList = 916, //812,
+    StatusChangeNotification = 820,
 
     DataChangeFilter = 724,
     EventFilter = 727,
