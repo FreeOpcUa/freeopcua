@@ -48,8 +48,8 @@ namespace OpcUa
       , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
+      , SessionID(GenerateSessionId())
     {
-      SessionID = NumericNodeID(5, 0);
       std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
       std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
     }
@@ -121,13 +121,14 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
+      std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
       PublishResponse response;
       FillResponseHeader(requestData.requestHeader, response.Header);
       response.Result = publishResult;
-      
+     
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
       SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -136,10 +137,6 @@ namespace OpcUa
       secureHeader.AddSize(RawSize(response));
       if (Debug) {
         std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
-        for  ( NotificationData d: response.Result.Message.Data )
-        {
-          std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
-        }
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };
@@ -502,7 +499,16 @@ namespace OpcUa
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ this->ForwardPublishResponse(i); });
+          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ 
+              try
+              {
+                this->ForwardPublishResponse(i); 
+              }
+              catch (std::exception& ex)
+              {
+                std::cerr << "Error forwarding publishResult to client: " << ex.what() << std::endl;
+              }
+              });
 
           Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
 
