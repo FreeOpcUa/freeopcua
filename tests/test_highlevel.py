@@ -165,6 +165,9 @@ class CommonTests(object):
         sub.delete()
 
     def test_subscription_data_change(self):
+        """
+        test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
+        """
 
         class MySubClient(opcua.SubscriptionClient):
             def setup(self, condition):

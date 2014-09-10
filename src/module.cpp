@@ -1063,6 +1063,7 @@ std::string parse_python_exception(){
       using RemoteClient::RemoteClient;
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
+      PyNode PyGetServerNode() { return PyNode(Server, OpcUa::ObjectID::Server); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
       PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
@@ -1077,7 +1078,7 @@ std::string parse_python_exception(){
       using OPCUAServer::OPCUAServer;
       PyNode PyGetRootNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder); }
-      //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
+      PyNode PyGetServerNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::Server); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
       PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
@@ -1369,6 +1370,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("disconnect", &PyClient::Disconnect)
           .def("get_root_node", &PyClient::PyGetRootNode)
           .def("get_objects_node", &PyClient::PyGetObjectsNode)
+          .def("get_server_node", &PyClient::PyGetServerNode)
           .def("get_node", &PyClient::PyGetNode)
           .def("set_endpoint", &PyClient::SetEndpoint)
           .def("get_endpoint", &PyClient::GetEndpoint)
@@ -1387,6 +1389,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("stop", &PyOPCUAServer::Stop)
           .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
           .def("get_objects_node", &PyOPCUAServer::PyGetObjectsNode)
+          .def("get_server_node", &PyOPCUAServer::PyGetServerNode)
           .def("get_node", &PyOPCUAServer::PyGetNode)
           //.def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
           //.def("get_node_from_qn_path", NodeFromPathQN)

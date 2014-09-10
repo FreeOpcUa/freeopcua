@@ -6,12 +6,12 @@ from IPython import embed
 import opcua
 
 class SubClient(opcua.SubscriptionClient):
-    #def data_change(self, handle, node, val, attr):
-        #print("New data change event", handle, node, val, attr)
+    def data_change(self, handle, node, val, attr):
+        print("New data change event", handle, node, val, attr)
 
 
 if __name__ == "__main__":
-    server = opcua.Server(True)
+    server = opcua.Server(False)
     server.set_endpoint("opc.tcp://localhost:4841")
     #s.add_xml_address_space("standard_address_space.xml")
     #s.add_xml_address_space("user_address_space.xml")
