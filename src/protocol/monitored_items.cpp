@@ -40,6 +40,7 @@ namespace OpcUa
     , MonitoredItemID(1) // 0 is not allowed for integerID
     , RevisedSamplingInterval(0)
     , RevizedQueueSize(0)
+    , Filter()
   {
   }
 

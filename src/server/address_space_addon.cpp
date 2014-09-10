@@ -123,7 +123,7 @@ namespace OpcUa
       return Registry->CreateMonitoredItems(parameters);
     }
 
-    std::vector<StatusCode> AddressSpaceAddon::DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+    std::vector<StatusCode> AddressSpaceAddon::DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
     {
       return Registry->DeleteMonitoredItems(params);
     }

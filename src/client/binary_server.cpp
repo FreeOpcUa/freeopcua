@@ -125,12 +125,12 @@ namespace
         {
           if (Debug)  { std::cout << "CallbackThread | waiting for nest post" << std::endl; }
           std::unique_lock<std::mutex> lock(Mutex);
-          Condition.wait(lock, [&]() { return (StopRequest == true) || (Queue.size() > 0) ;} );
+          Condition.wait(lock, [&]() { return (StopRequest == true) || ( ! Queue.empty() ) ;} );
           if (StopRequest)
           {
             return;
           }
-          while ( Queue.size() > 0 ) //to avoid crashing on spurious events
+          while ( ! Queue.empty() ) //to avoid crashing on spurious events
           {
             if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
             std::function<void()> callbackcopy = Queue.front();
@@ -425,7 +425,7 @@ namespace
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
     {
       DeleteMonitoredItemsRequest request;
       request.Parameters = params;

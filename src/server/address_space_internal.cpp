@@ -204,7 +204,7 @@ namespace OpcUa
      
       }
 
-      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 

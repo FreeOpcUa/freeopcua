@@ -774,10 +774,8 @@ namespace OpcUa
   {
   }
 
-  Variant::Variant(const Variant& var)
+  Variant::Variant(const Variant& var) : Type(var.Type), Dimensions(var.Dimensions)
   {
-    Type = var.Type;
-    Dimensions = var.Dimensions;
     _array = var.IsArray();
     CopyValue(Type, var.Value, this->Value);
   }

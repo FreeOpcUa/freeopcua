@@ -124,7 +124,7 @@ namespace
       return MonitoredItemsData();
     }
 
-    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
     {
       return std::vector<StatusCode>();
     }

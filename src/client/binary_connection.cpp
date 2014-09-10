@@ -59,7 +59,7 @@ namespace
   class BinaryConnection : public OpcUa::RemoteConnection
   {
   public:
-    BinaryConnection(int sock, const std::string host, unsigned short port)
+    BinaryConnection(int sock, const std::string& host, unsigned short port)
       : HostName(host)
       , Port(port)
       , Channel(sock)

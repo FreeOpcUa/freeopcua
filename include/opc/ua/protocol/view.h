@@ -103,7 +103,7 @@ namespace OpcUa
 
   struct BrowseResult
   {
-    OpcUa::StatusCode Status;
+    StatusCode Status;
     std::vector<uint8_t> ContinuationPoint;
     std::vector<ReferenceDescription> Referencies;
 

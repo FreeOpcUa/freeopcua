@@ -70,7 +70,7 @@ namespace OpcUa
       result.SubscriptionID = Data.ID;
       result.Message.PublishTime = CurrentDateTime();
 
-      if ( MonitoredItemsTriggered.size() > 0 )
+      if ( ! MonitoredItemsTriggered.empty() )
       {
         NotificationData data = GetNotificationData();
         result.Message.Data.push_back(data);
@@ -78,7 +78,7 @@ namespace OpcUa
       }
           
       // FIXME: parse events and statuschange notification since they can be send in same result
-      if ( EventTriggered.size() > 0 )
+      if ( ! EventTriggered.empty() )
       {
         if (Debug) { std::cout << "Subscription " << Data.ID << " has " << EventTriggered.size() << " events to send to client" << std::endl; }
         EventNotificationList notif;
