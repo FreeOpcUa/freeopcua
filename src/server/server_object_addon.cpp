@@ -17,45 +17,46 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#pragma once
+#include "server_object.h"
+#include "server_object_addon.h"
 
-#include <opc/ua/protocol/types.h>
-#include <opc/ua/protocol/view.h>
-#include <ostream>
+#include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/node.h>
+
+namespace
+{
+
+  class ServerObjectAddon : public Common::Addon
+  {
+  public:
+    void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters) override
+    {
+      OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+      OpcUa::Services::SharedPtr services = registry->GetServer();
+      Object.reset(new OpcUa::Server::ServerObject(services));
+    }
+
+    void Stop() override
+    {
+    }
+
+  private:
+    volatile bool Stopped = false;
+    OpcUa::Server::ServerObject::UniquePtr Object;
+  };
+
+} // namespace
+
 
 namespace OpcUa
 {
-
-  std::string ToString(const NodeID& id);
-  std::string ToString(const Guid& guid);
-  std::string ToString(const BrowseDirection& direction);
-
-  Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
+  namespace Server
   {
-    os << OpcUa::ToString(nodeid).c_str();
-    return os;
-  }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::QualifiedName& qn)
-  {
-     os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
-     return os;
-  }
+    Common::Addon::UniquePtr ServerObjectFactory::CreateAddon()
+    {
+      return Common::Addon::UniquePtr(new ServerObjectAddon());
+    }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
-  {
-     os << OpcUa::ToString(direction);
-     return os;
-  }
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
-  {
-     os << "{" << ToString(guid) << "}";
-     return os;
-  }
-}
-
+  } // namespace UaServer
+} // namespace OpcUa

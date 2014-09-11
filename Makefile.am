@@ -100,6 +100,10 @@ libopcuaserver_la_SOURCES = \
 	src/server/opcua_protocol.h \
 	src/server/opcua_protocol_addon.cpp \
 	src/server/opcuaserver.cpp \
+	src/server/server_object.cpp \
+	src/server/server_object.h \
+	src/server/server_object_addon.cpp \
+	src/server/server_object_addon.h \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
 	src/server/standard_namespace_addon.cpp \
@@ -149,6 +153,7 @@ test_opcuaserver_SOURCES = \
 	tests/server/common.h \
 	tests/server/endpoints_services_test.cpp \
 	tests/server/endpoints_services_test.h \
+	tests/server/model_ut.cpp \
 	tests/server/opcua_protocol_addon_test.cpp \
 	tests/server/opcua_protocol_addon_test.h \
 	tests/server/services_registry_test.h \
@@ -309,6 +314,10 @@ libopcuacore_la_SOURCES = \
                   src/core/common/object_id.cpp \
                   src/core/common/value.cpp \
                   src/core/event.cpp \
+                  src/core/model_node.cpp \
+                  src/core/model_object.cpp \
+                  src/core/model_object_type.cpp \
+                  src/core/model_server.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \

@@ -17,45 +17,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#pragma once
-
-#include <opc/ua/protocol/types.h>
-#include <opc/ua/protocol/view.h>
-#include <ostream>
+#include <opc/ua/model.h>
 
 namespace OpcUa
 {
-
-  std::string ToString(const NodeID& id);
-  std::string ToString(const Guid& guid);
-  std::string ToString(const BrowseDirection& direction);
-
-  Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
+  namespace Model
   {
-    os << OpcUa::ToString(nodeid).c_str();
-    return os;
-  }
+    Node::Node(NodeID id, Services::SharedPtr services)
+      : Id(id)
+      , Server(services)
+    {
+    }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::QualifiedName& qn)
-  {
-     os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
-     return os;
-  }
+    NodeID Node::GetID() const
+    {
+      return Id;
+    }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
-  {
-     os << OpcUa::ToString(direction);
-     return os;
-  }
+    QualifiedName Node::GetName() const
+    {
+      return QualifiedName();
+    }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
-  {
-     os << "{" << ToString(guid) << "}";
-     return os;
+    LocalizedText Node::GetDescription() const
+    {
+      return LocalizedText();
+    }
+
+    std::vector<Reference> Node::GetReferencies() const
+    {
+      return std::vector<Reference>();
+    }
+
   }
 }
-

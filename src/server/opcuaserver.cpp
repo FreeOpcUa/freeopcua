@@ -84,11 +84,6 @@ namespace OpcUa
     ListenThread.reset(new Common::Thread([this](){
           AsyncServer->Listen();
      }));
-
-
-    //TcpServer = UaServer::CreateTcpServer();
-    //Protocol = UaServer::CreateOpcUaProtocol(TcpServer, Debug);
-    //Protocol->StartEndpoints(Endpoints, Registry->GetServer());
   }
   
   Node OPCUAServer::GetNode(const NodeID& nodeid)

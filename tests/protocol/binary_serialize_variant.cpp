@@ -49,9 +49,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  Variant var;
-  var.Type = VariantType::BOOLEAN;
-  var.Value.Boolean = std::vector<bool>{true};
+  Variant var = true;
 
   GetStream() << var << flush;
 
@@ -71,9 +69,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_Array)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  Variant var;
-  var.Type = VariantType::BOOLEAN;
-  var.Value.Boolean = std::vector<bool>{true, true};
+  Variant var = std::vector<bool>{true, true};
 
   GetStream() << var << flush;
 
@@ -96,9 +92,7 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_DIMENSIONS)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  Variant var;
-  var.Type = VariantType::BOOLEAN;
-  var.Value.Boolean = std::vector<bool>{true};
+  Variant var = true;
   var.Dimensions.push_back(1);
 
   GetStream() << var << flush;
@@ -134,7 +128,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NUL)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type, VariantType::NUL);
+  ASSERT_EQ(var.Type(), VariantType::NUL);
   ASSERT_TRUE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
 }
@@ -156,9 +150,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(var.Value.Boolean.size(), 1);
-  ASSERT_EQ(var.Value.Boolean[0], true);
+  ASSERT_EQ(var.Type(), VariantType::BOOLEAN);
+  ASSERT_TRUE(var.As<bool>());
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
 }
@@ -182,10 +175,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_Array)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(var.Value.Boolean.size(), 2);
-  ASSERT_EQ(var.Value.Boolean[0], true);
-  ASSERT_EQ(var.Value.Boolean[1], true);
+  ASSERT_EQ(var.Type(), VariantType::BOOLEAN);
+  std::vector<bool> vals;
+  ASSERT_NO_THROW(vals = var.As<std::vector<bool>>());
+  ASSERT_EQ(vals.size(), 2);
+  ASSERT_EQ(vals[0], true);
+  ASSERT_EQ(vals[1], true);
   ASSERT_FALSE(var.IsNul());
   ASSERT_TRUE(var.IsArray());
 }
@@ -210,16 +205,15 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_DIMENSIONS)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(var.Value.Boolean.size(), 1);
-  ASSERT_EQ(var.Value.Boolean[0], true);
+  ASSERT_EQ(var.Type(), VariantType::BOOLEAN);
+  ASSERT_TRUE(var.As<bool>());
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
 }
 TEST(Variant, InitializeNUL)
 {
   const OpcUa::Variant var;
-  ASSERT_EQ(var.Type, OpcUa::VariantType::NUL);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::NUL);
   ASSERT_FALSE(var.IsArray());
   ASSERT_TRUE(var.IsNul());
 }
@@ -227,7 +221,7 @@ TEST(Variant, InitializeNUL)
 TEST(Variant, InitializeWithBoolValue)
 {
   const OpcUa::Variant var(true);
-  ASSERT_EQ(var.Type, OpcUa::VariantType::BOOLEAN);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::BOOLEAN);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
@@ -236,7 +230,7 @@ TEST(Variant, AssignBoolValue)
 {
   OpcUa::Variant var;
   var = true;
-  ASSERT_EQ(var.Type, OpcUa::VariantType::BOOLEAN);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::BOOLEAN);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
@@ -247,7 +241,7 @@ TEST(Variant, InitializeWithBoolVector)
 {
   const std::vector<bool> vec{true, false};
   const OpcUa::Variant var(vec);
-  ASSERT_EQ(var.Type, OpcUa::VariantType::BOOLEAN);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::BOOLEAN);
   ASSERT_TRUE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
@@ -255,7 +249,7 @@ TEST(Variant, InitializeWithBoolVector)
 TEST(Variant, InitializeWithString)
 {
   const OpcUa::Variant var(std::string("string"));
-  ASSERT_EQ(var.Type, OpcUa::VariantType::STRING);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::STRING);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
@@ -263,7 +257,7 @@ TEST(Variant, InitializeWithString)
 TEST(Variant, InitializeWithVariant)
 {
   const OpcUa::Variant var((uint32_t)OpcUa::NodeClass::Object);
-  ASSERT_EQ(var.Type, OpcUa::VariantType::UINT32);
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::UINT32);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }

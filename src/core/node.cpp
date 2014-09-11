@@ -132,11 +132,11 @@ namespace OpcUa
   {
     if ( force || BrowseName == QualifiedName() ){
       Variant var = GetAttribute(AttributeID::BROWSE_NAME);
-      if (var.Type != VariantType::QUALIFIED_NAME)
+      if (var.Type() != VariantType::QUALIFIED_NAME)
       {
         throw std::runtime_error("Could not retrieve browse name.");
       }
-      BrowseName = var.Value.Name.front();
+      BrowseName = var.As<QualifiedName>();
     }
     return BrowseName;
   }
@@ -304,7 +304,7 @@ namespace OpcUa
 
   Node Node::AddVariable(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
-    ObjectID datatype = VariantTypeToDataType(val.Type);
+    ObjectID datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;
@@ -354,7 +354,7 @@ namespace OpcUa
   Node Node::AddProperty(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
 
-    ObjectID datatype = VariantTypeToDataType(val.Type);
+    ObjectID datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;

@@ -14,12 +14,16 @@
 #include <opc/ua/protocol/datetime.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/status_codes.h>
+
+#include <boost/any.hpp>
 #include <string>
 
 #include <stdexcept>
 
+
 namespace OpcUa
 {
+
   enum class VariantType : uint8_t
   {
     NUL              = 0,
@@ -54,185 +58,6 @@ namespace OpcUa
   const uint8_t HAS_DIMENSIONS_MASK = 0x40;
   const uint8_t HAS_ARRAY_MASK = 0x80;
 
-
-  struct DataValue;
-  struct Variant;
-
-  struct VariantValue
-  {
-    std::vector<bool> Boolean;
-    std::vector<int8_t> SByte;
-    std::vector<uint8_t> Byte;
-    std::vector<int16_t> Int16;
-    std::vector<uint16_t> UInt16;
-    std::vector<int32_t> Int32;
-    std::vector<uint32_t> UInt32;
-    std::vector<int64_t> Int64;
-    std::vector<uint64_t> UInt64;
-    std::vector<float> Float;
-    std::vector<double> Double;
-    std::vector<StatusCode> Statuses;
-    std::vector<std::string> String;
-    std::vector<DateTime> Time;
-    std::vector<Guid> Guids;
-    std::vector<ByteString> ByteStrings;
-    std::vector<NodeID> Node;
-    std::vector<QualifiedName> Name;
-    std::vector<LocalizedText> Text;
-    std::vector<DataValue> Value;
-    std::vector<Variant> Variants;
-    std::vector<DiagnosticInfo> Diagnostic;
-
-    VariantType GetType() const;
-
-    VariantValue()
-    {
-    }
-
-    explicit VariantValue(bool val);
-    explicit VariantValue(int8_t val);
-    explicit VariantValue(uint8_t val);
-    explicit VariantValue(int16_t val);
-    explicit VariantValue(uint16_t val);
-    explicit VariantValue(int32_t val);
-    explicit VariantValue(uint32_t val);
-    explicit VariantValue(int64_t val);
-    explicit VariantValue(uint64_t val);
-    explicit VariantValue(float val);
-    explicit VariantValue(double val);
-    explicit VariantValue(StatusCode val);
-    explicit VariantValue(const std::string& val);
-    explicit VariantValue(const ByteString& val);
-    explicit VariantValue(const DateTime& val);
-    explicit VariantValue(const Guid& val);
-    explicit VariantValue(const NodeID& val);
-    explicit VariantValue(const QualifiedName& val);
-    explicit VariantValue(const LocalizedText& val);
-    explicit VariantValue(const DataValue& val);
-    explicit VariantValue(const DiagnosticInfo& val);
-
-    explicit VariantValue(const std::vector<bool>& val);
-    explicit VariantValue(const std::vector<int8_t>& val);
-    explicit VariantValue(const std::vector<uint8_t>& val);
-    explicit VariantValue(const std::vector<int16_t>& val);
-    explicit VariantValue(const std::vector<uint16_t>& val);
-    explicit VariantValue(const std::vector<int32_t>& val);
-    explicit VariantValue(const std::vector<uint32_t>& val);
-    explicit VariantValue(const std::vector<int64_t>& val);
-    explicit VariantValue(const std::vector<uint64_t>& val);
-    explicit VariantValue(const std::vector<float>& val);
-    explicit VariantValue(const std::vector<double>& val);
-    explicit VariantValue(const std::vector<StatusCode>& val);
-    explicit VariantValue(const std::vector<std::string>& val);
-    explicit VariantValue(const std::vector<ByteString>& val);
-    explicit VariantValue(const std::vector<DateTime>& val);
-    explicit VariantValue(const std::vector<Guid>& val);
-    explicit VariantValue(const std::vector<NodeID>& val);
-    explicit VariantValue(const std::vector<QualifiedName>& val);
-    explicit VariantValue(const std::vector<LocalizedText>& val);
-    explicit VariantValue(const std::vector<DataValue>& val);
-    explicit VariantValue(const std::vector<Variant>& val);
-    explicit VariantValue(const std::vector<DiagnosticInfo>& val);
-
-    VariantValue& operator= (bool val);
-    VariantValue& operator= (int8_t val);
-    VariantValue& operator= (uint8_t val);
-    VariantValue& operator= (int16_t val);
-    VariantValue& operator= (uint16_t val);
-    VariantValue& operator= (int32_t val);
-    VariantValue& operator= (uint32_t val);
-    VariantValue& operator= (int64_t val);
-    VariantValue& operator= (uint64_t val);
-    VariantValue& operator= (float val);
-    VariantValue& operator= (double val);
-    VariantValue& operator= (StatusCode val);
-    VariantValue& operator= (const std::string& val);
-    VariantValue& operator= (const ByteString& val);
-    VariantValue& operator= (const DateTime& val);
-    VariantValue& operator= (const Guid& val);
-    VariantValue& operator= (const NodeID& val);
-    VariantValue& operator= (const QualifiedName& val);
-    VariantValue& operator= (const LocalizedText& val);
-    VariantValue& operator= (const DataValue& val);
-    VariantValue& operator= (const Variant& val);
-    VariantValue& operator= (const DiagnosticInfo& val);
-
-    VariantValue& operator= (const std::vector<bool>& val);
-    VariantValue& operator= (const std::vector<int8_t>& val);
-    VariantValue& operator= (const std::vector<uint8_t>& val);
-    VariantValue& operator= (const std::vector<int16_t>& val);
-    VariantValue& operator= (const std::vector<uint16_t>& val);
-    VariantValue& operator= (const std::vector<int32_t>& val);
-    VariantValue& operator= (const std::vector<uint32_t>& val);
-    VariantValue& operator= (const std::vector<int64_t>& val);
-    VariantValue& operator= (const std::vector<uint64_t>& val);
-    VariantValue& operator= (const std::vector<float>& val);
-    VariantValue& operator= (const std::vector<double>& val);
-    VariantValue& operator= (const std::vector<StatusCode>& val);
-    VariantValue& operator= (const std::vector<std::string>& val);
-    VariantValue& operator= (const std::vector<DateTime>& val);
-    VariantValue& operator= (const std::vector<ByteString>& val);
-    VariantValue& operator= (const std::vector<Guid>& val);
-    VariantValue& operator= (const std::vector<NodeID>& val);
-    VariantValue& operator= (const std::vector<QualifiedName>& val);
-    VariantValue& operator= (const std::vector<LocalizedText>& val);
-    VariantValue& operator= (const std::vector<DataValue>& val);
-    VariantValue& operator= (const std::vector<Variant>& val);
-    VariantValue& operator= (const std::vector<DiagnosticInfo>& val);
-
-    bool operator== (bool val) const;
-    bool operator== (int8_t val) const;
-    bool operator== (uint8_t val) const;
-    bool operator== (int16_t val) const;
-    bool operator== (uint16_t val) const;
-    bool operator== (int32_t val) const;
-    bool operator== (uint32_t val) const;
-    bool operator== (int64_t val) const;
-    bool operator== (uint64_t val) const;
-    bool operator== (float val) const;
-    bool operator== (double val) const;
-    bool operator== (StatusCode val) const;
-    bool operator== (const std::string& val) const;
-    bool operator== (const DateTime& val) const;
-    bool operator== (const ByteString& val) const;
-    bool operator== (const Guid& val) const;
-    bool operator== (const NodeID& val) const;
-    bool operator== (const QualifiedName& val) const;
-    bool operator== (const LocalizedText& val) const;
-    bool operator== (const DataValue& val) const;
-    bool operator== (const Variant& val) const;
-    bool operator== (const DiagnosticInfo& val) const;
-    bool operator== (const std::vector<bool>& val) const;
-    bool operator== (const std::vector<int8_t>& val) const;
-    bool operator== (const std::vector<uint8_t>& val) const;
-    bool operator== (const std::vector<int16_t>& val) const;
-    bool operator== (const std::vector<uint16_t>& val) const;
-    bool operator== (const std::vector<int32_t>& val) const;
-    bool operator== (const std::vector<uint32_t>& val) const;
-    bool operator== (const std::vector<int64_t>& val) const;
-    bool operator== (const std::vector<uint64_t>& val) const;
-    bool operator== (const std::vector<float>& val) const;
-    bool operator== (const std::vector<double>& val) const;
-    bool operator== (const std::vector<StatusCode>& val) const;
-    bool operator== (const std::vector<std::string>& val) const;
-    bool operator== (const std::vector<ByteString>& val) const;
-    bool operator== (const std::vector<DateTime>& val) const;
-    bool operator== (const std::vector<Guid>& val) const;
-    bool operator== (const std::vector<NodeID>& val) const;
-    bool operator== (const std::vector<QualifiedName>& val) const;
-    bool operator== (const std::vector<LocalizedText>& val) const;
-    bool operator== (const std::vector<DataValue>& val) const;
-    bool operator== (const std::vector<Variant>& val) const;
-    bool operator== (const std::vector<DiagnosticInfo>& val) const;
-
-    bool operator== (const VariantValue& val) const;
-
-    template<typename T>
-    bool operator!= (const T& t) const
-    {
-      return !(*this == t);
-    }
-  };
 
   template<typename T>
   struct has_const_iterator
@@ -274,147 +99,268 @@ namespace OpcUa
   template<> 
     struct is_container_not_string<std::string> : std::integral_constant<bool, false> {};
 
-  struct Variant
+
+  class DataValue;
+
+
+  class Variant
   {
+    boost::any Value;
+
   public:
-    VariantValue Value;
-    VariantType Type;
+    Variant(){}
+
     std::vector<uint32_t> Dimensions;
 
-    Variant();
+    bool IsArray() const
+    {
+      const std::type_info& t = Value.type();
+      return
+      (t == typeid(std::vector<bool>))       ||
+      (t == typeid(std::vector<int8_t>))     ||
+      (t == typeid(std::vector<uint8_t>))    ||
+      (t == typeid(std::vector<int16_t>))    ||
+      (t == typeid(std::vector<uint16_t>))   ||
+      (t == typeid(std::vector<int32_t>))    ||
+      (t == typeid(std::vector<uint32_t>))   ||
+      (t == typeid(std::vector<int64_t>))    ||
+      (t == typeid(std::vector<uint64_t>))   ||
+      (t == typeid(std::vector<float>))      ||
+      (t == typeid(std::vector<double>))     ||
+      (t == typeid(std::vector<std::string>))||
+      (t == typeid(std::vector<DateTime>))   ||
+      (t == typeid(std::vector<Guid>))       ||
+      (t == typeid(std::vector<ByteString>)) ||
+      (t == typeid(std::vector<NodeID>))     ||
+      (t == typeid(std::vector<StatusCode>)) ||
+      (t == typeid(std::vector<LocalizedText>)) ||
+      (t == typeid(std::vector<QualifiedName>)) ||
+      (t == typeid(std::vector<DataValue>))  ||
+      (t == typeid(std::vector<Variant>))    ||
+      (t == typeid(std::vector<DiagnosticInfo>));
+    }
 
-    void setArray(bool val) {_array = val;};
+    bool IsScalar() const
+    {
+      return !IsArray();
+    }
 
-    bool IsArray() const;
-
-    bool IsNul() const;
+    bool IsNul() const
+    {
+      return Value.empty();
+    }
 
     template <typename T>
     Variant& operator=(const T& value)
     {
-      Value = VariantValue(value);
-      Type = Value.GetType();
-      if ( is_container_not_string< T >::value ){ _array = true;}
-      return *this;
+      Value = value;
     }
 
     template <typename T>
     bool operator==(const T& value) const
     {
-      return Value == value;
+      return boost::any_cast<T>(Value) == value;
     }
 
     template <typename T>
     Variant(const T& value)
+      : Value(value)
     {
-      Value = VariantValue(value);
-      Type = Value.GetType();
-      if ( is_container_not_string< T >::value ) { _array = true;}
     }
 
-    Variant(const Variant& var);
-    Variant& operator= (const Variant& variant);
+    Variant(const Variant& var)
+      : Value(var.Value)
+    {
+    }
+
+    Variant& operator= (const Variant& variant)
+    {
+      this->Value = variant.Value;
+      return *this;
+    }
 
     bool operator== (const Variant& var) const;
 
     template <typename T>
-    bool operator!= (T&& t) const
+    bool operator!= (const T& t) const
     {
       return !(*this == t);
     }
 
-  private:
-    bool _array = false;
-  };
-
-
-  class VariantVisitor
-  {
-  public:
     template <typename T>
-    void Visit(std::vector<T>& values)
+    T As() const
     {
+      return boost::any_cast<T>(Value);
     }
 
-    template <typename T>
-    void Visit(const std::vector<T>& values)
+    VariantType Type() const
     {
+      if (Value.empty())
+        return VariantType::NUL;
+
+      const std::type_info& t = Value.type();
+      if (t == typeid(bool) || t == typeid(std::vector<bool>))
+        return VariantType::BOOLEAN;
+      else if (t == typeid(int8_t) || t == typeid(std::vector<int8_t>))
+        return VariantType::SBYTE;
+      else if (t == typeid(uint8_t) || t == typeid(std::vector<uint8_t>))
+        return VariantType::BYTE;
+      else if (t == typeid(int16_t) || t == typeid(std::vector<int16_t>))
+        return VariantType::INT16;
+      else if (t == typeid(uint16_t) || t == typeid(std::vector<uint16_t>))
+        return VariantType::UINT16;
+      else if (t == typeid(int32_t) || t == typeid(std::vector<int32_t>))
+        return VariantType::INT32;
+      else if (t == typeid(uint32_t) || t == typeid(std::vector<uint32_t>))
+        return VariantType::UINT32;
+      else if (t == typeid(int64_t) || t == typeid(std::vector<int64_t>))
+        return VariantType::INT64;
+      else if (t == typeid(uint64_t) || t == typeid(std::vector<uint64_t>))
+        return VariantType::UINT64;
+      else if (t == typeid(float) || t == typeid(std::vector<float>))
+        return VariantType::FLOAT;
+      else if (t == typeid(double) || t == typeid(std::vector<double>))
+        return VariantType::DOUBLE;
+      else if (t == typeid(std::string) || t == typeid(std::vector<std::string>))
+        return VariantType::STRING;
+      else if (t == typeid(DateTime) || t == typeid(std::vector<DateTime>))
+        return VariantType::DATE_TIME;
+      else if (t == typeid(Guid) || t == typeid(std::vector<Guid>))
+        return VariantType::GUID;
+      else if (t == typeid(ByteString) || t == typeid(std::vector<ByteString>))
+        return VariantType::BYTE_STRING;
+      else if (t == typeid(NodeID) || t == typeid(std::vector<NodeID>))
+        return VariantType::NODE_ID;
+      else if (t == typeid(StatusCode) || t == typeid(std::vector<StatusCode>))
+        return VariantType::STATUS_CODE;
+      else if (t == typeid(LocalizedText) || t == typeid(std::vector<LocalizedText>))
+        return VariantType::LOCALIZED_TEXT;
+      else if (t == typeid(QualifiedName) || t == typeid(std::vector<QualifiedName>))
+        return VariantType::QUALIFIED_NAME;
+/*
+      else if (t == typeid(DataValue) || t == typeid(std::vector<DataValue>))
+        return VariantType::DATA_VALUE;
+*/
+      else if (t == typeid(Variant) || t == typeid(std::vector<Variant>))
+        return VariantType::VARIANT;
+      else if (t == typeid(DiagnosticInfo) || t == typeid(std::vector<DiagnosticInfo>))
+        return VariantType::DIAGNOSTIC_INFO;
+
+      throw std::runtime_error("Unknown variant type.");
+    }
+
+
+    template <typename VisitorType>
+    typename VisitorType::result_type Visit(VisitorType visitor) const
+    {
+      using namespace boost;
+      const std::type_info& t = Value.type();
+      if (t == typeid(bool))
+        return visitor(any_cast<bool>(Value));
+      if (t == typeid(std::vector<bool>))
+        return visitor(any_cast<std::vector<bool>>(Value));
+      if (t == typeid(int8_t))
+        return visitor(any_cast<int8_t>(Value));
+      if (t == typeid(std::vector<int8_t>))
+        return visitor(any_cast<std::vector<int8_t>>(Value));
+      if (t == typeid(uint8_t))
+        return visitor(any_cast<uint8_t>(Value));
+      if (t == typeid(std::vector<uint8_t>))
+        return visitor(any_cast<std::vector<uint8_t>>(Value));
+      if (t == typeid(int16_t))
+        return visitor(any_cast<int16_t>(Value));
+      if (t == typeid(std::vector<int16_t>))
+        return visitor(any_cast<std::vector<int16_t>>(Value));
+      if (t == typeid(uint16_t))
+        return visitor(any_cast<uint16_t>(Value));
+      if (t == typeid(std::vector<uint16_t>))
+        return visitor(any_cast<std::vector<uint16_t>>(Value));
+
+      if (t == typeid(int32_t))
+        return visitor(any_cast<int32_t>(Value));
+      if (t == typeid(std::vector<int32_t>))
+        return visitor(any_cast<std::vector<int32_t>>(Value));
+      if (t == typeid(uint32_t))
+        return visitor(any_cast<uint32_t>(Value));
+      if (t == typeid(std::vector<uint32_t>))
+        return visitor(any_cast<std::vector<uint32_t>>(Value));
+      if (t == typeid(int64_t))
+        return visitor(any_cast<int64_t>(Value));
+      if (t == typeid(std::vector<int64_t>))
+        return visitor(any_cast<std::vector<int64_t>>(Value));
+      if (t == typeid(uint64_t))
+        return visitor(any_cast<uint64_t>(Value));
+      if (t == typeid(std::vector<uint64_t>))
+        return visitor(any_cast<std::vector<uint64_t>>(Value));
+
+      if (t == typeid(float))
+        return visitor(any_cast<float>(Value));
+      if (t == typeid(std::vector<float>))
+        return visitor(any_cast<std::vector<float>>(Value));
+
+      if (t == typeid(double))
+        return visitor(any_cast<double>(Value));
+      if (t == typeid(std::vector<double>))
+        return visitor(any_cast<std::vector<double>>(Value));
+
+      if (t == typeid(std::string))
+        return visitor(any_cast<std::string>(Value));
+      if (t == typeid(std::vector<std::string>))
+        return visitor(any_cast<std::vector<std::string>>(Value));
+
+      if (t == typeid(DateTime))
+        return visitor(any_cast<DateTime>(Value));
+      if (t == typeid(std::vector<DateTime>))
+        return visitor(any_cast<std::vector<DateTime>>(Value));
+
+      if (t == typeid(Guid))
+        return visitor(any_cast<Guid>(Value));
+      if (t == typeid(std::vector<Guid>))
+        return visitor(any_cast<std::vector<Guid>>(Value));
+
+      if (t == typeid(ByteString))
+        return visitor(any_cast<ByteString>(Value));
+      if (t == typeid(std::vector<ByteString>))
+        return visitor(any_cast<std::vector<ByteString>>(Value));
+
+      if (t == typeid(NodeID))
+        return visitor(any_cast<NodeID>(Value));
+      if (t == typeid(std::vector<NodeID>))
+        return visitor(any_cast<std::vector<NodeID>>(Value));
+
+      if (t == typeid(StatusCode))
+        return visitor(any_cast<StatusCode>(Value));
+      if (t == typeid(std::vector<StatusCode>))
+        return visitor(any_cast<std::vector<StatusCode>>(Value));
+
+      if (t == typeid(LocalizedText))
+        return visitor(any_cast<LocalizedText>(Value));
+      if (t == typeid(std::vector<LocalizedText>))
+        return visitor(any_cast<std::vector<LocalizedText>>(Value));
+
+      if (t == typeid(QualifiedName))
+        return visitor(any_cast<QualifiedName>(Value));
+      if (t == typeid(std::vector<QualifiedName>))
+        return visitor(any_cast<std::vector<QualifiedName>>(Value));
+
+      if (t == typeid(DataValue))
+        return visitor(any_cast<DataValue>(Value));
+      if (t == typeid(std::vector<DataValue>))
+        return visitor(any_cast<std::vector<DataValue>>(Value));
+
+      if (t == typeid(Variant))
+        return visitor(any_cast<Variant>(Value));
+      if (t == typeid(std::vector<Variant>))
+        return visitor(any_cast<std::vector<Variant>>(Value));
+
+      if (t == typeid(DiagnosticInfo))
+        return visitor(any_cast<DiagnosticInfo>(Value));
+      if (t == typeid(std::vector<DiagnosticInfo>))
+        return visitor(any_cast<std::vector<DiagnosticInfo>>(Value));
+
+      throw std::logic_error("Unknown variant type.");
     }
   };
-
-  template <typename VisitorType>
-  void ApplyVisitor(Variant& var, VisitorType& visitor)
-  {
-    switch (var.Type)
-    {
-      case VariantType::BOOLEAN:          visitor.Visit(var.Value.Boolean); break;
-      case VariantType::SBYTE:            visitor.Visit(var.Value.SByte); break;
-      case VariantType::BYTE:             visitor.Visit(var.Value.Byte); break;
-      case VariantType::INT16:            visitor.Visit(var.Value.Int16); break;
-      case VariantType::UINT16:           visitor.Visit(var.Value.UInt16); break;
-      case VariantType::INT32:            visitor.Visit(var.Value.Int32); break;
-      case VariantType::UINT32:           visitor.Visit(var.Value.UInt32); break;
-      case VariantType::INT64:            visitor.Visit(var.Value.Int64); break;
-      case VariantType::UINT64:           visitor.Visit(var.Value.UInt64); break;
-      case VariantType::FLOAT:            visitor.Visit(var.Value.Float); break;
-      case VariantType::DOUBLE:           visitor.Visit(var.Value.Double); break;
-      case VariantType::STRING:           visitor.Visit(var.Value.String); break;
-      case VariantType::DATE_TIME:        visitor.Visit(var.Value.Time); break;
-      case VariantType::GUID:             visitor.Visit(var.Value.Guids); break;
-      case VariantType::BYTE_STRING:      visitor.Visit(var.Value.ByteStrings); break;
-      case VariantType::XML_ELEMENT:      visitor.Visit(var.Value.String); break;
-      case VariantType::NODE_ID:          visitor.Visit(var.Value.Node); break;
-      case VariantType::EXPANDED_NODE_ID: visitor.Visit(var.Value.Node); break;
-      case VariantType::STATUS_CODE:      visitor.Visit(var.Value.Statuses); break;
-      case VariantType::QUALIFIED_NAME:   visitor.Visit(var.Value.Name); break;
-      case VariantType::LOCALIZED_TEXT:   visitor.Visit(var.Value.Text); break;
-      case VariantType::DIAGNOSTIC_INFO:  visitor.Visit(var.Value.Diagnostic); break;
-      case VariantType::VARIANT:          visitor.Visit(var.Value.Variants); break;
-      case VariantType::DATA_VALUE:       visitor.Visit(var.Value.Value); break;
-      case VariantType::NUL:
-      case VariantType::EXTENSION_OBJECT:
-        break;
-      default:
-        throw std::logic_error("Unknown variant type.");
-    }
-  }
-
-  template <typename VisitorType>
-  void ApplyVisitor(const Variant& var, VisitorType& visitor)
-  {
-    switch (var.Type)
-    {
-      case VariantType::BOOLEAN:          visitor.Visit(var.Value.Boolean); break;
-      case VariantType::SBYTE:            visitor.Visit(var.Value.SByte); break;
-      case VariantType::BYTE:             visitor.Visit(var.Value.Byte); break;
-      case VariantType::INT16:            visitor.Visit(var.Value.Int16); break;
-      case VariantType::UINT16:           visitor.Visit(var.Value.UInt16); break;
-      case VariantType::INT32:            visitor.Visit(var.Value.Int32); break;
-      case VariantType::UINT32:           visitor.Visit(var.Value.UInt32); break;
-      case VariantType::INT64:            visitor.Visit(var.Value.Int64); break;
-      case VariantType::UINT64:           visitor.Visit(var.Value.UInt64); break;
-      case VariantType::FLOAT:            visitor.Visit(var.Value.Float); break;
-      case VariantType::DOUBLE:           visitor.Visit(var.Value.Double); break;
-      case VariantType::STRING:           visitor.Visit(var.Value.String); break;
-      case VariantType::DATE_TIME:        visitor.Visit(var.Value.Time); break;
-      case VariantType::GUID:             visitor.Visit(var.Value.Guids); break;
-      case VariantType::BYTE_STRING:      visitor.Visit(var.Value.ByteStrings); break;
-      case VariantType::XML_ELEMENT:      visitor.Visit(var.Value.String); break;
-      case VariantType::NODE_ID:          visitor.Visit(var.Value.Node); break;
-      case VariantType::EXPANDED_NODE_ID: visitor.Visit(var.Value.Node); break;
-      case VariantType::STATUS_CODE:      visitor.Visit(var.Value.Statuses); break;
-      case VariantType::QUALIFIED_NAME:   visitor.Visit(var.Value.Name); break;
-      case VariantType::LOCALIZED_TEXT:   visitor.Visit(var.Value.Text); break;
-      case VariantType::DIAGNOSTIC_INFO:  visitor.Visit(var.Value.Diagnostic); break;
-      case VariantType::VARIANT:          visitor.Visit(var.Value.Variants); break;
-      case VariantType::DATA_VALUE:       visitor.Visit(var.Value.Value); break;
-      case VariantType::NUL:
-      case VariantType::EXTENSION_OBJECT:
-        break;
-      default:
-        throw std::logic_error("Unknown variant type.");
-    }
-  }
 
 } // namespace OpcUa
 

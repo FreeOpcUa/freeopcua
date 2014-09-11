@@ -49,10 +49,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Value)
 
   DataValue data;
   data.Encoding = DATA_VALUE;
-
-  Variant var;
-  data.Value.Type = VariantType::BOOLEAN;
-  data.Value.Value.Boolean = std::vector<bool>{true};
+  data.Value = true;
 
   GetStream() << data << flush;
 
@@ -82,11 +79,7 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
 
   DataValue data;
   data.Encoding = encodingMask;
-
-  Variant var;
-  data.Value.Type = VariantType::BOOLEAN;
-  data.Value.Value.Boolean = std::vector<bool>{true};
-
+  data.Value = true;
   data.Status = static_cast<StatusCode>(1);
   data.SourceTimestamp.Value = 2;
   data.SourcePicoseconds = 3;
@@ -201,12 +194,12 @@ TEST(DataValue, ConstructivbeFromDataValue)
   DataValue data;
   data = node;
   ASSERT_TRUE(data.Encoding && DATA_VALUE);
-  ASSERT_TRUE(data.Value.Type == VariantType::NODE_ID);
+  ASSERT_TRUE(data.Value.Type() == VariantType::NODE_ID);
 
   DataValue newValue(data);
   ASSERT_TRUE(newValue.Encoding && DATA_VALUE);
-  ASSERT_EQ(newValue.Value.Type, VariantType::NODE_ID);
-  ASSERT_EQ(newValue.Value.Value.Node.size(), 1);
+  ASSERT_EQ(newValue.Value.Type(), VariantType::NODE_ID);
+  ASSERT_NO_THROW(newValue.Value.As<NodeID>());
 }
 
 TEST(DataValue, ComparableByValue)

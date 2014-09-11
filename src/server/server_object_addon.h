@@ -19,43 +19,19 @@
 
 #pragma once
 
-#include <opc/ua/protocol/types.h>
-#include <opc/ua/protocol/view.h>
-#include <ostream>
+#include <opc/common/addons_core/addon.h>
 
 namespace OpcUa
 {
-
-  std::string ToString(const NodeID& id);
-  std::string ToString(const Guid& guid);
-  std::string ToString(const BrowseDirection& direction);
-
-  Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
+  namespace Server
   {
-    os << OpcUa::ToString(nodeid).c_str();
-    return os;
-  }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::QualifiedName& qn)
-  {
-     os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
-     return os;
-  }
+    class ServerObjectFactory : public Common::AddonFactory
+    {
+    public:
+      /// @brief Create instance of addon.
+      Common::Addon::UniquePtr CreateAddon() override;
+    };
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
-  {
-     os << OpcUa::ToString(direction);
-     return os;
-  }
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
-  {
-     os << "{" << ToString(guid) << "}";
-     return os;
   }
 }
-

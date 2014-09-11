@@ -17,45 +17,58 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#pragma once
 
-#include <opc/ua/protocol/types.h>
-#include <opc/ua/protocol/view.h>
-#include <ostream>
+#include <opc/ua/model.h>
 
-namespace OpcUa
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/protocol/object_ids.h>
+#include <opc/ua/protocol/attribute_ids.h>
+#include <opc/ua/protocol/status_codes.h>
+#include <opc/ua/services/services.h>
+#include <opc/ua/server/address_space.h>
+#include <opc/ua/server/standard_namespace.h>
+
+#include "address_space_registry_test.h"
+#include "services_registry_test.h"
+#include "standard_namespace_test.h"
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+using namespace testing;
+
+class Model : public Test
 {
-
-  std::string ToString(const NodeID& id);
-  std::string ToString(const Guid& guid);
-  std::string ToString(const BrowseDirection& direction);
-
-  Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
-
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
+protected:
+  virtual void SetUp()
   {
-    os << OpcUa::ToString(nodeid).c_str();
-    return os;
+    const bool debug = false;
+    Addons = Common::CreateAddonsManager();
+
+    OpcUa::Test::RegisterServicesRegistry(*Addons);
+    OpcUa::Test::RegisterAddressSpace(*Addons);
+    OpcUa::Test::RegisterStandardNamespace(*Addons);
+    Addons->Start();
+
+    OpcUa::Server::ServicesRegistry::SharedPtr addon = Addons->GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+    Services = addon->GetServer();
   }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::QualifiedName& qn)
+  virtual void TearDown()
   {
-     os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
-     return os;
+    Services.reset();
+    Addons->Stop();
+    Addons.reset();
   }
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
-  {
-     os << OpcUa::ToString(direction);
-     return os;
-  }
+protected:
+  Common::AddonsManager::UniquePtr Addons;
+  OpcUa::Services::SharedPtr Services;
+};
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
-  {
-     os << "{" << ToString(guid) << "}";
-     return os;
-  }
+TEST_F(Model, CanRestoreObjectStructure)
+{
+  OpcUa::Model::ObjectType serverType(OpcUa::ObjectID::ServerType, Services);
+  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
+  OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType);
 }
-

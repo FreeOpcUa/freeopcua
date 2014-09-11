@@ -357,8 +357,7 @@ TEST_F(OpcUaBinarySerialization, WriteValue)
   value.Node.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DISPLAY_NAME;
   value.Data.Encoding = DATA_VALUE;
-  value.Data.Value.Type = VariantType::BOOLEAN;
-  value.Data.Value.Value.Boolean = std::vector<bool>{true};
+  value.Data.Value = true;
  
   GetStream() << value << flush;
 
@@ -395,9 +394,8 @@ TEST_F(OpcUaBinaryDeserialization, WriteValue)
   ASSERT_EQ(value.Node.FourByteData.Identifier, 1);
   ASSERT_EQ(value.Attribute, AttributeID::DISPLAY_NAME);
   ASSERT_EQ(value.Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(value.Data.Value.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(value.Data.Value.Value.Boolean.size(), 1);
-  ASSERT_EQ(value.Data.Value.Value.Boolean[0], true);
+  ASSERT_EQ(value.Data.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(value.Data.Value.As<bool>(), true);
 }
 
 
@@ -424,8 +422,7 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   value.Node.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DISPLAY_NAME;
   value.Data.Encoding = DATA_VALUE;
-  value.Data.Value.Type = VariantType::BOOLEAN;
-  value.Data.Value.Value.Boolean = std::vector<bool>{true};
+  value.Data.Value = true;
 
   request.Parameters.NodesToWrite.push_back(value);
 
@@ -485,9 +482,8 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DISPLAY_NAME);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean.size(), 1);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean[0], true);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.As<bool>(), true);
 }
 
 //-------------------------------------------------------

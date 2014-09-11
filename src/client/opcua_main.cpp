@@ -374,57 +374,74 @@ namespace
     }
   }
 
+
+  struct VariantPrint
+  {
+    typedef void result_type;
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& vals)
+    {
+      for (auto val : vals) std::cout << val << " ";
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == false>::type operator()(const T& val)
+    {
+      std::cout << val;
+    }
+
+    void operator()(char val)
+    {
+      std::cout << val;
+    }
+  };
+
   void Print(const OpcUa::Variant& var, const Tabs& tabs)
   {
-    switch (var.Type)
+    VariantPrint printer;
+
+    switch (var.Type())
     {
       case VariantType::BOOLEAN:
       {
         std::cout << tabs << "boolean: ";
-        for (auto val : var.Value.Boolean) std::cout << val << " ";
         break;
       }
       case VariantType::SBYTE:
       {
         std::cout << tabs << "signed byte: ";
-        for (auto val : var.Value.SByte) std::cout << (int)val << " ";
         break;
       }
       case VariantType::BYTE:
       {
         std::cout << tabs << "byte: ";
-        for (auto val : var.Value.Byte) std::cout << (unsigned)val << " ";
         break;
       }
       case VariantType::INT16:
       {
         std::cout << tabs << "int16: ";
-        for (auto val : var.Value.Int16) std::cout << val << " ";
         break;
       }
       case VariantType::UINT16:
       {
         std::cout << tabs << "unsigned int16: ";
-        for (auto val : var.Value.UInt16) std::cout << val << " ";
         break;
       }
       case VariantType::INT32:
       {
         std::cout << tabs << "int32: ";
-        for (auto val : var.Value.Int32) std::cout << val << " ";
         break;
       }
       case VariantType::UINT32:
       {
         std::cout << tabs << "unsigned int32: ";
-        for (auto val : var.Value.UInt32) std::cout << val << " ";
         break;
       }
 
       case VariantType::INT64:
       {
         std::cout << tabs << "int64: ";
-        for (auto val : var.Value.Int64) std::cout << val << " ";
         break;
       }
 
@@ -432,7 +449,6 @@ namespace
       case VariantType::UINT64:
       {
         std::cout << tabs << "unsigned int64: ";
-        for (auto val : var.Value.UInt64) std::cout << val << " ";
         break;
       }
 
@@ -440,7 +456,6 @@ namespace
       case VariantType::FLOAT:
       {
         std::cout << tabs << "float: ";
-        for (auto val : var.Value.Float) std::cout << val << " ";
         break;
       }
 
@@ -448,7 +463,6 @@ namespace
       case VariantType::DOUBLE:
       {
         std::cout << tabs << "double: ";
-        for (auto val : var.Value.Double) std::cout << val << " ";
         break;
       }
 
@@ -456,7 +470,6 @@ namespace
       case VariantType::STRING:
       {
         std::cout << tabs << "string: ";
-        for (auto val : var.Value.String) std::cout << val << " ";
         break;
       }
 
@@ -465,21 +478,18 @@ namespace
       case VariantType::NODE_ID:
       {
         std::cout << tabs << "NodeID: " << std::endl;
-        for (auto val : var.Value.Node) Print(val, Tabs(tabs.Num + 2));
         break;
       }
 
       case VariantType::QUALIFIED_NAME:
       {
         std::cout << tabs << "Name: ";
-        for (auto val : var.Value.Name) std::cout << val.NamespaceIndex << ":" << val.Name << " ";
         break;
       }
 
       case VariantType::LOCALIZED_TEXT:
       {
         std::cout << tabs << "Text: ";
-        for (auto val : var.Value.Text) std::cout << val.Locale << ":" << val.Text << " ";
         break;
       }
 
@@ -498,7 +508,9 @@ namespace
       default:
         throw std::logic_error("Unknown variant type.");
     }
-   std::cout << std::endl;
+    std::cout << "TODO: !!!! REFACTORED!!!!" << std::endl;
+//    var.Visit(printer); //TODO
+    std::cout << std::endl;
   }
 
   void Print(const DataValue& value, const Tabs& tabs)

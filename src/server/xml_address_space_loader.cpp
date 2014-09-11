@@ -694,7 +694,7 @@ namespace
       {
         return ObjectID::Null;
       }
-      return ConvertToObjectID(attrPos->second.Type);
+      return ConvertToObjectID(attrPos->second.Type());
     }
 
   private:

@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Test
   {
 
-    void RegisterStandardNamespace(Common::AddonsManager& addons)
+    inline void RegisterStandardNamespace(Common::AddonsManager& addons)
     {
       Common::AddonInformation config;
       config.Factory.reset(new OpcUa::Server::StandardNamespaceAddonFactory());
