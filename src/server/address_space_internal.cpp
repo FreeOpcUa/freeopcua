@@ -310,13 +310,14 @@ namespace OpcUa
         std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node); 
         if ( queue_it == PublishRequestQueues.end() )
         {
-          std::cout << "Error request for publish queue for unknown sessino" << node << std::endl;
+          std::cout << "Error request for publish queue for unknown session" << node << std::endl;
           return false;
         }
         else
         {
           if ( queue_it->second == 0 )
           {
+            std::cout << "Missing publish request, cannot send response for session: " << node << std::endl;
             return false;
           }
           else

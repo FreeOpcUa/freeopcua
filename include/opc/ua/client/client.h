@@ -39,7 +39,7 @@ namespace OpcUa
   class RemoteClient
   {
   public:
-    RemoteClient(bool debug=false) :Debug(debug) {}
+    RemoteClient(bool debug=false) : Debug(debug) {}
     explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug) {}
     ~RemoteClient() {}
 

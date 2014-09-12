@@ -128,6 +128,7 @@ namespace OpcUa
       }
       std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
       std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
+      std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
@@ -603,6 +604,7 @@ namespace OpcUa
           PublishRequestElement data;
           data.sequence = sequence;
           data.algorithmHeader = algorithmHeader;
+          data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
           Server->Subscriptions()->Publish(request);
 

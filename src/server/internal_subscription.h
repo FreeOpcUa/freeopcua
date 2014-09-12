@@ -50,7 +50,8 @@ namespace OpcUa
         void Stop();
 
       private:
-        std::vector<PublishResult> PopPublishResult(); //FIXME: To move to private
+        std::vector<PublishResult> PopPublishResult(); 
+        bool HasPublishResult(); 
 
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;

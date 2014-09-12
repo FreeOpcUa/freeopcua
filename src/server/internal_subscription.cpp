@@ -45,7 +45,7 @@ namespace OpcUa
         if (Debug) { std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
-      if ( AddressSpace.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
+      if ( HasPublishResult() && AddressSpace.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
       {
 
         std::vector<PublishResult> results = PopPublishResult();
@@ -64,6 +64,23 @@ namespace OpcUa
       }
       timer.expires_at(timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
       timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+    }
+
+    bool InternalSubscription::HasPublishResult()
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+      
+      if ( Startup || ! MonitoredItemsTriggered.empty() || ! EventTriggered.empty() ) 
+      {
+        return true;
+      }
+      if ( Data.RevizedMaxKeepAliveCount > KeepAliveCount ) //we need to send keepalive notification
+      {
+        ++KeepAliveCount;
+        return true;
+      }
+      return false;
+
     }
 
     std::vector<PublishResult> InternalSubscription::PopPublishResult()
@@ -97,12 +114,9 @@ namespace OpcUa
         result.Statuses.push_back(StatusCode::Good);
       }
       
-      if ( (! Startup ) && result.Statuses.size() == 0 && (  Data.RevizedMaxKeepAliveCount > KeepAliveCount ) ) 
-      {
-        ++KeepAliveCount;
-        return  std::vector<PublishResult>(); //No event and we do not need to send keepalive notification yet so return empty list
-      }
       KeepAliveCount = 0;
+      Startup = false;
+
       result.Message.SequenceID = NotificationSequence;
       ++NotificationSequence;
       result.MoreNotifications = false;
@@ -115,10 +129,6 @@ namespace OpcUa
       std::vector<PublishResult> resultlist;
       resultlist.push_back(result);
 
-      if ( Startup )
-      {
-        Startup = false;
-      }
       return resultlist;
     };
 
