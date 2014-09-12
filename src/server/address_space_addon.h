@@ -53,9 +53,9 @@ namespace OpcUa
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
     public: // SubscriptionServices
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0); 
+      virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callback=0); 
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions);
-      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements);
+      virtual void Publish(const PublishRequest& request);
 
     public: // MonitoredItemsServices
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);

@@ -29,10 +29,12 @@ namespace OpcUa
   Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
     : Server(server), Client(callback), Debug(debug)
   {
-    Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );
+    CreateSubscriptionRequest request;
+    request.Parameters = params;
+    Data = Server->Subscriptions()->CreateSubscription(request, [&](PublishResult i){ this->PublishCallback(i); } );
     //After creating the subscription, it is expected to send at least one publish request
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
+    Server->Subscriptions()->Publish(PublishRequest());
+    Server->Subscriptions()->Publish(PublishRequest());
   }
 
   void Subscription::Delete()
@@ -113,7 +115,9 @@ namespace OpcUa
     OpcUa::SubscriptionAcknowledgement ack;
     ack.SubscriptionID = GetId();
     ack.SequenceNumber = result.Message.SequenceID;
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({ack}));
+    PublishRequest request;
+    request.Parameters.Acknowledgements.push_back(ack);
+    Server->Subscriptions()->Publish(request);
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)

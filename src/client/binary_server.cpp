@@ -33,6 +33,8 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
+  typedef std::map<IntegerID, std::function<void (PublishResult)>> SubscriptionCallbackMap;
+
   class BufferInputChannel : public OpcUa::InputChannel
   {
   public:
@@ -400,12 +402,10 @@ namespace
       return shared_from_this();
     }
 
-    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
+    virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
     {
-      PublishCallback = callback;// TODO Pass calback to the Publish method.
-      CreateSubscriptionRequest request;
-      request.Parameters = parameters;
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
+      PublishCallbacks[response.Data.ID] = callback;// TODO Pass calback to the Publish method.
       return response.Data;
     }
 
@@ -433,18 +433,17 @@ namespace
       return response.Results;
     }
 
-    virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    virtual void Publish(const PublishRequest& originalrequest)
     {
-      PublishRequest request;
+      PublishRequest request(originalrequest); //Should parameter not be const?
       request.Header = CreateRequestHeader();
-      request.Parameters.Acknowledgements = acknowledgements;
 
       ResponseCallback responseCallback = [this](std::vector<char> buffer){
         BufferInputChannel bufferInput(buffer);
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
-        CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
+        CallbackService.post([this, response]() { this->PublishCallbacks[response.Result.SubscriptionID](response.Result);});
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       if (Debug) {std::cout << "Sending publish request with " << request.Parameters.Acknowledgements.size() << " acks" << std::endl;}
@@ -638,7 +637,7 @@ private:
     Remote::SecureConnectionParams Params;
     std::thread ReceiveThread;
 
-    std::function<void (PublishResult)> PublishCallback;
+    SubscriptionCallbackMap PublishCallbacks;
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
     mutable uint32_t RequestNumber;

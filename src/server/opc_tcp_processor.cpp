@@ -116,18 +116,25 @@ namespace OpcUa
       return true;
     }
 
-    void OpcTcpMessages::ForwardPublishResponse(const PublishResult publishResult)
+    void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
+      if ( PublishRequestQueue.empty() )
+      {
+        std::cerr << "Error trying to send publish response while we do not have data from a PublishRequest" << std::endl;
+        return;
+      }
       std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
+      std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
       PublishResponse response;
+
       FillResponseHeader(requestData.requestHeader, response.Header);
-      response.Result = publishResult;
+      response.Result = result;
      
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
@@ -493,13 +500,14 @@ namespace OpcUa
         case CREATE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing create subscription request." << std::endl;
-          SubscriptionParameters params;
-          istream >> params;
+          CreateSubscriptionRequest request;
+          istream >> request.Parameters;
+          request.Header = requestHeader;
 
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ 
+          response.Data = Server->Subscriptions()->CreateSubscription(request, [this](PublishResult i){ 
               try
               {
                 this->ForwardPublishResponse(i); 
@@ -588,14 +596,15 @@ namespace OpcUa
         case PUBLISH_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl;
-          PublishParameters params;
-          istream >> params;
+          PublishRequest request;
+          request.Header = requestHeader;
+          istream >> request.Parameters;
+
           PublishRequestElement data;
           data.sequence = sequence;
           data.algorithmHeader = algorithmHeader;
-          data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
-          Server->Subscriptions()->Publish(params.Acknowledgements);
+          Server->Subscriptions()->Publish(request);
 
           --SequenceNb; //We do not send response, so do not increase sequence
 

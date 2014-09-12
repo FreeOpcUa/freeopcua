@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "address_space_internal.h"
+
 #include <opc/ua/event.h>
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
@@ -30,11 +32,13 @@ namespace OpcUa
       IntegerID ClientHandle;
     };
 
+    class AddressSpaceInMemory; //pre-declaration
+
     
     class InternalSubscription
     {
       public:
-        InternalSubscription(SubscriptionData data, boost::asio::io_service& serverio, std::function<void (PublishResult)> Callback);
+        InternalSubscription(const SubscriptionData& data, const NodeID& SessionAuthenticationToken, AddressSpaceInMemory& AddressSpace, std::function<void (PublishResult)> Callback);
         ~InternalSubscription();
 
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
@@ -50,6 +54,8 @@ namespace OpcUa
 
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
+        AddressSpaceInMemory& AddressSpace;
+        NodeID CurrentSession;
         std::function<void (PublishResult)> Callback;
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
         uint32_t KeepAliveCount = 0; 

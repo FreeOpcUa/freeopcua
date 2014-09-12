@@ -549,14 +549,14 @@ namespace
 
   void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)
   {
-    OpcUa::SubscriptionParameters params;
-    params.MaxNotificationsPerPublish = 1;
-    params.Priority = 0;
-    params.PublishingEnabled = false;
-    params.RequestedLifetimeCount = 1;
-    params.RequestedMaxKeepAliveCount = 1;
-    params.RequestedPublishingInterval = 1000;
-    const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(params);
+    OpcUa::CreateSubscriptionRequest request;
+    request.Parameters.MaxNotificationsPerPublish = 1;
+    request.Parameters.Priority = 0;
+    request.Parameters.PublishingEnabled = false;
+    request.Parameters.RequestedLifetimeCount = 1;
+    request.Parameters.RequestedMaxKeepAliveCount = 1;
+    request.Parameters.RequestedPublishingInterval = 1000;
+    const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request);
     std::cout << "ID: " << data.ID << std::endl;
     std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
     std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;

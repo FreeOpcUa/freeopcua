@@ -6,10 +6,12 @@ namespace OpcUa
   namespace Internal
   {
 
-    InternalSubscription::InternalSubscription(SubscriptionData data, boost::asio::io_service& serverio, std::function<void (PublishResult)> callback)
+    InternalSubscription::InternalSubscription(const SubscriptionData& data, const NodeID& SessionAuthenticationToken, AddressSpaceInMemory& addressSpace, std::function<void (PublishResult)> callback)
       : Data(data)
+        , AddressSpace(addressSpace)
+        , CurrentSession(SessionAuthenticationToken)
         , Callback(callback)
-        , io(serverio)
+        , io(addressSpace.GetIOService())
         , timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
         , LifeTimeCount(data.RevisedLifetimeCount)
     {
@@ -43,19 +45,22 @@ namespace OpcUa
         if (Debug) { std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
-
-      std::vector<PublishResult> results = PopPublishResult();
-      if (results.size() > 0 )
+      if ( AddressSpace.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
       {
-        if (Debug) { std::cout << "Seems like subscription has a result, calling callback" << std::endl; }
-        if ( Callback )
+
+        std::vector<PublishResult> results = PopPublishResult();
+        if (results.size() > 0 )
         {
-          Callback(results[0]);
-        }
-        else
-        {
-          std::cout << "No callback defined for this subscription" << std::endl;
-        }
+          if (Debug) { std::cout << "Seems like subscription has a result, calling callback" << std::endl; }
+          if ( Callback )
+          {
+            Callback(results[0]);
+          }
+          else
+          {
+            std::cout << "No callback defined for this subscription" << std::endl;
+          }
+         }
       }
       timer.expires_at(timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
       timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });

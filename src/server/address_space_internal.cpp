@@ -8,29 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "address_space_addon.h"
-#include "internal_subscription.h"
-
-#include <opc/ua/event.h>
-#include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/subscriptions.h>
-#include <opc/ua/protocol/strings.h>
-#include <opc/ua/protocol/string_utils.h>
-#include <opc/ua/protocol/view.h>
-#include <opc/ua/services/attributes.h>
-#include <opc/ua/services/node_management.h>
-
-#include <boost/asio.hpp>
-#include <boost/thread/shared_mutex.hpp>
-#include <ctime>
-#include <limits>
-#include <list>
-#include <map>
-#include <queue>
-#include <deque>
-#include <set>
-#include <thread>
-
+#include "address_space_internal.h"
 
 
 namespace OpcUa
@@ -40,40 +18,7 @@ namespace OpcUa
 
     using namespace OpcUa::Remote;
 
-    typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
-    
-    //store subscription for one attribute
-    struct AttSubscription
-    {
-      IntegerID SubscriptionId;
-      IntegerID MonitoredItemId;
-      MonitoringParameters Parameters;
-    };
-
-    //Store an attribute value together with a link to all its suscriptions
-    struct AttributeValue
-    {
-      DataValue Value;
-      std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
-    };
-
-    typedef std::map<AttributeID, AttributeValue> AttributesMap;
-    
-    //Store all data related to a Node
-    struct NodeStruct
-    {
-      AttributesMap Attributes;
-      std::vector<ReferenceDescription> References;
-    };
-
-    typedef std::map<NodeID, NodeStruct> NodesMap;
-
-
-
-    class AddressSpaceInMemory : public UaServer::AddressSpace
-    {
-    public:
-      AddressSpaceInMemory(bool debug)
+    AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
         : Debug(debug), work(new boost::asio::io_service::work(io))
       {
         //Initialize the worker thread for subscriptions
@@ -92,7 +37,7 @@ namespace OpcUa
         AddNode(rootNode);
       }
 
-     ~AddressSpaceInMemory()
+    AddressSpaceInMemory::~AddressSpaceInMemory()
       {
         if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
         io.stop();
@@ -100,8 +45,12 @@ namespace OpcUa
         service_thread.join();
       }
 
+      boost::asio::io_service& AddressSpaceInMemory::GetIOService() 
+      {
+        return io;
+      }
 
-      void DeleteAllSubscriptions()
+      void AddressSpaceInMemory::DeleteAllSubscriptions()
       {
         if (Debug) std::cout << "Deleting all subscriptions." << std::endl;
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
@@ -112,7 +61,7 @@ namespace OpcUa
       }
 
   /*    
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+      std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -139,7 +88,7 @@ namespace OpcUa
       
  */     
 
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+      std::vector<StatusCode> AddressSpaceInMemory::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -161,23 +110,23 @@ namespace OpcUa
         return result;
       }
 
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params, std::function<void (PublishResult)> callback)
+      SubscriptionData AddressSpaceInMemory::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
         SubscriptionData data;
         data.ID = ++LastSubscriptionID;
-        data.RevisedLifetimeCount = params.RequestedLifetimeCount;
-        data.RevisedPublishingInterval = params.RequestedPublishingInterval;
-        data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
+        data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
+        data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
+        data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
         std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
 
-        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(data, io, callback));
+        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(data, request.Header.SessionAuthenticationToken, *this, callback));
         SubscriptionsMap[data.ID] = sub;
         return data;
       }
 
-      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params)
+      MonitoredItemsData AddressSpaceInMemory::CreateMonitoredItems(const MonitoredItemsParameters& params)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -204,7 +153,7 @@ namespace OpcUa
      
       }
 
-      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
+      std::vector<StatusCode> AddressSpaceInMemory::DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -226,7 +175,7 @@ namespace OpcUa
 
 
 
-      virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
+      std::vector<AddNodesResult> AddressSpaceInMemory::AddNodes(const std::vector<AddNodesItem>& items)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -238,7 +187,7 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
+      std::vector<StatusCode> AddressSpaceInMemory::AddReferences(const std::vector<AddReferencesItem>& items)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -250,7 +199,7 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+      std::vector<BrowsePathResult> AddressSpaceInMemory::TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -263,7 +212,7 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
+      std::vector<ReferenceDescription> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery& query) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -301,14 +250,14 @@ namespace OpcUa
         return result;
       }
 
-      virtual std::vector<ReferenceDescription> BrowseNext() const
+      std::vector<ReferenceDescription> AddressSpaceInMemory::BrowseNext() const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
         return std::vector<ReferenceDescription>();
       }
 
-      virtual std::vector<DataValue> Read(const ReadParameters& params) const
+      std::vector<DataValue> AddressSpaceInMemory::Read(const ReadParameters& params) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -320,7 +269,7 @@ namespace OpcUa
         return values;
       }
 
-      virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
+      std::vector<StatusCode> AddressSpaceInMemory::Write(const std::vector<OpcUa::WriteValue>& values)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -337,17 +286,16 @@ namespace OpcUa
         return statuses;
       }
 
-      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+      void AddressSpaceInMemory::Publish(const PublishRequest& request)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-        
-        if ( PublishRequestsQueue > 10000 ) //FIXME: It this number defined by spec?
+        if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
         {
-          return; //FIXME: spec says we should return error to warn client
+          PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
         }
-        ++ PublishRequestsQueue; 
+        //FIXME: else spec says we should return error to warn client
 
-        for (SubscriptionAcknowledgement ack: acknowledgements)
+        for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
         {
           SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
           if ( sub_it != SubscriptionsMap.end())
@@ -357,7 +305,29 @@ namespace OpcUa
         }
       }
 
-      void TriggerEvent(NodeID node, Event event)
+      bool AddressSpaceInMemory::PopPublishRequest(NodeID node)
+      {
+        std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node); 
+        if ( queue_it == PublishRequestQueues.end() )
+        {
+          std::cout << "Error request for publish queue for unknown sessino" << node << std::endl;
+          return false;
+        }
+        else
+        {
+          if ( queue_it->second == 0 )
+          {
+            return false;
+          }
+          else
+          {
+            --queue_it->second;
+            return true;
+          }
+        }
+      }
+
+      void AddressSpaceInMemory::TriggerEvent(NodeID node, Event event)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -382,9 +352,8 @@ namespace OpcUa
         }
       }
 
-    private:
 
-      void EnqueueEvent(AttributeValue& attval, const Event& event)
+      void AddressSpaceInMemory::EnqueueEvent(AttributeValue& attval, const Event& event)
       {
         //go through all subscription of attribute and add new event
         for (auto attsub = attval.AttSubscriptions.begin(); attsub != attval.AttSubscriptions.end() ;)
@@ -407,7 +376,7 @@ namespace OpcUa
       }
 
 
-      std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
+      std::tuple<bool, NodeID> AddressSpaceInMemory::FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(nodeid);
         if ( nodeit != Nodes.end() )
@@ -424,7 +393,7 @@ namespace OpcUa
         return std::make_tuple(false, NodeID());
       }
 
-      BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const
+      BrowsePathResult AddressSpaceInMemory::TranslateBrowsePath(const BrowsePath& browsepath) const
       {
         NodeID current = browsepath.StartingNode;
         BrowsePathResult result;
@@ -451,7 +420,7 @@ namespace OpcUa
       }
 
 
-      CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
+      CreateMonitoredItemsResult AddressSpaceInMemory::CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
       {
         NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
         if ( node_it == Nodes.end() )
@@ -483,7 +452,7 @@ namespace OpcUa
         return res;
       }
 
-      DataValue GetValue(const NodeID& node, AttributeID attribute) const
+      DataValue AddressSpaceInMemory::GetValue(const NodeID& node, AttributeID attribute) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(node);
         if ( nodeit != Nodes.end() )
@@ -500,7 +469,7 @@ namespace OpcUa
         return value;
       }
 
-      StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
+      StatusCode AddressSpaceInMemory::SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
       {
         NodesMap::iterator it = Nodes.find(node);
         if ( it != Nodes.end() )
@@ -508,7 +477,10 @@ namespace OpcUa
           AttributesMap::iterator ait = it->second.Attributes.find(attribute);
           if ( ait != it->second.Attributes.end() )
           {
-            ait->second.Value = data;
+            DataValue value(data);
+            value.ServerTimestamp = CurrentDateTime();
+            value.SourceTimestamp = CurrentDateTime(); //FIXME: should allow client to set this one
+            ait->second.Value = value;
             UpdateSubscriptions(ait->second);
             return StatusCode::Good;
           }
@@ -516,7 +488,7 @@ namespace OpcUa
         return StatusCode::BadAttributeIdInvalid;
       }
 
-      void UpdateSubscriptions(AttributeValue& val)
+      void AddressSpaceInMemory::UpdateSubscriptions(AttributeValue& val)
       {
         for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
         {
@@ -537,7 +509,7 @@ namespace OpcUa
         }
       }
 
-      bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
+      bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
       {
         if (Debug)
           std::cout << "Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
@@ -561,7 +533,7 @@ namespace OpcUa
         return true;
       }
 
-      bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const
+      bool AddressSpaceInMemory::IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const
       {
         if (!includeSubtypes)
         {
@@ -572,7 +544,7 @@ namespace OpcUa
         return resultIt != suitableTypes.end();
       }
 
-      std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
+      std::vector<NodeID> AddressSpaceInMemory::SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
       {
         std::vector<NodeID> subNodes;
         for ( NodeID nodeid: sourceNodes )
@@ -596,7 +568,7 @@ namespace OpcUa
         return sourceNodes;
       }
 
-      AddNodesResult AddNode( const AddNodesItem& item )
+      AddNodesResult AddressSpaceInMemory::AddNode( const AddNodesItem& item )
       {
         AddNodesResult result;
         if (Debug) std::cout << "address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
@@ -674,7 +646,7 @@ namespace OpcUa
         return result;
       }
 
-      StatusCode AddReference(const AddReferencesItem& item)
+      StatusCode AddressSpaceInMemory::AddReference(const AddReferencesItem& item)
       {
         NodesMap::iterator node_it = Nodes.find(item.SourceNodeID);
         if ( node_it == Nodes.end() )
@@ -694,18 +666,6 @@ namespace OpcUa
         return StatusCode::Good;
       }
 
-    private:
-      bool Debug = false;
-      mutable boost::shared_mutex DbMutex;
-      NodesMap Nodes;
-      SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
-      uint32_t LastSubscriptionID = 2;
-      uint32_t PublishRequestsQueue = 0;
-      boost::asio::io_service io;
-      std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
-      std::thread service_thread;
-
-    };
   }
 
   namespace UaServer
@@ -715,4 +675,6 @@ namespace OpcUa
       return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory(debug));
     }
   }
+
+
 }

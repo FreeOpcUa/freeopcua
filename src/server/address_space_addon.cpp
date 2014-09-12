@@ -108,9 +108,9 @@ namespace OpcUa
       return Registry->Write(filter);
     }
 
-    SubscriptionData AddressSpaceAddon::CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
+    SubscriptionData AddressSpaceAddon::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
     {
-      return Registry->CreateSubscription(parameters, callback);
+      return Registry->CreateSubscription(request, callback);
     }
 
     std::vector<StatusCode> AddressSpaceAddon::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
@@ -128,9 +128,9 @@ namespace OpcUa
       return Registry->DeleteMonitoredItems(params);
     }
 
-    void AddressSpaceAddon::Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    void AddressSpaceAddon::Publish(const PublishRequest& request)
     {
-      return Registry->Publish(acknowledgements);
+      return Registry->Publish(request);
     }
 
     void AddressSpaceAddon::TriggerEvent(NodeID node, Event event)

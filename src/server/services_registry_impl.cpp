@@ -109,7 +109,7 @@ namespace
       return std::vector<OpcUa::StatusCode>(filter.size(), StatusCode::BadNotImplemented);
     }
 
-    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0)
+    virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback=0)
     {
       return SubscriptionData();
     }
@@ -129,7 +129,7 @@ namespace
       return std::vector<StatusCode>();
     }
 
-    virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    virtual void Publish(const PublishRequest& request)
     {
     }
     
