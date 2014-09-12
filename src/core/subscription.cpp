@@ -51,7 +51,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); //To be finished
     //FIXME: finish to handle all types of publishresults!
 
-    if (Debug){ std::cout << "Suscription::PublishCallback called" << std::endl; }
+    if (Debug){ std::cout << "Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
     for (const NotificationData& data: result.Message.Data )
     {
       if (Debug) { std::cout << "Notification is of type DataChange\n"; }
@@ -76,8 +76,6 @@ namespace OpcUa
         if (Debug) { std::cout << "Notification is of type Event\n"; }
         for ( EventFieldList ef :  data.Events.Events)
         {
-
-
           AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {

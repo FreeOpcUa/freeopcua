@@ -74,11 +74,12 @@ namespace OpcUa
       {
         return true;
       }
-      if ( Data.RevizedMaxKeepAliveCount > KeepAliveCount ) //we need to send keepalive notification
+      if ( KeepAliveCount > Data.RevizedMaxKeepAliveCount ) //we need to send keepalive notification
       {
-        ++KeepAliveCount;
+        if (Debug) std::cout << "KeepAliveCount " << KeepAliveCount << " is > than MaxKeepAliveCount " <<  Data.RevizedMaxKeepAliveCount << " sending publish event" << std::endl; 
         return true;
       }
+      ++KeepAliveCount;
       return false;
 
     }
