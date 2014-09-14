@@ -19,9 +19,7 @@
 
 #include "server_object.h"
 
-#include <opc/ua/model.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/node.h>
 
 
 namespace OpcUa
@@ -30,51 +28,18 @@ namespace OpcUa
   {
 
     ServerObject::ServerObject(Services::SharedPtr services)
+      : Server(services)
+      , Instance(std::move(CreateServerObject(services)))
+    {
+    }
+
+    Model::Object ServerObject::CreateServerObject(const Services::SharedPtr& services) const
     {
       Model::Server server(services);
-      Model::Object root = server.RootObject();
+      Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
       Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
-      Model::Object serverObject = root.CreateObject(serverType);
-//      CreateServerObject(*services->NodeManagement());
+      return root.CreateObject(serverType, QualifiedName(OpcUa::Names::Server));
     }
 
-    void ServerObject::CreateServerObject(OpcUa::NodeManagementServices& services)
-    {
-      OpcUa::AddNodesItem serverNode;
-      serverNode.BrowseName = OpcUa::QualifiedName(OpcUa::Names::Server);
-      serverNode.Class = OpcUa::NodeClass::Object;
-      serverNode.ParentNodeId = OpcUa::ObjectID::ObjectsFolder;
-      serverNode.ReferenceTypeId = OpcUa::ObjectID::Organizes;
-      serverNode.TypeDefinition = OpcUa::ObjectID::ServerType;
-      OpcUa::ObjectAttributes attr;
-      attr.Description = OpcUa::LocalizedText(OpcUa::Names::Server);
-      attr.DisplayName = OpcUa::LocalizedText(OpcUa::Names::Server);
-      serverNode.Attributes = attr;
-      const std::vector<OpcUa::AddNodesResult>& results = services.AddNodes({serverNode});
-      if (results.size() != 1)
-      {
-        throw std::runtime_error("Address space error! Cannot add server object root node: returned wrong number of nodes.");
-      }
-      CheckStatusCode(results[0].Status);
-
-      ServerCapabilities(results[0].AddedNodeID, services);
-    }
-
-    void ServerObject::ServerCapabilities(const OpcUa::NodeID& parent, OpcUa::NodeManagementServices& services)
-    {
-      // Attributes
-      OpcUa::AddNodesItem node;
-      node.RequestedNewNodeID = OpcUa::ObjectID::ServerCapabilities;
-      node.BrowseName = OpcUa::QualifiedName(0, OpcUa::Names::ServerCapabilities);
-      node.Class = OpcUa::NodeClass::Object;
-      node.ParentNodeId = parent;
-      node.ReferenceTypeId = OpcUa::ReferenceID::HasComponent;
-      node.TypeDefinition = OpcUa::ObjectID::ServerCapabilitiesType;
-      OpcUa::ObjectAttributes attrs;
-      attrs.Description = OpcUa::LocalizedText(OpcUa::Names::ServerCapabilities);
-      attrs.DisplayName = OpcUa::LocalizedText(OpcUa::Names::ServerCapabilities);
-      node.Attributes = attrs;
-      services.AddNodes(std::vector<OpcUa::AddNodesItem>{node});
-    }
   } // namespace UaServer
 } // namespace OpcUa

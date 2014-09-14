@@ -627,15 +627,15 @@ namespace OpcUa
 
           nodestruct.Attributes.insert(std::make_pair(attr.first, attval));
         }
-        Nodes.insert(std::make_pair(item.RequestedNewNodeID, nodestruct));
 
+        Nodes.insert(std::make_pair(resultID, nodestruct));
 
         if (parent_node_it != Nodes.end())
         {
           // Link to parent
           ReferenceDescription desc;
           desc.ReferenceTypeID = item.ReferenceTypeId;
-          desc.TargetNodeID = item.RequestedNewNodeID;
+          desc.TargetNodeID = resultID;
           desc.TargetNodeClass = item.Class;
           desc.BrowseName = item.BrowseName;
           desc.DisplayName = LocalizedText(item.BrowseName.Name);
@@ -649,7 +649,7 @@ namespace OpcUa
         {
           // Link to parent
           AddReferencesItem typeRef;
-          typeRef.SourceNodeID = item.RequestedNewNodeID;
+          typeRef.SourceNodeID = resultID;
           typeRef.IsForward = true;
           typeRef.ReferenceTypeId = ObjectID::HasTypeDefinition;
           typeRef.TargetNodeID = item.TypeDefinition;
@@ -690,13 +690,16 @@ namespace OpcUa
           return OpcUa::NumericNodeID(++MaxNodeIDNum);
         }
 
-        const uint64_t number = id.GetIntegerIdentifier();
-        if (MaxNodeIDNum < number)
+        if (id.GetNamespaceIndex() == 0)
         {
-          MaxNodeIDNum = number;
+          const uint64_t number = id.GetIntegerIdentifier();
+          if (MaxNodeIDNum < number)
+          {
+            MaxNodeIDNum = number;
+          }
         }
 
-        return OpcUa::NumericNodeID(++MaxNodeIDNum);
+        return id;
       }
 
     private:

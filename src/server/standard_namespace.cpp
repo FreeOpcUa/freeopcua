@@ -2458,7 +2458,7 @@ namespace
         node.ParentNodeId = ObjectID::BaseObjectType;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
-        DataTypeAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.Description = LocalizedText(Names::ServerType);
         attrs.DisplayName = LocalizedText(Names::ServerType);
         attrs.IsAbstract = false;

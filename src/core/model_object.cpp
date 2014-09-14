@@ -24,9 +24,36 @@ namespace OpcUa
   namespace Model
   {
     Object::Object(NodeID objectId, Services::SharedPtr services)
-      : Node(objectId, services)
+      : Node(services)
     {
+      Id = objectId;
+      ReadParameters attrs;
+      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::DISPLAY_NAME));
+      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::BROWSE_NAME));
+      std::vector<DataValue> values = services->Attributes()->Read(attrs);
+      DisplayName = values[0].Value.As<LocalizedText>();
+      BrowseName = values[1].Value.As<QualifiedName>();
+    }
 
+    Object::Object(Object&& object)
+      : Node(std::move(object.OpcUaServices))
+    {
+      Id = std::move(object.Id);
+      DisplayName = std::move(object.DisplayName);
+      BrowseName = std::move(object.BrowseName);
+    }
+
+    Object::Object(const Object& object)
+      : Node(object.OpcUaServices)
+    {
+      Id = object.Id;
+      DisplayName = object.DisplayName;
+      BrowseName = object.BrowseName;
+    }
+
+    Object::Object(Services::SharedPtr services)
+      : Node(services)
+    {
     }
 
     ObjectType Object::GetType() const
@@ -36,7 +63,30 @@ namespace OpcUa
 
     std::vector<Variable> Object::GetVariables() const
     {
-      return std::vector<Variable>();
+      BrowseDescription desc;
+      desc.Direction = BrowseDirection::Forward;
+      desc.IncludeSubtypes = true;
+      desc.NodeClasses =   NODE_CLASS_VARIABLE;
+      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
+      desc.NodeToBrowse = GetID();
+      desc.ResultMask = 0;
+
+      NodesQuery query;
+      query.NodesToBrowse.push_back(desc);
+      Services::SharedPtr services = GetServices();
+      ViewServices::SharedPtr views = OpcUaServices->Views();
+      std::vector<ReferenceDescription> refs = views->Browse(query);
+
+      std::vector<Variable> vars;
+      std::for_each(refs.begin(), refs.end(), [&services, &vars](const ReferenceDescription& ref){
+        Variable var(services);
+        var.Id = ref.TargetNodeID;
+        var.BrowseName = ref.BrowseName;
+        var.DisplayName = ref.DisplayName;
+        vars.push_back(var);
+      });
+
+      return vars;
     }
 
     std::vector<Variable> Object::GetVariable(const QualifiedName& name) const
@@ -50,9 +100,32 @@ namespace OpcUa
     }
 
 
-    std::vector<Object> Object::Objects() const
+    std::vector<Object> Object::GetObjects() const
     {
-      return std::vector<Object>();
+      BrowseDescription desc;
+      desc.Direction = BrowseDirection::Forward;
+      desc.IncludeSubtypes = true;
+      desc.NodeClasses =   NODE_CLASS_OBJECT;
+      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
+      desc.NodeToBrowse = GetID();
+      desc.ResultMask = 0;
+
+      NodesQuery query;
+      query.NodesToBrowse.push_back(desc);
+      Services::SharedPtr services = GetServices();
+      ViewServices::SharedPtr views = OpcUaServices->Views();
+      std::vector<ReferenceDescription> refs = views->Browse(query);
+
+      std::vector<Object> objects;
+      std::for_each(refs.begin(), refs.end(), [&services, &objects](const ReferenceDescription& ref){
+        Object object(services);
+        object.Id = ref.TargetNodeID;
+        object.BrowseName = ref.BrowseName;
+        object.DisplayName = ref.DisplayName;
+        objects.push_back(object);
+      });
+
+      return objects;
     }
 
     Object Object::GetObject(const std::string& name) const
@@ -65,63 +138,211 @@ namespace OpcUa
       return Object(ObjectID::Null, GetServices());
     }
 
-    Object Object::CreateObject(const ObjectType& type)
+    Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName)
     {
-      // Reading attributes required for new object
-      AttributeServices::SharedPtr attributes = GetServices()->Attributes();
-      OpcUa::ReadParameters params;
-      params.AttributesToRead.push_back(AttributeValueID(type.GetID(), AttributeID::NODE_ID));
-      params.AttributesToRead.push_back(AttributeValueID(type.GetID(), AttributeID::BROWSE_NAME));
-      params.AttributesToRead.push_back(AttributeValueID(type.GetID(), AttributeID::DISPLAY_NAME));
-      params.AttributesToRead.push_back(AttributeValueID(type.GetID(), AttributeID::DESCRIPTION));
+      return CreateObject(type, browseName, browseName.Name);
+    }
 
-      std::vector<DataValue> result = attributes->Read(params);
-      if (result.size() != params.AttributesToRead.size())
-      {
-        throw std::runtime_error("opcua_model| Server returned wrong number of attributes.");
-      }
+    Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string displayName)
+    {
+      return CreateObject(GetID(), type.GetID(), browseName, displayName);
+    }
 
+    Object Object::CreateObject(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
+    {
+      Object object(GetServices());
+      object.Id = InstantiateType(parentNode, typeID, NodeClass::Object, browseName, displayName);
+      object.BrowseName = browseName;
+      object.DisplayName = LocalizedText(displayName);
+      return object;
+
+    }
+
+    NodeID Object::InstantiateType(const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName)
+    {
       // Creating new node for object
       AddNodesItem newNodeRequest;
-      newNodeRequest.BrowseName = result[0].Value.As<QualifiedName>();
-      newNodeRequest.Class = NodeClass::Object;
-      newNodeRequest.ParentNodeId = GetID();
-      newNodeRequest.ReferenceTypeId = ObjectID::HasComponent;
-      newNodeRequest.TypeDefinition = type.GetID();
+      newNodeRequest.BrowseName = browseName;
+      newNodeRequest.Class = nodeClass;
+      newNodeRequest.ParentNodeId = parentNode;
+      newNodeRequest.ReferenceTypeId = nodeClass == NodeClass::Object ? ObjectID::HasComponent : ObjectID::HasProperty;
+      newNodeRequest.TypeDefinition = typeID;
       ObjectAttributes attrs;
-      attrs.Description = result[3].Value.As<LocalizedText>();
-      attrs.DisplayName = result[3].Value.As<LocalizedText>();
+      attrs.Description = LocalizedText(displayName);
+      attrs.DisplayName = LocalizedText(displayName);
       newNodeRequest.Attributes = attrs;
 
       NodeManagementServices::SharedPtr nodes = GetServices()->NodeManagement();
       std::vector<AddNodesResult> newObjectNode = nodes->AddNodes({newNodeRequest});
-      OpcUa::CheckStatusCode(newObjectNode[0].Status);
-
-/*
-      const DataValue& value = result[0];
-      OpcUa::CheckStatusCode(value.Status);
-      if (value.Value.Type != VariantType::NODE_ID || value.Value.Value.Node.size() != 1 || value.Value.Value.Node[0] != type.GetID())
+      if (newObjectNode.size() != 1)
       {
-        throw std::runtime_error("opcua_model| Server returned attribute with node class.");
+        throw std::runtime_error("opcua_model| Server returned wrong number new nodes results.");
       }
 
+      OpcUa::CheckStatusCode(newObjectNode[0].Status);
+
+      std::map<NodeID, std::vector<ReferenceDescription>> nextRefs;
+      nextRefs.insert({newObjectNode[0].AddedNodeID, BrowseObjectsAndVariables(typeID)});
+      while(!nextRefs.empty())
+      {
+        std::map<NodeID, std::vector<ReferenceDescription>> newRefs;
+        for (auto idRefs : nextRefs)
+        {
+          std::map<NodeID, std::vector<ReferenceDescription>> tmpRefs = CopyObjectsAndVariables(idRefs.first, idRefs.second);
+          newRefs.insert(tmpRefs.begin(), tmpRefs.end());
+        }
+        nextRefs = std::move(newRefs);
+      }
+      return newObjectNode[0].AddedNodeID;
+    }
+
+    std::vector<ReferenceDescription> Object::BrowseObjectsAndVariables(const NodeID& id)
+    {
+      // ID of the new node.
       BrowseDescription desc;
       desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = false;
+      desc.IncludeSubtypes = true;
       desc.NodeClasses =   NODE_CLASS_OBJECT | NODE_CLASS_VARIABLE | NODE_CLASS_METHOD;
       desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
-      desc.NodeToBrowse = GetID();
-      desc.ResultMask = REFERENCE_TYPE | REFERENCE_IS_FORWARD | REFERENCE_NODE_CLASS | REFERENCE_BROWSE_NAME | REFERENCE_DISPLAY_NAME | REFERENCE_TYPE_DEFINITION;
+      desc.NodeToBrowse = id;
+      desc.ResultMask = REFERENCE_NODE_CLASS | REFERENCE_TYPE_DEFINITION | REFERENCE_BROWSE_NAME | REFERENCE_DISPLAY_NAME;
 
+      // browse sub objects and variables.
       NodesQuery query;
       query.NodesToBrowse.push_back(desc);
       ViewServices::SharedPtr views = GetServices()->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
-*/
-
-      return Object(newObjectNode[0].AddedNodeID, GetServices());
+      return views->Browse(query);
     }
 
+    std::map<NodeID, std::vector<ReferenceDescription>> Object::CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs)
+    {
+      std::map<NodeID, std::vector<ReferenceDescription>> nextCopyData;
+      for (const ReferenceDescription& ref : refs)
+      {
+        std::vector<AddNodesResult> result;
+        std::vector<AddNodesItem> newNodeRequest;
+        switch (ref.TargetNodeClass)
+        {
+          case NodeClass::Object:
+          {
+            if (ref.TargetNodeTypeDefinition !=ObjectID::Null)
+            {
+              InstantiateType(targetNode, ref.TargetNodeTypeDefinition, NodeClass::Object, ref.BrowseName, ref.DisplayName.Text);
+            }
+            else
+            {
+              newNodeRequest = {CreateObjectCopy(targetNode, ref)};
+            }
+            break;
+          }
+          case NodeClass::Variable:
+          {
+            newNodeRequest = {CreateVariableCopy(targetNode, ref)};
+            break;
+          }
+          default:
+          {
+            continue;
+          }
+        }
+        if (newNodeRequest.empty())
+        {
+          continue;
+        }
+        result = GetServices()->NodeManagement()->AddNodes(newNodeRequest);
+        std::vector<ReferenceDescription> newRefs = BrowseObjectsAndVariables(ref.TargetNodeID);
+        nextCopyData.insert({result[0].AddedNodeID, newRefs});
+      }
+      return nextCopyData;
+    }
+
+    Variable Object::CreateVariable(const VariableType& type, const QualifiedName& browseName)
+    {
+      return CreateVariable(type, browseName, browseName.Name);
+    }
+
+    Variable Object::CreateVariable(const VariableType& type, const QualifiedName& browseName, const std::string displayName)
+    {
+      return CreateVariable(GetID(), type.GetID(), browseName, displayName);
+    }
+
+    Variable Object::CreateVariable(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
+    {
+      Variable variable(GetServices());
+      return variable;
+    }
+
+    AddNodesItem Object::CreateVariableCopy(const NodeID& parentID, const ReferenceDescription& ref)
+    {
+      const NodeID& nodeID = ref.TargetNodeID;
+
+      ReadParameters readParams;
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DISPLAY_NAME});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DESCRIPTION});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::VALUE});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DATA_TYPE});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::VALUE_RANK});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::ARRAY_DIMENSIONS});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::ACCESS_LEVEL});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_ACCESS_LEVEL});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::MINIMUM_SAMPLING_INTERVAL});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::HISTORIZING});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::WRITE_MASK});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_WRITE_MASK});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::BROWSE_NAME});
+      std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
+
+      VariableAttributes attrs;
+      attrs.DisplayName = values[0].Value.As<LocalizedText>();
+      attrs.Description = values[1].Value.As<LocalizedText>();
+      attrs.Value = values[2].Value;
+      attrs.Type = values[3].Value.As<NodeID>();
+      attrs.Rank = values[4].Value.As<int32_t>();
+      attrs.Dimensions = values[5].Value.As<std::vector<uint32_t>>();
+      attrs.AccessLevel = static_cast<VariableAccessLevel>(values[6].Value.As<uint8_t>());
+      attrs.UserAccessLevel = static_cast<VariableAccessLevel>(values[7].Value.As<uint8_t>());
+      attrs.MinimumSamplingInterval = values[8].Value.As<Duration>();
+      attrs.Historizing = values[9].Value.As<bool>();
+      attrs.WriteMask = values[10].Value.As<uint32_t>();
+      attrs.UserWriteMask = values[11].Value.As<uint32_t>();
+
+      AddNodesItem newNode;
+      newNode.BrowseName = values[12].Value.As<QualifiedName>();
+      newNode.Class = NodeClass::Variable;
+      newNode.ParentNodeId = parentID;
+      newNode.ReferenceTypeId = ref.ReferenceTypeID;
+      newNode.TypeDefinition = ref.TargetNodeTypeDefinition;
+      newNode.Attributes = attrs;
+      return newNode;
+    }
+
+    AddNodesItem Object::CreateObjectCopy(const NodeID& parentID, const ReferenceDescription& ref)
+    {
+      const NodeID& nodeID = ref.TargetNodeID;
+
+      ReadParameters readParams;
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DISPLAY_NAME});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DESCRIPTION});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::WRITE_MASK});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_WRITE_MASK});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::BROWSE_NAME});
+      std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
+
+      ObjectAttributes attrs;
+      attrs.DisplayName = values[0].Value.As<LocalizedText>();
+      attrs.Description = values[1].Value.As<LocalizedText>();
+      attrs.WriteMask = values[2].Value.As<uint32_t>();
+      attrs.UserWriteMask = values[3].Value.As<uint32_t>();
+
+      AddNodesItem newNode;
+      newNode.BrowseName = values[4].Value.As<QualifiedName>();
+      newNode.Class = NodeClass::Object;
+      newNode.ParentNodeId = parentID;
+      newNode.ReferenceTypeId = ref.ReferenceTypeID;
+      newNode.TypeDefinition = ref.TargetNodeTypeDefinition;
+      newNode.Attributes = attrs;
+      return newNode;
+    }
 
   } // namespace Model
 } // namespace OpcUa

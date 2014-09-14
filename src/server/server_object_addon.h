@@ -26,6 +26,8 @@ namespace OpcUa
   namespace Server
   {
 
+    const char ServerObjectAddonID[] = "server_object";
+
     class ServerObjectFactory : public Common::AddonFactory
     {
     public:

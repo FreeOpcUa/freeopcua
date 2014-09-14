@@ -25,7 +25,18 @@ namespace OpcUa
   {
     Node::Node(NodeID id, Services::SharedPtr services)
       : Id(id)
-      , Server(services)
+      , OpcUaServices(services)
+    {
+      ReadParameters attrs;
+      attrs.AttributesToRead.push_back(AttributeValueID(id, AttributeID::DISPLAY_NAME));
+      attrs.AttributesToRead.push_back(AttributeValueID(id, AttributeID::BROWSE_NAME));
+      std::vector<DataValue> values = services->Attributes()->Read(attrs);
+      DisplayName = values[0].Value.As<LocalizedText>();
+      BrowseName = values[1].Value.As<QualifiedName>();
+    }
+
+    Node::Node(Services::SharedPtr services)
+      : OpcUaServices(services)
     {
     }
 
@@ -34,14 +45,14 @@ namespace OpcUa
       return Id;
     }
 
-    QualifiedName Node::GetName() const
+    QualifiedName Node::GetBrowseName() const
     {
-      return QualifiedName();
+      return BrowseName;
     }
 
-    LocalizedText Node::GetDescription() const
+    LocalizedText Node::GetDisplayName() const
     {
-      return LocalizedText();
+      return DisplayName;
     }
 
     std::vector<Reference> Node::GetReferencies() const

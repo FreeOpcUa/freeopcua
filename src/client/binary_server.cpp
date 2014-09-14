@@ -16,7 +16,7 @@
 #include <opc/ua/protocol/channel.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <atomic>
 #include <chrono>

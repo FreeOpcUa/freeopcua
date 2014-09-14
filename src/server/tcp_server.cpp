@@ -17,7 +17,7 @@
 
 #include <opc/common/thread.h>
 #include <opc/common/uri_facade.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/socket_channel.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/input_from_buffer.h>

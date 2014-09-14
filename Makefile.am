@@ -337,8 +337,7 @@ libtest_dynamic_addon.so: test_dynamic_addon.o
 
 common_test_SOURCES = \
                   tests/core/common/error_test.cpp \
-                  tests/core/common/main.cpp \
-                  tests/core/common/value_test.cpp
+                  tests/core/common/main.cpp
 
 
 common_test_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)

@@ -21,7 +21,7 @@
 
 #include <opc/common/uri_facade.h>
 #include <opc/ua/client/remote_connection.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/node.h>
 
 

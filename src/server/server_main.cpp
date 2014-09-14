@@ -18,6 +18,7 @@
 #include "tcp_server.h"
 
 #include "daemon.h"
+#include "server_object_addon.h"
 #include "server_options.h"
 
 #include <iostream>
@@ -86,6 +87,15 @@ namespace
     return opcTcp;
   }
 
+  Common::AddonInformation CreateServerObject()
+  {
+    Common::AddonInformation serverObjectAddon;
+    serverObjectAddon.Factory = std::make_shared<OpcUa::Server::ServerObjectFactory>();
+    serverObjectAddon.ID = OpcUa::Server::ServerObjectAddonID;
+    serverObjectAddon.Dependencies.push_back(OpcUa::Server::StandardNamespaceAddonID);
+    return serverObjectAddon;
+  }
+
   void AddStandardModules(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
   {
     Common::AddonInformation endpointsRegistry = CreateEndpointsRegistry();
@@ -117,6 +127,7 @@ namespace
     addons.push_back(addressSpaceRegistry);
     addons.push_back(CreateServicesRegistry());
     addons.push_back(CreateStandardNamespace());
+    addons.push_back(CreateServerObject());
   }
 
 }

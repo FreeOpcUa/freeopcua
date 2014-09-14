@@ -262,6 +262,24 @@ TEST(Variant, InitializeWithVariant)
   ASSERT_FALSE(var.IsNul());
 }
 
+TEST(Variant, InitializeObjectID)
+{
+  const OpcUa::Variant var = OpcUa::ObjectID::RootFolder;
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_ID);
+  ASSERT_EQ(var, OpcUa::ObjectID::RootFolder);
+  ASSERT_FALSE(var.IsArray());
+  ASSERT_FALSE(var.IsNul());
+}
+
+TEST(Variant, InitializeMessageID)
+{
+  const OpcUa::Variant var = OpcUa::MessageID::READ_RESPONSE;
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_ID);
+  ASSERT_EQ(var, OpcUa::MessageID::READ_RESPONSE);
+  ASSERT_FALSE(var.IsArray());
+  ASSERT_FALSE(var.IsNul());
+}
+
 /*
 
 TEST(Variant, InitializeWithBoolInitializerList)

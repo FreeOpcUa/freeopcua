@@ -77,7 +77,7 @@ namespace OpcUa
     }
     else
     {
-      return DataValue(); //FIXME: What does it mean when not value is found?
+      return Variant(); //FIXME: What does it mean when not value is found?
     }
   }
 

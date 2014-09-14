@@ -677,9 +677,10 @@ namespace
       return IsXmlNode(node, "attributes");
     }
 
-    void AddAttribute(AttributeID attr, const Variant& value)
+    template <typename T>
+    void AddAttribute(AttributeID attr, const T& value)
     {
-      OpcUaNode.Attributes.insert(std::make_pair(attr, value));
+      OpcUaNode.Attributes.insert(std::make_pair(attr, Variant(value)));
     }
 
     bool HasAttribute(AttributeID attr) const

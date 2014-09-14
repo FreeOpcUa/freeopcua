@@ -20,6 +20,7 @@
 #pragma once
 
 #include <opc/ua/services/services.h>
+#include <opc/ua/model.h>
 
 namespace OpcUa
 {
@@ -35,8 +36,11 @@ namespace OpcUa
       ServerObject(Services::SharedPtr services);
 
     private:
-      void CreateServerObject(OpcUa::NodeManagementServices& services);
-      void ServerCapabilities(const OpcUa::NodeID& parent, OpcUa::NodeManagementServices& services);
+      Model::Object CreateServerObject(const Services::SharedPtr& services) const;
+
+    private:
+      Services::SharedPtr Server;
+      Model::Object Instance;
     };
 
   }

@@ -18,7 +18,7 @@
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/node_classes.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <stdexcept>
 

@@ -36,22 +36,26 @@ namespace OpcUa
 
       NodeID GetID() const;
 
-      QualifiedName GetName() const;
-      LocalizedText GetDescription() const;
+
+      QualifiedName GetBrowseName() const;
+      LocalizedText GetDisplayName() const;
 
       std::vector<Reference> GetReferencies() const;
 
     public:
       Services::SharedPtr GetServices() const
       {
-        return Server;
+        return OpcUaServices;
       }
 
-    private:
+    protected:
+      Node(Services::SharedPtr services);
+
+    protected:
       NodeID Id;
-      QualifiedName Name;
-      LocalizedText Description;
-      Services::SharedPtr Server;
+      QualifiedName BrowseName;
+      LocalizedText DisplayName;
+      Services::SharedPtr OpcUaServices;
     };
 
 
@@ -135,6 +139,14 @@ namespace OpcUa
       Variable GetVariable(const std::vector<QualifiedName>& path) const;
 
     private:
+      friend class Object;
+
+      Variable(Services::SharedPtr services)
+        : Node(services)
+      {
+      }
+
+    private:
       NodeID TypeID;
     };
 
@@ -160,6 +172,8 @@ namespace OpcUa
     {
     public:
       Object(NodeID objectId, Services::SharedPtr services);
+      Object(Object&& object);
+      Object(const Object& object);
 
       ObjectType GetType() const;
 
@@ -167,11 +181,32 @@ namespace OpcUa
       std::vector<Variable> GetVariable(const QualifiedName& name) const;
       std::vector<Variable> GetVariable(const std::vector<QualifiedName>& name) const;
 
-      std::vector<Object> Objects() const;
+      std::vector<Object> GetObjects() const;
       Object GetObject(const std::string& name) const;
       Object GetObject(const std::vector<std::string>& name) const;
 
-      Object CreateObject(const ObjectType&);
+      Object CreateObject(const ObjectType& type, const QualifiedName& browseName);
+      Object CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string displayName);
+
+      Variable CreateVariable(const VariableType& type, const QualifiedName& browseName);
+      Variable CreateVariable(const VariableType& type, const QualifiedName& browseName, const std::string displayName);
+
+    private:
+      Object CreateObject(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName);
+      Variable CreateVariable(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName);
+
+      NodeID InstantiateType(const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName);
+      std::vector<ReferenceDescription> BrowseObjectsAndVariables(const NodeID& id);
+
+      std::map<NodeID, std::vector<ReferenceDescription>> CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs);
+      AddNodesItem CreateVariableCopy(const NodeID& parentID, const ReferenceDescription& ref);
+      AddNodesItem CreateObjectCopy(const NodeID& parentID, const ReferenceDescription& ref);
+
+
+
+
+    private:
+      explicit Object(Services::SharedPtr services);
     };
 
     class Server

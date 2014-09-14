@@ -24,7 +24,7 @@ namespace OpcUa
   namespace Model
   {
     Server::Server(Services::SharedPtr services)
-      : Server(services)
+      : Connection(services)
     {
     }
 

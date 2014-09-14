@@ -108,70 +108,20 @@ namespace OpcUa
     boost::any Value;
 
   public:
-    Variant(){}
-
     std::vector<uint32_t> Dimensions;
 
-    bool IsArray() const
-    {
-      const std::type_info& t = Value.type();
-      return
-      (t == typeid(std::vector<bool>))       ||
-      (t == typeid(std::vector<int8_t>))     ||
-      (t == typeid(std::vector<uint8_t>))    ||
-      (t == typeid(std::vector<int16_t>))    ||
-      (t == typeid(std::vector<uint16_t>))   ||
-      (t == typeid(std::vector<int32_t>))    ||
-      (t == typeid(std::vector<uint32_t>))   ||
-      (t == typeid(std::vector<int64_t>))    ||
-      (t == typeid(std::vector<uint64_t>))   ||
-      (t == typeid(std::vector<float>))      ||
-      (t == typeid(std::vector<double>))     ||
-      (t == typeid(std::vector<std::string>))||
-      (t == typeid(std::vector<DateTime>))   ||
-      (t == typeid(std::vector<Guid>))       ||
-      (t == typeid(std::vector<ByteString>)) ||
-      (t == typeid(std::vector<NodeID>))     ||
-      (t == typeid(std::vector<StatusCode>)) ||
-      (t == typeid(std::vector<LocalizedText>)) ||
-      (t == typeid(std::vector<QualifiedName>)) ||
-      (t == typeid(std::vector<DataValue>))  ||
-      (t == typeid(std::vector<Variant>))    ||
-      (t == typeid(std::vector<DiagnosticInfo>));
-    }
-
-    bool IsScalar() const
-    {
-      return !IsArray();
-    }
-
-    bool IsNul() const
-    {
-      return Value.empty();
-    }
-
-    template <typename T>
-    Variant& operator=(const T& value)
-    {
-      Value = value;
-    }
-
-    template <typename T>
-    bool operator==(const T& value) const
-    {
-      return boost::any_cast<T>(Value) == value;
-    }
-
-    template <typename T>
-    Variant(const T& value)
-      : Value(value)
-    {
-    }
-
+    Variant(){}
     Variant(const Variant& var)
       : Value(var.Value)
     {
     }
+
+    template <typename T>
+    Variant(const T& value) : Value(value){}
+    Variant(MessageID id) : Variant(NodeID(id)){}
+    Variant(ReferenceID id) : Variant(NodeID(id)){}
+    Variant(ObjectID id) : Variant(NodeID(id)){}
+    Variant(ExpandedObjectID id) : Variant(NodeID(id)){}
 
     Variant& operator= (const Variant& variant)
     {
@@ -179,7 +129,66 @@ namespace OpcUa
       return *this;
     }
 
+    template <typename T>
+    Variant& operator=(const T& value)
+    {
+      Value = value;
+      return *this;
+    }
+
+    Variant& operator=(MessageID value)
+    {
+      Value = NodeID(value);
+      return *this;
+    }
+
+    Variant& operator=(ReferenceID value)
+    {
+      Value = NodeID(value);
+      return *this;
+    }
+
+    Variant& operator=(ObjectID value)
+    {
+      Value = NodeID(value);
+      return *this;
+    }
+
+    Variant& operator=(ExpandedObjectID value)
+    {
+      Value = NodeID(value);
+      return *this;
+    }
+
+
     bool operator== (const Variant& var) const;
+
+    template <typename T>
+    bool operator==(const T& value) const
+    {
+      return boost::any_cast<T>(Value) == value;
+    }
+
+    bool operator==(MessageID id) const
+    {
+      return *this == NodeID(id);
+    }
+
+    bool operator==(ReferenceID id) const
+    {
+      return *this == NodeID(id);
+    }
+
+    bool operator==(ObjectID id) const
+    {
+      return *this == NodeID(id);
+    }
+
+    bool operator==(ExpandedObjectID id) const
+    {
+      return *this == NodeID(id);
+    }
+
 
     template <typename T>
     bool operator!= (const T& t) const
@@ -187,68 +196,23 @@ namespace OpcUa
       return !(*this == t);
     }
 
+    bool IsArray() const;
+    bool IsScalar() const;
+    bool IsNul() const;
+
     template <typename T>
     T As() const
     {
       return boost::any_cast<T>(Value);
     }
 
-    VariantType Type() const
+    template <typename T>
+    explicit operator T() const
     {
-      if (Value.empty())
-        return VariantType::NUL;
-
-      const std::type_info& t = Value.type();
-      if (t == typeid(bool) || t == typeid(std::vector<bool>))
-        return VariantType::BOOLEAN;
-      else if (t == typeid(int8_t) || t == typeid(std::vector<int8_t>))
-        return VariantType::SBYTE;
-      else if (t == typeid(uint8_t) || t == typeid(std::vector<uint8_t>))
-        return VariantType::BYTE;
-      else if (t == typeid(int16_t) || t == typeid(std::vector<int16_t>))
-        return VariantType::INT16;
-      else if (t == typeid(uint16_t) || t == typeid(std::vector<uint16_t>))
-        return VariantType::UINT16;
-      else if (t == typeid(int32_t) || t == typeid(std::vector<int32_t>))
-        return VariantType::INT32;
-      else if (t == typeid(uint32_t) || t == typeid(std::vector<uint32_t>))
-        return VariantType::UINT32;
-      else if (t == typeid(int64_t) || t == typeid(std::vector<int64_t>))
-        return VariantType::INT64;
-      else if (t == typeid(uint64_t) || t == typeid(std::vector<uint64_t>))
-        return VariantType::UINT64;
-      else if (t == typeid(float) || t == typeid(std::vector<float>))
-        return VariantType::FLOAT;
-      else if (t == typeid(double) || t == typeid(std::vector<double>))
-        return VariantType::DOUBLE;
-      else if (t == typeid(std::string) || t == typeid(std::vector<std::string>))
-        return VariantType::STRING;
-      else if (t == typeid(DateTime) || t == typeid(std::vector<DateTime>))
-        return VariantType::DATE_TIME;
-      else if (t == typeid(Guid) || t == typeid(std::vector<Guid>))
-        return VariantType::GUID;
-      else if (t == typeid(ByteString) || t == typeid(std::vector<ByteString>))
-        return VariantType::BYTE_STRING;
-      else if (t == typeid(NodeID) || t == typeid(std::vector<NodeID>))
-        return VariantType::NODE_ID;
-      else if (t == typeid(StatusCode) || t == typeid(std::vector<StatusCode>))
-        return VariantType::STATUS_CODE;
-      else if (t == typeid(LocalizedText) || t == typeid(std::vector<LocalizedText>))
-        return VariantType::LOCALIZED_TEXT;
-      else if (t == typeid(QualifiedName) || t == typeid(std::vector<QualifiedName>))
-        return VariantType::QUALIFIED_NAME;
-/*
-      else if (t == typeid(DataValue) || t == typeid(std::vector<DataValue>))
-        return VariantType::DATA_VALUE;
-*/
-      else if (t == typeid(Variant) || t == typeid(std::vector<Variant>))
-        return VariantType::VARIANT;
-      else if (t == typeid(DiagnosticInfo) || t == typeid(std::vector<DiagnosticInfo>))
-        return VariantType::DIAGNOSTIC_INFO;
-
-      throw std::runtime_error("Unknown variant type.");
+      return As<T>();
     }
 
+    VariantType Type() const;
 
     template <typename VisitorType>
     typename VisitorType::result_type Visit(VisitorType visitor) const
@@ -358,7 +322,7 @@ namespace OpcUa
       if (t == typeid(std::vector<DiagnosticInfo>))
         return visitor(any_cast<std::vector<DiagnosticInfo>>(Value));
 
-      throw std::logic_error("Unknown variant type.");
+      throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
     }
   };
 
