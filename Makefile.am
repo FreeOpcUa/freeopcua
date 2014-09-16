@@ -17,8 +17,8 @@ TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell 
 all:
 	$(opcua_paths) python setup.py build
 
+#	$(opcua_paths) $(MAKE) -C tests check
 check:
-	$(opcua_paths) $(MAKE) -C tests check
 	$(TEST_VARS) python ./tests/test_highlevel.py
 	
 clean:
