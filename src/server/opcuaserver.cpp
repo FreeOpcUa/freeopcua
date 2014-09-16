@@ -65,10 +65,11 @@ namespace OpcUa
     Registry->RegisterEndpointsServices(EndpointsServices);
 
     AddressSpace = UaServer::CreateAddressSpace(Debug);
+    SubscriptionService = UaServer::CreateSubscriptionService(AddressSpace, Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);
-    Registry->RegisterSubscriptionServices(AddressSpace);
+    Registry->RegisterSubscriptionServices(SubscriptionService);
 
     UaServer::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
 
@@ -139,7 +140,7 @@ namespace OpcUa
 
   void OPCUAServer::TriggerEvent(Event event)
   {
-    AddressSpace->TriggerEvent(ObjectID::Server, event);
+    SubscriptionService->TriggerEvent(ObjectID::Server, event);
   }
 
 }

@@ -15,6 +15,7 @@
 #include <opc/ua/server/endpoints_services.h>
 #include <opc/ua/server/opc_tcp_async.h>
 #include <opc/ua/server/services_registry.h>
+#include <opc/ua/server/subscription_service.h>
 
 
 namespace OpcUa
@@ -58,10 +59,9 @@ namespace OpcUa
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
 
       UaServer::ServicesRegistry::SharedPtr Registry;
-      //UaServer::TcpServer::SharedPtr TcpServer;
       UaServer::EndpointsRegistry::SharedPtr EndpointsServices;
       UaServer::AddressSpace::SharedPtr AddressSpace;
-      //UaServer::OpcUaProtocol::SharedPtr Protocol;
+      UaServer::SubscriptionService::SharedPtr SubscriptionService;
       UaServer::AsyncOpcTcp::SharedPtr AsyncServer;
       Common::Thread::UniquePtr ListenThread;
 

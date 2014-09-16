@@ -49,8 +49,7 @@ namespace OpcUa
       //Called for each datachange events
       virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const {std::cout << "default dc" << std::endl;};
       //Called for every events receive from server
-      // order and value of variants depend on event subscription and applied filter
-      virtual void Event(uint32_t handle, Event event) const {}; 
+      virtual void Event(uint32_t handle, const Event& event) const {std::cout << "default c++ event callback has been called" << std::endl;}; 
       //Called at server state changed
       virtual void StatusChange(StatusCode status) const  {}; 
   };

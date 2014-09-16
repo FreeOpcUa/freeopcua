@@ -19,11 +19,8 @@ namespace OpcUa
     using namespace OpcUa::Remote;
 
     AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
-        : Debug(debug), work(new boost::asio::io_service::work(io))
+        : Debug(debug)
       {
-        //Initialize the worker thread for subscriptions
-        service_thread = std::thread([&](){ io.run(); });
-
         ObjectAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::Root);
         attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -39,141 +36,7 @@ namespace OpcUa
 
     AddressSpaceInMemory::~AddressSpaceInMemory()
       {
-        if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
-        io.stop();
-        if (Debug) std::cout << "address_space_in_memory| Joining service thread." << std::endl;
-        service_thread.join();
       }
-
-      boost::asio::io_service& AddressSpaceInMemory::GetIOService() 
-      {
-        return io;
-      }
-
-      void AddressSpaceInMemory::DeleteAllSubscriptions()
-      {
-        if (Debug) std::cout << "Deleting all subscriptions." << std::endl;
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<IntegerID> ids(SubscriptionsMap.size());\
-        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-        DeleteSubscriptions(ids);
-      }
-
-  /*    
-      std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        //We need to stop the subscriptions and then delete them in io_service to make sure their are stopped before they are deleted
-        for (auto id: subscriptions)
-        {
-          std::cout << "Stopping Subscription (part 1): " << id << std::endl;
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(id);
-          if ( itsub != SubscriptionsMap.end()) 
-          {
-            itsub->second->Stop();
-          }
-        }
-
-        io.dispatch([=](){ this->_DeleteSubscriptions(subscriptions); });
-        //Now return good for everything, we do not care :-)
-        std::vector<StatusCode> codes;
-        for ( auto _ : subscriptions)
-        {
-          codes.push_back(StatusCode::Good);
-        }
-        return codes;
-      }
-      
- */     
-
-      std::vector<StatusCode> AddressSpaceInMemory::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<StatusCode> result;
-        for (const IntegerID& subid: subscriptions)
-        {
-          std::cout << "Deleting Subscription: " << subid << std::endl;
-          size_t count = SubscriptionsMap.erase(subid);
-          if ( count > 0)
-          {
-            result.push_back(StatusCode::Good);
-          }
-          else
-          {
-            std::cout << "Error, got request to delete non existing Subscription: " << subid << std::endl;
-            result.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-        }
-        return result;
-      }
-
-      SubscriptionData AddressSpaceInMemory::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        SubscriptionData data;
-        data.ID = ++LastSubscriptionID;
-        data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
-        data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
-        data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-        std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
-
-        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(data, request.Header.SessionAuthenticationToken, *this, callback));
-        SubscriptionsMap[data.ID] = sub;
-        return data;
-      }
-
-      MonitoredItemsData AddressSpaceInMemory::CreateMonitoredItems(const MonitoredItemsParameters& params)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        MonitoredItemsData data;
-
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
-        {
-          for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
-          {
-            CreateMonitoredItemsResult res;
-            res.Status = StatusCode::BadSubscriptionIdInvalid;
-            data.Results.push_back(res);
-          }
-          return data;
-        }
-
-        for (const MonitoredItemRequest& req: params.ItemsToCreate)
-        {
-          CreateMonitoredItemsResult result = CreateMonitoredItem(itsub, req);
-          data.Results.push_back(result);
-        }
-        return data;
-     
-      }
-
-      std::vector<StatusCode> AddressSpaceInMemory::DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<StatusCode> results;
-
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
-        {
-          for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
-          {
-            results.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-          return results;
-        }
-
-        results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
-        return results;
-      }
-
-
 
       std::vector<AddNodesResult> AddressSpaceInMemory::AddNodes(const std::vector<AddNodesItem>& items)
       {
@@ -286,97 +149,6 @@ namespace OpcUa
         return statuses;
       }
 
-      void AddressSpaceInMemory::Publish(const PublishRequest& request)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-        if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
-        {
-          PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
-        }
-        //FIXME: else spec says we should return error to warn client
-
-        for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
-        {
-          SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
-          if ( sub_it != SubscriptionsMap.end())
-          {
-            sub_it->second->NewAcknowlegment(ack); 
-          }
-        }
-      }
-
-      bool AddressSpaceInMemory::PopPublishRequest(NodeID node)
-      {
-        std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node); 
-        if ( queue_it == PublishRequestQueues.end() )
-        {
-          std::cout << "Error request for publish queue for unknown session" << node << std::endl;
-          return false;
-        }
-        else
-        {
-          if ( queue_it->second == 0 )
-          {
-            std::cout << "Missing publish request, cannot send response for session: " << node << std::endl;
-            return false;
-          }
-          else
-          {
-            --queue_it->second;
-            return true;
-          }
-        }
-      }
-
-      void AddressSpaceInMemory::TriggerEvent(NodeID node, Event event)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        //find node
-        NodesMap::iterator it = Nodes.find(node);
-        if ( it == Nodes.end() )
-        {
-          std::cout << "NodeID does not exist, raise exception\n";
-        }
-        else
-        {
-          //find event_notifier attribute of node
-          AttributesMap::iterator ait = it->second.Attributes.find(AttributeID::EVENT_NOTIFIER);
-          if ( ait == it->second.Attributes.end() )
-          {
-            std::cout << "Attempt to trigger event for node " << it->first << " which has no event_notifier attribute. This should raise exception" << std::endl;;
-          }
-          else
-          {
-            EnqueueEvent(ait->second, event);
-          }
-        }
-      }
-
-
-      void AddressSpaceInMemory::EnqueueEvent(AttributeValue& attval, const Event& event)
-      {
-        //go through all subscription of attribute and add new event
-        for (auto attsub = attval.AttSubscriptions.begin(); attsub != attval.AttSubscriptions.end() ;)
-        {
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-          if ( itsub == SubscriptionsMap.end() )
-          {
-            attsub = attval.AttSubscriptions.erase(attsub);
-          }
-          else
-          {
-            bool res = itsub->second->EnqueueEvent(attsub->MonitoredItemId, event);
-            if ( ! res )
-            {
-              attsub = attval.AttSubscriptions.erase(attsub);
-            }
-          }
-          ++attsub;
-        }
-      }
-
-
       std::tuple<bool, NodeID> AddressSpaceInMemory::FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(nodeid);
@@ -420,39 +192,6 @@ namespace OpcUa
         return result;
       }
 
-
-      CreateMonitoredItemsResult AddressSpaceInMemory::CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
-      {
-        NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
-        if ( node_it == Nodes.end() )
-        {
-          CreateMonitoredItemsResult res;
-          res.Status = OpcUa::StatusCode::BadNodeIdUnknown;
-          std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
-          return res;
-        }
-
-        AttributesMap::iterator attrit = node_it->second.Attributes.find(request.ItemToMonitor.Attribute);
-        if ( attrit == node_it->second.Attributes.end() )
-        {
-          CreateMonitoredItemsResult res;
-          res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
-          std::cout << "attribute not found" << std::endl;
-          return res;
-        }
-      
-        std::cout << "creating monitored item using subscription: " << subscription_it->first << std::endl;
-        CreateMonitoredItemsResult res = subscription_it->second->AddMonitoredItem(request);
-
-        AttSubscription attsub;
-        attsub.SubscriptionId = subscription_it->first;
-        attsub.MonitoredItemId = res.MonitoredItemID;
-        attsub.Parameters = request.Parameters;
-        attrit->second.AttSubscriptions.push_back(attsub); 
-
-        return res;
-      }
-
       DataValue AddressSpaceInMemory::GetValue(const NodeID& node, AttributeID attribute) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(node);
@@ -461,6 +200,12 @@ namespace OpcUa
           AttributesMap::const_iterator attrit = nodeit->second.Attributes.find(attribute);
           if ( attrit != nodeit->second.Attributes.end() )
           {
+            if ( attrit->second.GetValueCallback )
+            {
+              if (Debug) std::cout << "A callback is set for this value, calling callback" << std::endl;
+              return attrit->second.GetValueCallback();
+            }
+            if (Debug) std::cout << "No callback is set for this value returning stored value" << std::endl;
             return attrit->second.Value;
           }
         }
@@ -468,6 +213,57 @@ namespace OpcUa
         value.Encoding = DATA_VALUE_STATUS_CODE;
         value.Status = StatusCode::BadNotReadable;
         return value;
+      }
+
+      uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle, std::function<void(IntegerID, DataValue)> callback )
+      {
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it != Nodes.end() )
+        {
+          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+          if ( ait != it->second.Attributes.end() )
+          {
+            static uint32_t handle;
+            ++handle;
+            DataChangeCallbackData data;
+            data.DataChangeCallback = callback;
+            data.ClientHandle = clienthandle;
+            ait->second.DataChangeCallbacks[handle] = data;
+            return handle;
+          }
+        }
+        //return 0; //SHould I return 0 or raise exception?
+        throw std::runtime_error("NodeID or attribute not found");
+      }
+
+      void AddressSpaceInMemory::DeleteDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID handle )
+      {
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it != Nodes.end() )
+        {
+          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+          if ( ait != it->second.Attributes.end() )
+          {
+            ait->second.DataChangeCallbacks.erase(handle); 
+            return;
+          }
+        }
+        throw std::runtime_error("NodeID or attribute nor found");
+      }
+
+      StatusCode AddressSpaceInMemory::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
+      {
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it != Nodes.end() )
+        {
+          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+          if ( ait != it->second.Attributes.end() )
+          {
+            ait->second.GetValueCallback = callback;
+            return StatusCode::Good;
+          }
+        }
+        return StatusCode::BadAttributeIdInvalid;
       }
 
       StatusCode AddressSpaceInMemory::SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
@@ -482,32 +278,15 @@ namespace OpcUa
             value.ServerTimestamp = CurrentDateTime();
             value.SourceTimestamp = CurrentDateTime(); //FIXME: should allow client to set this one
             ait->second.Value = value;
-            UpdateSubscriptions(ait->second);
+            //call registered callback
+            for (auto pair : ait->second.DataChangeCallbacks)
+            {
+              pair.second.DataChangeCallback(pair.second.ClientHandle, ait->second.Value);
+            }
             return StatusCode::Good;
           }
         }
         return StatusCode::BadAttributeIdInvalid;
-      }
-
-      void AddressSpaceInMemory::UpdateSubscriptions(AttributeValue& val)
-      {
-        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
-        {
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-          if ( itsub == SubscriptionsMap.end() )
-          {
-            attsub = val.AttSubscriptions.erase(attsub);
-            continue;
-          }
-          bool res = itsub->second->EnqueueDataChange(attsub->MonitoredItemId, val.Value);
-          if ( ! res ) 
-          {
-            attsub = val.AttSubscriptions.erase(attsub);
-            continue;
-          }
-  
-          ++attsub;
-        }
       }
 
       bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const

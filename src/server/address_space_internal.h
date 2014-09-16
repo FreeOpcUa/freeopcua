@@ -11,18 +11,13 @@
 #pragma once
 
 #include "address_space_addon.h"
-#include "internal_subscription.h"
 
-#include <opc/ua/event.h>
-#include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/view.h>
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/node_management.h>
 
-#include <boost/asio.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
 #include <limits>
@@ -44,21 +39,29 @@ namespace OpcUa
 
     class InternalSubscription;
 
-    typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
     
     //store subscription for one attribute
-    struct AttSubscription
+    //struct AttSubscription
+    //{
+      //IntegerID SubscriptionId;
+      //IntegerID MonitoredItemId;
+      //MonitoringParameters Parameters;
+    //};
+    
+    struct DataChangeCallbackData
     {
-      IntegerID SubscriptionId;
-      IntegerID MonitoredItemId;
-      MonitoringParameters Parameters;
+      std::function<void(IntegerID, const DataValue&)> DataChangeCallback;
+      IntegerID ClientHandle;
     };
+
+    typedef std::map<uint32_t, DataChangeCallbackData> DataChangeCallbackMap;
 
     //Store an attribute value together with a link to all its suscriptions
     struct AttributeValue
     {
       DataValue Value;
-      std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
+      DataChangeCallbackMap DataChangeCallbacks;
+      std::function<DataValue(void)> GetValueCallback;
     };
 
     typedef std::map<AttributeID, AttributeValue> AttributesMap;
@@ -82,10 +85,6 @@ namespace OpcUa
        ~AddressSpaceInMemory();
 
         //Services implementation
-        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions);
-        virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
-        virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params);
-        virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
         virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items);
         virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items);
         virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const;
@@ -93,22 +92,18 @@ namespace OpcUa
         virtual std::vector<ReferenceDescription> BrowseNext() const;
         virtual std::vector<DataValue> Read(const ReadParameters& params) const;
         virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values);
-        virtual void Publish(const PublishRequest& request);
 
         //Server side methods
-        void DeleteAllSubscriptions();
-        boost::asio::io_service& GetIOService();
-        bool PopPublishRequest(NodeID node);
-        void TriggerEvent(NodeID node, Event event);
+        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle, std::function<void(IntegerID, DataValue)> callback);
+        void DeleteDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID handle);
+        StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
 
       private:
-        void EnqueueEvent(AttributeValue& attval, const Event& event);
         std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const;
         BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const;
-        CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request);
         DataValue GetValue(const NodeID& node, AttributeID attribute) const;
-        StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data);
-        void UpdateSubscriptions(AttributeValue& val);
+        StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data); //FIXME should be removed
+        StatusCode SetValue(const NodeID& node, AttributeID attribute, const DataValue& data); //FIXME: should be used instead of variant
         bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const;
         bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const;
         std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const;
@@ -119,13 +114,6 @@ namespace OpcUa
         bool Debug = false;
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
-        SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
-        uint32_t LastSubscriptionID = 2;
-        std::map<NodeID, uint32_t> PublishRequestQueues;
-        boost::asio::io_service io;
-        std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
-        std::thread service_thread;
-
     };
   }
 

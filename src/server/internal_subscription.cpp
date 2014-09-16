@@ -6,12 +6,13 @@ namespace OpcUa
   namespace Internal
   {
 
-    InternalSubscription::InternalSubscription(const SubscriptionData& data, const NodeID& SessionAuthenticationToken, AddressSpaceInMemory& addressSpace, std::function<void (PublishResult)> callback)
-      : Data(data)
-        , AddressSpace(addressSpace)
+    InternalSubscription::InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> callback)
+      : Service(service)
+        , AddressSpace(Service.GetAddressSpace())
+        , Data(data)
         , CurrentSession(SessionAuthenticationToken)
         , Callback(callback)
-        , io(addressSpace.GetIOService())
+        , io(service.GetIOService())
         , timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
         , LifeTimeCount(data.RevisedLifetimeCount)
     {
@@ -45,7 +46,7 @@ namespace OpcUa
         if (Debug) { std::cout << "boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
-      if ( HasPublishResult() && AddressSpace.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
+      if ( HasPublishResult() && Service.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
       {
 
         std::vector<PublishResult> results = PopPublishResult();
@@ -250,19 +251,38 @@ namespace OpcUa
       return fields;
     }
 
-    CreateMonitoredItemsResult InternalSubscription::AddMonitoredItem(const MonitoredItemRequest& request)
+    CreateMonitoredItemsResult InternalSubscription::CreateMonitoredItem(const MonitoredItemRequest& request)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       CreateMonitoredItemsResult result;
+      if (request.ItemToMonitor.Attribute == AttributeID::EVENT_NOTIFIER )
+      {
+        //client want to subscribe to events
+        //FIXME: check attribute EVENT notifier is set for the node
+        MonitoredEvents[request.ItemToMonitor.Node] = ++LastMonitoredItemID;
+      }
+      else
+      {
+        uint32_t handle = AddressSpace->AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(++LastMonitoredItemID), [this] (IntegerID handle, DataValue value) 
+          {
+            this->DataChangeCallback(handle, value);
+          });
+
+        if (handle == 0)
+        {
+          --LastMonitoredItemID;
+          result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
+          return result;
+        }
+      }
       result.Status = OpcUa::StatusCode::Good;
-      result.MonitoredItemID = ++LastMonitoredItemID ;
+      result.MonitoredItemID = LastMonitoredItemID ;
       result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
       result.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
       result.Filter = request.Parameters.Filter;
       //res.FilterResult = //We can omit that one if we do not change anything in filter
       DataMonitoredItems mdata;
-      mdata.SubscriptionID = Data.ID;
       mdata.Parameters = result;
       mdata.Mode = request.Mode;
       mdata.ClientHandle = request.Parameters.ClientHandle;
@@ -272,23 +292,38 @@ namespace OpcUa
     }
 
 
-    bool InternalSubscription::EnqueueDataChange(IntegerID monitoreditemid, const DataValue& value)
+
+    void InternalSubscription::DataChangeCallback(const IntegerID& handle, const DataValue& value)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       MonitoredItems event;
-      std::map<IntegerID, DataMonitoredItems>::iterator it_monitoreditem = MonitoredItemsMap.find(monitoreditemid);
+      MonitoredItemsMapType::iterator it_monitoreditem = MonitoredItemsMap.find(handle);
       if ( it_monitoreditem == MonitoredItemsMap.end()) 
       {
-        return false;
+        std::cout << "DataChangeCallback called for unknown item" << std::endl;
+        return ;
       }
 
       event.ClientHandle = it_monitoreditem->second.ClientHandle; 
       event.Value = value;
       if (Debug) { std::cout << "Enqueued DataChange triggered item for sub: " << Data.ID << " and clienthandle: " << event.ClientHandle << std::endl; }
       MonitoredItemsTriggered.push_back(event);
-      return true;
     }
+
+      void InternalSubscription::TriggerEvent(NodeID node, Event event)
+      {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+        MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
+        if ( it == MonitoredEvents.end() )
+        {
+          std::cout << "Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
+          return;
+        }
+        EnqueueEvent(it->second, event);
+      }
+
 
 
   }
