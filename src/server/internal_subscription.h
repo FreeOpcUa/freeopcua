@@ -34,6 +34,7 @@ namespace OpcUa
       time_t LastTrigger;
       CreateMonitoredItemsResult Parameters;
       IntegerID ClientHandle;
+      uint32_t CallbackHandle;
     };
 
     //typedef std::pair<NodeID, AttributeID> MonitoredItemsIndex;
@@ -60,6 +61,7 @@ namespace OpcUa
         void TriggerEvent(NodeID node, Event event);
 
       private:
+        void DeleteAllMonitoredItems(); 
         std::vector<PublishResult> PopPublishResult(); 
         bool HasPublishResult(); 
         NotificationData GetNotificationData();

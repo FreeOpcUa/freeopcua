@@ -39,18 +39,19 @@ namespace OpcUa
 
     class InternalSubscription;
 
-    
-    //store subscription for one attribute
-    //struct AttSubscription
-    //{
-      //IntegerID SubscriptionId;
-      //IntegerID MonitoredItemId;
-      //MonitoringParameters Parameters;
-    //};
+    struct NodeAttribute
+    {
+      NodeID Node;
+      AttributeID Attribute;
+      NodeAttribute(NodeID node, AttributeID attribute) : Node(node), Attribute(attribute) {}
+      NodeAttribute() {} //seems compiler wants this one
+    };
+
+    typedef std::map<uint32_t, NodeAttribute> ClientIDToAttributeMapType;
     
     struct DataChangeCallbackData
     {
-      std::function<void(IntegerID, const DataValue&)> DataChangeCallback;
+      std::function<void(const IntegerID&, const DataValue&)> DataChangeCallback;
       IntegerID ClientHandle;
     };
 
@@ -75,8 +76,7 @@ namespace OpcUa
 
     typedef std::map<NodeID, NodeStruct> NodesMap;
 
-
-
+    //In memory storage of server opc-ua data model
     class AddressSpaceInMemory : public UaServer::AddressSpace
     {
       public:
@@ -94,8 +94,8 @@ namespace OpcUa
         virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values);
 
         //Server side methods
-        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle, std::function<void(IntegerID, DataValue)> callback);
-        void DeleteDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID handle);
+        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback);
+        void DeleteDataChangeCallback(uint32_t serverhandle);
         StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
 
       private:
@@ -114,6 +114,7 @@ namespace OpcUa
         bool Debug = false;
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
+        ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
     };
   }
 

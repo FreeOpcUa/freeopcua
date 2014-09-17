@@ -21,12 +21,25 @@ namespace OpcUa
     
     InternalSubscription::~InternalSubscription()
     {
+      std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! desctructor" << std::endl; 
+      DeleteAllMonitoredItems();
       Stop();
     }
 
     void InternalSubscription::Stop()
     {
       timer.cancel();
+    }
+
+    void InternalSubscription::DeleteAllMonitoredItems()
+    {
+      std::cout << "deleting all monitoreditems" << std::endl; 
+      std::vector<IntegerID> handles;
+      for (auto pair : MonitoredItemsMap)
+      {
+        handles.push_back(pair.first);
+      }
+      DeleteMonitoredItemsIds(handles);
     }
 
     bool InternalSubscription::HasExpired()
@@ -151,24 +164,6 @@ namespace OpcUa
       NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceID; });
     }
     
-    std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std::vector<IntegerID>& monitoreditemsids)
-    {
-      std::vector<StatusCode> results;
-      for (const IntegerID handle: monitoreditemsids)
-      {
-        size_t nb = MonitoredItemsMap.erase(handle);
-        if ( nb != 1 )
-        {
-          results.push_back(StatusCode::BadMonitoredItemIdInvalid);
-        }
-        else
-        {
-          results.push_back(StatusCode::Good);
-        }
-      }
-      return results;
-    }
-
 
     bool InternalSubscription::EnqueueEvent(IntegerID monitoreditemid, const Event& event)
     {
@@ -256,6 +251,7 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       CreateMonitoredItemsResult result;
+      uint32_t callbackHandle = 0;
       if (request.ItemToMonitor.Attribute == AttributeID::EVENT_NOTIFIER )
       {
         //client want to subscribe to events
@@ -264,12 +260,14 @@ namespace OpcUa
       }
       else
       {
-        uint32_t handle = AddressSpace->AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(++LastMonitoredItemID), [this] (IntegerID handle, DataValue value) 
+        callbackHandle = AddressSpace->AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(++LastMonitoredItemID), [this] (IntegerID handle, DataValue value) 
           {
             this->DataChangeCallback(handle, value);
           });
+        std::cout << "Creating callback from client with ID: " << LastMonitoredItemID << std::endl;
+        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!callback ID: " << callbackHandle << std::endl;
 
-        if (handle == 0)
+        if (callbackHandle == 0)
         {
           --LastMonitoredItemID;
           result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
@@ -286,9 +284,31 @@ namespace OpcUa
       mdata.Parameters = result;
       mdata.Mode = request.Mode;
       mdata.ClientHandle = request.Parameters.ClientHandle;
+      mdata.CallbackHandle = callbackHandle;
       MonitoredItemsMap[result.MonitoredItemID] = mdata;
 
       return result;
+    }
+
+    std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std::vector<IntegerID>& monitoreditemsids)
+    {
+      std::vector<StatusCode> results;
+      for (const IntegerID& handle: monitoreditemsids)
+      {
+        std::cout << "Deleteing Monitoreditemsid: " << handle << std::endl;
+        MonitoredItemsMapType::iterator it = MonitoredItemsMap.find(handle);
+        if ( it == MonitoredItemsMap.end() )
+        {
+          results.push_back(StatusCode::BadMonitoredItemIdInvalid);
+        }
+        else
+        {
+          AddressSpace->DeleteDataChangeCallback(it->second.CallbackHandle);
+          MonitoredItemsMap.erase(handle);
+          results.push_back(StatusCode::Good);
+        }
+      }
+      return results;
     }
 
 

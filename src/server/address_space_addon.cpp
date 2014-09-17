@@ -106,12 +106,12 @@ namespace OpcUa
       return Registry->Write(filter);
     }
 
-    uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle, std::function<void(IntegerID, DataValue)> callback)
+    uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback)
     {
       return 0;
     }
 
-    void AddressSpaceAddon::DeleteDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle)
+    void AddressSpaceAddon::DeleteDataChangeCallback(uint32_t clienthandle)
     {
     }
 

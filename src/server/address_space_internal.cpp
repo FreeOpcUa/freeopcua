@@ -215,7 +215,7 @@ namespace OpcUa
         return value;
       }
 
-      uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID clienthandle, std::function<void(IntegerID, DataValue)> callback )
+      uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
       {
         NodesMap::iterator it = Nodes.find(node);
         if ( it != Nodes.end() )
@@ -223,12 +223,13 @@ namespace OpcUa
           AttributesMap::iterator ait = it->second.Attributes.find(attribute);
           if ( ait != it->second.Attributes.end() )
           {
-            static uint32_t handle;
+            static uint32_t handle = 0;
             ++handle;
             DataChangeCallbackData data;
             data.DataChangeCallback = callback;
             data.ClientHandle = clienthandle;
             ait->second.DataChangeCallbacks[handle] = data;
+            ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
             return handle;
           }
         }
@@ -236,15 +237,26 @@ namespace OpcUa
         throw std::runtime_error("NodeID or attribute not found");
       }
 
-      void AddressSpaceInMemory::DeleteDataChangeCallback(const NodeID& node, AttributeID attribute, IntegerID handle )
+      void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle )
       {
-        NodesMap::iterator it = Nodes.find(node);
-        if ( it != Nodes.end() )
+        std::cout << "Deleting callback with client id. " << serverhandle << std::endl;
+
+        ClientIDToAttributeMapType::iterator it = ClientIDToAttributeMap.find(serverhandle);
+        if ( it == ClientIDToAttributeMap.end() )
         {
-          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
-          if ( ait != it->second.Attributes.end() )
+          std::cout << "Error, request to delete a callback using unknown handle" << serverhandle << std::endl;
+          return;
+        }
+
+        NodesMap::iterator nodeit = Nodes.find(it->second.Node);
+        if ( nodeit != Nodes.end() )
+        {
+          AttributesMap::iterator ait = nodeit->second.Attributes.find(it->second.Attribute);
+          if ( ait != nodeit->second.Attributes.end() )
           {
-            ait->second.DataChangeCallbacks.erase(handle); 
+            size_t nb = ait->second.DataChangeCallbacks.erase(serverhandle); 
+            std::cout << "deleted " << nb << " callbacks" << std::endl;
+            ClientIDToAttributeMap.erase(serverhandle);
             return;
           }
         }
