@@ -28,9 +28,9 @@ namespace OpcUa
 
    SubscriptionServiceInternal::~SubscriptionServiceInternal()
       {
-        if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
+        if (Debug) std::cout << "SubscriptionService| Stopping boost io service." << std::endl;
         io.stop();
-        if (Debug) std::cout << "address_space_in_memory| Joining service thread." << std::endl;
+        if (Debug) std::cout << "SubscriptionService| Joining service thread." << std::endl;
         service_thread.join();
       }
 
@@ -46,7 +46,7 @@ namespace OpcUa
 
       void SubscriptionServiceInternal::DeleteAllSubscriptions()
       {
-        if (Debug) std::cout << "Deleting all subscriptions." << std::endl;
+        if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
         std::vector<IntegerID> ids(SubscriptionsMap.size());\
@@ -62,7 +62,7 @@ namespace OpcUa
         std::vector<StatusCode> result;
         for (const IntegerID& subid: subscriptions)
         {
-          std::cout << "Deleting Subscription: " << subid << std::endl;
+          std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
           size_t count = SubscriptionsMap.erase(subid);
           if ( count > 0)
           {
@@ -70,7 +70,7 @@ namespace OpcUa
           }
           else
           {
-            std::cout << "Error, got request to delete non existing Subscription: " << subid << std::endl;
+            std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
             result.push_back(StatusCode::BadSubscriptionIdInvalid);
           }
         }
@@ -86,7 +86,7 @@ namespace OpcUa
         data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
         data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
         data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-        if (Debug) std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
+        if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
 
         std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback));
         SubscriptionsMap[data.ID] = sub;
@@ -145,10 +145,8 @@ namespace OpcUa
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
         if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
         {
-          std::cout << "Increasing queue for publish request: " <<request.Header.SessionAuthenticationToken << std::endl;
           PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
         }
-          std::cout << "queue size for publish request is: " <<PublishRequestQueues[request.Header.SessionAuthenticationToken] << std::endl;
         //FIXME: else spec says we should return error to warn client
 
         for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
@@ -166,19 +164,18 @@ namespace OpcUa
         std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node); 
         if ( queue_it == PublishRequestQueues.end() )
         {
-          std::cout << "Error request for publish queue for unknown session" << node << std::endl;
+          std::cout << "SubscriptionService | Error request for publish queue for unknown session" << node << std::endl;
           return false;
         }
         else
         {
           if ( queue_it->second == 0 )
           {
-            std::cout << "Missing publish request, cannot send response for session: " << node << std::endl;
+            std::cout << "SubscriptionService | Missing publish request, cannot send response for session: " << node << std::endl;
             return false;
           }
           else
           {
-            std::cout << "poping publish request for session: " << node << std::endl;
             --queue_it->second;
             return true;
           }
