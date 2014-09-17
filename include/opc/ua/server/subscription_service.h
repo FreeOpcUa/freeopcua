@@ -15,6 +15,14 @@
 #include <opc/ua/services/subscriptions.h>
 
 
+namespace boost
+{
+  namespace asio
+  {
+    class io_service;
+  }
+}
+
 namespace OpcUa
 {
   namespace Server
@@ -28,7 +36,7 @@ namespace OpcUa
       virtual void TriggerEvent(NodeID node, Event event) = 0;
     };
 
-    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, bool debug);
+    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service& io, bool debug);
 
   } // namespace UaServer
 } // nmespace OpcUa

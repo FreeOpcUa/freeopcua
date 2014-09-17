@@ -9,6 +9,7 @@
 ///
 
 #include <opc/common/application.h>
+#include <opc/ua/server/addons/asio_addon.h>
 #include <opc/ua/server/addons/address_space.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
@@ -83,6 +84,7 @@ namespace
     opcTcp.Factory = std::make_shared<OpcUa::Server::AsyncOpcTcpAddonFactory>();
     opcTcp.ID = OpcUa::Server::AsyncOpcTcpAddonID;
     opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsRegistryAddonID);
+    opcTcp.Dependencies.push_back(OpcUa::Server::AsioAddonID);
     AddParameters(opcTcp, params);
     return opcTcp;
   }
@@ -96,10 +98,20 @@ namespace
     return serverObjectAddon;
   }
 
+  Common::AddonInformation CreateAsio()
+  {
+    Common::AddonInformation asioAddon;
+    asioAddon.Factory = std::make_shared<OpcUa::Server::AsioAddonFactory>();
+    asioAddon.ID = OpcUa::Server::AsioAddonID;
+    return asioAddon;
+  }
+
+
   void AddStandardModules(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
   {
     Common::AddonInformation endpointsRegistry = CreateEndpointsRegistry();
     Common::AddonInformation addressSpaceRegistry = CreateAddressSpace();
+    Common::AddonInformation asioAddon = CreateAsio();
 
     for (const Common::ParametersGroup& group : params.Groups)
     {
@@ -121,10 +133,15 @@ namespace
       {
         addons.push_back(CreateOpcTcpAsync(group));
       }
+      else if (group.Name == OpcUa::Server::AsioAddonID)
+      {
+        AddParameters(asioAddon, group);
+      }
     }
 
     addons.push_back(endpointsRegistry);
     addons.push_back(addressSpaceRegistry);
+    addons.push_back(asioAddon);
     addons.push_back(CreateServicesRegistry());
     addons.push_back(CreateStandardNamespace());
     addons.push_back(CreateServerObject());

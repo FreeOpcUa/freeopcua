@@ -17,191 +17,184 @@ namespace OpcUa
   namespace Internal
   {
 
-    SubscriptionServiceInternal::SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, bool debug)
-        : AddressSpace(addressspace)
-          , Debug(debug)
-          , work(new boost::asio::io_service::work(io))
+    SubscriptionServiceInternal::SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& ioService, bool debug)
+      : io(ioService)
+      , AddressSpace(addressspace)
+      , Debug(debug)
+    {
+    }
+
+    SubscriptionServiceInternal::~SubscriptionServiceInternal()
+    {
+    }
+
+    Server::AddressSpace& SubscriptionServiceInternal::GetAddressSpace()
+    {
+      return *AddressSpace;
+    }
+
+    boost::asio::io_service& SubscriptionServiceInternal::GetIOService()
+    {
+      return io;
+    }
+
+    void SubscriptionServiceInternal::DeleteAllSubscriptions()
+    {
+      if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
+      std::vector<IntegerID> ids(SubscriptionsMap.size());\
+      std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+      lock.unlock();
+      DeleteSubscriptions(ids);
+    }
+
+    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      std::vector<StatusCode> result;
+      for (const IntegerID& subid: subscriptions)
       {
-        //Initialize the worker thread for subscriptions
-        service_thread = std::thread([&](){ io.run(); });
-      }
-
-   SubscriptionServiceInternal::~SubscriptionServiceInternal()
-      {
-        if (Debug) std::cout << "SubscriptionService| Stopping boost io service." << std::endl;
-        io.stop();
-        if (Debug) std::cout << "SubscriptionService| Joining service thread." << std::endl;
-        service_thread.join();
-      }
-
-      std::shared_ptr<Server::AddressSpace> SubscriptionServiceInternal::GetAddressSpace()
-      {
-        return AddressSpace;
-      }
-
-      boost::asio::io_service& SubscriptionServiceInternal::GetIOService() 
-      {
-        return io;
-      }
-
-      void SubscriptionServiceInternal::DeleteAllSubscriptions()
-      {
-        if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<IntegerID> ids(SubscriptionsMap.size());\
-        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-        lock.unlock();
-        DeleteSubscriptions(ids);
-      }
-
-      std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<StatusCode> result;
-        for (const IntegerID& subid: subscriptions)
+        std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+        size_t count = SubscriptionsMap.erase(subid);
+        if ( count > 0)
         {
-          std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
-          size_t count = SubscriptionsMap.erase(subid);
-          if ( count > 0)
-          {
-            result.push_back(StatusCode::Good);
-          }
-          else
-          {
-            std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
-            result.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
+          result.push_back(StatusCode::Good);
         }
-        return result;
-      }
-
-      SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        SubscriptionData data;
-        data.ID = ++LastSubscriptionID;
-        data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
-        data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
-        data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-        if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
-
-        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback));
-        SubscriptionsMap[data.ID] = sub;
-        return data;
-      }
-
-      MonitoredItemsData SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        MonitoredItemsData data;
-
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+        else
         {
-          for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
-          {
-            CreateMonitoredItemsResult res;
-            res.Status = StatusCode::BadSubscriptionIdInvalid;
-            data.Results.push_back(res);
-          }
-          return data;
+          std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
+          result.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
+      }
+      return result;
+    }
 
-        for (const MonitoredItemRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
+    SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      SubscriptionData data;
+      data.ID = ++LastSubscriptionID;
+      data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
+      data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
+      data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
+      if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
+
+      std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback));
+      SubscriptionsMap[data.ID] = sub;
+      return data;
+    }
+
+    MonitoredItemsData SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      MonitoredItemsData data;
+
+      SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
+      if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+      {
+        for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
         {
-          CreateMonitoredItemsResult result = itsub->second->CreateMonitoredItem(req);
-          data.Results.push_back(result);
+          CreateMonitoredItemsResult res;
+          res.Status = StatusCode::BadSubscriptionIdInvalid;
+          data.Results.push_back(res);
         }
         return data;
-     
       }
 
-      std::vector<StatusCode> SubscriptionServiceInternal::DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
+      for (const MonitoredItemRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
       {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+        CreateMonitoredItemsResult result = itsub->second->CreateMonitoredItem(req);
+        data.Results.push_back(result);
+      }
+      return data;
 
-        std::vector<StatusCode> results;
+    }
 
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+    std::vector<StatusCode> SubscriptionServiceInternal::DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      std::vector<StatusCode> results;
+
+      SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
+      if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+      {
+        for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
         {
-          for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
-          {
-            results.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-          return results;
+          results.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
-
-        results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
         return results;
       }
 
-      void SubscriptionServiceInternal::Publish(const PublishRequest& request)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-        if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
-        {
-          PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
-        }
-        //FIXME: else spec says we should return error to warn client
+      results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
+      return results;
+    }
 
-        for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
+    void SubscriptionServiceInternal::Publish(const PublishRequest& request)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+      if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
+      {
+        PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
+      }
+      //FIXME: else spec says we should return error to warn client
+
+      for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
+      {
+        SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
+        if ( sub_it != SubscriptionsMap.end())
         {
-          SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
-          if ( sub_it != SubscriptionsMap.end())
-          {
-            sub_it->second->NewAcknowlegment(ack); 
-          }
+          sub_it->second->NewAcknowlegment(ack);
         }
       }
+    }
 
-      bool SubscriptionServiceInternal::PopPublishRequest(NodeID node)
+    bool SubscriptionServiceInternal::PopPublishRequest(NodeID node)
+    {
+      std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node);
+      if ( queue_it == PublishRequestQueues.end() )
       {
-        std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node); 
-        if ( queue_it == PublishRequestQueues.end() )
+        std::cout << "SubscriptionService | Error request for publish queue for unknown session" << node << std::endl;
+        return false;
+      }
+      else
+      {
+        if ( queue_it->second == 0 )
         {
-          std::cout << "SubscriptionService | Error request for publish queue for unknown session" << node << std::endl;
+          std::cout << "SubscriptionService | Missing publish request, cannot send response for session: " << node << std::endl;
           return false;
         }
         else
         {
-          if ( queue_it->second == 0 )
-          {
-            std::cout << "SubscriptionService | Missing publish request, cannot send response for session: " << node << std::endl;
-            return false;
-          }
-          else
-          {
-            --queue_it->second;
-            return true;
-          }
+          --queue_it->second;
+          return true;
         }
       }
+    }
 
-      void SubscriptionServiceInternal::TriggerEvent(NodeID node, Event event)
+    void SubscriptionServiceInternal::TriggerEvent(NodeID node, Event event)
+    {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
+      for (auto sub : SubscriptionsMap)
       {
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        for (auto sub : SubscriptionsMap)
-        {
-          sub.second->TriggerEvent(node, event);
-        }
-
+        sub.second->TriggerEvent(node, event);
       }
 
+    }
 
-  }
+  } // namespace Internal
 
   namespace Server
   {
 
-    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, bool debug)
+    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& io, bool debug)
     {
-      return SubscriptionService::UniquePtr(new Internal::SubscriptionServiceInternal(addressspace, debug));
+      return SubscriptionService::UniquePtr(new Internal::SubscriptionServiceInternal(addressspace, io, debug));
     }
 
   }

@@ -17,6 +17,7 @@
 #include <opc/ua/server/services_registry.h>
 #include <opc/ua/server/subscription_service.h>
 
+#include <boost/asio.hpp>
 
 namespace OpcUa
 {
@@ -48,6 +49,7 @@ namespace OpcUa
       std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& callback);
 
     protected:
+      boost::asio::io_service IoService;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine

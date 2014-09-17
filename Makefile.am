@@ -73,6 +73,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/standard_namespace.h
 	
 addonsinclude_HEADERS = \
+	include/opc/ua/server/addons/asio_addon.h \
 	include/opc/ua/server/addons/address_space.h \
 	include/opc/ua/server/addons/endpoints_services.h \
 	include/opc/ua/server/addons/opc_tcp_async.h \
@@ -82,6 +83,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/xml_ns.h
 
 libopcuaserver_la_SOURCES = \
+	src/server/asio_addon.cpp \
 	src/server/address_space_addon.cpp \
 	src/server/address_space_addon.h \
 	src/server/address_space_internal.cpp \

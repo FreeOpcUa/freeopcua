@@ -22,6 +22,13 @@
 #include <opc/ua/services/services.h>
 #include <opc/common/interface.h>
 
+namespace boost
+{
+  namespace asio
+  {
+    class io_service;
+  }
+}
 
 namespace OpcUa
 {
@@ -38,7 +45,6 @@ namespace OpcUa
       {
         std::string Host;
         unsigned Port = 4840;
-        std::size_t ThreadsNumber = 5;
         bool DebugMode = false;
       };
 
@@ -47,7 +53,7 @@ namespace OpcUa
       virtual void Shutdown() = 0;
     };
 
-    AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server);
+    AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& io);
 
   }
 }

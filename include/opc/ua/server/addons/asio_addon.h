@@ -17,24 +17,45 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
+#pragma once
 
-#include "opc_tcp_async_parameters.h"
+
+#include <opc/common/addons_core/addon.h>
+
+
+namespace boost
+{
+  namespace asio
+  {
+
+    class io_service;
+
+  }
+}
 
 namespace OpcUa
 {
   namespace Server
   {
 
-    AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters& addonParams)
-    {
-      AsyncOpcTcp::Parameters result;
-      for (const Common::Parameter& param : addonParams.Parameters)
-      {
-        if (param.Name == "debug")
-          result.DebugMode = param.Value == "false" || param.Value == "0" ? false : true;
-      }
-      return result;
-    }
+    const char AsioAddonID[] = "async";
 
-  } // namespace UaServer
-} // namespace OpcUa
+
+    class AsioAddon : public Common::Addon
+    {
+    public:
+      DEFINE_CLASS_POINTERS(AsioAddon);
+
+    public:
+      virtual boost::asio::io_service& GetIoService() = 0;
+    };
+
+
+    class AsioAddonFactory : public Common::AddonFactory
+    {
+    public:
+      Common::Addon::UniquePtr CreateAddon() override;
+    };
+
+  }
+}

@@ -82,7 +82,7 @@ namespace
     DEFINE_CLASS_POINTERS(OpcTcpServer);
 
   public:
-    OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server);
+    OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& ioService);
 
     virtual void Listen() override;
     virtual void Shutdown() override;
@@ -99,7 +99,6 @@ namespace
     Services::SharedPtr Server;
     std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
-    boost::asio::io_service io;
     tcp::socket socket;
     tcp::acceptor acceptor;
   };
@@ -295,14 +294,11 @@ namespace
     });
   }
 
-  OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
+  OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& ioService)
     : Params(params)
     , Server(server)
-    , io(params.ThreadsNumber)
-    , socket(io)
-    //, acceptor(io, tcp::endpoint(tcp::v4(), params.Port))
-    , acceptor(io)
-    //, acceptor( io, tcp::endpoint( ip::address::from_string(params.Host), params.Port ) )
+    , socket(ioService)
+    , acceptor(ioService)
   {
     tcp::endpoint ep;
     if (params.Host.empty() )
@@ -319,7 +315,6 @@ namespace
       ep = tcp::endpoint( ip::address::from_string(params.Host), params.Port );
     }
     acceptor.open(ep.protocol());
-    //acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
     acceptor.bind(ep);
   }
 
@@ -327,14 +322,12 @@ namespace
   {
     std::clog << "opc_tcp_async| Running server." << std::endl;
     Accept();
-    io.run();
     std::clog << "opc_tcp_async| Server stopped." << std::endl;
   }
 
   void OpcTcpServer::Shutdown()
   {
     std::clog << "opc_tcp_async| Shutdowning server." << std::endl;
-    io.stop();
     Clients.clear();
   }
 
@@ -365,7 +358,7 @@ namespace
 
 } // namespace
 
-OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters& params, Services::SharedPtr server)
+OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& io)
 {
-  return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server));
+  return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server, io));
 }

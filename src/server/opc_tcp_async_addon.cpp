@@ -18,9 +18,11 @@
  ******************************************************************************/
 
 #include "opc_tcp_async_parameters.h"
+
 #include "endpoints_parameters.h"
 
 #include <opc/common/uri_facade.h>
+#include <opc/ua/server/addons/asio_addon.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
@@ -47,7 +49,6 @@ namespace
 
   private:
     AsyncOpcTcp::SharedPtr Endpoint;
-    Common::Thread::SharedPtr ServerThread;
   };
 
 
@@ -58,7 +59,6 @@ namespace
     {
       std::cout << "opc_tcp_async| Parameters:" << std::endl;
       std::cout << "opc_tcp_async|   Debug mode: " << params.DebugMode << std::endl;
-      std::cout << "opc_tcp_async|   ThreadsNumber:" << params.ThreadsNumber << std::endl;
     }
     const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, params.DebugMode);
     if (params.DebugMode)
@@ -90,13 +90,11 @@ namespace
 
     PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
     OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+    OpcUa::Server::AsioAddon::SharedPtr asio = addons.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
 
     params.Port = Common::Uri(endpointDescriptions[0].EndpointURL).Port();
-    Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer());
-
-    ServerThread.reset(new Common::Thread([this](){
-          Endpoint->Listen();
-     }));
+    Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer(), asio->GetIoService());
+    Endpoint->Listen();
   }
 
   void AsyncOpcTcpAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
@@ -114,7 +112,6 @@ namespace
   void AsyncOpcTcpAddon::Stop()
   {
     Endpoint->Shutdown();
-    ServerThread->Join();
     Endpoint.reset();
   }
 

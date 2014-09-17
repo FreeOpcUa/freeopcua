@@ -68,11 +68,9 @@ namespace OpcUa
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
 
-
-
       private:
         SubscriptionServiceInternal& Service;
-        std::shared_ptr<Server::AddressSpace> AddressSpace;
+        Server::AddressSpace& AddressSpace;
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
         NodeID CurrentSession;
