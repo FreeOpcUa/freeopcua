@@ -103,6 +103,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/opcuaserver.cpp \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
+	src/server/subscription_service_internal.h \
+	src/server/subscription_service_internal.cpp \
 	src/server/standard_namespace_addon.cpp \
 	src/server/standard_namespace.cpp \
 	src/server/tcp_server.cpp \
