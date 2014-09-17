@@ -16,6 +16,7 @@
 #include <opc/ua/protocol/channel.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
+#include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/server.h>
 
 #include <atomic>
@@ -32,6 +33,8 @@ namespace
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
+
+  typedef std::map<IntegerID, std::function<void (PublishResult)>> SubscriptionCallbackMap;
 
   class BufferInputChannel : public OpcUa::InputChannel
   {
@@ -125,12 +128,12 @@ namespace
         {
           if (Debug)  { std::cout << "CallbackThread | waiting for nest post" << std::endl; }
           std::unique_lock<std::mutex> lock(Mutex);
-          Condition.wait(lock, [&]() { return (StopRequest == true) || (Queue.size() > 0) ;} );
+          Condition.wait(lock, [&]() { return (StopRequest == true) || ( ! Queue.empty() ) ;} );
           if (StopRequest)
           {
             return;
           }
-          while ( Queue.size() > 0 ) //to avoid crashing on spurious events
+          while ( ! Queue.empty() ) //to avoid crashing on spurious events
           {
             if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
             std::function<void()> callbackcopy = Queue.front();
@@ -291,16 +294,19 @@ namespace
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
+      if (Debug) std::cout << "BinaryClient | sending TranslateBrowsPathToNodeIds to server" << std::endl;
       TranslateBrowsePathsToNodeIDsRequest request;
       request.Header = CreateRequestHeader();
       request.Parameters = params;
       const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
+      if (Debug) std::cout << "BinaryClient | got TranslateBrowsPathToNodeIds repsonse " << std::endl;
       return response.Result.Paths;
     }
 
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
+      if (Debug) std::cout << "BinaryClient | sending Browse to server" << std::endl;
       BrowseRequest request;
       request.Header = CreateRequestHeader();
       request.Query = query;
@@ -311,6 +317,7 @@ namespace
         ContinuationPoint = result.ContinuationPoint;
         return result.Referencies;
       }
+      if (Debug) std::cout << "BinaryClient | got Browse repsonse " << std::endl;
 
       return  std::vector<ReferenceDescription>();
     }
@@ -359,17 +366,21 @@ namespace
   public:
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
+      if (Debug) std::cout << "BinaryClient | sending AddNodes to server" << std::endl;
       AddNodesRequest request;
       request.Parameters.NodesToAdd = items;
       const AddNodesResponse response = Send<AddNodesResponse>(request);
+      if (Debug) std::cout << "BinaryClient | Got AddNodes response" << std::endl;
       return response.results;
     }
 
     virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
     {
+      if (Debug) std::cout << "BinaryClient | sending AddReferences to server" << std::endl;
       AddReferencesRequest request;
       request.Parameters.ReferencesToAdd = items;
       const AddReferencesResponse response = Send<AddReferencesResponse>(request);
+      if (Debug) std::cout << "BinaryClient | Got AddReferences response" << std::endl;
       return response.Results;
     }
 
@@ -381,17 +392,21 @@ namespace
   public:
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
+      if (Debug) std::cout << "BinaryClient | sending Read to server" << std::endl;
       ReadRequest request;
       request.Parameters = params;
       const ReadResponse response = Send<ReadResponse>(request);
+      if (Debug) std::cout << "BinaryClient | got Read reponse" << std::endl;
       return response.Result.Results;
     }
 
     virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
     {
+      if (Debug) std::cout << "BinaryClient | sending Write to server" << std::endl;
       WriteRequest request;
       request.Parameters.NodesToWrite = values;
       const WriteResponse response = Send<WriteResponse>(request);
+      if (Debug) std::cout << "BinaryClient | got Write reponse" << std::endl;
       return response.Result.StatusCodes;
     }
 
@@ -400,17 +415,18 @@ namespace
       return shared_from_this();
     }
 
-    virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
+    virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
     {
-      PublishCallback = callback;// TODO Pass calback to the Publish method.
-      CreateSubscriptionRequest request;
-      request.Parameters = parameters;
+      if (Debug) std::cout << "BinaryClient | sending CreateSubscriptionRequest to server" << std::endl;
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
+      if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
+      PublishCallbacks[response.Data.ID] = callback;// TODO Pass calback to the Publish method.
       return response.Data;
     }
 
     virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
     {
+      if (Debug) std::cout << "BinaryClient | sending DeleteSubscriptionRequest to server" << std::endl;
       DeleteSubscriptionRequest request;
       request.SubscriptionsIds = subscriptions;
       const DeleteSubscriptionResponse response = Send<DeleteSubscriptionResponse>(request);
@@ -419,35 +435,42 @@ namespace
 
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
+      if (Debug) std::cout << "BinaryClient | sending CreateMonitoredItems to server" << std::endl;
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
+      if (Debug) std::cout << "BinaryClient | got CreateMonitoredItems response" << std::endl;
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
+    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
     {
+      if (Debug) std::cout << "BinaryClient | sending DeleteMonitoredItems to server" << std::endl;
       DeleteMonitoredItemsRequest request;
       request.Parameters = params;
       const DeleteMonitoredItemsResponse response = Send<DeleteMonitoredItemsResponse>(request);
       return response.Results;
     }
 
-    virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
+    virtual void Publish(const PublishRequest& originalrequest)
     {
-      PublishRequest request;
+      if (Debug) {std::cout << "BinaryClient | Sending publish request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
+      PublishRequest request(originalrequest); //Should parameter not be const?
       request.Header = CreateRequestHeader();
-      request.Parameters.Acknowledgements = acknowledgements;
 
       ResponseCallback responseCallback = [this](std::vector<char> buffer){
+        if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server"  << std::endl;}
         BufferInputChannel bufferInput(buffer);
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
-        CallbackService.post([this, response]() { this->PublishCallback( response.Result);});
+        CallbackService.post([this, response]() 
+            { 
+              if (Debug) {std::cout << "BinaryClient | Calling callback for publishresponse "  << std::endl;}
+              this->PublishCallbacks[response.Result.SubscriptionID](response.Result);
+            });
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
-      if (Debug) {std::cout << "Sending publish request with " << request.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       Send(request);
     }
 
@@ -513,10 +536,12 @@ private:
       in >> id;
       ResponseHeader header;
       in >> header;
+      if ( Debug )std::cout << "Got data with id: " << id << " and handle " << header.RequestHandle<< std::endl;
 
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
       if (callbackIt == Callbacks.end())
       {
+        std::cout << "No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
         return;
       }
       callbackIt->second(std::move(buffer));
@@ -638,7 +663,7 @@ private:
     Remote::SecureConnectionParams Params;
     std::thread ReceiveThread;
 
-    std::function<void (PublishResult)> PublishCallback;
+    SubscriptionCallbackMap PublishCallbacks;
     SecurityToken ChannelSecurityToken;
     mutable uint32_t SequenceNumber;
     mutable uint32_t RequestNumber;
@@ -646,7 +671,7 @@ private:
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<uint8_t> ContinuationPoint;
     mutable CallbackMap Callbacks;
-    const bool Debug = false;
+    const bool Debug = true;
     bool Finished = false;
 
     std::thread callback_thread;

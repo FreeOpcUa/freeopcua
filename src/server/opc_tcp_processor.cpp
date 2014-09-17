@@ -48,8 +48,8 @@ namespace OpcUa
       , Debug(debug)
       , ChannelID(1)
       , TokenID(2)
+      , SessionID(GenerateSessionId())
     {
-      SessionID = NumericNodeID(5, 0);
       std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
       std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
     }
@@ -116,18 +116,27 @@ namespace OpcUa
       return true;
     }
 
-    void OpcTcpMessages::ForwardPublishResponse(const PublishResult publishResult)
+    void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
+      if ( PublishRequestQueue.empty() )
+      {
+        std::cerr << "Error trying to send publish response while we do not have data from a PublishRequest" << std::endl;
+        return;
+      }
+      std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
+      std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
+      std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
       PublishResponse response;
+
       FillResponseHeader(requestData.requestHeader, response.Header);
-      response.Result = publishResult;
-      
+      response.Result = result;
+     
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
       SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
@@ -136,10 +145,6 @@ namespace OpcUa
       secureHeader.AddSize(RawSize(response));
       if (Debug) {
         std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
-        for  ( NotificationData d: response.Result.Message.Data )
-        {
-          std::cout << "opc_tcp_processor|      " << d.DataChange.Notification.size() <<  " modified items" << std::endl;
-        }
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };
@@ -496,13 +501,23 @@ namespace OpcUa
         case CREATE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing create subscription request." << std::endl;
-          SubscriptionParameters params;
-          istream >> params;
+          CreateSubscriptionRequest request;
+          istream >> request.Parameters;
+          request.Header = requestHeader;
 
           CreateSubscriptionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Data = Server->Subscriptions()->CreateSubscription(params, [this](PublishResult i){ this->ForwardPublishResponse(i); });
+          response.Data = Server->Subscriptions()->CreateSubscription(request, [this](PublishResult i){ 
+              try
+              {
+                this->ForwardPublishResponse(i); 
+              }
+              catch (std::exception& ex)
+              {
+                std::cerr << "Error forwarding publishResult to client: " << ex.what() << std::endl;
+              }
+              });
 
           Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
 
@@ -582,14 +597,16 @@ namespace OpcUa
         case PUBLISH_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl;
-          PublishParameters params;
-          istream >> params;
+          PublishRequest request;
+          request.Header = requestHeader;
+          istream >> request.Parameters;
+
           PublishRequestElement data;
           data.sequence = sequence;
           data.algorithmHeader = algorithmHeader;
           data.requestHeader = requestHeader;
           PublishRequestQueue.push(data);
-          Server->Subscriptions()->Publish(params.Acknowledgements);
+          Server->Subscriptions()->Publish(request);
 
           --SequenceNb; //We do not send response, so do not increase sequence
 
@@ -661,11 +678,20 @@ namespace OpcUa
           return;
         }
 
+        case CALL_REQUEST:
+        {
+          std::stringstream ss;
+          ss << "opc_tcp_processor| ERROR: Call Request not implemented";
+          return;
+        }
+
         default:
         {
           std::stringstream ss;
-          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved.";
-          throw std::logic_error(ss.str());
+          ss << std::endl << std::endl ;
+          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved." << std::endl;
+          ss << std::endl << std::endl;
+          //throw std::logic_error(ss.str());
         }
       }
     }

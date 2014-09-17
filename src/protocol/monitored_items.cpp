@@ -40,6 +40,7 @@ namespace OpcUa
     , MonitoredItemID(1) // 0 is not allowed for integerID
     , RevisedSamplingInterval(0)
     , RevizedQueueSize(0)
+    , Filter()
   {
   }
 
@@ -696,17 +697,17 @@ namespace OpcUa
       *this << data.Header;
       if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter ) 
       {
-        *this << RawSize(data.DataChange);
+        *this << (uint32_t) RawSize(data.DataChange);
         *this << data.DataChange;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::EventFilter ) 
       {
-        *this << RawSize(data.Event);
+        *this << (uint32_t) RawSize(data.Event);
         *this << data.Event;
       }
       else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter ) 
       {
-        *this << RawSize(data.Aggregate);
+        *this << (uint32_t) RawSize(data.Aggregate);
         *this << data.Aggregate;
       }
       else if ( data.Header.TypeID == NodeID(0, 0) ) 

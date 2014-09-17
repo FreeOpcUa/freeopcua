@@ -51,6 +51,15 @@ namespace OpcUa
     Value = 21,
   };
 
+  struct EventNotifier
+  {
+    static const uint8_t SubscribeToEvents = 1 << 0;
+    static const uint8_t Reserved = 1 << 1;
+    static const uint8_t HistoryRead = 1 << 2;
+    static const uint8_t HistoryWrite = 1 << 3;
+    //all other bytes are reserved
+  };
+
   typedef std::bitset<sizeof(uint32_t)> IntBits;
 
   struct ObjectAttributes

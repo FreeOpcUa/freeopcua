@@ -115,26 +115,23 @@ namespace OpcUa
   // NotificationData
   ////////////////////////////////////////////////////////
 
-    NotificationData::NotificationData(DataChangeNotification notification)
+    NotificationData::NotificationData(DataChangeNotification notification) : DataChange(notification)
     {
       //Header.TypeID  = ObjectID::DataChangeNotification; 
       Header.TypeID  = ExpandedObjectID::DataChangeNotification;
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
-      DataChange = notification;
     }
 
-    NotificationData::NotificationData(EventNotificationList notification)
+    NotificationData::NotificationData(EventNotificationList notification) : Events(notification)
     {
       Header.TypeID  = ExpandedObjectID::EventNotificationList; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
-      Events = notification;
     }
 
-    NotificationData::NotificationData(StatusChangeNotification notification)
+    NotificationData::NotificationData(StatusChangeNotification notification) : StatusChange(notification)
     {
       Header.TypeID  = ExpandedObjectID::StatusChangeNotification; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
-      StatusChange = notification;
     }
 
 
@@ -184,7 +181,7 @@ namespace OpcUa
     ////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<SubscriptionParameters>(const OpcUa::SubscriptionParameters& params)
+    std::size_t RawSize<SubscriptionParameters>(const SubscriptionParameters& params)
     {
       return RawSize(params.RequestedPublishingInterval) +
           RawSize(params.RequestedLifetimeCount) +

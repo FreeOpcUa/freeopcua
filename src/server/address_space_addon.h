@@ -52,18 +52,10 @@ namespace OpcUa
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
-    public: // SubscriptionServices
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback=0); 
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions);
-      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements);
-
-    public: // MonitoredItemsServices
-      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters);
-      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params); 
-      
-
     public: // Server internal methods
-      virtual void TriggerEvent(NodeID node, Event event);
+      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback);
+      virtual void DeleteDataChangeCallback(uint32_t clienthandle);
+      virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
 
     private:
       struct Options

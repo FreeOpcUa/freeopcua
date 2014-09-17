@@ -18,7 +18,6 @@
  ******************************************************************************/
 
 
-#include <opc/ua/event.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
@@ -30,10 +29,12 @@ namespace OpcUa
   Subscription::Subscription(Remote::Server::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
     : Server(server), Client(callback), Debug(debug)
   {
-    Data = Server->Subscriptions()->CreateSubscription(params, [&](PublishResult i){ this->PublishCallback(i); } );
+    CreateSubscriptionRequest request;
+    request.Parameters = params;
+    Data = Server->Subscriptions()->CreateSubscription(request, [&](PublishResult i){ this->PublishCallback(i); } );
     //After creating the subscription, it is expected to send at least one publish request
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>());
+    Server->Subscriptions()->Publish(PublishRequest());
+    Server->Subscriptions()->Publish(PublishRequest());
   }
 
   void Subscription::Delete()
@@ -50,7 +51,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); //To be finished
     //FIXME: finish to handle all types of publishresults!
 
-    if (Debug){ std::cout << "Suscription::PublishCallback called" << std::endl; }
+    if (Debug){ std::cout << "Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
     for (const NotificationData& data: result.Message.Data )
     {
       if (Debug) { std::cout << "Notification is of type DataChange\n"; }
@@ -65,8 +66,8 @@ namespace OpcUa
           }
           else
           {
-            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.Node << std::endl; }
-            Client.DataChange( item.ClientHandle, mapit->second.Node, item.Value.Value, mapit->second.Attribute);
+            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
+            Client.DataChange( item.ClientHandle, mapit->second.TargetNode, item.Value.Value, mapit->second.Attribute);
           }
         }
       }
@@ -75,8 +76,6 @@ namespace OpcUa
         if (Debug) { std::cout << "Notification is of type Event\n"; }
         for ( EventFieldList ef :  data.Events.Events)
         {
-
-
           AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
@@ -84,13 +83,19 @@ namespace OpcUa
           }
           else
           {
-            //FIXME: it might be an idea to push the call to another thread to avoid hanging on user error
-            //mapit->second.
-            //FIXME: think about event format!! should we havae paires? or better create an event object
             Event ev;
-            //ev.
+            uint32_t count = 0;
+            if ( mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size() )
+            {
+              throw std::runtime_error("Error receive event format does not match requested filter");
+            }
+            for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
+            {
+              ev.SetValue(op.BrowsePath, ef.EventFields[count]);
+              ++count;
+            }
             if (Debug) { std::cout << "Debug: Calling client callback\n"; }
-            Client.Event(ef.ClientHandle, ef.EventFields);
+            Client.Event(ef.ClientHandle, ev);
             if (Debug) { std::cout << "Debug: callback call finished\n"; }
           }
         }
@@ -108,7 +113,9 @@ namespace OpcUa
     OpcUa::SubscriptionAcknowledgement ack;
     ack.SubscriptionID = GetId();
     ack.SequenceNumber = result.Message.SequenceID;
-    Server->Subscriptions()->Publish(std::vector<SubscriptionAcknowledgement>({ack}));
+    PublishRequest request;
+    request.Parameters.Acknowledgements.push_back(ack);
+    Server->Subscriptions()->Publish(request);
   }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
@@ -157,7 +164,7 @@ namespace OpcUa
       MonitoredItemData mdata; 
       mdata.MonitoredItemID = res.MonitoredItemID;
       mdata.Attribute =  attributes[i].Attribute;
-      mdata.Node =  Node(Server, attributes[i].Node);
+      mdata.TargetNode =  Node(Server, attributes[i].Node);
       AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
       handles.push_back(itemsParams.ItemsToCreate[i].Parameters.ClientHandle);
       ++i;
@@ -197,12 +204,15 @@ namespace OpcUa
     }
   }
 
-  uint32_t Subscription::SubscribeEvents(const Node& eventtype)
+  uint32_t Subscription::SubscribeEvents()
+  {
+    return SubscribeEvents(Node(Server, ObjectID::Server), Node(Server, ObjectID::BaseEventType));
+  }
+
+  uint32_t Subscription::SubscribeEvents(const Node& node, const Node& eventtype)  
   {
     EventFilter filter;
-    //We only subscribe to variabes, since properties are supposed not to change
-    //FIXME: order of variables might not be constant on all servers, we should order variables
-    for ( Node& child: eventtype.GetVariables() )
+    for ( Node& child: eventtype.GetProperties() )
     {
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
@@ -210,7 +220,7 @@ namespace OpcUa
       op.BrowsePath = std::vector<QualifiedName>({child.GetName()});
       filter.SelectClauses.push_back(op);
     }
-    return SubscribeEvents(Node(Server, ObjectID::Server), filter);
+    return SubscribeEvents(node, filter);
   }
 
   uint32_t Subscription::SubscribeEvents(const Node& node, const EventFilter& eventfilter)
@@ -244,9 +254,10 @@ namespace OpcUa
     }
 
     MonitoredItemData mdata;
-    mdata.Node = Node(Server, avid.Node);
+    mdata.TargetNode = Node(Server, avid.Node);
     mdata.Attribute = avid.Attribute;
     mdata.MonitoredItemID = results[0].MonitoredItemID;
+    mdata.Filter = results[0].Filter;
     AttributeValueMap[params.ClientHandle] = mdata;
 
 

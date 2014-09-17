@@ -8,29 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include "address_space_addon.h"
-#include "internal_subscription.h"
-
-#include <opc/ua/event.h>
-#include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/subscriptions.h>
-#include <opc/ua/protocol/strings.h>
-#include <opc/ua/protocol/string_utils.h>
-#include <opc/ua/protocol/view.h>
-#include <opc/ua/services/attributes.h>
-#include <opc/ua/services/node_management.h>
-
-#include <boost/asio.hpp>
-#include <boost/thread/shared_mutex.hpp>
-#include <ctime>
-#include <limits>
-#include <list>
-#include <map>
-#include <queue>
-#include <deque>
-#include <set>
-#include <thread>
-
+#include "address_space_internal.h"
 
 
 namespace OpcUa
@@ -40,45 +18,9 @@ namespace OpcUa
 
     using namespace OpcUa::Remote;
 
-    typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
-    
-    //store subscription for one attribute
-    struct AttSubscription
-    {
-      IntegerID SubscriptionId;
-      IntegerID MonitoredItemId;
-      MonitoringParameters Parameters;
-    };
-
-    //Store an attribute value together with a link to all its suscriptions
-    struct AttributeValue
-    {
-      DataValue Value;
-      std::list<AttSubscription> AttSubscriptions; // a pair is subscirotionID, monitoredItemID
-    };
-
-    typedef std::map<AttributeID, AttributeValue> AttributesMap;
-    
-    //Store all data related to a Node
-    struct NodeStruct
-    {
-      AttributesMap Attributes;
-      std::vector<ReferenceDescription> References;
-    };
-
-    typedef std::map<NodeID, NodeStruct> NodesMap;
-
-
-
-    class AddressSpaceInMemory : public UaServer::AddressSpace
-    {
-    public:
-      AddressSpaceInMemory(bool debug)
-        : Debug(debug), work(new boost::asio::io_service::work(io))
+    AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
+        : Debug(debug)
       {
-        //Initialize the worker thread for subscriptions
-        service_thread = std::thread([&](){ io.run(); });
-
         ObjectAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::Root);
         attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -92,141 +34,11 @@ namespace OpcUa
         AddNode(rootNode);
       }
 
-     ~AddressSpaceInMemory()
+    AddressSpaceInMemory::~AddressSpaceInMemory()
       {
-        if (Debug) std::cout << "address_space_in_memory| Stopping boost io service." << std::endl;
-        io.stop();
-        if (Debug) std::cout << "address_space_in_memory| Joining service thread." << std::endl;
-        service_thread.join();
       }
 
-
-      void DeleteAllSubscriptions()
-      {
-        if (Debug) std::cout << "Deleting all subscriptions." << std::endl;
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<IntegerID> ids(SubscriptionsMap.size());\
-        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-        DeleteSubscriptions(ids);
-      }
-
-  /*    
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        //We need to stop the subscriptions and then delete them in io_service to make sure their are stopped before they are deleted
-        for (auto id: subscriptions)
-        {
-          std::cout << "Stopping Subscription (part 1): " << id << std::endl;
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(id);
-          if ( itsub != SubscriptionsMap.end()) 
-          {
-            itsub->second->Stop();
-          }
-        }
-
-        io.dispatch([=](){ this->_DeleteSubscriptions(subscriptions); });
-        //Now return good for everything, we do not care :-)
-        std::vector<StatusCode> codes;
-        for ( auto _ : subscriptions)
-        {
-          codes.push_back(StatusCode::Good);
-        }
-        return codes;
-      }
-      
- */     
-
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<StatusCode> result;
-        for (const IntegerID& subid: subscriptions)
-        {
-          std::cout << "Deleting Subscription: " << subid << std::endl;
-          size_t count = SubscriptionsMap.erase(subid);
-          if ( count > 0)
-          {
-            result.push_back(StatusCode::Good);
-          }
-          else
-          {
-            std::cout << "Error, got request to delete non existing Subscription: " << subid << std::endl;
-            result.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-        }
-        return result;
-      }
-
-      virtual SubscriptionData CreateSubscription(const SubscriptionParameters& params, std::function<void (PublishResult)> callback)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        SubscriptionData data;
-        data.ID = ++LastSubscriptionID;
-        data.RevisedLifetimeCount = params.RequestedLifetimeCount;
-        data.RevisedPublishingInterval = params.RequestedPublishingInterval;
-        data.RevizedMaxKeepAliveCount = params.RequestedMaxKeepAliveCount;
-        std::cout << "Creating Subscription with ID: " << data.ID << std::endl;
-
-        std::shared_ptr<InternalSubscription> sub(new InternalSubscription(data, io, callback));
-        SubscriptionsMap[data.ID] = sub;
-        return data;
-      }
-
-      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        MonitoredItemsData data;
-
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
-        {
-          for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
-          {
-            CreateMonitoredItemsResult res;
-            res.Status = StatusCode::BadSubscriptionIdInvalid;
-            data.Results.push_back(res);
-          }
-          return data;
-        }
-
-        for (const MonitoredItemRequest& req: params.ItemsToCreate)
-        {
-          CreateMonitoredItemsResult result = CreateMonitoredItem(itsub, req);
-          data.Results.push_back(result);
-        }
-        return data;
-     
-      }
-
-      virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
-        std::vector<StatusCode> results;
-
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
-        if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
-        {
-          for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
-          {
-            results.push_back(StatusCode::BadSubscriptionIdInvalid);
-          }
-          return results;
-        }
-
-        results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
-        return results;
-      }
-
-
-
-      virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
+      std::vector<AddNodesResult> AddressSpaceInMemory::AddNodes(const std::vector<AddNodesItem>& items)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -238,8 +50,10 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
+      std::vector<StatusCode> AddressSpaceInMemory::AddReferences(const std::vector<AddReferencesItem>& items)
       {
+        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> results;
         for (const auto& item : items)
         {
@@ -248,7 +62,7 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+      std::vector<BrowsePathResult> AddressSpaceInMemory::TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -261,9 +75,10 @@ namespace OpcUa
         return results;
       }
 
-      virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
+      std::vector<ReferenceDescription> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery& query) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
         if (Debug) std::cout << "Browsing." << std::endl;
         std::vector<ReferenceDescription> result;
         for ( BrowseDescription browseDescription: query.NodesToBrowse)
@@ -298,14 +113,14 @@ namespace OpcUa
         return result;
       }
 
-      virtual std::vector<ReferenceDescription> BrowseNext() const
+      std::vector<ReferenceDescription> AddressSpaceInMemory::BrowseNext() const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
         return std::vector<ReferenceDescription>();
       }
 
-      virtual std::vector<DataValue> Read(const ReadParameters& params) const
+      std::vector<DataValue> AddressSpaceInMemory::Read(const ReadParameters& params) const
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -317,9 +132,10 @@ namespace OpcUa
         return values;
       }
 
-      virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values)
+      std::vector<StatusCode> AddressSpaceInMemory::Write(const std::vector<OpcUa::WriteValue>& values)
       {
         boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
         std::vector<StatusCode> statuses;
         for (WriteValue value : values)
         {
@@ -333,73 +149,7 @@ namespace OpcUa
         return statuses;
       }
 
-      virtual void Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
-      {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-        
-        if ( PublishRequestsQueue > 10000 ) //FIXME: It this number defined by spec?
-        {
-          return; //FIXME: spec says we should return error to warn client
-        }
-        ++ PublishRequestsQueue; 
-
-        for (SubscriptionAcknowledgement ack: acknowledgements)
-        {
-          SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
-          if ( sub_it != SubscriptionsMap.end())
-          {
-            sub_it->second->NewAcknowlegment(ack); 
-          }
-        }
-      }
-
-      void TriggerEvent(NodeID node, Event event)
-      {
-        //find node
-        NodesMap::iterator it = Nodes.find(node);
-        if ( it == Nodes.end() )
-        {
-          std::cout << "NodeID does not exist, raise exception\n";
-        }
-        else
-        {
-          //find event_notifier attribute of node
-          AttributesMap::iterator ait = it->second.Attributes.find(AttributeID::EVENT_NOTIFIER);
-          if ( ait == it->second.Attributes.end() )
-          {
-            std::cout << "attempt o trigger node which has not event_notifier attribute, should raise exception\n";
-          }
-          else
-          {
-            EnqueueEvent(ait->second, event);
-          }
-        }
-      }
-
-    private:
-
-
-      void EnqueueEvent(AttributeValue& attval, const Event& event)
-      {
-        //go through all subscription of attribute and add new event
-        for (auto attsub = attval.AttSubscriptions.begin(); attsub != attval.AttSubscriptions.end() ;)
-        {
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-          if ( itsub == SubscriptionsMap.end() )
-          {
-            attsub = attval.AttSubscriptions.erase(attsub);
-          }
-          bool res = itsub->second->EnqueueEvent(attsub->MonitoredItemId, event);
-          if ( ! res )
-          {
-            attsub = attval.AttSubscriptions.erase(attsub);
-          }
-          ++attsub;
-        }
-      }
-
-
-      std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
+      std::tuple<bool, NodeID> AddressSpaceInMemory::FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(nodeid);
         if ( nodeit != Nodes.end() )
@@ -416,7 +166,7 @@ namespace OpcUa
         return std::make_tuple(false, NodeID());
       }
 
-      BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const
+      BrowsePathResult AddressSpaceInMemory::TranslateBrowsePath(const BrowsePath& browsepath) const
       {
         NodeID current = browsepath.StartingNode;
         BrowsePathResult result;
@@ -442,40 +192,7 @@ namespace OpcUa
         return result;
       }
 
-
-      CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request)
-      {
-        NodesMap::iterator node_it = Nodes.find(request.ItemToMonitor.Node);
-        if ( node_it == Nodes.end() )
-        {
-          CreateMonitoredItemsResult res;
-          res.Status = OpcUa::StatusCode::BadNodeIdUnknown;
-          std::cout << "NodeID does not exist: " << request.ItemToMonitor.Node << std::endl;
-          return res;
-        }
-
-        AttributesMap::iterator attrit = node_it->second.Attributes.find(request.ItemToMonitor.Attribute);
-        if ( attrit == node_it->second.Attributes.end() )
-        {
-          CreateMonitoredItemsResult res;
-          res.Status = OpcUa::StatusCode::BadAttributeIdInvalid;
-          std::cout << "attribute not found" << std::endl;
-          return res;
-        }
-      
-        std::cout << "creating monitored item with sub: " << subscription_it->first << std::endl;
-        CreateMonitoredItemsResult res = subscription_it->second->AddMonitoredItem(request);
-
-        AttSubscription attsub;
-        attsub.SubscriptionId = subscription_it->first;
-        attsub.MonitoredItemId = res.MonitoredItemID;
-        attsub.Parameters = request.Parameters;
-        attrit->second.AttSubscriptions.push_back(attsub); 
-
-        return res;
-      }
-
-      DataValue GetValue(const NodeID& node, AttributeID attribute) const
+      DataValue AddressSpaceInMemory::GetValue(const NodeID& node, AttributeID attribute) const
       {
         NodesMap::const_iterator nodeit = Nodes.find(node);
         if ( nodeit != Nodes.end() )
@@ -483,6 +200,12 @@ namespace OpcUa
           AttributesMap::const_iterator attrit = nodeit->second.Attributes.find(attribute);
           if ( attrit != nodeit->second.Attributes.end() )
           {
+            if ( attrit->second.GetValueCallback )
+            {
+              if (Debug) std::cout << "A callback is set for this value, calling callback" << std::endl;
+              return attrit->second.GetValueCallback();
+            }
+            if (Debug) std::cout << "No callback is set for this value returning stored value" << std::endl;
             return attrit->second.Value;
           }
         }
@@ -492,7 +215,7 @@ namespace OpcUa
         return value;
       }
 
-      StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
+      uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
       {
         NodesMap::iterator it = Nodes.find(node);
         if ( it != Nodes.end() )
@@ -500,36 +223,85 @@ namespace OpcUa
           AttributesMap::iterator ait = it->second.Attributes.find(attribute);
           if ( ait != it->second.Attributes.end() )
           {
-            ait->second.Value = data;
-            UpdateSubscriptions(ait->second);
+            static uint32_t handle = 0;
+            ++handle;
+            DataChangeCallbackData data;
+            data.DataChangeCallback = callback;
+            data.ClientHandle = clienthandle;
+            ait->second.DataChangeCallbacks[handle] = data;
+            ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
+            return handle;
+          }
+        }
+        //return 0; //SHould I return 0 or raise exception?
+        throw std::runtime_error("NodeID or attribute not found");
+      }
+
+      void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle )
+      {
+        std::cout << "Deleting callback with client id. " << serverhandle << std::endl;
+
+        ClientIDToAttributeMapType::iterator it = ClientIDToAttributeMap.find(serverhandle);
+        if ( it == ClientIDToAttributeMap.end() )
+        {
+          std::cout << "Error, request to delete a callback using unknown handle" << serverhandle << std::endl;
+          return;
+        }
+
+        NodesMap::iterator nodeit = Nodes.find(it->second.Node);
+        if ( nodeit != Nodes.end() )
+        {
+          AttributesMap::iterator ait = nodeit->second.Attributes.find(it->second.Attribute);
+          if ( ait != nodeit->second.Attributes.end() )
+          {
+            size_t nb = ait->second.DataChangeCallbacks.erase(serverhandle); 
+            std::cout << "deleted " << nb << " callbacks" << std::endl;
+            ClientIDToAttributeMap.erase(serverhandle);
+            return;
+          }
+        }
+        throw std::runtime_error("NodeID or attribute nor found");
+      }
+
+      StatusCode AddressSpaceInMemory::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
+      {
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it != Nodes.end() )
+        {
+          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+          if ( ait != it->second.Attributes.end() )
+          {
+            ait->second.GetValueCallback = callback;
             return StatusCode::Good;
           }
         }
         return StatusCode::BadAttributeIdInvalid;
       }
 
-      void UpdateSubscriptions(AttributeValue& val)
+      StatusCode AddressSpaceInMemory::SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
       {
-        for (auto attsub = val.AttSubscriptions.begin(); attsub !=val.AttSubscriptions.end();)
+        NodesMap::iterator it = Nodes.find(node);
+        if ( it != Nodes.end() )
         {
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(attsub->SubscriptionId);
-          if ( itsub == SubscriptionsMap.end() )
+          AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+          if ( ait != it->second.Attributes.end() )
           {
-            attsub = val.AttSubscriptions.erase(attsub);
-            continue;
+            DataValue value(data);
+            value.ServerTimestamp = CurrentDateTime();
+            value.SourceTimestamp = CurrentDateTime(); //FIXME: should allow client to set this one
+            ait->second.Value = value;
+            //call registered callback
+            for (auto pair : ait->second.DataChangeCallbacks)
+            {
+              pair.second.DataChangeCallback(pair.second.ClientHandle, ait->second.Value);
+            }
+            return StatusCode::Good;
           }
-          bool res = itsub->second->EnqueueDataChange(attsub->MonitoredItemId, val.Value);
-          if ( ! res ) 
-          {
-            attsub = val.AttSubscriptions.erase(attsub);
-            continue;
-          }
-  
-          ++attsub;
         }
+        return StatusCode::BadAttributeIdInvalid;
       }
 
-      bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
+      bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
       {
         if (Debug)
           std::cout << "Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
@@ -553,7 +325,7 @@ namespace OpcUa
         return true;
       }
 
-      bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const
+      bool AddressSpaceInMemory::IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const
       {
         if (!includeSubtypes)
         {
@@ -564,7 +336,7 @@ namespace OpcUa
         return resultIt != suitableTypes.end();
       }
 
-      std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
+      std::vector<NodeID> AddressSpaceInMemory::SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const
       {
         std::vector<NodeID> subNodes;
         for ( NodeID nodeid: sourceNodes )
@@ -588,7 +360,7 @@ namespace OpcUa
         return sourceNodes;
       }
 
-      AddNodesResult AddNode( const AddNodesItem& item )
+      AddNodesResult AddressSpaceInMemory::AddNode( const AddNodesItem& item )
       {
         AddNodesResult result;
         if (Debug) std::cout << "address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
@@ -666,7 +438,7 @@ namespace OpcUa
         return result;
       }
 
-      StatusCode AddReference(const AddReferencesItem& item)
+      StatusCode AddressSpaceInMemory::AddReference(const AddReferencesItem& item)
       {
         NodesMap::iterator node_it = Nodes.find(item.SourceNodeID);
         if ( node_it == Nodes.end() )
@@ -686,18 +458,6 @@ namespace OpcUa
         return StatusCode::Good;
       }
 
-    private:
-      bool Debug = false;
-      mutable boost::shared_mutex DbMutex;
-      NodesMap Nodes;
-      SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
-      uint32_t LastSubscriptionID = 2;
-      uint32_t PublishRequestsQueue = 0;
-      boost::asio::io_service io;
-      std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
-      std::thread service_thread;
-
-    };
   }
 
   namespace UaServer
@@ -707,4 +467,6 @@ namespace OpcUa
       return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory(debug));
     }
   }
+
+
 }

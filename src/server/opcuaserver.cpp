@@ -65,10 +65,11 @@ namespace OpcUa
     Registry->RegisterEndpointsServices(EndpointsServices);
 
     AddressSpace = UaServer::CreateAddressSpace(Debug);
+    SubscriptionService = UaServer::CreateSubscriptionService(AddressSpace, Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);
-    Registry->RegisterSubscriptionServices(AddressSpace);
+    Registry->RegisterSubscriptionServices(SubscriptionService);
 
     UaServer::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
 
@@ -115,6 +116,20 @@ namespace OpcUa
     return GetNode(ObjectID::ObjectsFolder);
   }
 
+  Node OPCUAServer::GetServerNode()
+  {
+    return GetNode(ObjectID::Server);
+  }
+
+  void OPCUAServer::EnableEventNotification()
+  {
+    Node server = GetServerNode();
+    uint8_t notifierval = 0;
+    notifierval |= EventNotifier::SubscribeToEvents; 
+
+    server.SetAttribute(AttributeID::EVENT_NOTIFIER, notifierval);
+  }
+
   std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(uint period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;
@@ -125,7 +140,7 @@ namespace OpcUa
 
   void OPCUAServer::TriggerEvent(Event event)
   {
-    AddressSpace->TriggerEvent(ObjectID::Server, event);
+    SubscriptionService->TriggerEvent(ObjectID::Server, event);
   }
 
 }

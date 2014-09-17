@@ -53,21 +53,37 @@ int main(int argc, char** argv)
   NodeID nid(99, 1);
   QualifiedName qn("NewObject", 2);
   Node newobject = objects.AddObject(nid, qn);
-  //Add a virable to objevt
+  //Add a variable to objevt
   Node myvar = newobject.AddVariable(NodeID(999, 0), QualifiedName("MyVariable", 2), Variant(8));
+
+  //Uncomment following to subscribe to datachange events inside server
   /*
- 
   SubClient clt; 
   std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
   sub->SubscribeDataChange(myvar);
   */
+
   uint32_t counter = 0;
   myvar.SetValue(Variant(counter)); //will change value and trigger datachange event
+
+  //Create event
+  server.EnableEventNotification();
+  Event ev(ObjectID::BaseEventType); //you should create your own type
+  ev.Severity = 2;
+  ev.SourceNode = ObjectID::Server;
+  ev.SourceName = "Event from FreeOpcUA";
+  ev.Time = CurrentDateTime();  
+
+
   std::cout << "Ctrl-C to exit" << std::endl;
   for(;;)
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
+    std::stringstream ss;
+    ss << "This is event number: " << counter ;
+    ev.Message = LocalizedText(ss.str());
+    server.TriggerEvent(ev);
   }
 
   server.Stop();
