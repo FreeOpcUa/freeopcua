@@ -26,12 +26,19 @@ namespace OpcUa
       : public ViewServices
       , public AttributeServices
       , public NodeManagementServices
-      , public SubscriptionServices
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpace);
+      
+      //Server side methods
+      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback) = 0;
+      virtual void DeleteDataChangeCallback(uint32_t clienthandle) = 0;
+      virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback) = 0;
+      //FIXME : SHould we also expose SetValue and GetValue on server side? then we need to lock them ...
 
-      virtual void TriggerEvent(NodeID node, Event event) = 0;
+
+
+
     };
 
     AddressSpace::UniquePtr CreateAddressSpace(bool debug);

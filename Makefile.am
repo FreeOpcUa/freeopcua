@@ -85,6 +85,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/address_space_addon.cpp \
 	src/server/address_space_addon.h \
 	src/server/address_space_internal.cpp \
+	src/server/address_space_internal.h \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_parameters.h \
 	src/server/endpoints_services_addon.cpp \
@@ -106,6 +107,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/server_object_addon.h \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
+	src/server/subscription_service_internal.h \
+	src/server/subscription_service_internal.cpp \
 	src/server/standard_namespace_addon.cpp \
 	src/server/standard_namespace.cpp \
 	src/server/tcp_server.cpp \

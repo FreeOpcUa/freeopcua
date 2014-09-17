@@ -149,8 +149,13 @@ TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
   params.RequestedMaxKeepAliveCount = 3;
   params.RequestedPublishingInterval = 1000;
 
+
+  OpcUa::CreateSubscriptionRequest req;
+  req.Parameters = params;
   OpcUa::SubscriptionData data;
-  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(params));
+  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(req, [](OpcUa::PublishResult){
+
+  }));
 
   subscriptions.reset();
   computer.reset();

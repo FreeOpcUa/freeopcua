@@ -39,7 +39,7 @@ namespace OpcUa
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
       void DeleteSubscriptions(const std::vector<IntegerID>& ids);
       void DeleteAllSubscriptions();
-      void ForwardPublishResponse(PublishResult result);
+      void ForwardPublishResponse(const PublishResult response);
 
     private:
       boost::shared_mutex ProcessMutex;

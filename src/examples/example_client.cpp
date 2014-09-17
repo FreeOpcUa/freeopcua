@@ -40,14 +40,14 @@ int main(int argc, char** argv)
       OpcUa::RemoteClient client(endpoint);
       client.Connect();
 
-      OpcUa::Node root = client.GetRoot();
+      OpcUa::Node root = client.GetRootNode();
       std::cout << "Root node is: " << root << std::endl;
       std::vector<std::string> path({"Objects", "Server"});
       OpcUa::Node server = root.GetChild(path);
       std::cout << "Server node obtained by path: " << server << std::endl;
 
       std::cout << "Child of objects node are: " << std::endl;
-      for (OpcUa::Node node : client.GetObjectsFolder().GetChildren())
+      for (OpcUa::Node node : client.GetObjectsNode().GetChildren())
         std::cout << "    " << node << std::endl;
 
       std::cout << "NamespaceArray is: " << std::endl;

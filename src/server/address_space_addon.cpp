@@ -51,7 +51,6 @@ namespace OpcUa
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
       InternalServer->RegisterNodeManagementServices(Registry);
-      InternalServer->RegisterSubscriptionServices(Registry);
     }
 
     void AddressSpaceAddon::Stop()
@@ -59,7 +58,6 @@ namespace OpcUa
       InternalServer->UnregisterViewServices();
       InternalServer->UnregisterAttributeServices();
       InternalServer->UnregisterNodeManagementServices();
-      InternalServer->UnregisterSubscriptionServices();
       InternalServer.reset();
       Registry.reset();
     }
@@ -108,35 +106,21 @@ namespace OpcUa
       return Registry->Write(filter);
     }
 
-    SubscriptionData AddressSpaceAddon::CreateSubscription(const SubscriptionParameters& parameters, std::function<void (PublishResult)> callback)
+    uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback)
     {
-      return Registry->CreateSubscription(parameters, callback);
+      return 0;
     }
 
-    std::vector<StatusCode> AddressSpaceAddon::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+    void AddressSpaceAddon::DeleteDataChangeCallback(uint32_t clienthandle)
     {
-      return Registry->DeleteSubscriptions(subscriptions);
     }
 
-    MonitoredItemsData AddressSpaceAddon::CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    StatusCode AddressSpaceAddon::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
     {
-      return Registry->CreateMonitoredItems(parameters);
+      return StatusCode::BadNotImplemented;
     }
+ 
 
-    std::vector<StatusCode> AddressSpaceAddon::DeleteMonitoredItems(const DeleteMonitoredItemsParameters params)
-    {
-      return Registry->DeleteMonitoredItems(params);
-    }
-
-    void AddressSpaceAddon::Publish(const std::vector<SubscriptionAcknowledgement>& acknowledgements)
-    {
-      return Registry->Publish(acknowledgements);
-    }
-
-    void AddressSpaceAddon::TriggerEvent(NodeID node, Event event)
-    {
-      return Registry->TriggerEvent(node, event);
-    }
   } // namespace Internal
 } // namespace OpcUa
 

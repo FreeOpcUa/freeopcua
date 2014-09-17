@@ -20,6 +20,7 @@
 #pragma once
 
 #include <opc/ua/node.h>
+#include <opc/ua/event.h>
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/services/subscriptions.h>
 
@@ -34,8 +35,9 @@ namespace OpcUa
   struct MonitoredItemData
   {
     IntegerID MonitoredItemID;
-    Node MonitoringNode;
+    Node TargetNode;
     AttributeID Attribute;
+    MonitoringFilter Filter;
   };
 
   typedef std::map<IntegerID, MonitoredItemData> AttValMap;
@@ -47,10 +49,9 @@ namespace OpcUa
       //Called for each datachange events
       virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const {std::cout << "default dc" << std::endl;};
       //Called for every events receive from server
-      // order and value of variants depend on event subscription and applied filter
-      virtual void Event(uint32_t handle, std::vector<Variant> xx) const {}; 
+      virtual void Event(uint32_t handle, const Event& event) const {std::cout << "default c++ event callback has been called" << std::endl;}; 
       //Called at server state changed
-      virtual void StatusChange(StatusCode newstatus) const  {}; 
+      virtual void StatusChange(StatusCode status) const  {}; 
   };
 
 
@@ -63,7 +64,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false);
+      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false); 
       //Delete the subscription from server
       void Delete();
 
@@ -83,7 +84,8 @@ namespace OpcUa
       //Subscribe to Events for given node
       //As far as I remember the only allowed node is Server in most SDKs
       uint32_t SubscribeEvents(const Node& node, const EventFilter& eventfilter); 
-      uint32_t SubscribeEvents(const Node& eventype); //subscribe to all variables og given event type at the server node
+      uint32_t SubscribeEvents(const Node& node, const Node& eventType); //subscribe to all variables og given event type 
+      uint32_t SubscribeEvents(); //subscribe to variables of baseEventTypes and ServerNode 
 
       //Subscribe to server status change
       // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now

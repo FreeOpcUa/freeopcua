@@ -67,16 +67,22 @@ namespace OpcUa
     return Node(Server, nodeId);
   }
 
-  Node RemoteClient::GetRoot() const
+  Node RemoteClient::GetRootNode() const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, OpcUa::ObjectID::RootFolder);
   }
 
-  Node RemoteClient::GetObjectsFolder() const
+  Node RemoteClient::GetObjectsNode() const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, OpcUa::ObjectID::ObjectsFolder);
+  }
+
+  Node RemoteClient::GetServerNode() const
+  {
+    if ( ! Server ) { throw NotConnectedError();}
+    return Node(Server, OpcUa::ObjectID::Server);
   }
 
   std::unique_ptr<Subscription> RemoteClient::CreateSubscription(uint period, SubscriptionClient& callback)

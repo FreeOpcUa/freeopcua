@@ -15,6 +15,7 @@
 #include <opc/ua/server/endpoints_services.h>
 #include <opc/ua/server/opc_tcp_async.h>
 #include <opc/ua/server/services_registry.h>
+#include <opc/ua/server/subscription_service.h>
 
 
 namespace OpcUa
@@ -30,6 +31,7 @@ namespace OpcUa
       void SetServerName(const std::string& name){this->Name = name;}
       void AddAddressSpace(const std::string& path) {xml_address_spaces.push_back(path);}
       void SetLoadCppAddressSpace(bool val=true){loadCppAddressSpace = val;}
+      void EnableEventNotification();
 
       void Start();
       void Stop();
@@ -37,6 +39,7 @@ namespace OpcUa
       //Node GetNode(std::vector<std::string> browsepath);
       Node GetRootNode();
       Node GetObjectsNode();
+      Node GetServerNode();
       Node GetNode(const NodeID& nodeid);
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
       Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
@@ -56,10 +59,9 @@ namespace OpcUa
       bool loadCppAddressSpace = true; //Always true as long as we have not fixed the loading of xml addressspace
 
       Server::ServicesRegistry::SharedPtr Registry;
-      //UaServer::TcpServer::SharedPtr TcpServer;
       Server::EndpointsRegistry::SharedPtr EndpointsServices;
       Server::AddressSpace::SharedPtr AddressSpace;
-      //UaServer::OpcUaProtocol::SharedPtr Protocol;
+      Server::SubscriptionService::SharedPtr SubscriptionService;
       Server::AsyncOpcTcp::SharedPtr AsyncServer;
       Common::Thread::UniquePtr ListenThread;
 
