@@ -91,6 +91,46 @@ namespace OpcUa
             }
             for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
             {
+              if ( op.BrowsePath.size() == 1 )
+              {
+                if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
+                {
+                  ev.EventId = ef.EventFields[count].Value.ByteStrings[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("EventType", 0) )
+                {
+                  ev.EventType = ef.EventFields[count].Value.Node[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("SourceNode", 0) )
+                {
+                  ev.SourceNode = ef.EventFields[count].Value.Node[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("SourceName", 0) )
+                {
+                  ev.SourceName = ef.EventFields[count].Value.String[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("Message", 0) )
+                {
+                  ev.Message = ef.EventFields[count].Value.Text[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("Severity", 0) )
+                {
+                  ev.Severity = ef.EventFields[count].Value.UInt16[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("LocalTime", 0) )
+                {
+                  ev.LocalTime = ef.EventFields[count].Value.Time[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
+                {
+                  ev.ReceiveTime = ef.EventFields[count].Value.Time[0];
+                }
+                else if ( op.BrowsePath[0] == QualifiedName("Time", 0) )
+                {
+                  ev.Time = ef.EventFields[count].Value.Time[0];
+                }
+              }
+              //Add anyway field as value
               ev.SetValue(op.BrowsePath, ef.EventFields[count]);
               ++count;
             }
@@ -131,6 +171,8 @@ namespace OpcUa
 
   std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<AttributeValueID>& attributes)
   {
+    std::unique_lock<std::mutex> lock(Mutex); 
+
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
 
@@ -179,22 +221,24 @@ namespace OpcUa
 
   void Subscription::UnSubscribe(std::vector<uint32_t> handles) 
   {
+    std::unique_lock<std::mutex> lock(Mutex); 
+
     DeleteMonitoredItemsParameters params;
     params.SubscriptionId = Data.ID;
     std::vector<IntegerID> mids;
     for (auto id : handles)
     {
-      AttValMap::iterator mapit = AttributeValueMap.find(IntegerID(id));
-      if ( mapit != AttributeValueMap.end() )
+      if (Debug) std::cout << "Sending unsubscribe for monitoreditemsid: " << id << std::endl;
+      mids.push_back(IntegerID(id));
+      //Now trying to remove monitoreditem from our internal cache
+      for ( auto pair : AttributeValueMap )
       {
-        mids.push_back(mapit->second.MonitoredItemID);
+        if (pair.second.MonitoredItemID == id)
+        {
+          AttributeValueMap.erase(pair.first);
+          break; //we modified our iterating object, so quit!!
+        }
       }
-      else
-      {
-        //To no not confuse client we send to the server the last id it may use... but will this id one day exist?
-        mids.push_back(IntegerID(std::numeric_limits<uint32_t>::max()));
-      }
-
     }
     params.MonitoredItemsIds = mids;
     auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
@@ -225,6 +269,8 @@ namespace OpcUa
 
   uint32_t Subscription::SubscribeEvents(const Node& node, const EventFilter& eventfilter)
   {
+    std::unique_lock<std::mutex> lock(Mutex); 
+
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionID = Data.ID;
 

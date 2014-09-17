@@ -78,12 +78,12 @@ int main(int argc, char** argv)
   std::cout << "Ctrl-C to exit" << std::endl;
   for(;;)
   {
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
     std::stringstream ss;
     ss << "This is event number: " << counter ;
     ev.Message = LocalizedText(ss.str());
     server.TriggerEvent(ev);
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
   }
 
   server.Stop();
