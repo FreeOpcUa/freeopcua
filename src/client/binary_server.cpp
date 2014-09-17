@@ -544,9 +544,7 @@ private:
         std::cout << "No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
         return;
       }
-      std::cout << "calling callback " << std::endl;
       callbackIt->second(std::move(buffer));
-      std::cout << "callback called " << std::endl;
     }
 
     Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)

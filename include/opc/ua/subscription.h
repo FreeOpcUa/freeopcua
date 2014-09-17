@@ -84,7 +84,8 @@ namespace OpcUa
       //Subscribe to Events for given node
       //As far as I remember the only allowed node is Server in most SDKs
       uint32_t SubscribeEvents(const Node& node, const EventFilter& eventfilter); 
-      uint32_t SubscribeEvents(const Node& eventype); //subscribe to all variables og given event type at the server node
+      uint32_t SubscribeEvents(const Node& node, const Node& eventType); //subscribe to all variables og given event type 
+      uint32_t SubscribeEvents(); //subscribe to variables of baseEventTypes and ServerNode 
 
       //Subscribe to server status change
       // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now

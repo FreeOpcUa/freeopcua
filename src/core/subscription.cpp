@@ -204,12 +204,15 @@ namespace OpcUa
     }
   }
 
-  uint32_t Subscription::SubscribeEvents(const Node& eventtype)
+  uint32_t Subscription::SubscribeEvents()
+  {
+    return SubscribeEvents(Node(Server, ObjectID::Server), Node(Server, ObjectID::BaseEventType));
+  }
+
+  uint32_t Subscription::SubscribeEvents(const Node& node, const Node& eventtype)  
   {
     EventFilter filter;
-    //We only subscribe to variabes, since properties are supposed not to change
-    //FIXME: order of variables might not be constant on all servers, we should order variables
-    for ( Node& child: eventtype.GetVariables() )
+    for ( Node& child: eventtype.GetProperties() )
     {
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
@@ -217,7 +220,7 @@ namespace OpcUa
       op.BrowsePath = std::vector<QualifiedName>({child.GetName()});
       filter.SelectClauses.push_back(op);
     }
-    return SubscribeEvents(Node(Server, ObjectID::Server), filter);
+    return SubscribeEvents(node, filter);
   }
 
   uint32_t Subscription::SubscribeEvents(const Node& node, const EventFilter& eventfilter)

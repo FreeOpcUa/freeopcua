@@ -7,7 +7,7 @@
 namespace OpcUa
 {
 
-  Event::Event() : EventType(ObjectID::EventType) 
+  Event::Event() : EventType(ObjectID::BaseEventType) 
   {
   }
 
