@@ -114,7 +114,6 @@ namespace OpcUa
         result.Statuses.push_back(StatusCode::Good);
       }
           
-      // FIXME: parse events and statuschange notification since they can be send in same result
       if ( ! EventTriggered.empty() )
       {
         if (Debug) { std::cout << "Subscription " << Data.ID << " has " << EventTriggered.size() << " events to send to client" << std::endl; }
@@ -128,6 +127,9 @@ namespace OpcUa
         result.Message.Data.push_back(data);
         result.Statuses.push_back(StatusCode::Good);
       }
+
+
+      // FIXME: also add statuschange notification since they can be send in same result
       
       KeepAliveCount = 0;
       Startup = false;
@@ -168,6 +170,7 @@ namespace OpcUa
     bool InternalSubscription::EnqueueEvent(IntegerID monitoreditemid, const Event& event)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+      if (Debug) { std::cout << "Enqueing event to be send" << std::endl; }
 
       //Find monitoredItem 
       std::map<IntegerID, DataMonitoredItems>::iterator mii_it =  MonitoredItemsMap.find( monitoreditemid );
@@ -333,7 +336,7 @@ namespace OpcUa
 
       void InternalSubscription::TriggerEvent(NodeID node, Event event)
       {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
         MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
         if ( it == MonitoredEvents.end() )
@@ -341,6 +344,7 @@ namespace OpcUa
           std::cout << "Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
           return;
         }
+        lock.unlock();//Enqueue vill need to set a unique lock
         EnqueueEvent(it->second, event);
       }
 

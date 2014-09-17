@@ -51,36 +51,9 @@ namespace OpcUa
 
         std::vector<IntegerID> ids(SubscriptionsMap.size());\
         std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+        lock.unlock();
         DeleteSubscriptions(ids);
       }
-
-  /*    
-      std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
-      {
-        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
-        //We need to stop the subscriptions and then delete them in io_service to make sure their are stopped before they are deleted
-        for (auto id: subscriptions)
-        {
-          std::cout << "Stopping Subscription (part 1): " << id << std::endl;
-          SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(id);
-          if ( itsub != SubscriptionsMap.end()) 
-          {
-            itsub->second->Stop();
-          }
-        }
-
-        io.dispatch([=](){ this->_DeleteSubscriptions(subscriptions); });
-        //Now return good for everything, we do not care :-)
-        std::vector<StatusCode> codes;
-        for ( auto _ : subscriptions)
-        {
-          codes.push_back(StatusCode::Good);
-        }
-        return codes;
-      }
-      
- */     
 
       std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
       {
@@ -214,7 +187,7 @@ namespace OpcUa
 
       void SubscriptionServiceInternal::TriggerEvent(NodeID node, Event event)
       {
-        boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
         for (auto sub : SubscriptionsMap)
         {
