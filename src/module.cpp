@@ -18,8 +18,7 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
-//#include <python3.4/Python.h> //FIXME
-#include <Python.h> //FIXME
+#include <Python.h> 
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -578,7 +577,6 @@ namespace OpcUa
     }
     return result;
   }
-
   class PyServer
   {
   public:
@@ -600,7 +598,7 @@ namespace OpcUa
       const std::vector<EndpointDescription> endpoints = Impl->Endpoints()->GetEndpoints(filter);
       return ToList(endpoints);
     }
-*/
+    */
     python::list Browse(const PyBrowseParameters& p) const
     {
       OpcUa::BrowseDescription description;
@@ -882,7 +880,7 @@ namespace OpcUa
   {
     public:
       PyNode(OpcUa::Remote::Server::SharedPtr srv, const NodeID& id) : Node(srv, id){}
-      PyNode (const Node& other): Node( other.GetServer(), other.GetId()) {}
+      PyNode (const Node& other): Node( other.GetServer(), other.GetId(), other.GetName() ) {} //, other.GetCachedName()) {}
       //PyNode (const Node& other): Server(other.Server), Id(other.Id), BrowseName(other.BrowseName) {}
       //PyNode static FromNode(const Node& other) { return PyNode(other.GetServer(), other.GetNodeId()); }
       python::object PyGetValue() { return ToObject(Node::GetValue()); }
@@ -945,44 +943,150 @@ namespace OpcUa
   };
 
 
-  class PyEvent 
+  class PyEvent : public Event
   {
     public:
-      PyEvent (const NodeID& type) : Evt(type) { }
-      PyEvent() : Evt() {}
+      using Event::Event;
+      PyEvent(const Event& other) : Event(other) {}
 
       void PySetValue(const std::string& name, const python::object& val)
       {
-        Evt.SetValue(name, ToVariant(val));
+        SetValue(name, ToVariant(val));
       }
 
       python::object PyGetValue(const std::string& name) 
       {
-        return ToObject(Evt.GetValue(name));
+        return ToObject(GetValue(name));
       }
 
-      Event Evt;
+      void SetMessage(const std::string& name) 
+      {
+        Message = LocalizedText(name);
+      }
+
+      python::object GetMessage() 
+      {
+        std::cout << "Getting message: " << Message.Text << std::endl;
+        return ToObject(Message.Text);
+      }
+
   };
 
-  class PySubscriptionClient: public SubscriptionClient
+
+std::string parse_python_exception(){
+  PyObject *type_ptr = NULL, *value_ptr = NULL, *traceback_ptr = NULL;
+  // Fetch the exception info from the Python C API
+  PyErr_Fetch(&type_ptr, &value_ptr, &traceback_ptr);
+  // Fallback error
+  std::string ret("Unfetchable Python error");
+  // If the fetch got a type pointer, parse the type into the exception string
+  if(type_ptr != NULL){
+    python::handle<> h_type(type_ptr);
+    python::str type_pstr(h_type);
+    // Extract the string from the boost::python object
+    python::extract<std::string> e_type_pstr(type_pstr);
+    // If a valid string extraction is available, use it
+    // otherwise use fallback
+    if(e_type_pstr.check())
+      ret = e_type_pstr();
+    else
+      ret = "Unknown exception type";
+  }
+  // Do the same for the exception value (the stringification of the exception)
+  if(value_ptr != NULL){
+    python::handle<> h_val(value_ptr);
+    python::str a(h_val);
+    python::extract<std::string> returned(a);
+    if(returned.check())
+      ret += ": " + returned();
+    else
+      ret += std::string(": Unparseable Python error: ");
+  }
+  // Parse lines from the traceback using the Python traceback module
+  if(traceback_ptr != NULL){
+    python::handle<> h_tb(traceback_ptr);
+    // Load the traceback module and the format_tb function
+    python::object tb(python::import("traceback"));
+    python::object fmt_tb(tb.attr("format_tb"));
+    // Call format_tb to get a list of traceback strings
+    python::object tb_list(fmt_tb(h_tb));
+    // Join the traceback strings into a single string
+    python::object tb_str(python::str("\n").join(tb_list));
+    // Extract the string, check the extraction, and fallback in necessary
+    python::extract<std::string> returned(tb_str);
+    if(returned.check())
+      ret += ": " + returned();
+    else
+      ret += std::string(": Unparseable Python traceback");
+  }
+  return ret;
+}
+
+    class PySubscriptionClient: public SubscriptionClient
   {
     public:
-      PySubscriptionClient(PyObject* p) : self(p) {
-        std::cout << "got constructed" << std::endl;
-      }
+      PySubscriptionClient(PyObject* p) : self(p) {}
       //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {} //copy construct
 
       void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const override
       {
         PyGILState_STATE state = PyGILState_Ensure();
-        python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        try {
+          python::call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
+        }
+        catch (const python::error_already_set& ex)
+        {
+          std::string perror_str = parse_python_exception();
+          std::cout << "Error in Python: " << perror_str << std::endl;
+        }
         PyGILState_Release(state);
       };
 
       static void DefaultDataChange(const SubscriptionClient& self_, uint32_t handle, const PyNode& node, const python::object& val, uint32_t attribute)  
       {
-        std::cout << "No callback defined in python" << std::endl;
+        std::cout << "No callback defined in python for DataChange" << std::endl;
       }
+
+      void Event(uint32_t handle, const OpcUa::Event& event) const override
+      {
+        PyGILState_STATE state = PyGILState_Ensure();
+        try {
+          python::call_method<void>(self, "event", handle, PyEvent(event));
+        }
+        catch (const python::error_already_set& ex)
+        {
+          std::string perror_str = parse_python_exception();
+          std::cout << "Error in Python: " << perror_str << std::endl;
+        }
+        PyGILState_Release(state);
+      };
+
+      static void DefaultEvent(const SubscriptionClient& self_, uint32_t handle, const OpcUa::PyEvent& event)  
+      {
+        std::cout << "No callback defined in python for Event" << std::endl;
+      }
+
+      void StatusChange(StatusCode status)  const override
+      {
+        PyGILState_STATE state = PyGILState_Ensure();
+        try {
+          python::call_method<void>(self, "status_change", status);
+        }
+        catch (const python::error_already_set& ex)
+        {
+          std::string perror_str = parse_python_exception();
+          std::cout << "Error in Python: " << perror_str << std::endl;
+        }
+        PyGILState_Release(state);
+      };
+
+      static void DefaultStatusChange(const SubscriptionClient& self_, StatusCode status)  
+      {
+        std::cout << "No callback defined in python for StatusChange" << std::endl;
+      }
+
+
+
 
     private:
       PyObject* const self;
@@ -996,8 +1100,9 @@ namespace OpcUa
       void Delete() { Sub->Delete(); }
       uint32_t SubscribeDataChange(PyNode node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
       uint32_t SubscribeDataChange2(PyNode node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
-      void UnSubscribe(uint32_t id) { Sub->UnSubscribe(id); }
-      void SubscribeEvents(const Node& eventtype) { Sub->SubscribeEvents(eventtype); }
+      void UnSubscribe(uint32_t id) { return Sub->UnSubscribe(id); }
+      uint32_t SubscribeEvents() { return Sub->SubscribeEvents(); }
+      uint32_t SubscribeEvents2(const Node node, const Node& eventtype) { return Sub->SubscribeEvents(node, eventtype); }
       
     private:
       std::shared_ptr<Subscription> Sub;
@@ -1006,8 +1111,10 @@ namespace OpcUa
   class PyClient: public RemoteClient
   {
     public:
+      using RemoteClient::RemoteClient;
       PyNode PyGetRootNode() { return PyNode(Server, OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Server, OpcUa::ObjectID::ObjectsFolder); }
+      PyNode PyGetServerNode() { return PyNode(Server, OpcUa::ObjectID::Server); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(RemoteClient::GetNode(nodeid)); }
       //PyNode PyGetNodeFromPath(const python::object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
       PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
@@ -1022,7 +1129,7 @@ namespace OpcUa
       using OPCUAServer::OPCUAServer;
       PyNode PyGetRootNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::RootFolder); }
       PyNode PyGetObjectsNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::ObjectsFolder); }
-      //PyNode GetNode(NodeID nodeid) { return PyNode::FromNode(OPCUAServer::GetNode(nodeid)); }
+      PyNode PyGetServerNode() { return PyNode(Registry->GetServer(), OpcUa::ObjectID::Server); }
       PyNode PyGetNode(PyNodeID nodeid) { return PyNode(OPCUAServer::GetNode(nodeid)); }
       PyNode PyGetNodeFromPath(const python::object& path) { return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path)); }
       PySubscription CreateSubscription(uint period, PySubscriptionClient& callback) 
@@ -1040,7 +1147,10 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
   using self_ns::str; //hack to enable __str__ in python classes with str(self)
 
-  PyEval_InitThreads(); //Seems to be necessary for callback from another thread
+  if ( ! PyEval_ThreadsInitialized() )
+  {
+    PyEval_InitThreads(); //Seems to be necessary for callback from another thread
+  }
 
   RegisterCommonObjectIDs();
 
@@ -1215,6 +1325,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("numeric_range", &PyWriteValue::NumericRange)
     .def_readwrite("data", &PyWriteValue::Data);
 
+  /*
     class_<PyServer>("Server", "Interface for remote opc ua server.", init<std::string>())
     //.def("find_servers", &PyServer::FindServers)
     //.def("get_endpoints", &PyServer::GetEndpoints)
@@ -1225,7 +1336,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
     def("VariantToObject", ToObject);
     def("ObjectToVariant", ToVariant);
-
+*/
     class_<Variant>("Variant")
         .def_readonly("value", &Variant::Value)
         .def_readonly("type", &Variant::Type)
@@ -1287,13 +1398,23 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
 
     class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
           .def("data_change", &PySubscriptionClient::DefaultDataChange)
-          .def("event", &PySubscriptionClient::Event)
+          .def("event", &PySubscriptionClient::DefaultEvent)
+          .def("status_chane", &PySubscriptionClient::DefaultStatusChange)
       ;
 
 
     class_<PyEvent>("Event", init<const NodeID&>())
           .def("get_value", &PyEvent::PyGetValue)
           .def("set_value", &PyEvent::PySetValue)
+          .def_readwrite("event_id", &PyEvent::EventId)
+          .def_readwrite("event_type", &PyEvent::EventType)
+          .def_readwrite("local_time", &PyEvent::LocalTime)
+          .def_readwrite("receive_time", &PyEvent::ReceiveTime)
+          .def_readwrite("time", &PyEvent::Time)
+          .def_readwrite("source_name", &PyEvent::SourceName)
+          .def_readwrite("source_node", &PyEvent::SourceNode)
+          .add_property("message2", &PyEvent::GetMessage, &PyEvent::SetMessage)
+          .def_readwrite("severity", &PyEvent::Severity)
       ;
 
     class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())
@@ -1302,13 +1423,16 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("delete", &PySubscription::Delete)
           .def("unsubscribe", &PySubscription::UnSubscribe)
           .def("subscribe_events", &PySubscription::SubscribeEvents)
+          .def("subscribe_events", &PySubscription::SubscribeEvents2)
       ;
 
-    class_<PyClient, boost::noncopyable>("Client")
+    class_<PyClient, boost::noncopyable>("Client", init<>())
+          .def(init<bool>())
           .def("connect", &PyClient::Connect)
           .def("disconnect", &PyClient::Disconnect)
           .def("get_root_node", &PyClient::PyGetRootNode)
           .def("get_objects_node", &PyClient::PyGetObjectsNode)
+          .def("get_server_node", &PyClient::PyGetServerNode)
           .def("get_node", &PyClient::PyGetNode)
           .def("set_endpoint", &PyClient::SetEndpoint)
           .def("get_endpoint", &PyClient::GetEndpoint)
@@ -1327,6 +1451,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
           .def("stop", &PyOPCUAServer::Stop)
           .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
           .def("get_objects_node", &PyOPCUAServer::PyGetObjectsNode)
+          .def("get_server_node", &PyOPCUAServer::PyGetServerNode)
           .def("get_node", &PyOPCUAServer::PyGetNode)
           //.def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
           //.def("get_node_from_qn_path", NodeFromPathQN)
