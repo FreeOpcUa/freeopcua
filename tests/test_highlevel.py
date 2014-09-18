@@ -234,7 +234,7 @@ class ServerProcess(Process):
     def run(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4841")
+        self.srv.set_endpoint("opc.tcp://localhost:48410")
         self.srv.start()
         self.started.set()
         while not self._exit.is_set():
@@ -256,7 +256,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         #start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint("opc.tcp://localhost:4841")
+        self.clt.set_endpoint("opc.tcp://localhost:48410")
         self.clt.connect()
         self.opc = self.clt
 
@@ -274,7 +274,7 @@ class TestServer(unittest.TestCase, CommonTests):
     def setUpClass(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4843")
+        self.srv.set_endpoint("opc.tcp://localhost:48430")
         self.srv.start()
         self.opc = self.srv 
 
