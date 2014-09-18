@@ -165,6 +165,9 @@ class CommonTests(object):
         sub.delete()
 
     def test_subscription_data_change(self):
+        """
+        test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
+        """
 
         class MySubClient(opcua.SubscriptionClient):
             def setup(self, condition):
@@ -231,7 +234,7 @@ class ServerProcess(Process):
     def run(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4841")
+        self.srv.set_endpoint("opc.tcp://localhost:48410")
         self.srv.start()
         self.started.set()
         while not self._exit.is_set():
@@ -253,7 +256,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         #start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint("opc.tcp://localhost:4841")
+        self.clt.set_endpoint("opc.tcp://localhost:48410")
         self.clt.connect()
         self.opc = self.clt
 
@@ -271,7 +274,7 @@ class TestServer(unittest.TestCase, CommonTests):
     def setUpClass(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint("opc.tcp://localhost:4843")
+        self.srv.set_endpoint("opc.tcp://localhost:48430")
         self.srv.start()
         self.opc = self.srv 
 
