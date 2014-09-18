@@ -57,6 +57,25 @@ namespace OpcUa
   MonitoredItemsData::MonitoredItemsData()
   {
   }
+
+  MonitoringFilter::MonitoringFilter(DataChangeFilter filter) : DataChange(filter)
+  {
+    Header.TypeID  = ExpandedObjectID::DataChangeFilter;
+    Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+  }
+
+  MonitoringFilter::MonitoringFilter(EventFilter filter) : Event(filter)
+  {
+    Header.TypeID  = ExpandedObjectID::EventFilter;
+    Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+  }
+
+  MonitoringFilter:: MonitoringFilter(AggregateFilter filter) : Aggregate(filter)
+  {
+    Header.TypeID  = ExpandedObjectID::DataChangeFilter;
+    Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
+  }
+
   namespace Binary
   {
 

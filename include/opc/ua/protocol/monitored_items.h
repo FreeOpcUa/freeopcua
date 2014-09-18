@@ -132,6 +132,10 @@ namespace OpcUa
     DataChangeFilter DataChange;
     EventFilter Event;
     AggregateFilter Aggregate;
+    MonitoringFilter() {}
+    MonitoringFilter(DataChangeFilter filter);
+    MonitoringFilter(EventFilter filter);
+    MonitoringFilter(AggregateFilter filter);
   };
 
   struct MonitoringParameters

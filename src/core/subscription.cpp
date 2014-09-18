@@ -256,8 +256,10 @@ namespace OpcUa
   uint32_t Subscription::SubscribeEvents(const Node& node, const Node& eventtype)  
   {
     EventFilter filter;
+    std::cout << "Subscrive events" << std::endl;
     for ( Node& child: eventtype.GetProperties() )
     {
+      std::cout << "      property: "<< child.GetName() << std::endl;
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
       op.Attribute = AttributeID::VALUE;
@@ -287,8 +289,7 @@ namespace OpcUa
     params.DiscardOldest = true;
     params.ClientHandle = IntegerID(++LastMonitoredItemHandle);
 
-    MonitoringFilter filter;
-    filter.Event = eventfilter;
+    MonitoringFilter filter(eventfilter);
     params.Filter = filter;
     req.Parameters = params;
     itemsParams.ItemsToCreate.push_back(req);
