@@ -127,9 +127,12 @@ namespace OpcUa
         std::cerr << "Error trying to send publish response while we do not have data from a PublishRequest" << std::endl;
         return;
       }
-      std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
-      std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
-      std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
+      if (Debug)
+      {
+        std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
+        std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
+        std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
+      }
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 

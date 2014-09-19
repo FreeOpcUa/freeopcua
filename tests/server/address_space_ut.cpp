@@ -72,3 +72,15 @@ TEST_F(AddressSpace, GeneratesIfNodeIDDuplicated)
   EXPECT_EQ(result.Status, OpcUa::StatusCode::BadNodeIdExists);
   EXPECT_EQ(result.AddedNodeID, OpcUa::ObjectID::Null);
 }
+
+TEST_F(AddressSpace, ReadAttributes)
+{
+  OpcUa::ReadParameters readParams;
+  OpcUa::AttributeValueID value(OpcUa::ObjectID::RootFolder, OpcUa::AttributeID::BROWSE_NAME);
+  readParams.AttributesToRead.push_back(value);
+  std::vector<OpcUa::DataValue> results = NameSpace->Read(readParams);
+  ASSERT_EQ(results.size(), 1);
+  const OpcUa::DataValue& result = results[0];
+  ASSERT_TRUE(result.Encoding | OpcUa::DATA_VALUE);
+  EXPECT_EQ(result.Value, OpcUa::QualifiedName(OpcUa::Names::Root));
+}

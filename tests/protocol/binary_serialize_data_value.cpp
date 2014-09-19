@@ -14,6 +14,7 @@
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/data_value.h>
+#include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 
@@ -79,21 +80,23 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
 
   DataValue data;
   data.Encoding = encodingMask;
-  data.Value = true;
+  data.Value = QualifiedName(1, OpcUa::Names::Root);
   data.Status = static_cast<StatusCode>(1);
   data.SourceTimestamp.Value = 2;
   data.SourcePicoseconds = 3;
   data.ServerTimestamp.Value = 4;
   data.ServerPicoseconds = 5;
 
-
   GetStream() << data << flush;
 
 
-  char variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);
+  char variantMask = static_cast<uint8_t>(VariantType::QUALIFIED_NAME);
   const std::vector<char> expectedData = {
   encodingMask,
-  variantMask, 1,
+  variantMask,
+  1, 0, // QualifiedName::NamespaceIndex
+  4,0,0,0, // Qualified::Name.size()
+  'R', 'o', 'o', 't', // QualifiedName::Name::c_str()
   1,0,0,0,
   2,0,0,0,0,0,0,0,
   3,0,

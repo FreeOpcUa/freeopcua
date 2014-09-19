@@ -214,105 +214,105 @@ namespace OpcUa
     const std::type_info& t = Value.type();
     if (t == typeid(bool))
       return Compare<bool>(*this, var);
-    if (t == typeid(std::vector<bool>))
+    else if (t == typeid(std::vector<bool>))
       return Compare<std::vector<bool>>(*this, var);
-    if (t == typeid(int8_t))
+    else if (t == typeid(int8_t))
       return Compare<int8_t>(*this, var);
-    if (t == typeid(std::vector<int8_t>))
+    else if (t == typeid(std::vector<int8_t>))
       return Compare<std::vector<int8_t>>(*this, var);
-    if (t == typeid(uint8_t))
+    else if (t == typeid(uint8_t))
       return Compare<uint8_t>(*this, var);
-    if (t == typeid(std::vector<uint8_t>))
+    else if (t == typeid(std::vector<uint8_t>))
       return Compare<std::vector<uint8_t>>(*this, var);
-    if (t == typeid(int16_t))
+    else if (t == typeid(int16_t))
       return Compare<int16_t>(*this, var);
-    if (t == typeid(std::vector<int16_t>))
+    else if (t == typeid(std::vector<int16_t>))
       return Compare<std::vector<int16_t>>(*this, var);
-    if (t == typeid(uint16_t))
+    else if (t == typeid(uint16_t))
       return Compare<uint16_t>(*this, var);
-    if (t == typeid(std::vector<uint16_t>))
+    else if (t == typeid(std::vector<uint16_t>))
       return Compare<std::vector<uint16_t>>(*this, var);
 
-    if (t == typeid(int32_t))
+    else if (t == typeid(int32_t))
       return Compare<int32_t>(*this, var);
-    if (t == typeid(std::vector<int32_t>))
+    else if (t == typeid(std::vector<int32_t>))
       return Compare<std::vector<int32_t>>(*this, var);
-    if (t == typeid(uint32_t))
+    else if (t == typeid(uint32_t))
       return Compare<uint32_t>(*this, var);
-    if (t == typeid(std::vector<uint32_t>))
+    else if (t == typeid(std::vector<uint32_t>))
       return Compare<std::vector<uint32_t>>(*this, var);
-    if (t == typeid(int64_t))
+    else if (t == typeid(int64_t))
       return Compare<int64_t>(*this, var);
-    if (t == typeid(std::vector<int64_t>))
+    else if (t == typeid(std::vector<int64_t>))
       return Compare<std::vector<int64_t>>(*this, var);
-    if (t == typeid(uint64_t))
+    else if (t == typeid(uint64_t))
       return Compare<uint64_t>(*this, var);
-    if (t == typeid(std::vector<uint64_t>))
+    else if (t == typeid(std::vector<uint64_t>))
       return Compare<std::vector<uint64_t>>(*this, var);
 
-    if (t == typeid(float))
+    else if (t == typeid(float))
       return Compare<float>(*this, var);
-    if (t == typeid(std::vector<float>))
+    else if (t == typeid(std::vector<float>))
       return Compare<std::vector<float>>(*this, var);
 
-    if (t == typeid(double))
+    else if (t == typeid(double))
       return Compare<double>(*this, var);
-    if (t == typeid(std::vector<double>))
+    else if (t == typeid(std::vector<double>))
       return Compare<std::vector<double>>(*this, var);
 
-    if (t == typeid(std::string))
+    else if (t == typeid(std::string))
       return Compare<std::string>(*this, var);
-    if (t == typeid(std::vector<std::string>))
+    else if (t == typeid(std::vector<std::string>))
       return Compare<std::vector<std::string>>(*this, var);
 
-    if (t == typeid(DateTime))
+    else if (t == typeid(DateTime))
       return Compare<DateTime>(*this, var);
-    if (t == typeid(std::vector<DateTime>))
+    else if (t == typeid(std::vector<DateTime>))
       return Compare<std::vector<DateTime>>(*this, var);
 
-    if (t == typeid(Guid))
+    else if (t == typeid(Guid))
       return Compare<Guid>(*this, var);
-    if (t == typeid(std::vector<Guid>))
+    else if (t == typeid(std::vector<Guid>))
       return Compare<std::vector<Guid>>(*this, var);
 
-    if (t == typeid(ByteString))
+    else if (t == typeid(ByteString))
       return Compare<ByteString>(*this, var);
-    if (t == typeid(std::vector<ByteString>))
+    else if (t == typeid(std::vector<ByteString>))
       return Compare<std::vector<ByteString>>(*this, var);
 
-    if (t == typeid(NodeID))
+    else if (t == typeid(NodeID))
       return Compare<NodeID>(*this, var);
-    if (t == typeid(std::vector<NodeID>))
+    else if (t == typeid(std::vector<NodeID>))
       return Compare<std::vector<NodeID>>(*this, var);
 
-    if (t == typeid(StatusCode))
+    else if (t == typeid(StatusCode))
       return Compare<StatusCode>(*this, var);
-    if (t == typeid(std::vector<StatusCode>))
+    else if (t == typeid(std::vector<StatusCode>))
       return Compare<std::vector<StatusCode>>(*this, var);
 
-    if (t == typeid(LocalizedText))
+    else if (t == typeid(LocalizedText))
       return Compare<LocalizedText>(*this, var);
-    if (t == typeid(std::vector<LocalizedText>))
+    else if (t == typeid(std::vector<LocalizedText>))
       return Compare<std::vector<LocalizedText>>(*this, var);
 
-    if (t == typeid(QualifiedName))
+    else if (t == typeid(QualifiedName))
       return Compare<QualifiedName>(*this, var);
-    if (t == typeid(std::vector<QualifiedName>))
+    else if (t == typeid(std::vector<QualifiedName>))
       return Compare<std::vector<QualifiedName>>(*this, var);
-/*
-    if (t == typeid(DataValue))
+
+    else if (t == typeid(DataValue))
       return Compare<DataValue>(*this, Value);
-    if (t == typeid(std::vector<DataValue>))
+    else if (t == typeid(std::vector<DataValue>))
       return Compare<std::vector<DataValue>>(*this, var);
-*/
-    if (t == typeid(Variant))
+
+    else if (t == typeid(Variant))
       return Compare<Variant>(*this, var);
-    if (t == typeid(std::vector<Variant>))
+    else if (t == typeid(std::vector<Variant>))
       return Compare<std::vector<Variant>>(*this, var);
 
-    if (t == typeid(DiagnosticInfo))
+    else if (t == typeid(DiagnosticInfo))
       return Compare<DiagnosticInfo>(*this, var);
-    if (t == typeid(std::vector<DiagnosticInfo>))
+    else if (t == typeid(std::vector<DiagnosticInfo>))
       return Compare<std::vector<DiagnosticInfo>>(*this, var);
 
     throw std::logic_error(std::string("Unknown variant type '") + t.name() + std::string("'."));
@@ -400,10 +400,8 @@ namespace OpcUa
       return VariantType::LOCALIZED_TEXT;
     else if (t == typeid(QualifiedName) || t == typeid(std::vector<QualifiedName>))
       return VariantType::QUALIFIED_NAME;
-/*
     else if (t == typeid(DataValue) || t == typeid(std::vector<DataValue>))
       return VariantType::DATA_VALUE;
-*/
     else if (t == typeid(Variant) || t == typeid(std::vector<Variant>))
       return VariantType::VARIANT;
     else if (t == typeid(DiagnosticInfo) || t == typeid(std::vector<DiagnosticInfo>))
@@ -540,10 +538,17 @@ namespace OpcUa
         var = deserializer.get<StatusCode>();
       if(encodingMask == ((uint8_t)VariantType::STATUS_CODE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<StatusCode>>();
+
       if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT))
         var = deserializer.get<LocalizedText>();
       if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<LocalizedText>>();
+
+      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME))
+        var = deserializer.get<QualifiedName>();
+      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<QualifiedName>>();
+
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE))
         var = deserializer.get<DataValue>();
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE | HAS_ARRAY_MASK))

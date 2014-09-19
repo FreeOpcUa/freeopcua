@@ -25,7 +25,7 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
-      OPCUAServer(const bool debug) : Debug(debug) {} 
+      explicit OPCUAServer(bool debug);
       void SetEndpoint(const std::string& endpoint){this->Endpoint = endpoint;}
       void SetProductURI(const std::string& uri){this->ProductUri = uri;}
       void SetURI(const std::string& uri){this->ServerUri = uri;}
@@ -36,20 +36,24 @@ namespace OpcUa
 
       void Start();
       void Stop();
-      //Node GetNode(std::vector<QualifiedName> browsepath); //Do we need that? or should we use rootnode anyway?
-      //Node GetNode(std::vector<std::string> browsepath);
-      Node GetRootNode();
-      Node GetObjectsNode();
-      Node GetServerNode();
-      Node GetNode(const NodeID& nodeid);
-      Node GetNodeFromPath(const std::vector<QualifiedName>& path) {return GetRootNode().GetChild(path);}
-      Node GetNodeFromPath(const std::vector<std::string>& path) {return GetRootNode().GetChild(path);}
+
+      Node GetRootNode() const;
+      Node GetObjectsNode() const;
+      Node GetServerNode() const;
+      Node GetNode(const NodeID& nodeid) const;
+      Node GetNodeFromPath(const std::vector<QualifiedName>& path) const;
+      Node GetNodeFromPath(const std::vector<std::string>& path) const;
+
       void TriggerEvent(Event event);
 
       std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& callback);
 
+    private:
+      void Run();
+
     protected:
       boost::asio::io_service IoService;
+      std::shared_ptr<boost::asio::io_service::work> ServerWork;
       std::vector<std::string> xml_address_spaces;
       std::string config_path = "";
       std::string Endpoint = "opc.tcp://localhost:4841"; //This is the expected address of an OPC-UA server on a machine

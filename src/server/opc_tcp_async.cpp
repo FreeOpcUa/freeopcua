@@ -322,7 +322,6 @@ namespace
   {
     std::clog << "opc_tcp_async| Running server." << std::endl;
     Accept();
-    std::clog << "opc_tcp_async| Server stopped." << std::endl;
   }
 
   void OpcTcpServer::Shutdown()

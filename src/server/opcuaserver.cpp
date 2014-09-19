@@ -35,8 +35,14 @@ namespace OpcUa
   {
   }
 
+  OPCUAServer::OPCUAServer(bool debug)
+    : Debug(debug)
+  {
+  }
+
   void OPCUAServer::Start()
   {
+    ServerWork.reset(new boost::asio::io_service::work(IoService));
     EndpointsServices = Server::CreateEndpointsRegistry();
    
     std::vector<ApplicationDescription> Apps;
@@ -73,21 +79,45 @@ namespace OpcUa
 
     Server::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
 
-
+    const Common::Uri uri(Endpoints[0].EndpointURL);
     Server::AsyncOpcTcp::Parameters asyncparams;
-    asyncparams.Port = Common::Uri(Endpoints[0].EndpointURL).Port();
-    asyncparams.Host = Common::Uri(Endpoints[0].EndpointURL).Host();
+    asyncparams.Host = uri.Host();
+    asyncparams.Port = uri.Port();
     asyncparams.DebugMode = Debug;
     AsyncServer = Server::CreateAsyncOpcTcp(asyncparams, Registry->GetServer(), IoService);
     AsyncServer->Listen();
     ListenThread.reset(new Common::Thread([this](){
-      IoService.run();
+      Run();
     }));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+  }
+
+  void OPCUAServer::Run()
+  {
+    try
+    {
+      IoService.run();
+    }
+    catch (const std::exception& exc)
+    {
+      std::cout << exc.what() << std::endl;
+    }
+    std::cout << "OPCUAServer| service thread exited." << std::endl;
   }
   
-  Node OPCUAServer::GetNode(const NodeID& nodeid)
+  Node OPCUAServer::GetNode(const NodeID& nodeid) const
   {
     return Node(Registry->GetServer(), nodeid);
+  }
+
+  Node OPCUAServer::GetNodeFromPath(const std::vector<QualifiedName>& path) const
+  {
+    return GetRootNode().GetChild(path);
+  }
+
+  Node OPCUAServer::GetNodeFromPath(const std::vector<std::string>& path) const
+  {
+    return GetRootNode().GetChild(path);
   }
 
   void OPCUAServer::Stop()
@@ -95,21 +125,22 @@ namespace OpcUa
     std::cout << "Stopping opcua server application" << std::endl;
     AsyncServer->Shutdown();
     AsyncServer.reset();
+    ServerWork.reset();
     IoService.stop();
     ListenThread->Join();
   }
 
-  Node OPCUAServer::GetRootNode()
+  Node OPCUAServer::GetRootNode() const
   {
     return GetNode(OpcUa::ObjectID::RootFolder);
   }
 
-  Node OPCUAServer::GetObjectsNode()
+  Node OPCUAServer::GetObjectsNode() const
   {
     return GetNode(ObjectID::ObjectsFolder);
   }
 
-  Node OPCUAServer::GetServerNode()
+  Node OPCUAServer::GetServerNode() const
   {
     return GetNode(ObjectID::Server);
   }

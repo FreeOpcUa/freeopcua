@@ -1177,7 +1177,6 @@ namespace OpcUa
     {
       return Names::ServerType;
     }
-    std::cerr << "Error no Node name defined for ObjectID: " << id << std::endl;
     return "NoNameFound";
   }
 
