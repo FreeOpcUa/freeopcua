@@ -130,7 +130,7 @@ namespace OpcUa
     server.SetAttribute(AttributeID::EVENT_NOTIFIER, notifierval);
   }
 
-  std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(uint period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;

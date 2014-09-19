@@ -26,6 +26,7 @@
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/services_registry.h>
 
+#include <boost/thread/locks.hpp>
 #include <chrono>
 #include <iostream>
 #include <list>
@@ -410,7 +411,7 @@ namespace OpcUa
           {
             for (BrowsePathResult res: result)
             {
-              std::cout << "opc_tcp_processor| Result of browsePath is: " << (uint) res.Status << ". Target is: ";
+              std::cout << "opc_tcp_processor| Result of browsePath is: " << (uint32_t) res.Status << ". Target is: ";
               for ( BrowsePathTarget path : res.Targets)
               {
                 std::cout << path.Node ;
