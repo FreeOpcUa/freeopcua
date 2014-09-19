@@ -201,16 +201,16 @@ namespace OpcUa
     VariantValue::VariantValue(uint64_t val) : UInt64{val} {}
     VariantValue::VariantValue(float val) : Float{val} {}
     VariantValue::VariantValue(double val) : Double{val} {}
-    VariantValue::VariantValue(StatusCode val) : Statuses{val} {}
-    VariantValue::VariantValue(const std::string& val) : String{val} {}
-    VariantValue::VariantValue(const ByteString& val) : ByteStrings{val} {}
-    VariantValue::VariantValue(const DateTime& val) : Time{val} {}
-    VariantValue::VariantValue(const Guid& val) : Guids{val} {}
-    VariantValue::VariantValue(const NodeID& val) : Node{val} {}
-    VariantValue::VariantValue(const QualifiedName& val) : Name{val} {}
-    VariantValue::VariantValue(const LocalizedText& val) : Text{val} {}
-    VariantValue::VariantValue(const DataValue& val) : Value{val} {}
-    VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{val} {}
+    VariantValue::VariantValue(StatusCode val) : Statuses{1, val} {}
+    VariantValue::VariantValue(const std::string& val) : String{1,val} {}
+    VariantValue::VariantValue(const ByteString& val) : ByteStrings{1, val} {}
+    VariantValue::VariantValue(const DateTime& val) : Time{1, val} {}
+    VariantValue::VariantValue(const Guid& val) : Guids{1, val} {}
+    VariantValue::VariantValue(const NodeID& val) : Node{1, val} {}
+    VariantValue::VariantValue(const QualifiedName& val) : Name{1, val} {}
+    VariantValue::VariantValue(const LocalizedText& val) : Text{1, val} {}
+    VariantValue::VariantValue(const DataValue& val) : Value{1, val} {}
+    VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{1, val} {}
 
     VariantValue::VariantValue(const std::vector<bool>& val) : Boolean(val) {}
     VariantValue::VariantValue(const std::vector<int8_t>& val) : SByte(val) {}
@@ -793,7 +793,7 @@ namespace OpcUa
   {
     bool GuessedIsArray = false;
     ApplyToVariantValue(Type, Value, IsValueArray, GuessedIsArray);
-    if (_array == false and GuessedIsArray == false)
+	if (_array == false && GuessedIsArray == false)
     {
       return false;
     }
