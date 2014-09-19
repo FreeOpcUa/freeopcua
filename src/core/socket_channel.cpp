@@ -11,15 +11,25 @@
 #include <opc/ua/socket_channel.h>
 #include <opc/ua/errors.h>
 
-#include <arpa/inet.h>
+
 #include <errno.h>
 #include <iostream>
-#include <netinet/tcp.h>
+
 #include <stdexcept>
 #include <string.h>
-#include <sys/socket.h>
+
 #include <sys/types.h>
+
+
+#ifdef _WIN32
+#include <WinSock2.h>
+#else
+#include <arpa/inet.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
 #include <unistd.h>
+#endif
+
 
 OpcUa::SocketChannel::SocketChannel(int sock)
   : Socket(sock)

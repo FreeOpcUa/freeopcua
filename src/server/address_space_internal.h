@@ -18,6 +18,7 @@
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/node_management.h>
 
+#include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <ctime>
 #include <limits>

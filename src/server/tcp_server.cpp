@@ -22,18 +22,26 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/input_from_buffer.h>
 
-#include <arpa/inet.h>
+
 #include <errno.h>
 #include <iostream>
 #include <map>
 #include <mutex>
-#include <netdb.h>
-#include <netinet/in.h>
 #include <stdexcept>
 #include <string.h>
-#include <sys/socket.h>
 #include <sys/types.h>
+
+
+#ifdef _WIN32
+#include <WinSock2.h>
+#else
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <unistd.h>
+
+#include <sys/socket.h>
+#endif
 
 namespace
 {

@@ -12,15 +12,21 @@
 #include <opc/ua/errors.h>
 #include <opc/ua/socket_channel.h>
 
-#include <arpa/inet.h>
+
 #include <errno.h>
 #include <iostream>
-#include <netdb.h>
-#include <netinet/in.h>
 #include <stdexcept>
 #include <string.h>
-#include <sys/socket.h>
 #include <sys/types.h>
+
+#ifdef _WIN32
+  #include <WinSock2.h>
+#else
+  #include <arpa/inet.h>
+  #include <netdb.h>
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+#endif
 
 namespace
 {
