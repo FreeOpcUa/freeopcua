@@ -1,5 +1,6 @@
 #include "internal_subscription.h"
 
+#include <boost/thread/locks.hpp>
 
 namespace OpcUa
 {

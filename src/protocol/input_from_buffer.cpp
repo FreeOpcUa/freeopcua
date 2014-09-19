@@ -21,6 +21,7 @@
 
 #include <stdexcept>
 #include <cstring>
+#include <algorithm>
 
 namespace OpcUa
 {

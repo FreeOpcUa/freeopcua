@@ -16,6 +16,8 @@
 #include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 
+#include <functional>
+
 namespace OpcUa
 {
 

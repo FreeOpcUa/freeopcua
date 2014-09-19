@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <chrono>
 
 namespace OpcUa
@@ -138,12 +138,14 @@ namespace OpcUa
     return DateTime(t1);
   }
 
+  /*
   DateTime ToDateTime(long long usec)
   {
     const int64_t secsFrom1600To1970 = 11676096000LL;
     int64_t t1 = (usec * 10) + (secsFrom1600To1970 * 10000000LL);
     return DateTime(t1);
   }
+  */
 
   // TODO move to separate file with time utils.
   DateTime CurrentDateTime()

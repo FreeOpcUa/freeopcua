@@ -10,6 +10,7 @@
 #include <opc/ua/protocol/status_codes.h>
 
 #include <stdexcept>
+#include <string>
 
 void OpcUa::CheckStatusCode(StatusCode code)
 {

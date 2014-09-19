@@ -85,7 +85,7 @@ namespace OpcUa
     return Node(Server, OpcUa::ObjectID::Server);
   }
 
-  std::unique_ptr<Subscription> RemoteClient::CreateSubscription(uint period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> RemoteClient::CreateSubscription(unsigned int period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;

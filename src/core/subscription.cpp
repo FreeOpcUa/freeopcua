@@ -156,7 +156,7 @@ namespace OpcUa
     }
 
     std::vector<uint32_t> handles;
-    uint i = 0;
+    unsigned int i = 0;
     for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
@@ -174,7 +174,7 @@ namespace OpcUa
 
   void Subscription::UnSubscribe(uint32_t handle)
   {
-    return UnSubscribe(std::vector<uint32_t>({handle}));
+    return UnSubscribe(std::vector<uint32_t>(1, handle));
   }
 
   void Subscription::UnSubscribe(std::vector<uint32_t> handles) 
@@ -237,7 +237,7 @@ namespace OpcUa
     req.Mode = MonitoringMode::Reporting;
     MonitoringParameters params;
     params.SamplingInterval = Data.RevisedPublishingInterval;
-    params.QueueSize = std::numeric_limits<double>::max();
+    params.QueueSize = std::numeric_limits<uint32_t>::max();
     params.DiscardOldest = true;
     params.ClientHandle = IntegerID(++LastMonitoredItemHandle);
 
