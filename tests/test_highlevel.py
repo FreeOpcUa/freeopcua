@@ -206,7 +206,6 @@ class CommonTests(object):
 
         self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         self.assertEqual(msclt.value, [5])
-        self.assertEqual(msclt.handle, handle1)
         self.assertEqual(msclt.node, v1)
 
         v2.set_value(99)
@@ -214,7 +213,6 @@ class CommonTests(object):
             ret = cond.wait(0.5)
         self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         self.assertEqual(msclt.value, 99)
-        self.assertEqual(msclt.handle, handle2)
         self.assertEqual(msclt.node, v2)
 
         sub.unsubscribe(handle1)
