@@ -22,8 +22,8 @@ namespace OpcUa
 
   SubscriptionParameters::SubscriptionParameters()
     : RequestedPublishingInterval(500)
-    , RequestedLifetimeCount(300)
-    , RequestedMaxKeepAliveCount(100)
+    , RequestedLifetimeCount(3000)
+    , RequestedMaxKeepAliveCount(10000)
     , MaxNotificationsPerPublish(0)
     , PublishingEnabled(true)
     , Priority(0)

@@ -79,7 +79,7 @@ namespace OpcUa
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
         uint32_t KeepAliveCount = 0; 
         bool Startup = true; //To force specific behaviour at startup
-        uint32_t LastMonitoredItemID = 2;
+        uint32_t LastMonitoredItemID = 100;
         MonitoredItemsMapType MonitoredItemsMap; 
         std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
         std::list<MonitoredItems> MonitoredItemsTriggered; 
