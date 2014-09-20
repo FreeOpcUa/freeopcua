@@ -38,7 +38,7 @@ namespace OpcUa
       Model::Server server(services);
       Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
       Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
-      return root.CreateObject(serverType, QualifiedName(OpcUa::Names::Server));
+      return root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
     }
 
   } // namespace UaServer

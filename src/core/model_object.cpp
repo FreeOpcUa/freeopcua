@@ -140,29 +140,35 @@ namespace OpcUa
 
     Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName)
     {
-      return CreateObject(type, browseName, browseName.Name);
+      return CreateObject(NodeID(), type, browseName);
+    }
+
+    Object Object::CreateObject(const NodeID& newNodeId, const ObjectType& nodeType, const QualifiedName& browseName)
+    {
+      return CreateObject(newNodeId, GetID(), nodeType.GetID(), browseName, browseName.Name);
     }
 
     Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string displayName)
     {
-      return CreateObject(GetID(), type.GetID(), browseName, displayName);
+      return CreateObject(NodeID(), GetID(), type.GetID(), browseName, displayName);
     }
 
-    Object Object::CreateObject(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
+    Object Object::CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
     {
       Object object(GetServices());
-      object.Id = InstantiateType(parentNode, typeID, NodeClass::Object, browseName, displayName);
+      object.Id = InstantiateType(newNodeID, parentNode, typeID, NodeClass::Object, browseName, displayName);
       object.BrowseName = browseName;
       object.DisplayName = LocalizedText(displayName);
       return object;
 
     }
 
-    NodeID Object::InstantiateType(const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName)
+    NodeID Object::InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName)
     {
       // Creating new node for object
       AddNodesItem newNodeRequest;
       newNodeRequest.BrowseName = browseName;
+      newNodeRequest.RequestedNewNodeID = newNodeID;
       newNodeRequest.Class = nodeClass;
       newNodeRequest.ParentNodeId = parentNode;
       newNodeRequest.ReferenceTypeId = nodeClass == NodeClass::Object ? ObjectID::HasComponent : ObjectID::HasProperty;
@@ -227,7 +233,7 @@ namespace OpcUa
           {
             if (ref.TargetNodeTypeDefinition !=ObjectID::Null)
             {
-              InstantiateType(targetNode, ref.TargetNodeTypeDefinition, NodeClass::Object, ref.BrowseName, ref.DisplayName.Text);
+              InstantiateType(NodeID(), targetNode, ref.TargetNodeTypeDefinition, NodeClass::Object, ref.BrowseName, ref.DisplayName.Text);
             }
             else
             {

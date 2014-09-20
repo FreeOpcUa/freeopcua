@@ -50,6 +50,7 @@ namespace OpcUa
 
     private:
       void Run();
+      void CreateServerObjectNode();
 
     protected:
       boost::asio::io_service IoService;

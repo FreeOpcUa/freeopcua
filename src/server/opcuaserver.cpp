@@ -22,6 +22,7 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/standard_namespace.h>
+#include <opc/ua/model.h>
 #include <opc/ua/node.h>
 #include <opc/ua/server/opcuaserver.h>
 
@@ -78,6 +79,8 @@ namespace OpcUa
     Registry->RegisterSubscriptionServices(SubscriptionService);
 
     Server::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
+    CreateServerObjectNode();
+
 
     const Common::Uri uri(Endpoints[0].EndpointURL);
     Server::AsyncOpcTcp::Parameters asyncparams;
@@ -165,6 +168,14 @@ namespace OpcUa
   void OPCUAServer::TriggerEvent(Event event)
   {
     SubscriptionService->TriggerEvent(ObjectID::Server, event);
+  }
+
+  void OPCUAServer::CreateServerObjectNode()
+  {
+    Model::Server server(Registry->GetServer());
+    Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
+    Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
+    root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
   }
 
 }
