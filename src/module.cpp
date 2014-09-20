@@ -1094,6 +1094,25 @@ namespace OpcUa
         std::cout << "Getting message: " << Message.Text << std::endl;
         return ToObject(Message.Text);
       }
+       void SetSourceNode(NodeID node)
+      {
+        SourceNode = node;
+      }
+
+      PyNodeID GetSourceNode()
+      {
+        return PyNodeID(SourceNode);
+      }
+
+      python::object GetTime()
+      {
+        return ToObject(Time);
+      };
+
+      void SetTime(python::object datetime)
+      {
+        //FIXME: implement
+      }
 
   };
 
@@ -1560,9 +1579,11 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("receive_time", &PyEvent::ReceiveTime)
     .def_readwrite("time", &PyEvent::Time)
     .def_readwrite("source_name", &PyEvent::SourceName)
-    .def_readwrite("source_node", &PyEvent::SourceNode)
     .add_property("message2", &PyEvent::GetMessage, &PyEvent::SetMessage)
     .def_readwrite("severity", &PyEvent::Severity)
+    .add_property("message", &PyEvent::GetMessage, &PyEvent::SetMessage)
+    .add_property("source_node", &PyEvent::GetSourceNode, &PyEvent::SetSourceNode)
+    .add_property("time", &PyEvent::GetTime, &PyEvent::SetTime)
   ;
 
   class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())
