@@ -34,23 +34,23 @@ namespace OpcUa
 
     class BuiltinServerAddon
       : public Common::Addon
-      , public UaServer::TcpServer
-      , public UaServer::BuiltinServer
+      , public Server::TcpServer
+      , public Server::BuiltinServer
       , private Common::ThreadObserver
     {
     public:
       BuiltinServerAddon();
       ~BuiltinServerAddon();
 
-      virtual std::shared_ptr<OpcUa::Remote::Server> GetServer() const override;
+      OpcUa::Services::SharedPtr GetServices() const override;
 
     public: // Common::Addon
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
       virtual void Stop();
 
     public: // TcpServer
-      virtual void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor);
-      virtual void StopListen(const OpcUa::UaServer::TcpParameters& params);
+      virtual void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
+      virtual void StopListen(const OpcUa::Server::TcpParameters& params);
 
     private:
       virtual void OnSuccess();
@@ -64,7 +64,7 @@ namespace OpcUa
       std::shared_ptr<OpcUa::IOChannel> ServerChannel;
       std::unique_ptr<Common::Thread> Thread;
 
-      OpcUa::UaServer::OpcUaProtocol::SharedPtr Protocol;
+      OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
       bool Debug;
     };
 

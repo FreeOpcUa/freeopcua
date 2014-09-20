@@ -22,11 +22,11 @@ namespace OpcUa
 
     void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
-      Registry = addons.GetAddon<Remote::NodeManagementServices>(UaServer::AddressSpaceRegistryAddonID);
+      Registry = addons.GetAddon<NodeManagementServices>(Server::AddressSpaceRegistryAddonID);
       if (!Registry)
       {
         std::stringstream stream;
-        stream << "Unable to find addon '" << UaServer::AddressSpaceRegistryAddonID << "'. " << std::endl;
+        stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonID << "'. " << std::endl;
         throw std::logic_error(stream.str());
       }
 
@@ -56,12 +56,12 @@ namespace OpcUa
       Load(path, *Registry);
     }
 
-    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::Remote::NodeManagementServices& registry)
+    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::NodeManagementServices& registry)
     {
       if (!Registry)
       {
         std::stringstream stream;
-        stream << "Unable to find addon '" << UaServer::AddressSpaceRegistryAddonID << "'. " << std::endl;
+        stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonID << "'. " << std::endl;
         throw std::logic_error(stream.str());
       }
 

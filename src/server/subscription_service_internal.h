@@ -42,10 +42,10 @@ namespace OpcUa
     typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
 
 
-    class SubscriptionServiceInternal : public UaServer::SubscriptionService
+    class SubscriptionServiceInternal : public Server::SubscriptionService
     {
       public:
-        SubscriptionServiceInternal(std::shared_ptr<UaServer::AddressSpace> addressspace, bool debug);
+        SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& io, bool debug);
 
        ~SubscriptionServiceInternal();
 
@@ -59,30 +59,29 @@ namespace OpcUa
         boost::asio::io_service& GetIOService();
         bool PopPublishRequest(NodeID node);
         void TriggerEvent(NodeID node, Event event);
-        std::shared_ptr<UaServer::AddressSpace> GetAddressSpace();
+        Server::AddressSpace& GetAddressSpace();
 
       private:
         //CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request);
         //void UpdateSubscriptions(AttributeValue& val);
 
       private:
-        std::shared_ptr<UaServer::AddressSpace> AddressSpace;
+        boost::asio::io_service& io;
+        Server::AddressSpace::SharedPtr AddressSpace;
         bool Debug;
         mutable boost::shared_mutex DbMutex;
         SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
         uint32_t LastSubscriptionID = 2;
         std::map<NodeID, uint32_t> PublishRequestQueues;
-        boost::asio::io_service io;
-        std::shared_ptr<boost::asio::io_service::work> work; //work object prevent worker thread to exist even whenre there are no subsciptions
         std::thread service_thread;
     };
 
 
   }
 
-  namespace UaServer
+  namespace Server
   {
-    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<UaServer::AddressSpace> addressspace, bool debug);
+    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, bool debug);
   }
 
 

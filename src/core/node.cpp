@@ -31,19 +31,19 @@
 namespace OpcUa
 {
 
-  Node::Node(Remote::Server::SharedPtr srv)
+  Node::Node(Services::SharedPtr srv)
     : Node(srv, ObjectID::RootFolder, QualifiedName("Root", 0))
   {
   }
 
-  Node::Node(Remote::Server::SharedPtr srv, const NodeID& id)
+  Node::Node(Services::SharedPtr srv, const NodeID& id)
     : Server(srv)
     , Id(id)
   {
     GetName();
   }
 
-  Node::Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name)
+  Node::Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name)
     : Server(srv)
     , Id(id)
     , BrowseName(name)
@@ -77,7 +77,7 @@ namespace OpcUa
     }
     else
     {
-      return DataValue(); //FIXME: What does it mean when not value is found?
+      return Variant(); //FIXME: What does it mean when not value is found?
     }
   }
 
@@ -132,11 +132,11 @@ namespace OpcUa
   {
     if ( force || BrowseName == QualifiedName() ){
       Variant var = GetAttribute(AttributeID::BROWSE_NAME);
-      if (var.Type != VariantType::QUALIFIED_NAME)
+      if (var.Type() != VariantType::QUALIFIED_NAME)
       {
         throw std::runtime_error("Could not retrieve browse name.");
       }
-      BrowseName = var.Value.Name.front();
+      BrowseName = var.As<QualifiedName>();
     }
     return BrowseName;
   }
@@ -304,7 +304,7 @@ namespace OpcUa
 
   Node Node::AddVariable(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
-    ObjectID datatype = VariantTypeToDataType(val.Type);
+    ObjectID datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;
@@ -354,7 +354,7 @@ namespace OpcUa
   Node Node::AddProperty(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
 
-    ObjectID datatype = VariantTypeToDataType(val.Type);
+    ObjectID datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;

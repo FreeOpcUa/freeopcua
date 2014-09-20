@@ -573,11 +573,11 @@ namespace OpcUa
       total += RawSize(val.SpecifiedAttributes);
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DISPLAY_NAME)->second.Value.Text.front()); //We assume the attr exists!!!
+        total += RawSize(val.Attributes.find(AttributeID::DISPLAY_NAME)->second.As<LocalizedText>()); //We assume the attr exists!!!
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DESCRIPTION)->second.Value.Text.front());
+        total += RawSize(val.Attributes.find(AttributeID::DESCRIPTION)->second.As<LocalizedText>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
@@ -589,7 +589,7 @@ namespace OpcUa
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DATA_TYPE)->second.Value.Node.front());
+        total += RawSize(val.Attributes.find(AttributeID::DATA_TYPE)->second.As<NodeID>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
@@ -597,7 +597,7 @@ namespace OpcUa
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        total += RawSizeContainer(val.Attributes.find(AttributeID::DESCRIPTION)->second.Value.UInt32);
+        total += RawSizeContainer(val.Attributes.find(AttributeID::ARRAY_DIMENSIONS)->second.As<std::vector<uint32_t>>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
@@ -667,23 +667,23 @@ namespace OpcUa
       *this << val.SpecifiedAttributes;
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        *this << val.Attributes.find(AttributeID::DISPLAY_NAME)->second.Value.Text.front();
+        *this << val.Attributes.find(AttributeID::DISPLAY_NAME)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        *this << val.Attributes.find(AttributeID::DESCRIPTION)->second.Value.Text.front();
+        *this << val.Attributes.find(AttributeID::DESCRIPTION)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::WriteMask))
       {
-        *this << val.Attributes.find(AttributeID::WRITE_MASK)->second.Value.UInt32.front();
+        *this << val.Attributes.find(AttributeID::WRITE_MASK)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserWriteMask))
       {
-        *this << val.Attributes.find(AttributeID::USER_WRITE_MASK)->second.Value.UInt32.front();
+        *this << val.Attributes.find(AttributeID::USER_WRITE_MASK)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
-        *this << (uint8_t) val.Attributes.find(AttributeID::EVENT_NOTIFIER)->second.Value.Byte.front();
+        *this << (uint8_t) val.Attributes.find(AttributeID::EVENT_NOTIFIER)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
@@ -691,55 +691,55 @@ namespace OpcUa
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        *this << val.Attributes.find(AttributeID::DATA_TYPE)->second.Value.Node.front();
+        *this << val.Attributes.find(AttributeID::DATA_TYPE)->second.As<NodeID>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
-        *this << val.Attributes.find(AttributeID::VALUE_RANK)->second.Value.Int32.front();
+        *this << val.Attributes.find(AttributeID::VALUE_RANK)->second.As<int32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        *this << val.Attributes.find(AttributeID::ARRAY_DIMENSIONS)->second.Value.UInt32;
+        *this << val.Attributes.find(AttributeID::ARRAY_DIMENSIONS)->second.As<std::vector<uint32_t>>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::ACCESS_LEVEL)->second.Value.Byte.front();
+        *this << val.Attributes.find(AttributeID::ACCESS_LEVEL)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserAccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::USER_ACCESS_LEVEL)->second.Value.Byte.front();
+        *this << val.Attributes.find(AttributeID::USER_ACCESS_LEVEL)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::MinimumSamplingInterval))
       {
-        *this << val.Attributes.find(AttributeID::MINIMUM_SAMPLING_INTERVAL)->second.Value.Double.front();
+        *this << val.Attributes.find(AttributeID::MINIMUM_SAMPLING_INTERVAL)->second.As<double>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Historizing))
       {
-        *this << val.Attributes.find(AttributeID::HISTORIZING)->second.Value.Boolean.front();
+        *this << val.Attributes.find(AttributeID::HISTORIZING)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Executable))
       {
-        *this << val.Attributes.find(AttributeID::EXECUTABLE)->second;
+        *this << val.Attributes.find(AttributeID::EXECUTABLE)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserExecutable))
       {
-        *this << val.Attributes.find(AttributeID::USER_EXECUTABLE)->second;
+        *this << val.Attributes.find(AttributeID::USER_EXECUTABLE)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::IsAbstract))
       {
-        *this << val.Attributes.find(AttributeID::IS_ABSTRACT)->second;
+        *this << val.Attributes.find(AttributeID::IS_ABSTRACT)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Symmetric))
       {
-        *this << val.Attributes.find(AttributeID::SYMMETRIC)->second;
+        *this << val.Attributes.find(AttributeID::SYMMETRIC)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::InverseName))
       {
-        *this << val.Attributes.find(AttributeID::INVERSE_NAME)->second;
+        *this << val.Attributes.find(AttributeID::INVERSE_NAME)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ContainsNoLoops))
       {
-        *this << val.Attributes.find(AttributeID::CONTAINS_NO_LOOPS)->second;
+        *this << val.Attributes.find(AttributeID::CONTAINS_NO_LOOPS)->second.As<bool>();
       }
 
     }
@@ -1177,7 +1177,6 @@ namespace OpcUa
     {
       return Names::ServerType;
     }
-    std::cerr << "Error no Node name defined for ObjectID: " << id << std::endl;
     return "NoNameFound";
   }
 

@@ -30,43 +30,6 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-
-  #define ApplyToVariantValue(type, var, func, secondParam) \
-  { \
-    switch (type) \
-    { \
-      case VariantType::BOOLEAN:          func(var.Boolean, secondParam); break; \
-      case VariantType::SBYTE:            func(var.SByte, secondParam); break; \
-      case VariantType::BYTE:             func(var.Byte, secondParam); break; \
-      case VariantType::INT16:            func(var.Int16, secondParam); break; \
-      case VariantType::UINT16:           func(var.UInt16, secondParam); break; \
-      case VariantType::INT32:            func(var.Int32, secondParam); break; \
-      case VariantType::UINT32:           func(var.UInt32, secondParam); break; \
-      case VariantType::INT64:            func(var.Int64, secondParam); break; \
-      case VariantType::UINT64:           func(var.UInt64, secondParam); break; \
-      case VariantType::FLOAT:            func(var.Float, secondParam); break; \
-      case VariantType::DOUBLE:           func(var.Double, secondParam); break; \
-      case VariantType::STRING:           func(var.String, secondParam); break; \
-      case VariantType::DATE_TIME:        func(var.Time, secondParam); break; \
-      case VariantType::GUID:             func(var.Guids, secondParam); break; \
-      case VariantType::BYTE_STRING:      func(var.ByteStrings, secondParam); break; \
-      case VariantType::XML_ELEMENT:      func(var.String, secondParam); break; \
-      case VariantType::NODE_ID:          func(var.Node, secondParam); break; \
-      case VariantType::EXPANDED_NODE_ID: func(var.Node, secondParam); break; \
-      case VariantType::STATUS_CODE:      func(var.Statuses, secondParam); break; \
-      case VariantType::QUALIFIED_NAME:   func(var.Name, secondParam); break; \
-      case VariantType::LOCALIZED_TEXT:   func(var.Text, secondParam); break; \
-      case VariantType::DIAGNOSTIC_INFO:  func(var.Diagnostic, secondParam); break; \
-      case VariantType::VARIANT:          func(var.Variants, secondParam); break; \
-      case VariantType::DATA_VALUE:       func(var.Value, secondParam); break; \
-      case VariantType::NUL: \
-      case VariantType::EXTENSION_OBJECT: \
-        break; \
-      default: \
-        throw std::logic_error("Unknown variant type."); \
-    } \
-  }
-
   template <typename T>
   bool IsValueArray(const std::vector<T>& t)
   {
@@ -148,785 +111,305 @@ namespace
     value.push_back(tmp);
   }
 
-
-  void CopyValue(VariantType type, const VariantValue& value, VariantValue& var)
+  struct RawSizeVisitor
   {
-    switch (type)
-    {
-      case VariantType::BOOLEAN:          var.Boolean = value.Boolean; break;
-      case VariantType::SBYTE:            var.SByte = value.SByte; break;
-      case VariantType::BYTE:             var.Byte = value.Byte; break;
-      case VariantType::INT16:            var.Int16 = value.Int16; break;
-      case VariantType::UINT16:           var.UInt16 = value.UInt16; break;
-      case VariantType::INT32:            var.Int32 = value.Int32; break;
-      case VariantType::UINT32:           var.UInt32 = value.UInt32; break;
-      case VariantType::INT64:            var.Int64 = value.Int64; break;
-      case VariantType::UINT64:           var.UInt64 = value.UInt64; break;
-      case VariantType::FLOAT:            var.Float = value.Float; break;
-      case VariantType::DOUBLE:           var.Double = value.Double; break;
-      case VariantType::STRING:           var.String = value.String; break;
-      case VariantType::DATE_TIME:        var.Time = value.Time; break;
-      case VariantType::GUID:             var.Guids = value.Guids; break;
-      case VariantType::BYTE_STRING:      var.ByteStrings = value.ByteStrings; break;
-      case VariantType::XML_ELEMENT:      var.String = value.String; break;
-      case VariantType::NODE_ID:          var.Node = value.Node; break;
-      case VariantType::EXPANDED_NODE_ID: var.Node = value.Node; break;
-      case VariantType::STATUS_CODE:      var.Statuses = value.Statuses; break;
-      case VariantType::QUALIFIED_NAME:   var.Name = value.Name; break;
-      case VariantType::LOCALIZED_TEXT:   var.Text = value.Text; break;
-      case VariantType::DIAGNOSTIC_INFO:  var.Diagnostic = value.Diagnostic; break;
-      case VariantType::VARIANT:          var.Variants = value.Variants; break;
-      case VariantType::DATA_VALUE:       var.Value = value.Value; break;
-      case VariantType::NUL:
-      case VariantType::EXTENSION_OBJECT:
-        break;
-      default:
-        throw std::logic_error("Unknown variant type.");
-    }
-  }
+    typedef size_t result_type;
 
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == true, size_t>::type operator()(const T& val)
+    {
+      return RawSizeContainer(val);
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == false, size_t>::type operator()(const T& val)
+    {
+      return RawSize(val);
+    }
+  };
+
+  struct VariantSerializer
+  {
+    DataSerializer* Serializer;
+
+    explicit VariantSerializer(DataSerializer* serializer)
+      : Serializer(serializer)
+    {
+
+    }
+
+    typedef void result_type;
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& val)
+    {
+      SerializeContainer(*Serializer, val);
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == false>::type operator()(const T& val)
+    {
+      Serializer->Serialize(val);
+    }
+  };
+
+  struct VariantDeserializer
+  {
+    DataDeserializer* Deserializer;
+
+    explicit VariantDeserializer(DataDeserializer* deserializer)
+      : Deserializer(deserializer)
+    {
+
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == true, T>::type get()
+    {
+      T tmp;
+      DeserializeContainer(*Deserializer, tmp);
+      return tmp;
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == false, T>::type get()
+    {
+      T tmp;
+      *Deserializer >> tmp;
+      return tmp;
+    }
+  };
+
+  template<typename T>
+  bool Compare(const Variant& lhs, const Variant& rhs)
+  {
+    return lhs.As<T>() == rhs.As<T>();
+  }
 }
 
 namespace OpcUa
 {
-
-    VariantValue::VariantValue(bool val) : Boolean(1, val) {}
-    VariantValue::VariantValue(int8_t val) : SByte{val} {}
-    VariantValue::VariantValue(uint8_t val) :  Byte{val} {}
-    VariantValue::VariantValue(int16_t val) : Int16{val} {}
-    VariantValue::VariantValue(uint16_t val) : UInt16{val} {}
-    VariantValue::VariantValue(int32_t val) : Int32{val} {}
-    VariantValue::VariantValue(uint32_t val) : UInt32{val} {}
-    VariantValue::VariantValue(int64_t val) : Int64{val} {}
-    VariantValue::VariantValue(uint64_t val) : UInt64{val} {}
-    VariantValue::VariantValue(float val) : Float{val} {}
-    VariantValue::VariantValue(double val) : Double{val} {}
-    VariantValue::VariantValue(StatusCode val) : Statuses{1, val} {}
-    VariantValue::VariantValue(const std::string& val) : String{1,val} {}
-    VariantValue::VariantValue(const ByteString& val) : ByteStrings{1, val} {}
-    VariantValue::VariantValue(const DateTime& val) : Time{1, val} {}
-    VariantValue::VariantValue(const Guid& val) : Guids{1, val} {}
-    VariantValue::VariantValue(const NodeID& val) : Node{1, val} {}
-    VariantValue::VariantValue(const QualifiedName& val) : Name{1, val} {}
-    VariantValue::VariantValue(const LocalizedText& val) : Text{1, val} {}
-    VariantValue::VariantValue(const DataValue& val) : Value{1, val} {}
-    VariantValue::VariantValue(const DiagnosticInfo& val) : Diagnostic{1, val} {}
-
-    VariantValue::VariantValue(const std::vector<bool>& val) : Boolean(val) {}
-    VariantValue::VariantValue(const std::vector<int8_t>& val) : SByte(val) {}
-    VariantValue::VariantValue(const std::vector<uint8_t>& val) :  Byte(val) {}
-    VariantValue::VariantValue(const std::vector<int16_t>& val) : Int16(val) {}
-    VariantValue::VariantValue(const std::vector<uint16_t>& val) : UInt16(val) {}
-    VariantValue::VariantValue(const std::vector<int32_t>& val) : Int32(val) {}
-    VariantValue::VariantValue(const std::vector<uint32_t>& val) : UInt32(val) {}
-    VariantValue::VariantValue(const std::vector<int64_t>& val) : Int64(val) {}
-    VariantValue::VariantValue(const std::vector<uint64_t>& val) : UInt64(val) {}
-    VariantValue::VariantValue(const std::vector<float>& val) : Float(val) {}
-    VariantValue::VariantValue(const std::vector<double>& val) : Double(val) {}
-    VariantValue::VariantValue(const std::vector<StatusCode>& val) : Statuses(val) {}
-    VariantValue::VariantValue(const std::vector<std::string>& val) : String(val) {}
-    VariantValue::VariantValue(const std::vector<ByteString>& val) : ByteStrings(val) {}
-    VariantValue::VariantValue(const std::vector<DateTime>& val) : Time{val} {}
-    VariantValue::VariantValue(const std::vector<Guid>& val) : Guids(val) {}
-    VariantValue::VariantValue(const std::vector<NodeID>& val) : Node(val) {}
-    VariantValue::VariantValue(const std::vector<QualifiedName>& val) : Name(val) {}
-    VariantValue::VariantValue(const std::vector<LocalizedText>& val) : Text(val) {}
-    VariantValue::VariantValue(const std::vector<DataValue>& val) : Value(val) {}
-    VariantValue::VariantValue(const std::vector<Variant>& val) : Variants(val) {}
-    VariantValue::VariantValue(const std::vector<DiagnosticInfo>& val) : Diagnostic(val) {}
-
-
-    VariantValue& VariantValue::operator= (bool val)
-    {
-      Boolean = std::vector<bool>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (int8_t val)
-    {
-      SByte = std::vector<int8_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (uint8_t val)
-    {
-      Byte = std::vector<uint8_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (int16_t val)
-    {
-      Int16 = std::vector<int16_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (uint16_t val)
-    {
-      UInt16 = std::vector<uint16_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (int32_t val)
-    {
-      Int32 = std::vector<int32_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (uint32_t val)
-    {
-      UInt32 = std::vector<uint32_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (int64_t val)
-    {
-      Int64 = std::vector<int64_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (uint64_t val)
-    {
-      UInt64 = std::vector<uint64_t>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (float val)
-    {
-      Float = std::vector<float>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (double val)
-    {
-      Double = std::vector<double>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (StatusCode val)
-    {
-      Statuses = std::vector<StatusCode>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::string& val)
-    {
-      String = std::vector<std::string>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const ByteString& val)
-    {
-      ByteStrings = std::vector<ByteString>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const DateTime& val)
-    {
-      Time = std::vector<DateTime>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const Guid& val)
-    {
-      Guids = std::vector<Guid>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const NodeID& val)
-    {
-      Node = std::vector<NodeID>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const QualifiedName& val)
-    {
-      Name = std::vector<QualifiedName>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const LocalizedText& val)
-    {
-      Text = std::vector<LocalizedText>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const DataValue& val)
-    {
-      Value = std::vector<DataValue>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const Variant& val)
-    {
-      Variants = std::vector<Variant>{val};
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const DiagnosticInfo& val)
-    {
-      Diagnostic = std::vector<DiagnosticInfo>{val};
-      return *this;
-    }
-
-
-    VariantValue& VariantValue::operator= (const std::vector<bool>& val)
-    {
-      Boolean = std::vector<bool>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<int8_t>& val)
-    {
-      SByte = std::vector<int8_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<uint8_t>& val)
-    {
-      Byte = std::vector<uint8_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<int16_t>& val)
-    {
-      Int16 = std::vector<int16_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<uint16_t>& val)
-    {
-      UInt16 = std::vector<uint16_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<int32_t>& val)
-    {
-      Int32 = std::vector<int32_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<uint32_t>& val)
-    {
-      UInt32 = std::vector<uint32_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<int64_t>& val)
-    {
-      Int64 = std::vector<int64_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<uint64_t>& val)
-    {
-      UInt64 = std::vector<uint64_t>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<float>& val)
-    {
-      Float = std::vector<float>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<double>& val)
-    {
-      Double = std::vector<double>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<StatusCode>& val)
-    {
-      Statuses = std::vector<StatusCode>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<std::string>& val)
-    {
-      String = std::vector<std::string>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<DateTime>& val)
-    {
-      Time = std::vector<DateTime>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<ByteString>& val)
-    {
-      ByteStrings = std::vector<ByteString>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<Guid>& val)
-    {
-      Guids = std::vector<Guid>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<NodeID>& val)
-    {
-      Node = std::vector<NodeID>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<QualifiedName>& val)
-    {
-      Name = std::vector<QualifiedName>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<LocalizedText>& val)
-    {
-      Text = std::vector<LocalizedText>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<DataValue>& val)
-    {
-      Value = std::vector<DataValue>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<Variant>& val)
-    {
-      Variants = std::vector<Variant>(val);
-      return *this;
-    }
-
-    VariantValue& VariantValue::operator= (const std::vector<DiagnosticInfo>& val)
-    {
-      Diagnostic = std::vector<DiagnosticInfo>(val);
-      return *this;
-    }
-
-
-    bool VariantValue::operator== (bool val) const
-    {
-      return Boolean.size() == 1 && Boolean.front() == val;
-    }
-
-    bool VariantValue::operator== (int8_t val) const
-    {
-      return SByte.size() == 1 && SByte.front() == val;
-    }
-
-    bool VariantValue::operator== (uint8_t val) const
-    {
-      return Byte.size() == 1 && Byte.front() == val;
-    }
-
-    bool VariantValue::operator== (int16_t val) const
-    {
-      return Int16.size() == 1 && Int16.front() == val;
-    }
-
-    bool VariantValue::operator== (uint16_t val) const
-    {
-      return UInt16.size() == 1 && UInt16.front() == val;
-    }
-
-    bool VariantValue::operator== (int32_t val) const
-    {
-      return Int32.size() == 1 && Int32.front() == val;
-    }
-
-    bool VariantValue::operator== (uint32_t val) const
-    {
-      return UInt32.size() == 1 && UInt32.front() == val;
-    }
-
-    bool VariantValue::operator== (int64_t val) const
-    {
-      return Int64.size() == 1 && Int64.front() == val;
-    }
-
-    bool VariantValue::operator== (uint64_t val) const
-    {
-      return UInt64.size() == 1 && UInt64.front() == val;
-    }
-
-    bool VariantValue::operator== (float val) const
-    {
-      return Float.size() == 1 && Float.front() == val;
-    }
-
-    bool VariantValue::operator== (double val) const
-    {
-      return Double.size() == 1 && Double.front() == val;
-    }
-
-    bool VariantValue::operator== (StatusCode val) const
-    {
-      return Statuses.size() == 1 && Statuses.front() == val;
-    }
-
-    bool VariantValue::operator== (const std::string& val) const
-    {
-      return String.size() == 1 && String.front() == val;
-    }
-
-    bool VariantValue::operator== (const ByteString& val) const
-    {
-      return ByteStrings.size() == 1 && ByteStrings.front() == val;
-    }
-
-    bool VariantValue::operator== (const DateTime& val) const
-    {
-      return Time.size() == 1 && Time.front() == val;
-    }
-
-    bool VariantValue::operator== (const Guid& val) const
-    {
-      return Guids.size() == 1 && Guids.front() == val;
-    }
-
-    bool VariantValue::operator== (const NodeID& val) const
-    {
-      return Node.size() == 1 && Node.front() == val;
-    }
-
-    bool VariantValue::operator== (const QualifiedName& val) const
-    {
-      return Name.size() == 1 && Name.front() == val;
-    }
-
-    bool VariantValue::operator== (const LocalizedText& val) const
-    {
-      return Text.size() == 1 && Text.front() == val;
-    }
-
-    bool VariantValue::operator== (const DataValue& val) const
-    {
-      return Value.size() == 1 && Value.front() == val;
-    }
-
-    bool VariantValue::operator== (const Variant& val) const
-    {
-      return Variants.size() == 1 && Variants.front() == val;
-    }
-
-    bool VariantValue::operator== (const DiagnosticInfo& val) const
-    {
-      return Diagnostic.size() == 1 && Diagnostic.front() == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<bool>& val) const
-    {
-      return Boolean == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<int8_t>& val) const
-    {
-      return SByte == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<uint8_t>& val) const
-    {
-      return Byte == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<int16_t>& val) const
-    {
-      return Int16 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<uint16_t>& val) const
-    {
-      return UInt16 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<int32_t>& val) const
-    {
-      return Int32 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<uint32_t>& val) const
-    {
-      return UInt32 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<int64_t>& val) const
-    {
-      return Int64 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<uint64_t>& val) const
-    {
-      return UInt64 == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<float>& val) const
-    {
-      return Float == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<double>& val) const
-    {
-      return Double == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<StatusCode>& val) const
-    {
-      return Statuses == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<std::string>& val) const
-    {
-      return String == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<DateTime>& val) const
-    {
-      return Time == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<ByteString>& val) const
-    {
-      return ByteStrings == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<Guid>& val) const
-    {
-      return Guids == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<NodeID>& val) const
-    {
-      return Node == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<QualifiedName>& val) const
-    {
-      return Name == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<LocalizedText>& val) const
-    {
-      return Text == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<DataValue>& val) const
-    {
-      return Value == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<Variant>& val) const
-    {
-      return Variants == val;
-    }
-
-    bool VariantValue::operator== (const std::vector<DiagnosticInfo>& val) const
-    {
-      return Diagnostic == val;
-    }
-
-    bool VariantValue::operator== (const VariantValue& val) const
-    {
-      const OpcUa::VariantType type = GetType();
-      if (type != val.GetType())
-      {
-        return false;
-      }
-
-      switch (type)
-      {
-        case VariantType::BOOLEAN:          return Boolean     == val.Boolean;
-        case VariantType::SBYTE:            return SByte       == val.SByte;
-        case VariantType::BYTE:             return Byte        == val.Byte;
-        case VariantType::INT16:            return Int16       == val.Int16;
-        case VariantType::UINT16:           return UInt16      == val.UInt16;
-        case VariantType::INT32:            return Int32       == val.Int32;
-        case VariantType::UINT32:           return UInt32      == val.UInt32;
-        case VariantType::INT64:            return Int64       == val.Int64;
-        case VariantType::UINT64:           return UInt64      == val.UInt64;
-        case VariantType::FLOAT:            return Float       == val.Float;
-        case VariantType::DOUBLE:           return Double      == val.Double;
-        case VariantType::STRING:           return String      == val.String;
-        case VariantType::DATE_TIME:        return Time        == val.Time;
-        case VariantType::GUID:             return Guids       == val.Guids;
-        case VariantType::BYTE_STRING:      return ByteStrings == val.ByteStrings;
-        case VariantType::XML_ELEMENT:      return String      == val.String;
-        case VariantType::NODE_ID:          return Node        == val.Node;
-        case VariantType::EXPANDED_NODE_ID: return Node        == val.Node;
-        case VariantType::STATUS_CODE:      return Statuses    == val.Statuses;
-        case VariantType::QUALIFIED_NAME:   return Name        == val.Name;
-        case VariantType::LOCALIZED_TEXT:   return Text        == val.Text;
-        case VariantType::DIAGNOSTIC_INFO:  return Diagnostic  == val.Diagnostic;
-        case VariantType::VARIANT:          return Variants    == val.Variants;
-        case VariantType::DATA_VALUE:       return Value       == val.Value;
-        case VariantType::NUL:
-          return true;
-        case VariantType::EXTENSION_OBJECT:
-        default:
-          throw std::logic_error("Unknown variant type.");
-      }
-    }
-
   //---------------------------------------------------
   // Variant
   //---------------------------------------------------
 
-
-  Variant::Variant()
-    : Type(VariantType::NUL)
+  bool Variant::operator== (const Variant& var) const
   {
-  }
-
-  Variant::Variant(const Variant& var) : Type(var.Type), Dimensions(var.Dimensions)
-  {
-    _array = var.IsArray();
-    CopyValue(Type, var.Value, this->Value);
-  }
-
-  Variant& Variant::operator= (const Variant& var)
-  {
-    Type = var.Type;
-    Dimensions = var.Dimensions;
-    _array = var.IsArray();
-    CopyValue(Type, var.Value, this->Value);
-    return *this;
-  }
-
-  bool Variant::IsArray() const
-  {
-    bool GuessedIsArray = false;
-    ApplyToVariantValue(Type, Value, IsValueArray, GuessedIsArray);
-	if (_array == false && GuessedIsArray == false)
+    if (Value.empty() ^ var.Value.empty())
     {
       return false;
     }
-    else
+
+    if (Value.empty() && var.Value.empty())
     {
       return true;
     }
+
+    if (Value.type() != var.Value.type())
+    {
+      return false;
+    }
+
+    using namespace boost;
+    const std::type_info& t = Value.type();
+    if (t == typeid(bool))
+      return Compare<bool>(*this, var);
+    else if (t == typeid(std::vector<bool>))
+      return Compare<std::vector<bool>>(*this, var);
+    else if (t == typeid(int8_t))
+      return Compare<int8_t>(*this, var);
+    else if (t == typeid(std::vector<int8_t>))
+      return Compare<std::vector<int8_t>>(*this, var);
+    else if (t == typeid(uint8_t))
+      return Compare<uint8_t>(*this, var);
+    else if (t == typeid(std::vector<uint8_t>))
+      return Compare<std::vector<uint8_t>>(*this, var);
+    else if (t == typeid(int16_t))
+      return Compare<int16_t>(*this, var);
+    else if (t == typeid(std::vector<int16_t>))
+      return Compare<std::vector<int16_t>>(*this, var);
+    else if (t == typeid(uint16_t))
+      return Compare<uint16_t>(*this, var);
+    else if (t == typeid(std::vector<uint16_t>))
+      return Compare<std::vector<uint16_t>>(*this, var);
+
+    else if (t == typeid(int32_t))
+      return Compare<int32_t>(*this, var);
+    else if (t == typeid(std::vector<int32_t>))
+      return Compare<std::vector<int32_t>>(*this, var);
+    else if (t == typeid(uint32_t))
+      return Compare<uint32_t>(*this, var);
+    else if (t == typeid(std::vector<uint32_t>))
+      return Compare<std::vector<uint32_t>>(*this, var);
+    else if (t == typeid(int64_t))
+      return Compare<int64_t>(*this, var);
+    else if (t == typeid(std::vector<int64_t>))
+      return Compare<std::vector<int64_t>>(*this, var);
+    else if (t == typeid(uint64_t))
+      return Compare<uint64_t>(*this, var);
+    else if (t == typeid(std::vector<uint64_t>))
+      return Compare<std::vector<uint64_t>>(*this, var);
+
+    else if (t == typeid(float))
+      return Compare<float>(*this, var);
+    else if (t == typeid(std::vector<float>))
+      return Compare<std::vector<float>>(*this, var);
+
+    else if (t == typeid(double))
+      return Compare<double>(*this, var);
+    else if (t == typeid(std::vector<double>))
+      return Compare<std::vector<double>>(*this, var);
+
+    else if (t == typeid(std::string))
+      return Compare<std::string>(*this, var);
+    else if (t == typeid(std::vector<std::string>))
+      return Compare<std::vector<std::string>>(*this, var);
+
+    else if (t == typeid(DateTime))
+      return Compare<DateTime>(*this, var);
+    else if (t == typeid(std::vector<DateTime>))
+      return Compare<std::vector<DateTime>>(*this, var);
+
+    else if (t == typeid(Guid))
+      return Compare<Guid>(*this, var);
+    else if (t == typeid(std::vector<Guid>))
+      return Compare<std::vector<Guid>>(*this, var);
+
+    else if (t == typeid(ByteString))
+      return Compare<ByteString>(*this, var);
+    else if (t == typeid(std::vector<ByteString>))
+      return Compare<std::vector<ByteString>>(*this, var);
+
+    else if (t == typeid(NodeID))
+      return Compare<NodeID>(*this, var);
+    else if (t == typeid(std::vector<NodeID>))
+      return Compare<std::vector<NodeID>>(*this, var);
+
+    else if (t == typeid(StatusCode))
+      return Compare<StatusCode>(*this, var);
+    else if (t == typeid(std::vector<StatusCode>))
+      return Compare<std::vector<StatusCode>>(*this, var);
+
+    else if (t == typeid(LocalizedText))
+      return Compare<LocalizedText>(*this, var);
+    else if (t == typeid(std::vector<LocalizedText>))
+      return Compare<std::vector<LocalizedText>>(*this, var);
+
+    else if (t == typeid(QualifiedName))
+      return Compare<QualifiedName>(*this, var);
+    else if (t == typeid(std::vector<QualifiedName>))
+      return Compare<std::vector<QualifiedName>>(*this, var);
+/*
+    else if (t == typeid(DataValue))
+      return Compare<DataValue>(*this, Value);
+    else if (t == typeid(std::vector<DataValue>))
+      return Compare<std::vector<DataValue>>(*this, var);
+*/
+    else if (t == typeid(Variant))
+      return Compare<Variant>(*this, var);
+    else if (t == typeid(std::vector<Variant>))
+      return Compare<std::vector<Variant>>(*this, var);
+
+    else if (t == typeid(DiagnosticInfo))
+      return Compare<DiagnosticInfo>(*this, var);
+    else if (t == typeid(std::vector<DiagnosticInfo>))
+      return Compare<std::vector<DiagnosticInfo>>(*this, var);
+
+    throw std::logic_error(std::string("Unknown variant type '") + t.name() + std::string("'."));
+  }
+
+  bool Variant::IsScalar() const
+  {
+    return !IsArray();
   }
 
   bool Variant::IsNul() const
   {
-    if (Type == VariantType::NUL)
-    {
-      return true;
-    }
-    bool isNul = false;
-    ApplyToVariantValue(Type, Value, IsNulValue, isNul);
-    return isNul;
+    return Value.empty();
   }
 
-  VariantType VariantValue::GetType() const
+  bool Variant::IsArray() const
   {
-    if (!Boolean.empty())
-    {
+    const std::type_info& t = Value.type();
+    return
+    (t == typeid(std::vector<bool>))       ||
+    (t == typeid(std::vector<int8_t>))     ||
+    (t == typeid(std::vector<uint8_t>))    ||
+    (t == typeid(std::vector<int16_t>))    ||
+    (t == typeid(std::vector<uint16_t>))   ||
+    (t == typeid(std::vector<int32_t>))    ||
+    (t == typeid(std::vector<uint32_t>))   ||
+    (t == typeid(std::vector<int64_t>))    ||
+    (t == typeid(std::vector<uint64_t>))   ||
+    (t == typeid(std::vector<float>))      ||
+    (t == typeid(std::vector<double>))     ||
+    (t == typeid(std::vector<std::string>))||
+    (t == typeid(std::vector<DateTime>))   ||
+    (t == typeid(std::vector<Guid>))       ||
+    (t == typeid(std::vector<ByteString>)) ||
+    (t == typeid(std::vector<NodeID>))     ||
+    (t == typeid(std::vector<StatusCode>)) ||
+    (t == typeid(std::vector<LocalizedText>)) ||
+    (t == typeid(std::vector<QualifiedName>)) ||
+//    (t == typeid(std::vector<DataValue>))  ||
+    (t == typeid(std::vector<Variant>))    ||
+    (t == typeid(std::vector<DiagnosticInfo>));
+  }
+
+  VariantType Variant::Type() const
+  {
+    if (Value.empty())
+      return VariantType::NUL;
+
+    const std::type_info& t = Value.type();
+    if (t == typeid(bool) || t == typeid(std::vector<bool>))
       return VariantType::BOOLEAN;
-    }
-    if (!SByte.empty())
-    {
+    else if (t == typeid(int8_t) || t == typeid(std::vector<int8_t>))
       return VariantType::SBYTE;
-    }
-
-    if (!Byte.empty())
-    {
+    else if (t == typeid(uint8_t) || t == typeid(std::vector<uint8_t>))
       return VariantType::BYTE;
-    }
-
-    if (!UInt16.empty())
-    {
-      return VariantType::UINT16;
-    }
-
-    if (!Int16.empty())
-    {
+    else if (t == typeid(int16_t) || t == typeid(std::vector<int16_t>))
       return VariantType::INT16;
-    }
-
-    if (!UInt32.empty())
-    {
-      return VariantType::UINT32;
-    }
-
-    if (!Int32.empty())
-    {
+    else if (t == typeid(uint16_t) || t == typeid(std::vector<uint16_t>))
+      return VariantType::UINT16;
+    else if (t == typeid(int32_t) || t == typeid(std::vector<int32_t>))
       return VariantType::INT32;
-    }
-
-    if (!UInt64.empty())
-    {
-      return VariantType::UINT64;
-    }
-
-    if (!Int64.empty())
-    {
+    else if (t == typeid(uint32_t) || t == typeid(std::vector<uint32_t>))
+      return VariantType::UINT32;
+    else if (t == typeid(int64_t) || t == typeid(std::vector<int64_t>))
       return VariantType::INT64;
-    }
-
-    if (!Float.empty())
-    {
+    else if (t == typeid(uint64_t) || t == typeid(std::vector<uint64_t>))
+      return VariantType::UINT64;
+    else if (t == typeid(float) || t == typeid(std::vector<float>))
       return VariantType::FLOAT;
-    }
-
-    if (!Double.empty())
-    {
+    else if (t == typeid(double) || t == typeid(std::vector<double>))
       return VariantType::DOUBLE;
-    }
-    if (!String.empty())
-    {
+    else if (t == typeid(std::string) || t == typeid(std::vector<std::string>))
       return VariantType::STRING;
-    }
-    if (!Time.empty())
-    {
+    else if (t == typeid(DateTime) || t == typeid(std::vector<DateTime>))
       return VariantType::DATE_TIME;
-    }
-    if (!Guids.empty())
-    {
+    else if (t == typeid(Guid) || t == typeid(std::vector<Guid>))
       return VariantType::GUID;
-    }
-    if (!ByteStrings.empty())
-    {
+    else if (t == typeid(ByteString) || t == typeid(std::vector<ByteString>))
       return VariantType::BYTE_STRING;
-    }
-    if (!Node.empty())
-    {
+    else if (t == typeid(NodeID) || t == typeid(std::vector<NodeID>))
       return VariantType::NODE_ID;
-    }
-    if (!Statuses.empty())
-    {
+    else if (t == typeid(StatusCode) || t == typeid(std::vector<StatusCode>))
       return VariantType::STATUS_CODE;
-    }
-    if (!Name.empty())
-    {
-      return VariantType::QUALIFIED_NAME;
-    }
-    if (!Text.empty())
-    {
+    else if (t == typeid(LocalizedText) || t == typeid(std::vector<LocalizedText>))
       return VariantType::LOCALIZED_TEXT;
-    }
-    if (!Value.empty())
-    {
+    else if (t == typeid(QualifiedName) || t == typeid(std::vector<QualifiedName>))
+      return VariantType::QUALIFIED_NAME;
+/*
+    else if (t == typeid(DataValue) || t == typeid(std::vector<DataValue>))
       return VariantType::DATA_VALUE;
-    }
-    if (!Variants.empty())
-    {
+*/
+    else if (t == typeid(Variant) || t == typeid(std::vector<Variant>))
       return VariantType::VARIANT;
-    }
-    if (!Diagnostic.empty())
-    {
+    else if (t == typeid(DiagnosticInfo) || t == typeid(std::vector<DiagnosticInfo>))
       return VariantType::DIAGNOSTIC_INFO;
-    }
-    return VariantType::NUL;
-  }
 
-  bool Variant::operator== (const Variant& var) const
-  {
-    if (Type != var.Type)
-    {
-      return false;
-    }
-    if (Dimensions != var.Dimensions)
-    {
-      return false;
-    }
-    return Value == var.Value;
+    throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
   }
 
   namespace Binary
@@ -941,16 +424,8 @@ namespace OpcUa
         return size;
       }
 
-      std::size_t valueSize = 0;
-      if (var.IsArray())
-      {
-        ApplyToVariantValue(var.Type, var.Value, RawValueSizeArray, valueSize);
-      }
-      else
-      {
-        ApplyToVariantValue(var.Type, var.Value, RawValueSize, valueSize);
-      }
-      size += valueSize;
+      RawSizeVisitor rawSizeCalc;
+      size += var.Visit(rawSizeCalc);
       if (!var.Dimensions.empty())
       {
         size += RawSizeContainer(var.Dimensions);
@@ -962,32 +437,24 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<Variant>(const Variant& var)
     {
-      uint8_t encodingMask = static_cast<uint8_t>(var.Type);
-      if (!var.IsNul())
+      uint8_t encodingMask = static_cast<uint8_t>(var.Type());
+      if (var.IsArray())
       {
-        if (var.IsArray())
-        {
-          encodingMask |= HAS_ARRAY_MASK;
-        }
-        if (!var.Dimensions.empty())
-        {
-          encodingMask |= HAS_DIMENSIONS_MASK;
-        }
+        encodingMask |= HAS_ARRAY_MASK;
       }
-
+      if (!var.Dimensions.empty())
+      {
+        encodingMask |= HAS_DIMENSIONS_MASK;
+      }
       Serialize(encodingMask);
       if (var.IsNul())
       {
         return;
       }
-      if (var.IsArray() )
-      {
-        ApplyToVariantValue(var.Type, var.Value, SerializeValueArray, *this);
-      }
-      else
-      {
-        ApplyToVariantValue(var.Type, var.Value, SerializeValue, *this);
-      }
+
+      VariantSerializer variantSerializer(this);
+      var.Visit(variantSerializer);
+
       if (!var.Dimensions.empty())
       {
         SerializeContainer(*this, var.Dimensions);
@@ -998,22 +465,107 @@ namespace OpcUa
     void DataDeserializer::Deserialize<Variant>(Variant& var)
     {
 
-      uint8_t encodingMask = 0;
-      Deserialize(encodingMask);
+      uint8_t encoding = 0;
+      Deserialize(encoding);
 
+      VariantDeserializer deserializer(this);
+
+      const uint8_t encodingMask = encoding & (~HAS_DIMENSIONS_MASK);
       // TODO check validity of type value after decoding.
-      var.Type = static_cast<VariantType>(encodingMask & VALUE_TYPE_MASK);
-      if (encodingMask & HAS_ARRAY_MASK)
-      {
-        var.setArray(true);
-        ApplyToVariantValue(var.Type, var.Value, DeserializeContainerValue, *this);
-      }
-      else
-      {
-        ApplyToVariantValue(var.Type, var.Value, DeserializeValue, *this);
-      }
+      if(encodingMask == (uint8_t)VariantType::BOOLEAN)
+        var = deserializer.get<bool>();
+      if(encodingMask == ((uint8_t)VariantType::BOOLEAN | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<bool>>();
+      if(encodingMask == (uint8_t)VariantType::SBYTE)
+        var = deserializer.get<int8_t>();
+      if(encodingMask == ((uint8_t)VariantType::SBYTE | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<int8_t>>();
+      if(encodingMask == (uint8_t)VariantType::BYTE)
+        var = deserializer.get<uint8_t>();
+      if(encodingMask == ((uint8_t)VariantType::BYTE | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<uint8_t>>();
+      if(encodingMask == ((uint8_t)VariantType::INT16))
+        var = deserializer.get<int16_t>();
+      if(encodingMask == ((uint8_t)VariantType::INT16 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<int16_t>>();
+      if(encodingMask == ((uint8_t)VariantType::UINT16))
+        var = deserializer.get<uint16_t>();
+      if(encodingMask == ((uint8_t)VariantType::UINT16 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<uint16_t>>();
+      if(encodingMask == ((uint8_t)VariantType::INT32))
+        var = deserializer.get<int32_t>();
+      if(encodingMask == ((uint8_t)VariantType::INT32 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<int32_t>>();
+      if(encodingMask == ((uint8_t)VariantType::UINT32))
+        var = deserializer.get<uint32_t>();
+      if(encodingMask == ((uint8_t)VariantType::UINT32 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<uint32_t>>();
+      if(encodingMask == ((uint8_t)VariantType::INT64))
+        var = deserializer.get<int64_t>();
+      if(encodingMask == ((uint8_t)VariantType::INT64 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<int64_t>>();
+      if(encodingMask == ((uint8_t)VariantType::UINT64))
+        var = deserializer.get<uint64_t>();
+      if(encodingMask == ((uint8_t)VariantType::UINT64 | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<uint64_t>>();
+      if(encodingMask == ((uint8_t)VariantType::FLOAT))
+        var = deserializer.get<float>();
+      if(encodingMask == ((uint8_t)VariantType::FLOAT | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<float>>();
+      if(encodingMask == ((uint8_t)VariantType::DOUBLE))
+        var = deserializer.get<double>();
+      if(encodingMask == ((uint8_t)VariantType::DOUBLE | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<double>>();
+      if(encodingMask == ((uint8_t)VariantType::STRING))
+        var = deserializer.get<std::string>();
+      if(encodingMask == ((uint8_t)VariantType::STRING | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<std::string>>();
+      if(encodingMask == ((uint8_t)VariantType::DATE_TIME))
+        var = deserializer.get<DateTime>();
+      if(encodingMask == ((uint8_t)VariantType::DATE_TIME | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<DateTime>>();
+      if(encodingMask == ((uint8_t)VariantType::GUID))
+        var = deserializer.get<Guid>();
+      if(encodingMask == ((uint8_t)VariantType::GUID | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<Guid>>();
+      if(encodingMask == ((uint8_t)VariantType::BYTE_STRING))
+        var = deserializer.get<ByteString>();
+      if(encodingMask == ((uint8_t)VariantType::BYTE_STRING | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<ByteString>>();
+      if(encodingMask == ((uint8_t)VariantType::NODE_ID))
+        var = deserializer.get<NodeID>();
+      if(encodingMask == ((uint8_t)VariantType::NODE_ID | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<NodeID>>();
+      if(encodingMask == ((uint8_t)VariantType::STATUS_CODE))
+        var = deserializer.get<StatusCode>();
+      if(encodingMask == ((uint8_t)VariantType::STATUS_CODE | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<StatusCode>>();
 
-      if (encodingMask & HAS_DIMENSIONS_MASK)
+      if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT))
+        var = deserializer.get<LocalizedText>();
+      if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<LocalizedText>>();
+
+      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME))
+        var = deserializer.get<QualifiedName>();
+      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<QualifiedName>>();
+/*
+      if(encodingMask == ((uint8_t)VariantType::DATA_VALUE))
+        var = deserializer.get<DataValue>();
+      if(encodingMask == ((uint8_t)VariantType::DATA_VALUE | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<DataValue>>();
+*/
+      if(encodingMask == ((uint8_t)VariantType::VARIANT))
+        var = deserializer.get<Variant>();
+      if(encodingMask == ((uint8_t)VariantType::VARIANT | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<Variant>>();
+      if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO))
+        var = deserializer.get<DiagnosticInfo>();
+      if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<DiagnosticInfo>>();
+
+      if (encoding & HAS_DIMENSIONS_MASK)
       {
         DeserializeContainer(*this, var.Dimensions);
       }

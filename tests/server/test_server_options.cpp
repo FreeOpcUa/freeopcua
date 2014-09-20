@@ -17,7 +17,7 @@
 TEST(LoadingAddon, DISABLED_TestAdon)
 {
   const char* argv[4] = { "test.exe", "--config=./tests/server/configs/", "--log-file=/path/to/log/server.log", "--daemon" };
-  OpcUa::UaServer::CommandLine cmdline(4, argv);
+  OpcUa::Server::CommandLine cmdline(4, argv);
   EXPECT_EQ(cmdline.GetLogFile(), "/path/to/log/server.log");
   EXPECT_TRUE(cmdline.IsDaemonMode());
 
@@ -38,7 +38,7 @@ TEST(LoadingAddon, DISABLED_TestAdon)
 TEST(ServerOptions, DISABLED_ParsesConfigurationFile)
 {
   const char* argv[2] = { "test.exe", "--config=./tests/server/configs" };
-  OpcUa::UaServer::CommandLine cmdline(2, argv);
+  OpcUa::Server::CommandLine cmdline(2, argv);
   std::vector<Common::AddonInformation> modules = cmdline.GetModules();
   ASSERT_EQ(modules.size(), 1);
   const Common::AddonInformation& module = modules.front();

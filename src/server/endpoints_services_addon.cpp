@@ -17,8 +17,7 @@
 #include <opc/ua/services/endpoints.h>
 
 using namespace OpcUa;
-using namespace OpcUa::UaServer;
-using namespace OpcUa::Remote;
+using namespace OpcUa::Server;
 
 
 namespace
@@ -31,12 +30,12 @@ namespace
     {
       ApplyAddonParameters(params);
 
-      Endpoints = OpcUa::UaServer::CreateEndpointsRegistry();
+      Endpoints = OpcUa::Server::CreateEndpointsRegistry();
       InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonID);
       InternalServer->RegisterEndpointsServices(Endpoints);
 
-      const std::vector<OpcUa::UaServer::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
-      for (const OpcUa::UaServer::ApplicationData& application : data)
+      const std::vector<OpcUa::Server::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+      for (const OpcUa::Server::ApplicationData& application : data)
       {
         Endpoints->AddApplications(std::vector<OpcUa::ApplicationDescription>(1, application.Application));
         Endpoints->AddEndpoints(application.Endpoints);
@@ -99,7 +98,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
     Common::Addon::UniquePtr EndpointsRegistryAddonFactory::CreateAddon()
     {

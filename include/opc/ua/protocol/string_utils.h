@@ -51,5 +51,11 @@ namespace OpcUa
      os << OpcUa::ToString(direction);
      return os;
   }
+
+  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
+  {
+     os << "{" << ToString(guid) << "}";
+     return os;
+  }
 }
 

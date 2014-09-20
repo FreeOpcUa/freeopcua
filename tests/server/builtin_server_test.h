@@ -25,9 +25,9 @@ namespace OpcUa
     void RegisterBuiltinServerAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation opcTcp;
-      opcTcp.Factory.reset(new OpcUa::UaServer::BuiltingServerFactory());
-      opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
-      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
+      opcTcp.Factory.reset(new OpcUa::Server::BuiltingServerFactory());
+      opcTcp.ID = OpcUa::Server::OpcUaProtocolAddonID;
+      opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsRegistryAddonID);
 
       Common::ParametersGroup application("application");
       application.Parameters.push_back(Common::Parameter("application_name","Test OPC UA Server"));

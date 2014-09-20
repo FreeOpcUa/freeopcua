@@ -58,23 +58,23 @@ protected:
 
 TEST_F(OpcUaProtocolAddonTest, Loads)
 {
-  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::UaServer::OpcUaProtocolAddonID)));
+  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::OpcUaProtocolAddonID)));
 }
 
 TEST_F(OpcUaProtocolAddonTest, CanGetServerWhichOpensAndClosesSecureChannel)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
   ASSERT_TRUE(static_cast<bool>(computerAddon));
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   ASSERT_TRUE(static_cast<bool>(computer));
   computer.reset();
 }
 
 TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
+  std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
   ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
   ASSERT_EQ(desc.size(), 1);
@@ -84,9 +84,9 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
 
 TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::EndpointServices> endpoints = computer->Endpoints();
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
+  std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::ApplicationDescription> servers;
   ASSERT_NO_THROW(servers = endpoints->FindServers(OpcUa::FindServersParameters()));
   ASSERT_EQ(servers.size(), 1);
@@ -96,9 +96,9 @@ TEST_F(OpcUaProtocolAddonTest, CanFindServers)
 
 TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::ViewServices> views = computer->Views();
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
+  std::shared_ptr<OpcUa::ViewServices> views = computer->Views();
 
   OpcUa::BrowseDescription description;
   description.NodeToBrowse = OpcUa::ObjectID::RootFolder;
@@ -119,10 +119,10 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
 
 TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
 
-  OpcUa::Remote::SessionParameters session;
+  OpcUa::RemoteSessionParameters session;
   session.ClientDescription.Name.Text = "opcua client";
   session.SessionName = "opua command line";
   session.EndpointURL = "opc.tcp://localhost:4841";
@@ -137,9 +137,9 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
 
 TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
 {
-  std::shared_ptr<OpcUa::UaServer::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::UaServer::BuiltinServer>(OpcUa::UaServer::OpcUaProtocolAddonID);
-  std::shared_ptr<OpcUa::Remote::Server> computer = computerAddon->GetServer();
-  std::shared_ptr<OpcUa::Remote::SubscriptionServices> subscriptions = computer->Subscriptions();
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
+  std::shared_ptr<OpcUa::SubscriptionServices> subscriptions = computer->Subscriptions();
 
   OpcUa::SubscriptionParameters params;
   params.MaxNotificationsPerPublish = 3;
@@ -149,9 +149,30 @@ TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
   params.RequestedMaxKeepAliveCount = 3;
   params.RequestedPublishingInterval = 1000;
 
+
+  OpcUa::CreateSubscriptionRequest req;
+  req.Parameters = params;
   OpcUa::SubscriptionData data;
-  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(params));
+  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(req, [](OpcUa::PublishResult){
+
+  }));
 
   subscriptions.reset();
+  computer.reset();
+}
+
+TEST_F(OpcUaProtocolAddonTest, CanReadAttributes)
+{
+  std::shared_ptr<OpcUa::Server::BuiltinServer> computerAddon = Addons->GetAddon<OpcUa::Server::BuiltinServer>(OpcUa::Server::OpcUaProtocolAddonID);
+  std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
+  std::shared_ptr<OpcUa::AttributeServices> attributes = computer->Attributes();
+
+  OpcUa::ReadParameters params;
+  params.AttributesToRead.push_back(OpcUa::AttributeValueID(OpcUa::ObjectID::RootFolder, OpcUa::AttributeID::BROWSE_NAME));
+
+  std::vector<OpcUa::DataValue> values = attributes->Read(params);
+  ASSERT_EQ(values.size(), 1);
+
+  attributes.reset();
   computer.reset();
 }

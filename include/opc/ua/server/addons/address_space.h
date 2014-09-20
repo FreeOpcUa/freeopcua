@@ -15,7 +15,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char AddressSpaceRegistryAddonID[] = "address_space_registry";

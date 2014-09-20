@@ -21,7 +21,7 @@
 #pragma once
 
 #include <opc/ua/node.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/client/binary_server.h>
 
@@ -78,7 +78,7 @@ namespace OpcUa
     bool Debug = false; 
 
   protected:
-    Remote::Server::SharedPtr Server;
+    Services::SharedPtr Server;
 
   };
 

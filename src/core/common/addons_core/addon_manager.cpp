@@ -13,7 +13,6 @@
 #include <opc/common/addons_core/errors.h>
 #include <opc/common/exception.h>
 
-#include <boost/thread/mutex.hpp>
 #include <map>
 
 

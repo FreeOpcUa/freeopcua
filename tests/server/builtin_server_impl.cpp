@@ -168,7 +168,7 @@ namespace
   };
 
 
-  void Process(std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
+  void Process(std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor, std::shared_ptr<OpcUa::IOChannel> channel)
   {
     processor->Process(channel);
   }
@@ -181,17 +181,17 @@ BuiltinServerAddon::BuiltinServerAddon()
 {
 }
 
-std::shared_ptr<OpcUa::Remote::Server> BuiltinServerAddon::GetServer() const
+OpcUa::Services::SharedPtr BuiltinServerAddon::GetServices() const
 {
   if (!ClientChannel)
   {
     throw std::logic_error("Cannot access builtin computer. No endpoints was created. You have to configure endpoints.");
   }
 
-  OpcUa::Remote::SecureConnectionParams params;
+  OpcUa::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  return OpcUa::Remote::CreateBinaryServer(ClientChannel, params);
+  return OpcUa::CreateBinaryServer(ClientChannel, params);
 }
 
 BuiltinServerAddon::~BuiltinServerAddon()
@@ -215,20 +215,20 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
     }
   }
 
-  const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
-  for (OpcUa::UaServer::ApplicationData d: applications) {
+  const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+  for (OpcUa::Server::ApplicationData d: applications) {
     std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
   }
 
   std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
   std::vector<OpcUa::EndpointDescription> endpointDescriptions;
-  for (const OpcUa::UaServer::ApplicationData application : applications)
+  for (const OpcUa::Server::ApplicationData application : applications)
   {
     applicationDescriptions.push_back(application.Application);
     endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
   }
 
-  OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+  OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
   if (!endpointsAddon)
   {
     std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -237,9 +237,9 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
   endpointsAddon->AddEndpoints(endpointDescriptions);
   endpointsAddon->AddApplications(applicationDescriptions);
 
-  OpcUa::UaServer::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+  OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
 
-  Protocol = OpcUa::UaServer::CreateOpcUaProtocol(*this, Debug);
+  Protocol = OpcUa::Server::CreateOpcUaProtocol(*this, Debug);
   Protocol->StartEndpoints(endpointDescriptions, internalServer->GetServer());
 }
 
@@ -262,7 +262,7 @@ void BuiltinServerAddon::Stop()
   ServerInput.reset();
 }
 
-void BuiltinServerAddon::Listen(const OpcUa::UaServer::TcpParameters&, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
+void BuiltinServerAddon::Listen(const OpcUa::Server::TcpParameters&, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
 {
   if (Thread)
   {
@@ -278,7 +278,7 @@ void BuiltinServerAddon::Listen(const OpcUa::UaServer::TcpParameters&, std::shar
   Thread.reset(new Common::Thread(std::bind(Process, processor, ServerChannel), this));
 }
 
-void BuiltinServerAddon::StopListen(const OpcUa::UaServer::TcpParameters&)
+void BuiltinServerAddon::StopListen(const OpcUa::Server::TcpParameters&)
 {
   Stop();
 }

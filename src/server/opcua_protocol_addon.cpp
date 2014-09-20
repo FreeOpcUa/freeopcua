@@ -32,13 +32,13 @@ namespace
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  using namespace OpcUa::UaServer;
+  using namespace OpcUa::Server;
 
-  class OpcTcp : public OpcUa::UaServer::IncomingConnectionProcessor
+  class OpcTcp : public OpcUa::Server::IncomingConnectionProcessor
   {
   public:
-    OpcTcp(OpcUa::Remote::Server::SharedPtr computer, bool debug)
-      : Server(computer)
+    OpcTcp(OpcUa::Services::SharedPtr services, bool debug)
+      : Server(services)
       , Debug(debug)
     {
     }
@@ -66,7 +66,7 @@ namespace
     }
 
   private:
-    void ProcessData(OpcUa::IOChannel& clientChannel, OpcUa::UaServer::OpcTcpMessages& messageProcessor)
+    void ProcessData(OpcUa::IOChannel& clientChannel, OpcUa::Server::OpcTcpMessages& messageProcessor)
     {
       using namespace OpcUa::Binary;
 
@@ -104,23 +104,23 @@ namespace
     }
 
   private:
-    OpcUa::Remote::Server::SharedPtr Server;
+    OpcUa::Services::SharedPtr Server;
     bool Debug;
   };
 
-  class OpcUaProtocol : public OpcUa::UaServer::OpcUaProtocol
+  class OpcUaProtocol : public OpcUa::Server::OpcUaProtocol
   {
   public:
     DEFINE_CLASS_POINTERS(OpcUaProtocol);
 
   public:
-    OpcUaProtocol(OpcUa::UaServer::TcpServer& tcpServer, bool debug)
+    OpcUaProtocol(OpcUa::Server::TcpServer& tcpServer, bool debug)
       : TcpAddon(tcpServer)
       , Debug(debug)
     {
     }
 
-    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Remote::Server::SharedPtr server) override
+    virtual void StartEndpoints(const std::vector<EndpointDescription>& endpoints, OpcUa::Services::SharedPtr server) override
     {
       for (const EndpointDescription endpoint : endpoints)
       {
@@ -146,7 +146,7 @@ namespace
     }
 
   private:
-    OpcUa::UaServer::TcpServer& TcpAddon;
+    OpcUa::Server::TcpServer& TcpAddon;
     std::vector<TcpParameters> Ports;
     bool Debug;
   };
@@ -169,28 +169,28 @@ namespace
     void PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
 
   private:
-    OpcUa::UaServer::ServicesRegistry::SharedPtr InternalServer;
-    OpcUa::UaServer::TcpServer::SharedPtr TcpServer;
-    OpcUa::UaServer::OpcUaProtocol::SharedPtr Protocol;
+    OpcUa::Server::ServicesRegistry::SharedPtr InternalServer;
+    OpcUa::Server::TcpServer::SharedPtr TcpServer;
+    OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
     bool Debug;
   };
 
   void OpcUaProtocolAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
   {
     ApplyAddonParameters(params);
-    const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
-    for (OpcUa::UaServer::ApplicationData d: applications) {
+    const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+    for (OpcUa::Server::ApplicationData d: applications) {
       std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
     }
 
     std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
     std::vector<OpcUa::EndpointDescription> endpointDescriptions;
-    for (const OpcUa::UaServer::ApplicationData application : applications)
+    for (const OpcUa::Server::ApplicationData application : applications)
     {
       applicationDescriptions.push_back(application.Application);
       endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
     }
-    OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -199,9 +199,9 @@ namespace
     endpointsAddon->AddEndpoints(endpointDescriptions);
     endpointsAddon->AddApplications(applicationDescriptions);
 
-    InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+    InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
 
-    TcpServer = OpcUa::UaServer::CreateTcpServer();
+    TcpServer = OpcUa::Server::CreateTcpServer();
     Protocol.reset(new OpcUaProtocol(*TcpServer, Debug));
     Protocol->StartEndpoints(endpointDescriptions, InternalServer->GetServer());
   }
@@ -224,7 +224,7 @@ namespace
 
   void OpcUaProtocolAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
   {
-    OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -239,7 +239,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
     Common::Addon::UniquePtr OpcUaProtocolAddonFactory::CreateAddon()
     {

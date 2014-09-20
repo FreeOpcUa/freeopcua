@@ -21,7 +21,7 @@
 
 #include <opc/common/uri_facade.h>
 #include <opc/ua/client/remote_connection.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/node.h>
 
 
@@ -33,13 +33,13 @@ namespace OpcUa
     const Common::Uri serverUri(Endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
 
-    OpcUa::Remote::SecureConnectionParams params;
+    OpcUa::SecureConnectionParams params;
     params.EndpointUrl = Endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::Remote::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
 
-    OpcUa::Remote::SessionParameters session;
+    OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = Uri;
     session.ClientDescription.ProductURI = Uri;
     session.ClientDescription.Name.Text = SessionName;

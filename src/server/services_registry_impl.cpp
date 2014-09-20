@@ -15,15 +15,14 @@
 namespace
 {
   using namespace OpcUa;
-  using namespace OpcUa::Remote;
 
-  class ServicesRegistry : public OpcUa::UaServer::ServicesRegistry
+  class ServicesRegistry : public OpcUa::Server::ServicesRegistry
   {
   public:
     ServicesRegistry();
 
   public: // InternalServerAddon
-    virtual OpcUa::Remote::Server::SharedPtr GetServer() const;
+    virtual OpcUa::Services::SharedPtr GetServer() const;
     virtual void RegisterEndpointsServices(EndpointServices::SharedPtr endpoints) override;
     virtual void UnregisterEndpointsServices()  override;
     virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
@@ -135,7 +134,7 @@ namespace
     
   };
 
-  class ServicesRegistry::InternalServer : public Server
+  class ServicesRegistry::InternalServer : public Services
   {
   public:
     InternalServer()
@@ -147,7 +146,7 @@ namespace
       SetSubscriptions(Services);
     }
 
-    virtual void CreateSession(const SessionParameters& parameters)
+    virtual void CreateSession(const RemoteSessionParameters& parameters)
     {
     }
 
@@ -211,11 +210,11 @@ namespace
     }
 
   public:
-    OpcUa::Remote::AttributeServices::SharedPtr AttributesServices;
-    OpcUa::Remote::ViewServices::SharedPtr ViewsServices;
-    OpcUa::Remote::NodeManagementServices::SharedPtr NodeServices;
-    OpcUa::Remote::EndpointServices::SharedPtr EndpointsServices;
-    OpcUa::Remote::SubscriptionServices::SharedPtr SubscriptionsServices;
+    OpcUa::AttributeServices::SharedPtr AttributesServices;
+    OpcUa::ViewServices::SharedPtr ViewsServices;
+    OpcUa::NodeManagementServices::SharedPtr NodeServices;
+    OpcUa::EndpointServices::SharedPtr EndpointsServices;
+    OpcUa::SubscriptionServices::SharedPtr SubscriptionsServices;
     std::shared_ptr<DefaultServices> Services;
   };
 
@@ -225,7 +224,7 @@ namespace
   {
   }
 
-  std::shared_ptr<Server> ServicesRegistry::GetServer() const
+  std::shared_ptr<Services> ServicesRegistry::GetServer() const
   {
     return Comp;
   }
@@ -286,9 +285,9 @@ namespace
 namespace OpcUa
 {
 
-  UaServer::ServicesRegistry::UniquePtr UaServer::CreateServicesRegistry()
+  Server::ServicesRegistry::UniquePtr Server::CreateServicesRegistry()
   {
-    return UaServer::ServicesRegistry::UniquePtr(new ::ServicesRegistry());
+    return Server::ServicesRegistry::UniquePtr(new ::ServicesRegistry());
   }
 
 }

@@ -12,11 +12,10 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/server/services_registry.h>
-#include <opc/ua/server.h>
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char ServicesRegistryAddonID[] = "services_registry";

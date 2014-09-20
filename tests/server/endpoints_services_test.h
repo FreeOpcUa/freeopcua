@@ -23,9 +23,9 @@ namespace OpcUa
     inline void RegisterEndpointsServicesAddon(Common::AddonsManager& addons)
     {
       Common::AddonInformation endpoints;
-      endpoints.Factory.reset(new OpcUa::UaServer::EndpointsRegistryAddonFactory());
-      endpoints.ID = OpcUa::UaServer::EndpointsRegistryAddonID;
-      endpoints.Dependencies.push_back(OpcUa::UaServer::ServicesRegistryAddonID);
+      endpoints.Factory.reset(new OpcUa::Server::EndpointsRegistryAddonFactory());
+      endpoints.ID = OpcUa::Server::EndpointsRegistryAddonID;
+      endpoints.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonID);
       addons.Register(endpoints);
     }
 

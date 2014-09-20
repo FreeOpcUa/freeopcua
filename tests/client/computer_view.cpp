@@ -16,7 +16,6 @@
 #include <stdexcept>
 
 using namespace OpcUa;
-using namespace OpcUa::Remote;
 
 
 class View : public ::testing::Test
@@ -39,7 +38,7 @@ protected:
   {
     Server = Connect(GetEndpoint());
 
-    SessionParameters session;
+    RemoteSessionParameters session;
     session.ClientDescription.Name.Text = "opcua view service test";
     session.SessionName = "opua test";
     session.EndpointURL = GetEndpoint();
@@ -63,7 +62,7 @@ protected:
 
 protected:
   OpcUa::NodesQuery Query;
-  std::unique_ptr<Server> Server;
+  std::unique_ptr<Services> Server;
   std::shared_ptr<ViewServices> Service;
 };
 

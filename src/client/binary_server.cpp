@@ -17,7 +17,7 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/string_utils.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <atomic>
 #include <chrono>
@@ -113,34 +113,37 @@ namespace
       {
 
       }
+
       void post(std::function<void()> callback)
       {
-        if (Debug)  { std::cout << "CallbackThread | start post" << std::endl; }
+        if (Debug)  { std::cout << "binary_client| CallbackThread :  start post" << std::endl; }
         std::unique_lock<std::mutex> lock(Mutex);
         Queue.push(callback);
         Condition.notify_one();
-        if (Debug)  { std::cout << "CallbackThread | end post" << std::endl; }
+        if (Debug)  { std::cout << "binary_client| CallbackThread :  end post" << std::endl; }
       }
 
       void Run()
       {
         while (true)
         {
-          if (Debug)  { std::cout << "CallbackThread | waiting for nest post" << std::endl; }
+          if (Debug)  { std::cout << "binary_client| CallbackThread : waiting for nest post" << std::endl; }
           std::unique_lock<std::mutex> lock(Mutex);
           Condition.wait(lock, [&]() { return (StopRequest == true) || ( ! Queue.empty() ) ;} );
           if (StopRequest)
           {
+            if (Debug)  { std::cout << "binary_client| CallbackThread : exited." << std::endl; }
             return;
           }
           while ( ! Queue.empty() ) //to avoid crashing on spurious events
           {
-            if (Debug)  { std::cout << "CallbackThread | condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
+            if (Debug)  { std::cout << "binary_client| CallbackThread : condition has triggered copying callback and poping. queue size is  " << Queue.size() << std::endl; }
             std::function<void()> callbackcopy = Queue.front();
             Queue.pop();
             lock.unlock();
-            if (Debug)  { std::cout << "CallbackThread | now calling callback" << std::endl; }
+            if (Debug)  { std::cout << "binary_client| CallbackThread : now calling callback." << std::endl; }
             callbackcopy();
+            if (Debug)  { std::cout << "binary_client| CallbackThread : callback called." << std::endl; }
             lock.lock();
           }
         }
@@ -148,6 +151,7 @@ namespace
 
       void Stop()
       {
+        if (Debug)  { std::cout << "binary_client| CallbackThread : stopping." << std::endl; }
         StopRequest = true;
         Condition.notify_all();
       }
@@ -161,12 +165,12 @@ namespace
   };
 
   class BinaryServer
-    : public Remote::Server
-    , public Remote::EndpointServices
-    , public Remote::ViewServices
-    , public Remote::SubscriptionServices
-    , public Remote::AttributeServices
-    , public Remote::NodeManagementServices
+    : public Services
+    , public EndpointServices
+    , public ViewServices
+    , public SubscriptionServices
+    , public AttributeServices
+    , public NodeManagementServices
     , public std::enable_shared_from_this<BinaryServer>
   {
   private:
@@ -174,7 +178,7 @@ namespace
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
-    BinaryServer(std::shared_ptr<IOChannel> channel, const Remote::SecureConnectionParams& params, bool debug)
+    BinaryServer(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
       , Params(params)
@@ -199,6 +203,7 @@ namespace
         }
         catch (const std::exception& exc)
         {
+          if (Debug)  { std::cerr << "binary_client| CallbackThread :"; }
           std::cerr << exc.what() << std::endl;
         }
       }));
@@ -221,8 +226,9 @@ namespace
 
     }
 
-    virtual void CreateSession(const Remote::SessionParameters& parameters)
+    virtual void CreateSession(const RemoteSessionParameters& parameters)
     {
+      if (Debug)  { std::cout << "binary_client| CreateSession -->" << std::endl; }
       CreateSessionRequest request;
       request.Header = CreateRequestHeader();
 
@@ -243,70 +249,79 @@ namespace
       request.Parameters.MaxResponseMessageSize = 65536;
       CreateSessionResponse response = Send<CreateSessionResponse>(request);
       AuthenticationToken = response.Session.AuthenticationToken;
+      if (Debug)  { std::cout << "binary_client| CreateSession <--" << std::endl; }
     }
 
     virtual void ActivateSession()
     {
+      if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
       request.Parameters.LocaleIDs.push_back("en");
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
+      if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
     }
 
     virtual void CloseSession()
     {
+      if (Debug)  { std::cout << "binary_client| CloseSession -->" << std::endl; }
       CloseSessionRequest request;
       CloseSessionResponse response = Send<CloseSessionResponse>(request);
+      if (Debug)  { std::cout << "binary_client| CloseSession <--" << std::endl; }
     }
 
-    virtual std::shared_ptr<Remote::EndpointServices> Endpoints() override
+    virtual std::shared_ptr<EndpointServices> Endpoints() override
     {
       return shared_from_this();
     }
 
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
     {
+      if (Debug)  { std::cout << "binary_client| FindServers -->" << std::endl; }
       OpcUa::FindServersRequest request;
       request.Parameters = params;
       FindServersResponse response = Send<FindServersResponse>(request);
+      if (Debug)  { std::cout << "binary_client| FindServers <--" << std::endl; }
       return response.Data.Descriptions;
     }
 
     virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
     {
+      if (Debug)  { std::cout << "binary_client| GetEndpoints -->" << std::endl; }
       OpcUa::GetEndpointsRequest request;
       request.Header = CreateRequestHeader();
       request.Filter.EndpointURL = filter.EndpointURL;
       request.Filter.LocaleIDs = filter.LocaleIDs;
       request.Filter.ProfileUries = filter.ProfileUries;
       const GetEndpointsResponse response = Send<GetEndpointsResponse>(request);
+      if (Debug)  { std::cout << "binary_client| GetEndpoints <--" << std::endl; }
       return response.Endpoints;
     }
 
-    virtual void RegisterServer(const Remote::ServerParameters& parameters)
+    virtual void RegisterServer(const ServerParameters& parameters)
     {
     }
 
     // ViewServices
-    virtual std::shared_ptr<Remote::ViewServices> Views() override
+    virtual std::shared_ptr<ViewServices> Views() override
     {
       return shared_from_this();
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
-      if (Debug) std::cout << "BinaryClient | sending TranslateBrowsPathToNodeIds to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
       TranslateBrowsePathsToNodeIDsRequest request;
       request.Header = CreateRequestHeader();
       request.Parameters = params;
       const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
-      if (Debug) std::cout << "BinaryClient | got TranslateBrowsPathToNodeIds repsonse " << std::endl;
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
       return response.Result.Paths;
     }
 
 
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
     {
-      if (Debug) std::cout << "BinaryClient | sending Browse to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| Browse -->" << std::endl; }
       BrowseRequest request;
       request.Header = CreateRequestHeader();
       request.Query = query;
@@ -315,26 +330,27 @@ namespace
       {
         const BrowseResult& result = *response.Results.begin();
         ContinuationPoint = result.ContinuationPoint;
+        if (Debug)  { std::cerr << "binary_client| Browse <--" << std::endl; }
         return result.Referencies;
       }
-      if (Debug) std::cout << "BinaryClient | got Browse repsonse " << std::endl;
-
+      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
       return  std::vector<ReferenceDescription>();
     }
 
     virtual std::vector<ReferenceDescription> BrowseNext() const
     {
-      if (ContinuationPoint.empty())
+      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+      std::vector<ReferenceDescription> result;
+      if (!ContinuationPoint.empty())
       {
-        return std::vector<ReferenceDescription>();
+        result = Next();
+        if (result.empty())
+        {
+          Release();
+        }
       }
-
-      const std::vector<ReferenceDescription>& referencies = Next();
-      if (referencies.empty())
-      {
-        Release();
-      }
-      return referencies;
+      if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
+      return result;
     }
 
   private:
@@ -358,7 +374,7 @@ namespace
     }
 
   public:
-    virtual std::shared_ptr<Remote::NodeManagementServices> NodeManagement() override
+    virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return shared_from_this();
     }
@@ -366,25 +382,25 @@ namespace
   public:
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
-      if (Debug) std::cout << "BinaryClient | sending AddNodes to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| AddNodes -->" << std::endl; }
       AddNodesRequest request;
       request.Parameters.NodesToAdd = items;
       const AddNodesResponse response = Send<AddNodesResponse>(request);
-      if (Debug) std::cout << "BinaryClient | Got AddNodes response" << std::endl;
+      if (Debug)  { std::cout << "binary_client| AddNodes <--" << std::endl; }
       return response.results;
     }
 
     virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
     {
-      if (Debug) std::cout << "BinaryClient | sending AddReferences to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| AddReferences -->" << std::endl; }
       AddReferencesRequest request;
       request.Parameters.ReferencesToAdd = items;
       const AddReferencesResponse response = Send<AddReferencesResponse>(request);
-      if (Debug) std::cout << "BinaryClient | Got AddReferences response" << std::endl;
+      if (Debug)  { std::cout << "binary_client| AddReferences <--" << std::endl; }
       return response.Results;
     }
 
-    virtual std::shared_ptr<Remote::AttributeServices> Attributes() override
+    virtual std::shared_ptr<AttributeServices> Attributes() override
     {
       return shared_from_this();
     }
@@ -392,69 +408,72 @@ namespace
   public:
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
-      if (Debug) std::cout << "BinaryClient | sending Read to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| Read -->" << std::endl; }
       ReadRequest request;
       request.Parameters = params;
       const ReadResponse response = Send<ReadResponse>(request);
-      if (Debug) std::cout << "BinaryClient | got Read reponse" << std::endl;
+      if (Debug)  { std::cout << "binary_client| Read <--" << std::endl; }
       return response.Result.Results;
     }
 
     virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
     {
-      if (Debug) std::cout << "BinaryClient | sending Write to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| Write -->" << std::endl; }
       WriteRequest request;
       request.Parameters.NodesToWrite = values;
       const WriteResponse response = Send<WriteResponse>(request);
-      if (Debug) std::cout << "BinaryClient | got Write reponse" << std::endl;
+      if (Debug)  { std::cout << "binary_client| Write <--" << std::endl; }
       return response.Result.StatusCodes;
     }
 
-    virtual std::shared_ptr<Remote::SubscriptionServices> Subscriptions() override
+    virtual std::shared_ptr<SubscriptionServices> Subscriptions() override
     {
       return shared_from_this();
     }
 
     virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
     {
-      if (Debug) std::cout << "BinaryClient | sending CreateSubscriptionRequest to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
       PublishCallbacks[response.Data.ID] = callback;// TODO Pass calback to the Publish method.
+      if (Debug)  { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
       return response.Data;
     }
 
     virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
     {
-      if (Debug) std::cout << "BinaryClient | sending DeleteSubscriptionRequest to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
       DeleteSubscriptionRequest request;
       request.SubscriptionsIds = subscriptions;
       const DeleteSubscriptionResponse response = Send<DeleteSubscriptionResponse>(request);
+      if (Debug)  { std::cout << "binary_client| DeleteSubscriptions <--" << std::endl; }
       return response.Results;
     }
 
     virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
-      if (Debug) std::cout << "BinaryClient | sending CreateMonitoredItems to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
-      if (Debug) std::cout << "BinaryClient | got CreateMonitoredItems response" << std::endl;
+      if (Debug)  { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
       return response.Data;
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
     {
-      if (Debug) std::cout << "BinaryClient | sending DeleteMonitoredItems to server" << std::endl;
+      if (Debug)  { std::cout << "binary_client| DeleteMonitoredItems -->" << std::endl; }
       DeleteMonitoredItemsRequest request;
       request.Parameters = params;
       const DeleteMonitoredItemsResponse response = Send<DeleteMonitoredItemsResponse>(request);
+      if (Debug)  { std::cout << "binary_client| DeleteMonitoredItems <--" << std::endl; }
       return response.Results;
     }
 
     virtual void Publish(const PublishRequest& originalrequest)
     {
-      if (Debug) {std::cout << "BinaryClient | Sending publish request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
+      if (Debug) {std::cout << "binary_client| Publish -->" << std::endl << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest); //Should parameter not be const?
       request.Header = CreateRequestHeader();
 
@@ -472,6 +491,7 @@ namespace
       };
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
       Send(request);
+      if (Debug) {std::cout << "binary_client| Publish  <--" << std::endl;}
     }
 
 private:
@@ -536,19 +556,20 @@ private:
       in >> id;
       ResponseHeader header;
       in >> header;
-      if ( Debug )std::cout << "Got data with id: " << id << " and handle " << header.RequestHandle<< std::endl;
+      if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
 
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
       if (callbackIt == Callbacks.end())
       {
-        std::cout << "No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
+        std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
         return;
       }
       callbackIt->second(std::move(buffer));
     }
 
-    Binary::Acknowledge HelloServer(const Remote::SecureConnectionParams& params)
+    Binary::Acknowledge HelloServer(const SecureConnectionParams& params)
     {
+      if (Debug) {std::cout << "binary_client| HelloServer -->" << std::endl;}
       Binary::Hello hello;
       hello.ProtocolVersion = 0;
       hello.ReceiveBufferSize = 65536;
@@ -567,11 +588,13 @@ private:
 
       Acknowledge ack;
       Stream >> ack; // TODO check for connection parameters
+      if (Debug) {std::cout << "binary_client| HelloServer <--" << std::endl;}
       return ack;
     }
 
     OpcUa::OpenSecureChannelResponse OpenChannel()
     {
+      if (Debug) {std::cout << "binary_client| OpenChannel -->" << std::endl;}
       SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, 0);
       AsymmetricAlgorithmHeader algorithmHeader;
       algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
@@ -602,6 +625,7 @@ private:
       OpenSecureChannelResponse response;
       Stream >> response;
 
+      if (Debug) {std::cout << "binary_client| OpenChannel <--" << std::endl;}
       return response;
     }
 
@@ -624,6 +648,7 @@ private:
     {
       try
       {
+        if (Debug) {std::cout << "binary_client| CloseSecureChannel -->" << std::endl;}
         SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
 
         const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
@@ -636,11 +661,13 @@ private:
         hdr.AddSize(RawSize(request));
 
         Stream << hdr << algorithmHeader << sequence << request << flush;
+        if (Debug) {std::cout << "binary_client| Secure channel closed." << std::endl;}
       }
       catch (const std::exception& exc)
       {
         std::cerr << "Closing secure channel failed with error: " << exc.what() << std::endl;
       }
+      if (Debug) {std::cout << "binary_client| CloseSecureChannel <--" << std::endl;}
     }
 
     RequestHeader CreateRequestHeader() const
@@ -660,7 +687,7 @@ private:
   private:
     std::shared_ptr<IOChannel> Channel;
     mutable IOStreamBinary Stream;
-    Remote::SecureConnectionParams Params;
+    SecureConnectionParams Params;
     std::thread ReceiveThread;
 
     SubscriptionCallbackMap PublishCallbacks;
@@ -682,16 +709,16 @@ private:
 } // namespace
 
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::Remote::SecureConnectionParams& params, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Remote::Server::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Services::SharedPtr(new BinaryServer(channel, params, debug));
 }
 
-OpcUa::Remote::Server::SharedPtr OpcUa::Remote::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(const std::string& endpointUrl, bool debug)
 {
   const Common::Uri serverUri(endpointUrl);
   OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-  OpcUa::Remote::SecureConnectionParams params;
+  OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
   return CreateBinaryServer(channel, params, debug);

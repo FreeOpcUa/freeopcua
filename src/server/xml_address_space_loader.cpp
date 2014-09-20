@@ -677,9 +677,10 @@ namespace
       return IsXmlNode(node, "attributes");
     }
 
-    void AddAttribute(AttributeID attr, const Variant& value)
+    template <typename T>
+    void AddAttribute(AttributeID attr, const T& value)
     {
-      OpcUaNode.Attributes.insert(std::make_pair(attr, value));
+      OpcUaNode.Attributes.insert(std::make_pair(attr, Variant(value)));
     }
 
     bool HasAttribute(AttributeID attr) const
@@ -694,7 +695,7 @@ namespace
       {
         return ObjectID::Null;
       }
-      return ConvertToObjectID(attrPos->second.Type);
+      return ConvertToObjectID(attrPos->second.Type());
     }
 
   private:
@@ -943,7 +944,7 @@ namespace
   class NodesRegistrator
   {
   public:
-    NodesRegistrator(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    NodesRegistrator(OpcUa::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {
@@ -988,7 +989,7 @@ namespace
     }
 
   private:
-    OpcUa::Remote::NodeManagementServices& Registry;
+    OpcUa::NodeManagementServices& Registry;
     const bool Debug;
   };
 } // namespace
@@ -998,7 +999,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    XmlAddressSpaceLoader::XmlAddressSpaceLoader(OpcUa::NodeManagementServices& registry, bool debug)
       : Registry(registry)
       , Debug(debug)
     {

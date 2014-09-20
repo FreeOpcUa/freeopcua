@@ -46,8 +46,8 @@ namespace OpcUa
     void AddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {
       Options options = GetOptions(params);
-      Registry = UaServer::CreateAddressSpace(options.Debug);
-      InternalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+      Registry = Server::CreateAddressSpace(options.Debug);
+      InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
       InternalServer->RegisterNodeManagementServices(Registry);
@@ -124,7 +124,7 @@ namespace OpcUa
   } // namespace Internal
 } // namespace OpcUa
 
-Common::Addon::UniquePtr OpcUa::UaServer::AddressSpaceAddonFactory::CreateAddon()
+Common::Addon::UniquePtr OpcUa::Server::AddressSpaceAddonFactory::CreateAddon()
 {
   return Common::Addon::UniquePtr(new Internal::AddressSpaceAddon());
 }

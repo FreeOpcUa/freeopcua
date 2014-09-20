@@ -63,7 +63,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     CommandLine::CommandLine(int argc, const char** argv)

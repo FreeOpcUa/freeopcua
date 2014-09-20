@@ -20,13 +20,11 @@
 
 namespace OpcUa
 {
-  namespace Remote
-  {
 
-    class SubscriptionServices : private Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(SubscriptionServices);
+  class SubscriptionServices : private Common::Interface
+  {
+  public:
+    DEFINE_CLASS_POINTERS(SubscriptionServices);
 
     public:
       virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callback=0) = 0; 
@@ -36,9 +34,8 @@ namespace OpcUa
       //FIXME: Spec says MonitoredItems methods should be in their own service
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters) = 0; 
       virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params) = 0; 
-    };
+  };
 
-  }
 }
 
 #endif // __OPC_UA_CLIENT_SUBSCRIPTIONS_H

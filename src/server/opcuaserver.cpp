@@ -22,6 +22,7 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/standard_namespace.h>
+#include <opc/ua/model.h>
 #include <opc/ua/node.h>
 #include <opc/ua/server/opcuaserver.h>
 
@@ -35,9 +36,15 @@ namespace OpcUa
   {
   }
 
+  OPCUAServer::OPCUAServer(bool debug)
+    : Debug(debug)
+  {
+  }
+
   void OPCUAServer::Start()
   {
-    EndpointsServices = UaServer::CreateEndpointsRegistry();
+    ServerWork.reset(new boost::asio::io_service::work(IoService));
+    EndpointsServices = Server::CreateEndpointsRegistry();
    
     std::vector<ApplicationDescription> Apps;
     ApplicationDescription appdesc;
@@ -61,62 +68,82 @@ namespace OpcUa
     EndpointsServices->AddApplications(Apps);
     EndpointsServices->AddEndpoints(Endpoints);
 
-    Registry = UaServer::CreateServicesRegistry();
+    Registry = Server::CreateServicesRegistry();
     Registry->RegisterEndpointsServices(EndpointsServices);
 
-    AddressSpace = UaServer::CreateAddressSpace(Debug);
-    SubscriptionService = UaServer::CreateSubscriptionService(AddressSpace, Debug);
+    AddressSpace = Server::CreateAddressSpace(Debug);
+    SubscriptionService = Server::CreateSubscriptionService(AddressSpace, IoService, Debug);
     Registry->RegisterViewServices(AddressSpace);
     Registry->RegisterAttributeServices(AddressSpace);
     Registry->RegisterNodeManagementServices(AddressSpace);
     Registry->RegisterSubscriptionServices(SubscriptionService);
 
-    UaServer::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
+    Server::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
+    CreateServerObjectNode();
 
 
-    UaServer::AsyncOpcTcp::Parameters asyncparams;
-    asyncparams.Port = Common::Uri(Endpoints[0].EndpointURL).Port();
-    asyncparams.Host = Common::Uri(Endpoints[0].EndpointURL).Host();
-    asyncparams.ThreadsNumber = 2;
+    const Common::Uri uri(Endpoints[0].EndpointURL);
+    Server::AsyncOpcTcp::Parameters asyncparams;
+    asyncparams.Host = uri.Host();
+    asyncparams.Port = uri.Port();
     asyncparams.DebugMode = Debug;
-    AsyncServer = UaServer::CreateAsyncOpcTcp(asyncparams, Registry->GetServer());
-    
-
+    AsyncServer = Server::CreateAsyncOpcTcp(asyncparams, Registry->GetServer(), IoService);
+    AsyncServer->Listen();
     ListenThread.reset(new Common::Thread([this](){
-          AsyncServer->Listen();
-     }));
+      Run();
+    }));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+  }
 
-
-    //TcpServer = UaServer::CreateTcpServer();
-    //Protocol = UaServer::CreateOpcUaProtocol(TcpServer, Debug);
-    //Protocol->StartEndpoints(Endpoints, Registry->GetServer());
+  void OPCUAServer::Run()
+  {
+    try
+    {
+      IoService.run();
+    }
+    catch (const std::exception& exc)
+    {
+      std::cout << exc.what() << std::endl;
+    }
+    std::cout << "OPCUAServer| service thread exited." << std::endl;
   }
   
-  Node OPCUAServer::GetNode(const NodeID& nodeid)
+  Node OPCUAServer::GetNode(const NodeID& nodeid) const
   {
     return Node(Registry->GetServer(), nodeid);
+  }
+
+  Node OPCUAServer::GetNodeFromPath(const std::vector<QualifiedName>& path) const
+  {
+    return GetRootNode().GetChild(path);
+  }
+
+  Node OPCUAServer::GetNodeFromPath(const std::vector<std::string>& path) const
+  {
+    return GetRootNode().GetChild(path);
   }
 
   void OPCUAServer::Stop()
   {
     std::cout << "Stopping opcua server application" << std::endl;
     AsyncServer->Shutdown();
-    ListenThread->Join();
     AsyncServer.reset();
- 
+    ServerWork.reset();
+    IoService.stop();
+    ListenThread->Join();
   }
 
-  Node OPCUAServer::GetRootNode()
+  Node OPCUAServer::GetRootNode() const
   {
     return GetNode(OpcUa::ObjectID::RootFolder);
   }
 
-  Node OPCUAServer::GetObjectsNode()
+  Node OPCUAServer::GetObjectsNode() const
   {
     return GetNode(ObjectID::ObjectsFolder);
   }
 
-  Node OPCUAServer::GetServerNode()
+  Node OPCUAServer::GetServerNode() const
   {
     return GetNode(ObjectID::Server);
   }
@@ -141,6 +168,14 @@ namespace OpcUa
   void OPCUAServer::TriggerEvent(Event event)
   {
     SubscriptionService->TriggerEvent(ObjectID::Server, event);
+  }
+
+  void OPCUAServer::CreateServerObjectNode()
+  {
+    Model::Server server(Registry->GetServer());
+    Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
+    Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
+    root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
   }
 
 }

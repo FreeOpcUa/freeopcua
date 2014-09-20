@@ -38,12 +38,12 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     using namespace OpcUa::Binary;
 
-    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug)
+    OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug)
       : Server(computer)
       , OutputStream(outputChannel)
       , Debug(debug)
@@ -127,9 +127,12 @@ namespace OpcUa
         std::cerr << "Error trying to send publish response while we do not have data from a PublishRequest" << std::endl;
         return;
       }
-      std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
-      std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
-      std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
+      if (Debug)
+      {
+        std::cout << "DEBUG                             ! " << PublishRequestQueue.front().requestHeader.SessionAuthenticationToken << std::endl; ;
+        std::cout << "DEBUG                             PublishRequestQueue size is: ! " << PublishRequestQueue.size() << std::endl; ;
+        std::cout << "DEBUG                             PublishRequest hanlde is: ! " << PublishRequestQueue.front().requestHeader.RequestHandle << std::endl; ;
+      }
       PublishRequestElement requestData = PublishRequestQueue.front();
       PublishRequestQueue.pop();
 
@@ -334,7 +337,7 @@ namespace OpcUa
           ReadResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
+          if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
             values = service->Read(params);
           }
@@ -368,7 +371,7 @@ namespace OpcUa
           WriteResponse response;
           FillResponseHeader(requestHeader, response.Header);
           std::vector<DataValue> values;
-          if (std::shared_ptr<OpcUa::Remote::AttributeServices> service = Server->Attributes())
+          if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
             response.Result.StatusCodes = service->Write(params.NodesToWrite);
           }
@@ -510,14 +513,15 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
 
           response.Data = Server->Subscriptions()->CreateSubscription(request, [this](PublishResult i){ 
-              try
-              {
-                this->ForwardPublishResponse(i); 
-              }
-              catch (std::exception& ex)
-              {
-                std::cerr << "Error forwarding publishResult to client: " << ex.what() << std::endl;
-              }
+                try
+                {
+                  this->ForwardPublishResponse(i); 
+                }
+                catch (std::exception& ex)
+                {
+                  // TODO Disconnect client!
+                  std::cerr << "Error forwarding publishResult to client: " << ex.what() << std::endl;
+                }
               });
 
           Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting

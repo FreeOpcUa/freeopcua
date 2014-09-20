@@ -17,7 +17,7 @@
 
 #include <opc/common/thread.h>
 #include <opc/common/uri_facade.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 #include <opc/ua/socket_channel.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/input_from_buffer.h>
@@ -47,7 +47,7 @@ namespace
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  using namespace OpcUa::UaServer;
+  using namespace OpcUa::Server;
 
  
   class SocketHolder
@@ -134,7 +134,7 @@ namespace
   class TcpServerConnection : private Common::ThreadObserver
   {
   public:
-    TcpServerConnection(const TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor)
+    TcpServerConnection(const TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor)
       : Port(params.Port)
       , Stopped(true)
       , Socket(-1)
@@ -268,12 +268,12 @@ namespace
     std::map<int, std::shared_ptr<Client>> ClientThreads;
   };
 
-  class TcpServer : public OpcUa::UaServer::TcpServer
+  class TcpServer : public OpcUa::Server::TcpServer
   {
   public:
     DEFINE_CLASS_POINTERS(TcpServer);
 
-    void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor) override
+    void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) override
     {
       if (Servers.find(params.Port) != std::end(Servers))
       {
@@ -286,7 +286,7 @@ namespace
       Servers.insert(std::make_pair(params.Port, listener));
     }
 
-    void StopListen(const OpcUa::UaServer::TcpParameters& params) override
+    void StopListen(const OpcUa::Server::TcpParameters& params) override
     {
       ServersMap::iterator serverIt = Servers.find(params.Port);
       if (serverIt == std::end(Servers))
@@ -313,7 +313,7 @@ namespace
 
 } // namespace
 
-std::unique_ptr<OpcUa::UaServer::TcpServer> OpcUa::UaServer::CreateTcpServer()
+std::unique_ptr<OpcUa::Server::TcpServer> OpcUa::Server::CreateTcpServer()
 {
-  return std::unique_ptr<OpcUa::UaServer::TcpServer>(new ::TcpServer());
+  return std::unique_ptr<OpcUa::Server::TcpServer>(new ::TcpServer());
 }

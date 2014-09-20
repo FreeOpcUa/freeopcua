@@ -22,7 +22,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters& addonParams)
@@ -30,8 +30,6 @@ namespace OpcUa
       AsyncOpcTcp::Parameters result;
       for (const Common::Parameter& param : addonParams.Parameters)
       {
-        if (param.Name == "threads_number")
-          result.ThreadsNumber = std::stoi(param.Value);
         if (param.Name == "debug")
           result.DebugMode = param.Value == "false" || param.Value == "0" ? false : true;
       }

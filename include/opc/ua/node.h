@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <sstream>
 
@@ -43,9 +43,9 @@ namespace OpcUa
   {
   public:
     // Creating Root Node.
-    explicit Node(Remote::Server::SharedPtr srv);
-    Node(Remote::Server::SharedPtr srv, const NodeID& id);
-    Node(Remote::Server::SharedPtr srv, const NodeID& id, const QualifiedName& name);
+    explicit Node(Services::SharedPtr srv);
+    Node(Services::SharedPtr srv, const NodeID& id);
+    Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name);
     Node(const Node& other); 
     Node(){}
 
@@ -117,10 +117,10 @@ namespace OpcUa
     bool operator!=(Node const& x) const { return Id != x.Id; }
 
     //FIXME: I need this to create a copy for python binding, another way?
-    OpcUa::Remote::Server::SharedPtr GetServer() const {return Server;} 
+    OpcUa::Services::SharedPtr GetServices() const {return Server;}
 
   protected:
-    OpcUa::Remote::Server::SharedPtr Server;
+    OpcUa::Services::SharedPtr Server;
     NodeID Id;
     mutable QualifiedName BrowseName;
   };

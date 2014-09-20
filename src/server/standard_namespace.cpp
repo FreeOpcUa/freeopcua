@@ -25,7 +25,6 @@
 namespace
 {
     using namespace OpcUa;
-    using namespace OpcUa::Remote;
 
     const bool forward = true;
     const bool reverse = true;
@@ -33,7 +32,7 @@ namespace
     class StandardNamespace
     {
     public:
-      StandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+      StandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)
         : Registry(registry)
         , Debug(debug)
       {
@@ -81,8 +80,6 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::Objects);
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        Server();
       }
 
       void Views()
@@ -102,52 +99,6 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      // Server object have to be created based on Server type in the some addon;
-      void Server()
-      {
-        // Attributes
-        AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::Server;
-        node.BrowseName = QualifiedName(0, OpcUa::Names::Server);
-        node.Class = NodeClass::Object;
-        node.ParentNodeId = ObjectID::ObjectsFolder;
-        node.ReferenceTypeId = ReferenceID::Organizes;
-        node.TypeDefinition = ObjectID::ServerType;
-        ObjectAttributes attrs;
-        attrs.Description = LocalizedText(OpcUa::Names::Server);
-        attrs.DisplayName = LocalizedText(OpcUa::Names::Server);
-        node.Attributes = attrs;
-        Registry.AddNodes(std::vector<AddNodesItem>{node});
-
-        //Auditing();
-        NamespaceArray(ObjectID::Server);
-        //ServerArray();
-        ServerCapabilities(ObjectID::Server);
-        //ServerDiagnostics();
-        //ServerRedundancy();
-        //ServerStatus();
-        //ServiceLevel();
-        //VendorServerInfo();
-
-      }
-/*
-      void ServerCapabilities()
-      {
-        // Attributes
-        AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::ServerCapabilities;
-        node.BrowseName = QualifiedName(0, OpcUa::Names::ServerCapabilities);
-        node.Class = NodeClass::Object;
-        node.ParentNodeId = ObjectID::ServerType;
-        node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::ServerCapabilitiesType;
-        ObjectAttributes attrs;
-        attrs.Description = LocalizedText(OpcUa::Names::ServerCapabilities);
-        attrs.DisplayName = LocalizedText(OpcUa::Names::ServerCapabilities);
-        node.Attributes = attrs;
-        Registry.AddNodes(std::vector<AddNodesItem>{node});
-      }
-*/
       void Types()
       {
         // Attributes
@@ -2507,7 +2458,7 @@ namespace
         node.ParentNodeId = ObjectID::BaseObjectType;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
-        DataTypeAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.Description = LocalizedText(Names::ServerType);
         attrs.DisplayName = LocalizedText(Names::ServerType);
         attrs.IsAbstract = false;
@@ -3780,7 +3731,7 @@ namespace
       }
 
     private:
-      OpcUa::Remote::NodeManagementServices& Registry;
+      OpcUa::NodeManagementServices& Registry;
       const bool Debug;
     };
 
@@ -3788,10 +3739,10 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
-    void FillStandardNamespace(OpcUa::Remote::NodeManagementServices& registry, bool debug)
+    void FillStandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)
     {
       StandardNamespace ns(registry, debug);
       ns.Fill();
