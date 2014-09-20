@@ -1,5 +1,5 @@
 opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
-libraries_path =$(OPCUA_SERVER_PATH)/lib
+libraries_path =$(OPCUA_SERVER_PATH)/lib:$(OPCUA_SERVER_PATH)/.libs
 
 all:
 	$(opcua_paths) python setup.py bdist

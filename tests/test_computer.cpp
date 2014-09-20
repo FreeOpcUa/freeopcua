@@ -8,14 +8,13 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <stdexcept>
 
 namespace
 {
   using namespace OpcUa;
-  using namespace OpcUa::Remote;
 
   class TestEndpoints : public EndpointServices
   {
@@ -93,7 +92,7 @@ namespace
     }
   }
 
-  class TestAttributes : public OpcUa::Remote::AttributeServices
+  class TestAttributes : public AttributeServices
   {
   public:
     virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& params) const
@@ -143,8 +142,8 @@ namespace
       Assert(value.Data.SourcePicoseconds == 3, "Invalid SourcePicoseconds.");
       Assert(value.Data.SourceTimestamp.Value == 4, "Invalid SourceTimeStamp.");
       Assert(value.Data.Status == StatusCode::BadNotReadable, "Invalid data status.");
-      Assert(value.Data.Value.Type == VariantType::STRING, "Invalid data type.");
-      Assert(value.Data.Value.Value.String.size() == 1, "Invalid number of strings in variant.");
+      Assert(value.Data.Value.Type() == VariantType::STRING, "Invalid data type.");
+      Assert(value.Data.Value.As<std::string>().size() == 1, "Invalid number of strings in variant.");
       Assert(value.Data.Value == std::vector<std::string>(1, "value"), "Invalid data value.");
 
       const uint8_t encoding =
@@ -161,7 +160,7 @@ namespace
     }
   };
 
-  class TestViewServices : public OpcUa::Remote::ViewServices
+  class TestViewServices : public ViewServices
   {
   public:
     virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
@@ -195,7 +194,7 @@ namespace
     }
   };
 
-  class TestComputer : public Server
+  class TestComputer : public Services
   {
   public:
     TestComputer(const std::string& url)
@@ -205,7 +204,7 @@ namespace
     {
     }
 
-    virtual void CreateSession(const Remote::SessionParameters& parameters)
+    virtual void CreateSession(const RemoteSessionParameters& parameters)
     {
       throw std::logic_error("not implemented.");
     }
@@ -255,14 +254,11 @@ namespace
 
 namespace OpcUa
 {
-  namespace Remote
+
+  std::unique_ptr<Services> Connect(const std::string& url)
   {
-
-    std::unique_ptr<Server> Connect(const std::string& url)
-    {
-      return std::unique_ptr<Server>(new TestComputer(url));
-    }
-
+    return std::unique_ptr<Services>(new TestComputer(url));
   }
+
 }
 

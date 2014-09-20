@@ -9,18 +9,21 @@ EXTRA_DIST = \
   setup.py
 
 opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
-opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
-libraries_path =$(OPCUA_SERVER_PATH)/lib
+libraries_path =$(OPCUA_SERVER_PATH)/lib:$(OPCUA_SERVER_PATH)/.libs
 TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find ./build -name \*.so -exec dirname {} + )
 
 
 all:
 	$(opcua_paths) python setup.py build
 
+#	$(opcua_paths) $(MAKE) -C tests check
 check:
-	$(opcua_paths) $(MAKE) -C tests check
 	$(TEST_VARS) python ./tests/test_highlevel.py
+
+debug:
+	$(TEST_VARS) cgdb --args python ./tests/test_highlevel.py
 	
+
 clean:
 	$(MAKE) -C tests clean
 	rm -rvf build dist
