@@ -95,39 +95,39 @@ namespace OpcUa
               {
                 if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
                 {
-                  ev.EventId = ef.EventFields[count].Value.ByteStrings[0];
+                  ev.EventId = ef.EventFields[count].As<ByteString>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("EventType", 0) )
                 {
-                  ev.EventType = ef.EventFields[count].Value.Node[0];
+                  ev.EventType = ef.EventFields[count].As<NodeID>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("SourceNode", 0) )
                 {
-                  ev.SourceNode = ef.EventFields[count].Value.Node[0];
+                  ev.SourceNode = ef.EventFields[count].As<NodeID>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("SourceName", 0) )
                 {
-                  ev.SourceName = ef.EventFields[count].Value.String[0];
+                  ev.SourceName = ef.EventFields[count].As<std::string>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("Message", 0) )
                 {
-                  ev.Message = ef.EventFields[count].Value.Text[0];
+                  ev.Message = ef.EventFields[count].As<LocalizedText>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("Severity", 0) )
                 {
-                  ev.Severity = ef.EventFields[count].Value.UInt16[0];
+                  ev.Severity = ef.EventFields[count].As<uint16_t>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("LocalTime", 0) )
                 {
-                  ev.LocalTime = ef.EventFields[count].Value.Time[0];
+                  ev.LocalTime = ef.EventFields[count].As<DateTime>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
                 {
-                  ev.ReceiveTime = ef.EventFields[count].Value.Time[0];
+                  ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
                 }
                 else if ( op.BrowsePath[0] == QualifiedName("Time", 0) )
                 {
-                  ev.Time = ef.EventFields[count].Value.Time[0];
+                  ev.Time = ef.EventFields[count].As<DateTime>();
                 }
               }
               //Add anyway field as value
