@@ -197,7 +197,7 @@ namespace OpcUa
       throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
     }
 
-    std::vector<uint32_t> handles;
+    std::vector<uint32_t> monitoredItemsIds;
     unsigned int i = 0;
     for (const auto& res : results)
     {
@@ -208,10 +208,10 @@ namespace OpcUa
       mdata.Attribute =  attributes[i].Attribute;
       mdata.TargetNode =  Node(Server, attributes[i].Node);
       AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
-      handles.push_back(itemsParams.ItemsToCreate[i].Parameters.ClientHandle);
+      monitoredItemsIds.push_back(res.MonitoredItemID);
       ++i;
     }
-    return handles;
+    return monitoredItemsIds;
   }
 
   void Subscription::UnSubscribe(uint32_t handle)
