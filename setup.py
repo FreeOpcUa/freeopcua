@@ -27,7 +27,8 @@ libs = [
 ]
 
 ldirs = [
-	opcua_server_path + '/lib'
+	opcua_server_path + '/lib',
+	opcua_server_path + '/.libs'
 ]
 
 opcua_client = Extension(
