@@ -34,7 +34,7 @@ protected:
   virtual void SetUp()
   {
     const bool debug = false;
-    NameSpace = OpcUa::UaServer::CreateAddressSpace(debug);
+    NameSpace = OpcUa::Server::CreateAddressSpace(debug);
   }
 
   virtual void TearDown()
@@ -90,7 +90,7 @@ protected:
   }
 
 protected:
-  UaServer::AddressSpace::UniquePtr NameSpace;
+  Server::AddressSpace::UniquePtr NameSpace;
 };
 
 TEST_F(XmlAddressSpace, ExceptionIfCannotLoadDocument)

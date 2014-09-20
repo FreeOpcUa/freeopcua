@@ -17,14 +17,12 @@
 #include <opc/ua/services/endpoints.h>
 
 using namespace OpcUa;
-using namespace OpcUa::UaServer;
-using namespace OpcUa::Remote;
-
+using namespace OpcUa::Server;
 
 namespace
 {
 
-  class EndpointServicesRegistry : public OpcUa::UaServer::EndpointsRegistry
+  class EndpointServicesRegistry : public OpcUa::Server::EndpointsRegistry
   {
   public:
     DEFINE_CLASS_POINTERS(EndpointServices);
@@ -42,7 +40,7 @@ namespace
       return Endpoints;
     }
 
-    virtual void RegisterServer(const OpcUa::Remote::ServerParameters& parameters) override
+    virtual void RegisterServer(const OpcUa::ServerParameters& parameters) override
     {
     }
 
@@ -58,7 +56,7 @@ namespace
     }
 
   private:
-    UaServer::ServicesRegistry::SharedPtr InternalServer;
+    Server::ServicesRegistry::SharedPtr InternalServer;
     bool Debug;
 
     std::vector<EndpointDescription> Endpoints;
@@ -70,9 +68,9 @@ namespace
 
 namespace OpcUa
 {
-  UaServer::EndpointsRegistry::UniquePtr UaServer::CreateEndpointsRegistry()
+  Server::EndpointsRegistry::UniquePtr Server::CreateEndpointsRegistry()
   {
-    return UaServer::EndpointsRegistry::UniquePtr(new EndpointServicesRegistry);
+    return Server::EndpointsRegistry::UniquePtr(new EndpointServicesRegistry);
   }
 }
 

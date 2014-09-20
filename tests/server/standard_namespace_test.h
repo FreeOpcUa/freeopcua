@@ -19,12 +19,12 @@ namespace OpcUa
   namespace Test
   {
 
-    void RegisterStandardNamespace(Common::AddonsManager& addons)
+    inline void RegisterStandardNamespace(Common::AddonsManager& addons)
     {
       Common::AddonInformation config;
-      config.Factory.reset(new OpcUa::UaServer::StandardNamespaceAddonFactory());
-      config.ID = OpcUa::UaServer::StandardNamespaceAddonID;
-      config.Dependencies.push_back(OpcUa::UaServer::AddressSpaceRegistryAddonID);
+      config.Factory.reset(new OpcUa::Server::StandardNamespaceAddonFactory());
+      config.ID = OpcUa::Server::StandardNamespaceAddonID;
+      config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonID);
       addons.Register(config);
     }
 

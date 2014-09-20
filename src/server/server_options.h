@@ -21,7 +21,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class CommandLine

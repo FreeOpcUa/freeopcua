@@ -18,9 +18,11 @@
  ******************************************************************************/
 
 #include "opc_tcp_async_parameters.h"
+
 #include "endpoints_parameters.h"
 
 #include <opc/common/uri_facade.h>
+#include <opc/ua/server/addons/asio_addon.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
@@ -31,7 +33,7 @@
 
 namespace
 {
-  using namespace OpcUa::UaServer;
+  using namespace OpcUa::Server;
 
   class AsyncOpcTcpAddon : public Common::Addon
   {
@@ -47,7 +49,6 @@ namespace
 
   private:
     AsyncOpcTcp::SharedPtr Endpoint;
-    Common::Thread::SharedPtr ServerThread;
   };
 
 
@@ -58,12 +59,11 @@ namespace
     {
       std::cout << "opc_tcp_async| Parameters:" << std::endl;
       std::cout << "opc_tcp_async|   Debug mode: " << params.DebugMode << std::endl;
-      std::cout << "opc_tcp_async|   ThreadsNumber:" << params.ThreadsNumber << std::endl;
     }
-    const std::vector<OpcUa::UaServer::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, params.DebugMode);
+    const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, params.DebugMode);
     if (params.DebugMode)
     {
-      for (OpcUa::UaServer::ApplicationData d: applications)
+      for (OpcUa::Server::ApplicationData d: applications)
       {
         std::cout << "opc_tcp_async| Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
       }
@@ -71,7 +71,7 @@ namespace
 
     std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
     std::vector<OpcUa::EndpointDescription> endpointDescriptions;
-    for (const OpcUa::UaServer::ApplicationData application : applications)
+    for (const OpcUa::Server::ApplicationData application : applications)
     {
       applicationDescriptions.push_back(application.Application);
       endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
@@ -89,19 +89,17 @@ namespace
     }
 
     PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
-    OpcUa::UaServer::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::UaServer::ServicesRegistry>(OpcUa::UaServer::ServicesRegistryAddonID);
+    OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+    OpcUa::Server::AsioAddon::SharedPtr asio = addons.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
 
     params.Port = Common::Uri(endpointDescriptions[0].EndpointURL).Port();
-    Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer());
-
-    ServerThread.reset(new Common::Thread([this](){
-          Endpoint->Listen();
-     }));
+    Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer(), asio->GetIoService());
+    Endpoint->Listen();
   }
 
   void AsyncOpcTcpAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
   {
-    OpcUa::UaServer::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::UaServer::EndpointsRegistry>(OpcUa::UaServer::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot publish information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -114,7 +112,6 @@ namespace
   void AsyncOpcTcpAddon::Stop()
   {
     Endpoint->Shutdown();
-    ServerThread->Join();
     Endpoint.reset();
   }
 
@@ -122,7 +119,7 @@ namespace
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     Common::Addon::UniquePtr AsyncOpcTcpAddonFactory::CreateAddon()

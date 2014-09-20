@@ -24,7 +24,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters& addonParams);

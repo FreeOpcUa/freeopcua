@@ -18,7 +18,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
     struct TcpParameters
     {
@@ -35,8 +35,8 @@ namespace OpcUa
     public:
       DEFINE_CLASS_POINTERS(TcpServer);
 
-      virtual void Listen(const OpcUa::UaServer::TcpParameters& params, std::shared_ptr<OpcUa::UaServer::IncomingConnectionProcessor> processor) = 0;
-      virtual void StopListen(const OpcUa::UaServer::TcpParameters& params) = 0;
+      virtual void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
+      virtual void StopListen(const OpcUa::Server::TcpParameters& params) = 0;
     };
 
     TcpServer::UniquePtr CreateTcpServer();

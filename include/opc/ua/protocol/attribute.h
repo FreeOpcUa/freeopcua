@@ -28,6 +28,12 @@ namespace OpcUa
     QualifiedName DataEncoding;
 
     AttributeValueID();
+
+    AttributeValueID(const NodeID& id, AttributeID attr)
+      : Node(id)
+      , Attribute(attr)
+    {
+    }
   };
 
   struct ReadParameters

@@ -25,7 +25,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char AsyncOpcTcpAddonID[] = "opc_tcp_async";

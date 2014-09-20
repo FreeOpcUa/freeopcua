@@ -55,7 +55,7 @@ int main(int argc, char** argv)
       OpcUa::Node nsnode = root.GetChild(nspath);
       OpcUa::Variant ns  = nsnode.GetValue();
 
-      for (std::string d : ns.Value.String)
+      for (std::string d : ns.As<std::vector<std::string>>())
         std::cout << "    "  << d << std::endl;
 
 

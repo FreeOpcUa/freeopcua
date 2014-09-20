@@ -73,6 +73,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/standard_namespace.h
 	
 addonsinclude_HEADERS = \
+	include/opc/ua/server/addons/asio_addon.h \
 	include/opc/ua/server/addons/address_space.h \
 	include/opc/ua/server/addons/endpoints_services.h \
 	include/opc/ua/server/addons/opc_tcp_async.h \
@@ -82,6 +83,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/xml_ns.h
 
 libopcuaserver_la_SOURCES = \
+	src/server/asio_addon.cpp \
 	src/server/address_space_addon.cpp \
 	src/server/address_space_addon.h \
 	src/server/address_space_internal.cpp \
@@ -101,6 +103,10 @@ libopcuaserver_la_SOURCES = \
 	src/server/opcua_protocol.h \
 	src/server/opcua_protocol_addon.cpp \
 	src/server/opcuaserver.cpp \
+	src/server/server_object.cpp \
+	src/server/server_object.h \
+	src/server/server_object_addon.cpp \
+	src/server/server_object_addon.h \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
 	src/server/subscription_service_internal.h \
@@ -137,11 +143,12 @@ opcuaserver_LDFLAGS = -ldl -lpthread -lboost_filesystem -lboost_program_options 
 
 
 test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacore.la
-	gcc -o0 -g -Wall -std=c++0x -fPIC -c tests/server/test_addon.cpp -I$(top_srcdir)/include -o test_addon.o
-	gcc -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.so
+	$(CC) -o0 -g -Wall -std=c++0x -fPIC -c tests/server/test_addon.cpp -I$(top_srcdir)/include -o test_addon.o
+	$(CC) -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.a
 
 test_opcuaserver_SOURCES = \
 	tests/server/address_space_registry_test.h \
+	tests/server/address_space_ut.cpp \
 	tests/server/builtin_server.h \
 	tests/server/builtin_server_addon.h \
 	tests/server/builtin_server_factory.cpp \
@@ -151,18 +158,24 @@ test_opcuaserver_SOURCES = \
 	tests/server/common.h \
 	tests/server/endpoints_services_test.cpp \
 	tests/server/endpoints_services_test.h \
+	tests/server/model_ut.cpp \
 	tests/server/opcua_protocol_addon_test.cpp \
 	tests/server/opcua_protocol_addon_test.h \
 	tests/server/services_registry_test.h \
 	tests/server/standard_namespace_test.h \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
-	tests/server/xml_addressspace_ut.cpp \
-	tests/server/xml_address_space_addon_ut.cpp
+	src/server/server_options.cpp \
+	src/server/server_options.h
+
+# temporary disabled until new format is discussed.
+#	tests/server/xml_addressspace_ut.cpp
+#	tests/server/xml_address_space_addon_ut.cpp
+
 
 test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la
 test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS)
+test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS) -lboost_program_options
 
 ####################################################
 # Protocol library
@@ -259,7 +272,6 @@ opcuainclude_HEADERS = \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
-  include/opc/ua/server.h \
   include/opc/ua/socket_channel.h \
   include/opc/ua/subscription.h
 
@@ -267,6 +279,7 @@ servicesinclude_HEADERS = \
   include/opc/ua/services/attributes.h \
   include/opc/ua/services/endpoints.h \
   include/opc/ua/services/node_management.h \
+  include/opc/ua/services/services.h \
   include/opc/ua/services/subscriptions.h \
   include/opc/ua/services/view.h
 
@@ -280,8 +293,7 @@ common_HEADERS = \
                   include/opc/common/modules.h \
                   include/opc/common/object_id.h \
                   include/opc/common/thread.h \
-                  include/opc/common/uri_facade.h \
-                  include/opc/common/value.h
+                  include/opc/common/uri_facade.h
 
 addonscoredir = $(commondir)/addons_core
 addonscore_HEADERS = \
@@ -307,6 +319,10 @@ libopcuacore_la_SOURCES = \
                   src/core/common/object_id.cpp \
                   src/core/common/value.cpp \
                   src/core/event.cpp \
+                  src/core/model_node.cpp \
+                  src/core/model_object.cpp \
+                  src/core/model_object_type.cpp \
+                  src/core/model_server.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \
@@ -326,8 +342,7 @@ libtest_dynamic_addon.so: test_dynamic_addon.o
 
 common_test_SOURCES = \
                   tests/core/common/error_test.cpp \
-                  tests/core/common/main.cpp \
-                  tests/core/common/value_test.cpp
+                  tests/core/common/main.cpp
 
 
 common_test_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)

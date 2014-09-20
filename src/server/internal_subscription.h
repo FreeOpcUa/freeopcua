@@ -68,17 +68,13 @@ namespace OpcUa
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
 
-
-
       private:
-
         SubscriptionServiceInternal& Service;
-        std::shared_ptr<UaServer::AddressSpace> AddressSpace;
+        Server::AddressSpace& AddressSpace;
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
         NodeID CurrentSession;
         std::function<void (PublishResult)> Callback;
-
 
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
         uint32_t KeepAliveCount = 0; 

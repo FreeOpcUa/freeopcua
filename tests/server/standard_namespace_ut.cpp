@@ -28,8 +28,8 @@ protected:
   virtual void SetUp()
   {
     const bool debug = false;
-    NameSpace = OpcUa::UaServer::CreateAddressSpace(debug);
-    OpcUa::UaServer::FillStandardNamespace(*NameSpace, debug);
+    NameSpace = OpcUa::Server::CreateAddressSpace(debug);
+    OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
   }
 
   virtual void TearDown()
@@ -120,7 +120,7 @@ protected:
   }
 
 protected:
-  UaServer::AddressSpace::UniquePtr NameSpace;
+  Server::AddressSpace::UniquePtr NameSpace;
 };
 
 template <typename T>
@@ -175,16 +175,6 @@ TEST_F(StandardNamespaceStructure, CheckRoot)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
 
   ExpectHasBaseAttributes(ObjectID::RootFolder);
-}
-
-TEST_F(StandardNamespaceStructure, CheckObjects)
-{
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ObjectsFolder);
-  EXPECT_EQ(SizeOf(refs), 2);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::Server));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
-
-  ExpectHasBaseAttributes(ObjectID::ObjectsFolder);
 }
 
 TEST_F(StandardNamespaceStructure, CheckTypes)

@@ -21,8 +21,6 @@
 
 namespace OpcUa
 {
-  namespace Remote
-  {
 
     class AttributeServices : private Common::Interface
     {
@@ -34,8 +32,6 @@ namespace OpcUa
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
     };
 
-  } // namespace Remote
 } // namespace OpcUa
 
 #endif // OPC_UA_CLIENT_ATTRIBUTES_H
-

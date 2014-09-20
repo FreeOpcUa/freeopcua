@@ -20,7 +20,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class OpcUaProtocol : public Common::Interface
@@ -28,7 +28,7 @@ namespace OpcUa
     public:
       DEFINE_CLASS_POINTERS(OpcUaProtocol);
 
-      virtual void StartEndpoints(const std::vector<EndpointDescription>& Endpoints, Remote::Server::SharedPtr server) = 0;
+      virtual void StartEndpoints(const std::vector<EndpointDescription>& Endpoints, Services::SharedPtr server) = 0;
       virtual void StopEndpoints() = 0;
     };
 

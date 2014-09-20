@@ -16,7 +16,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     const char EndpointsRegistryAddonID[] = "endpoints_services";

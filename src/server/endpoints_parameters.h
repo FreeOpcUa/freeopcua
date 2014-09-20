@@ -18,6 +18,6 @@
 namespace OpcUa
 {
 
-  std::vector<UaServer::ApplicationData> ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& rootGroup, bool debug);
+  std::vector<Server::ApplicationData> ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& rootGroup, bool debug);
 
 }

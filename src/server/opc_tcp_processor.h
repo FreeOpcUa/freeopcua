@@ -10,7 +10,7 @@
 
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <boost/thread/shared_mutex.hpp>
 #include <chrono>
@@ -20,13 +20,13 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class OpcTcpMessages
     {
     public:
-      OpcTcpMessages(std::shared_ptr<OpcUa::Remote::Server> computer, OpcUa::OutputChannel& outputChannel, bool debug);
+      OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug);
       ~OpcTcpMessages();
 
       bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
@@ -43,7 +43,7 @@ namespace OpcUa
 
     private:
       boost::shared_mutex ProcessMutex;
-      std::shared_ptr<OpcUa::Remote::Server> Server;
+      std::shared_ptr<OpcUa::Services> Server;
       OpcUa::Binary::OStreamBinary OutputStream;
       bool Debug;
       uint32_t ChannelID;

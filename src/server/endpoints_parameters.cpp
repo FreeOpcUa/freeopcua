@@ -18,7 +18,7 @@ namespace
 {
 
   using namespace OpcUa;
-  using namespace OpcUa::UaServer;
+  using namespace OpcUa::Server;
 
   class OpcUaParameters
   {
@@ -253,9 +253,9 @@ namespace
   };
 }
 
-std::vector<OpcUa::UaServer::ApplicationData> OpcUa::ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& applicationGroups, bool debug)
+std::vector<OpcUa::Server::ApplicationData> OpcUa::ParseEndpointsParameters(const std::vector<Common::ParametersGroup>& applicationGroups, bool debug)
 {
   OpcUaParameters parser(debug);
-  const std::vector<OpcUa::UaServer::ApplicationData>& data = parser.GetApplications(applicationGroups);
+  const std::vector<OpcUa::Server::ApplicationData>& data = parser.GetApplications(applicationGroups);
   return data;
 }

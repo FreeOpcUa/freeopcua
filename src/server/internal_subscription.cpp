@@ -182,7 +182,7 @@ namespace OpcUa
       }
       else
       {
-        callbackHandle = AddressSpace->AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(result.MonitoredItemID), [this] (IntegerID handle, DataValue value) 
+        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(result.MonitoredItemID), [this] (IntegerID handle, DataValue value) 
           {
             this->DataChangeCallback(handle, value);
           });
@@ -232,7 +232,7 @@ namespace OpcUa
         }
         else
         {
-          AddressSpace->DeleteDataChangeCallback(it->second.CallbackHandle);
+          AddressSpace.DeleteDataChangeCallback(it->second.CallbackHandle);
           MonitoredItemsMap.erase(handle);
           results.push_back(StatusCode::Good);
         }

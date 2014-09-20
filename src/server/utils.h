@@ -26,7 +26,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     inline void PrintBlob(const std::vector<char>& buf)

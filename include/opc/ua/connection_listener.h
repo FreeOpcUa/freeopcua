@@ -17,7 +17,7 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class IncomingConnectionProcessor : private Common::Interface

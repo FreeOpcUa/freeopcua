@@ -14,6 +14,7 @@
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
+#include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/types.h>
 
 #include <algorithm>
@@ -283,19 +284,61 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
+  resp.Result.Results.push_back(OpcUa::DataValue(QualifiedName(1, OpcUa::Names::Root)));
+
   ASSERT_NO_THROW(GetStream() << resp << flush);
 
+  char encodingMask = static_cast<char>(OpcUa::DATA_VALUE);
+  char variantMask = static_cast<char>(OpcUa::VariantType::QUALIFIED_NAME);
   const std::vector<char> expectedData = {
   1, 0, (char)0x7A, 0x2, // TypeID
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
-  0,0,0,0,
-  0,0,0,0,
+  1,0,0,0,
+  encodingMask,
+  variantMask,
+  1, 0,
+  4, 0, 0, 0, 'R','o','o','t',
+  0,0,0,0
   };
 
-  ASSERT_EQ(expectedData.size(), RawSize(resp));
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
+  ASSERT_EQ(expectedData.size(), RawSize(resp));
 }
+
+TEST_F(OpcUaBinaryDeserialization, ReadResponse_with_QualifiedName_as_value)
+{
+
+  using namespace OpcUa;
+  using namespace OpcUa::Binary;
+
+  char variantMask = static_cast<uint8_t>(VariantType::QUALIFIED_NAME);
+  char encodingMask = DATA_VALUE;
+
+  const std::vector<char> expectedData = {
+      1, 0, (char)0x7A, 0x2, // TypeID
+      // RequestHeader
+      TEST_RESPONSE_HEADER_BINARY_DATA,
+      1,0,0,0,
+      encodingMask,
+      variantMask,
+      1, 0,
+      4, 0, 0, 0, 'R','o','o','t',
+      0,0,0,0
+  };
+
+  GetChannel().SetData(expectedData);
+  ReadResponse resp;
+  GetStream() >> resp;
+
+  ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::READ_RESPONSE);
+
+  ASSERT_RESPONSE_HEADER_EQ(resp.Header);
+  ASSERT_EQ(resp.Result.Results.size(), 1);
+}
+
 
 TEST_F(OpcUaBinaryDeserialization, ReadResponse)
 {
@@ -357,8 +400,7 @@ TEST_F(OpcUaBinarySerialization, WriteValue)
   value.Node.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DISPLAY_NAME;
   value.Data.Encoding = DATA_VALUE;
-  value.Data.Value.Type = VariantType::BOOLEAN;
-  value.Data.Value.Value.Boolean = std::vector<bool>{true};
+  value.Data.Value = true;
  
   GetStream() << value << flush;
 
@@ -395,9 +437,8 @@ TEST_F(OpcUaBinaryDeserialization, WriteValue)
   ASSERT_EQ(value.Node.FourByteData.Identifier, 1);
   ASSERT_EQ(value.Attribute, AttributeID::DISPLAY_NAME);
   ASSERT_EQ(value.Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(value.Data.Value.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(value.Data.Value.Value.Boolean.size(), 1);
-  ASSERT_EQ(value.Data.Value.Value.Boolean[0], true);
+  ASSERT_EQ(value.Data.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(value.Data.Value.As<bool>(), true);
 }
 
 
@@ -424,8 +465,7 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   value.Node.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DISPLAY_NAME;
   value.Data.Encoding = DATA_VALUE;
-  value.Data.Value.Type = VariantType::BOOLEAN;
-  value.Data.Value.Value.Boolean = std::vector<bool>{true};
+  value.Data.Value = true;
 
   request.Parameters.NodesToWrite.push_back(value);
 
@@ -485,9 +525,8 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DISPLAY_NAME);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type, VariantType::BOOLEAN);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean.size(), 1);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Value.Boolean[0], true);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.As<bool>(), true);
 }
 
 //-------------------------------------------------------

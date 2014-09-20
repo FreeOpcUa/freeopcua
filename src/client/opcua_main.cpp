@@ -18,7 +18,7 @@
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/node_classes.h>
-#include <opc/ua/server.h>
+#include <opc/ua/services/services.h>
 
 #include <stdexcept>
 
@@ -302,9 +302,9 @@ namespace
 //    std::vector<UserTokenPolicy> ;
   }
 
-  void PrintEndpoints(OpcUa::Remote::Server& computer)
+  void PrintEndpoints(OpcUa::Services& computer)
   {
-    std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
+    std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
     OpcUa::EndpointsFilter filter;
     std::vector<OpcUa::EndpointDescription> endpoints = service->GetEndpoints(filter);
     for(auto it = endpoints.begin(); it != endpoints.end(); ++it)
@@ -314,9 +314,9 @@ namespace
     }
   }
 
-  void PrintServers(OpcUa::Remote::Server& computer)
+  void PrintServers(OpcUa::Services& computer)
   {
-    std::shared_ptr<OpcUa::Remote::EndpointServices> service = computer.Endpoints();
+    std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
     OpcUa::FindServersParameters filter;
     std::vector<OpcUa::ApplicationDescription> applications = service->FindServers(filter);
     for(const OpcUa::ApplicationDescription& desc : applications)
@@ -344,7 +344,7 @@ namespace
     Print(desc.TargetNodeTypeDefinition, tabs1);
   }
 
-  void Browse(OpcUa::Remote::ViewServices& view, OpcUa::NodeID nodeID)
+  void Browse(OpcUa::ViewServices& view, OpcUa::NodeID nodeID)
   {
     OpcUa::BrowseDescription description;
     description.NodeToBrowse = nodeID;
@@ -374,57 +374,74 @@ namespace
     }
   }
 
+
+  struct VariantPrint
+  {
+    typedef void result_type;
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& vals)
+    {
+      for (auto val : vals) std::cout << val << " ";
+    }
+
+    template <typename T>
+    typename std::enable_if<is_container_not_string<T>::value == false>::type operator()(const T& val)
+    {
+      std::cout << val;
+    }
+
+    void operator()(char val)
+    {
+      std::cout << val;
+    }
+  };
+
   void Print(const OpcUa::Variant& var, const Tabs& tabs)
   {
-    switch (var.Type)
+    VariantPrint printer;
+
+    switch (var.Type())
     {
       case VariantType::BOOLEAN:
       {
         std::cout << tabs << "boolean: ";
-        for (auto val : var.Value.Boolean) std::cout << val << " ";
         break;
       }
       case VariantType::SBYTE:
       {
         std::cout << tabs << "signed byte: ";
-        for (auto val : var.Value.SByte) std::cout << (int)val << " ";
         break;
       }
       case VariantType::BYTE:
       {
         std::cout << tabs << "byte: ";
-        for (auto val : var.Value.Byte) std::cout << (unsigned)val << " ";
         break;
       }
       case VariantType::INT16:
       {
         std::cout << tabs << "int16: ";
-        for (auto val : var.Value.Int16) std::cout << val << " ";
         break;
       }
       case VariantType::UINT16:
       {
         std::cout << tabs << "unsigned int16: ";
-        for (auto val : var.Value.UInt16) std::cout << val << " ";
         break;
       }
       case VariantType::INT32:
       {
         std::cout << tabs << "int32: ";
-        for (auto val : var.Value.Int32) std::cout << val << " ";
         break;
       }
       case VariantType::UINT32:
       {
         std::cout << tabs << "unsigned int32: ";
-        for (auto val : var.Value.UInt32) std::cout << val << " ";
         break;
       }
 
       case VariantType::INT64:
       {
         std::cout << tabs << "int64: ";
-        for (auto val : var.Value.Int64) std::cout << val << " ";
         break;
       }
 
@@ -432,7 +449,6 @@ namespace
       case VariantType::UINT64:
       {
         std::cout << tabs << "unsigned int64: ";
-        for (auto val : var.Value.UInt64) std::cout << val << " ";
         break;
       }
 
@@ -440,7 +456,6 @@ namespace
       case VariantType::FLOAT:
       {
         std::cout << tabs << "float: ";
-        for (auto val : var.Value.Float) std::cout << val << " ";
         break;
       }
 
@@ -448,7 +463,6 @@ namespace
       case VariantType::DOUBLE:
       {
         std::cout << tabs << "double: ";
-        for (auto val : var.Value.Double) std::cout << val << " ";
         break;
       }
 
@@ -456,7 +470,6 @@ namespace
       case VariantType::STRING:
       {
         std::cout << tabs << "string: ";
-        for (auto val : var.Value.String) std::cout << val << " ";
         break;
       }
 
@@ -465,21 +478,18 @@ namespace
       case VariantType::NODE_ID:
       {
         std::cout << tabs << "NodeID: " << std::endl;
-        for (auto val : var.Value.Node) Print(val, Tabs(tabs.Num + 2));
         break;
       }
 
       case VariantType::QUALIFIED_NAME:
       {
         std::cout << tabs << "Name: ";
-        for (auto val : var.Value.Name) std::cout << val.NamespaceIndex << ":" << val.Name << " ";
         break;
       }
 
       case VariantType::LOCALIZED_TEXT:
       {
         std::cout << tabs << "Text: ";
-        for (auto val : var.Value.Text) std::cout << val.Locale << ":" << val.Text << " ";
         break;
       }
 
@@ -498,7 +508,9 @@ namespace
       default:
         throw std::logic_error("Unknown variant type.");
     }
-   std::cout << std::endl;
+    std::cout << "TODO: !!!! REFACTORED!!!!" << std::endl;
+//    var.Visit(printer); //TODO
+    std::cout << std::endl;
   }
 
   void Print(const DataValue& value, const Tabs& tabs)
@@ -517,7 +529,7 @@ namespace
   }
 
 
-  void Read(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
+  void Read(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
   {
     ReadParameters params;
     AttributeValueID attribute;
@@ -534,7 +546,7 @@ namespace
     Print(values.front(), Tabs(2));
   }
 
-  void Write(OpcUa::Remote::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
+  void Write(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
   {
     OpcUa::WriteValue attribute;
     attribute.Node = nodeID;
@@ -547,7 +559,7 @@ namespace
     }
   }
 
-  void CreateSubscription(OpcUa::Remote::SubscriptionServices& subscriptions)
+  void CreateSubscription(OpcUa::SubscriptionServices& subscriptions)
   {
     OpcUa::CreateSubscriptionRequest request;
     request.Parameters.MaxNotificationsPerPublish = 1;
@@ -568,7 +580,7 @@ namespace
     const std::string serverURI = cmd.GetServerURI();
     const Common::Uri uri(serverURI);
     OpcUa::Client::Addon::SharedPtr addon = addons.GetAddon<OpcUa::Client::Addon>(uri.Scheme());
-    std::shared_ptr<OpcUa::Remote::Server> computer = addon->Connect(serverURI);
+    std::shared_ptr<OpcUa::Services> computer = addon->Connect(serverURI);
 
     if (cmd.IsGetEndpointsOperation())
     {
@@ -580,7 +592,7 @@ namespace
       PrintServers(*computer);
     }
 
-    OpcUa::Remote::SessionParameters session;
+    OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.Name.Text = "opcua client";

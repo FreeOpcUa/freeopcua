@@ -19,13 +19,13 @@
 
 namespace OpcUa
 {
-  namespace UaServer
+  namespace Server
   {
 
     class AddressSpace
-      : public Remote::ViewServices
-      , public Remote::AttributeServices
-      , public Remote::NodeManagementServices
+      : public ViewServices
+      , public AttributeServices
+      , public NodeManagementServices
     {
     public:
       DEFINE_CLASS_POINTERS(AddressSpace);

@@ -8,6 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+/*
 #include <opc/common/value.h>
 #include <opc/common/errors.h>
 
@@ -26,3 +27,4 @@ Common::ValueType Common::GetValueType(const Common::VariantType& value)
   THROW_ERROR1(InvalidValueType, value.which());
 }
 
+*/

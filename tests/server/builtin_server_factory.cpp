@@ -11,7 +11,7 @@
 #include "builtin_server_addon.h"
 #include "builtin_server_impl.h"
 
-Common::Addon::UniquePtr OpcUa::UaServer::BuiltingServerFactory::CreateAddon()
+Common::Addon::UniquePtr OpcUa::Server::BuiltingServerFactory::CreateAddon()
 {
   return Common::Addon::UniquePtr(new OpcUa::Impl::BuiltinServerAddon);
 }

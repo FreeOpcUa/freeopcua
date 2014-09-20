@@ -36,8 +36,6 @@ namespace OpcUa
   namespace Internal
   {
 
-    using namespace OpcUa::Remote;
-
     class InternalSubscription;
 
     struct NodeAttribute
@@ -78,7 +76,7 @@ namespace OpcUa
     typedef std::map<NodeID, NodeStruct> NodesMap;
 
     //In memory storage of server opc-ua data model
-    class AddressSpaceInMemory : public UaServer::AddressSpace
+    class AddressSpaceInMemory : public Server::AddressSpace
     {
       public:
         AddressSpaceInMemory(bool debug);
@@ -110,16 +108,18 @@ namespace OpcUa
         std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const;
         AddNodesResult AddNode( const AddNodesItem& item );
         StatusCode AddReference(const AddReferencesItem& item);
+        NodeID GetNewNodeID(const NodeID& id);
 
       private:
         bool Debug = false;
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
         ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
+        uint64_t MaxNodeIDNum = 0;
     };
   }
 
-  namespace UaServer
+  namespace Server
   {
     AddressSpace::UniquePtr CreateAddressSpace(bool debug);
   }
