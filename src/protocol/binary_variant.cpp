@@ -299,12 +299,12 @@ namespace OpcUa
       return Compare<QualifiedName>(*this, var);
     else if (t == typeid(std::vector<QualifiedName>))
       return Compare<std::vector<QualifiedName>>(*this, var);
-
+/*
     else if (t == typeid(DataValue))
       return Compare<DataValue>(*this, Value);
     else if (t == typeid(std::vector<DataValue>))
       return Compare<std::vector<DataValue>>(*this, var);
-
+*/
     else if (t == typeid(Variant))
       return Compare<Variant>(*this, var);
     else if (t == typeid(std::vector<Variant>))
@@ -351,7 +351,7 @@ namespace OpcUa
     (t == typeid(std::vector<StatusCode>)) ||
     (t == typeid(std::vector<LocalizedText>)) ||
     (t == typeid(std::vector<QualifiedName>)) ||
-    (t == typeid(std::vector<DataValue>))  ||
+//    (t == typeid(std::vector<DataValue>))  ||
     (t == typeid(std::vector<Variant>))    ||
     (t == typeid(std::vector<DiagnosticInfo>));
   }
@@ -400,8 +400,10 @@ namespace OpcUa
       return VariantType::LOCALIZED_TEXT;
     else if (t == typeid(QualifiedName) || t == typeid(std::vector<QualifiedName>))
       return VariantType::QUALIFIED_NAME;
+/*
     else if (t == typeid(DataValue) || t == typeid(std::vector<DataValue>))
       return VariantType::DATA_VALUE;
+*/
     else if (t == typeid(Variant) || t == typeid(std::vector<Variant>))
       return VariantType::VARIANT;
     else if (t == typeid(DiagnosticInfo) || t == typeid(std::vector<DiagnosticInfo>))
@@ -548,11 +550,12 @@ namespace OpcUa
         var = deserializer.get<QualifiedName>();
       if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<QualifiedName>>();
-
+/*
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE))
         var = deserializer.get<DataValue>();
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DataValue>>();
+*/
       if(encodingMask == ((uint8_t)VariantType::VARIANT))
         var = deserializer.get<Variant>();
       if(encodingMask == ((uint8_t)VariantType::VARIANT | HAS_ARRAY_MASK))

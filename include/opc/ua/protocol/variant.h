@@ -100,7 +100,7 @@ namespace OpcUa
     struct is_container_not_string<std::string> : std::integral_constant<bool, false> {};
 
 
-  class DataValue;
+  //class DataValue;
 
 
   class Variant
@@ -306,12 +306,12 @@ namespace OpcUa
         return visitor(any_cast<QualifiedName>(Value));
       if (t == typeid(std::vector<QualifiedName>))
         return visitor(any_cast<std::vector<QualifiedName>>(Value));
-
+/*
       if (t == typeid(DataValue))
         return visitor(any_cast<DataValue>(Value));
       if (t == typeid(std::vector<DataValue>))
         return visitor(any_cast<std::vector<DataValue>>(Value));
-
+*/
       if (t == typeid(Variant))
         return visitor(any_cast<Variant>(Value));
       if (t == typeid(std::vector<Variant>))
