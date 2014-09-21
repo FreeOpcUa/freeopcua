@@ -27,9 +27,11 @@ namespace OpcUa
   namespace Server
   {
 
-    ServerObject::ServerObject(Services::SharedPtr services)
+    ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service& io)
       : Server(services)
+      , Io(io)
       , Instance(std::move(CreateServerObject(services)))
+      , ServerTime(Instance.GetVariable(QualifiedName("Variable")))
     {
     }
 

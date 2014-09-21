@@ -323,6 +323,7 @@ libopcuacore_la_SOURCES = \
                   src/core/model_object.cpp \
                   src/core/model_object_type.cpp \
                   src/core/model_server.cpp \
+                  src/core/model_variable.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \

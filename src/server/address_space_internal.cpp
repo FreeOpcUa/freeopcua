@@ -148,7 +148,7 @@ namespace OpcUa
       {
         if (value.Data.Encoding & DATA_VALUE)
         {
-          statuses.push_back(SetValue(value.Node, value.Attribute, value.Data.Value));
+          statuses.push_back(SetValue(value.Node, value.Attribute, value.Data));
           continue;
         }
         statuses.push_back(StatusCode::BadNotWritable);
@@ -285,7 +285,7 @@ namespace OpcUa
       return StatusCode::BadAttributeIdInvalid;
     }
 
-    StatusCode AddressSpaceInMemory::SetValue(const NodeID& node, AttributeID attribute, const Variant& data)
+    StatusCode AddressSpaceInMemory::SetValue(const NodeID& node, AttributeID attribute, const DataValue& data)
     {
       NodesMap::iterator it = Nodes.find(node);
       if ( it != Nodes.end() )
@@ -294,8 +294,7 @@ namespace OpcUa
         if ( ait != it->second.Attributes.end() )
         {
           DataValue value(data);
-          value.ServerTimestamp = CurrentDateTime();
-          value.SourceTimestamp = CurrentDateTime(); //FIXME: should allow client to set this one
+          value.SetServerTimestamp(CurrentDateTime());
           ait->second.Value = value;
           //call registered callback
           for (auto pair : ait->second.DataChangeCallbacks)

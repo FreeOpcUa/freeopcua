@@ -24,7 +24,38 @@ namespace OpcUa
   namespace Model
   {
 
+    DataValue Variable::GetValue() const
+    {
+      ReadParameters params;
+      params.AttributesToRead.push_back(AttributeValueID(GetID(), AttributeID::VALUE));
+      const std::vector<DataValue> result = GetServices()->Attributes()->Read(params);
+      if (result.size() != 1)
+      {
+        throw std::runtime_error("Cannot read variable value. Server returned invalid number of values.");
+      }
+      return result.front();
+    }
 
+    void Variable::SetValue(const Variant& value)
+    {
+      DataValue data(value);
+      data.SetSourceTimestamp(OpcUa::CurrentDateTime());
+      SetValue(data);
+    }
+
+    void Variable::SetValue(const DataValue& value)
+    {
+      WriteValue writeValue;
+      writeValue.Attribute = AttributeID::VALUE;
+      writeValue.Data = value;
+      writeValue.Node = Id;
+      std::vector<StatusCode> result = GetServices()->Attributes()->Write({writeValue});
+      if (result.size() != 1)
+      {
+        throw std::runtime_error("Failed to write data. Server returned wron nunber of status codes.");
+      }
+      CheckStatusCode(result[0]);
+    }
 
   }
 }

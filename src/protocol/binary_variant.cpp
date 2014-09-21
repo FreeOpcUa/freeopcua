@@ -585,4 +585,3 @@ namespace OpcUa
 
   } // namespace Binary
 } // namespace OpcUa
-
