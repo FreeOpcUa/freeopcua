@@ -347,7 +347,7 @@ common_test_SOURCES = \
 
 
 common_test_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_test_LDADD = libopcuacore.la 
+common_test_LDADD = libopcuacore.la libopcuaprotocol.la
 common_test_LDFLAGS = -ldl -lpthread -lcppunit
 
 common_gtest_SOURCES = \
@@ -361,7 +361,7 @@ common_gtest_SOURCES = \
   tests/core/common/thread_test.cpp
 
 common_gtest_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_gtest_LDADD = libopcuacore.la
+common_gtest_LDADD = libopcuacore.la libopcuaprotocol.la
 common_gtest_LDFLAGS = -ldl -lpthread -lxml2 $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 
 
