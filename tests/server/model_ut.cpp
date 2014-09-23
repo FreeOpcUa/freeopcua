@@ -288,3 +288,11 @@ TEST_F(Model, CanInstantiateObjectTypeWithOneTypedObject)
   ASSERT_NO_THROW(variables = subObject.GetVariables());
   ASSERT_EQ(variables.size(), 1);
 }
+
+TEST_F(Model, ServerAccessObjectTypes)
+{
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::ObjectType baseObjectType = server.GetObjectType(OpcUa::ObjectID::BaseObjectType);
+  ASSERT_EQ(baseObjectType.GetID(), OpcUa::ObjectID::BaseObjectType);
+  ASSERT_EQ(baseObjectType.GetDisplayName().Text, OpcUa::Names::BaseObjectType);
+}
