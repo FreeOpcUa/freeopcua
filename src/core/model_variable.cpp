@@ -17,12 +17,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
+#include "model_impl.h"
+
 #include <opc/ua/model.h>
 
 namespace OpcUa
 {
   namespace Model
   {
+    Variable::Variable(NodeID variableID, Services::SharedPtr services)
+      : Node(services)
+    {
+      Id = variableID;
+      ReadParameters attrs;
+      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::DISPLAY_NAME));
+      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::BROWSE_NAME));
+      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::DATA_TYPE));
+      std::vector<DataValue> values = services->Attributes()->Read(attrs);
+      DisplayName = values[0].Value.As<LocalizedText>();
+      BrowseName = values[1].Value.As<QualifiedName>();
+      DataType = OpcUa::DataTypeToVariantType(values[2].Value.As<NodeID>());
+    }
 
     DataValue Variable::GetValue() const
     {
@@ -57,5 +72,9 @@ namespace OpcUa
       CheckStatusCode(result[0]);
     }
 
+    std::vector<Variable> Variable::Variables() const
+    {
+      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
+    }
   }
 }

@@ -13,6 +13,7 @@
 #include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/nodeid.h>
+#include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 
@@ -410,6 +411,89 @@ namespace OpcUa
       return VariantType::DIAGNOSTIC_INFO;
 
     throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
+  }
+
+
+  ObjectID VariantTypeToDataType(VariantType vt)
+  {
+    switch (vt)
+    {
+      case VariantType::BOOLEAN:          return ObjectID::Boolean;
+      case VariantType::SBYTE:            return ObjectID::SByte;
+      case VariantType::BYTE:             return ObjectID::Byte;
+      case VariantType::INT16:            return ObjectID::Int16;
+      case VariantType::UINT16:           return ObjectID::UInt16;
+      case VariantType::INT32:            return ObjectID::Int32;
+      case VariantType::UINT32:           return ObjectID::UInt32;
+      case VariantType::INT64:            return ObjectID::Int64;
+      case VariantType::UINT64:           return ObjectID::UInt64;
+      case VariantType::FLOAT:            return ObjectID::Float;
+      case VariantType::DOUBLE:           return ObjectID::Double;
+      case VariantType::STRING:           return ObjectID::String;
+      case VariantType::DATE_TIME:        return ObjectID::DateTime;
+      case VariantType::GUID:             return ObjectID::Guid;
+      case VariantType::BYTE_STRING:      return ObjectID::ByteString;
+      case VariantType::XML_ELEMENT:      return ObjectID::XmlElement;
+      case VariantType::NODE_ID:          return ObjectID::NodeID;
+      case VariantType::EXPANDED_NODE_ID: return ObjectID::ExpandedNodeID;
+      case VariantType::STATUS_CODE:      return ObjectID::StatusCode;
+      case VariantType::QUALIFIED_NAME:   return ObjectID::QualifiedName;
+      case VariantType::LOCALIZED_TEXT:   return ObjectID::LocalizedText;
+      case VariantType::DIAGNOSTIC_INFO:  return ObjectID::DiagnosticInfo;
+      case VariantType::DATA_VALUE:       return ObjectID::DataValue;
+      case VariantType::NUL:              return ObjectID::Null;
+      case VariantType::EXTENSION_OBJECT:
+      case VariantType::VARIANT:
+      default:
+      {
+        throw std::runtime_error("Unknown variant type.");
+      }
+    }
+  }
+
+  VariantType DataTypeToVariantType(const NodeID& dataType)
+  {
+    if (dataType.GetNamespaceIndex())
+    {
+      std::string msg("Cannot convert to variant type: invalid namespace of node ");
+      throw std::runtime_error(msg + ToString(dataType));
+    }
+
+    switch (static_cast<OpcUa::ObjectID>(dataType.GetIntegerIdentifier()))
+    {
+      case ObjectID::Boolean:        return VariantType::BOOLEAN;
+      case ObjectID::SByte:          return VariantType::SBYTE;
+      case ObjectID::Byte:           return VariantType::BYTE;
+      case ObjectID::Int16:          return VariantType::INT16;
+      case ObjectID::UInt16:         return VariantType::UINT16;
+      case ObjectID::Int32:          return VariantType::INT32;
+      case ObjectID::UInt32:         return VariantType::UINT32;
+      case ObjectID::Int64:          return VariantType::INT64;
+      case ObjectID::UInt64:         return VariantType::UINT64;
+      case ObjectID::Float:          return VariantType::FLOAT;
+      case ObjectID::Double:         return VariantType::DOUBLE;
+      case ObjectID::String:         return VariantType::STRING;
+      case ObjectID::DateTime:       return VariantType::DATE_TIME;
+      case ObjectID::Guid:           return VariantType::GUID;
+      case ObjectID::ByteString:     return VariantType::BYTE_STRING;
+      case ObjectID::XmlElement:     return VariantType::XML_ELEMENT;
+      case ObjectID::NodeID:         return VariantType::NODE_ID;
+      case ObjectID::ExpandedNodeID: return VariantType::EXPANDED_NODE_ID;
+      case ObjectID::StatusCode:     return VariantType::STATUS_CODE;
+      case ObjectID::QualifiedName:  return VariantType::QUALIFIED_NAME;
+      case ObjectID::LocalizedText:  return VariantType::LOCALIZED_TEXT;
+      case ObjectID::DiagnosticInfo: return VariantType::DIAGNOSTIC_INFO;
+      case ObjectID::DataValue:      return VariantType::DATA_VALUE;
+      case ObjectID::Null:           return VariantType::NUL;
+      default:
+        return VariantType::NODE_ID;
+/*
+      {
+        std::string msg("Unknown type id ");
+        throw std::runtime_error(msg  + ToString(dataType));
+      }
+*/
+    }
   }
 
   namespace Binary

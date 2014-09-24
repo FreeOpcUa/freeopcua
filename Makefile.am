@@ -158,7 +158,9 @@ test_opcuaserver_SOURCES = \
 	tests/server/common.h \
 	tests/server/endpoints_services_test.cpp \
 	tests/server/endpoints_services_test.h \
-	tests/server/model_ut.cpp \
+	tests/server/model_object_ut.cpp \
+	tests/server/model_object_type_ut.cpp \
+	tests/server/model_variable_ut.cpp \
 	tests/server/opcua_protocol_addon_test.cpp \
 	tests/server/opcua_protocol_addon_test.h \
 	tests/server/services_registry_test.h \

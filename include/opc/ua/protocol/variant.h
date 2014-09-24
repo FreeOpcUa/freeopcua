@@ -327,40 +327,8 @@ namespace OpcUa
     }
   };
 
-  inline ObjectID VariantTypeToDataType(VariantType vt)
-  {
-    switch (vt)
-    {
-      case VariantType::BOOLEAN:          return ObjectID::Boolean;
-      case VariantType::SBYTE:            return ObjectID::SByte;
-      case VariantType::BYTE:             return ObjectID::Byte;
-      case VariantType::INT16:            return ObjectID::Int16;
-      case VariantType::UINT16:           return ObjectID::UInt16;
-      case VariantType::INT32:            return ObjectID::Int32;
-      case VariantType::UINT32:           return ObjectID::UInt32;
-      case VariantType::INT64:            return ObjectID::Int64;
-      case VariantType::UINT64:           return ObjectID::UInt64;
-      case VariantType::FLOAT:            return ObjectID::Float;
-      case VariantType::DOUBLE:           return ObjectID::Double;
-      case VariantType::STRING:           return ObjectID::String;
-      case VariantType::DATE_TIME:        return ObjectID::DateTime;
-      case VariantType::GUID:             return ObjectID::Guid;
-      case VariantType::BYTE_STRING:      return ObjectID::ByteString;
-      case VariantType::XML_ELEMENT:      return ObjectID::XmlElement;
-      case VariantType::NODE_ID:          return ObjectID::NodeID;
-      case VariantType::EXPANDED_NODE_ID: return ObjectID::ExpandedNodeID;
-      case VariantType::STATUS_CODE:      return ObjectID::StatusCode;
-      case VariantType::QUALIFIED_NAME:   return ObjectID::QualifiedName;
-      case VariantType::LOCALIZED_TEXT:   return ObjectID::LocalizedText;
-      case VariantType::DIAGNOSTIC_INFO:  return ObjectID::DiagnosticInfo;
-      case VariantType::DATA_VALUE:       return ObjectID::DataValue;
-      case VariantType::NUL:              return ObjectID::Null;
-      case VariantType::EXTENSION_OBJECT:
-      case VariantType::VARIANT:
-      default:
-        throw std::runtime_error("Unknown variant type.");
-    }
-  }
+  ObjectID VariantTypeToDataType(VariantType vt);
+  VariantType DataTypeToVariantType(const NodeID& dataType);
 
 } // namespace OpcUa
 

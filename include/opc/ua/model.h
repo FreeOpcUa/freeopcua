@@ -171,6 +171,10 @@ namespace OpcUa
       std::vector<ObjectType> SubTypes() const;
 
       ObjectType Parent() const;
+
+    private:
+      bool Abstract = false;
+      NodeID ParentTypeID;
     };
 
 
@@ -221,9 +225,6 @@ namespace OpcUa
       std::map<NodeID, std::vector<ReferenceDescription>> CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs);
       AddNodesItem CreateVariableCopy(const NodeID& parentID, const ReferenceDescription& ref);
       AddNodesItem CreateObjectCopy(const NodeID& parentID, const ReferenceDescription& ref);
-
-
-
 
     private:
       explicit Object(Services::SharedPtr services);

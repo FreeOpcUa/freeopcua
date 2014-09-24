@@ -37,7 +37,7 @@
 using namespace testing;
 
 
-class Model : public Test
+class ModelObject : public Test
 {
 protected:
   virtual void SetUp()
@@ -65,14 +65,14 @@ protected:
   {
     OpcUa::NodeManagementServices::SharedPtr nodes = Services->NodeManagement();
     OpcUa::AddNodesItem item;
-    item.BrowseName = OpcUa::QualifiedName("empty_object_type");
+    item.BrowseName = OpcUa::QualifiedName("object_type");
     item.Class = OpcUa::NodeClass::ObjectType;
     item.ParentNodeId = OpcUa::ObjectID::BaseObjectType;
     item.ReferenceTypeId = OpcUa::ObjectID::HasSubtype;
 
     OpcUa::ObjectTypeAttributes attrs;
-    attrs.Description = OpcUa::LocalizedText("empty_object_type");
-    attrs.DisplayName = OpcUa::LocalizedText("empty_object_type");
+    attrs.Description = OpcUa::LocalizedText("object_type");
+    attrs.DisplayName = OpcUa::LocalizedText("object_type");
     attrs.IsAbstract = false;
     item.Attributes = attrs;
     std::vector<OpcUa::AddNodesResult> result = nodes->AddNodes({item});
@@ -83,12 +83,12 @@ protected:
   {
     const OpcUa::NodeID& objectID = CreateEmptyObjectType();
     OpcUa::AddNodesItem variable;
-    variable.BrowseName = OpcUa::QualifiedName("new_variable1");
+    variable.BrowseName = OpcUa::QualifiedName("variable");
     variable.Class = OpcUa::NodeClass::Variable;
     variable.ParentNodeId = objectID;
     variable.ReferenceTypeId = OpcUa::ObjectID::HasProperty;
     OpcUa::VariableAttributes attrs;
-    attrs.DisplayName = OpcUa::LocalizedText("new_variable");
+    attrs.DisplayName = OpcUa::LocalizedText("variable");
     variable.Attributes = attrs;
     Services->NodeManagement()->AddNodes({variable});
     return objectID;
@@ -98,12 +98,12 @@ protected:
   {
     const OpcUa::NodeID& objectID = CreateEmptyObjectType();
     OpcUa::AddNodesItem object;
-    object.BrowseName = OpcUa::QualifiedName("new_sub_object1");
+    object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
     object.ParentNodeId = objectID;
     object.ReferenceTypeId = OpcUa::ObjectID::HasComponent;
     OpcUa::ObjectAttributes attrs;
-    attrs.DisplayName = OpcUa::LocalizedText("new_sub_object");
+    attrs.DisplayName = OpcUa::LocalizedText("sub_object");
     object.Attributes = attrs;
     Services->NodeManagement()->AddNodes({object});
     return objectID;
@@ -114,13 +114,13 @@ protected:
     const OpcUa::NodeID& resultTypeID = CreateEmptyObjectType();
     const OpcUa::NodeID& objectTypeWithVar = CreateObjectTypeWithOneVariable();
     OpcUa::AddNodesItem object;
-    object.BrowseName = OpcUa::QualifiedName("new_sub_object1");
+    object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
     object.ParentNodeId = resultTypeID;
     object.ReferenceTypeId = OpcUa::ObjectID::HasComponent;
     object.TypeDefinition = objectTypeWithVar;
     OpcUa::ObjectAttributes attrs;
-    attrs.DisplayName = OpcUa::LocalizedText("new_sub_object");
+    attrs.DisplayName = OpcUa::LocalizedText("sub_object");
     object.Attributes = attrs;
     Services->NodeManagement()->AddNodes({object});
     return resultTypeID;
@@ -132,7 +132,7 @@ protected:
 };
 
 
-TEST_F(Model, ServerCanAccessToRootObject)
+TEST_F(ModelObject, ServerCanAccessToRootObject)
 {
   OpcUa::Model::Server server(Services);
   OpcUa::Model::Object rootObject = server.RootObject();
@@ -140,7 +140,7 @@ TEST_F(Model, ServerCanAccessToRootObject)
   ASSERT_EQ(rootObject.GetID(), OpcUa::ObjectID::RootFolder);
 }
 
-TEST_F(Model, ObjectCanCreateVariable)
+TEST_F(ModelObject, ObjectCanCreateVariable)
 {
   OpcUa::Model::Server server(Services);
   OpcUa::Model::Object rootObject = server.RootObject();
@@ -154,51 +154,7 @@ TEST_F(Model, ObjectCanCreateVariable)
   ASSERT_EQ(variable.GetValue(), value);
 }
 
-TEST_F(Model, CanSetVariableValue_ByVariant)
-{
-  OpcUa::Model::Server server(Services);
-  OpcUa::Model::Object rootObject = server.RootObject();
-  OpcUa::QualifiedName name("new_variable");
-  OpcUa::Variant value = 8;
-  OpcUa::Model::Variable variable = rootObject.CreateVariable(name, value);
-
-  ASSERT_NE(variable.GetID(), OpcUa::ObjectID::Null);
-  ASSERT_EQ(variable.GetBrowseName(), name);
-  ASSERT_EQ(variable.GetDisplayName(), OpcUa::LocalizedText(name.Name));
-  ASSERT_EQ(variable.GetValue(), value);
-
-  variable.SetValue(10);
-  OpcUa::DataValue data = variable.GetValue();
-  ASSERT_TRUE(data.Encoding & (OpcUa::DATA_VALUE));
-  ASSERT_TRUE(data.Encoding & (OpcUa::DATA_VALUE_SOURCE_TIMESTAMP));
-  EXPECT_EQ(data.Value, 10);
-  EXPECT_NE(data.SourceTimestamp, 0);
-}
-
-TEST_F(Model, CanSetVariableValue_DataValue)
-{
-  OpcUa::Model::Server server(Services);
-  OpcUa::Model::Object rootObject = server.RootObject();
-  OpcUa::QualifiedName name("new_variable");
-  OpcUa::Variant value = 8;
-  OpcUa::Model::Variable variable = rootObject.CreateVariable(name, value);
-
-  ASSERT_NE(variable.GetID(), OpcUa::ObjectID::Null);
-  ASSERT_EQ(variable.GetBrowseName(), name);
-  ASSERT_EQ(variable.GetDisplayName(), OpcUa::LocalizedText(name.Name));
-  ASSERT_EQ(variable.GetValue(), value);
-
-  OpcUa::DataValue data(10);
-  data.SetSourceTimestamp(OpcUa::DateTime(12345));
-  variable.SetValue(data);
-  OpcUa::DataValue result = variable.GetValue();
-  ASSERT_TRUE(result.Encoding & (OpcUa::DATA_VALUE));
-  ASSERT_TRUE(result.Encoding & (OpcUa::DATA_VALUE_SOURCE_TIMESTAMP));
-  EXPECT_EQ(result.Value, 10);
-  EXPECT_EQ(result.SourceTimestamp, 12345);
-}
-
-TEST_F(Model, CanInstantiateEmptyObjectType)
+TEST_F(ModelObject, CanInstantiateEmptyObjectType)
 {
   const OpcUa::NodeID& typeID = CreateEmptyObjectType();
   OpcUa::Model::ObjectType objectType(typeID, Services);
@@ -215,7 +171,7 @@ TEST_F(Model, CanInstantiateEmptyObjectType)
   ASSERT_EQ(variables.size(), 0);
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneVariable)
+TEST_F(ModelObject, CanInstantiateObjectTypeWithOneVariable)
 {
   const OpcUa::NodeID& typeID = CreateObjectTypeWithOneVariable();
   OpcUa::Model::ObjectType objectType(typeID, Services);
@@ -232,7 +188,7 @@ TEST_F(Model, CanInstantiateObjectTypeWithOneVariable)
   ASSERT_EQ(variables.size(), 1);
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneUntypedObject)
+TEST_F(ModelObject, CanInstantiateObjectTypeWithOneUntypedObject)
 {
   const OpcUa::NodeID& typeID = CreateObjectTypeWithOneUntypedObject();
   OpcUa::Model::ObjectType objectType(typeID, Services);
@@ -249,7 +205,7 @@ TEST_F(Model, CanInstantiateObjectTypeWithOneUntypedObject)
   ASSERT_EQ(objects.size(), 1);
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneTypedObject)
+TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
 {
   // Type with one property - empty object with type that has a variable.
   // ObjectType1
@@ -289,10 +245,36 @@ TEST_F(Model, CanInstantiateObjectTypeWithOneTypedObject)
   ASSERT_EQ(variables.size(), 1);
 }
 
-TEST_F(Model, ServerAccessObjectTypes)
+OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
+{
+  OpcUa::RelativePathElement element;
+  element.ReferenceTypeID = OpcUa::ObjectID::HierarchicalReferences;
+  element.IncludeSubtypes = true;
+  element.TargetName.Name = browseName;
+  return element;
+}
+
+TEST_F(ModelObject, CanAccessVaraibleByBrowsePath)
 {
   OpcUa::Model::Server server(Services);
-  OpcUa::Model::ObjectType baseObjectType = server.GetObjectType(OpcUa::ObjectID::BaseObjectType);
-  ASSERT_EQ(baseObjectType.GetID(), OpcUa::ObjectID::BaseObjectType);
-  ASSERT_EQ(baseObjectType.GetDisplayName().Text, OpcUa::Names::BaseObjectType);
+  OpcUa::Model::Object rootObject = server.RootObject();
+  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType, OpcUa::QualifiedName("Server"));
+  OpcUa::RelativePath path;
+  path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::ServerStatus));
+  path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::BuildInfo));
+  path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::BuildNumber));
+
+  OpcUa::Model::Variable buildNumber = serverObject.GetVariable(path);
+  EXPECT_EQ(buildNumber.GetBrowseName(), OpcUa::QualifiedName(OpcUa::Names::BuildNumber));
+}
+
+TEST_F(ModelObject, CanAccessVaraibleByQualifiedName)
+{
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::Object rootObject = server.RootObject();
+  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType, OpcUa::QualifiedName("Server"));
+  OpcUa::Model::Variable serverStatus = serverObject.GetVariable(OpcUa::QualifiedName(OpcUa::Names::ServerStatus));
+  EXPECT_EQ(serverStatus.GetBrowseName(), OpcUa::QualifiedName(OpcUa::Names::ServerStatus));
 }

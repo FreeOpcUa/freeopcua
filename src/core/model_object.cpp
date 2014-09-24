@@ -17,12 +17,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
+#include "model_impl.h"
+
 #include <opc/ua/model.h>
 
 namespace OpcUa
 {
   namespace Model
   {
+
     Object::Object(NodeID objectId, Services::SharedPtr services)
       : Node(services)
     {
@@ -63,69 +66,44 @@ namespace OpcUa
 
     std::vector<Variable> Object::GetVariables() const
     {
-      BrowseDescription desc;
-      desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = true;
-      desc.NodeClasses =   NODE_CLASS_VARIABLE;
-      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
-      desc.NodeToBrowse = GetID();
-      desc.ResultMask = 0;
-
-      NodesQuery query;
-      query.NodesToBrowse.push_back(desc);
-      Services::SharedPtr services = GetServices();
-      ViewServices::SharedPtr views = OpcUaServices->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
-
-      std::vector<Variable> vars;
-      std::for_each(refs.begin(), refs.end(), [&services, &vars](const ReferenceDescription& ref){
-        Variable var(services);
-        var.Id = ref.TargetNodeID;
-        var.BrowseName = ref.BrowseName;
-        var.DisplayName = ref.DisplayName;
-        vars.push_back(var);
-      });
-
-      return vars;
+      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
     }
 
     Variable Object::GetVariable(const QualifiedName& name) const
     {
-      return Variable(GetServices());
+      OpcUa::RelativePathElement element;
+      element.ReferenceTypeID = OpcUa::ObjectID::HierarchicalReferences;
+      element.IncludeSubtypes = true;
+      element.TargetName = name;
+
+      OpcUa::RelativePath path;
+      path.Elements.push_back(element);
+      return GetVariable(path);
     }
 
-    Variable Object::GetVariable(const RelativePath& name) const
+    Variable Object::GetVariable(const RelativePath& relativePath) const
     {
-      return Variable(GetServices());
+      OpcUa::BrowsePath browsePath;
+      browsePath.StartingNode = GetID();
+      browsePath.Path = relativePath;
+      OpcUa::TranslateBrowsePathsParameters params;
+      params.BrowsePaths.push_back(browsePath);
+      const std::vector<OpcUa::BrowsePathResult>& result = GetServices()->Views()->TranslateBrowsePathsToNodeIds(params);
+      if (result.size() != 1)
+        throw std::runtime_error("object_model| Server returned more than one browse paths on TranslateBrowsePathsToNodeIds request.");
+
+      const OpcUa::BrowsePathResult& resultPath = result.back();
+      OpcUa::CheckStatusCode(resultPath.Status);
+      if (resultPath.Targets.size() != 1)
+        throw std::runtime_error("object_model| Server returned too many target elements on TranslateBrowsePathsToNodeIds request.");
+
+      return Variable(resultPath.Targets.back().Node, GetServices());
     }
 
 
     std::vector<Object> Object::GetObjects() const
     {
-      BrowseDescription desc;
-      desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = true;
-      desc.NodeClasses =   NODE_CLASS_OBJECT;
-      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
-      desc.NodeToBrowse = GetID();
-      desc.ResultMask = 0;
-
-      NodesQuery query;
-      query.NodesToBrowse.push_back(desc);
-      Services::SharedPtr services = GetServices();
-      ViewServices::SharedPtr views = OpcUaServices->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
-
-      std::vector<Object> objects;
-      std::for_each(refs.begin(), refs.end(), [&services, &objects](const ReferenceDescription& ref){
-        Object object(services);
-        object.Id = ref.TargetNodeID;
-        object.BrowseName = ref.BrowseName;
-        object.DisplayName = ref.DisplayName;
-        objects.push_back(object);
-      });
-
-      return objects;
+      return Browse<Object>(GetID(), NODE_CLASS_OBJECT, GetServices());
     }
 
     Object Object::GetObject(const QualifiedName& name) const
