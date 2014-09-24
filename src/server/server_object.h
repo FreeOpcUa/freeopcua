@@ -22,6 +22,8 @@
 #include <opc/ua/services/services.h>
 #include <opc/ua/model.h>
 
+#include <boost/asio/deadline_timer.hpp>
+
 namespace boost
 {
   namespace asio
@@ -42,15 +44,18 @@ namespace OpcUa
 
     public:
       ServerObject(Services::SharedPtr services, boost::asio::io_service& io);
+      ~ServerObject();
 
     private:
       Model::Object CreateServerObject(const Services::SharedPtr& services) const;
+      void OnTimer(const boost::system::error_code& error);
 
     private:
       Services::SharedPtr Server;
       boost::asio::io_service& Io;
       Model::Object Instance;
       Model::Variable ServerTime;
+      boost::asio::deadline_timer Timer;
     };
 
   }
