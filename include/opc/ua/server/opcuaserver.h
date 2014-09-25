@@ -25,6 +25,7 @@ namespace OpcUa
   {
     public:
       OPCUAServer(); 
+      ~OPCUAServer();
       explicit OPCUAServer(bool debug);
       void SetEndpoint(const std::string& endpoint){this->Endpoint = endpoint;}
       void SetProductURI(const std::string& uri){this->ProductUri = uri;}
@@ -50,7 +51,6 @@ namespace OpcUa
 
     private:
       void Run();
-      void CreateServerObjectNode();
 
     protected:
       boost::asio::io_service IoService;
@@ -71,7 +71,8 @@ namespace OpcUa
       Server::SubscriptionService::SharedPtr SubscriptionService;
       Server::AsyncOpcTcp::SharedPtr AsyncServer;
       Common::Thread::UniquePtr ListenThread;
-
+      class ServerInternal;
+      std::shared_ptr<ServerInternal> Internal;
   };
 
 }
