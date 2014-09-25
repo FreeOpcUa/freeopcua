@@ -15,8 +15,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
-//#include <sys/time.h>
-#include <chrono>
+#include <sys/time.h>
 
 namespace OpcUa
 {
@@ -129,44 +128,36 @@ namespace OpcUa
 
   } // namespace Binary
 
+
   DateTime ToDateTime(time_t t, unsigned usec)
   {
-    const int64_t secsFrom1600To1970 = 11676096000LL;
-    int64_t t1 = t + secsFrom1600To1970;
+    const int64_t daysBetween1601And1970 = 134774;
+    const int64_t secsFrom1601To1970 = daysBetween1601And1970 * 24 * 3600LL;
+    int64_t t1 = t + secsFrom1601To1970;
     t1 = t1 * 10000000LL;
     t1 += usec * 10;
     return DateTime(t1);
   }
 
-  /*
-  DateTime ToDateTime(long long usec)
-  {
-    const int64_t secsFrom1600To1970 = 11676096000LL;
-    int64_t t1 = (usec * 10) + (secsFrom1600To1970 * 10000000LL);
-    return DateTime(t1);
-  }
-  */
-
   // TODO move to separate file with time utils.
   DateTime CurrentDateTime()
   {
-     std::chrono::high_resolution_clock::time_point tnow = std::chrono::high_resolution_clock::now();
-     std::chrono::high_resolution_clock::duration tduration = tnow.time_since_epoch();
-     long long usec = std::chrono::duration_cast<std::chrono::microseconds>(tduration).count();
-
-     return ToDateTime(usec);
+    timeval tv;
+    gettimeofday(&tv, 0);
+    return ToDateTime(tv.tv_sec, tv.tv_usec);
   }
 
   time_t ToTimeT(DateTime dateTime)
   {
-    const int64_t secsFrom1600To1970 = 11676096000LL;
-    if (dateTime.Value < secsFrom1600To1970)
+    const int64_t daysBetween1601And1970 = 134774;
+    const int64_t secsFrom1601To1970 = daysBetween1601And1970 * 24 * 3600LL;
+    if (dateTime.Value < secsFrom1601To1970)
     {
       std::stringstream stream;
-      stream << "OpcUa date time cannot be less than " << secsFrom1600To1970;
+      stream << "OpcUa date time cannot be less than " << secsFrom1601To1970;
       throw std::invalid_argument(stream.str());
     }
-    const int64_t secsFrom1970 = dateTime.Value / 10000000LL - secsFrom1600To1970;
+    const int64_t secsFrom1970 = dateTime.Value / 10000000LL - secsFrom1601To1970;
     return secsFrom1970;
   }
 
