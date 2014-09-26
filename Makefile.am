@@ -158,7 +158,9 @@ test_opcuaserver_SOURCES = \
 	tests/server/common.h \
 	tests/server/endpoints_services_test.cpp \
 	tests/server/endpoints_services_test.h \
-	tests/server/model_ut.cpp \
+	tests/server/model_object_ut.cpp \
+	tests/server/model_object_type_ut.cpp \
+	tests/server/model_variable_ut.cpp \
 	tests/server/opcua_protocol_addon_test.cpp \
 	tests/server/opcua_protocol_addon_test.h \
 	tests/server/services_registry_test.h \
@@ -323,6 +325,7 @@ libopcuacore_la_SOURCES = \
                   src/core/model_object.cpp \
                   src/core/model_object_type.cpp \
                   src/core/model_server.cpp \
+                  src/core/model_variable.cpp \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \
@@ -346,7 +349,7 @@ common_test_SOURCES = \
 
 
 common_test_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_test_LDADD = libopcuacore.la 
+common_test_LDADD = libopcuacore.la libopcuaprotocol.la
 common_test_LDFLAGS = -ldl -lpthread -lcppunit
 
 common_gtest_SOURCES = \
@@ -360,7 +363,7 @@ common_gtest_SOURCES = \
   tests/core/common/thread_test.cpp
 
 common_gtest_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
-common_gtest_LDADD = libopcuacore.la
+common_gtest_LDADD = libopcuacore.la libopcuaprotocol.la
 common_gtest_LDFLAGS = -ldl -lpthread -lxml2 $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 
 

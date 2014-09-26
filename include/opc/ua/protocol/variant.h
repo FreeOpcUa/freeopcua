@@ -122,6 +122,7 @@ namespace OpcUa
     Variant(ReferenceID id) : Variant(NodeID(id)){}
     Variant(ObjectID id) : Variant(NodeID(id)){}
     Variant(ExpandedObjectID id) : Variant(NodeID(id)){}
+    explicit Variant(VariantType);
 
     Variant& operator= (const Variant& variant)
     {
@@ -325,6 +326,9 @@ namespace OpcUa
       throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
     }
   };
+
+  ObjectID VariantTypeToDataType(VariantType vt);
+  VariantType DataTypeToVariantType(const NodeID& dataType);
 
 } // namespace OpcUa
 

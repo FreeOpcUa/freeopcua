@@ -17,7 +17,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#include "model_impl.h"
+#pragma once
 
 #include <opc/ua/model.h>
 
@@ -25,45 +25,28 @@ namespace OpcUa
 {
   namespace Model
   {
-
-    ObjectType::ObjectType(NodeID objectId, Services::SharedPtr services)
-      : Node(services)
+    template <typename T>
+    std::vector<T> Browse(const NodeID& node, unsigned nodeClassMask, Services::SharedPtr services)
     {
-      Id = objectId;
-      ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::DISPLAY_NAME));
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::BROWSE_NAME));
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::IS_ABSTRACT));
-      std::vector<DataValue> values = services->Attributes()->Read(attrs);
-      DisplayName = values[0].Value.As<LocalizedText>();
-      BrowseName = values[1].Value.As<QualifiedName>();
-      Abstract = values[2].Value.As<bool>();
-    }
+      BrowseDescription desc;
+      desc.Direction = BrowseDirection::Forward;
+      desc.IncludeSubtypes = true;
+      desc.NodeClasses =   nodeClassMask;
+      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
+      desc.NodeToBrowse = node;
+      desc.ResultMask = 0;
 
-    bool ObjectType::IsAbstract() const
-    {
-      return false;
-    }
+      NodesQuery query;
+      query.NodesToBrowse.push_back(desc);
+      ViewServices::SharedPtr views = services->Views();
+      std::vector<ReferenceDescription> refs = views->Browse(query);
 
-    std::vector<Variable> ObjectType::Variables() const
-    {
-      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
-    }
+      std::vector<T> objects;
+      std::for_each(refs.begin(), refs.end(), [&node, &services, &objects](const ReferenceDescription& ref){
+        objects.push_back(T(ref.TargetNodeID, services));
+      });
 
-    std::vector<Object> ObjectType::Objects() const
-    {
-      return Browse<Object>(GetID(), NODE_CLASS_OBJECT, GetServices());
+      return objects;
     }
-
-    std::vector<ObjectType> ObjectType::SubTypes() const
-    {
-      return Browse<ObjectType>(GetID(), NODE_CLASS_OBJECT_TYPE, GetServices());
-    }
-
-    ObjectType ObjectType::Parent() const
-    {
-      return ObjectType(ObjectID::Null, GetServices());
-    }
-
   }
 }

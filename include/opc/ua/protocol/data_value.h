@@ -43,6 +43,8 @@ namespace OpcUa
     {
     }
 
+    DataValue(const DataValue& data) = default;
+
     explicit DataValue(const Variant& value)
       : DataValue()
     {
@@ -97,6 +99,18 @@ namespace OpcUa
         return false;
 
       return true;
+    }
+
+    void SetSourceTimestamp(const DateTime& t)
+    {
+      SourceTimestamp = t;
+      Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
+    }
+
+    void SetServerTimestamp(const DateTime& t)
+    {
+      ServerTimestamp = t;
+      Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
     }
   };
 

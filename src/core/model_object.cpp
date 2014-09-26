@@ -17,12 +17,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
+#include "model_impl.h"
+
 #include <opc/ua/model.h>
 
 namespace OpcUa
 {
   namespace Model
   {
+
     Object::Object(NodeID objectId, Services::SharedPtr services)
       : Node(services)
     {
@@ -63,77 +66,52 @@ namespace OpcUa
 
     std::vector<Variable> Object::GetVariables() const
     {
-      BrowseDescription desc;
-      desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = true;
-      desc.NodeClasses =   NODE_CLASS_VARIABLE;
-      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
-      desc.NodeToBrowse = GetID();
-      desc.ResultMask = 0;
-
-      NodesQuery query;
-      query.NodesToBrowse.push_back(desc);
-      Services::SharedPtr services = GetServices();
-      ViewServices::SharedPtr views = OpcUaServices->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
-
-      std::vector<Variable> vars;
-      std::for_each(refs.begin(), refs.end(), [&services, &vars](const ReferenceDescription& ref){
-        Variable var(services);
-        var.Id = ref.TargetNodeID;
-        var.BrowseName = ref.BrowseName;
-        var.DisplayName = ref.DisplayName;
-        vars.push_back(var);
-      });
-
-      return vars;
+      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
     }
 
-    std::vector<Variable> Object::GetVariable(const QualifiedName& name) const
+    Variable Object::GetVariable(const QualifiedName& name) const
     {
-      return std::vector<Variable>();
+      OpcUa::RelativePathElement element;
+      element.ReferenceTypeID = OpcUa::ObjectID::HierarchicalReferences;
+      element.IncludeSubtypes = true;
+      element.TargetName = name;
+
+      OpcUa::RelativePath path;
+      path.Elements.push_back(element);
+      return GetVariable(path);
     }
 
-    std::vector<Variable> Object::GetVariable(const std::vector<QualifiedName>& name) const
+    Variable Object::GetVariable(const RelativePath& relativePath) const
     {
-      return std::vector<Variable>();
+      OpcUa::BrowsePath browsePath;
+      browsePath.StartingNode = GetID();
+      browsePath.Path = relativePath;
+      OpcUa::TranslateBrowsePathsParameters params;
+      params.BrowsePaths.push_back(browsePath);
+      const std::vector<OpcUa::BrowsePathResult>& result = GetServices()->Views()->TranslateBrowsePathsToNodeIds(params);
+      if (result.size() != 1)
+        throw std::runtime_error("object_model| Server returned more than one browse paths on TranslateBrowsePathsToNodeIds request.");
+
+      const OpcUa::BrowsePathResult& resultPath = result.back();
+      OpcUa::CheckStatusCode(resultPath.Status);
+      if (resultPath.Targets.size() != 1)
+        throw std::runtime_error("object_model| Server returned too many target elements on TranslateBrowsePathsToNodeIds request.");
+
+      return Variable(resultPath.Targets.back().Node, GetServices());
     }
 
 
     std::vector<Object> Object::GetObjects() const
     {
-      BrowseDescription desc;
-      desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = true;
-      desc.NodeClasses =   NODE_CLASS_OBJECT;
-      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
-      desc.NodeToBrowse = GetID();
-      desc.ResultMask = 0;
-
-      NodesQuery query;
-      query.NodesToBrowse.push_back(desc);
-      Services::SharedPtr services = GetServices();
-      ViewServices::SharedPtr views = OpcUaServices->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
-
-      std::vector<Object> objects;
-      std::for_each(refs.begin(), refs.end(), [&services, &objects](const ReferenceDescription& ref){
-        Object object(services);
-        object.Id = ref.TargetNodeID;
-        object.BrowseName = ref.BrowseName;
-        object.DisplayName = ref.DisplayName;
-        objects.push_back(object);
-      });
-
-      return objects;
+      return Browse<Object>(GetID(), NODE_CLASS_OBJECT, GetServices());
     }
 
-    Object Object::GetObject(const std::string& name) const
+    Object Object::GetObject(const QualifiedName& name) const
     {
       return Object(ObjectID::Null, GetServices());
     }
 
-    Object Object::GetObject(const std::vector<std::string>& name) const
+    Object Object::GetObject(const RelativePath& name) const
     {
       return Object(ObjectID::Null, GetServices());
     }
@@ -262,20 +240,53 @@ namespace OpcUa
       return nextCopyData;
     }
 
-    Variable Object::CreateVariable(const VariableType& type, const QualifiedName& browseName)
+    Variable Object::CreateVariable(const QualifiedName& browseName, const Variant& value)
     {
-      return CreateVariable(type, browseName, browseName.Name);
+      return CreateVariable(NodeID(), browseName, value);
     }
 
-    Variable Object::CreateVariable(const VariableType& type, const QualifiedName& browseName, const std::string displayName)
+    Variable Object::CreateVariable(const NodeID& newVariableID, const QualifiedName& browseName, const Variant& value)
     {
-      return CreateVariable(GetID(), type.GetID(), browseName, displayName);
+      // Creating new node for object
+      AddNodesItem newNodeRequest;
+      newNodeRequest.BrowseName = browseName;
+      newNodeRequest.RequestedNewNodeID = newVariableID;
+      newNodeRequest.Class = NodeClass::Variable;
+      newNodeRequest.ParentNodeId = GetID();
+      newNodeRequest.ReferenceTypeId = ObjectID::HasProperty;
+      newNodeRequest.TypeDefinition = NodeID();
+      VariableAttributes attrs;
+      attrs.Description = LocalizedText(browseName.Name);
+      attrs.DisplayName = LocalizedText(browseName.Name);
+      attrs.Value = value;
+      attrs.Type = OpcUa::VariantTypeToDataType(value.Type());
+      newNodeRequest.Attributes = attrs;
+
+      NodeManagementServices::SharedPtr nodes = GetServices()->NodeManagement();
+      std::vector<AddNodesResult> newNode = nodes->AddNodes({newNodeRequest});
+      if (newNode.size() != 1)
+      {
+        throw std::runtime_error("opcua_model| Server returned wrong number new nodes results.");
+      }
+
+      OpcUa::CheckStatusCode(newNode[0].Status);
+      Variable newVariable(GetServices());
+      newVariable.Id = newNode[0].AddedNodeID;
+      newVariable.BrowseName = browseName;
+      newVariable.DisplayName = attrs.Description;
+      newVariable.DataType = value.Type();
+      newVariable.TypeID = newNodeRequest.TypeDefinition;
+      return newVariable;
     }
 
-    Variable Object::CreateVariable(const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
+    Variable Object::CreateVariable(const QualifiedName& browseName, const VariableType& type)
     {
-      Variable variable(GetServices());
-      return variable;
+      return Variable(GetServices());
+    }
+
+    Variable Object::CreateVariable(const NodeID& newVariableID, const QualifiedName& browseName, const VariableType& type)
+    {
+      return Variable(GetServices());
     }
 
     AddNodesItem Object::CreateVariableCopy(const NodeID& parentID, const ReferenceDescription& ref)

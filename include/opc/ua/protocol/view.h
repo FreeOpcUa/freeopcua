@@ -62,7 +62,7 @@ namespace OpcUa
     NodeID NodeToBrowse;
     BrowseDirection Direction;
     NodeID ReferenceTypeID;
-    bool IncludeSubtypes;
+    bool IncludeSubtypes; // If false will follow strctly ReferenceTypeID. if true will follow subtypes of ReferenceTypeID.
     uint32_t NodeClasses;
     uint32_t ResultMask;
 
