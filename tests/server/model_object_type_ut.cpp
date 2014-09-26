@@ -21,7 +21,6 @@
 #include <opc/ua/model.h>
 
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/ua/protocol/object_ids.h>
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/status_codes.h>
 #include <opc/ua/services/services.h>
@@ -37,7 +36,8 @@
 
 using namespace testing;
 
-class Model : public Test
+
+class ModelObjectType : public Test
 {
 protected:
   virtual void SetUp()
@@ -131,93 +131,37 @@ protected:
   OpcUa::Services::SharedPtr Services;
 };
 
-TEST_F(Model, CanInstantiateEmptyObjectType)
+
+TEST_F(ModelObjectType, ServerAccessObjectTypes)
 {
-  const OpcUa::NodeID& typeID = CreateEmptyObjectType();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
-  const char* objectDesc = "Empty object.";
-  const OpcUa::QualifiedName browseName("empty_object");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
-
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
-  ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
-
-  std::vector<OpcUa::Model::Variable> variables = object.GetVariables();
-  ASSERT_EQ(variables.size(), 0);
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::ObjectType baseObjectType = server.GetObjectType(OpcUa::ObjectID::BaseObjectType);
+  ASSERT_EQ(baseObjectType.GetID(), OpcUa::ObjectID::BaseObjectType);
+  ASSERT_EQ(baseObjectType.GetDisplayName(), OpcUa::LocalizedText(OpcUa::Names::BaseObjectType));
+  ASSERT_EQ(baseObjectType.GetBrowseName(), OpcUa::QualifiedName(OpcUa::Names::BaseObjectType));
+  ASSERT_EQ(baseObjectType.IsAbstract(), false);
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneVariable)
+TEST_F(ModelObjectType, ObjectTypeAllowsAccessToSubtypes)
 {
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneVariable();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
-  const OpcUa::QualifiedName browseName("object_with_var");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
-
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
-  ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
-
-  std::vector<OpcUa::Model::Variable> variables = object.GetVariables();
-  ASSERT_EQ(variables.size(), 1);
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::ObjectType baseObjectType = server.GetObjectType(OpcUa::ObjectID::BaseObjectType);
+  std::vector<OpcUa::Model::ObjectType> subTypes = baseObjectType.SubTypes();
+  ASSERT_FALSE(subTypes.empty());
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneUntypedObject)
+TEST_F(ModelObjectType, ObjectTypeAllowsAccessToVariables)
 {
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneUntypedObject();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
-  const OpcUa::QualifiedName browseName("object_with_var");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
-
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
-  ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
-
-  std::vector<OpcUa::Model::Object> objects = object.GetObjects();
-  ASSERT_EQ(objects.size(), 1);
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  std::vector<OpcUa::Model::Variable> variables = serverType.Variables();
+  ASSERT_FALSE(variables.empty());
 }
 
-TEST_F(Model, CanInstantiateObjectTypeWithOneTypedObject)
+TEST_F(ModelObjectType, ObjectTypeAllowsAccessToObjects)
 {
-  // Type with one property - empty object with type that has a variable.
-  // ObjectType1
-  //   +-object - ObjectType2
-  //
-  // ObjectType2
-  //   +-variable
-
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneTypedObject();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  // we will create objects under root folder.
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
-  const OpcUa::QualifiedName browseName("object_with_var");
-  // Instantiate object type we have created first.
-  // Get only id of that object.
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  // This constructor will read all parameters of created object.
-  // Restored object structure should be next:
-  // Object1 - ObjectType1
-  //   +-Object2 - ObjectType2
-  //       +-variable
-  OpcUa::Model::Object object(objectID, Services);
-
-  ASSERT_EQ(object.GetID(), objectID);
-  ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
-
-  // Created object will have one sub object.
-  std::vector<OpcUa::Model::Object> objects = object.GetObjects();
-  ASSERT_EQ(objects.size(), 1);
-  const OpcUa::Model::Object& subObject = objects[0];
-  // Sub object in the source object type dedn't have any sub objects.
-  // But it has a type definition which has one variable.
-  // And new instantiated object have to restore full hierarchy.
-  std::vector<OpcUa::Model::Variable> variables;
-  ASSERT_NO_THROW(variables = subObject.GetVariables());
-  ASSERT_EQ(variables.size(), 1);
+  OpcUa::Model::Server server(Services);
+  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  std::vector<OpcUa::Model::Object> objects = serverType.Objects();
+  ASSERT_FALSE(objects.empty());
 }

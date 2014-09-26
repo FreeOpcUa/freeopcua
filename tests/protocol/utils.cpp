@@ -17,6 +17,21 @@
 using namespace testing;
 using namespace OpcUa;
 
+TEST(DateTime, FixedTimeT_to_DateTime)
+{
+  time_t timet03_10_1980 = 321494400;
+  unsigned usec = 1;
+  const DateTime dateTime_03_10_1980 = ToDateTime(timet03_10_1980, usec);
+  ASSERT_EQ(dateTime_03_10_1980, 138495*24*3600LL*10000000LL + 10);
+}
+
+TEST(DateTime, FixedDateTime_to_TimeT)
+{
+  const DateTime dateTime_03_10_1980(138495*24*3600LL*10000000LL);
+  time_t timet_03_10_1980 = ToTimeT(dateTime_03_10_1980);
+  ASSERT_EQ(timet_03_10_1980, 321494400);
+}
+
 TEST(DateTime, ToTimeT_And_Back)
 {
   time_t timet = time(0);
@@ -48,7 +63,8 @@ TEST(DateTime, ZeroTimeT)
 {
   time_t t = 0;
   const DateTime converted = OpcUa::ToDateTime(t);
-  ASSERT_EQ(converted/10000000, 11676096000);
+  const DateTime expected(134774LL*24*3600*10000000LL);
+  ASSERT_EQ(converted, expected);
 }
 
 

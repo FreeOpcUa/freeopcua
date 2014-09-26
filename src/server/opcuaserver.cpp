@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #include "opc_tcp_async_parameters.h"
+#include "server_object.h"
 
 #include <opc/common/uri_facade.h>
 #include <opc/common/addons_core/config_file.h>
@@ -31,8 +32,23 @@
 
 namespace OpcUa
 {
+  class OPCUAServer::ServerInternal
+  {
+  public:
+    ServerInternal(Services::SharedPtr services, boost::asio::io_service& io)
+    {
+      ServerObject = std::make_shared<Server::ServerObject>(services, io);
+    }
+
+  private:
+    Server::ServerObject::SharedPtr ServerObject;
+  };
 
   OPCUAServer::OPCUAServer()
+  {
+  }
+
+  OPCUAServer::~OPCUAServer()
   {
   }
 
@@ -79,8 +95,7 @@ namespace OpcUa
     Registry->RegisterSubscriptionServices(SubscriptionService);
 
     Server::FillStandardNamespace(*Registry->GetServer()->NodeManagement(), Debug);
-    CreateServerObjectNode();
-
+    Internal = std::make_shared<ServerInternal>(Registry->GetServer(), IoService);
 
     const Common::Uri uri(Endpoints[0].EndpointURL);
     Server::AsyncOpcTcp::Parameters asyncparams;
@@ -126,6 +141,7 @@ namespace OpcUa
   void OPCUAServer::Stop()
   {
     std::cout << "Stopping opcua server application" << std::endl;
+    Internal.reset();
     AsyncServer->Shutdown();
     AsyncServer.reset();
     ServerWork.reset();
@@ -168,14 +184,6 @@ namespace OpcUa
   void OPCUAServer::TriggerEvent(Event event)
   {
     SubscriptionService->TriggerEvent(ObjectID::Server, event);
-  }
-
-  void OPCUAServer::CreateServerObjectNode()
-  {
-    Model::Server server(Registry->GetServer());
-    Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
-    Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
-    root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
   }
 
 }

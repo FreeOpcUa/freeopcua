@@ -21,6 +21,7 @@
 #include "server_object_addon.h"
 
 #include <opc/ua/server/addons/services_registry.h>
+#include <opc/ua/server/addons/asio_addon.h>
 #include <opc/ua/node.h>
 
 namespace
@@ -32,8 +33,9 @@ namespace
     void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters) override
     {
       OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
       OpcUa::Services::SharedPtr services = registry->GetServer();
-      Object.reset(new OpcUa::Server::ServerObject(services));
+      Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService()));
     }
 
     void Stop() override

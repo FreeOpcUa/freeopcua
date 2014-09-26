@@ -101,8 +101,7 @@ namespace OpcUa
         std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const;
         BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const;
         DataValue GetValue(const NodeID& node, AttributeID attribute) const;
-        StatusCode SetValue(const NodeID& node, AttributeID attribute, const Variant& data); //FIXME should be removed
-        StatusCode SetValue(const NodeID& node, AttributeID attribute, const DataValue& data); //FIXME: should be used instead of variant
+        StatusCode SetValue(const NodeID& node, AttributeID attribute, const DataValue& data);
         bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const;
         bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const;
         std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const;
