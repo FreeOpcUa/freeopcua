@@ -354,6 +354,7 @@ namespace
     description.ResultMask = OpcUa::REFERENCE_ALL;
 
     OpcUa::NodesQuery query;
+    query.View.Timestamp = OpcUa::CurrentDateTime();
     query.NodesToBrowse.push_back(description);
     query.MaxReferenciesPerNode = 100;
 
