@@ -7,10 +7,12 @@ The library is under development but works will all tested clients and servers.
 Currently supported:
 * read, write, browse
 * translateBrowsePathToNodeId
-* DataChange Subscription
+* DataChange Events
 * Events
+* Subscriptions
 
 Work in progress
+* StatusChange Events
 * Filtering
 * Documentation
 
