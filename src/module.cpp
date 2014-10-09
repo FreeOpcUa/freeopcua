@@ -1838,5 +1838,11 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def("create_subscription", &PyOPCUAServer::CreateSubscription)
   ;
 
+  class_<LocalizedText>("LocalizedText")
+      .def_readonly("Encoding", &LocalizedText::Encoding)
+      .def_readonly("Locale", &LocalizedText::Locale)
+      .def_readonly("Text", &LocalizedText::Text)
+    ;  
+
 }
 
