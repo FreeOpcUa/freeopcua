@@ -19,8 +19,12 @@
 
 #include <opc/ua/protocol/string_utils.h>
 #include <cstring>
+#include <ctime>
 #include <stdexcept>
 #include <sstream>
+#include <iomanip>
+#include <iostream>
+
 
 std::string OpcUa::ToString(const NodeID& id)
 {
@@ -225,4 +229,59 @@ std::string OpcUa::ToString(const OpcUa::BrowseDirection& direction)
     default:
       return "unknown";
   }
+}
+
+std::string OpcUa::ToString(const OpcUa::DateTime& t)
+{
+  std::time_t st = OpcUa::ToTimeT(t);
+  return std::ctime(&st);
+}
+
+
+std::string OpcUa::ToString(OpcUa::StatusCode code)
+{
+  if (code == OpcUa::StatusCode::Good)
+  {
+    return std::string();
+  }
+
+  std::stringstream stream;
+  stream << "0x" << std::setfill('0') << std::setw(8) << std::hex << (unsigned)code << " (";
+  switch (code)
+  {
+    case StatusCode::BadNodeIdExists:
+      stream << "NodeId allready exist";
+      break;
+    case StatusCode::BadSourceNodeIdInvalid:
+      stream << "Source NodeId invalid";
+      break;
+    case StatusCode::BadNodeIdUnknown:
+      stream << "NodeId unknown";
+      break;
+    case StatusCode::BadParentNodeIdInvalid:
+      stream << "Parent NodeId invalid";
+      break;
+    case StatusCode::BadAttributeIdInvalid:
+      stream << "Attribute id invalid";
+      break;
+    case StatusCode::BadSubscriptionIdInvalid:
+      stream << "Subscription id invalid";
+      break;
+    case StatusCode::BadNotReadable:
+      stream << "Attribute could not be read, it does not exist or you are not allowed to read it";
+      break;
+    case StatusCode::BadNotWritable:
+      stream << "Attribute not writable, it does not exist or you are not allowed";
+      break;
+    case StatusCode::BadNoMatch:
+      stream << "No match for request";
+      break;
+    case StatusCode::BadMonitoredItemIdInvalid:
+      stream << "MonitoredItemID is invalid";
+      break;
+    default:
+      break;
+    stream << ")";
+  }
+  return stream.str();
 }
