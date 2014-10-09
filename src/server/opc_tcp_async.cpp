@@ -203,7 +203,7 @@ namespace
     }
 
     async_read(Socket, buffer(Buffer), transfer_exactly(messageSize),
-        [this, &header](const boost::system::error_code& error, std::size_t bytesTransferred)
+        [this, header](const boost::system::error_code& error, std::size_t bytesTransferred)
         {
           if (error)
           {

@@ -78,6 +78,10 @@ namespace OpcUa
     ed.SecurityMode = SecurityMode;
     ed.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
     ed.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
+    //setting up policy is required for some client, this should be in a constructor
+    UserTokenPolicy policy;
+    policy.TokenType = UserIdentifyTokenType::ANONYMOUS;
+    ed.UserIdentifyTokens.push_back(policy);
 
     Endpoints.push_back(ed);
 
