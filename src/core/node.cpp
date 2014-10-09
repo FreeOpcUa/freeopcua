@@ -86,7 +86,9 @@ namespace OpcUa
     WriteValue attribute;
     attribute.Node = Id;
     attribute.Attribute = attr;
-    attribute.Data = value;
+    DataValue dval(value);
+    dval.SetSourceTimestamp(CurrentDateTime());
+    attribute.Data = dval;
     std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<WriteValue>(1, attribute));
     return codes.front();
   }

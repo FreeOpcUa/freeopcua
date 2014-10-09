@@ -2516,7 +2516,7 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::NamespaceArray);
         attrs.Type = ObjectID::String;
         attrs.Value = std::vector<std::string>{"http://opcfoundation.org/UA/", "http://freeopcua.github.io"};
-        attrs.Dimensions = {0};
+        attrs.Dimensions = {};
         attrs.Rank = 1;
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -2537,7 +2537,7 @@ namespace
         attrs.DisplayName = LocalizedText(OpcUa::Names::ServerArray);
         attrs.Type = ObjectID::String;
         attrs.Value = std::vector<std::string>{"http://treww.github.com"}; // TODO
-        attrs.Dimensions = {0};
+        attrs.Dimensions = {};
         attrs.Rank = 1;
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
