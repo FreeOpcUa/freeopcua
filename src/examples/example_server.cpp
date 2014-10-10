@@ -17,7 +17,6 @@
 #include <opc/ua/node.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/server/opcuaserver.h>
-#include "src/server/daemon.h"
 
 
 

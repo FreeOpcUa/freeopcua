@@ -92,6 +92,7 @@ namespace OpcUa
 
         case MT_SECURE_MESSAGE:
         {
+          if (Debug) std::clog << "opc_tcp_processor| Processing secure message." << std::endl;
           ProcessRequest(iStream, OutputStream);
           break;
         }
