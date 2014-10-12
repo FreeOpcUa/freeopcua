@@ -39,14 +39,9 @@ namespace OpcUa
         return IsDaemon;
       }
 
-      Common::AddonParameters GetParameters() const
+      std::string GetConfigDir() const
       {
-        return Parameters;
-      }
-
-      std::vector<Common::AddonInformation> GetModules() const
-      {
-        return Modules;
+    	return ConfigDir;
       }
 
       std::string GetLogFile() const
@@ -57,8 +52,7 @@ namespace OpcUa
     private:
       bool StartPossible;
       bool IsDaemon;
-      Common::AddonParameters Parameters;
-      std::vector<Common::AddonInformation> Modules;
+      std::string ConfigDir;
       std::string LogFile;
     };
 

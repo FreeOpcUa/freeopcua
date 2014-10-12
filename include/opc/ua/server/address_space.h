@@ -35,10 +35,6 @@ namespace OpcUa
       virtual void DeleteDataChangeCallback(uint32_t clienthandle) = 0;
       virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback) = 0;
       //FIXME : SHould we also expose SetValue and GetValue on server side? then we need to lock them ...
-
-
-
-
     };
 
     AddressSpace::UniquePtr CreateAddressSpace(bool debug);

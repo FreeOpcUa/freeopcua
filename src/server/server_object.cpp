@@ -73,22 +73,30 @@ namespace OpcUa
 
     void ServerObject::OnTimer(const boost::system::error_code& error)
     {
-      if (error)
+      try
       {
-        return;
+        if (error)
+        {
+          return;
+        }
+
+        DateTime t = OpcUa::CurrentDateTime();
+        DataValue timeData(t);
+        timeData.SetSourceTimestamp(t);
+        timeData.SetServerTimestamp(t);
+
+        ServerTime.SetValue(timeData);
+
+        Timer.expires_from_now(boost::posix_time::seconds(1));
+        Timer.async_wait([this](const boost::system::error_code& error) {
+          OnTimer(error);
+        });
+      }
+      catch (std::exception& ex)
+      {
+        std::cerr << "Failed to update time at server object: " << ex.what() << std::endl;
       }
 
-      DateTime t = OpcUa::CurrentDateTime();
-      DataValue timeData(t);
-      timeData.SetSourceTimestamp(t);
-      timeData.SetServerTimestamp(t);
-
-      ServerTime.SetValue(timeData);
-
-      Timer.expires_from_now(boost::posix_time::seconds(1));
-      Timer.async_wait([this](const boost::system::error_code& error) {
-        OnTimer(error);
-      });
     }
 
   } // namespace UaServer

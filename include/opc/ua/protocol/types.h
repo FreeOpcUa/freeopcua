@@ -118,8 +118,8 @@ namespace OpcUa
   struct RelativePathElement
   {
     NodeID ReferenceTypeID;
-    bool IsInverse;
-    bool IncludeSubtypes;
+    bool IsInverse = false;
+    bool IncludeSubtypes = false;
     QualifiedName TargetName;
   };
 
@@ -190,10 +190,10 @@ namespace OpcUa
   {
     NodeID SessionAuthenticationToken;
     DateTime UtcTime;
-    uint32_t RequestHandle;
-    uint32_t ReturnDiagnostics;
+    uint32_t RequestHandle = 0;
+    uint32_t ReturnDiagnostics = 0;
     std::string AuditEntryID;
-    uint32_t Timeout; // in miliseconds
+    uint32_t Timeout = 0; // in miliseconds
     AdditionalHeader Additional;
 
     RequestHeader();
@@ -257,8 +257,8 @@ namespace OpcUa
   struct ResponseHeader
   {
     DateTime Timestamp;
-    uint32_t RequestHandle;
-    StatusCode ServiceResult;
+    uint32_t RequestHandle = 0;
+    StatusCode ServiceResult = StatusCode::Good;
     DiagnosticInfo InnerDiagnostics;
     std::vector<std::string> StringTable;
     AdditionalHeader Additional;
@@ -302,7 +302,7 @@ namespace OpcUa
     std::string URI;
     std::string ProductURI;
     LocalizedText Name;
-    ApplicationType Type;
+    ApplicationType Type = ApplicationType::CLIENT;
     std::string GatewayServerURI;
     std::string DiscoveryProfileURI;
     std::vector<std::string> DiscoveryURLs;
@@ -321,7 +321,7 @@ namespace OpcUa
   struct UserTokenPolicy
   {
     std::string PolicyID;
-    UserIdentifyTokenType TokenType;
+    UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
     std::string IssuedTokenType;
     std::string IssuerEndpointURL;
     std::string SecurityPolicyURI;
@@ -332,11 +332,11 @@ namespace OpcUa
     std::string EndpointURL;
     ApplicationDescription ServerDescription;
     CertificateData ServerCertificate;
-    MessageSecurityMode SecurityMode;
+    MessageSecurityMode SecurityMode = MessageSecurityMode::MSM_NONE;
     std::string SecurityPolicyURI;
     std::vector<UserTokenPolicy> UserIdentifyTokens;
     std::string TransportProfileURI;
-    uint8_t SecurityLevel;
+    uint8_t SecurityLevel = 0;
   };
 
 

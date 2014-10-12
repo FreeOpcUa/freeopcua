@@ -17,7 +17,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    SubscriptionServiceInternal::SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& ioService, bool debug)
+    SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service& ioService, bool debug)
       : io(ioService)
       , AddressSpace(addressspace)
       , Debug(debug)

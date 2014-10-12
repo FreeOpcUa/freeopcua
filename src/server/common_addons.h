@@ -17,49 +17,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#include "server_object.h"
-#include "server_object_addon.h"
+#pragma once
 
-#include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/addons/asio_addon.h>
-#include <opc/ua/node.h>
-
-namespace
-{
-
-  class ServerObjectAddon : public Common::Addon
-  {
-  public:
-    void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters) override
-    {
-      OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
-      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
-      OpcUa::Services::SharedPtr services = registry->GetServer();
-      Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService()));
-    }
-
-    void Stop() override
-    {
-      Object.reset();
-    }
-
-  private:
-    volatile bool Stopped = false;
-    OpcUa::Server::ServerObject::UniquePtr Object;
-  };
-
-} // namespace
-
+#include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/protocol/types.h>
 
 namespace OpcUa
 {
   namespace Server
   {
 
-    Common::Addon::UniquePtr ServerObjectFactory::CreateAddon()
+    struct Parameters
     {
-      return Common::Addon::UniquePtr(new ServerObjectAddon());
-    }
+      /// @Endpoint configuration.
+      /// listen parameters will be taked from EndpointUrl.
+      /// Example:
+      /// opc.tcp://localhost:4841
+      /// opc.tcp://10.250.1.1:4841
+      /// opc.tcp://opcua.server.com:4841
+      EndpointDescription Endpoint;
+      unsigned ThreadsCount = 1;
+      bool Debug = false;
+    };
 
-  } // namespace UaServer
-} // namespace OpcUa
+    /// @brief parameters of server.
+    /// can be used at embedded.
+    void RegisterCommonAddons(const Parameters& params, Common::AddonsManager& addons);
+
+    /// @brief Load parameters from configuration files.
+    /// This function will enumerate '*.config' files in the directory.
+    /// configuration file can load third party dynamic addons.
+    void LoadConfiguration(const std::string& configDirectoryPath, Common::AddonsManager& addons);
+
+  }
+}
