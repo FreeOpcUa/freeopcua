@@ -169,6 +169,7 @@ namespace OpcUa
 
     CreateMonitoredItemsResult InternalSubscription::CreateMonitoredItem(const MonitoredItemRequest& request)
     {
+      if (Debug) std::cout << "SubscriptionService| Creating monitored item." << std::endl;
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       CreateMonitoredItemsResult result;
@@ -176,12 +177,14 @@ namespace OpcUa
       result.MonitoredItemID = ++LastMonitoredItemID;
       if (request.ItemToMonitor.Attribute == AttributeID::EVENT_NOTIFIER )
       {
+        if (Debug) std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl;
         //client want to subscribe to events
         //FIXME: check attribute EVENT notifier is set for the node
         MonitoredEvents[request.ItemToMonitor.Node] = result.MonitoredItemID;
       }
       else
       {
+        if (Debug) std::cout << "SubscriptionService| Subscribing to data chanes in the address space." << std::endl;
         callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(result.MonitoredItemID), [this] (IntegerID handle, DataValue value) 
           {
             this->DataChangeCallback(handle, value);
@@ -189,6 +192,7 @@ namespace OpcUa
 
         if (callbackHandle == 0)
         {
+          if (Debug) std::cout << "SubscriptionService| ERROR: address returned zero handle." << std::endl;
           --LastMonitoredItemID; //revert increment 
           result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
           return result;

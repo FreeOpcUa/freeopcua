@@ -72,16 +72,6 @@ namespace OpcUa
       return Registry->AddReferences(items);
     }
 
-    void AddressSpaceAddon::AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
-    {
-      //Registry->AddAttribute(node, attribute, value);
-    }
-
-    void AddressSpaceAddon::AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
-    {
-      //Registry->AddReference(sourceNode, reference);
-    }
-
     std::vector<ReferenceDescription> AddressSpaceAddon::Browse(const OpcUa::NodesQuery& query) const
     {
       return Registry->Browse(query);
@@ -108,16 +98,17 @@ namespace OpcUa
 
     uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback)
     {
-      return 0;
+      return Registry->AddDataChangeCallback(node, attribute, clienthandle, callback);
     }
 
     void AddressSpaceAddon::DeleteDataChangeCallback(uint32_t clienthandle)
     {
+      return Registry->DeleteDataChangeCallback(clienthandle);
     }
 
     StatusCode AddressSpaceAddon::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
     {
-      return StatusCode::BadNotImplemented;
+      return Registry->SetValueCallback(node, attribute, callback);
     }
  
 

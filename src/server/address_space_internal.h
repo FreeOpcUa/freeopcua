@@ -115,6 +115,7 @@ namespace OpcUa
         NodesMap Nodes;
         ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
         uint64_t MaxNodeIDNum = 0;
+        std::atomic<uint32_t> DataChangeCallbackHandle;
     };
   }
 

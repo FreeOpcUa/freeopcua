@@ -40,8 +40,6 @@ namespace OpcUa
     public: // NodeManagementServices
       virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items);
       virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items);
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value); //FIXME: remove
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference); //FIXME: remove
 
     public: // ViewServices
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
