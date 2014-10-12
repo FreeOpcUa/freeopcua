@@ -476,6 +476,7 @@ namespace
       if (Debug) {std::cout << "binary_client| Publish -->" << std::endl << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest); //Should parameter not be const?
       request.Header = CreateRequestHeader();
+      request.Header.Timeout = 0; //We do not want the request to timeout!
 
       ResponseCallback responseCallback = [this](std::vector<char> buffer){
         if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server"  << std::endl;}
