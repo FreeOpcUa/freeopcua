@@ -16,6 +16,7 @@ Work in progress
 * StatusChange Events
 * Filtering
 * Documentation
+* Windows port (Help welcome to handle shared libraries...)
 
 Not implemented yet (patches are welcome)
 * Methods
