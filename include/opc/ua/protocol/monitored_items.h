@@ -193,6 +193,7 @@ namespace OpcUa
     NodeID TypeID;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
+    DiagnosticInfoList Diagnostics;
 
     DeleteMonitoredItemsResponse();
   };
