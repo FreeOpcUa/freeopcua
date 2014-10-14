@@ -65,7 +65,6 @@ namespace OpcUa
     bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
       boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
-      std::cout << "processMessage with type: " << msgType << " and " << MT_HELLO << std::endl;
 
       switch (msgType)
       {
@@ -687,11 +686,6 @@ namespace OpcUa
 
         default:
         {
-          std::stringstream ss;
-          ss << std::endl << std::endl ;
-          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved." << std::endl;
-          ss << std::endl << std::endl;
-
           ServiceFaultResponse response;
           FillResponseHeader(requestHeader, response.Header);
           response.Header.ServiceResult = StatusCode::BadNotImplemented;
@@ -701,7 +695,7 @@ namespace OpcUa
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "opc_tcp_processor| Sending ServiceFaultResponse to unsupported request." << std::endl;
+          if (Debug) std::cerr << "opc_tcp_processor| Sending ServiceFaultResponse to unsupported request of id: " << message << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
