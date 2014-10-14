@@ -18,7 +18,6 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
-#include <Python.h> 
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -519,6 +518,55 @@ namespace OpcUa
     }
   }
 
+  struct DataValueWrap : OpcUa::DataValue
+  {
+
+    DataValueWrap(const python::object& object)
+    : OpcUa::DataValue(ToVariant(object))
+    {}
+
+    DataValueWrap(const python::object& object, VariantType vtype)
+    : OpcUa::DataValue(ToVariant2(object, vtype))
+    {}
+
+    python::object get_value()
+    { return ToObject(Value); }
+    
+    void set_value(const python::object& object, VariantType vtype)
+    { Value = ToVariant2(object, vtype); Encoding |= DATA_VALUE; }
+   
+    StatusCode get_status()
+    { return Status; }
+
+    void set_status( const StatusCode & sc)
+    { Status = sc; Encoding |= DATA_VALUE_STATUS_CODE; }
+
+    DateTime get_source_timestamp()
+    { return SourceTimestamp; }
+
+    void set_source_timestamp(const DateTime & dt)
+    { SourceTimestamp = dt; Encoding |= DATA_VALUE_SOURCE_TIMESTAMP; }
+
+    uint16_t get_source_picoseconds()
+    { return SourcePicoseconds; }
+
+    void set_source_picoseconds(uint16_t ps)
+    { SourcePicoseconds = ps; Encoding |= DATA_VALUE_SOURCE_PICOSECONDS; }
+
+    DateTime get_server_timestamp()
+    { return ServerTimestamp; }
+
+    void set_server_timestamp(const DateTime & dt)
+    { ServerTimestamp = dt; Encoding |= DATA_VALUE_SERVER_TIMESTAMP; }
+
+    uint16_t get_server_picoseconds()
+    { return ServerPicoseconds; }
+
+    void set_server_picoseconds(uint16_t ps)
+    { ServerPicoseconds = ps; Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
+
+  };
+
   struct PyDataValue
   {
     python::object Value;
@@ -536,7 +584,7 @@ namespace OpcUa
       , ServerPicoseconds(0)
     {
     }
-
+    
     explicit PyDataValue(const OpcUa::DataValue& value)
     {
       if (value.Encoding & DATA_VALUE)
@@ -969,16 +1017,16 @@ namespace OpcUa
       return PyNodeID(Node::GetId());
     }
 
-    python::object PySetValue(const python::object& val)
+    python::object PySetValue(const python::object& val, VariantType hint = VariantType::NUL, DateTime t = CurrentDateTime())
     {
-      OpcUa::StatusCode code = Node::SetValue(ToVariant(val));
+      Variant var = ToVariant2(val, hint);
+      OpcUa::StatusCode code = Node::SetValue(var, t);
       return ToObject(code);
     }
 
-    python::object PySetValue2(const python::object& val, VariantType hint)
+    python::object PySetDataValue(const DataValueWrap &dval)
     {
-      Variant var = ToVariant2(val, hint);
-      OpcUa::StatusCode code = Node::SetValue(var);
+      OpcUa::StatusCode code = Node::SetValue(dval);
       return ToObject(code);
     }
 
@@ -1067,6 +1115,7 @@ namespace OpcUa
     }
   };
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PyNodeSetValue_stubs, PyNode::PySetValue, 1, 3);
 
   class PyEvent : public Event
   {
@@ -1397,6 +1446,14 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .value("VALUE_RANK", OpcUa::AttributeID::VALUE_RANK)
     .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
 
+  class_<DateTime>("DateTime", init<>())
+    .def(init<int64_t>())
+  ;
+
+  def("CurrentDateTime", &CurrentDateTime);
+  def("ToDateTime", &ToDateTime);
+  def("ToTimeT", &ToTimeT);
+
   class_<PyNodeID>("NodeID")
     .def(init<unsigned, unsigned>())
     .def(init<std::string, uint16_t>())
@@ -1427,7 +1484,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def(self == self)
     ;
 
-  class_<DataValue>("DataValue", "Parameters of read data.")
+  class_<DataValue>("DataValue", "Parameters of read data.") // XXX "DataValue"
     .def_readwrite("value", &DataValue::Value)
     .def_readwrite("status", &DataValue::Status)
     .def_readwrite("source_timestamp", &DataValue::SourceTimestamp)
@@ -1435,7 +1492,17 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("server_timestamp", &DataValue::ServerTimestamp)
     .def_readwrite("server_picoseconds", &DataValue::ServerPicoseconds);
 
-
+  class_<DataValueWrap>("DataValueWrap", "Parameters of read data.", init<const python::object&>())
+    .def(init<const python::object&, VariantType>())
+    #define dvproperty(X) add_property( #X, &DataValueWrap::get_ ## X, &DataValueWrap::set_ ## X)
+    .dvproperty(value)
+    .dvproperty(status)
+    .dvproperty(source_timestamp)
+    .dvproperty(source_picoseconds)
+    .dvproperty(server_timestamp)
+    .dvproperty(server_picoseconds)
+    #undef dvproperty
+    ;
 
   class_<PyApplicationDescription>("ApplicationDescription")
     .def_readwrite("uri", &PyApplicationDescription::URI)
@@ -1491,7 +1558,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
     .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
 
-  class_<PyDataValue>("DataValue", "Parameters of read data.")
+  class_<PyDataValue>("DataValue", "Parameters of read data.") // XXX "DataValue"
     .def_readwrite("value", &PyDataValue::Value)
     .def_readwrite("status", &PyDataValue::Status)
     .def_readwrite("source_timestamp", &PyDataValue::SourceTimestamp)
@@ -1739,8 +1806,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def("get_attribute", &PyNode::GetAttribute)
     .def("set_attribute", &PyNode::SetAttribute)
     .def("get_value", &PyNode::PyGetValue)
-    .def("set_value", &PyNode::PySetValue)
-    .def("set_value", &PyNode::PySetValue2) //should be possible to use default argument
+    .def("set_value", &PyNode::PySetValue, PyNodeSetValue_stubs((python::arg("value"), python::arg("hint")=VariantType::NUL, python::arg("DateTime")=CurrentDateTime()), "set a node value."))
+    .def("set_value", &PyNode::PySetDataValue)
     .def("get_properties", &PyNode::GetProperties)
     .def("get_variables", &PyNode::GetVariables)
     .def("get_name", &PyNode::PyGetName)
@@ -1839,10 +1906,10 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
   ;
 
   class_<LocalizedText>("LocalizedText")
-      .def_readwrite("Encoding", &LocalizedText::Encoding)
-      .def_readwrite("Locale", &LocalizedText::Locale)
-      .def_readwrite("Text", &LocalizedText::Text)
-    ;  
+    .def_readwrite("Encoding", &LocalizedText::Encoding)
+    .def_readwrite("Locale", &LocalizedText::Locale)
+    .def_readwrite("Text", &LocalizedText::Text)
+  ;  
 
 }
 
