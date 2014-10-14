@@ -38,8 +38,7 @@ namespace
 
     void Stop()
     {
-      // TODO make this after implementing deinitialization of addons in order of dependencies.
-      //Services->UnregisterSubscriptionServices();
+      Services->UnregisterSubscriptionServices();
       Subscriptions.reset();
       Services.reset();
     }
