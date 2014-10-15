@@ -171,10 +171,14 @@ namespace OpcUa
   void OPCUAServer::EnableEventNotification()
   {
     Node server = GetServerNode();
+    
     uint8_t notifierval = 0;
-    notifierval |= EventNotifier::SubscribeToEvents; 
+    notifierval |= EventNotifier::SubscribeToEvents;
 
-    server.SetAttribute(AttributeID::EVENT_NOTIFIER, notifierval);
+    DataValue dval(notifierval);
+    dval.SetSourceTimestamp(CurrentDateTime());
+
+    server.SetAttribute(AttributeID::EVENT_NOTIFIER, dval);
   }
 
   std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
