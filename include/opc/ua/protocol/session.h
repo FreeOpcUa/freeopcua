@@ -140,6 +140,14 @@ namespace OpcUa
   };
 
   NodeID GenerateSessionId();
+
+  struct ServiceFaultResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+
+    ServiceFaultResponse();
+  };
   
 
 } // namespace OpcUa
