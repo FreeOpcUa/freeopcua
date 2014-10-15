@@ -171,7 +171,7 @@ namespace OpcUa
     template <>
     std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
     {
-      return RawSize(data.TypeID) + RawSize(data.Header) + RawSizeContainer(data.Results);
+      return RawSize(data.TypeID) + RawSize(data.Header) + RawSizeContainer(data.Results) + RawSize(data.Diagnostics);
     }
 
     template<>
@@ -180,6 +180,7 @@ namespace OpcUa
       *this << data.TypeID;
       *this << data.Header;
       *this << data.Results;
+      *this << data.Diagnostics;
     }
 
 
@@ -190,6 +191,7 @@ namespace OpcUa
       *this >> data.TypeID;
       *this >> data.Header;
       *this >> data.Results;
+      *this >> data.Diagnostics;
     }
 
     ////////////////////////////////////////////////////////////////

@@ -71,6 +71,10 @@ namespace OpcUa
   {
   }
 
+  ServiceFaultResponse::ServiceFaultResponse()
+    : TypeID(SERVICE_FAULT)
+  {
+  }
 
   namespace Binary
   {
@@ -441,6 +445,30 @@ namespace OpcUa
     {
       *this >> response.TypeID;
       *this >> response.Header;
+    }
+
+    //---------------------------------------------------
+    // ServiceFaultResponse
+    //---------------------------------------------------
+
+    template<>
+    std::size_t RawSize<ServiceFaultResponse>(const ServiceFaultResponse& request)
+    {
+      return RawSize(request.TypeID) + RawSize(request.Header);
+    }
+
+    template<>
+    void DataSerializer::Serialize<ServiceFaultResponse>(const ServiceFaultResponse& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<ServiceFaultResponse>(ServiceFaultResponse& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
     }
 
 

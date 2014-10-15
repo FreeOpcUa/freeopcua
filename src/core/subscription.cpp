@@ -51,10 +51,10 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); //To be finished
     //FIXME: finish to handle all types of publishresults!
 
-    if (Debug){ std::cout << "Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
+    if (Debug){ std::cout << "Subscription | Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
     for (const NotificationData& data: result.Message.Data )
     {
-      if (Debug) { std::cout << "Notification is of type DataChange\n"; }
+      if (Debug) { std::cout << "Subscription | Notification is of type DataChange\n"; }
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
         for ( const MonitoredItems& item: data.DataChange.Notification)
@@ -62,24 +62,24 @@ namespace OpcUa
           AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
-            std::cout << "Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
+            std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
           }
           else
           {
-            if (Debug) { std::cout << "Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
+            if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
             Client.DataChange( item.ClientHandle, mapit->second.TargetNode, item.Value.Value, mapit->second.Attribute);
           }
         }
       }
       else if (data.Header.TypeID == ExpandedObjectID::EventNotificationList)
       {
-        if (Debug) { std::cout << "Notification is of type Event\n"; }
+        if (Debug) { std::cout << "Subscription | Notification is of type Event\n"; }
         for ( EventFieldList ef :  data.Events.Events)
         {
           AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
           if ( mapit == AttributeValueMap.end() )
           {
-            std::cout << "Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
+            std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
           }
           else
           {
@@ -87,7 +87,7 @@ namespace OpcUa
             uint32_t count = 0;
             if ( mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size() )
             {
-              throw std::runtime_error("Error receive event format does not match requested filter");
+              throw std::runtime_error("Subscription | Error receive event format does not match requested filter");
             }
             for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
             {
@@ -134,20 +134,20 @@ namespace OpcUa
               ev.SetValue(op.BrowsePath, ef.EventFields[count]);
               ++count;
             }
-            if (Debug) { std::cout << "Debug: Calling client callback\n"; }
+            if (Debug) { std::cout << "Subscription | Debug: Calling client callback\n"; }
             Client.Event(ef.ClientHandle, ev);
-            if (Debug) { std::cout << "Debug: callback call finished\n"; }
+            if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
           }
         }
       }
       else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)
       {
-        if (Debug) { std::cout << "Notification is of type StatusChange\n"; }
+        if (Debug) { std::cout << "Subscription | Notification is of type StatusChange\n"; }
         Client.StatusChange(data.StatusChange.Status);
       }
       else
       {
-        std::cout << "Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
+        std::cout << "Subscription | Error unknown notficiation type received: " << data.Header.TypeID <<std::endl;
       }
     }
     OpcUa::SubscriptionAcknowledgement ack;
@@ -194,7 +194,7 @@ namespace OpcUa
 
     if ( results.size() != attributes.size() ) 
     {
-      throw(std::runtime_error("Error server did not send answer for all monitoreditem requessts"));
+      throw(std::runtime_error("Subscription | Error server did not send answer for all monitoreditem requessts"));
     }
 
     std::vector<uint32_t> monitoredItemsIds;
@@ -202,7 +202,7 @@ namespace OpcUa
     for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
-      if (Debug ) { std::cout << "storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl;  }
+      if (Debug ) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemID << std::endl;  }
       MonitoredItemData mdata; 
       mdata.MonitoredItemID = res.MonitoredItemID;
       mdata.Attribute =  attributes[i].Attribute;
@@ -228,7 +228,7 @@ namespace OpcUa
     std::vector<IntegerID> mids;
     for (auto id : handles)
     {
-      if (Debug) std::cout << "Sending unsubscribe for monitoreditemsid: " << id << std::endl;
+      if (Debug) std::cout << "Subscription | Sending unsubscribe for monitoreditemsid: " << id << std::endl;
       mids.push_back(IntegerID(id));
       //Now trying to remove monitoreditem from our internal cache
       for ( auto pair : AttributeValueMap )
@@ -256,10 +256,10 @@ namespace OpcUa
   uint32_t Subscription::SubscribeEvents(const Node& node, const Node& eventtype)  
   {
     EventFilter filter;
-    std::cout << "Subscrive events" << std::endl;
+    if (Debug) std::cout << "Subscription | Subscribing events with filter for properties:" << std::endl;
     for ( Node& child: eventtype.GetProperties() )
     {
-      std::cout << "      property: "<< child.GetName() << std::endl;
+      if (Debug) std::cout << "      property: "<< child.GetName() << std::endl;
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
       op.Attribute = AttributeID::VALUE;
@@ -297,7 +297,7 @@ namespace OpcUa
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
     if ( results.size()  != 1 )
     {
-      throw(std::runtime_error("Protocol Error CreateMonitoredItems should return one result"));
+      throw(std::runtime_error("Subscription | Protocol Error CreateMonitoredItems should return one result"));
     }
 
     MonitoredItemData mdata;

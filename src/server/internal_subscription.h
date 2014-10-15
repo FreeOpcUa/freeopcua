@@ -89,7 +89,7 @@ namespace OpcUa
         uint32_t LifeTimeCount;
         MonitoredEventsMap MonitoredEvents;
 
-        bool Debug = true;
+        bool Debug = false;
          
     };
 

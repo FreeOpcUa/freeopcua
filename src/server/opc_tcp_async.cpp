@@ -214,7 +214,7 @@ namespace
         {
           if (error)
           {
-            if (Debug) std::cout << "opc_tcp_async| Error during receiving message body." << std::endl;
+            if (Debug) std::cerr << "opc_tcp_async| Error during receiving message body." << std::endl;
             return;
           }
           ProcessMessage(header.Type, error, bytesTransferred);
@@ -310,7 +310,6 @@ namespace
     tcp::endpoint ep;
     if (params.Host.empty() )
     {
-      std::cout << "opc_tcp_async| " << std::endl;
       ep = tcp::endpoint( tcp::v4(), params.Port );
     }
     else if ( params.Host == "localhost" )

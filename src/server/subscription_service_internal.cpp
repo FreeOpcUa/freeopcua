@@ -56,7 +56,7 @@ namespace OpcUa
       std::vector<StatusCode> result;
       for (const IntegerID& subid: subscriptions)
       {
-        std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+        if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
         size_t count = SubscriptionsMap.erase(subid);
         if ( count > 0)
         {
@@ -158,7 +158,11 @@ namespace OpcUa
       std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node);
       if ( queue_it == PublishRequestQueues.end() )
       {
-        std::cout << "SubscriptionService | Error request for publish queue for unknown session" << node << std::endl;
+        std::cout << "SubscriptionService | Error request for publish queue for unknown session: " << node << " queue are available for: ";
+        for ( auto i: PublishRequestQueues ){
+          std::cout << "    " << i.first ;
+        }
+        std::cout << std::endl;
         return false;
       }
       else
