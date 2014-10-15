@@ -33,7 +33,7 @@ namespace OpcUa
 
     void InternalSubscription::DeleteAllMonitoredItems()
     {
-      std::cout << "Subscription | Deleting all monitoreditems" << std::endl; 
+      if (Debug) std::cout << "InternalSubscription | Deleting all monitoreditems" << std::endl; 
       std::vector<IntegerID> handles;
       for (auto pair : MonitoredItemsMap)
       {
@@ -47,7 +47,7 @@ namespace OpcUa
       bool expired = KeepAliveCount > LifeTimeCount ;
       if ( expired )
       {
-        if (Debug) { std::cout << "Subscription | Subscription has expired " << KeepAliveCount << "  " << LifeTimeCount << std::endl; }
+        if (Debug) { std::cout << "InternalSubscription | Subscription has expired " << KeepAliveCount << "  " << LifeTimeCount << std::endl; }
       }
       return expired;
     }
@@ -56,7 +56,7 @@ namespace OpcUa
     {
       if ( error || HasExpired() )
       {
-        if (Debug) { std::cout << "Subscription | boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
+        if (Debug) { std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
       if ( HasPublishResult() && Service.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
@@ -65,14 +65,14 @@ namespace OpcUa
         std::vector<PublishResult> results = PopPublishResult();
         if (results.size() > 0 )
         {
-          if (Debug) { std::cout << "Subscription | Subscription has " << results.size() << " results, calling callback" << std::endl; }
+          if (Debug) { std::cout << "InternalSubscription | Subscription has " << results.size() << " results, calling callback" << std::endl; }
           if ( Callback )
           {
             Callback(results[0]);
           }
           else
           {
-            std::cout << "Subcsription | No callback defined for this subscription" << std::endl;
+            if (Debug) std::cout << "InternalSubcsription | No callback defined for this subscription" << std::endl;
           }
          }
       }
@@ -90,7 +90,7 @@ namespace OpcUa
       }
       if ( KeepAliveCount > Data.RevizedMaxKeepAliveCount ) //we need to send keepalive notification
       {
-        if (Debug) std::cout << "Subcsription | KeepAliveCount " << KeepAliveCount << " is > than MaxKeepAliveCount " <<  Data.RevizedMaxKeepAliveCount << " sending publish event" << std::endl; 
+        if (Debug) std::cout << "InternalSubscription | KeepAliveCount " << KeepAliveCount << " is > than MaxKeepAliveCount " <<  Data.RevizedMaxKeepAliveCount << " sending publish event" << std::endl; 
         return true;
       }
       ++KeepAliveCount;
@@ -116,7 +116,7 @@ namespace OpcUa
           
       if ( ! EventTriggered.empty() )
       {
-        if (Debug) { std::cout << "Subcsription | Subscription " << Data.ID << " has " << EventTriggered.size() << " events to send to client" << std::endl; }
+        if (Debug) { std::cout << "InternalSubcsription | Subscription " << Data.ID << " has " << EventTriggered.size() << " events to send to client" << std::endl; }
         EventNotificationList notif;
         for ( EventFieldList ef: EventTriggered )
         {
@@ -142,7 +142,7 @@ namespace OpcUa
         result.AvailableSequenceNumber.push_back(res.Message.SequenceID);
       }
       NotAcknowledgedResults.push_back(result);
-      if (Debug) { std::cout << "Subcsription | Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl; }
       std::vector<PublishResult> resultlist;
       resultlist.push_back(result);
 
@@ -205,7 +205,7 @@ namespace OpcUa
       mdata.ClientHandle = request.Parameters.ClientHandle;
       mdata.CallbackHandle = callbackHandle;
       MonitoredItemsMap[result.MonitoredItemID] = mdata;
-      if (Debug) std::cout << "Created MonitoredItem with id: " << result.MonitoredItemID << " ( " << (unsigned int)LastMonitoredItemID << ") " << "eq is:  " << (101 == LastMonitoredItemID) << " and client handle " << mdata.ClientHandle << std::endl;
+      if (Debug) std::cout << "Created MonitoredItem with id: " << result.MonitoredItemID << " and client handle " << mdata.ClientHandle << std::endl;
 
       return result;
     }
@@ -215,7 +215,7 @@ namespace OpcUa
       std::vector<StatusCode> results;
       for (const IntegerID& handle: monitoreditemsids)
       {
-        std::cout << "Subcsription | Deleteing Monitoreditemsid: " << handle << std::endl;
+        if (Debug) std::cout << "InternalSubcsription | Deleting Monitoreditemsid: " << handle << std::endl;
         for (auto pair : MonitoredEvents)
         {
           if ( pair.second == handle )
@@ -232,7 +232,9 @@ namespace OpcUa
         }
         else
         {
-          AddressSpace.DeleteDataChangeCallback(it->second.CallbackHandle);
+          if (it->second.CallbackHandle != 0){ //if 0 this monitoreditem did not use callbacks
+            AddressSpace.DeleteDataChangeCallback(it->second.CallbackHandle);
+          }
           MonitoredItemsMap.erase(handle);
           results.push_back(StatusCode::Good);
         }
@@ -250,13 +252,13 @@ namespace OpcUa
       MonitoredItemsMapType::iterator it_monitoreditem = MonitoredItemsMap.find(m_id);
       if ( it_monitoreditem == MonitoredItemsMap.end()) 
       {
-        std::cout << "Subcsription | DataChangeCallback called for unknown item" << std::endl;
+        std::cout << "InternalSubcsription | DataChangeCallback called for unknown item" << std::endl;
         return ;
       }
 
       event.ClientHandle = it_monitoreditem->second.ClientHandle; 
       event.Value = value;
-      if (Debug) { std::cout << "Subcsription | Enqueued DataChange triggered item for sub: " << Data.ID << " and clienthandle: " << event.ClientHandle << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Enqueued DataChange triggered item for sub: " << Data.ID << " and clienthandle: " << event.ClientHandle << std::endl; }
       MonitoredItemsTriggered.push_back(event);
     }
 
@@ -267,7 +269,7 @@ namespace OpcUa
       MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
       if ( it == MonitoredEvents.end() )
       {
-        std::cout << "Subcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
+        std::cout << "InternalSubcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
         return;
       }
       lock.unlock();//Enqueue vill need to set a unique lock
@@ -277,13 +279,13 @@ namespace OpcUa
     bool InternalSubscription::EnqueueEvent(IntegerID monitoreditemid, const Event& event)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-      if (Debug) { std::cout << "Subcsription | Enqueing event to be send" << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Enqueing event to be send" << std::endl; }
 
       //Find monitoredItem 
       std::map<IntegerID, DataMonitoredItems>::iterator mii_it =  MonitoredItemsMap.find( monitoreditemid );
       if  (mii_it == MonitoredItemsMap.end() ) 
       {
-        if (Debug) std::cout << "Subcsription | monitoreditem " << monitoreditemid << " is already deleted" << std::endl; 
+        if (Debug) std::cout << "InternalSubcsription | monitoreditem " << monitoreditemid << " is already deleted" << std::endl; 
         return false;
       }
           
@@ -300,17 +302,17 @@ namespace OpcUa
     {
       //Go through filter and add value og matches as in spec
       std::vector<Variant> fields;
-      std::cout << "GetEventField " << filter.SelectClauses.size() << std::endl;
+      if(Debug) std::cout << "InternalSubscription | InternalGetEventField " << filter.SelectClauses.size() << std::endl;
       for (SimpleAttributeOperand sattr : filter.SelectClauses)
       {
-        std::cout << "BrowsePAth size " << sattr.BrowsePath.size() << std::endl;
+        if(Debug) std::cout << "InternalSubscription | BrowsePAth size " << sattr.BrowsePath.size() << std::endl;
         if ( sattr.BrowsePath.size() == 0 )
         {
           fields.push_back(event.GetValue(sattr.Attribute));
         }
         else
         {
-          std::cout << "sending value for : " << sattr.BrowsePath[0] << std::endl;
+          if(Debug) std::cout << "InternalSubscription | sending value for : " << sattr.BrowsePath[0] << std::endl;
           if ( sattr.BrowsePath[0] == QualifiedName("EventID", 0) )
           {
             fields.push_back(event.EventId);
