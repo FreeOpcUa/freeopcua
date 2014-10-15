@@ -56,7 +56,7 @@ namespace OpcUa
       std::vector<StatusCode> result;
       for (const IntegerID& subid: subscriptions)
       {
-        std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+        if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
         size_t count = SubscriptionsMap.erase(subid);
         if ( count > 0)
         {
