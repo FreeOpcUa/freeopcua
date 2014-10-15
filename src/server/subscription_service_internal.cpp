@@ -41,11 +41,13 @@ namespace OpcUa
     void SubscriptionServiceInternal::DeleteAllSubscriptions()
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
-      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-      std::vector<IntegerID> ids(SubscriptionsMap.size());\
-      std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-      lock.unlock();
+      std::vector<IntegerID> ids(SubscriptionsMap.size());
+      {
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+      }
+
       DeleteSubscriptions(ids);
     }
 

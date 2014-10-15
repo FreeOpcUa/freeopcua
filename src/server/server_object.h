@@ -43,7 +43,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(ServerObject);
 
     public:
-      ServerObject(Services::SharedPtr services, boost::asio::io_service& io);
+      ServerObject(Services::SharedPtr services, boost::asio::io_service& io, bool debug);
       ~ServerObject();
 
     private:
@@ -53,6 +53,8 @@ namespace OpcUa
     private:
       Services::SharedPtr Server;
       boost::asio::io_service& Io;
+      bool Debug = false;
+      bool Stopped = false;
       Model::Object Instance;
       Model::Variable ServerTime;
       boost::asio::deadline_timer Timer;

@@ -9,15 +9,15 @@ namespace OpcUa
 
     InternalSubscription::InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> callback)
       : Service(service)
-        , AddressSpace(Service.GetAddressSpace())
-        , Data(data)
-        , CurrentSession(SessionAuthenticationToken)
-        , Callback(callback)
-        , io(service.GetIOService())
-        , timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
-        , LifeTimeCount(data.RevisedLifetimeCount)
+      , AddressSpace(Service.GetAddressSpace())
+      , Data(data)
+      , CurrentSession(SessionAuthenticationToken)
+      , Callback(callback)
+      , io(service.GetIOService())
+      , Timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
+      , LifeTimeCount(data.RevisedLifetimeCount)
     {
-      timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
     
     InternalSubscription::~InternalSubscription()
@@ -28,7 +28,8 @@ namespace OpcUa
 
     void InternalSubscription::Stop()
     {
-      timer.cancel();
+      if (!TimerStopped)
+        Timer.cancel();
     }
 
     void InternalSubscription::DeleteAllMonitoredItems()
@@ -56,6 +57,7 @@ namespace OpcUa
     {
       if ( error || HasExpired() )
       {
+        TimerStopped = true;
         if (Debug) { std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
@@ -76,8 +78,9 @@ namespace OpcUa
           }
          }
       }
-      timer.expires_at(timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
-      timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      TimerStopped = false;
+      Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
+      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
 
     bool InternalSubscription::HasPublishResult()

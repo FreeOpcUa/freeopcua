@@ -32,10 +32,16 @@ namespace
   public:
     void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters) override
     {
+      for (const Common::Parameter& param : parameters.Parameters)
+      {
+        if (param.Name == "debug")
+          Debug = param.Value == "false" || param.Value == "0" ? false : true;
+      }
+
       OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
       OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
       OpcUa::Services::SharedPtr services = registry->GetServer();
-      Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService()));
+      Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService(), Debug));
     }
 
     void Stop() override
@@ -44,7 +50,7 @@ namespace
     }
 
   private:
-    volatile bool Stopped = false;
+    bool Debug = false;
     OpcUa::Server::ServerObject::UniquePtr Object;
   };
 

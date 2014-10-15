@@ -132,6 +132,7 @@ namespace
     Common::AddonInformation addressSpaceRegistry = CreateAddressSpace();
     Common::AddonInformation asioAddon = CreateAsio();
     Common::AddonInformation subscriptionService = CreateSubscriptionService();
+    Common::AddonInformation serverObject = CreateServerObject();
 
     for (const Common::ParametersGroup& group : params.Groups)
     {
@@ -161,6 +162,10 @@ namespace
       {
         AddParameters(subscriptionService, group);
       }
+      else if (group.Name == OpcUa::Server::ServerObjectAddonID)
+      {
+        AddParameters(serverObject, group);
+      }
     }
 
     addons.push_back(endpointsRegistry);
@@ -169,7 +174,7 @@ namespace
     addons.push_back(subscriptionService);
     addons.push_back(::CreateServicesRegistry());
     addons.push_back(CreateStandardNamespace());
-    addons.push_back(CreateServerObject());
+    addons.push_back(serverObject);
   }
 
   inline void RegisterAddons(std::vector<Common::AddonInformation> addons, Common::AddonsManager& manager)

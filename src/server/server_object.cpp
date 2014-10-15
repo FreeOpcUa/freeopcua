@@ -48,9 +48,10 @@ namespace OpcUa
   namespace Server
   {
 
-    ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service& io)
+    ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service& io, bool debug)
       : Server(services)
       , Io(io)
+      , Debug(debug)
       , Instance(std::move(CreateServerObject(services)))
       , ServerTime(Instance.GetVariable(GetCurrentTimeRelativepath()))
       , Timer(io, boost::posix_time::seconds(1))
@@ -60,7 +61,12 @@ namespace OpcUa
 
     ServerObject::~ServerObject()
     {
-      Timer.cancel();
+      if (!Stopped)
+      {
+        if (Debug) std::clog << "server_object| canceling timer..." << std::endl;
+        Timer.cancel();
+        if (Debug) std::clog << "server_object| timer stopped." << std::endl;
+      }
     }
 
     Model::Object ServerObject::CreateServerObject(const Services::SharedPtr& services) const
@@ -77,6 +83,8 @@ namespace OpcUa
       {
         if (error)
         {
+          Stopped = true;
+          std::cerr << "server_object| Error in timer: " << error.message() << std::endl;
           return;
         }
 
@@ -85,6 +93,7 @@ namespace OpcUa
         timeData.SetSourceTimestamp(t);
         timeData.SetServerTimestamp(t);
 
+        if (Debug) std::clog << "server_object| Updating server time: " << t << std::endl;
         ServerTime.SetValue(timeData);
 
         Timer.expires_from_now(boost::posix_time::seconds(1));
