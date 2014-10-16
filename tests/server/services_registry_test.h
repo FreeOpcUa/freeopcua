@@ -22,9 +22,7 @@ namespace OpcUa
 
     inline void RegisterServicesRegistry(Common::AddonsManager& addons)
     {
-      Common::AddonInformation services;
-      services.Factory.reset(new OpcUa::Server::ServicesRegistryFactory());
-      services.ID = OpcUa::Server::ServicesRegistryAddonID;
+      Common::AddonInformation services = Server::CreateServicesRegistryAddon();
       addons.Register(services);
     }
 

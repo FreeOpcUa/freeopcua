@@ -19,8 +19,9 @@
 
 #include "server_object.h"
 
-#include <chrono>
+#include <boost/chrono.hpp>
 #include <opc/ua/server/addons/services_registry.h>
+#include <functional>
 
 namespace
 {
@@ -54,19 +55,18 @@ namespace OpcUa
       , Debug(debug)
       , Instance(std::move(CreateServerObject(services)))
       , ServerTime(Instance.GetVariable(GetCurrentTimeRelativepath()))
-      , Timer(io, boost::posix_time::seconds(1))
+      , Timer(io)
     {
-      OnTimer(boost::system::error_code());
+      Timer.Start(boost::posix_time::seconds(1), [this](){
+        UpdateTime();
+      });
     }
 
     ServerObject::~ServerObject()
     {
-      if (!Stopped)
-      {
-        if (Debug) std::clog << "server_object| canceling timer..." << std::endl;
-        Timer.cancel();
-        if (Debug) std::clog << "server_object| timer stopped." << std::endl;
-      }
+      if (Debug) std::clog << "server_object| canceling timer..." << std::endl;
+      Timer.Cancel();
+      if (Debug) std::clog << "server_object| timer stopped." << std::endl;
     }
 
     Model::Object ServerObject::CreateServerObject(const Services::SharedPtr& services) const
@@ -77,17 +77,10 @@ namespace OpcUa
       return root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
     }
 
-    void ServerObject::OnTimer(const boost::system::error_code& error)
+    void ServerObject::UpdateTime()
     {
       try
       {
-        if (error)
-        {
-          Stopped = true;
-          std::cerr << "server_object| Error in timer: " << error.message() << std::endl;
-          return;
-        }
-
         DateTime t = OpcUa::CurrentDateTime();
         DataValue timeData(t);
         timeData.SetSourceTimestamp(t);
@@ -95,11 +88,6 @@ namespace OpcUa
 
         if (Debug) std::clog << "server_object| Updating server time: " << t << std::endl;
         ServerTime.SetValue(timeData);
-
-        Timer.expires_from_now(boost::posix_time::seconds(1));
-        Timer.async_wait([this](const boost::system::error_code& error) {
-          OnTimer(error);
-        });
       }
       catch (std::exception& ex)
       {

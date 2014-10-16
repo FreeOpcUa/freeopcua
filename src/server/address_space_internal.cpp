@@ -28,6 +28,8 @@ namespace OpcUa
     AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
         : Debug(debug)
     {
+      DataChangeCallbackHandle = 0;
+
       ObjectAttributes attrs;
       attrs.Description = LocalizedText(OpcUa::Names::Root);
       attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -225,28 +227,25 @@ namespace OpcUa
     uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
     {
       if (Debug) std::cout << "AddressSpaceInternal| Set data changes callback for node " << node
-          << " and attribute " << (unsigned)attribute <<  std::endl;
-
+         << " and attribute " << (unsigned)attribute <<  std::endl;
       NodesMap::iterator it = Nodes.find(node);
       if ( it == Nodes.end() )
       {
         if (Debug) std::cout << "AddressSpaceInternal| Node '" << node << "' not found." << std::endl;
-        throw std::runtime_error("NodeID not found");
+        throw std::runtime_error("AddressSpaceInternal | NodeID not found");
       }
-
       AttributesMap::iterator ait = it->second.Attributes.find(attribute);
       if ( ait == it->second.Attributes.end() )
       {
         if (Debug) std::cout << "address_space| Attribute " << (unsigned)attribute << " of node '" << node << "' not found." << std::endl;
         throw std::runtime_error("Attribute not found");
-
       }
 
       uint32_t handle = ++DataChangeCallbackHandle;
       DataChangeCallbackData data;
       data.DataChangeCallback = callback;
       data.ClientHandle = clienthandle;
-      //return 0; //SHould I return 0 or raise exception?
+      ait->second.DataChangeCallbacks[handle] = data;
       ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
       return handle;
     }

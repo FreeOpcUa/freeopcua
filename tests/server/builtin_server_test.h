@@ -13,6 +13,7 @@
 #include "builtin_server_addon.h"
 #include "builtin_server.h"
 #include <opc/common/addons_core/addon_manager.h>
+#include <opc/ua/server/addons/subscription_service.h>
 
 namespace OpcUa
 {
@@ -28,6 +29,7 @@ namespace OpcUa
       opcTcp.Factory.reset(new OpcUa::Server::BuiltingServerFactory());
       opcTcp.ID = OpcUa::Server::OpcUaProtocolAddonID;
       opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsRegistryAddonID);
+      opcTcp.Dependencies.push_back(OpcUa::Server::SubscriptionServiceAddonID);
 
       Common::ParametersGroup application("application");
       application.Parameters.push_back(Common::Parameter("application_name","Test OPC UA Server"));
@@ -50,6 +52,7 @@ namespace OpcUa
       opcTcp.Parameters.Parameters.push_back(Common::Parameter("debug", "0"));
 
       addons.Register(opcTcp);
+
     }
 
   } // namespace Test

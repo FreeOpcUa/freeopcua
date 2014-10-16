@@ -42,7 +42,8 @@ public:
     OpcUa::Test::RegisterBuiltinServerAddon(*Addons);
     //OpcUa::Test::RegisterOpcTcpAddon(*Addons);
     OpcUa::Test::RegisterEndpointsServicesAddon(*Addons);
-
+    Addons->Register(OpcUa::Server::CreateSubscriptionServiceAddon());
+    Addons->Register(OpcUa::Server::CreateAsioAddon());
     Addons->Start();
   }
 

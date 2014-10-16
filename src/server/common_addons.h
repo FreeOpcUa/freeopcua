@@ -49,5 +49,16 @@ namespace OpcUa
     /// configuration file can load third party dynamic addons.
     void LoadConfiguration(const std::string& configDirectoryPath, Common::AddonsManager& addons);
 
+    Common::AddonInformation CreateServicesRegistryAddon();
+    Common::AddonInformation CreateAddressSpaceAddon();
+    Common::AddonInformation CreateStandardNamespaceAddon();
+    Common::AddonInformation CreateEndpointsRegistryAddon();
+    Common::AddonInformation CreateBinaryServerAddon();
+    Common::AddonInformation CreateOpcTcpAsyncAddon();
+    Common::AddonInformation CreateServerObjectAddon();
+    Common::AddonInformation CreateAsioAddon();
+    Common::AddonInformation CreateSubscriptionServiceAddon();
+
+
   }
 }
