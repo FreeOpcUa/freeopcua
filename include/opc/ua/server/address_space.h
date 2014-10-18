@@ -22,6 +22,8 @@ namespace OpcUa
   namespace Server
   {
 
+    typedef void DataChangeCallback(const NodeID& node, AttributeID attribute, DataValue);
+
     class AddressSpace
       : public ViewServices
       , public AttributeServices
@@ -31,7 +33,7 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(AddressSpace);
       
       //Server side methods
-      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback) = 0;
+      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<DataChangeCallback> callback) = 0;
       virtual void DeleteDataChangeCallback(uint32_t clienthandle) = 0;
       virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback) = 0;
       //FIXME : SHould we also expose SetValue and GetValue on server side? then we need to lock them ...

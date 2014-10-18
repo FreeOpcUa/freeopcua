@@ -224,7 +224,7 @@ namespace OpcUa
       return value;
     }
 
-    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
+    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback)
     {
       if (Debug) std::cout << "AddressSpaceInternal| Set data changes callback for node " << node
          << " and attribute " << (unsigned)attribute <<  std::endl;
@@ -243,8 +243,7 @@ namespace OpcUa
 
       uint32_t handle = ++DataChangeCallbackHandle;
       DataChangeCallbackData data;
-      data.DataChangeCallback = callback;
-      data.ClientHandle = clienthandle;
+      data.Callback = callback;
       ait->second.DataChangeCallbacks[handle] = data;
       ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
       return handle;
@@ -305,7 +304,7 @@ namespace OpcUa
           //call registered callback
           for (auto pair : ait->second.DataChangeCallbacks)
           {
-            pair.second.DataChangeCallback(pair.second.ClientHandle, ait->second.Value);
+            pair.second.Callback(it->first, ait->first, ait->second.Value);
           }
           return StatusCode::Good;
         }

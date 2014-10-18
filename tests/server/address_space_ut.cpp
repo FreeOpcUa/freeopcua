@@ -44,6 +44,17 @@ protected:
     NameSpace.reset();
   }
 
+  OpcUa::NodeID CreateValue()
+  {
+    OpcUa::AddNodesItem item;
+    item.Attributes = OpcUa::VariableAttributes();
+    item.BrowseName = OpcUa::QualifiedName("value");
+    item.Class = OpcUa::NodeClass::Variable;
+    item.ParentNodeId = OpcUa::ObjectID::RootFolder;
+    std::vector<OpcUa::AddNodesResult> newNodesResult = NameSpace->AddNodes({item});
+    return newNodesResult[0].AddedNodeID;
+  }
+
 protected:
   OpcUa::Server::AddressSpace::UniquePtr NameSpace;
 };
@@ -83,4 +94,56 @@ TEST_F(AddressSpace, ReadAttributes)
   const OpcUa::DataValue& result = results[0];
   ASSERT_TRUE(result.Encoding | OpcUa::DATA_VALUE);
   EXPECT_EQ(result.Value, OpcUa::QualifiedName(OpcUa::Names::Root));
+}
+
+TEST_F(AddressSpace, CallsDataChangeCallbackOnWrite)
+{
+  OpcUa::NodeID valueId = CreateValue();
+  OpcUa::NodeID callbackID;
+  OpcUa::AttributeID callbackAttr;
+  OpcUa::DataValue callbackValue;
+  bool callbackCalled = false;
+  unsigned callbackHandle = NameSpace->AddDataChangeCallback(valueId, OpcUa::AttributeID::VALUE, [&](const OpcUa::NodeID& id, OpcUa::AttributeID attr, const OpcUa::DataValue& value){
+    callbackID = id;
+    callbackAttr = attr;
+    callbackValue = value;
+    callbackCalled = true;
+  });
+
+  EXPECT_NE(callbackHandle, 0);
+
+  OpcUa::WriteValue value;
+  value.Attribute = OpcUa::AttributeID::VALUE;
+  value.Node = valueId;
+  value.Data = 10;
+  std::vector<OpcUa::StatusCode> result = NameSpace->Write({value});
+  ASSERT_EQ(result.size(), 1);
+  EXPECT_EQ(result[0], OpcUa::StatusCode::Good);
+  EXPECT_EQ(callbackID, valueId);
+  EXPECT_EQ(callbackValue, 10);
+  EXPECT_EQ(callbackAttr, OpcUa::AttributeID::VALUE);
+
+  callbackCalled = false;
+  NameSpace->DeleteDataChangeCallback(callbackHandle);
+  result = NameSpace->Write({value});
+  ASSERT_EQ(result.size(), 1);
+  EXPECT_EQ(result[0], OpcUa::StatusCode::Good);
+  ASSERT_FALSE(callbackCalled);
+}
+
+TEST_F(AddressSpace, ValueCallbackIsCalled)
+{
+  OpcUa::NodeID valueId = CreateValue();
+  OpcUa::StatusCode code = NameSpace->SetValueCallback(valueId, OpcUa::AttributeID::VALUE, [](){
+    return OpcUa::DataValue(10);
+  });
+
+  ASSERT_EQ(code, OpcUa::StatusCode::Good);
+
+  OpcUa::ReadParameters readParams;
+  readParams.AttributesToRead.push_back(OpcUa::AttributeValueID(valueId, OpcUa::AttributeID::VALUE));
+  std::vector<OpcUa::DataValue> result = NameSpace->Read(readParams);
+  ASSERT_EQ(result.size(), 1);
+  EXPECT_TRUE(result[0].Encoding & OpcUa::DATA_VALUE);
+  EXPECT_EQ(result[0].Value, 10);
 }

@@ -188,9 +188,10 @@ namespace OpcUa
       else
       {
         if (Debug) std::cout << "SubscriptionService| Subscribing to data chanes in the address space." << std::endl;
-        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(result.MonitoredItemID), [this] (IntegerID handle, DataValue value) 
+        IntegerID id = result.MonitoredItemID;
+        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, [this, id] (const OpcUa::NodeID& nodeId, OpcUa::AttributeID attr, const DataValue& value)
           {
-            this->DataChangeCallback(handle, value);
+            this->DataChangeCallback(id, value);
           });
 
         if (callbackHandle == 0)
