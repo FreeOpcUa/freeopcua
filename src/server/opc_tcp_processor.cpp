@@ -59,7 +59,14 @@ namespace OpcUa
     OpcTcpMessages::~OpcTcpMessages()
     {
       // This is a hack, we cannot leave subcsriptoins running since they have a cllback to us
-      DeleteAllSubscriptions();
+      try
+      {
+        DeleteAllSubscriptions();
+      }
+      catch (const std::exception& exc)
+      {
+        std::cerr << "Error during stopping OpcTcpMessages. " << exc.what() <<std::endl;
+      }
     }
 
     bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
@@ -684,20 +691,20 @@ namespace OpcUa
           return;
         }
 
-        case CALL_REQUEST:
-        {
-          std::stringstream ss;
-          ss << "opc_tcp_processor| ERROR: Call Request not implemented";
-          return;
-        }
-
         default:
         {
-          std::stringstream ss;
-          ss << std::endl << std::endl ;
-          ss << "opc_tcp_processor| ERROR: Unknown message with id '" << message << "' was recieved." << std::endl;
-          ss << std::endl << std::endl;
-          //throw std::logic_error(ss.str());
+          ServiceFaultResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Header.ServiceResult = StatusCode::BadNotImplemented;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::cerr << "opc_tcp_processor| Sending ServiceFaultResponse to unsupported request of id: " << message << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
         }
       }
     }

@@ -10,8 +10,6 @@
 
 #include "server_options.h"
 
-#include <opc/common/addons_core/config_file.h>
-
 #include <algorithm>
 #include <functional>
 #include <boost/program_options/options_description.hpp>
@@ -74,7 +72,7 @@ namespace OpcUa
       po::options_description desc("Parameters");
       desc.add_options()
         (OPTION_HELP, "Print help message and exit.")
-        (OPTION_CONFIG, po::value<std::string>(), "Path to directory with configuration files.")
+        (OPTION_CONFIG, po::value<std::string>(), (std::string("Path to directory with configuration files. Default: ") + CONFIG_PATH).c_str())
         (OPTION_LOGFILE, po::value<std::string>(), "Set path to the log file. Default 'var/log/opcua/server.log")
         (OPTION_DAEMON, "Start in daemon mode.")
         ;
@@ -91,10 +89,7 @@ namespace OpcUa
       }
 
       IsDaemon = GetDaemonMode(vm);
-      const std::string configDir = GetConfigOptionValue(vm);
-      const Common::Configuration& configuration = Common::ParseConfigurationFiles(configDir);
-      std::transform(configuration.Modules.begin(), configuration.Modules.end(), std::back_inserter(Modules), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
-      Parameters = configuration.Parameters;
+      ConfigDir = GetConfigOptionValue(vm);
       LogFile = ::GetLogFile(vm);
     }
 

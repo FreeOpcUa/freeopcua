@@ -17,7 +17,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    SubscriptionServiceInternal::SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& ioService, bool debug)
+    SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service& ioService, bool debug)
       : io(ioService)
       , AddressSpace(addressspace)
       , Debug(debug)
@@ -41,11 +41,13 @@ namespace OpcUa
     void SubscriptionServiceInternal::DeleteAllSubscriptions()
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
-      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-      std::vector<IntegerID> ids(SubscriptionsMap.size());\
-      std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-      lock.unlock();
+      std::vector<IntegerID> ids(SubscriptionsMap.size());
+      {
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+      }
+
       DeleteSubscriptions(ids);
     }
 
@@ -56,7 +58,7 @@ namespace OpcUa
       std::vector<StatusCode> result;
       for (const IntegerID& subid: subscriptions)
       {
-        std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+        if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
         size_t count = SubscriptionsMap.erase(subid);
         if ( count > 0)
         {
@@ -158,7 +160,11 @@ namespace OpcUa
       std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node);
       if ( queue_it == PublishRequestQueues.end() )
       {
-        std::cout << "SubscriptionService | Error request for publish queue for unknown session" << node << std::endl;
+        std::cout << "SubscriptionService | Error request for publish queue for unknown session: " << node << " queue are available for: ";
+        for ( auto i: PublishRequestQueues ){
+          std::cout << "    " << i.first ;
+        }
+        std::cout << std::endl;
         return false;
       }
       else

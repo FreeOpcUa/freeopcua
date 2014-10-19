@@ -28,6 +28,8 @@ namespace OpcUa
     AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
         : Debug(debug)
     {
+      DataChangeCallbackHandle = 0;
+
       ObjectAttributes attrs;
       attrs.Description = LocalizedText(OpcUa::Names::Root);
       attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -86,13 +88,13 @@ namespace OpcUa
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-      if (Debug) std::cout << "Browsing." << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | Browsing." << std::endl;
       std::vector<ReferenceDescription> result;
       for ( BrowseDescription browseDescription: query.NodesToBrowse)
       {
         if(Debug)
         {
-          std::cout << "Browsing ";
+          std::cout << "AddressSpaceInternal | Browsing ";
           std::cout << " NodeID: '" << browseDescription.NodeToBrowse << "'";
           std::cout << ", ReferenceID: '" << browseDescription.ReferenceTypeID << "'";
           std::cout << ", Direction: " << browseDescription.Direction;
@@ -103,14 +105,14 @@ namespace OpcUa
         NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
         if ( node_it == Nodes.end() )
         {
-          if (Debug) std::cout << "Node not found in the address space." << std::endl;
+          if (Debug) std::cout << "AddressSpaceInternal | Node not found in the address space." << std::endl;
           continue;
         }
 
         if(Debug)
         {
-          std::cout << "Node found in the address space." << std::endl;
-          std::cout << "Finding reference." << std::endl;
+          std::cout << "AddressSpaceInternal | Node found in the address space." << std::endl;
+          std::cout << "AddressSpaceInternal | Finding reference." << std::endl;
         }
 
         std::copy_if(node_it->second.References.begin(), node_it->second.References.end(), std::back_inserter(result),
@@ -209,10 +211,10 @@ namespace OpcUa
         {
           if ( attrit->second.GetValueCallback )
           {
-            if (Debug) std::cout << "A callback is set for this value, calling callback" << std::endl;
+            if (Debug) std::cout << "AddressSpaceInternal | A callback is set for this value, calling callback" << std::endl;
             return attrit->second.GetValueCallback();
           }
-          if (Debug) std::cout << "No callback is set for this value returning stored value" << std::endl;
+          if (Debug) std::cout << "AddressSpaceInternal | No callback is set for this value returning stored value" << std::endl;
           return attrit->second.Value;
         }
       }
@@ -222,36 +224,39 @@ namespace OpcUa
       return value;
     }
 
-    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
+    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback)
     {
+      if (Debug) std::cout << "AddressSpaceInternal| Set data changes callback for node " << node
+         << " and attribute " << (unsigned)attribute <<  std::endl;
       NodesMap::iterator it = Nodes.find(node);
-      if ( it != Nodes.end() )
+      if ( it == Nodes.end() )
       {
-        AttributesMap::iterator ait = it->second.Attributes.find(attribute);
-        if ( ait != it->second.Attributes.end() )
-        {
-          static uint32_t handle = 0;
-          ++handle;
-          DataChangeCallbackData data;
-          data.DataChangeCallback = callback;
-          data.ClientHandle = clienthandle;
-          ait->second.DataChangeCallbacks[handle] = data;
-          ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
-          return handle;
-        }
+        if (Debug) std::cout << "AddressSpaceInternal| Node '" << node << "' not found." << std::endl;
+        throw std::runtime_error("AddressSpaceInternal | NodeID not found");
       }
-      //return 0; //SHould I return 0 or raise exception?
-      throw std::runtime_error("NodeID or attribute not found");
+      AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+      if ( ait == it->second.Attributes.end() )
+      {
+        if (Debug) std::cout << "address_space| Attribute " << (unsigned)attribute << " of node '" << node << "' not found." << std::endl;
+        throw std::runtime_error("Attribute not found");
+      }
+
+      uint32_t handle = ++DataChangeCallbackHandle;
+      DataChangeCallbackData data;
+      data.Callback = callback;
+      ait->second.DataChangeCallbacks[handle] = data;
+      ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
+      return handle;
     }
 
     void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle )
     {
-      std::cout << "Deleting callback with client id. " << serverhandle << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | Deleting callback with client id. " << serverhandle << std::endl;
 
       ClientIDToAttributeMapType::iterator it = ClientIDToAttributeMap.find(serverhandle);
       if ( it == ClientIDToAttributeMap.end() )
       {
-        std::cout << "Error, request to delete a callback using unknown handle" << serverhandle << std::endl;
+        std::cout << "AddressSpaceInternal | Error, request to delete a callback using unknown handle: " << serverhandle << std::endl;
         return;
       }
 
@@ -262,12 +267,12 @@ namespace OpcUa
         if ( ait != nodeit->second.Attributes.end() )
         {
           size_t nb = ait->second.DataChangeCallbacks.erase(serverhandle);
-          std::cout << "deleted " << nb << " callbacks" << std::endl;
+          if (Debug) std::cout << "AddressSpaceInternal | deleted " << nb << " callbacks" << std::endl;
           ClientIDToAttributeMap.erase(serverhandle);
           return;
         }
       }
-      throw std::runtime_error("NodeID or attribute nor found");
+      throw std::runtime_error("AddressSpaceInternal | NodeID or attribute nor found");
     }
 
     StatusCode AddressSpaceInMemory::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
@@ -299,7 +304,7 @@ namespace OpcUa
           //call registered callback
           for (auto pair : ait->second.DataChangeCallbacks)
           {
-            pair.second.DataChangeCallback(pair.second.ClientHandle, ait->second.Value);
+            pair.second.Callback(it->first, ait->first, ait->second.Value);
           }
           return StatusCode::Good;
         }
@@ -309,25 +314,24 @@ namespace OpcUa
 
     bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
     {
-      if (Debug)
-        std::cout << "Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
 
       if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
       {
-        if (Debug) std::cout << "Reference in different direction." << std::endl;
+        if (Debug) std::cout << "AddressSpaceInternal | Reference in different direction." << std::endl;
         return false;
       }
       if (desc.ReferenceTypeID != ObjectID::Null && !IsSuitableReferenceType(reference, desc.ReferenceTypeID, desc.IncludeSubtypes))
       {
-        if (Debug) std::cout << "Reference has wrong type." << std::endl;
+        if (Debug) std::cout << "AddressSpaceInternal | Reference has wrong type." << std::endl;
         return false;
       }
       if (desc.NodeClasses && (desc.NodeClasses & static_cast<int32_t>(reference.TargetNodeClass)) == 0)
       {
-        if (Debug) std::cout << "Reference has wrong class." << std::endl;
+        if (Debug) std::cout << "AddressSpaceInternal | Reference has wrong class." << std::endl;
         return false;
       }
-      if (Debug) std::cout << "Reference suitable." << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | Reference suitable." << std::endl;
       return true;
     }
 
@@ -369,11 +373,11 @@ namespace OpcUa
     AddNodesResult AddressSpaceInMemory::AddNode( const AddNodesItem& item )
     {
       AddNodesResult result;
-      if (Debug) std::cout << "address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | address_space| Adding new node id='" << item.RequestedNewNodeID << "' name=" << item.BrowseName.Name << std::endl;
 
       if (!Nodes.empty() && item.RequestedNewNodeID != ObjectID::Null && Nodes.find(item.RequestedNewNodeID) != Nodes.end())
       {
-        std::cout << "Error: NodeID '"<< item.RequestedNewNodeID << "' allready exist: " << std::endl;
+        std::cerr << "AddressSpaceInternal | Error: NodeID '"<< item.RequestedNewNodeID << "' allready exist: " << std::endl;
         result.Status = StatusCode::BadNodeIdExists;
         return result;
       }
@@ -384,7 +388,7 @@ namespace OpcUa
         parent_node_it = Nodes.find(item.ParentNodeId);
         if ( parent_node_it == Nodes.end() )
         {
-          std::cout << "Error: Parent node '"<< item.ParentNodeId << "'does not exist" << std::endl;
+          std::cout << "AddressSpaceInternal | Error: Parent node '"<< item.ParentNodeId << "'does not exist" << std::endl;
           result.Status = StatusCode::BadParentNodeIdInvalid;
           return result;
         }
@@ -437,7 +441,7 @@ namespace OpcUa
 
       result.Status = StatusCode::Good;
       result.AddedNodeID = resultID;
-      if (Debug) std::cout << "address_space| node added." << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | node added." << std::endl;
       return result;
     }
 

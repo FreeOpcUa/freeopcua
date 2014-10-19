@@ -80,12 +80,13 @@ namespace OpcUa
     //The Read and Write methods read or write attributes of the node
     //FIXME: add possibility to read and write several nodes at once
     Variant GetAttribute(AttributeID attr) const;
-    StatusCode SetAttribute(AttributeID attr, const Variant &val) const;
+    StatusCode SetAttribute(AttributeID attr, const DataValue &dval) const;
     //std::vector<StatusCode> WriteAttrs(OpcUa::AttributeID attr, const Variant &val);
     
     //Helper method to get/set VALUE attribute of a node (Not all nodes support VALUE attribute)
     Variant GetValue() const;
-    StatusCode SetValue(const Variant& value) const;
+    StatusCode SetValue(const Variant& val, const DateTime& = CurrentDateTime()) const;
+    StatusCode SetValue(const DataValue& dval) const;
 
     Variant GetDataType() const;
 

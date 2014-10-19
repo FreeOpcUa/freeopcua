@@ -81,22 +81,28 @@ namespace OpcUa
     }
   }
 
-  StatusCode Node::SetAttribute(const AttributeID attr, const Variant &value) const
+  StatusCode Node::SetAttribute(AttributeID attr, const DataValue &dval) const
   {
     WriteValue attribute;
     attribute.Node = Id;
     attribute.Attribute = attr;
-    DataValue dval(value);
-    dval.SetSourceTimestamp(CurrentDateTime());
     attribute.Data = dval;
     std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<WriteValue>(1, attribute));
     return codes.front();
   }
 
-  StatusCode Node::SetValue(const Variant& value) const
+  StatusCode Node::SetValue(const Variant& val, const DateTime& dt) const
   {
-    return SetAttribute(AttributeID::VALUE, value);
+    DataValue dval(val);
+    dval.SetSourceTimestamp(dt);
+    return SetAttribute(AttributeID::VALUE, dval);
   }
+
+  StatusCode Node::SetValue(const DataValue &dval) const
+  {
+    return SetAttribute(AttributeID::VALUE, dval);
+  }
+
 
   std::vector<Node> Node::GetChildren(const ReferenceID& refid) const
   {

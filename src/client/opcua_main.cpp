@@ -14,7 +14,6 @@
 #include <opc/ua/client/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/config_file.h>
-#include <opc/common/application.h>
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/node_classes.h>
@@ -740,15 +739,16 @@ int main(int argc, char** argv)
     const std::string configDir = cmd.GetConfigDir();
     const Common::Configuration& config = Common::ParseConfigurationFiles(configDir);
 
-    OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
     std::vector<Common::AddonInformation> infos(config.Modules.size());
     std::transform(config.Modules.begin(), config.Modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
-    application->Start(infos);
-    const Common::AddonsManager& addons = application->GetAddonsManager();
 
-    Process(cmd, addons);
-
-    application->Stop();
+    Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+    std::for_each(infos.begin(), infos.end(), [&manager](const Common::AddonInformation& addon){
+      manager->Register(addon);
+    });
+    manager->Start();
+    Process(cmd, *manager);
+    manager->Stop();
     return 0;
   }
   catch (const std::exception& exc)

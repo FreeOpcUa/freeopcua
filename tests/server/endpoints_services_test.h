@@ -14,7 +14,7 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/endpoints_services.h>
-
+#include <src/server/common_addons.h>
 namespace OpcUa
 {
   namespace Test
@@ -22,10 +22,7 @@ namespace OpcUa
 
     inline void RegisterEndpointsServicesAddon(Common::AddonsManager& addons)
     {
-      Common::AddonInformation endpoints;
-      endpoints.Factory.reset(new OpcUa::Server::EndpointsRegistryAddonFactory());
-      endpoints.ID = OpcUa::Server::EndpointsRegistryAddonID;
-      endpoints.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonID);
+      Common::AddonInformation endpoints = Server::CreateEndpointsRegistryAddon();
       addons.Register(endpoints);
     }
 

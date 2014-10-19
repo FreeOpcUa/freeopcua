@@ -476,6 +476,7 @@ namespace
       if (Debug) {std::cout << "binary_client| Publish -->" << std::endl << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest); //Should parameter not be const?
       request.Header = CreateRequestHeader();
+      request.Header.Timeout = 0; //We do not want the request to timeout!
 
       ResponseCallback responseCallback = [this](std::vector<char> buffer){
         if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server"  << std::endl;}
@@ -557,6 +558,14 @@ private:
       ResponseHeader header;
       in >> header;
       if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
+
+      if (id == SERVICE_FAULT) 
+      {
+        std::cerr << std::endl;
+        std::cerr << "Receive ServiceFault from Server with StatusCode " << (uint32_t) header.ServiceResult << std::cout ;//FIXME merge ToString from treeww
+        std::cerr << std::endl;
+        return;
+      }
 
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
       if (callbackIt == Callbacks.end())

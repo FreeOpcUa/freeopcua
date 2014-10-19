@@ -208,6 +208,9 @@ namespace
 
   void OpcUaProtocolAddon::Stop()
   {
+    Protocol.reset();
+    TcpServer.reset();
+    InternalServer.reset();
   }
 
   void OpcUaProtocolAddon::ApplyAddonParameters(const Common::AddonParameters& params)

@@ -88,6 +88,8 @@ namespace OpcUa
 
     DELETE_REFERENCES_REQUEST  = 0x1fa, //506;
     DELETE_REFERENCES_RESPONSE = 0x1fd, //509;
+
+    SERVICE_FAULT = 0x18d, //397;
   };
 
   struct NodeID;

@@ -37,27 +37,8 @@ namespace
 
   bool IsAddonNotStarted(const std::pair<Common::AddonID, AddonData>& addonData)
   {
-    return addonData.second.Addon == std::shared_ptr<Common::Addon>();
+    return addonData.second.Addon == Common::Addon::SharedPtr();
   }
-
-  void StopAddon(const std::pair<Common::AddonID, AddonData>& addonPair)
-  {
-    if (!addonPair.second.Addon)
-    {
-      return;
-    }
-    try
-    {
-      std::clog << "Stopping addon '" << addonPair.second.ID << "'" <<  std::endl;
-      addonPair.second.Addon->Stop();
-      std::clog << "Addon '" << addonPair.second.ID << "' successfuly stopped." <<  std::endl;
-    }
-    catch (const std::exception& exc)
-    {
-      std::cerr << "Failed to stop addon '" << addonPair.second.ID << "': " << exc.what() <<  std::endl;
-    }
-  }
-
 
   class AddonsManagerImpl : public Common::AddonsManager
   {
@@ -152,12 +133,24 @@ namespace
   private:
     void StopAddons()
     {
-      // TODO lock manager
-      if (!Addons.empty())
+      if (Addons.empty())
+          return;
+
+      while (AddonData* addonData = GetNextAddonDataForStop())
       {
-        std::for_each(Addons.begin(), Addons.end(), StopAddon);
-        Addons.clear();
+        try
+        {
+          std::cout << "Stopping addon '" << addonData->ID << "'" <<  std::endl;
+          addonData->Addon->Stop();
+          addonData->Addon.reset();
+          std::cout << "Addon '" << addonData->ID << "' successfully stopped." <<  std::endl;
+        }
+        catch (const std::exception& exc)
+        {
+          std::cerr << "Failed to initialize addon '" << addonData->ID << "': "<< exc.what() <<  std::endl;
+        }
       }
+      Addons.clear();
     }
 
     bool DoStart()
@@ -195,6 +188,19 @@ namespace
      return 0;
    }
 
+
+   AddonData* GetNextAddonDataForStop()
+   {
+     for (AddonList::iterator it = Addons.begin(); it != Addons.end(); ++it)
+     {
+       if (IsAddonStarted(it->second) && IsAllDependentAddonsStopped(it->first))
+       {
+         return &it->second;
+       }
+     }
+     return 0;
+   }
+
    bool IsAddonStarted(const AddonData& addonData) const
    {
      return static_cast<bool>(addonData.Addon);
@@ -211,6 +217,25 @@ namespace
        }
 
        if (!IsAddonStarted(addonIt->second))
+       {
+         return false;
+       }
+     }
+     return true;
+   }
+
+   bool IsAllDependentAddonsStopped(const Common::AddonID& id) const
+   {
+     for (const AddonList::value_type& addonIt : Addons)
+     {
+       // Skip alreay sopped addons.
+       if (!IsAddonStarted(addonIt.second))
+       {
+         continue;
+       }
+       // If current addon depends on passed.
+       const std::vector<Common::AddonID>& deps = addonIt.second.Dependencies;
+       if (std::find(deps.begin(), deps.end(), id) != deps.end())
        {
          return false;
        }
