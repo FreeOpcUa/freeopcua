@@ -17,7 +17,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    SubscriptionServiceInternal::SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& ioService, bool debug)
+    SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service& ioService, bool debug)
       : io(ioService)
       , AddressSpace(addressspace)
       , Debug(debug)
@@ -41,11 +41,13 @@ namespace OpcUa
     void SubscriptionServiceInternal::DeleteAllSubscriptions()
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
-      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-      std::vector<IntegerID> ids(SubscriptionsMap.size());\
-      std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
-      lock.unlock();
+      std::vector<IntegerID> ids(SubscriptionsMap.size());
+      {
+        boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+      }
+
       DeleteSubscriptions(ids);
     }
 

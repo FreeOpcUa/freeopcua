@@ -85,7 +85,8 @@ namespace OpcUa
         std::list<MonitoredItems> MonitoredItemsTriggered; 
         std::list<EventFieldList> EventTriggered; 
         boost::asio::io_service& io;
-        boost::asio::deadline_timer timer;
+        boost::asio::deadline_timer Timer;
+        bool TimerStopped = false;
         uint32_t LifeTimeCount;
         MonitoredEventsMap MonitoredEvents;
 

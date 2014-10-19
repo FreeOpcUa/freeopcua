@@ -9,15 +9,15 @@ namespace OpcUa
 
     InternalSubscription::InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> callback)
       : Service(service)
-        , AddressSpace(Service.GetAddressSpace())
-        , Data(data)
-        , CurrentSession(SessionAuthenticationToken)
-        , Callback(callback)
-        , io(service.GetIOService())
-        , timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
-        , LifeTimeCount(data.RevisedLifetimeCount)
+      , AddressSpace(Service.GetAddressSpace())
+      , Data(data)
+      , CurrentSession(SessionAuthenticationToken)
+      , Callback(callback)
+      , io(service.GetIOService())
+      , Timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
+      , LifeTimeCount(data.RevisedLifetimeCount)
     {
-      timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
     
     InternalSubscription::~InternalSubscription()
@@ -28,7 +28,8 @@ namespace OpcUa
 
     void InternalSubscription::Stop()
     {
-      timer.cancel();
+      if (!TimerStopped)
+        Timer.cancel();
     }
 
     void InternalSubscription::DeleteAllMonitoredItems()
@@ -56,6 +57,7 @@ namespace OpcUa
     {
       if ( error || HasExpired() )
       {
+        TimerStopped = true;
         if (Debug) { std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
@@ -76,8 +78,9 @@ namespace OpcUa
           }
          }
       }
-      timer.expires_at(timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
-      timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      TimerStopped = false;
+      Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
+      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
 
     bool InternalSubscription::HasPublishResult()
@@ -169,6 +172,7 @@ namespace OpcUa
 
     CreateMonitoredItemsResult InternalSubscription::CreateMonitoredItem(const MonitoredItemRequest& request)
     {
+      if (Debug) std::cout << "SubscriptionService| Creating monitored item." << std::endl;
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       CreateMonitoredItemsResult result;
@@ -176,19 +180,23 @@ namespace OpcUa
       result.MonitoredItemID = ++LastMonitoredItemID;
       if (request.ItemToMonitor.Attribute == AttributeID::EVENT_NOTIFIER )
       {
+        if (Debug) std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl;
         //client want to subscribe to events
         //FIXME: check attribute EVENT notifier is set for the node
         MonitoredEvents[request.ItemToMonitor.Node] = result.MonitoredItemID;
       }
       else
       {
-        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, IntegerID(result.MonitoredItemID), [this] (IntegerID handle, DataValue value) 
+        if (Debug) std::cout << "SubscriptionService| Subscribing to data chanes in the address space." << std::endl;
+        IntegerID id = result.MonitoredItemID;
+        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, [this, id] (const OpcUa::NodeID& nodeId, OpcUa::AttributeID attr, const DataValue& value)
           {
-            this->DataChangeCallback(handle, value);
+            this->DataChangeCallback(id, value);
           });
 
         if (callbackHandle == 0)
         {
+          if (Debug) std::cout << "SubscriptionService| ERROR: address returned zero handle." << std::endl;
           --LastMonitoredItemID; //revert increment 
           result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
           return result;

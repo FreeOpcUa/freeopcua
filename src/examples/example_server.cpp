@@ -33,7 +33,7 @@ class SubClient : public SubscriptionClient
 
 int main(int argc, char** argv)
 {
-  const bool debug = true;
+  const bool debug = false;
   OpcUa::OPCUAServer server(debug);
 
   server.SetEndpoint("opc.tcp://localhost:4841");

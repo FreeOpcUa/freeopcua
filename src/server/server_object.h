@@ -22,7 +22,7 @@
 #include <opc/ua/services/services.h>
 #include <opc/ua/model.h>
 
-#include <boost/asio/deadline_timer.hpp>
+#include "timer.h"
 
 namespace boost
 {
@@ -43,19 +43,20 @@ namespace OpcUa
       DEFINE_CLASS_POINTERS(ServerObject);
 
     public:
-      ServerObject(Services::SharedPtr services, boost::asio::io_service& io);
+      ServerObject(Services::SharedPtr services, boost::asio::io_service& io, bool debug);
       ~ServerObject();
 
     private:
       Model::Object CreateServerObject(const Services::SharedPtr& services) const;
-      void OnTimer(const boost::system::error_code& error);
+      void UpdateTime();
 
     private:
       Services::SharedPtr Server;
       boost::asio::io_service& Io;
+      bool Debug = false;
       Model::Object Instance;
       Model::Variable ServerTime;
-      boost::asio::deadline_timer Timer;
+      PeriodicTimer Timer;
     };
 
   }

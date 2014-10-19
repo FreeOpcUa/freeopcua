@@ -70,7 +70,8 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/opc_tcp_async.h \
 	include/opc/ua/server/opcuaserver.h \
 	include/opc/ua/server/services_registry.h \
-	include/opc/ua/server/standard_namespace.h
+  include/opc/ua/server/standard_namespace.h \
+  include/opc/ua/server/subscription_service.h
 	
 addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/asio_addon.h \
@@ -80,6 +81,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/services_registry.h \
 	include/opc/ua/server/addons/standard_namespace.h \
+  include/opc/ua/server/addons/subscription_service.h \
 	include/opc/ua/server/addons/xml_ns.h
 
 libopcuaserver_la_SOURCES = \
@@ -88,6 +90,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/address_space_addon.h \
 	src/server/address_space_internal.cpp \
 	src/server/address_space_internal.h \
+  src/server/common_addons.cpp \
+  src/server/common_addons.h \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_parameters.h \
 	src/server/endpoints_services_addon.cpp \
@@ -109,6 +113,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/server_object_addon.h \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
+  src/server/subscription_service_addon.cpp \
 	src/server/subscription_service_internal.h \
 	src/server/subscription_service_internal.cpp \
 	src/server/standard_namespace_addon.cpp \
@@ -274,6 +279,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
   include/opc/ua/node.h \
+  include/opc/ua/model.h \
   include/opc/ua/socket_channel.h \
   include/opc/ua/subscription.h
 
@@ -287,7 +293,6 @@ servicesinclude_HEADERS = \
 
 commondir = $(opcincludedir)/common
 common_HEADERS = \
-                  include/opc/common/application.h \
                   include/opc/common/class_pointers.h \
                   include/opc/common/errors.h \
                   include/opc/common/exception.h \
@@ -308,7 +313,6 @@ addonscore_HEADERS = \
                   include/opc/common/addons_core/errors.h
 
 libopcuacore_la_SOURCES = \
-                  src/core/common/application.cpp \
                   src/core/common/thread.cpp \
                   src/core/common/addons_core/addon_manager.cpp \
                   src/core/common/addons_core/config_file.cpp \
@@ -321,6 +325,7 @@ libopcuacore_la_SOURCES = \
                   src/core/common/object_id.cpp \
                   src/core/common/value.cpp \
                   src/core/event.cpp \
+                  src/core/model_impl.h \
                   src/core/model_node.cpp \
                   src/core/model_object.cpp \
                   src/core/model_object_type.cpp \

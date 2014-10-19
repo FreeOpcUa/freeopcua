@@ -14,10 +14,10 @@
 #include <opc/ua/client/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/common/addons_core/config_file.h>
-#include <opc/common/application.h>
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/node_classes.h>
+#include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/services/services.h>
 
 #include <stdexcept>
@@ -354,6 +354,7 @@ namespace
     description.ResultMask = OpcUa::REFERENCE_ALL;
 
     OpcUa::NodesQuery query;
+    query.View.Timestamp = OpcUa::CurrentDateTime();
     query.NodesToBrowse.push_back(description);
     query.MaxReferenciesPerNode = 100;
 
@@ -382,7 +383,11 @@ namespace
     template <typename T>
     typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& vals)
     {
-      for (auto val : vals) std::cout << val << " ";
+      for (auto val : vals)
+      {
+        (*this)(val);
+        std::cout << " ";
+      }
     }
 
     template <typename T>
@@ -394,6 +399,26 @@ namespace
     void operator()(char val)
     {
       std::cout << val;
+    }
+
+    void operator() (const OpcUa::DiagnosticInfo& info)
+    {
+      std::cout << "!!!TODO!!!" << std::endl;
+    }
+
+    void operator() (const OpcUa::Variant& info)
+    {
+      std::cout << "!!!TODO!!!" << std::endl;
+    }
+
+    void operator() (const OpcUa::LocalizedText& text)
+    {
+      std::cout << text.Text << std::endl;
+    }
+
+    void operator() (const OpcUa::StatusCode& code)
+    {
+      std::cout << OpcUa::ToString(code) << std::endl;
     }
   };
 
@@ -495,6 +520,10 @@ namespace
 
 
       case VariantType::DATE_TIME:
+      {
+        std::cout << "DateTime: " << OpcUa::ToString(var.As<DateTime>()) << std::endl;
+        break;
+      }
       case VariantType::GUID:
       case VariantType::BYTE_STRING:
       case VariantType::XML_ELEMENT:
@@ -508,8 +537,7 @@ namespace
       default:
         throw std::logic_error("Unknown variant type.");
     }
-    std::cout << "TODO: !!!! REFACTORED!!!!" << std::endl;
-//    var.Visit(printer); //TODO
+    var.Visit(printer);
     std::cout << std::endl;
   }
 
@@ -711,15 +739,16 @@ int main(int argc, char** argv)
     const std::string configDir = cmd.GetConfigDir();
     const Common::Configuration& config = Common::ParseConfigurationFiles(configDir);
 
-    OpcUa::Application::UniquePtr application = OpcUa::CreateApplication();
     std::vector<Common::AddonInformation> infos(config.Modules.size());
     std::transform(config.Modules.begin(), config.Modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
-    application->Start(infos);
-    const Common::AddonsManager& addons = application->GetAddonsManager();
 
-    Process(cmd, addons);
-
-    application->Stop();
+    Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+    std::for_each(infos.begin(), infos.end(), [&manager](const Common::AddonInformation& addon){
+      manager->Register(addon);
+    });
+    manager->Start();
+    Process(cmd, *manager);
+    manager->Stop();
     return 0;
   }
   catch (const std::exception& exc)

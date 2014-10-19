@@ -50,7 +50,7 @@ namespace OpcUa
     
     struct DataChangeCallbackData
     {
-      std::function<void(const IntegerID&, const DataValue&)> DataChangeCallback;
+      std::function<Server::DataChangeCallback> Callback;
       IntegerID ClientHandle;
     };
 
@@ -93,8 +93,15 @@ namespace OpcUa
         virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values);
 
         //Server side methods
-        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback);
+
+        /// @brief Add callback which will be called when values of attribute is changed.
+        /// @return handle of a callback which should be passed to the DeletDataChangeCallabck
+        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback);
+
+        /// @bried Delete data change callback assosioated with handle.
         void DeleteDataChangeCallback(uint32_t serverhandle);
+
+        /// @brief Set callback which will be called to read new value of the attribue.
         StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
 
       private:
@@ -115,6 +122,7 @@ namespace OpcUa
         NodesMap Nodes;
         ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
         uint64_t MaxNodeIDNum = 0;
+        std::atomic<uint32_t> DataChangeCallbackHandle;
     };
   }
 

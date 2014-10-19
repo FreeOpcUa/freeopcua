@@ -45,7 +45,7 @@ namespace OpcUa
     class SubscriptionServiceInternal : public Server::SubscriptionService
     {
       public:
-        SubscriptionServiceInternal(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service& io, bool debug);
+        SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service& io, bool debug);
 
        ~SubscriptionServiceInternal();
 
@@ -73,16 +73,9 @@ namespace OpcUa
         SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
         uint32_t LastSubscriptionID = 2;
         std::map<NodeID, uint32_t> PublishRequestQueues;
-        std::thread service_thread;
     };
 
 
   }
-
-  namespace Server
-  {
-    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, bool debug);
-  }
-
 
 }

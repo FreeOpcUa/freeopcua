@@ -40,8 +40,6 @@ namespace OpcUa
     public: // NodeManagementServices
       virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items);
       virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items);
-      virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value); //FIXME: remove
-      virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference); //FIXME: remove
 
     public: // ViewServices
       virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const;
@@ -53,7 +51,7 @@ namespace OpcUa
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
     public: // Server internal methods
-      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback);
+      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback);
       virtual void DeleteDataChangeCallback(uint32_t clienthandle);
       virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
 

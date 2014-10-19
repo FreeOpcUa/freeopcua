@@ -59,7 +59,14 @@ namespace OpcUa
     OpcTcpMessages::~OpcTcpMessages()
     {
       // This is a hack, we cannot leave subcsriptoins running since they have a cllback to us
-      DeleteAllSubscriptions();
+      try
+      {
+        DeleteAllSubscriptions();
+      }
+      catch (const std::exception& exc)
+      {
+        std::cerr << "Error during stopping OpcTcpMessages. " << exc.what() <<std::endl;
+      }
     }
 
     bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)

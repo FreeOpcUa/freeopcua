@@ -166,7 +166,14 @@ namespace
     async_read(Socket, buffer(Buffer), transfer_exactly(GetHeaderSize()),
       [this](const boost::system::error_code& error, std::size_t bytes_transferred)
       {
-        ProcessHeader(error, bytes_transferred);
+        try
+        {
+          ProcessHeader(error, bytes_transferred);
+        }
+        catch (const std::exception& exc)
+        {
+          std::cerr << "opc_tcp_async| Failed to process message header: " << exc.what() << std::endl;
+        }
       }
     );
   }
@@ -331,22 +338,29 @@ namespace
 
   void OpcTcpServer::Accept()
   {
-    std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
-    acceptor.listen();
-    acceptor.async_accept(socket, [this](boost::system::error_code errorCode){
-      if (!errorCode)
-      {
-        std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
-        std::shared_ptr<OpcTcpConnection> connection = std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode);
-        Clients.insert(connection);
-        connection->Start();
-      }
-      else
-      {
-        std::cout << "opc_tcp_async| Error during client connection: "<< errorCode.message() << std::endl;
-      }
-      Accept();
-    });
+    try
+    {
+      std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
+      acceptor.listen();
+      acceptor.async_accept(socket, [this](boost::system::error_code errorCode){
+        if (!errorCode)
+        {
+          std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
+          std::shared_ptr<OpcTcpConnection> connection = std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode);
+          Clients.insert(connection);
+          connection->Start();
+        }
+        else
+        {
+          std::cout << "opc_tcp_async| Error during client connection: "<< errorCode.message() << std::endl;
+        }
+        Accept();
+      });
+    }
+    catch (const std::exception& exc)
+    {
+      std::cout << "opc_tcp_async| Error accepting client connection: "<< exc.what() << std::endl;
+    }
   }
 
   void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)

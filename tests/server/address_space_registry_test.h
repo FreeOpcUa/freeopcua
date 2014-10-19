@@ -14,7 +14,7 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/address_space.h>
 #include <opc/ua/server/addons/services_registry.h>
-
+#include <src/server/common_addons.h>
 
 namespace OpcUa
 {
@@ -23,10 +23,7 @@ namespace OpcUa
 
     inline void RegisterAddressSpace(Common::AddonsManager& addons)
     {
-      Common::AddonInformation config;
-      config.Factory.reset(new OpcUa::Server::AddressSpaceAddonFactory());
-      config.ID = OpcUa::Server::AddressSpaceRegistryAddonID;
-      config.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonID);
+      Common::AddonInformation config = Server::CreateAddressSpaceAddon();
       addons.Register(config);
     }
 

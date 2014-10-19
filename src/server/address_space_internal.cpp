@@ -28,6 +28,8 @@ namespace OpcUa
     AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
         : Debug(debug)
     {
+      DataChangeCallbackHandle = 0;
+
       ObjectAttributes attrs;
       attrs.Description = LocalizedText(OpcUa::Names::Root);
       attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -222,26 +224,29 @@ namespace OpcUa
       return value;
     }
 
-    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, const IntegerID& clienthandle, std::function<void(IntegerID, DataValue)> callback )
+    uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback)
     {
+      if (Debug) std::cout << "AddressSpaceInternal| Set data changes callback for node " << node
+         << " and attribute " << (unsigned)attribute <<  std::endl;
       NodesMap::iterator it = Nodes.find(node);
-      if ( it != Nodes.end() )
+      if ( it == Nodes.end() )
       {
-        AttributesMap::iterator ait = it->second.Attributes.find(attribute);
-        if ( ait != it->second.Attributes.end() )
-        {
-          static uint32_t handle = 0;
-          ++handle;
-          DataChangeCallbackData data;
-          data.DataChangeCallback = callback;
-          data.ClientHandle = clienthandle;
-          ait->second.DataChangeCallbacks[handle] = data;
-          ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
-          return handle;
-        }
+        if (Debug) std::cout << "AddressSpaceInternal| Node '" << node << "' not found." << std::endl;
+        throw std::runtime_error("AddressSpaceInternal | NodeID not found");
       }
-      //return 0; //SHould I return 0 or raise exception?
-      throw std::runtime_error("AddressSpaceInternal | NodeID or attribute not found");
+      AttributesMap::iterator ait = it->second.Attributes.find(attribute);
+      if ( ait == it->second.Attributes.end() )
+      {
+        if (Debug) std::cout << "address_space| Attribute " << (unsigned)attribute << " of node '" << node << "' not found." << std::endl;
+        throw std::runtime_error("Attribute not found");
+      }
+
+      uint32_t handle = ++DataChangeCallbackHandle;
+      DataChangeCallbackData data;
+      data.Callback = callback;
+      ait->second.DataChangeCallbacks[handle] = data;
+      ClientIDToAttributeMap[handle] = NodeAttribute(node, attribute);
+      return handle;
     }
 
     void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle )
@@ -299,7 +304,7 @@ namespace OpcUa
           //call registered callback
           for (auto pair : ait->second.DataChangeCallbacks)
           {
-            pair.second.DataChangeCallback(pair.second.ClientHandle, ait->second.Value);
+            pair.second.Callback(it->first, ait->first, ait->second.Value);
           }
           return StatusCode::Good;
         }
