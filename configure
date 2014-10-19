@@ -2332,6 +2332,13 @@ if test "${with_opcuaserver+set}" = set; then :
               { $as_echo "$as_me:${as_lineno-$LINENO}: opcuaserver path: $with_opcuaserver" >&5
 $as_echo "$as_me: opcuaserver path: $with_opcuaserver" >&6;}
 
+else
+
+              OPCUA_SERVER_PATH="$prefix"
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: opcuaserver path: $prefix" >&5
+$as_echo "$as_me: opcuaserver path: $prefix" >&6;}
+
 fi
 
 

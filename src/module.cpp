@@ -1897,7 +1897,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     .def("get_node", &PyOPCUAServer::PyGetNode)
     //.def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
     //.def("get_node_from_qn_path", NodeFromPathQN)
-    .def("set_uri", &PyOPCUAServer::SetURI)
+    .def("set_uri", &PyOPCUAServer::SetServerURI)
     .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
     .def("set_server_name", &PyOPCUAServer::SetServerName)
     .def("set_endpoint", &PyOPCUAServer::SetEndpoint)

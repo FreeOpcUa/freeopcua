@@ -21,6 +21,8 @@ AC_ARG_WITH([opcuaserver],
               AC_MSG_NOTICE([opcuaserver path: $with_opcuaserver])
             ],
             [
+              AC_SUBST([OPCUA_SERVER_PATH], ["$prefix"])
+              AC_MSG_NOTICE([opcuaserver path: $prefix])
             ])
 
 
