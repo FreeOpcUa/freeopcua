@@ -1348,11 +1348,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   using self_ns::str; //hack to enable __str__ in python classes with str(self)
 
-  if (! PyEval_ThreadsInitialized())
-    {
-      PyEval_InitThreads(); //Seems to be necessary for callback from another thread
-    }
-
+  PyEval_InitThreads();
 
   wrap_opcua_enums();
 
