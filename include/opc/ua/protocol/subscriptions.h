@@ -119,7 +119,7 @@ namespace OpcUa
   struct RepublishParameters
   {
     IntegerID Subscription;
-    uint32_t Counter;
+    uint32_t Counter = 0;
   };
 
 

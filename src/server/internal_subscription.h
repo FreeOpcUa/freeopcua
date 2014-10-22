@@ -47,7 +47,7 @@ namespace OpcUa
     class InternalSubscription
     {
       public:
-        InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> Callback);
+        InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug=false);
         ~InternalSubscription();
 
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
