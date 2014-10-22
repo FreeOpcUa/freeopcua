@@ -1527,7 +1527,7 @@ BOOST_PYTHON_MODULE(opcua)
   class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
   .def("data_change", &PySubscriptionClient::DefaultDataChange)
   .def("event", &PySubscriptionClient::DefaultEvent)
-  .def("status_chane", &PySubscriptionClient::DefaultStatusChange)
+  .def("status_change", &PySubscriptionClient::DefaultStatusChange)
   ;
 
 
