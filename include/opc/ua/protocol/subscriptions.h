@@ -116,6 +116,13 @@ namespace OpcUa
     std::vector<SubscriptionAcknowledgement> Acknowledgements;
   };
 
+  struct RepublishParameters
+  {
+    IntegerID Subscription;
+    uint32_t Counter;
+  };
+
+
   ////////////////////////////////////////////////////////
   // PublishRequest
   ////////////////////////////////////////////////////////
@@ -128,6 +135,16 @@ namespace OpcUa
 
     PublishRequest();
   };
+
+  struct RepublishRequest
+  {
+    NodeID TypeID;
+    RequestHeader Header;
+    RepublishParameters Parameters;
+
+    RepublishRequest();
+  };
+
 
   ////////////////////////////////////////////////////////
   // NotificationMessage
@@ -218,6 +235,16 @@ namespace OpcUa
 
     PublishResponse();
   };
+
+  struct RepublishResponse
+  {
+    NodeID TypeID;
+    ResponseHeader Header;
+    NotificationMessage Message;
+
+    RepublishResponse();
+  };
+
 
   struct PublishingModeParameters
   {

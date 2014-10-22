@@ -691,6 +691,27 @@ namespace OpcUa
           return;
         }
 
+        case REPUBLISH_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Republish' request." << std::endl;
+          RepublishParameters params;
+          istream >> params;
+
+          //Not implemented so we just say we do not have that notification
+          RepublishResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+          response.Header.ServiceResult = StatusCode::BadMessageNotAvailable;
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Republish' request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
         default:
         {
           ServiceFaultResponse response;

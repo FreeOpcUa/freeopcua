@@ -92,6 +92,11 @@ namespace OpcUa
   {
   }
 
+  RepublishRequest::RepublishRequest()
+    : TypeID(REPUBLISH_REQUEST)
+  {
+  }
+
   ////////////////////////////////////////////////////////
   // PublishResult
   ////////////////////////////////////////////////////////
@@ -107,6 +112,11 @@ namespace OpcUa
 
   PublishResponse::PublishResponse()
     : TypeID(PUBLISH_RESPONSE)
+  {
+  }
+
+  RepublishResponse::RepublishResponse()
+    : TypeID(REPUBLISH_RESPONSE)
   {
   }
 
@@ -427,6 +437,26 @@ namespace OpcUa
       *this << params.Acknowledgements;
     }
 
+    template<>
+    std::size_t RawSize(const RepublishParameters& params)
+    {
+      return RawSize(params.Subscription) + RawSize(params.Counter);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters& params)
+    {
+      *this >> params.Subscription;
+      *this >> params.Counter;
+    }
+
+    template<>
+    void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters& params)
+    {
+      *this << params.Subscription;
+      *this << params.Counter;
+    }
+
     ////////////////////////////////////////////////////////
     // PublishRequest
     ////////////////////////////////////////////////////////
@@ -452,6 +482,29 @@ namespace OpcUa
       *this << request.Header;
       *this << request.Parameters;
     }
+
+    template<>
+    std::size_t RawSize(const RepublishRequest& request)
+    {
+      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest& request)
+    {
+      *this >> request.TypeID;
+      *this >> request.Header;
+      *this >> request.Parameters;
+    }
+
+    template<>
+    void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest& request)
+    {
+      *this << request.TypeID;
+      *this << request.Header;
+      *this << request.Parameters;
+    }
+
 
     ////////////////////////////////////////////////////////
     // MonitoredItems
@@ -769,6 +822,28 @@ namespace OpcUa
       *this << response.TypeID;
       *this << response.Header;
       *this << response.Result;
+    }
+
+    template<>
+    std::size_t RawSize(const RepublishResponse& response)
+    {
+      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Message);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& response)
+    {
+      *this >> response.TypeID;
+      *this >> response.Header;
+      *this >> response.Message;
+    }
+
+    template<>
+    void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& response)
+    {
+      *this << response.TypeID;
+      *this << response.Header;
+      *this << response.Message;
     }
 
     ////////////////////////////////////////////////////////
