@@ -78,126 +78,6 @@ std::vector<T> ToVector(const object & list)
 }
 
 
-struct PyNodeID
-{
-public:
-  PyNodeID()
-  {
-//      std::cout << "PyNodeID()" << std::endl;
-//      std::cout.flush();
-  }
-
-  explicit PyNodeID(const NodeID & node)
-    : Id(node)
-  {
-//      std::cout << "PyNodeID(const NodeID& node = " << ToString(node) << ")" << std::endl;
-//      std::cout.flush();
-  }
-
-  PyNodeID(unsigned integerId, unsigned index)
-    : Id(integerId, index)
-  {
-//      std::cout << "PyNodeID(unsigned integerId = " << integerId << ", unsigned index = " << index << ")" << std::endl;
-//      std::cout.flush();
-  }
-
-  PyNodeID(const std::string & stringId, uint16_t index)
-    : Id(stringId, index)
-  {
-//      std::cout << "PyNodeID(const std::string& stringId = " << stringId << ", uint16_t index = " << index << ")" << std::endl;
-//      std::cout.flush();
-  }
-
-  explicit PyNodeID(const std::string & encodedNodeID)
-    : Id(ToNodeID(encodedNodeID))
-  {
-//      std::cout << "PyNodeID(const std::string& encodedNodeID = encodedNodeID" << encodedNodeID << ")" << std::endl;
-//      std::cout.flush();
-  }
-
-  uint32_t GetNamespaceIndex() const
-  {
-    return Id.GetNamespaceIndex();
-  }
-
-  object GetIdentifier() const
-  {
-    if (Id.IsInteger())
-      {
-        return object(Id.GetIntegerIdentifier());
-      }
-
-    else if (Id.IsString())
-      {
-        return object(Id.GetStringIdentifier());
-      }
-
-    else if (Id.IsGuid())
-      {
-        return object(Id.GetGuidIdentifier());
-      }
-
-    else if (Id.IsBinary())
-      {
-        return object(Id.GetBinaryIdentifier());
-      }
-
-    else
-      {
-        throw std::logic_error("Error unknown identifier.");
-      }
-  }
-
-  unsigned GetEncodingValue() const
-  {
-    return Id.Encoding;
-  }
-
-  bool IsInteger() const
-  {
-    return Id.IsInteger();
-  }
-
-  bool IsBinary() const
-  {
-    return Id.IsBinary();
-  }
-
-  bool IsGuid() const
-  {
-    return Id.IsGuid();
-  }
-
-  bool IsString() const
-  {
-    return Id.IsString();
-  }
-
-  std::string GetNamespaceURI() const
-  {
-    return Id.NamespaceURI;
-  }
-
-  NodeID GetID() const
-  {
-    return Id;
-  }
-
-  bool operator==(const PyNodeID & id) const
-  {
-    return Id == id.Id;
-  }
-
-private:
-  NodeID Id;
-};
-
-std::ostream & operator<< (std::ostream & out, const PyNodeID & pyId)
-{
-  out << pyId.GetID();
-  return out;
-}
-
 struct PyApplicationDescription
 {
   std::string URI;
@@ -323,9 +203,9 @@ list ToList(const std::vector<EndpointDescription> endpoints)
 struct PyBrowseParameters
 {
   unsigned MaxReferenciesCount;
-  PyNodeID NodeToBrowse;
+  NodeID NodeToBrowse;
   unsigned Direction;
-  PyNodeID ReferenceTypeID;
+  NodeID ReferenceTypeID;
   bool IncludeSubtypes;
   unsigned NodeClasses;
   unsigned ResultMask;
@@ -345,13 +225,13 @@ typedef QualifiedName PyQualifiedName;
 
 struct PyReferenceDescription
 {
-  PyNodeID ReferenceTypeID;
+  NodeID ReferenceTypeID;
   bool IsForward;
-  PyNodeID TargetNodeID;
+  NodeID TargetNodeID;
   PyQualifiedName BrowseName;
   std::string DisplayName;
   unsigned TargetNodeClass;
-  PyNodeID TargetNodeTypeDefinition;
+  NodeID TargetNodeTypeDefinition;
 
   PyReferenceDescription()
     : IsForward(false)
@@ -387,7 +267,7 @@ list ToList(const std::vector<ReferenceDescription> descs)
 
 struct PyAttributeValueID
 {
-  PyNodeID Node;
+  NodeID Node;
   unsigned Attribute; // type AttributeID
   std::string IndexRange;
   PyQualifiedName DataEncoding;
@@ -647,7 +527,7 @@ struct PyDataValue
 
 struct PyWriteValue
 {
-  PyNodeID Node;
+  NodeID Node;
   unsigned Attribute;
   std::string NumericRange;
   PyDataValue Data;
@@ -670,7 +550,7 @@ WriteValue GetWriteValue(const PyWriteValue & pyValue)
 {
   WriteValue result;
   result.Attribute = static_cast<AttributeID>(pyValue.Attribute);
-  result.Node = pyValue.Node.GetID();
+  result.Node = pyValue.Node;
   result.NumericRange = pyValue.NumericRange;
 
   if (pyValue.Data.Status)
@@ -754,8 +634,8 @@ public:
   list Browse(const PyBrowseParameters & p) const
   {
     BrowseDescription description;
-    description.NodeToBrowse = p.NodeToBrowse.GetID();
-    description.ReferenceTypeID = p.ReferenceTypeID.GetID();
+    description.NodeToBrowse = p.NodeToBrowse;
+    description.ReferenceTypeID = p.ReferenceTypeID;
     description.Direction = static_cast<BrowseDirection>(p.Direction);
     description.IncludeSubtypes = p.IncludeSubtypes;
     description.NodeClasses = p.NodeClasses;
@@ -784,7 +664,7 @@ public:
         attr.DataEncoding.NamespaceIndex = value.DataEncoding.NamespaceIndex;
         attr.DataEncoding.Name = value.DataEncoding.Name;
         attr.IndexRange = value.IndexRange;
-        attr.Node = value.Node.GetID();
+        attr.Node = value.Node;
         params.AttributesToRead.push_back(attr);
       }
 
@@ -935,9 +815,8 @@ private:
 class PyNode: public Node
 {
 public:
-  PyNode(Services::SharedPtr srv, const NodeID & id)\
-:
-  Node(srv, id)
+  PyNode(Services::SharedPtr srv, const NodeID & id)
+  : Node(srv, id)
   {
   }
 
@@ -956,9 +835,9 @@ public:
     return ToObject(Node::GetName());
   }
 
-  PyNodeID PyGetNodeID()
+  NodeID PyGetNodeID()
   {
-    return PyNodeID(Node::GetId());
+    return GetId();
   }
 
   object PySetValue(const object & val, VariantType hint = VariantType::NUL, DateTime t = CurrentDateTime())
@@ -1011,9 +890,9 @@ public:
     return PyNode(Node::AddFolder(nodeid, browsename));
   }
 
-  PyNode PyAddFolder3(const PyNodeID & nodeid, const QualifiedName browsename)
+  PyNode PyAddFolder3(const NodeID & nodeid, const QualifiedName browsename)
   {
-    return PyNode(Node::AddFolder(nodeid.GetID(), browsename));
+    return PyNode(Node::AddFolder(nodeid, browsename));
   }
 
   PyNode PyAddObject(const std::string & browsename)
@@ -1026,9 +905,9 @@ public:
     return PyNode(Node::AddObject(ToNodeID(nodeid), ToQualifiedName(browsename, 0)));
   }
 
-  PyNode PyAddObject3(const PyNodeID & nodeid, const QualifiedName & browsename)
+  PyNode PyAddObject3(const NodeID & nodeid, const QualifiedName & browsename)
   {
-    return PyNode(Node::AddObject(nodeid.GetID(), browsename));
+    return PyNode(Node::AddObject(nodeid, browsename));
   }
 
   PyNode PyAddVariable(const std::string & browsename, const object & val)
@@ -1041,9 +920,9 @@ public:
     return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val)));
   }
 
-  PyNode PyAddVariable3(const PyNodeID & nodeid, const QualifiedName & browsename, const object & val)
+  PyNode PyAddVariable3(const NodeID & nodeid, const QualifiedName & browsename, const object & val)
   {
-    return PyNode(Node::AddVariable(nodeid.GetID(), browsename, ToVariant(val)));
+    return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val)));
   }
 
   PyNode PyAddProperty(const std::string & browsename, const object & val)
@@ -1056,9 +935,9 @@ public:
     return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val)));
   }
 
-  PyNode PyAddProperty3(const PyNodeID & nodeid, const QualifiedName & browsename, const object & val)
+  PyNode PyAddProperty3(const NodeID & nodeid, const QualifiedName & browsename, const object & val)
   {
-    return PyNode(Node::AddProperty(nodeid.GetID(), browsename, ToVariant(val)));
+    return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val)));
   }
 };
 
@@ -1095,9 +974,9 @@ public:
     SourceNode = node;
   }
 
-  PyNodeID GetSourceNode()
+  NodeID GetSourceNode()
   {
-    return PyNodeID(SourceNode);
+    return SourceNode;
   }
 
   object GetTime()
@@ -1294,9 +1173,9 @@ public:
     return PyNode(Server, ObjectID::Server);
   }
 
-  PyNode PyGetNode(PyNodeID nodeid)
+  PyNode PyGetNode(NodeID nodeid)
   {
-    return PyNode(RemoteClient::GetNode(nodeid.GetID()));
+    return PyNode(RemoteClient::GetNode(nodeid));
   }
 
   //PyNode PyGetNodeFromPath(const object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
@@ -1326,9 +1205,9 @@ public:
     return PyNode(Registry->GetServer(), ObjectID::Server);
   }
 
-  PyNode PyGetNode(const PyNodeID & nodeid) const
+  PyNode PyGetNode(const NodeID & nodeid) const
   {
-    return PyNode(OPCUAServer::GetNode(nodeid.GetID()));
+    return PyNode(OPCUAServer::GetNode(nodeid));
   }
 
   PyNode PyGetNodeFromPath(const object & path) const
@@ -1342,6 +1221,46 @@ public:
   }
 };
 
+//--------------------------------------------------------------------------
+// helpers
+//--------------------------------------------------------------------------
+
+object NodeID_GetIdentifier(const NodeID & self)
+{
+  if (self.IsInteger())
+    {
+      return object(self.GetIntegerIdentifier());
+    }
+
+  else if (self.IsString())
+    {
+      return object(self.GetStringIdentifier());
+    }
+
+  else if (self.IsGuid())
+    {
+      return object(self.GetGuidIdentifier());
+    }
+
+  else if (self.IsBinary())
+    {
+      return object(self.GetBinaryIdentifier());
+    }
+
+  else
+    {
+      throw std::logic_error("Error unknown identifier.");
+    }
+}
+
+static boost::shared_ptr<NodeID> NodeID_constructor(const std::string & encodedNodeID)
+{
+  return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID)));
+}
+
+//--------------------------------------------------------------------------
+// module
+//--------------------------------------------------------------------------
 
 BOOST_PYTHON_MODULE(opcua)
 {
@@ -1360,18 +1279,24 @@ BOOST_PYTHON_MODULE(opcua)
   def("ToDateTime", &ToDateTime);
   def("ToTimeT", &ToTimeT);
 
-  class_<PyNodeID>("NodeID")
-  .def(init<unsigned, unsigned>())
+  class_<LocalizedText>("LocalizedText")
+  .def_readwrite("Encoding", &LocalizedText::Encoding)
+  .def_readwrite("Locale", &LocalizedText::Locale)
+  .def_readwrite("Text", &LocalizedText::Text)
+  ;
+
+  class_<NodeID, boost::shared_ptr<NodeID>>("NodeID")
+  .def(init<uint32_t, uint16_t>())
   .def(init<std::string, uint16_t>())
-  .def(init<std::string>())
-  .def_readonly("namespace_index", &PyNodeID::GetNamespaceIndex)
-  .def_readonly("identifier", &PyNodeID::GetIdentifier)
-  .def("get_encoding", &PyNodeID::GetEncodingValue)
-  .def("is_integer", &PyNodeID::IsInteger)
-  .def("is_binary", &PyNodeID::IsBinary)
-  .def("is_guid", &PyNodeID::IsGuid)
-  .def("is_string", &PyNodeID::IsString)
-  .def_readonly("namespace_uri", &PyNodeID::GetNamespaceURI)
+  .def("__init__", make_constructor(NodeID_constructor)) // XXX add this constructor to freeopcua
+  .add_property("namespace_index", &NodeID::GetNamespaceIndex)
+  .add_property("identifier", &NodeID_GetIdentifier)
+  .add_property("encoding", &NodeID::GetEncodingValue)
+  .add_property("is_integer", &NodeID::IsInteger)
+  .add_property("is_binary", &NodeID::IsBinary)
+  .add_property("is_guid", &NodeID::IsGuid)
+  .add_property("is_string", &NodeID::IsString)
+  .def_readonly("namespace_uri", &NodeID::NamespaceURI)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
@@ -1587,12 +1512,6 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
   .def("load_cpp_addressspace", &PyOPCUAServer::SetLoadCppAddressSpace)
   .def("create_subscription", &PyOPCUAServer::CreateSubscription)
-  ;
-
-  class_<LocalizedText>("LocalizedText")
-  .def_readwrite("Encoding", &LocalizedText::Encoding)
-  .def_readwrite("Locale", &LocalizedText::Locale)
-  .def_readwrite("Text", &LocalizedText::Text)
   ;
 
 }
