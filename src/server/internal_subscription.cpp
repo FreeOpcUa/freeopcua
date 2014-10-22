@@ -7,7 +7,7 @@ namespace OpcUa
   namespace Internal
   {
 
-    InternalSubscription::InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> callback)
+    InternalSubscription::InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> callback, bool debug)
       : Service(service)
       , AddressSpace(Service.GetAddressSpace())
       , Data(data)
@@ -16,6 +16,7 @@ namespace OpcUa
       , io(service.GetIOService())
       , Timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
       , LifeTimeCount(data.RevisedLifetimeCount)
+      , Debug(debug)
     {
       Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
