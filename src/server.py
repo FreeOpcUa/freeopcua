@@ -23,8 +23,8 @@ if __name__ == "__main__":
         print("I got objects folder: ", objects)
 
         #Now adding some object to our addresse space from server side
-        test = objects.add_folder("testfolder")
-        myvar = test.add_variable("myvar", [16, 56])
+        test = objects.add_object("2:NewObject")
+        myvar = test.add_variable("2:MyVariable", [16, 56])
         myprop = test.add_property("myprop", 9.9)
        
         # uncomment next lines to subscribe to changes on server side

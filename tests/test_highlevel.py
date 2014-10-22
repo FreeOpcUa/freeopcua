@@ -10,7 +10,7 @@ import opcua
 
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
-        print("New data change event", node, val, attr)
+        pass
 
 
 class Unit(unittest.TestCase):
@@ -163,6 +163,12 @@ class CommonTests(object):
         sub.unsubscribe(handle)
         sub.delete()
 
+    def test_subscribe_events(self):
+        sub = self.opc.create_subscription(100, sclt)
+        handle = sub.subscribe_events()
+        sub.unsubscribe(handle)
+        sub.delete()
+
     def test_subscription_data_change(self):
         """
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
@@ -177,7 +183,6 @@ class CommonTests(object):
                 self.value = None
 
             def data_change(self, handle, node, val, attr):
-                print("Data change event in python client", handle, node, val , attr)
                 self.handle = handle
                 self.node = node
                 self.value = val
@@ -194,9 +199,7 @@ class CommonTests(object):
         v2 = o.add_variable("3:SubscriptionVariableV2", 1)
         sub = self.opc.create_subscription(100, msclt)
         handle1 = sub.subscribe_data_change(v1)
-        print("Got handle ", handle1)
         handle2 = sub.subscribe_data_change(v2)
-        print("Got handle ", handle2)
 
         v1.set_value([5])
         start = time.time()
@@ -236,9 +239,7 @@ class ServerProcess(Process):
         self.started.set()
         while not self._exit.is_set():
             time.sleep(0.1)
-        print("Stopping server")
         self.srv.stop()
-        print("Server stopped")
 
     def stop(self):
         self._exit.set()
@@ -259,9 +260,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
     @classmethod
     def tearDownClass(self):
-        print("Disconnecting")
         self.clt.disconnect()
-        print("Trying to stop server")
         self.srv.stop()
 
 
