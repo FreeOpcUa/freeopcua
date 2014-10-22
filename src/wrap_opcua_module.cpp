@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief OPC UA Address space part.
+/// @brief Python bindings for freeopcua.
 /// @license GNU GPL
 ///
 /// Distributed under the GNU GPL License
@@ -8,20 +8,22 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include <opc/ua/client/client.h>
-#include <opc/ua/client/binary_server.h>
-#include <opc/ua/node.h>
-#include <opc/ua/event.h>
-#include <opc/ua/server/opcuaserver.h>
-#include <opc/ua/protocol/types.h>
-#include <opc/ua/services/services.h>
-#include <opc/ua/subscription.h>
-#include <opc/ua/protocol/string_utils.h>
-
 #include <boost/python.hpp>
 #include <boost/python/type_id.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <functional>
+
+#include "opc/ua/client/client.h"
+#include "opc/ua/client/binary_server.h"
+#include "opc/ua/node.h"
+#include "opc/ua/event.h"
+#include "opc/ua/server/opcuaserver.h"
+#include "opc/ua/protocol/types.h"
+#include "opc/ua/services/services.h"
+#include "opc/ua/subscription.h"
+#include "opc/ua/protocol/string_utils.h"
+
+#include "wrap_opcua_enums.h"
 
 namespace OpcUa
 {
@@ -772,103 +774,7 @@ namespace OpcUa
     OpcUa::Services::SharedPtr Impl;
   };
 
-  void RegisterCommonObjectIDs()
-  {
-    python::enum_<OpcUa::ObjectID>("ObjectID")
-      .value("NULL", OpcUa::ObjectID::Null)
-      .value("BOOLEAN", OpcUa::ObjectID::Boolean)
-      .value("SBYTE", OpcUa::ObjectID::SByte)
-      .value("BYTE", OpcUa::ObjectID::Byte)
-      .value("INT16", OpcUa::ObjectID::Int16)
-      .value("UINT16", OpcUa::ObjectID::UInt16)
-      .value("INT32", OpcUa::ObjectID::Int32)
-      .value("UINT32", OpcUa::ObjectID::UInt32)
-      .value("INT64", OpcUa::ObjectID::Int64)
-      .value("UINT64", OpcUa::ObjectID::UInt64)
-      .value("FLOAT", OpcUa::ObjectID::Float)
-      .value("DOUBLE", OpcUa::ObjectID::Double)
-      .value("STRING", OpcUa::ObjectID::String)
-      .value("DATE_TIME", OpcUa::ObjectID::DateTime)
-      .value("GUID", OpcUa::ObjectID::Guid)
-      .value("BYTE_STRING", OpcUa::ObjectID::ByteString)
-      .value("XML_ELEMENT", OpcUa::ObjectID::XmlElement)
-      .value("NODE_ID", OpcUa::ObjectID::NodeID)
-      .value("EXPANDED_NODE_ID", OpcUa::ObjectID::ExpandedNodeID)
-      .value("STATUS_CODE", OpcUa::ObjectID::StatusCode)
-      .value("QUALIFIED_NAME", OpcUa::ObjectID::QualifiedName)
-      .value("QUALIFIED_NAME", OpcUa::ObjectID::QualifiedName)
-      .value("LOCALIZED_TEXT", OpcUa::ObjectID::LocalizedText)
-      .value("STRUCTURE", OpcUa::ObjectID::Structure)
-      .value("DATA_VALUE", OpcUa::ObjectID::DataValue)
-      .value("BASE_DATA_TYPE", OpcUa::ObjectID::BaseDataType)
-      .value("DIAGNOSTIC_INFO", OpcUa::ObjectID::DiagnosticInfo)
-      .value("NUMBER", OpcUa::ObjectID::Number)
-      .value("INTEGER", OpcUa::ObjectID::Integer)
-      .value("UINTEGER", OpcUa::ObjectID::UInteger)
-      .value("ENUMERATION", OpcUa::ObjectID::Enumeration)
-      .value("IMAGE", OpcUa::ObjectID::Image)
-      .value("REFERENCES", OpcUa::ObjectID::References)
-      .value("NON_HIERARCHAL_REFERENCES", OpcUa::ObjectID::NonHierarchicalReferences)
-      .value("HAS_CHILD", OpcUa::ObjectID::HasChild)
-      .value("ORGANIZES", OpcUa::ObjectID::Organizes)
-      .value("HAS_EVENT_SOURCE", OpcUa::ObjectID::HasEventSource)
-      .value("HAS_MODELLING_RULE", OpcUa::ObjectID::HasModellingRule)
-      .value("HAS_ENCODING", OpcUa::ObjectID::HasEncoding)
-      .value("HAS_DESCRIPTION", OpcUa::ObjectID::HasDescription)
-      .value("HAS_TYPE_DEFINITION", OpcUa::ObjectID::HasTypeDefinition)
-      .value("GENERATES_EVENT", OpcUa::ObjectID::GeneratesEvent)
-      .value("AGGREGATES", OpcUa::ObjectID::Aggregates)
-      .value("HAS_SUBTYPE", OpcUa::ObjectID::HasSubtype)
-      .value("HAS_PROPERTY", OpcUa::ObjectID::HasProperty)
-      .value("HAS_COMPONENT", OpcUa::ObjectID::HasComponent)
-      .value("HAS_NOTIFIER", OpcUa::ObjectID::HasNotifier)
-      .value("HAS_ORDERED_COMPONENT", OpcUa::ObjectID::HasOrderedComponent)
-      .value("HAS_MODEL_PARENT", OpcUa::ObjectID::HasModelParent)
-      .value("FROM_STATE", OpcUa::ObjectID::FromState)
-      .value("TO_STATE", OpcUa::ObjectID::ToState)
-      .value("HAS_CAUSE", OpcUa::ObjectID::HasCause)
-      .value("HAS_EFFECT", OpcUa::ObjectID::HasEffect)
-      .value("HAS_HISTORICAL_CONFIGURATION", OpcUa::ObjectID::HasHistoricalConfiguration)
-      .value("HAS_HISTORICAL_EVENT_CONFIGURATION", OpcUa::ObjectID::HasHistoricalEventConfiguration)
-      .value("BASE_OBJECT_TYPE", OpcUa::ObjectID::BaseObjectType)
-      .value("FOLDER_TYPE", OpcUa::ObjectID::FolderType)
-      .value("BASE_VARIABLE_TYPE", OpcUa::ObjectID::BaseVariableType)
-      .value("BASE_DATA_VARIABLE_TYPE", OpcUa::ObjectID::BaseDataVariableType)
-      .value("PROPERTY_TYPE", OpcUa::ObjectID::PropertyType)
-      .value("DATA_TYPE_DESCRIPTION_TYPE", OpcUa::ObjectID::DataTypeDescriptionType)
-      .value("DATA_TYPE_DICTIONARY_TYPE", OpcUa::ObjectID::DataTypeDictionaryType)
-      .value("DATA_TYPE_SYSTEM_TYPE", OpcUa::ObjectID::DataTypeSystemType)
-      .value("DATA_TYPE_ENCODING_TYPE", OpcUa::ObjectID::DataTypeEncodingType)
-      .value("MODELLING_RULE_TYPE", OpcUa::ObjectID::ModellingRuleType)
-      .value("MODELLING_RULE_MANDATORY", OpcUa::ObjectID::ModellingRuleMandatory)
-      .value("MODELLING_RULE_MANDATORY_SHARED", OpcUa::ObjectID::ModellingRuleMandatoryShared)
-      .value("MODELLING_RULE_OPTIONAL", OpcUa::ObjectID::ModellingRuleOptional)
-      .value("MODELLING_RULE_CARDINALITY_RESTRICTION", OpcUa::ObjectID::ModellingRuleCardinalityRestriction)
-      .value("MODELLING_RULE_EXPOSES_ITS_ARRAY", OpcUa::ObjectID::ModellingRuleExposesItsArray)
-      .value("ROOT_FOLDER", OpcUa::ObjectID::RootFolder)
-      .value("OBJECTS_FOLDER", OpcUa::ObjectID::ObjectsFolder)
-      .value("TYPES_FOLDER", OpcUa::ObjectID::TypesFolder)
-      .value("VIEWS_FOLDER", OpcUa::ObjectID::ViewsFolder)
-      .value("OBJECT_TYPES", OpcUa::ObjectID::ObjectTypes)
-      .value("VARIABLE_TYPES", OpcUa::ObjectID::VariableTypes)
-      .value("DATA_TYPES", OpcUa::ObjectID::DataTypes)
-      .value("REFERENCE_TYPES", OpcUa::ObjectID::ReferenceTypes)
-      .value("NAMING_RULE", OpcUa::ObjectID::NamingRule)
-      .value("HAS_SUBSTATE_MACHINE", OpcUa::ObjectID::HasSubStateMachine)
-      .value("HAS_EVENT_HISTORY", OpcUa::ObjectID::HasEventHistory)
-      .value("ID_TYPE", OpcUa::ObjectID::IdType)
-      .value("NODE_CLASS", OpcUa::ObjectID::NodeClass)
-      .value("DURATION", OpcUa::ObjectID::Duration)
-      .value("NUMERIC_RANGE", OpcUa::ObjectID::NumericRange)
-      .value("UTC_TIME", OpcUa::ObjectID::UtcTime)
-      .value("LOCALE_ID", OpcUa::ObjectID::LocaleID)
-      .value("STRUCTURE_ARGUMENT", OpcUa::ObjectID::StructureArgument)
-;
 /*
-
-
-
-
       StructureStatusResult
       MessageSecurityMode
       StructureApplicationDescription
@@ -986,8 +892,6 @@ namespace OpcUa
       HasFalseSubState
       HasCondition
 */
-    ;
-  }
  
   class PyNode: public Node
   {
@@ -1368,8 +1272,7 @@ std::string parse_python_exception(){
   };
 }
 
-
-BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in command line
+BOOST_PYTHON_MODULE(opcua)
 {
   using namespace boost::python;
   using namespace OpcUa;
@@ -1381,70 +1284,8 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
     PyEval_InitThreads(); //Seems to be necessary for callback from another thread
   }
 
-  RegisterCommonObjectIDs();
-
-  enum_<OpcUa::ApplicationType>("ApplicationType")
-    .value("CLIENT", OpcUa::ApplicationType::CLIENT)
-    .value("CLIENT_AND_SERVER", OpcUa::ApplicationType::CLIENT_AND_SERVER)
-    .value("DISCOVERY_SERVER", OpcUa::ApplicationType::DISCOVERY_SERVER)
-    .value("SERVER", OpcUa::ApplicationType::SERVER);
-
-  enum_<OpcUa::MessageSecurityMode>("MessageSecurityMode")
-    .value("NONE", OpcUa::MessageSecurityMode::MSM_NONE)
-    .value("SIGN", OpcUa::MessageSecurityMode::MSM_SIGN)
-    .value("SIGN_AND_ENCRYPT", OpcUa::MessageSecurityMode::MSM_SIGN);
-
-  enum_<OpcUa::UserIdentifyTokenType>("UserIdentifyTokenType")
-    .value("ANONYMOUS", OpcUa::UserIdentifyTokenType::ANONYMOUS)
-    .value("USERNAME", OpcUa::UserIdentifyTokenType::USERNAME)
-    .value("CERTIFICATE", OpcUa::UserIdentifyTokenType::CERTIFICATE)
-    .value("ISSUED_TOKEN", OpcUa::UserIdentifyTokenType::ISSUED_TOKEN);
-
-  enum_<OpcUa::BrowseDirection>("BrowseDirection")
-    .value("BOTH", OpcUa::BrowseDirection::Both)
-    .value("FORWARD", OpcUa::BrowseDirection::Forward)
-    .value("INVERSE", OpcUa::BrowseDirection::Inverse);
-
-  enum_<OpcUa::NodeClass>("NodeClass")
-    .value("ALL", OpcUa::NodeClass::All)
-    .value("OBJECT", OpcUa::NodeClass::Object)
-    .value("VARIABLE", OpcUa::NodeClass::Variable)
-    .value("METHOD", OpcUa::NodeClass::Method)
-    .value("OBJECT_TYPE", OpcUa::NodeClass::ObjectType)
-    .value("VARIABLE_TYPE", OpcUa::NodeClass::VariableType)
-    .value("REFERENCE_TYPE", OpcUa::NodeClass::ReferenceType)
-    .value("DATA_TYPE", OpcUa::NodeClass::DataType)
-    .value("VIEW", OpcUa::NodeClass::View);
-
-  enum_<OpcUa::TimestampsToReturn>("TimestampsToReturn")
-    .value("SOURCE", OpcUa::TimestampsToReturn::SOURCE)
-    .value("SERVER", OpcUa::TimestampsToReturn::SERVER)
-    .value("BOTH",   OpcUa::TimestampsToReturn::BOTH)
-    .value("SERVER", OpcUa::TimestampsToReturn::NEITHER);
-
-  enum_<OpcUa::AttributeID>("AttributeID")
-    .value("ACCESS_LEVEL", OpcUa::AttributeID::ACCESS_LEVEL)
-    .value("ARRAY_DIMENSIONS", OpcUa::AttributeID::ARRAY_DIMENSIONS)
-    .value("BROWSE_NAME", OpcUa::AttributeID::BROWSE_NAME)
-    .value("CONTAINS_NO_LOOPS", OpcUa::AttributeID::CONTAINS_NO_LOOPS)
-    .value("DATA_TYPE", OpcUa::AttributeID::DATA_TYPE)
-    .value("DESCRIPTION", OpcUa::AttributeID::DESCRIPTION)
-    .value("DISPLAY_NAME", OpcUa::AttributeID::DISPLAY_NAME)
-    .value("EVENT_NOTIFIER", OpcUa::AttributeID::EVENT_NOTIFIER)
-    .value("EXECUTABLE", OpcUa::AttributeID::EXECUTABLE)
-    .value("HISTORIZING", OpcUa::AttributeID::HISTORIZING)
-    .value("INVERSE_NAME", OpcUa::AttributeID::INVERSE_NAME)
-    .value("IS_ABSTRACT", OpcUa::AttributeID::IS_ABSTRACT)
-    .value("MINIMUM_SAMPLING_INTERVAL", OpcUa::AttributeID::MINIMUM_SAMPLING_INTERVAL)
-    .value("NODE_CLASS", OpcUa::AttributeID::NODE_CLASS)
-    .value("NODE_ID", OpcUa::AttributeID::NODE_ID)
-    .value("SYMMETRIC", OpcUa::AttributeID::SYMMETRIC)
-    .value("UNKNOWN", OpcUa::AttributeID::UNKNOWN)
-    .value("USER_ACCESS_LEVEL", OpcUa::AttributeID::USER_ACCESS_LEVEL)
-    .value("USER_EXECUTABLE", OpcUa::AttributeID::USER_EXECUTABLE)
-    .value("VALUE", OpcUa::AttributeID::VALUE)
-    .value("VALUE_RANK", OpcUa::AttributeID::VALUE_RANK)
-    .value("WRITE_MASK", OpcUa::AttributeID::WRITE_MASK);
+  
+  wrap_opcua_enums();
 
   class_<DateTime>("DateTime", init<>())
     .def(init<int64_t>())
@@ -1577,228 +1418,6 @@ BOOST_PYTHON_MODULE(MODULE_NAME) // MODULE_NAME specifies via preprocessor in co
       .def_readonly("type", &PyVariant::Type)
       .def_readonly("is_null", &PyVariant::IsNull)
     ;
-
-  enum_<StatusCode>("StatusCode")
-#define scvalue(XXX) value(#XXX, StatusCode:: XXX )
-    .scvalue(Good)
-    .scvalue(BadUnexpectedError)
-    .scvalue(BadInternalError)
-    .scvalue(BadOutOfMemory)
-    .scvalue(BadResourceUnavailable)
-    .scvalue(BadCommunicationError)
-    .scvalue(BadEncodingError)
-    .scvalue(BadDecodingError)
-    .scvalue(BadEncodingLimitsExceeded)
-    .scvalue(BadUnknownResponse)
-    .scvalue(BadTimeout)
-    .scvalue(BadServiceUnsupported)
-    .scvalue(BadShutdown)
-    .scvalue(BadServerNotConnected)
-    .scvalue(BadServerHalted)
-    .scvalue(BadNothingToDo)
-    .scvalue(BadTooManyOperations)
-    .scvalue(BadDataTypeIdUnknown)
-    .scvalue(BadCertificateInvalid)
-    .scvalue(BadSecurityChecksFailed)
-    .scvalue(BadCertificateTimeInvalid)
-    .scvalue(BadCertificateIssuerTimeInvalid)
-    .scvalue(BadCertificateHostNameInvalid)
-    .scvalue(BadCertificateUriInvalid)
-    .scvalue(BadCertificateUseNotAllowed)
-    .scvalue(BadCertificateIssuerUseNotAllowed)
-    .scvalue(BadCertificateUntrusted)
-    .scvalue(BadCertificateRevocationUnknown)
-    .scvalue(BadCertificateIssuerRevocationUnknown)
-    .scvalue(BadCertificateRevoked)
-    .scvalue(BadCertificateIssuerRevoked)
-    .scvalue(BadUserAccessDenied)
-    .scvalue(BadIdentityTokenInvalid)
-    .scvalue(BadIdentityTokenRejected)
-    .scvalue(BadSecureChannelIdInvalid)
-    .scvalue(BadInvalidTimestamp)
-    .scvalue(BadNonceInvalid)
-    .scvalue(BadSessionIdInvalid)
-    .scvalue(BadSessionClosed)
-    .scvalue(BadSessionNotActivated)
-    .scvalue(BadSubscriptionIdInvalid)
-    .scvalue(BadRequestHeaderInvalid)
-    .scvalue(BadTimestampsToReturnInvalid)
-    .scvalue(BadRequestCancelledByClient)
-    .scvalue(GoodSubscriptionTransferred)
-    .scvalue(GoodCompletesAsynchronously)
-    .scvalue(GoodOverload)
-    .scvalue(GoodClamped)
-    .scvalue(BadNoCommunication)
-    .scvalue(BadWaitingForInitialData)
-    .scvalue(BadNodeIdInvalid)
-    .scvalue(BadNodeIdUnknown)
-    .scvalue(BadAttributeIdInvalid)
-    .scvalue(BadIndexRangeInvalid)
-    .scvalue(BadIndexRangeNoData)
-    .scvalue(BadDataEncodingInvalid)
-    .scvalue(BadDataEncodingUnsupported)
-    .scvalue(BadNotReadable)
-    .scvalue(BadNotWritable)
-    .scvalue(BadOutOfRange)
-    .scvalue(BadNotSupported)
-    .scvalue(BadNotFound)
-    .scvalue(BadObjectDeleted)
-    .scvalue(BadNotImplemented)
-    .scvalue(BadMonitoringModeInvalid)
-    .scvalue(BadMonitoredItemIdInvalid)
-    .scvalue(BadMonitoredItemFilterInvalid)
-    .scvalue(BadMonitoredItemFilterUnsupported)
-    .scvalue(BadFilterNotAllowed)
-    .scvalue(BadStructureMissing)
-    .scvalue(BadEventFilterInvalid)
-    .scvalue(BadContentFilterInvalid)
-    .scvalue(BadFilterOperandInvalid)
-    .scvalue(BadContinuationPointInvalid)
-    .scvalue(BadNoContinuationPoints)
-    .scvalue(BadReferenceTypeIdInvalid)
-    .scvalue(BadBrowseDirectionInvalid)
-    .scvalue(BadNodeNotInView)
-    .scvalue(BadServerUriInvalid)
-    .scvalue(BadServerNameMissing)
-    .scvalue(BadDiscoveryUrlMissing)
-    .scvalue(BadSempahoreFileMissing)
-    .scvalue(BadRequestTypeInvalid)
-    .scvalue(BadSecurityModeRejected)
-    .scvalue(BadSecurityPolicyRejected)
-    .scvalue(BadTooManySessions)
-    .scvalue(BadUserSignatureInvalid)
-    .scvalue(BadApplicationSignatureInvalid)
-    .scvalue(BadNoValidCertificates)
-    .scvalue(BadRequestCancelledByRequest)
-    .scvalue(BadParentNodeIdInvalid)
-    .scvalue(BadReferenceNotAllowed)
-    .scvalue(BadNodeIdRejected)
-    .scvalue(BadNodeIdExists)
-    .scvalue(BadNodeClassInvalid)
-    .scvalue(BadBrowseNameInvalid)
-    .scvalue(BadBrowseNameDuplicated)
-    .scvalue(BadNodeAttributesInvalid)
-    .scvalue(BadTypeDefinitionInvalid)
-    .scvalue(BadSourceNodeIdInvalid)
-    .scvalue(BadTargetNodeIdInvalid)
-    .scvalue(BadDuplicateReferenceNotAllowed)
-    .scvalue(BadInvalidSelfReference)
-    .scvalue(BadReferenceLocalOnly)
-    .scvalue(BadNoDeleteRights)
-    .scvalue(BadServerIndexInvalid)
-    .scvalue(BadViewIdUnknown)
-    .scvalue(Uncertain_ReferenceOutOfServer)
-    .scvalue(BadTooManyMatches)
-    .scvalue(BadQueryTooComplex)
-    .scvalue(BadNoMatch)
-    .scvalue(BadMaxAgeInvalid)
-    .scvalue(BadHistoryOperationInvalid)
-    .scvalue(BadHistoryOperationUnsupported)
-    .scvalue(BadWriteNotSupported)
-    .scvalue(BadTypeMismatch)
-    .scvalue(BadMethodInvalid)
-    .scvalue(BadArgumentsMissing)
-    .scvalue(BadTooManySubscriptions)
-    .scvalue(BadTooManyPublishRequests)
-    .scvalue(BadNoSubscription)
-    .scvalue(BadSequenceNumberUnknown)
-    .scvalue(BadMessageNotAvailable)
-    .scvalue(BadInsufficientClientProfile)
-    .scvalue(BadTcpServerTooBusy)
-    .scvalue(BadTcpMessageTypeInvalid)
-    .scvalue(BadTcpSecureChannelUnknown)
-    .scvalue(BadTcpMessageTooLarge)
-    .scvalue(BadTcpNotEnoughResources)
-    .scvalue(BadTcpInternalError)
-    .scvalue(BadTcpEndpointUrlInvalid)
-    .scvalue(BadRequestInterrupted)
-    .scvalue(BadRequestTimeout)
-    .scvalue(BadSecureChannelClosed)
-    .scvalue(BadSecureChannelTokenUnknown)
-    .scvalue(BadSequenceNumberInvalid)
-    .scvalue(BadConfigurationError)
-    .scvalue(BadNotConnected)
-    .scvalue(BadDeviceFailure)
-    .scvalue(BadSensorFailure)
-    .scvalue(BadOutOfService)
-    .scvalue(BadDeadbandFilterInvalid)
-    .scvalue(Uncertain_NoCommunicationLastUsableValue)
-    .scvalue(Uncertain_LastUsableValue)
-    .scvalue(Uncertain_SubstituteValue)
-    .scvalue(Uncertain_InitialValue)
-    .scvalue(Uncertain_SensorNotAccurate)
-    .scvalue(Uncertain_EngineeringUnitsExceeded)
-    .scvalue(Uncertain_SubNormal)
-    .scvalue(GoodLocalOverride)
-    .scvalue(BadRefreshInProgress)
-    .scvalue(BadConditionAlreadyDisabled)
-    .scvalue(BadConditionDisabled)
-    .scvalue(BadEventIdUnknown)
-    .scvalue(BadNoData)
-    .scvalue(BadNoBound)
-    .scvalue(BadDataLost)
-    .scvalue(BadDataUnavailable)
-    .scvalue(BadEntryExists)
-    .scvalue(BadNoEntryExists)
-    .scvalue(BadTimestampNotSupported)
-    .scvalue(GoodEntryInserted)
-    .scvalue(GoodEntryReplaced)
-    .scvalue(Uncertain_DataSubNormal)
-    .scvalue(GoodNoData)
-    .scvalue(GoodMoreData)
-    .scvalue(GoodCommunicationEvent)
-    .scvalue(GoodShutdownEvent)
-    .scvalue(GoodCallAgain)
-    .scvalue(GoodNonCriticalTimeout)
-    .scvalue(BadInvalidArgument)
-    .scvalue(BadConnectionRejected)
-    .scvalue(BadDisconnect)
-    .scvalue(BadConnectionClosed)
-    .scvalue(BadInvalidState)
-    .scvalue(BadEndOfStream)
-    .scvalue(BadNoDataAvailable)
-    .scvalue(BadWaitingForResponse)
-    .scvalue(BadOperationAbandoned)
-    .scvalue(BadExpectedStreamToBlock)
-    .scvalue(BadWouldBlock)
-    .scvalue(BadSyntaxError)
-    .scvalue(BadMaxConnectionsReached)
-    .scvalue(BadRequestTooLarge)
-    .scvalue(BadResponseTooLarge)
-    .scvalue(GoodResultsMayBeIncomplete)
-    .scvalue(BadEventNotAcknowledgeable)
-    .scvalue(Uncertain_ReferenceNotDeleted)
-    .scvalue(BadInvalidTimestampArgument)
-    .scvalue(BadProtocolVersionUnsupported)
-    .scvalue(BadStateNotActive)
-    .scvalue(Uncertain_NotAllNodesAvailable)
-    .scvalue(BadFilterOperatorInvalid)
-    .scvalue(BadFilterOperatorUnsupported)
-    .scvalue(BadFilterOperandCountMismatch)
-    .scvalue(BadFilterElementInvalid)
-    .scvalue(BadFilterLiteralInvalid)
-    .scvalue(BadIdentityChangeNotSupported)
-    .scvalue(BadNotTypeDefinition)
-    .scvalue(BadViewTimestampInvalid)
-    .scvalue(BadViewParameterMismatch)
-    .scvalue(BadViewVersionInvalid)
-    .scvalue(BadConditionAlreadyEnabled)
-    .scvalue(BadDialogNotActive)
-    .scvalue(BadDialogResponseInvalid)
-    .scvalue(BadConditionBranchAlreadyAcked)
-    .scvalue(BadConditionBranchAlreadyConfirmed)
-    .scvalue(BadConditionAlreadyShelved)
-    .scvalue(BadConditionNotShelved)
-    .scvalue(BadShelvingTimeOutOfRange)
-#undef scvalue
-    ;
-
-  enum_<VariantType>("VariantType")
-    .value("uint16", VariantType::UINT16)
-    .value("uint32", VariantType::UINT32)
-    .value("uint64", VariantType::UINT64)
-    .value("bool", VariantType::BOOLEAN)
-  ;
 
   class_<PyNode>("Node", init<Services::SharedPtr, NodeID>())
     .def(init<Node>())

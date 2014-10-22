@@ -4,20 +4,24 @@
 *.so
 
 # Packages
+autom4te.cache/
+bin
+build
+config.log
+config.status
+develop-eggs
+dist
 *.egg
 *.egg-info
-dist
-build
 eggs
-parts
-bin
-var
-sdist
-develop-eggs
 .installed.cfg
 lib
 lib64
+Makefile
+parts
 __pycache__
+sdist
+var
 
 # Installer logs
 pip-log.txt
