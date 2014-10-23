@@ -11,6 +11,7 @@
 #pragma once
 
 #include <opc/common/class_pointers.h>
+#include <opc/ua/protocol/session.h>
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/endpoints.h>
 #include <opc/ua/services/node_management.h>
@@ -39,9 +40,9 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(Services);
 
   public:
-    virtual void CreateSession(const RemoteSessionParameters& parameters) = 0;
-    virtual void ActivateSession() = 0;
-    virtual void CloseSession() = 0;
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
+    virtual ActivateSessionResponse ActivateSession() = 0;
+    virtual CloseSessionResponse CloseSession() = 0;
 
     virtual EndpointServices::SharedPtr Endpoints() = 0;
     virtual ViewServices::SharedPtr Views() = 0;
