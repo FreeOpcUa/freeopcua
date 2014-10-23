@@ -220,15 +220,12 @@ struct PyBrowseParameters
   }
 };
 
-
-typedef QualifiedName PyQualifiedName;
-
 struct PyReferenceDescription
 {
   NodeID ReferenceTypeID;
   bool IsForward;
   NodeID TargetNodeID;
-  PyQualifiedName BrowseName;
+  QualifiedName BrowseName;
   std::string DisplayName;
   unsigned TargetNodeClass;
   NodeID TargetNodeTypeDefinition;
@@ -270,7 +267,7 @@ struct PyAttributeValueID
   NodeID Node;
   unsigned Attribute; // type AttributeID
   std::string IndexRange;
-  PyQualifiedName DataEncoding;
+  QualifiedName DataEncoding;
 };
 
 struct PyReadParameters
@@ -1302,16 +1299,14 @@ BOOST_PYTHON_MODULE(opcua)
   .def(self == self)
   ;
 
-  class_<PyQualifiedName>("QualifiedName")
+  class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
   .def(init<std::string, uint16_t>())
   .def("parse", &ToQualifiedName)
-  .def_readwrite("namespace_index", &PyQualifiedName::NamespaceIndex)
-  .def_readwrite("name", &PyQualifiedName::Name)
+  .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
+  .def_readwrite("name", &QualifiedName::Name)
   .def(str(self))
   .def(repr(self))
-  //.def(self_ns::str(self_ns::self))
-  //.def("__str__", operator<<)
   .def(self == self)
   ;
 
