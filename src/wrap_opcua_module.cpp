@@ -421,113 +421,12 @@ Variant ToVariant2(const object & object, VariantType vtype)
     }
 }
 
-struct DataValueWrap : DataValue
-{
-
-  DataValueWrap(const object & object)
-    : DataValue(ToVariant(object))
-  {}
-
-  DataValueWrap(const object & object, VariantType vtype)
-    : DataValue(ToVariant2(object, vtype))
-  {}
-
-  object get_value()
-  { return ToObject(Value); }
-
-  void set_value(const object & object, VariantType vtype)
-  { Value = ToVariant2(object, vtype); Encoding |= DATA_VALUE; }
-
-  StatusCode get_status()
-  { return Status; }
-
-  void set_status(const StatusCode & sc)
-  { Status = sc; Encoding |= DATA_VALUE_STATUS_CODE; }
-
-  DateTime get_source_timestamp()
-  { return SourceTimestamp; }
-
-  void set_source_timestamp(const DateTime & dt)
-  { SourceTimestamp = dt; Encoding |= DATA_VALUE_SOURCE_TIMESTAMP; }
-
-  uint16_t get_source_picoseconds()
-  { return SourcePicoseconds; }
-
-  void set_source_picoseconds(uint16_t ps)
-  { SourcePicoseconds = ps; Encoding |= DATA_VALUE_SOURCE_PICOSECONDS; }
-
-  DateTime get_server_timestamp()
-  { return ServerTimestamp; }
-
-  void set_server_timestamp(const DateTime & dt)
-  { ServerTimestamp = dt; Encoding |= DATA_VALUE_SERVER_TIMESTAMP; }
-
-  uint16_t get_server_picoseconds()
-  { return ServerPicoseconds; }
-
-  void set_server_picoseconds(uint16_t ps)
-  { ServerPicoseconds = ps; Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
-
-};
-
-struct PyDataValue
-{
-  object Value;
-  unsigned Status;
-  uint64_t SourceTimestamp;
-  uint16_t SourcePicoseconds;
-  uint64_t ServerTimestamp;
-  uint16_t ServerPicoseconds;
-
-  PyDataValue()
-    : Status(0)
-    , SourceTimestamp(0)
-    , SourcePicoseconds(0)
-    , ServerTimestamp(0)
-    , ServerPicoseconds(0)
-  {
-  }
-
-  explicit PyDataValue(const DataValue & value)
-  {
-    if (value.Encoding & DATA_VALUE)
-      {
-        Value = ToObject(value.Value);
-      }
-
-    if (value.Encoding & DATA_VALUE_STATUS_CODE)
-      {
-        Status = static_cast<unsigned>(value.Status);
-      }
-
-    if (value.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
-      {
-        SourceTimestamp = value.SourceTimestamp.Value;
-      }
-
-    if (value.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
-      {
-        ServerTimestamp = value.ServerTimestamp.Value;
-      }
-
-    if (value.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
-      {
-        SourcePicoseconds = value.SourcePicoseconds;
-      }
-
-    if (value.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
-      {
-        ServerPicoseconds = value.ServerPicoseconds;
-      }
-  }
-};
-
 struct PyWriteValue
 {
   NodeID Node;
   unsigned Attribute;
   std::string NumericRange;
-  PyDataValue Data;
+  DataValue Data;
 
   PyWriteValue()
     : Attribute(0)
@@ -550,39 +449,39 @@ WriteValue GetWriteValue(const PyWriteValue & pyValue)
   result.Node = pyValue.Node;
   result.NumericRange = pyValue.NumericRange;
 
-  if (pyValue.Data.Status)
+  if (pyValue.Data.Encoding & DATA_VALUE_STATUS_CODE)
     {
       result.Data.Status = static_cast<StatusCode>(pyValue.Data.Status);
       result.Data.Encoding |= DATA_VALUE_STATUS_CODE;
     }
 
-  if (pyValue.Data.ServerPicoseconds)
+  if (pyValue.Data.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
     {
       result.Data.ServerPicoseconds = pyValue.Data.ServerPicoseconds;
       result.Data.Encoding |= DATA_VALUE_SERVER_PICOSECONDS;
     }
 
-  if (pyValue.Data.SourcePicoseconds)
+  if (pyValue.Data.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
     {
       result.Data.SourcePicoseconds = pyValue.Data.SourcePicoseconds;
       result.Data.Encoding |= DATA_VALUE_SOURCE_PICOSECONDS;
     }
 
-  if (pyValue.Data.ServerTimestamp)
+  if (pyValue.Data.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
     {
       result.Data.ServerTimestamp.Value = pyValue.Data.ServerTimestamp;
       result.Data.Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
     }
 
-  if (pyValue.Data.SourceTimestamp)
+  if (pyValue.Data.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
     {
       result.Data.SourceTimestamp.Value = pyValue.Data.SourceTimestamp;
       result.Data.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
     }
 
-  if (pyValue.Data.Value)
+  if (pyValue.Data.Encoding & DATA_VALUE)
     {
-      result.Data.Value = ToVariant(pyValue.Data.Value);
+      result.Data.Value = pyValue.Data.Value;
       result.Data.Encoding |= DATA_VALUE;
     }
 
@@ -666,7 +565,7 @@ public:
       }
 
     std::vector<DataValue> data = Impl->Attributes()->Read(params);
-    return ToList<PyDataValue, DataValue>(data);
+    return ToList<DataValue, DataValue>(data);
   }
 
   //    std::vector<StatusCode> Write(const std::vector<WriteValue>& filter) = 0;
@@ -844,7 +743,7 @@ public:
     return ToObject(code);
   }
 
-  object PySetDataValue(const DataValueWrap & dval)
+  object PySetDataValue(const DataValue & dval)
   {
     StatusCode code = Node::SetValue(dval);
     return ToObject(code);
@@ -1219,8 +1118,13 @@ public:
 };
 
 //--------------------------------------------------------------------------
-// helpers
+// NodeID helpers
 //--------------------------------------------------------------------------
+
+static boost::shared_ptr<NodeID> NodeID_constructor(const std::string & encodedNodeID)
+{
+  return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID)));
+}
 
 static object NodeID_GetIdentifier(const NodeID & self)
 {
@@ -1250,10 +1154,55 @@ static object NodeID_GetIdentifier(const NodeID & self)
     }
 }
 
-static boost::shared_ptr<NodeID> NodeID_constructor(const std::string & encodedNodeID)
+//--------------------------------------------------------------------------
+// DataValue helpers
+//--------------------------------------------------------------------------
+
+static boost::shared_ptr<DataValue> DataValue_constructor1(const object & obj)
 {
-  return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID)));
+  return boost::shared_ptr<DataValue>(new DataValue(ToVariant(obj)));
 }
+
+static boost::shared_ptr<DataValue> DataValue_constructor2(const object & obj, VariantType vtype)
+{
+  return boost::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype)));
+}
+
+static object  DataValue_get_value(const DataValue & self)
+{ return ToObject(self.Value); }
+
+static void DataValue_set_value(DataValue & self, const object & obj, VariantType vtype)
+{ self.Value = ToVariant2(obj, vtype); self.Encoding |= DATA_VALUE; }
+
+static StatusCode DataValue_get_status(const DataValue & self)
+{ return self.Status; }
+
+static void DataValue_set_status(DataValue & self, const StatusCode & sc)
+{ self.Status = sc; self.Encoding |= DATA_VALUE_STATUS_CODE; }
+
+static DateTime DataValue_get_source_timestamp(const DataValue & self)
+{ return self.SourceTimestamp; }
+
+static void DataValue_set_source_timestamp(DataValue & self, const DateTime & dt)
+{ self.SourceTimestamp = dt; self.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP; }
+
+static uint16_t DataValue_get_source_picoseconds(const DataValue & self)
+{ return self.SourcePicoseconds; }
+
+static void DataValue_set_source_picoseconds(DataValue & self, uint16_t ps)
+{ self.SourcePicoseconds = ps; self.Encoding |= DATA_VALUE_SOURCE_PICOSECONDS; }
+
+static DateTime DataValue_get_server_timestamp(const DataValue & self)
+{ return self.ServerTimestamp; }
+
+static void DataValue_set_server_timestamp(DataValue & self, const DateTime & dt)
+{ self.ServerTimestamp = dt; self.Encoding |= DATA_VALUE_SERVER_TIMESTAMP; }
+
+static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
+{ return self.ServerPicoseconds; }
+
+static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
+{ self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
 
 //--------------------------------------------------------------------------
 // module
@@ -1301,8 +1250,8 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
-  .def(init<std::string, uint16_t>())
-  .def("parse", &ToQualifiedName)
+  .def(init<std::string, uint16_t>()) // XXX ahright
+  //.def("parse", &ToQualifiedName)      XXX could be def(), dropped it's mostly useless
   .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
   .def_readwrite("name", &QualifiedName::Name)
   .def(str(self))
@@ -1310,24 +1259,17 @@ BOOST_PYTHON_MODULE(opcua)
   .def(self == self)
   ;
 
-  class_<DataValue>("DataValue", "Parameters of read data.") // XXX "DataValue"
-  .def_readwrite("value", &DataValue::Value)
-  .def_readwrite("status", &DataValue::Status)
-  .def_readwrite("source_timestamp", &DataValue::SourceTimestamp)
-  .def_readwrite("source_picoseconds", &DataValue::SourcePicoseconds)
-  .def_readwrite("server_timestamp", &DataValue::ServerTimestamp)
-  .def_readwrite("server_picoseconds", &DataValue::ServerPicoseconds);
-
-  class_<DataValueWrap>("DataValueWrap", "Parameters of read data.", init<const object &>())
-  .def(init<const object &, VariantType>())
-#define dvproperty(X) add_property( #X, &DataValueWrap::get_ ## X, &DataValueWrap::set_ ## X)
-  .dvproperty(value)
-  .dvproperty(status)
-  .dvproperty(source_timestamp)
-  .dvproperty(source_picoseconds)
-  .dvproperty(server_timestamp)
-  .dvproperty(server_picoseconds)
-#undef dvproperty
+  class_<DataValue, boost::shared_ptr<DataValue>>("DataValue")
+  .def("__init__", make_constructor(DataValue_constructor1))  // XXX Variant vs object
+  .def("__init__", make_constructor(DataValue_constructor2)) // XXX Variant,VariantType vs object,VariantType
+#define _property(X) add_property( #X, &DataValue_get_ ## X, &DataValue_set_ ## X)
+  ._property(value)
+  ._property(status)
+  ._property(source_timestamp)
+  ._property(source_picoseconds)
+  ._property(server_timestamp)
+  ._property(server_picoseconds)
+#undef _property
   ;
 
   class_<PyApplicationDescription>("ApplicationDescription")
@@ -1383,14 +1325,6 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("attribute", &PyAttributeValueID::Attribute)
   .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
   .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
-
-  class_<PyDataValue>("DataValue", "Parameters of read data.") // XXX "DataValue"
-  .def_readwrite("value", &PyDataValue::Value)
-  .def_readwrite("status", &PyDataValue::Status)
-  .def_readwrite("source_timestamp", &PyDataValue::SourceTimestamp)
-  .def_readwrite("source_picoseconds", &PyDataValue::SourcePicoseconds)
-  .def_readwrite("server_timestamp", &PyDataValue::ServerTimestamp)
-  .def_readwrite("server_picoseconds", &PyDataValue::ServerPicoseconds);
 
   class_<PyWriteValue>("WriteValue", "Parameters data for writing.")
   .def_readwrite("node", &PyWriteValue::Node)
