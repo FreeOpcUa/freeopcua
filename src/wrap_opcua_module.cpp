@@ -1225,7 +1225,7 @@ public:
 // helpers
 //--------------------------------------------------------------------------
 
-object NodeID_GetIdentifier(const NodeID & self)
+static object NodeID_GetIdentifier(const NodeID & self)
 {
   if (self.IsInteger())
     {

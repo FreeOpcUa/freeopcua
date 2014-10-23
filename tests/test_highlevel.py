@@ -14,6 +14,13 @@ class SubClient(opcua.SubscriptionClient):
 
 
 class Unit(unittest.TestCase):
+
+    def test_equal_nodeid(self):
+        nid1 = opcua.NodeID(999, 2)
+        nid2 = opcua.NodeID(999, 2)
+        self.assertTrue(nid1==nid2)
+        self.assertTrue(id(nid1)!=id(nid2))
+    
     def test_zero_nodeid(self):
         nid = opcua.NodeID()
         zero = opcua.NodeID(0, 0)
@@ -29,6 +36,17 @@ class Unit(unittest.TestCase):
         self.assertEqual(nid.namespace_index, 2)
         self.assertEqual(nid.identifier, 999)
 
+    def test_qualifiedstring_nodeid(self):
+        nid = opcua.NodeID('ns=2;s=PLC1.Manufacturer;')
+        self.assertEqual(nid.namespace_index, 2)
+        self.assertEqual(nid.identifier, 'PLC1.Manufacturer')
+
+    
+    def test_strrepr_nodeid(self):
+        nid = opcua.NodeID('ns=2;s=PLC1.Manufacturer;')
+        self.assertEqual(str(nid), 'ns=2;s=PLC1.Manufacturer;')
+        self.assertEqual(repr(nid), 'ns=2;s=PLC1.Manufacturer;')
+    
     def test_qualified_name(self):
         qn = opcua.QualifiedName("qname", 2)
         self.assertEqual(qn.namespace_index, 2)
