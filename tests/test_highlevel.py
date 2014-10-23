@@ -68,6 +68,13 @@ class Unit(unittest.TestCase):
         self.assertEqual(dv.value,True)
         self.assertEqual(type(dv.value),bool)
 
+    def test_application_description(self):
+        ad=opcua.ApplicationDescription()
+        self.assertEqual(ad.type,opcua.ApplicationType.CLIENT)
+        ad.discovery_urls=['a','b','c']
+        self.assertEqual(ad.discovery_urls,['a','b','c'])
+        
+
 
 class CommonTests(object):
     def test_root(self):

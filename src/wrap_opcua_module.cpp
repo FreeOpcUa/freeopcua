@@ -24,6 +24,7 @@
 #include "opc/ua/protocol/string_utils.h"
 
 #include "wrap_opcua_enums.h"
+#include "wrap_opcua_helpers.h"
 
 using namespace boost::python;
 using namespace OpcUa;
@@ -77,48 +78,6 @@ std::vector<T> ToVector(const object & list)
   return result;
 }
 
-
-struct PyApplicationDescription
-{
-  std::string URI;
-  std::string ProductURI;
-  std::string Name;
-  unsigned Type;
-  std::string GatewayServerURI;
-  std::string DiscoveryProfileURI;
-  list DiscoveryURLs;
-
-  PyApplicationDescription()
-    : Type(0)
-  {
-  }
-
-  explicit PyApplicationDescription(const ApplicationDescription & desc)
-    : URI(desc.URI)
-    , ProductURI(desc.ProductURI)
-    , Name(desc.Name.Text) // NOTE: encoding mask doesn't check.
-    , Type(static_cast<unsigned>(desc.Type))
-    , GatewayServerURI(desc.GatewayServerURI)
-    , DiscoveryProfileURI(desc.DiscoveryProfileURI)
-    , DiscoveryURLs(ToList(desc.DiscoveryURLs))
-  {
-  }
-};
-
-list ToList(const std::vector<ApplicationDescription> nativeApps)
-{
-  list resultApps;
-  std::for_each(
-    nativeApps.begin(),
-    nativeApps.end(),
-    [&resultApps](const ApplicationDescription & app)
-  {
-    resultApps.append(PyApplicationDescription(app));
-  });
-
-  return resultApps;
-}
-
 struct PyUserTokenPolicy
 {
   std::string PolicyID;
@@ -159,7 +118,7 @@ list ToList(const std::vector<UserTokenPolicy> policies)
 struct PyEndpointDescription
 {
   std::string EndpointURL;
-  PyApplicationDescription ServerDescription;
+  ApplicationDescription ServerDescription;
   //CertificateData ServerCertificate; TODO
   unsigned SecurityMode;
   std::string SecurityPolicyURI;
@@ -565,7 +524,7 @@ public:
       }
 
     std::vector<DataValue> data = Impl->Attributes()->Read(params);
-    return ToList<DataValue, DataValue>(data);
+    return ToList<DataValue, DataValue>(data); // XXX std::vector<DataValue> has been wrapped.
   }
 
   //    std::vector<StatusCode> Write(const std::vector<WriteValue>& filter) = 0;
@@ -712,7 +671,7 @@ class PyNode: public Node
 {
 public:
   PyNode(Services::SharedPtr srv, const NodeID & id)
-  : Node(srv, id)
+    : Node(srv, id)
   {
   }
 
@@ -1204,6 +1163,18 @@ static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
 static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 { self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
 
+
+
+//--------------------------------------------------------------------------
+// ApplicationDescription helpers
+//--------------------------------------------------------------------------
+
+static void ApplicationDescription_SetDiscoveryURLs(ApplicationDescription & self, std::vector<std::string> urls)
+{ self.DiscoveryURLs = urls; }
+
+static std::vector<std::string> ApplicationDescription_GetDiscoveryURLs(const ApplicationDescription & self)
+{ return self.DiscoveryURLs; }
+
 //--------------------------------------------------------------------------
 // module
 //--------------------------------------------------------------------------
@@ -1216,6 +1187,8 @@ BOOST_PYTHON_MODULE(opcua)
   PyEval_InitThreads();
 
   wrap_opcua_enums();
+  string_vector_from_python_converter();
+  to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
 
   class_<DateTime>("DateTime", init<>())
   .def(init<int64_t>())
@@ -1250,7 +1223,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
-  .def(init<std::string, uint16_t>()) // XXX ahright
+  .def(init<std::string, uint16_t>()) // XXX ah, right
   //.def("parse", &ToQualifiedName)      XXX could be def(), dropped it's mostly useless
   .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
   .def_readwrite("name", &QualifiedName::Name)
@@ -1272,14 +1245,19 @@ BOOST_PYTHON_MODULE(opcua)
 #undef _property
   ;
 
-  class_<PyApplicationDescription>("ApplicationDescription")
-  .def_readwrite("uri", &PyApplicationDescription::URI)
-  .def_readwrite("product_uri", &PyApplicationDescription::ProductURI)
-  .def_readwrite("name", &PyApplicationDescription::Name)
-  .def_readwrite("type", &PyApplicationDescription::Type)
-  .def_readwrite("gateway_server_uri", &PyApplicationDescription::GatewayServerURI)
-  .def_readwrite("discovery_profile_uri", &PyApplicationDescription::DiscoveryProfileURI)
-  .def_readwrite("discovery_urls", &PyApplicationDescription::DiscoveryURLs);
+  to_python_converter<std::vector<DataValue>, vector_to_python_converter<DataValue>>();
+
+  class_<ApplicationDescription>("ApplicationDescription")
+  .def_readwrite("uri", &ApplicationDescription::URI)
+  .def_readwrite("product_uri", &ApplicationDescription::ProductURI)
+  .def_readwrite("name", &ApplicationDescription::Name)
+  .def_readwrite("type", &ApplicationDescription::Type)
+  .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerURI)
+  .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileURI)
+  .add_property("discovery_urls", &ApplicationDescription_GetDiscoveryURLs, &ApplicationDescription_SetDiscoveryURLs) // XXX getter ok, setter needs to be wrap (why?)
+  ;
+
+  to_python_converter<std::vector<ApplicationDescription>, vector_to_python_converter<ApplicationDescription>>();
 
   class_<PyEndpointDescription>("EndpointDescription")
   .def_readwrite("url", &PyEndpointDescription::EndpointURL)
@@ -1315,6 +1293,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("display_name", &PyReferenceDescription::DisplayName)
   .def_readwrite("target_node_class", &PyReferenceDescription::TargetNodeClass)
   .def_readwrite("target_node_type_definition", &PyReferenceDescription::TargetNodeTypeDefinition);
+
   class_<PyReadParameters>("ReadParameters")
   .def_readwrite("max_age", &PyReadParameters::MaxAge)
   .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
@@ -1368,10 +1347,6 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<std::vector<Node> >("NodeVector")
   .def(vector_indexing_suite<std::vector<Node> >())
-  ;
-
-  class_<std::vector<std::string> >("StringVector")
-  .def(vector_indexing_suite<std::vector<std::string> >())
   ;
 
   class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
