@@ -146,16 +146,19 @@ namespace
       SetSubscriptions(Services);
     }
 
-    virtual void CreateSession(const RemoteSessionParameters& parameters)
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
     {
+      return CreateSessionResponse();
     }
 
-    virtual void ActivateSession()
+    virtual ActivateSessionResponse ActivateSession()
     {
+      return ActivateSessionResponse();
     }
 
-    virtual void CloseSession()
+    virtual CloseSessionResponse CloseSession()
     {
+      return CloseSessionResponse();
     }
 
     virtual EndpointServices::SharedPtr Endpoints() override

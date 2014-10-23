@@ -226,7 +226,7 @@ namespace
 
     }
 
-    virtual void CreateSession(const RemoteSessionParameters& parameters)
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
     {
       if (Debug)  { std::cout << "binary_client| CreateSession -->" << std::endl; }
       CreateSessionRequest request;
@@ -250,23 +250,26 @@ namespace
       CreateSessionResponse response = Send<CreateSessionResponse>(request);
       AuthenticationToken = response.Session.AuthenticationToken;
       if (Debug)  { std::cout << "binary_client| CreateSession <--" << std::endl; }
+      return response;
     }
 
-    virtual void ActivateSession()
+    virtual ActivateSessionResponse ActivateSession()
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
       request.Parameters.LocaleIDs.push_back("en");
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
+      return response;
     }
 
-    virtual void CloseSession()
+    virtual CloseSessionResponse CloseSession()
     {
       if (Debug)  { std::cout << "binary_client| CloseSession -->" << std::endl; }
       CloseSessionRequest request;
       CloseSessionResponse response = Send<CloseSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| CloseSession <--" << std::endl; }
+      return response;
     }
 
     virtual std::shared_ptr<EndpointServices> Endpoints() override

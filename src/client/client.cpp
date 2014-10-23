@@ -48,8 +48,9 @@ namespace OpcUa
     session.EndpointURL = Endpoint;
     session.Timeout = 1200000;
 
-    Server->CreateSession(session);
-    Server->ActivateSession();
+    CreateSessionResponse response = Server->CreateSession(session);
+    //FIXME: Here read timeout from server and start a keepalive thread if we need to
+    ActivateSessionResponse aresponse = Server->ActivateSession();
   }
 
   void RemoteClient::Disconnect()
