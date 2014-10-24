@@ -30,13 +30,6 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-
-template <typename T>
-T Extract(const object & obj)
-{
-  return extract<T>(obj)();
-}
-
 template <typename T>
 list ToList(const std::vector<T> objects)
 {
@@ -72,40 +65,12 @@ std::vector<T> ToVector(const object & list)
   for (std::size_t i = 0; i < listSize; ++i)
     {
       const object & element = list[i];
-      const T & value = Extract<T>(element);
+      const T & value = extract<T>(element)();
       result.push_back(value);
     }
 
   return result;
 }
-
-struct PyBrowseParameters
-{
-  unsigned MaxReferenciesCount;
-  NodeID NodeToBrowse;
-  unsigned Direction;
-  NodeID ReferenceTypeID;
-  bool IncludeSubtypes;
-  unsigned NodeClasses;
-  unsigned ResultMask;
-
-  PyBrowseParameters()
-    : MaxReferenciesCount(0)
-    , Direction(0)
-    , IncludeSubtypes(false)
-    , NodeClasses(0)
-    , ResultMask(0)
-  {
-  }
-};
-
-struct PyReadParameters
-{
-  double MaxAge;
-  TimestampsToReturn TimestampsType;
-  list AttributesToRead; // type of elmnts is AttributeValueID
-};
-
 
 struct VariantToPythonObjectConverter
 {
@@ -176,12 +141,12 @@ Variant ToVariant(const object & object)
 
   else if (extract<int>(object).check())
     {
-      var = Extract<int>(object);
+      var = extract<int>(object)();
     }
 
   else if (extract<double>(object).check())
     {
-      var = Extract<double>(object);
+      var = extract<double>(object)();
     }
 
   else if (extract<NodeID>(object).check())
@@ -435,8 +400,8 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
-  .def(init<std::string, uint16_t>()) // XXX ah, right
-  //.def("parse", &ToQualifiedName)      XXX could be def(), dropped it's mostly useless
+  .def(init<std::string, uint16_t>()) // XXX A.D.D, right
+  //.def("parse", &ToQualifiedName)      XXX could be def(), useless
   .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
   .def_readwrite("name", &QualifiedName::Name)
   .def(str(self))
@@ -466,7 +431,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("type", &ApplicationDescription::Type)
   .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerURI)
   .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileURI)
-  //.def_readwrite("discovery_urls", &ApplicationDescription::DiscoveryURLs) XXX
+  //.def_readwrite("discovery_urls", &ApplicationDescription::DiscoveryURLs) XXX getter ok, setter not
   .add_vector_property("discovery_urls", ApplicationDescription, std::string, DiscoveryURLs)
   ;
 
@@ -486,27 +451,15 @@ BOOST_PYTHON_MODULE(opcua)
   class_<EndpointDescription>("EndpointDescription")
   .def_readwrite("url", &EndpointDescription::EndpointURL)
   .def_readwrite("server_description", &EndpointDescription::ServerDescription)
-  //.def_readwrite("certificate", &EndpointDescription::ServerCertificate)
   .def_readwrite("security_mode", &EndpointDescription::SecurityMode)
   .def_readwrite("security_policy_uri", &EndpointDescription::SecurityPolicyURI)
-  //.def_readwrite("user_identify_tokens", &EndpointDescription::UserIdentifyTokens) XXX
+  //.def_readwrite("user_identify_tokens", &EndpointDescription::UserIdentifyTokens) XXX getter ok, setter not
   .add_vector_property("user_identify_tokens", EndpointDescription, UserTokenPolicy, UserIdentifyTokens)
   .def_readwrite("transport_profile_uri", &EndpointDescription::TransportProfileURI)
   .def_readwrite("security_level", &EndpointDescription::SecurityLevel)
   ;
 
   to_python_converter<std::vector<EndpointDescription>, vector_to_python_converter<EndpointDescription>>();
-
-  // XXX delete
-  class_<PyBrowseParameters>("BrowseParameters")
-  .def_readwrite("max_referencies_count", &PyBrowseParameters::MaxReferenciesCount)
-  .def_readwrite("node_to_browse", &PyBrowseParameters::NodeToBrowse)
-  .def_readwrite("direction", &PyBrowseParameters::Direction)
-  .def_readwrite("reference_type_id", &PyBrowseParameters::ReferenceTypeID)
-  .def_readwrite("include_subtypes", &PyBrowseParameters::IncludeSubtypes)
-  .def_readwrite("node_classes", &PyBrowseParameters::NodeClasses)
-  .def_readwrite("result_mask", &PyBrowseParameters::ResultMask)
-  ;
 
   class_<ReferenceDescription>("ReferenceDescription")
   .def_readwrite("reference_type_id", &ReferenceDescription::ReferenceTypeID)
@@ -519,13 +472,6 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
-
-  // XXX delete
-  class_<PyReadParameters>("ReadParameters")
-  .def_readwrite("max_age", &PyReadParameters::MaxAge)
-  .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
-  .def_readwrite("attributes_to_read", &PyReadParameters::AttributesToRead)
-  ;
 
   class_<AttributeValueID>("AttributeValueID")
   .def_readwrite("node", &AttributeValueID::Node)
@@ -643,8 +589,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_objects_node", &OPCUAServer::GetObjectsNode)
   .def("get_server_node", &OPCUAServer::GetServerNode)
   .def("get_node", &OPCUAServer::GetNode)
-  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<QualifiedName>&)) &OPCUAServer::GetNodeFromPath)
-  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<std::string>&)) &OPCUAServer::GetNodeFromPath)
+  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<QualifiedName>&)) &OPCUAServer::GetNodeFromPath) XXX
+  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<std::string>&)) &OPCUAServer::GetNodeFromPath) XXX
   .def("set_uri", &OPCUAServer::SetServerURI)
   .def("add_xml_address_space", &OPCUAServer::AddAddressSpace)
   .def("set_server_name", &OPCUAServer::SetServerName)
