@@ -98,48 +98,6 @@ struct PyBrowseParameters
   }
 };
 
-struct PyReferenceDescription
-{
-  NodeID ReferenceTypeID;
-  bool IsForward;
-  NodeID TargetNodeID;
-  QualifiedName BrowseName;
-  std::string DisplayName;
-  unsigned TargetNodeClass;
-  NodeID TargetNodeTypeDefinition;
-
-  PyReferenceDescription()
-    : IsForward(false)
-    , TargetNodeClass(0)
-  {
-  }
-
-  explicit PyReferenceDescription(const ReferenceDescription & desc)
-    : ReferenceTypeID(desc.ReferenceTypeID)
-    , IsForward(desc.IsForward)
-    , TargetNodeID(desc.TargetNodeID)
-    , BrowseName(desc.BrowseName)
-    , DisplayName(desc.DisplayName.Text)
-    , TargetNodeClass(static_cast<unsigned>(desc.TargetNodeClass))
-    , TargetNodeTypeDefinition(desc.TargetNodeTypeDefinition)
-  {
-  }
-};
-
-list ToList(const std::vector<ReferenceDescription> descs)
-{
-  list result;
-  std::for_each(
-    descs.begin(),
-    descs.end(),
-    [&result](const ReferenceDescription & desc)
-  {
-    result.append(PyReferenceDescription(desc));
-  });
-
-  return result;
-}
-
 struct PyAttributeValueID
 {
   NodeID Node;
@@ -1193,6 +1151,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   to_python_converter<std::vector<EndpointDescription>, vector_to_python_converter<EndpointDescription>>();
 
+  // XXX delete
   class_<PyBrowseParameters>("BrowseParameters")
   .def_readwrite("max_referencies_count", &PyBrowseParameters::MaxReferenciesCount)
   .def_readwrite("node_to_browse", &PyBrowseParameters::NodeToBrowse)
@@ -1202,14 +1161,17 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("node_classes", &PyBrowseParameters::NodeClasses)
   .def_readwrite("result_mask", &PyBrowseParameters::ResultMask);
 
-  class_<PyReferenceDescription>("ReferenceDescription")
-  .def_readwrite("reference_type_id", &PyReferenceDescription::ReferenceTypeID)
-  .def_readwrite("is_forward", &PyReferenceDescription::IsForward)
-  .def_readwrite("target_node_id", &PyReferenceDescription::TargetNodeID)
-  .def_readwrite("browse_name", &PyReferenceDescription::BrowseName)
-  .def_readwrite("display_name", &PyReferenceDescription::DisplayName)
-  .def_readwrite("target_node_class", &PyReferenceDescription::TargetNodeClass)
-  .def_readwrite("target_node_type_definition", &PyReferenceDescription::TargetNodeTypeDefinition);
+  class_<ReferenceDescription>("ReferenceDescription")
+  .def_readwrite("reference_type_id", &ReferenceDescription::ReferenceTypeID)
+  .def_readwrite("is_forward", &ReferenceDescription::IsForward)
+  .def_readwrite("target_node_id", &ReferenceDescription::TargetNodeID)
+  .def_readwrite("browse_name", &ReferenceDescription::BrowseName)
+  .def_readwrite("display_name", &ReferenceDescription::DisplayName)
+  .def_readwrite("target_node_class", &ReferenceDescription::TargetNodeClass)
+  .def_readwrite("target_node_type_definition", &ReferenceDescription::TargetNodeTypeDefinition)
+  ;
+
+  to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
 
   class_<PyReadParameters>("ReadParameters")
   .def_readwrite("max_age", &PyReadParameters::MaxAge)

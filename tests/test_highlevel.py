@@ -87,6 +87,16 @@ class Unit(unittest.TestCase):
         ed.user_identify_tokens = [opcua.UserTokenPolicy()]*3
         self.assertEqual(len(ed.user_identify_tokens),3)
 
+    def test_reference_description(self):
+        rd=opcua.ReferenceDescription()
+        self.assertEqual(rd.browse_name,opcua.QualifiedName())
+        self.assertEqual(rd.is_forward,False)
+        self.assertEqual(rd.reference_type_id,opcua.NodeID())
+        self.assertEqual(rd.target_node_class,opcua.NodeClass.All)
+        self.assertEqual(rd.target_node_id,opcua.NodeID())
+        self.assertEqual(rd.target_node_type_definition,opcua.NodeID())
+
+
 class CommonTests(object):
     def test_root(self):
         root = self.opc.get_root_node()
