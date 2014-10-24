@@ -78,87 +78,6 @@ std::vector<T> ToVector(const object & list)
   return result;
 }
 
-struct PyUserTokenPolicy
-{
-  std::string PolicyID;
-  unsigned TokenType;
-  std::string IssuedTokenType;
-  std::string IssuerEndpointURL;
-  std::string SecurityPolicyURI;
-
-  PyUserTokenPolicy()
-    : TokenType(0)
-  {
-  }
-
-  PyUserTokenPolicy(const UserTokenPolicy & policy)
-    : PolicyID(policy.PolicyID)
-    , TokenType(static_cast<unsigned>(policy.TokenType))
-    , IssuedTokenType(policy.IssuedTokenType)
-    , IssuerEndpointURL(policy.IssuerEndpointURL)
-    , SecurityPolicyURI(policy.SecurityPolicyURI)
-  {
-  }
-};
-
-list ToList(const std::vector<UserTokenPolicy> policies)
-{
-  list result;
-  std::for_each(
-    policies.begin(),
-    policies.end(),
-    [&result](const UserTokenPolicy & policy)
-  {
-    result.append(PyUserTokenPolicy(policy));
-  }
-  );
-  return result;
-}
-
-struct PyEndpointDescription
-{
-  std::string EndpointURL;
-  ApplicationDescription ServerDescription;
-  //CertificateData ServerCertificate; TODO
-  unsigned SecurityMode;
-  std::string SecurityPolicyURI;
-  list UserIdentifyTokens;
-  std::string TransportProfileURI;
-  unsigned SecurityLevel;
-
-  PyEndpointDescription()
-    : SecurityMode(0)
-    , SecurityLevel(0)
-  {
-  }
-
-  explicit PyEndpointDescription(const EndpointDescription & endpoint)
-    : EndpointURL(endpoint.EndpointURL)
-    , ServerDescription(endpoint.ServerDescription)
-    // , ServerCertificate(endpoint.ServerCertificate)
-    , SecurityMode(endpoint.SecurityMode)
-    , SecurityPolicyURI(endpoint.SecurityPolicyURI)
-    , UserIdentifyTokens(ToList(endpoint.UserIdentifyTokens))
-    , TransportProfileURI(endpoint.TransportProfileURI)
-    , SecurityLevel(endpoint.SecurityLevel)
-  {
-  }
-};
-
-list ToList(const std::vector<EndpointDescription> endpoints)
-{
-  list resultApps;
-  std::for_each(
-    endpoints.begin(),
-    endpoints.end(),
-    [&resultApps](const EndpointDescription & endpoint)
-  {
-    resultApps.append(PyEndpointDescription(endpoint));
-  });
-
-  return resultApps;
-}
-
 struct PyBrowseParameters
 {
   unsigned MaxReferenciesCount;
@@ -1163,18 +1082,6 @@ static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
 static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 { self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
 
-
-
-//--------------------------------------------------------------------------
-// ApplicationDescription helpers
-//--------------------------------------------------------------------------
-
-static void ApplicationDescription_SetDiscoveryURLs(ApplicationDescription & self, std::vector<std::string> urls)
-{ self.DiscoveryURLs = urls; }
-
-static std::vector<std::string> ApplicationDescription_GetDiscoveryURLs(const ApplicationDescription & self)
-{ return self.DiscoveryURLs; }
-
 //--------------------------------------------------------------------------
 // module
 //--------------------------------------------------------------------------
@@ -1182,13 +1089,14 @@ static std::vector<std::string> ApplicationDescription_GetDiscoveryURLs(const Ap
 BOOST_PYTHON_MODULE(opcua)
 {
 
-  using self_ns::str; //hack to enable __str__ in python classes with str(self)
+  using self_ns::str; // hack to enable __str__ in python classes with str(self)
 
   PyEval_InitThreads();
 
   wrap_opcua_enums();
-  string_vector_from_python_converter();
+
   to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
+  vector_from_python_converter<std::string>();
 
   class_<DateTime>("DateTime", init<>())
   .def(init<int64_t>())
@@ -1254,27 +1162,36 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("type", &ApplicationDescription::Type)
   .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerURI)
   .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileURI)
-  .add_property("discovery_urls", &ApplicationDescription_GetDiscoveryURLs, &ApplicationDescription_SetDiscoveryURLs) // XXX getter ok, setter needs to be wrap (why?)
+  //.def_readwrite("discovery_urls", &ApplicationDescription::DiscoveryURLs) XXX
+  .add_vector_property("discovery_urls", ApplicationDescription, std::string, DiscoveryURLs)
   ;
 
   to_python_converter<std::vector<ApplicationDescription>, vector_to_python_converter<ApplicationDescription>>();
 
-  class_<PyEndpointDescription>("EndpointDescription")
-  .def_readwrite("url", &PyEndpointDescription::EndpointURL)
-  .def_readwrite("server_description", &PyEndpointDescription::ServerDescription)
-  //.def_readwrite("certificate", &PyEndpointDescription::ServerCertificate)
-  .def_readwrite("security_mode", &PyEndpointDescription::SecurityMode)
-  .def_readwrite("security_policy_uri", &PyEndpointDescription::SecurityPolicyURI)
-  .def_readwrite("user_identify_tokens", &PyEndpointDescription::UserIdentifyTokens)
-  .def_readwrite("transport_profile_uri", &PyEndpointDescription::TransportProfileURI)
-  .def_readwrite("security_level", &PyEndpointDescription::SecurityLevel);
+  class_<UserTokenPolicy>("UserTokenPolicy")
+  .def_readwrite("policy_id", &UserTokenPolicy::PolicyID)
+  .def_readwrite("token_type", &UserTokenPolicy::TokenType)
+  .def_readwrite("issued_token_type", &UserTokenPolicy::IssuedTokenType)
+  .def_readwrite("issuer_endpoint_url", &UserTokenPolicy::IssuerEndpointURL)
+  .def_readwrite("security_policy_uri", &UserTokenPolicy::SecurityPolicyURI)
+  ;
 
-  class_<PyUserTokenPolicy>("UserTokenPolicy")
-  .def_readwrite("policy_id", &PyUserTokenPolicy::PolicyID)
-  .def_readwrite("token_type", &PyUserTokenPolicy::TokenType)
-  .def_readwrite("issued_token_type", &PyUserTokenPolicy::IssuedTokenType)
-  .def_readwrite("issuer_endpoint_url", &PyUserTokenPolicy::IssuerEndpointURL)
-  .def_readwrite("security_policy_uri", &PyUserTokenPolicy::SecurityPolicyURI);
+  to_python_converter<std::vector<UserTokenPolicy>, vector_to_python_converter<UserTokenPolicy>>();
+  vector_from_python_converter<UserTokenPolicy>();
+
+  class_<EndpointDescription>("EndpointDescription")
+  .def_readwrite("url", &EndpointDescription::EndpointURL)
+  .def_readwrite("server_description", &EndpointDescription::ServerDescription)
+  //.def_readwrite("certificate", &EndpointDescription::ServerCertificate)
+  .def_readwrite("security_mode", &EndpointDescription::SecurityMode)
+  .def_readwrite("security_policy_uri", &EndpointDescription::SecurityPolicyURI)
+  //.def_readwrite("user_identify_tokens", &EndpointDescription::UserIdentifyTokens) XXX
+  .add_vector_property("user_identify_tokens", EndpointDescription, UserTokenPolicy, UserIdentifyTokens)
+  .def_readwrite("transport_profile_uri", &EndpointDescription::TransportProfileURI)
+  .def_readwrite("security_level", &EndpointDescription::SecurityLevel)
+  ;
+
+  to_python_converter<std::vector<EndpointDescription>, vector_to_python_converter<EndpointDescription>>();
 
   class_<PyBrowseParameters>("BrowseParameters")
   .def_readwrite("max_referencies_count", &PyBrowseParameters::MaxReferenciesCount)

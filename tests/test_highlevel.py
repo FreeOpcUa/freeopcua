@@ -73,8 +73,19 @@ class Unit(unittest.TestCase):
         self.assertEqual(ad.type,opcua.ApplicationType.CLIENT)
         ad.discovery_urls=['a','b','c']
         self.assertEqual(ad.discovery_urls,['a','b','c'])
-        
+    
+    def test_user_token_policy(self):
+        utp = opcua.UserTokenPolicy()
+        self.assertEqual(utp.token_type,opcua.UserIdentifyTokenType.ANONYMOUS)
 
+    def test_endpoint_description(self):
+        ed=opcua.EndpointDescription()
+        self.assertEqual(ed.security_mode,opcua.MessageSecurityMode.MSM_NONE)
+        self.assertEqual(ed.security_level,0)
+        ed.server_description=opcua.ApplicationDescription()
+        self.assertEqual(ed.user_identify_tokens,[])
+        ed.user_identify_tokens = [opcua.UserTokenPolicy()]*3
+        self.assertEqual(len(ed.user_identify_tokens),3)
 
 class CommonTests(object):
     def test_root(self):

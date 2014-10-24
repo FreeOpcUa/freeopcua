@@ -9,7 +9,6 @@ opcua_server_path = os.environ['OPCUA_SERVER_PATH']
 sources = [
 	'../src/wrap_opcua_module.cpp',
 	'../src/wrap_opcua_enums.cpp',
-  '../src/wrap_opcua_helpers.cpp',
 	'test_computer.cpp'
 ] 
 
