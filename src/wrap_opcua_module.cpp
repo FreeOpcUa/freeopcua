@@ -350,79 +350,6 @@ private:
   Services::SharedPtr Impl;
 };
 
-
-class PyClient: public RemoteClient
-{
-public:
-  using RemoteClient::RemoteClient;
-
-  Node PyGetRootNode()
-  {
-    return Node(Server, ObjectID::RootFolder);
-  }
-
-  Node PyGetObjectsNode()
-  {
-    return Node(Server, ObjectID::ObjectsFolder);
-  }
-
-  Node PyGetServerNode()
-  {
-    return Node(Server, ObjectID::Server);
-  }
-
-  Node PyGetNode(NodeID nodeid)
-  {
-    return Node(RemoteClient::GetNode(nodeid));
-  }
-
-  Subscription * CreateSubscription(uint period, PySubscriptionClient & callback)
-  {
-    std::unique_ptr<OpcUa::Subscription> sub  = RemoteClient::CreateSubscription(period, callback);
-    Subscription * psub = sub.release(); // XXX ownership
-    return psub;
-  }
-};
-
-class PyOPCUAServer: public OPCUAServer
-{
-public:
-  using OPCUAServer::OPCUAServer;
-
-  Node PyGetRootNode() const
-  {
-    return Node(Registry->GetServer(), ObjectID::RootFolder);
-  }
-
-  Node PyGetObjectsNode() const
-  {
-    return Node(Registry->GetServer(), ObjectID::ObjectsFolder);
-  }
-
-  Node PyGetServerNode() const
-  {
-    return Node(Registry->GetServer(), ObjectID::Server);
-  }
-
-  Node PyGetNode(const NodeID & nodeid) const
-  {
-    return Node(OPCUAServer::GetNode(nodeid));
-  }
-
-  Node PyGetNodeFromPath(const object & path) const
-  {
-    return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path));
-  }
-
-  Subscription * CreateSubscription(uint period, PySubscriptionClient & callback)
-  {
-    std::unique_ptr<OpcUa::Subscription> sub  = OPCUAServer::CreateSubscription(period, callback);
-    Subscription * psub = sub.release(); // XXX ownership
-    return psub;
-  }
-};
-
-
 //--------------------------------------------------------------------------
 // Overloads
 //--------------------------------------------------------------------------
@@ -430,6 +357,7 @@ public:
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OPCUAServerSetLoadCppAddressSpace_stubs, OPCUAServer::SetLoadCppAddressSpace, 0, 1);
 
 
 //--------------------------------------------------------------------------
@@ -518,6 +446,29 @@ static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
 
 static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 { self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
+
+//--------------------------------------------------------------------------
+// RemoteClient helpers
+//--------------------------------------------------------------------------
+
+
+Subscription * RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
+{
+  std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
+  Subscription * psub = sub.release(); // XXX ownership
+  return psub;
+}
+
+//--------------------------------------------------------------------------
+// OPCUAServer helpers
+//--------------------------------------------------------------------------
+
+Subscription * OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
+{
+  std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
+  Subscription * psub = sub.release(); // XXX ownership
+  return psub;
+}
 
 //--------------------------------------------------------------------------
 // module
@@ -749,41 +700,41 @@ BOOST_PYTHON_MODULE(opcua)
   .def("subscribe_events", (uint32_t (Subscription::*)(const Node &, const Node &)) &Subscription::SubscribeEvents)
   ;
 
-  class_<PyClient, boost::noncopyable>("Client", init<>())
+  class_<RemoteClient, boost::noncopyable>("Client", init<>())
   .def(init<bool>())
-  .def("connect", &PyClient::Connect)
-  .def("disconnect", &PyClient::Disconnect)
-  .def("get_root_node", &PyClient::PyGetRootNode)
-  .def("get_objects_node", &PyClient::PyGetObjectsNode)
-  .def("get_server_node", &PyClient::PyGetServerNode)
-  .def("get_node", &PyClient::PyGetNode)
-  .def("set_endpoint", &PyClient::SetEndpoint)
-  .def("get_endpoint", &PyClient::GetEndpoint)
-  .def("set_session_name", &PyClient::SetSessionName)
-  .def("get_session_name", &PyClient::GetSessionName)
-  .def("get_uri", &PyClient::GetURI)
-  .def("set_uri", &PyClient::SetURI)
-  .def("set_security_policy", &PyClient::SetSecurityPolicy)
-  .def("get_security_policy", &PyClient::GetSecurityPolicy)
-  .def("create_subscription", &PyClient::CreateSubscription, return_value_policy<reference_existing_object>())
+  .def("connect", &RemoteClient::Connect)
+  .def("disconnect", &RemoteClient::Disconnect)
+  .def("get_root_node", &RemoteClient::GetRootNode)
+  .def("get_objects_node", &RemoteClient::GetObjectsNode)
+  .def("get_server_node", &RemoteClient::GetServerNode)
+  .def("get_node", &RemoteClient::GetNode)
+  .def("set_endpoint", &RemoteClient::SetEndpoint)
+  .def("get_endpoint", &RemoteClient::GetEndpoint)
+  .def("set_session_name", &RemoteClient::SetSessionName)
+  .def("get_session_name", &RemoteClient::GetSessionName)
+  .def("get_uri", &RemoteClient::GetURI)
+  .def("set_uri", &RemoteClient::SetURI)
+  .def("set_security_policy", &RemoteClient::SetSecurityPolicy)
+  .def("get_security_policy", &RemoteClient::GetSecurityPolicy)
+  .def("create_subscription", &RemoteClient_CreateSubscription, return_value_policy<reference_existing_object>())
   ;
 
-  class_<PyOPCUAServer, boost::noncopyable >("Server", init<>())
+  class_<OPCUAServer, boost::noncopyable >("Server", init<>())
   .def(init<bool>())
-  .def("start", &PyOPCUAServer::Start)
-  .def("stop", &PyOPCUAServer::Stop)
-  .def("get_root_node", &PyOPCUAServer::PyGetRootNode)
-  .def("get_objects_node", &PyOPCUAServer::PyGetObjectsNode)
-  .def("get_server_node", &PyOPCUAServer::PyGetServerNode)
-  .def("get_node", &PyOPCUAServer::PyGetNode)
-  //.def("get_node_from_path", &PyOPCUAServer::PyGetNodeFromPath)
-  //.def("get_node_from_qn_path", NodeFromPathQN)
-  .def("set_uri", &PyOPCUAServer::SetServerURI)
-  .def("add_xml_address_space", &PyOPCUAServer::AddAddressSpace)
-  .def("set_server_name", &PyOPCUAServer::SetServerName)
-  .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
-  .def("load_cpp_addressspace", &PyOPCUAServer::SetLoadCppAddressSpace)
-  .def("create_subscription", &PyOPCUAServer::CreateSubscription, return_value_policy<reference_existing_object>())
+  .def("start", &OPCUAServer::Start)
+  .def("stop", &OPCUAServer::Stop)
+  .def("get_root_node", &OPCUAServer::GetRootNode)
+  .def("get_objects_node", &OPCUAServer::GetObjectsNode)
+  .def("get_server_node", &OPCUAServer::GetServerNode)
+  .def("get_node", &OPCUAServer::GetNode)
+  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<QualifiedName>&)) &OPCUAServer::GetNodeFromPath)
+  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<std::string>&)) &OPCUAServer::GetNodeFromPath)
+  .def("set_uri", &OPCUAServer::SetServerURI)
+  .def("add_xml_address_space", &OPCUAServer::AddAddressSpace)
+  .def("set_server_name", &OPCUAServer::SetServerName)
+  .def("set_endpoint", &OPCUAServer::SetEndpoint)
+  .def("load_cpp_addressspace", &OPCUAServer::SetLoadCppAddressSpace, OPCUAServerSetLoadCppAddressSpace_stubs((arg("val") = true)))
+  .def("create_subscription", &OPCUAServer_CreateSubscription, return_value_policy<reference_existing_object>())
   ;
 
 }
