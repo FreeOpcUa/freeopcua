@@ -103,6 +103,14 @@ class Unit(unittest.TestCase):
         self.assertEqual(avid.index_range,'')
         self.assertEqual(avid.data_encoding,opcua.QualifiedName())
 
+    def test_write_value(self):
+        wv=opcua.WriteValue()
+        self.assertEqual(wv.node,opcua.NodeID())
+        self.assertEqual(wv.attribute,opcua.AttributeID())
+        self.assertEqual(wv.numeric_range,'')
+        self.assertEqual(wv.data.value,None)
+
+
 class CommonTests(object):
     def test_root(self):
         root = self.opc.get_root_node()
@@ -150,8 +158,6 @@ class CommonTests(object):
         self.assertEqual(qn, v.get_name())
         val = v.get_value()
         self.assertEqual(['l', 'b'], val)
-
-
 
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()

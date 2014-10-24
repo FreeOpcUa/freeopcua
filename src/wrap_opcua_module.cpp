@@ -25,6 +25,7 @@
 
 #include "wrap_opcua_enums.h"
 #include "wrap_opcua_helpers.h"
+#include "wrap_opcua_subscriptionclient.h"
 
 using namespace boost::python;
 using namespace OpcUa;
@@ -249,74 +250,6 @@ Variant ToVariant2(const object & object, VariantType vtype)
     }
 }
 
-struct PyWriteValue
-{
-  NodeID Node;
-  unsigned Attribute;
-  std::string NumericRange;
-  DataValue Data;
-
-  PyWriteValue()
-    : Attribute(0)
-  {
-  }
-
-  explicit PyWriteValue(const WriteValue & value)
-    : Node(value.Node)
-    , Attribute(static_cast<unsigned>(value.Attribute))
-    , NumericRange(value.NumericRange)
-    , Data(value.Data)
-  {
-  }
-};
-
-WriteValue GetWriteValue(const PyWriteValue & pyValue)
-{
-  WriteValue result;
-  result.Attribute = static_cast<AttributeID>(pyValue.Attribute);
-  result.Node = pyValue.Node;
-  result.NumericRange = pyValue.NumericRange;
-
-  if (pyValue.Data.Encoding & DATA_VALUE_STATUS_CODE)
-    {
-      result.Data.Status = static_cast<StatusCode>(pyValue.Data.Status);
-      result.Data.Encoding |= DATA_VALUE_STATUS_CODE;
-    }
-
-  if (pyValue.Data.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
-    {
-      result.Data.ServerPicoseconds = pyValue.Data.ServerPicoseconds;
-      result.Data.Encoding |= DATA_VALUE_SERVER_PICOSECONDS;
-    }
-
-  if (pyValue.Data.Encoding & DATA_VALUE_SOURCE_PICOSECONDS)
-    {
-      result.Data.SourcePicoseconds = pyValue.Data.SourcePicoseconds;
-      result.Data.Encoding |= DATA_VALUE_SOURCE_PICOSECONDS;
-    }
-
-  if (pyValue.Data.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
-    {
-      result.Data.ServerTimestamp.Value = pyValue.Data.ServerTimestamp;
-      result.Data.Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
-    }
-
-  if (pyValue.Data.Encoding & DATA_VALUE_SOURCE_TIMESTAMP)
-    {
-      result.Data.SourceTimestamp.Value = pyValue.Data.SourceTimestamp;
-      result.Data.Encoding |= DATA_VALUE_SOURCE_TIMESTAMP;
-    }
-
-  if (pyValue.Data.Encoding & DATA_VALUE)
-    {
-      result.Data.Value = pyValue.Data.Value;
-      result.Data.Encoding |= DATA_VALUE;
-    }
-
-  return result;
-}
-
-
 struct PyVariant
 {
   object Value;
@@ -396,470 +329,27 @@ public:
     return ToList<DataValue, DataValue>(data); // XXX std::vector<DataValue> has been wrapped.
   }
 
-  //    std::vector<StatusCode> Write(const std::vector<WriteValue>& filter) = 0;
-  list Write(const list & in)
-  {
-    const std::vector<PyWriteValue> & pyValues = ToVector<PyWriteValue>(in);
-    std::vector<WriteValue> values;
-
-    for (std::vector<PyWriteValue>::const_iterator valueIt = pyValues.begin(); valueIt != pyValues.end(); ++valueIt)
-      {
-        const PyWriteValue & pyValue = *valueIt;
-        const WriteValue & value = GetWriteValue(pyValue);
-        values.push_back(value);
-      }
-
-    const list & result = ToList<unsigned, StatusCode>(Impl->Attributes()->Write(values));
-    return result;
-  }
+// XXX XXX XXX PyWriteValue is gone but we have it and vector<>
+//  list Write(const list & in)
+//  {
+//    const std::vector<PyWriteValue> & pyValues = ToVector<PyWriteValue>(in);
+//    std::vector<WriteValue> values;
+//
+//    for (std::vector<PyWriteValue>::const_iterator valueIt = pyValues.begin(); valueIt != pyValues.end(); ++valueIt)
+//      {
+//        const PyWriteValue & pyValue = *valueIt;
+//        const WriteValue & value = GetWriteValue(pyValue);
+//        values.push_back(value);
+//      }
+//
+//    const list & result = ToList<unsigned, StatusCode>(Impl->Attributes()->Write(values));
+//    return result;
+//  }
 
 private:
   Services::SharedPtr Impl;
 };
 
-/*
-      StructureStatusResult
-      MessageSecurityMode
-      StructureApplicationDescription
-      SecurityTokenRequestType
-      StructureUserIdentifyToken
-      AnonymousIdentifyToken
-      UserNameIdentifyToken
-      X509IdentifyToken
-      StructureBuildInfo
-      SoftwareCertificate
-      StructureSignedSoftwareCertificate
-      StructureAddNodesItem
-      StructureAddReferencesItem
-      StructureDeleteNodesItem
-      StructureDeleteReferencesItem
-      RedundancySupport
-      ServerState
-      StructureSamplingIntervalDiagnosticsDataType
-      StructureServerDiagnosticsSummaryType
-      StructureServerStatusDataType
-      StructureSessionDiagnosticsDataType
-      StructureSessionSecurityDiagnosticsDataType
-      StructureServiceCounterDataType
-      StructureSubscriptionDiagnosticsDataType
-      StructureModelChangeStructureDataType
-      StructureRange
-      StructureEUInformation
-      StructureSemanticChangeStructureDataType
-      ImageBmp
-      ImageGif
-      ImageJpg
-      ImagePng
-      ServerType
-      ServerArray
-      NamespaceArray
-      ServerStatus
-      ServiceLevel
-      ServerCapabilities
-      ServerDiagnostics
-      VendorServerInfo
-      ServerRedundancy
-      ServerCapabilitiesType
-      ServerProfileArray
-      LocaleIDArray
-      MinSupportedSampleRate
-      ModellingRules
-      ServerDiagnosticsType
-      ServerDiagnosticsSummary
-      SamplingIntervalDiagnosticsArray
-      SubscriptionDiagnosticsArray
-      EnableFlag
-      SessionDiagnosticsSummaryType
-      SessionDiagnosticsObjectType
-      VendorServerInfoType
-      ServerRedundancyType
-      RedundancySupportTypeRedundancySupport
-      BaseEventType
-      EventID
-      EventType
-      SourceNode
-      SourceName
-      Time
-      ReceiveTime
-      Message
-      Severity
-      SystemEventType
-      DeviceFailureEventType
-      BaseModelChangeEventType
-      ServerVendorCapabilityType
-      ServerStatusType
-      ServerDiagnosticsSummaryType
-      SamplingIntervalDiagnosticsArrayType
-      SamplingIntervalDiagnosticsType
-      SubscriptionDiagnosticsArrayType
-      SubscriptionDiagnosticsType
-      SessionsDiagnosticsArrayType
-      ServerDiagnosticsVariableType
-      SessionSecurityDiagnosticsArrayType
-      SessionSecurityDiagnosticsType
-      StateType
-      StateNumber
-      TransitionType
-      HistoricalEventConfigurationType
-      MaxBrowseContinuationPoints
-      MaxHistoryContinuationPoints
-      SemanticChangeEventType
-      Auditing
-      SessionsDiagnosticsSummary
-      AggregateFunctions
-      RefreshStartEventType
-      RefreshEndEventType
-      RefreshRequiredEventType
-      EventTypes
-      SoftwareCertificates
-      AlwaysGeneratesEvent
-      StartTime
-      CurrentTime
-      State
-      BuildInfo
-      ProductURI
-      ManufacturerName
-      ProductName
-      SoftwareVersion
-      BuildNumber
-      BuildDate
-      SecondsTillShutdown
-      ShutdownReason
-      LocalTime
-      IdTypeEnumStrings
-      MessageSecurityModeEnumStrings
-      SecurityTokenRequestTypeEnumStrings
-      RedundancySupportEnumStrings
-      ServerStateEnumStrings
-      HasTrueSubState
-      HasFalseSubState
-      HasCondition
-*/
-
-class PyNode: public Node
-{
-public:
-  PyNode(Services::SharedPtr srv, const NodeID & id)
-    : Node(srv, id)
-  {
-  }
-
-  PyNode(const Node & other)
-    : Node(other.GetServices(), other.GetId(), other.GetName())
-  {
-  }
-
-  object PyGetValue()
-  {
-    return ToObject(Node::GetValue());
-  }
-
-  object PyGetName()
-  {
-    return ToObject(Node::GetName());
-  }
-
-  NodeID PyGetNodeID()
-  {
-    return GetId();
-  }
-
-  object PySetValue(const object & val, VariantType hint = VariantType::NUL, DateTime t = CurrentDateTime())
-  {
-    Variant var = ToVariant2(val, hint);
-    StatusCode code = Node::SetValue(var, t);
-    return ToObject(code);
-  }
-
-  object PySetDataValue(const DataValue & dval)
-  {
-    StatusCode code = Node::SetValue(dval);
-    return ToObject(code);
-  }
-
-  list PyGetChildren()
-  {
-    list result;
-
-    for (Node n : Node::GetChildren())
-      {
-        result.append(PyNode(n));
-      }
-
-    return result;
-  }
-
-  PyNode PyGetChild(const object & path)
-  {
-    if (extract<std::string>(path).check())
-      {
-        Node n = Node::GetChild(extract<std::string>(path)());
-        return PyNode(n);
-      }
-
-    else
-      {
-        Node n = Node::GetChild(ToVector<std::string>(path));
-        return PyNode(n);
-      }
-  }
-
-  PyNode PyAddFolder(const std::string & browsename)
-  {
-    return PyNode(Node::AddFolder(browsename));
-  }
-
-  PyNode PyAddFolder2(const std::string & nodeid, const std::string & browsename)
-  {
-    return PyNode(Node::AddFolder(nodeid, browsename));
-  }
-
-  PyNode PyAddFolder3(const NodeID & nodeid, const QualifiedName browsename)
-  {
-    return PyNode(Node::AddFolder(nodeid, browsename));
-  }
-
-  PyNode PyAddObject(const std::string & browsename)
-  {
-    return PyNode(Node::AddObject(browsename));
-  }
-
-  PyNode PyAddObject2(const std::string & nodeid, const std::string & browsename)
-  {
-    return PyNode(Node::AddObject(ToNodeID(nodeid), ToQualifiedName(browsename, 0)));
-  }
-
-  PyNode PyAddObject3(const NodeID & nodeid, const QualifiedName & browsename)
-  {
-    return PyNode(Node::AddObject(nodeid, browsename));
-  }
-
-  PyNode PyAddVariable(const std::string & browsename, const object & val)
-  {
-    return PyNode(Node::AddVariable(browsename, ToVariant(val)));
-  }
-
-  PyNode PyAddVariable2(const std::string & nodeid, const std::string & browsename, const object & val)
-  {
-    return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val)));
-  }
-
-  PyNode PyAddVariable3(const NodeID & nodeid, const QualifiedName & browsename, const object & val)
-  {
-    return PyNode(Node::AddVariable(nodeid, browsename, ToVariant(val)));
-  }
-
-  PyNode PyAddProperty(const std::string & browsename, const object & val)
-  {
-    return PyNode(Node::AddProperty(browsename, ToVariant(val)));
-  }
-
-  PyNode PyAddProperty2(const std::string & nodeid, const std::string & browsename, const object & val)
-  {
-    return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val)));
-  }
-
-  PyNode PyAddProperty3(const NodeID & nodeid, const QualifiedName & browsename, const object & val)
-  {
-    return PyNode(Node::AddProperty(nodeid, browsename, ToVariant(val)));
-  }
-};
-
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(PyNodeSetValue_stubs, PyNode::PySetValue, 1, 3);
-
-class PyEvent : public Event
-{
-public:
-  using Event::Event;
-  PyEvent(const Event & other) : Event(other) {}
-
-  void PySetValue(const std::string & name, const object & val)
-  {
-    SetValue(name, ToVariant(val));
-  }
-
-  object PyGetValue(const std::string & name)
-  {
-    return ToObject(GetValue(name));
-  }
-
-  void SetMessage(const std::string & name)
-  {
-    Message = LocalizedText(name);
-  }
-
-  object GetMessage()
-  {
-    std::cout << "Getting message: " << Message.Text << std::endl;
-    return ToObject(Message.Text);
-  }
-  void SetSourceNode(NodeID node)
-  {
-    SourceNode = node;
-  }
-
-  NodeID GetSourceNode()
-  {
-    return SourceNode;
-  }
-
-  object GetTime()
-  {
-    return ToObject(Time);
-  };
-
-  void SetTime(object datetime)
-  {
-    //FIXME: implement
-  }
-
-};
-
-
-std::string parse_python_exception()
-{
-  PyObject * type_ptr = NULL, *value_ptr = NULL, *traceback_ptr = NULL;
-  // Fetch the exception info from the Python C API
-  PyErr_Fetch(&type_ptr, &value_ptr, &traceback_ptr);
-  // Fallback error
-  std::string ret("Unfetchable Python error");
-
-  // If the fetch got a type pointer, parse the type into the exception string
-  if (type_ptr != NULL)
-    {
-      handle<> h_type(type_ptr);
-      str type_pstr(h_type);
-      // Extract the string from the boost::python object
-      extract<std::string> e_type_pstr(type_pstr);
-
-      // If a valid string extraction is available, use it
-      // otherwise use fallback
-      if (e_type_pstr.check())
-        { ret = e_type_pstr(); }
-
-      else
-        { ret = "Unknown exception type"; }
-    }
-
-  // Do the same for the exception value (the stringification of the exception)
-  if (value_ptr != NULL)
-    {
-      handle<> h_val(value_ptr);
-      str a(h_val);
-      extract<std::string> returned(a);
-
-      if (returned.check())
-        { ret += ": " + returned(); }
-
-      else
-        { ret += std::string(": Unparseable Python error: "); }
-    }
-
-  // Parse lines from the traceback using the Python traceback module
-  if (traceback_ptr != NULL)
-    {
-      handle<> h_tb(traceback_ptr);
-      // Load the traceback module and the format_tb function
-      object tb(import("traceback"));
-      object fmt_tb(tb.attr("format_tb"));
-      // Call format_tb to get a list of traceback strings
-      object tb_list(fmt_tb(h_tb));
-      // Join the traceback strings into a single string
-      object tb_str(str("\n").join(tb_list));
-      // Extract the string, check the extraction, and fallback in necessary
-      extract<std::string> returned(tb_str);
-
-      if (returned.check())
-        { ret += ": " + returned(); }
-
-      else
-        { ret += std::string(": Unparseable Python traceback"); }
-    }
-
-  return ret;
-}
-
-class PySubscriptionClient: public SubscriptionClient
-{
-public:
-  PySubscriptionClient(PyObject * p) : self(p) {}
-  //PySubscriptionClient(PyObject *p, const SubscriptionClient& x)  : SubscriptionClient(x), self(p) {} //copy construct
-
-  void DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const override
-  {
-    PyGILState_STATE state = PyGILState_Ensure();
-
-    try
-      {
-        call_method<void>(self, "data_change", handle, PyNode(node), ToObject(val) , (uint32_t) attribute);
-      }
-
-    catch (const error_already_set & ex)
-      {
-        std::string perror_str = parse_python_exception();
-        std::cout << "Error in Python: " << perror_str << std::endl;
-      }
-
-    PyGILState_Release(state);
-  };
-
-  static void DefaultDataChange(const SubscriptionClient & self_, uint32_t handle, const PyNode & node, const object & val, uint32_t attribute)
-  {
-    std::cout << "No callback defined in python for DataChange" << std::endl;
-  }
-
-  void Event(uint32_t handle, const OpcUa::Event & event) const override
-  {
-    PyGILState_STATE state = PyGILState_Ensure();
-
-    try
-      {
-        call_method<void>(self, "event", handle, PyEvent(event));
-      }
-
-    catch (const error_already_set & ex)
-      {
-        std::string perror_str = parse_python_exception();
-        std::cout << "Error in Python: " << perror_str << std::endl;
-      }
-
-    PyGILState_Release(state);
-  };
-
-  static void DefaultEvent(const SubscriptionClient & self_, uint32_t handle, const PyEvent & event)
-  {
-    std::cout << "No callback defined in python for Event" << std::endl;
-  }
-
-  void StatusChange(StatusCode status)  const override
-  {
-    PyGILState_STATE state = PyGILState_Ensure();
-
-    try
-      {
-        call_method<void>(self, "status_change", status);
-      }
-
-    catch (const error_already_set & ex)
-      {
-        std::string perror_str = parse_python_exception();
-        std::cout << "Error in Python: " << perror_str << std::endl;
-      }
-
-    PyGILState_Release(state);
-  };
-
-  static void DefaultStatusChange(const SubscriptionClient & self_, StatusCode status)
-  {
-    std::cout << "No callback defined in python for StatusChange" << std::endl;
-  }
-
-
-
-
-private:
-  PyObject * const self;
-};
 
 class PySubscription
 {
@@ -867,8 +357,8 @@ public:
   PySubscription(std::shared_ptr<Subscription> other): Sub(other) { }  //converting to shared pointer, should be ok
   PySubscription() { throw std::runtime_error("Subscription cannot be instanciated from Python"); }
   void Delete() { Sub->Delete(); }
-  uint32_t SubscribeDataChange(PyNode node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
-  uint32_t SubscribeDataChange2(PyNode node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
+  uint32_t SubscribeDataChange(Node node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
+  uint32_t SubscribeDataChange2(Node node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
   void UnSubscribe(uint32_t id) { return Sub->UnSubscribe(id); }
   uint32_t SubscribeEvents() { return Sub->SubscribeEvents(); }
   uint32_t SubscribeEvents2(const Node node, const Node & eventtype) { return Sub->SubscribeEvents(node, eventtype); }
@@ -882,27 +372,27 @@ class PyClient: public RemoteClient
 public:
   using RemoteClient::RemoteClient;
 
-  PyNode PyGetRootNode()
+  Node PyGetRootNode()
   {
-    return PyNode(Server, ObjectID::RootFolder);
+    return Node(Server, ObjectID::RootFolder);
   }
 
-  PyNode PyGetObjectsNode()
+  Node PyGetObjectsNode()
   {
-    return PyNode(Server, ObjectID::ObjectsFolder);
+    return Node(Server, ObjectID::ObjectsFolder);
   }
 
-  PyNode PyGetServerNode()
+  Node PyGetServerNode()
   {
-    return PyNode(Server, ObjectID::Server);
+    return Node(Server, ObjectID::Server);
   }
 
-  PyNode PyGetNode(NodeID nodeid)
+  Node PyGetNode(NodeID nodeid)
   {
-    return PyNode(RemoteClient::GetNode(nodeid));
+    return Node(RemoteClient::GetNode(nodeid));
   }
 
-  //PyNode PyGetNodeFromPath(const object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
+  //Node GetNodeFromPath(const object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
   PySubscription CreateSubscription(uint period, PySubscriptionClient & callback)
   {
     return PySubscription(RemoteClient::CreateSubscription(period, callback));
@@ -914,27 +404,27 @@ class PyOPCUAServer: public OPCUAServer
 public:
   using OPCUAServer::OPCUAServer;
 
-  PyNode PyGetRootNode() const
+  Node PyGetRootNode() const
   {
-    return PyNode(Registry->GetServer(), ObjectID::RootFolder);
+    return Node(Registry->GetServer(), ObjectID::RootFolder);
   }
 
-  PyNode PyGetObjectsNode() const
+  Node PyGetObjectsNode() const
   {
-    return PyNode(Registry->GetServer(), ObjectID::ObjectsFolder);
+    return Node(Registry->GetServer(), ObjectID::ObjectsFolder);
   }
 
-  PyNode PyGetServerNode() const
+  Node PyGetServerNode() const
   {
-    return PyNode(Registry->GetServer(), ObjectID::Server);
+    return Node(Registry->GetServer(), ObjectID::Server);
   }
 
-  PyNode PyGetNode(const NodeID & nodeid) const
+  Node PyGetNode(const NodeID & nodeid) const
   {
-    return PyNode(OPCUAServer::GetNode(nodeid));
+    return Node(OPCUAServer::GetNode(nodeid));
   }
 
-  PyNode PyGetNodeFromPath(const object & path) const
+  Node PyGetNodeFromPath(const object & path) const
   {
     return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path));
   }
@@ -944,6 +434,16 @@ public:
     return PySubscription(OPCUAServer::CreateSubscription(period, callback));
   }
 };
+
+
+//--------------------------------------------------------------------------
+// Overloads
+//--------------------------------------------------------------------------
+
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
+
 
 //--------------------------------------------------------------------------
 // NodeID helpers
@@ -1151,7 +651,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("reference_type_id", &PyBrowseParameters::ReferenceTypeID)
   .def_readwrite("include_subtypes", &PyBrowseParameters::IncludeSubtypes)
   .def_readwrite("node_classes", &PyBrowseParameters::NodeClasses)
-  .def_readwrite("result_mask", &PyBrowseParameters::ResultMask);
+  .def_readwrite("result_mask", &PyBrowseParameters::ResultMask)
+  ;
 
   class_<ReferenceDescription>("ReferenceDescription")
   .def_readwrite("reference_type_id", &ReferenceDescription::ReferenceTypeID)
@@ -1164,12 +665,13 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
-  
+
   // XXX delete
   class_<PyReadParameters>("ReadParameters")
   .def_readwrite("max_age", &PyReadParameters::MaxAge)
   .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
-  .def_readwrite("attributes_to_read", &PyReadParameters::AttributesToRead);
+  .def_readwrite("attributes_to_read", &PyReadParameters::AttributesToRead)
+  ;
 
   class_<AttributeValueID>("AttributeValueID")
   .def_readwrite("node", &AttributeValueID::Node)
@@ -1178,49 +680,59 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("data_encoding", &AttributeValueID::DataEncoding)
   ;
 
-  class_<PyWriteValue>("WriteValue", "Parameters data for writing.")
-  .def_readwrite("node", &PyWriteValue::Node)
-  .def_readwrite("attribute", &PyWriteValue::Attribute)
-  .def_readwrite("numeric_range", &PyWriteValue::NumericRange)
-  .def_readwrite("data", &PyWriteValue::Data);
+  to_python_converter<std::vector<AttributeValueID>, vector_to_python_converter<AttributeValueID>>();
 
+
+  class_<WriteValue>("WriteValue")
+  .def_readwrite("node", &WriteValue::Node)
+  .def_readwrite("attribute", &WriteValue::Attribute)
+  .def_readwrite("numeric_range", &WriteValue::NumericRange)
+  .def_readwrite("data", &WriteValue::Data)
+  ;
+
+  to_python_converter<std::vector<WriteValue>, vector_to_python_converter<WriteValue>>();
+  vector_from_python_converter<WriteValue>();
+
+  // XXX todo
   class_<PyVariant>("Variant")
   .def_readonly("value", &PyVariant::Value)
   .def_readonly("type", &PyVariant::Type)
   .def_readonly("is_null", &PyVariant::IsNull)
   ;
 
-  class_<PyNode>("Node", init<Services::SharedPtr, NodeID>())
+  class_<Node>("Node", init<Services::SharedPtr, NodeID>())
   .def(init<Node>())
-  .def("get_id", &PyNode::PyGetNodeID)
-  .def("get_attribute", &PyNode::GetAttribute)
-  .def("set_attribute", &PyNode::SetAttribute)
-  .def("get_value", &PyNode::PyGetValue)
-  .def("set_value", &PyNode::PySetValue, PyNodeSetValue_stubs((arg("value"), arg("hint") = VariantType::NUL, arg("DateTime") = CurrentDateTime()), "set a node value."))
-  .def("set_value", &PyNode::PySetDataValue)
-  .def("get_properties", &PyNode::GetProperties)
-  .def("get_variables", &PyNode::GetVariables)
-  .def("get_name", &PyNode::PyGetName)
-  .def("get_children", &PyNode::PyGetChildren)
-  .def("get_child", &PyNode::PyGetChild)
-  .def("add_folder", &PyNode::PyAddFolder)
-  .def("add_folder", &PyNode::PyAddFolder2)
-  .def("add_object", &PyNode::PyAddObject)
-  .def("add_object", &PyNode::PyAddObject2)
-  .def("add_variable", &PyNode::PyAddVariable)
-  .def("add_variable", &PyNode::PyAddVariable2)
-  .def("add_variable", &PyNode::PyAddVariable3)
-  .def("add_property", &PyNode::PyAddProperty)
-  .def("add_property", &PyNode::PyAddProperty2)
-  .def("add_property", &PyNode::PyAddProperty3)
+  .def("get_id", &Node::GetId)
+  .def("get_attribute", &Node::GetAttribute)
+  .def("set_attribute", &Node::SetAttribute)
+  .def("get_value", &Node::GetValue)
+  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime") = CurrentDateTime()), "set a node value."))
+  .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
+  .def("get_properties", &Node::GetProperties)
+  .def("get_variables", &Node::GetVariables)
+  .def("get_name", &Node::GetName, NodeGetName_stubs((arg("force") = false)))
+  .def("get_children", (std::vector<Node> (Node::*)() const) &Node::GetChildren)
+  .def("get_child", (Node(Node::*)(const std::vector<std::string> &) const) &Node::GetChild)
+  .def("get_child", (Node(Node::*)(const std::string &) const) &Node::GetChild)
+  .def("add_folder", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddFolder)
+  .def("add_folder", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddFolder)
+  .def("add_folder", (Node(Node::*)(const std::string &) const) &Node::AddFolder)
+  .def("add_object", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddObject)
+  .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
+  .def("add_object", (Node(Node::*)(const std::string &) const) &Node::AddObject)
+  .def("add_variable", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
+  .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
+  .def("add_variable", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddVariable)
+  .def("add_property", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
+  .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
+  .def("add_property", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddProperty)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
   ;
 
-  class_<std::vector<Node> >("NodeVector")
-  .def(vector_indexing_suite<std::vector<Node> >())
-  ;
+  to_python_converter<std::vector<Node>, vector_to_python_converter<Node>>();
+  vector_from_python_converter<Node>();
 
   class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
   .def("data_change", &PySubscriptionClient::DefaultDataChange)
@@ -1228,21 +740,18 @@ BOOST_PYTHON_MODULE(opcua)
   .def("status_change", &PySubscriptionClient::DefaultStatusChange)
   ;
 
-
-  class_<PyEvent>("Event", init<const NodeID &>())
-  .def("get_value", &PyEvent::PyGetValue)
-  .def("set_value", &PyEvent::PySetValue)
-  .def_readwrite("event_id", &PyEvent::EventId)
-  .def_readwrite("event_type", &PyEvent::EventType)
-  .def_readwrite("local_time", &PyEvent::LocalTime)
-  .def_readwrite("receive_time", &PyEvent::ReceiveTime)
-  .def_readwrite("time", &PyEvent::Time)
-  .def_readwrite("source_name", &PyEvent::SourceName)
-  .add_property("message2", &PyEvent::GetMessage, &PyEvent::SetMessage)
-  .def_readwrite("severity", &PyEvent::Severity)
-  .add_property("message", &PyEvent::GetMessage, &PyEvent::SetMessage)
-  .add_property("source_node", &PyEvent::GetSourceNode, &PyEvent::SetSourceNode)
-  .add_property("time", &PyEvent::GetTime, &PyEvent::SetTime)
+  class_<Event>("Event", init<const NodeID &>())
+  .def("get_value", (Variant(Event::*)(const std::string &) const) &Event::GetValue)
+  .def("set_value", (void (Event::*)(const std::string &, Variant)) &Event::SetValue)
+  .def_readwrite("event_id", &Event::EventId)
+  .def_readwrite("event_type", &Event::EventType)
+  .def_readwrite("local_time", &Event::LocalTime)
+  .def_readwrite("message", &Event::Message)
+  .def_readwrite("receive_time", &Event::ReceiveTime)
+  .def_readwrite("severity", &Event::Severity)
+  .def_readwrite("source_name", &Event::SourceName)
+  .def_readwrite("source_node", &Event::SourceNode)
+  .def_readwrite("time", &Event::Time)
   ;
 
   class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())

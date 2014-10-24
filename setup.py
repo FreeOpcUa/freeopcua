@@ -42,6 +42,7 @@ setup(name='opcua',
       sources=[
         'src/wrap_opcua_module.cpp',
         'src/wrap_opcua_enums.cpp',
+        'src/wrap_opcua_subscriptionclient.cpp',
       ],
       include_dirs = include_dirs,
       extra_compile_args = extra_compile_args,
