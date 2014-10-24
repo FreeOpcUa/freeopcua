@@ -96,6 +96,12 @@ class Unit(unittest.TestCase):
         self.assertEqual(rd.target_node_id,opcua.NodeID())
         self.assertEqual(rd.target_node_type_definition,opcua.NodeID())
 
+    def test_attribute_valueid(self):
+        avid=opcua.AttributeValueID()
+        self.assertEqual(avid.node,opcua.NodeID())
+        self.assertEqual(avid.attribute,opcua.AttributeID.VALUE)
+        self.assertEqual(avid.index_range,'')
+        self.assertEqual(avid.data_encoding,opcua.QualifiedName())
 
 class CommonTests(object):
     def test_root(self):

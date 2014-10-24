@@ -98,14 +98,6 @@ struct PyBrowseParameters
   }
 };
 
-struct PyAttributeValueID
-{
-  NodeID Node;
-  unsigned Attribute; // type AttributeID
-  std::string IndexRange;
-  QualifiedName DataEncoding;
-};
-
 struct PyReadParameters
 {
   double MaxAge;
@@ -390,9 +382,9 @@ public:
 
     for (std::size_t i = 0; i < listSize; ++i)
       {
-        const PyAttributeValueID & value = extract<PyAttributeValueID>(in.AttributesToRead[i]);
+        const AttributeValueID & value = extract<AttributeValueID>(in.AttributesToRead[i]); // XXX check
         AttributeValueID attr;
-        attr.Attribute = static_cast<AttributeID>(value.Attribute);
+        attr.Attribute = value.Attribute;
         attr.DataEncoding.NamespaceIndex = value.DataEncoding.NamespaceIndex;
         attr.DataEncoding.Name = value.DataEncoding.Name;
         attr.IndexRange = value.IndexRange;
@@ -1172,17 +1164,19 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
-
+  
+  // XXX delete
   class_<PyReadParameters>("ReadParameters")
   .def_readwrite("max_age", &PyReadParameters::MaxAge)
   .def_readwrite("timestamps_to_return", &PyReadParameters::TimestampsType)
   .def_readwrite("attributes_to_read", &PyReadParameters::AttributesToRead);
 
-  class_<PyAttributeValueID>("AttributeValueID", "Description of attribute value to read.")
-  .def_readwrite("node", &PyAttributeValueID::Node)
-  .def_readwrite("attribute", &PyAttributeValueID::Attribute)
-  .def_readwrite("index_range", &PyAttributeValueID::IndexRange)
-  .def_readwrite("data_encoding", &PyAttributeValueID::DataEncoding);
+  class_<AttributeValueID>("AttributeValueID")
+  .def_readwrite("node", &AttributeValueID::Node)
+  .def_readwrite("attribute", &AttributeValueID::Attribute)
+  .def_readwrite("index_range", &AttributeValueID::IndexRange)
+  .def_readwrite("data_encoding", &AttributeValueID::DataEncoding)
+  ;
 
   class_<PyWriteValue>("WriteValue", "Parameters data for writing.")
   .def_readwrite("node", &PyWriteValue::Node)
