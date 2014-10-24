@@ -26,210 +26,10 @@
 #include "wrap_opcua_enums.h"
 #include "wrap_opcua_helpers.h"
 #include "wrap_opcua_subscriptionclient.h"
+#include "wrap_opcua_variant.h"
 
 using namespace boost::python;
 using namespace OpcUa;
-
-template <typename T>
-list ToList(const std::vector<T> objects)
-{
-  list result;
-  std::for_each(objects.begin(), objects.end(),
-                [&result](const T & obj)
-  {
-    result.append(obj);
-  }
-               );
-  return result;
-}
-
-template <typename ResultType, typename SourceType>
-list ToList(const std::vector<SourceType> objects)
-{
-  list result;
-  std::for_each(objects.begin(), objects.end(),
-                [&result](const SourceType & obj)
-  {
-    result.append(ResultType(obj));
-  }
-               );
-  return result;
-}
-
-template <typename T>
-std::vector<T> ToVector(const object & list)
-{
-  std::vector<T> result;
-  std::size_t listSize = len(list);
-
-  for (std::size_t i = 0; i < listSize; ++i)
-    {
-      const object & element = list[i];
-      const T & value = extract<T>(element)();
-      result.push_back(value);
-    }
-
-  return result;
-}
-
-struct VariantToPythonObjectConverter
-{
-  typedef object result_type;
-
-  template <typename T>
-  typename std::enable_if<is_container_not_string<T>::value == true, result_type>::type operator()(const T & val)
-  {
-    return ToList(val);
-  }
-
-  template <typename T>
-  typename std::enable_if<is_container_not_string<T>::value == false, result_type>::type operator()(const T & val)
-  {
-    return object(val);
-  }
-};
-
-object ToObject(const Variant & var)
-{
-  if (var.IsNul())
-    {
-      return object();
-    }
-
-  return var.Visit(VariantToPythonObjectConverter());
-}
-
-Variant ToVariant(const object & object)
-{
-  Variant var;
-
-  if (extract<std::string>(object).check())
-    {
-      var = extract<std::string>(object)();
-    }
-
-  else if (extract<list>(object).check())
-    {
-      list plist = (list) object;
-
-      if (len(object) == 0)
-        {
-        }
-      else
-        {
-          if (extract<int>(object[0]).check())
-            {
-              var = ToVector<int>(object);
-            }
-
-          else if (extract<double>(object[0]).check())
-            {
-              var = ToVector<double>(object);
-            }
-
-          else if (extract<std::string>(object[0]).check())
-            {
-              var = ToVector<std::string>(object);
-            }
-
-          else
-            {
-              throw std::logic_error("Cannot create variant from python list. Unsupported type.");
-            }
-        }
-    }
-
-  else if (extract<int>(object).check())
-    {
-      var = extract<int>(object)();
-    }
-
-  else if (extract<double>(object).check())
-    {
-      var = extract<double>(object)();
-    }
-
-  else if (extract<NodeID>(object).check())
-    {
-      var = ToVector<NodeID>(object);
-    }
-
-  else
-    {
-      throw std::logic_error("Cannot create variant from python object. Unsupported type.");
-    }
-
-  return var;
-}
-
-
-//similar to ToVariant but gives a hint to what c++ object type the python object should be converted to
-Variant ToVariant2(const object & object, VariantType vtype)
-{
-  Variant var;
-
-  if (extract<list>(object).check())
-    {
-
-      list plist = (list) object;
-
-      if (len(object) == 0)
-        {
-          return var;
-        }
-
-      else
-        {
-          switch (vtype)
-            {
-            case VariantType::BOOLEAN:
-              var = ToVector<bool>(object);
-              return var;
-
-            case VariantType::UINT32:
-              var = ToVector<uint32_t>(object);
-              return var;
-
-            default:
-              return ToVariant(object);
-            }
-        }
-    }
-
-  else
-    {
-      switch (vtype)
-        {
-        case VariantType::BOOLEAN:
-          var = extract<bool>(object)();
-          return var;
-
-        case VariantType::UINT16:
-        case VariantType::UINT32:
-          var = extract<uint32_t>(object)();
-          return var;
-
-        default:
-          return ToVariant(object);
-        }
-    }
-}
-
-struct PyVariant
-{
-  object Value;
-  VariantType Type = VariantType::NUL;
-  bool IsNull = true;
-
-  PyVariant() = default;
-
-  explicit PyVariant(const Variant & value)
-    : Value(ToObject(value))
-    , Type(value.Type())
-    , IsNull(value.IsNul())
-  {
-  }
-};
 
 //--------------------------------------------------------------------------
 // Overloads
@@ -367,6 +167,9 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
   vector_from_python_converter<std::string>();
 
+  variant_from_python_converter();
+  to_python_converter<Variant, variant_to_python_converter>();
+
   class_<DateTime>("DateTime", init<>())
   .def(init<int64_t>())
   ;
@@ -493,12 +296,12 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<WriteValue>, vector_to_python_converter<WriteValue>>();
   vector_from_python_converter<WriteValue>();
 
-  // XXX todo
-  class_<PyVariant>("Variant")
-  .def_readonly("value", &PyVariant::Value)
-  .def_readonly("type", &PyVariant::Type)
-  .def_readonly("is_null", &PyVariant::IsNull)
-  ;
+//  XXX
+//  class_<Variant>("Variant")
+//  .def_readonly("value", &PyVariant::Value)
+//  .def("type", &PyVariant::Type)
+//  .def("is_null", &PyVariant::IsNull)
+//  ;
 
   class_<Node>("Node", init<Services::SharedPtr, NodeID>())
   .def(init<Node>())
