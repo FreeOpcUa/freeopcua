@@ -351,22 +351,6 @@ private:
 };
 
 
-class PySubscription
-{
-public:
-  PySubscription(std::shared_ptr<Subscription> other): Sub(other) { }  //converting to shared pointer, should be ok
-  PySubscription() { throw std::runtime_error("Subscription cannot be instanciated from Python"); }
-  void Delete() { Sub->Delete(); }
-  uint32_t SubscribeDataChange(Node node) { return Sub->SubscribeDataChange(node, AttributeID::VALUE); }
-  uint32_t SubscribeDataChange2(Node node, AttributeID attr) { return Sub->SubscribeDataChange(node, attr); }
-  void UnSubscribe(uint32_t id) { return Sub->UnSubscribe(id); }
-  uint32_t SubscribeEvents() { return Sub->SubscribeEvents(); }
-  uint32_t SubscribeEvents2(const Node node, const Node & eventtype) { return Sub->SubscribeEvents(node, eventtype); }
-
-private:
-  std::shared_ptr<Subscription> Sub;
-};
-
 class PyClient: public RemoteClient
 {
 public:
@@ -392,10 +376,11 @@ public:
     return Node(RemoteClient::GetNode(nodeid));
   }
 
-  //Node GetNodeFromPath(const object& path) { return Client::Client::GetNodeFromPath(ToVector<std::string>(path)); }
-  PySubscription CreateSubscription(uint period, PySubscriptionClient & callback)
+  Subscription * CreateSubscription(uint period, PySubscriptionClient & callback)
   {
-    return PySubscription(RemoteClient::CreateSubscription(period, callback));
+    std::unique_ptr<OpcUa::Subscription> sub  = RemoteClient::CreateSubscription(period, callback);
+    Subscription * psub = sub.release(); // XXX ownership
+    return psub;
   }
 };
 
@@ -429,9 +414,11 @@ public:
     return OPCUAServer::GetNodeFromPath(ToVector<std::string>(path));
   }
 
-  PySubscription CreateSubscription(uint period, PySubscriptionClient & callback)
+  Subscription * CreateSubscription(uint period, PySubscriptionClient & callback)
   {
-    return PySubscription(OPCUAServer::CreateSubscription(period, callback));
+    std::unique_ptr<OpcUa::Subscription> sub  = OPCUAServer::CreateSubscription(period, callback);
+    Subscription * psub = sub.release(); // XXX ownership
+    return psub;
   }
 };
 
@@ -440,7 +427,7 @@ public:
 // Overloads
 //--------------------------------------------------------------------------
 
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
@@ -754,13 +741,12 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("time", &Event::Time)
   ;
 
-  class_<PySubscription>("Subscription", init<std::shared_ptr<Subscription>>())
-  .def("subscribe_data_change", &PySubscription::SubscribeDataChange)
-  .def("subscribe_data_change", &PySubscription::SubscribeDataChange2)
-  .def("delete", &PySubscription::Delete)
-  .def("unsubscribe", &PySubscription::UnSubscribe)
-  .def("subscribe_events", &PySubscription::SubscribeEvents)
-  .def("subscribe_events", &PySubscription::SubscribeEvents2)
+  class_<Subscription, Subscription *, boost::noncopyable>("Subscription", no_init)
+  .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::VALUE)))
+  .def("delete", &Subscription::Delete)
+  .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
+  .def("subscribe_events", (uint32_t (Subscription::*)()) &Subscription::SubscribeEvents)
+  .def("subscribe_events", (uint32_t (Subscription::*)(const Node &, const Node &)) &Subscription::SubscribeEvents)
   ;
 
   class_<PyClient, boost::noncopyable>("Client", init<>())
@@ -779,7 +765,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_uri", &PyClient::SetURI)
   .def("set_security_policy", &PyClient::SetSecurityPolicy)
   .def("get_security_policy", &PyClient::GetSecurityPolicy)
-  .def("create_subscription", &PyClient::CreateSubscription)
+  .def("create_subscription", &PyClient::CreateSubscription, return_value_policy<reference_existing_object>())
   ;
 
   class_<PyOPCUAServer, boost::noncopyable >("Server", init<>())
@@ -797,7 +783,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_server_name", &PyOPCUAServer::SetServerName)
   .def("set_endpoint", &PyOPCUAServer::SetEndpoint)
   .def("load_cpp_addressspace", &PyOPCUAServer::SetLoadCppAddressSpace)
-  .def("create_subscription", &PyOPCUAServer::CreateSubscription)
+  .def("create_subscription", &PyOPCUAServer::CreateSubscription, return_value_policy<reference_existing_object>())
   ;
 
 }
