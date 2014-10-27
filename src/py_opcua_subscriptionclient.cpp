@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#include "wrap_opcua_subscriptionclient.h"
+#include "py_opcua_subscriptionclient.h"
 
 static std::string parse_python_exception()
 {

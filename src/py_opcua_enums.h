@@ -1,5 +1,5 @@
 /// @author Matthieu Bec 2014
-/// @email mdcb808@gmail.com
+/// @email mbec@gmto.org
 /// @brief Python bindings for freeopcua.
 /// @license GNU GPL
 ///
@@ -11,7 +11,7 @@
 #ifndef WRAP_OPCUA_ENUMS_H
 #define WRAP_OPCUA_ENUMS_H
 
-void wrap_opcua_enums();
+void py_opcua_enums();
 
 #endif
 

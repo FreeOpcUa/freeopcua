@@ -25,9 +25,8 @@ class Unit(unittest.TestCase):
         self.assertTrue(id(nid1)!=id(nid2))
     
     def test_zero_nodeid(self):
-        nid = opcua.NodeID()
-        zero = opcua.NodeID(0, 0)
-        self.assertEqual(nid, zero)
+        self.assertEqual(opcua.NodeID(), opcua.NodeID(0,0))
+        self.assertEqual(opcua.NodeID(), opcua.NodeID('ns=0;i=0;'))
 
     def test_string_nodeid(self):
         nid = opcua.NodeID('titi', 1)

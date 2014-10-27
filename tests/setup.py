@@ -7,9 +7,9 @@ import os
 opcua_server_path = os.environ['OPCUA_SERVER_PATH']
 
 sources = [
-  '../src/wrap_opcua_module.cpp',
-  '../src/wrap_opcua_enums.cpp',
-  '../src/wrap_opcua_subscriptionclient.cpp',
+  '../src/py_opcua_module.cpp',
+  '../src/py_opcua_enums.cpp',
+  '../src/py_opcua_subscriptionclient.cpp',
 	'test_computer.cpp',
 ] 
 

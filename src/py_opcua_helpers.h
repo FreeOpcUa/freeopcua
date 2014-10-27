@@ -1,5 +1,5 @@
 /// @author Matthieu Bec 2014
-/// @email mdcb808@gmail.com
+/// @email mbec@gmto.org
 /// @brief Python bindings for freeopcua.
 /// @license GNU GPL
 ///

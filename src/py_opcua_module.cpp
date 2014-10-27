@@ -1,5 +1,5 @@
-/// @author Alexander Rykovanov 2013
-/// @email rykovanov.as@gmail.com
+/// @author Matthieu Bec 2014
+/// @email mbec@gmto.org
 /// @brief Python bindings for freeopcua.
 /// @license GNU GPL
 ///
@@ -9,9 +9,6 @@
 ///
 
 #include <boost/python.hpp>
-#include <boost/python/type_id.hpp>
-#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
-#include <functional>
 
 #include "opc/ua/client/client.h"
 #include "opc/ua/client/binary_server.h"
@@ -23,10 +20,10 @@
 #include "opc/ua/subscription.h"
 #include "opc/ua/protocol/string_utils.h"
 
-#include "wrap_opcua_enums.h"
-#include "wrap_opcua_helpers.h"
-#include "wrap_opcua_subscriptionclient.h"
-#include "wrap_opcua_variant.h"
+#include "py_opcua_enums.h"
+#include "py_opcua_helpers.h"
+#include "py_opcua_subscriptionclient.h"
+#include "py_opcua_variant.h"
 
 using namespace boost::python;
 using namespace OpcUa;
@@ -46,36 +43,24 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OPCUAServerSetLoadCppAddressSpace_stubs, 
 //--------------------------------------------------------------------------
 
 static boost::shared_ptr<NodeID> NodeID_constructor(const std::string & encodedNodeID)
-{
-  return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID)));
-}
+{ return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID))); }
 
 static object NodeID_GetIdentifier(const NodeID & self)
 {
   if (self.IsInteger())
-    {
-      return object(self.GetIntegerIdentifier());
-    }
+    { return object(self.GetIntegerIdentifier()); }
 
   else if (self.IsString())
-    {
-      return object(self.GetStringIdentifier());
-    }
+    { return object(self.GetStringIdentifier()); }
 
   else if (self.IsGuid())
-    {
-      return object(self.GetGuidIdentifier());
-    }
+    { return object(self.GetGuidIdentifier()); }
 
   else if (self.IsBinary())
-    {
-      return object(self.GetBinaryIdentifier());
-    }
+    { return object(self.GetBinaryIdentifier()); }
 
   else
-    {
-      throw std::logic_error("Error unknown identifier.");
-    }
+    { throw std::logic_error("Error unknown identifier."); }
 }
 
 //--------------------------------------------------------------------------
@@ -83,11 +68,9 @@ static object NodeID_GetIdentifier(const NodeID & self)
 //--------------------------------------------------------------------------
 
 static boost::shared_ptr<DataValue> DataValue_constructor(const object & obj, VariantType vtype)
-{
-  return boost::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype)));
-}
+{ return boost::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype))); }
 
-static object  DataValue_get_value(const DataValue & self)
+static object DataValue_get_value(const DataValue & self)
 { return ToObject(self.Value); }
 
 static void DataValue_set_value(DataValue & self, const object & obj, VariantType vtype)
@@ -127,7 +110,6 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 // RemoteClient helpers
 //--------------------------------------------------------------------------
 
-
 std::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
@@ -155,7 +137,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   PyEval_InitThreads();
 
-  wrap_opcua_enums();
+  py_opcua_enums();
 
   to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
   vector_from_python_converter<std::string>();
@@ -276,7 +258,6 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   to_python_converter<std::vector<AttributeValueID>, vector_to_python_converter<AttributeValueID>>();
-
 
   class_<WriteValue>("WriteValue")
   .def_readwrite("node", &WriteValue::Node)

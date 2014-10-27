@@ -1,5 +1,5 @@
 /// @author Matthieu Bec 2014
-/// @email mdcb808@gmail.com
+/// @email mbec@gmto.org
 /// @brief Python bindings for freeopcua.
 /// @license GNU GPL
 ///
@@ -95,12 +95,8 @@ Variant ToVariant(const object & object)
 
   else if (extract<list>(object).check())
     {
-      list plist = (list) object;
 
-      if (len(object) == 0)
-        {
-        }
-      else
+      if (len(object) > 0)
         {
           if (extract<int>(object[0]).check())
             {
@@ -111,16 +107,15 @@ Variant ToVariant(const object & object)
             {
               var = ToVector<double>(object);
             }
-          
-          else if (extract<std::vector<std::string>>(object).check()) // vec<string> already wrap
+
+          else if (extract<std::vector<std::string>>(object).check())
             {
               var = extract<std::vector<std::string>>(object)();
             }
 
-
-          else if (extract<std::string>(object[0]).check())
+          else if (extract<std::vector<NodeID>>(object).check())
             {
-              var = ToVector<std::string>(object);
+              var = extract<std::vector<NodeID>>(object)();
             }
 
           else
@@ -142,7 +137,7 @@ Variant ToVariant(const object & object)
 
   else if (extract<NodeID>(object).check())
     {
-      var = ToVector<NodeID>(object);
+      var = extract<NodeID>(object)();
     }
 
   else
@@ -162,8 +157,6 @@ Variant ToVariant2(const object & object, VariantType vtype)
   if (extract<list>(object).check())
     {
 
-      list plist = (list) object;
-
       if (len(object) == 0)
         {
           return var;
@@ -177,8 +170,13 @@ Variant ToVariant2(const object & object, VariantType vtype)
               var = ToVector<bool>(object);
               return var;
 
+            case VariantType::UINT16:
             case VariantType::UINT32:
               var = ToVector<uint32_t>(object);
+              return var;
+            
+            case VariantType::FLOAT:
+              var = ToVector<float>(object);
               return var;
 
             default:
@@ -200,7 +198,6 @@ Variant ToVariant2(const object & object, VariantType vtype)
           var = extract<uint32_t>(object)();
           return var;
 
-        // XXX more missing?
         case VariantType::FLOAT:
           var = extract<float>(object)();
           return var;
