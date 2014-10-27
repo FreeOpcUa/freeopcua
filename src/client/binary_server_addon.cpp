@@ -55,7 +55,7 @@ namespace
   };
 }
 
-extern "C" Common::Addon::UniquePtr CreateAddon()
+extern "C" Common::Addon* CreateAddon()
 {
-  return Common::Addon::UniquePtr(new BinaryServerAddon());
+  return new BinaryServerAddon();
 }

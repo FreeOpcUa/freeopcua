@@ -318,7 +318,7 @@ libopcuacore_la_SOURCES = \
                   src/core/common/addons_core/config_file.cpp \
                   src/core/common/addons_core/errors_addon_manager.cpp \
                   src/core/common/addons_core/dynamic_addon_factory.cpp \
-                  src/core/common/addons_core/dynamic_library.cpp \
+                  src/core/common/addons_core/dynamic_library_lin.cpp \
                   src/core/common/addons_core/dynamic_library.h \
                   src/core/common/common_errors.cpp \
                   src/core/common/exception.cpp \

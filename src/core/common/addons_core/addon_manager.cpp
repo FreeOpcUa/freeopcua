@@ -13,8 +13,8 @@
 #include <opc/common/addons_core/errors.h>
 #include <opc/common/exception.h>
 
+#include <iostream>
 #include <map>
-
 
 namespace
 {

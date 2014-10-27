@@ -558,7 +558,7 @@ private:
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << ToString(header.ServiceResult) << std::cout ;
+        std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
         std::cerr << std::endl;
         return;
       }

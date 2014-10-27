@@ -18,8 +18,10 @@
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/string_utils.h>
+#include <opc/ua/protocol/variant_visitor.h>
 #include <opc/ua/services/services.h>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace
@@ -380,55 +382,58 @@ namespace
   }
 
 
-  struct VariantPrint
+  struct VariantPrinter
   {
-    typedef void result_type;
-
     template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& vals)
-    {
-      for (auto val : vals)
-      {
-        (*this)(val);
-        std::cout << " ";
-      }
-    }
-
-    template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == false>::type operator()(const T& val)
+    void PrintVallue()
     {
       std::cout << val;
     }
 
-    void operator()(char val)
+    void PrintValue(const OpcUa::DiagnosticInfo& info)
     {
-      std::cout << val;
+      std::cout << "!!!TODO!!!";
     }
 
-    void operator() (const OpcUa::DiagnosticInfo& info)
+    void PrintValue(const OpcUa::Variant& info)
     {
-      std::cout << "!!!TODO!!!" << std::endl;
+      std::cout << "!!!TODO!!!";
     }
 
-    void operator() (const OpcUa::Variant& info)
-    {
-      std::cout << "!!!TODO!!!" << std::endl;
-    }
-
-    void operator() (const OpcUa::LocalizedText& text)
+    void PrintValue(const OpcUa::LocalizedText& text)
     {
       std::cout << text.Text << std::endl;
     }
 
-    void operator() (const OpcUa::StatusCode& code)
+    void PrintValue(const OpcUa::StatusCode& code)
     {
       std::cout << OpcUa::ToString(code) << std::endl;
+    }
+
+    template <typename T>
+    void OnScalar(const T& val)
+    {
+      PrintValue(val);
+      std::cout << std::endl;
+    }
+
+    template <typename T>
+    void OnContainer(const std::vector<T>& vals)
+    {
+      typedef typename std::vector<T>::const_iterator Iterator;
+      for (Iterator it = vals.begin(); it != vals.end(); ++it)
+      {
+	PrintValue(*it);
+        std::cout << " ";
+      }
+      std::cout << std::endl;
     }
   };
 
   void Print(const OpcUa::Variant& var, const Tabs& tabs)
   {
-    VariantPrint printer;
+    VariantPrinter printer;
+    TypedVisitor<VariantPrinter> visitor(printer);
 
     switch (var.Type())
     {
@@ -541,7 +546,7 @@ namespace
       default:
         throw std::logic_error("Unknown variant type.");
     }
-    var.Visit(printer);
+    var.Visit(visitor);
     std::cout << std::endl;
   }
 
@@ -600,7 +605,7 @@ namespace
     request.Parameters.RequestedLifetimeCount = 1;
     request.Parameters.RequestedMaxKeepAliveCount = 1;
     request.Parameters.RequestedPublishingInterval = 1000;
-    const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request);
+    const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request, [](PublishResult){});
     std::cout << "ID: " << data.ID << std::endl;
     std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
     std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;
