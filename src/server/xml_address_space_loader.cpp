@@ -492,7 +492,7 @@ namespace
   bool GetBool(xmlNode& node)
   {
     const std::string nodeValue = GetNodeValue(node);
-    return ::GetBool(nodeValue);
+    return GetBool(nodeValue);
   }
 
   Variant GetVariantValue(OpcUa::VariantType type, xmlNode& node)

@@ -126,7 +126,7 @@ Common::Configuration Common::ParseConfigurationFiles(const std::string& directo
     if  (entry.path().filename().extension() == ".conf")
     {
       std::cout << "Parsing config file: " << entry.path().native() << std::endl;
-      Common::Configuration tmp = Common::ParseConfiguration(entry.path().native());
+      Common::Configuration tmp = Common::ParseConfiguration(entry.path().string());
       configuration.Modules.insert(configuration.Modules.end(), tmp.Modules.begin(), tmp.Modules.end());
       configuration.Parameters.Groups.insert(configuration.Parameters.Groups.end(), tmp.Parameters.Groups.begin(), tmp.Parameters.Groups.end());
       configuration.Parameters.Parameters.insert(configuration.Parameters.Parameters.end(), tmp.Parameters.Parameters.begin(), tmp.Parameters.Parameters.end());

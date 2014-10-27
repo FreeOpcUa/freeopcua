@@ -41,7 +41,7 @@ namespace
 
   Addon::UniquePtr DynamicAddonFactory::CreateAddon()
   {
-    return Library.Find<CreateAddonFunc>("CreateAddon")();
+    return Addon::UniquePtr(Library.Find<CreateAddonFunc>("CreateAddon")());
   }
 }
 
