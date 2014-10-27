@@ -109,7 +109,7 @@ namespace
   class CallbackThread
   {
     public:
-      CallbackThread() 
+      CallbackThread() : StopRequest(false)
       {
 
       }
@@ -159,7 +159,7 @@ namespace
     private:
       std::mutex Mutex;
       std::condition_variable Condition;
-      bool StopRequest = false;
+      std::atomic<bool> StopRequest;
       std::queue<std::function<void()>> Queue;
       bool Debug = false;
   };
@@ -493,7 +493,9 @@ namespace
               this->PublishCallbacks[response.Result.SubscriptionID](response.Result);
             });
       };
+      std::unique_lock<std::mutex> lock(Mutex);
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      lock.unlock();
       Send(request);
       if (Debug) {std::cout << "binary_client| Publish  <--" << std::endl;}
     }
@@ -508,7 +510,9 @@ private:
       ResponseCallback responseCallback = [&requestCallback](std::vector<char> buffer){
         requestCallback.OnData(std::move(buffer));
       };
+      std::unique_lock<std::mutex> lock(Mutex);
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      lock.unlock();
 
       Send(request);
 
@@ -565,11 +569,11 @@ private:
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << (uint32_t) header.ServiceResult << std::cout ;//FIXME merge ToString from treeww
+        std::cerr << "Receive ServiceFault from Server with StatusCode " << ToString(header.ServiceResult) << std::cout ;
         std::cerr << std::endl;
         return;
       }
-
+      std::unique_lock<std::mutex> lock(Mutex);
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
       if (callbackIt == Callbacks.end())
       {
@@ -704,8 +708,8 @@ private:
 
     SubscriptionCallbackMap PublishCallbacks;
     SecurityToken ChannelSecurityToken;
-    mutable uint32_t SequenceNumber;
-    mutable uint32_t RequestNumber;
+    mutable std::atomic<uint32_t> SequenceNumber;
+    mutable std::atomic<uint32_t> RequestNumber;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<uint8_t> ContinuationPoint;
@@ -715,6 +719,7 @@ private:
 
     std::thread callback_thread;
     CallbackThread CallbackService;
+    mutable std::mutex Mutex;
 
   };
 
