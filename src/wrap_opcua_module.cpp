@@ -82,12 +82,7 @@ static object NodeID_GetIdentifier(const NodeID & self)
 // DataValue helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<DataValue> DataValue_constructor1(const object & obj)
-{
-  return boost::shared_ptr<DataValue>(new DataValue(ToVariant(obj)));
-}
-
-static boost::shared_ptr<DataValue> DataValue_constructor2(const object & obj, VariantType vtype)
+static boost::shared_ptr<DataValue> DataValue_constructor(const object & obj, VariantType vtype)
 {
   return boost::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype)));
 }
@@ -133,22 +128,20 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 //--------------------------------------------------------------------------
 
 
-Subscription * RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
+std::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
-  Subscription * psub = sub.release(); // XXX ownership
-  return psub;
+  return std::shared_ptr<Subscription>(sub.release());
 }
 
 //--------------------------------------------------------------------------
 // OPCUAServer helpers
 //--------------------------------------------------------------------------
 
-Subscription * OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
+std::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
-  Subscription * psub = sub.release(); // XXX ownership
-  return psub;
+  return std::shared_ptr<Subscription>(sub.release());
 }
 
 //--------------------------------------------------------------------------
@@ -204,7 +197,7 @@ BOOST_PYTHON_MODULE(opcua)
   class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
   .def(init<std::string, uint16_t>()) // XXX A.D.D, right
-  //.def("parse", &ToQualifiedName)      XXX could be def(), useless
+  //.def("parse", &ToQualifiedName)      XXX def()
   .def_readwrite("namespace_index", &QualifiedName::NamespaceIndex)
   .def_readwrite("name", &QualifiedName::Name)
   .def(str(self))
@@ -212,9 +205,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def(self == self)
   ;
 
-  class_<DataValue, boost::shared_ptr<DataValue>>("DataValue")
-  .def("__init__", make_constructor(DataValue_constructor1))  // XXX Variant vs object
-  .def("__init__", make_constructor(DataValue_constructor2)) // XXX Variant,VariantType vs object,VariantType
+  class_<DataValue, boost::shared_ptr<DataValue>>("DataValue", init<const Variant &>())
+  .def("__init__", make_constructor(DataValue_constructor))  // Variant, VariantType
 #define _property(X) add_property( #X, &DataValue_get_ ## X, &DataValue_set_ ## X)
   ._property(value)
   ._property(status)
@@ -357,7 +349,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("time", &Event::Time)
   ;
 
-  class_<Subscription, Subscription *, boost::noncopyable>("Subscription", no_init)
+  class_<Subscription, std::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
   .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::VALUE)))
   .def("delete", &Subscription::Delete)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
@@ -381,7 +373,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_uri", &RemoteClient::SetURI)
   .def("set_security_policy", &RemoteClient::SetSecurityPolicy)
   .def("get_security_policy", &RemoteClient::GetSecurityPolicy)
-  .def("create_subscription", &RemoteClient_CreateSubscription, return_value_policy<reference_existing_object>())
+  .def("create_subscription", &RemoteClient_CreateSubscription)
   ;
 
   class_<OPCUAServer, boost::noncopyable >("Server", init<>())
@@ -399,7 +391,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_server_name", &OPCUAServer::SetServerName)
   .def("set_endpoint", &OPCUAServer::SetEndpoint)
   .def("load_cpp_addressspace", &OPCUAServer::SetLoadCppAddressSpace, OPCUAServerSetLoadCppAddressSpace_stubs((arg("val") = true)))
-  .def("create_subscription", &OPCUAServer_CreateSubscription, return_value_policy<reference_existing_object>())
+  .def("create_subscription", &OPCUAServer_CreateSubscription)
   ;
 
 }

@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import sys
 import unittest
 from multiprocessing import Process, Event
@@ -7,6 +9,8 @@ from threading import Condition
 
 import opcua
 
+port_num = 48410
+port_num_serv = 48430
 
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
@@ -305,7 +309,7 @@ class ServerProcess(Process):
     def run(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:48410')
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num)
         self.srv.start()
         self.started.set()
         while not self._exit.is_set():
@@ -327,7 +331,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         #start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint('opc.tcp://localhost:48410')
+        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num)
         self.clt.connect()
         self.opc = self.clt
 
@@ -345,7 +349,7 @@ class TestServer(unittest.TestCase, CommonTests):
     def setUpClass(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:48430')
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num_serv)
         self.srv.start()
         self.opc = self.srv 
 

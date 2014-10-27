@@ -19,12 +19,12 @@ template <typename T>
 list ToList(const std::vector<T> objects)
 {
   list result;
-  std::for_each(objects.begin(), objects.end(),
-                [&result](const T & obj)
-  {
-    result.append(obj);
-  }
-               );
+
+  for (auto obj : objects)
+    {
+      result.append(obj);
+    }
+
   return result;
 }
 
@@ -32,12 +32,12 @@ template <typename ResultType, typename SourceType>
 list ToList(const std::vector<SourceType> objects)
 {
   list result;
-  std::for_each(objects.begin(), objects.end(),
-                [&result](const SourceType & obj)
-  {
-    result.append(ResultType(obj));
-  }
-               );
+
+  for (auto obj : objects)
+    {
+      result.append(ResultType(obj));
+    }
+
   return result;
 }
 
@@ -111,6 +111,12 @@ Variant ToVariant(const object & object)
             {
               var = ToVector<double>(object);
             }
+          
+          else if (extract<std::vector<std::string>>(object).check()) // vec<string> already wrap
+            {
+              var = extract<std::vector<std::string>>(object)();
+            }
+
 
           else if (extract<std::string>(object[0]).check())
             {
@@ -194,6 +200,11 @@ Variant ToVariant2(const object & object, VariantType vtype)
           var = extract<uint32_t>(object)();
           return var;
 
+        // XXX more missing?
+        case VariantType::FLOAT:
+          var = extract<float>(object)();
+          return var;
+
         default:
           return ToVariant(object);
         }
@@ -234,8 +245,6 @@ struct variant_to_python_converter
 {
   static PyObject * convert(Variant const & v)
   {
-
-    std::cerr << "inside variant_to_python_converter\n";
 
     if (v.IsNul())
       {
