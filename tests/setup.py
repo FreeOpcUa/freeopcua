@@ -7,9 +7,10 @@ import os
 opcua_server_path = os.environ['OPCUA_SERVER_PATH']
 
 sources = [
-	'../src/wrap_opcua_module.cpp',
-	'../src/wrap_opcua_enums.cpp',
-	'test_computer.cpp'
+  '../src/py_opcua_module.cpp',
+  '../src/py_opcua_enums.cpp',
+  '../src/py_opcua_subscriptionclient.cpp',
+	'test_computer.cpp',
 ] 
 
 
@@ -20,7 +21,7 @@ includes = [
 cpp_flags = [
 	'-std=c++11', 
 	'-DMODULE_NAME=test_opcua',
-	'-Wl,--no-undefined'
+	'-Wl,--no-undefined',
 ]
 
 libs = [
@@ -28,12 +29,12 @@ libs = [
 	'opcuaserver',
 	'stdc++',
 	'pthread',
-	'boost_python'
+	'boost_python',
 ]
 
 ldirs = [
 	opcua_server_path + '/lib',
-	opcua_server_path + '/.libs'
+	opcua_server_path + '/.libs',
 ]
 
 opcua_client = Extension(

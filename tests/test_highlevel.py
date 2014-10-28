@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import sys
 import unittest
 from multiprocessing import Process, Event
@@ -7,6 +9,8 @@ from threading import Condition
 
 import opcua
 
+port_num = 48410
+port_num_serv = 48430
 
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
@@ -21,9 +25,8 @@ class Unit(unittest.TestCase):
         self.assertTrue(id(nid1)!=id(nid2))
     
     def test_zero_nodeid(self):
-        nid = opcua.NodeID()
-        zero = opcua.NodeID(0, 0)
-        self.assertEqual(nid, zero)
+        self.assertEqual(opcua.NodeID(), opcua.NodeID(0,0))
+        self.assertEqual(opcua.NodeID(), opcua.NodeID('ns=0;i=0;'))
 
     def test_string_nodeid(self):
         nid = opcua.NodeID('titi', 1)
@@ -67,6 +70,48 @@ class Unit(unittest.TestCase):
         dv = opcua.DataValue(True,opcua.VariantType.BOOLEAN)
         self.assertEqual(dv.value,True)
         self.assertEqual(type(dv.value),bool)
+
+    def test_application_description(self):
+        ad=opcua.ApplicationDescription()
+        self.assertEqual(ad.type,opcua.ApplicationType.CLIENT)
+        ad.discovery_urls=['a','b','c']
+        self.assertEqual(ad.discovery_urls,['a','b','c'])
+    
+    def test_user_token_policy(self):
+        utp = opcua.UserTokenPolicy()
+        self.assertEqual(utp.token_type,opcua.UserIdentifyTokenType.ANONYMOUS)
+
+    def test_endpoint_description(self):
+        ed=opcua.EndpointDescription()
+        self.assertEqual(ed.security_mode,opcua.MessageSecurityMode.MSM_NONE)
+        self.assertEqual(ed.security_level,0)
+        ed.server_description=opcua.ApplicationDescription()
+        self.assertEqual(ed.user_identify_tokens,[])
+        ed.user_identify_tokens = [opcua.UserTokenPolicy()]*3
+        self.assertEqual(len(ed.user_identify_tokens),3)
+
+    def test_reference_description(self):
+        rd=opcua.ReferenceDescription()
+        self.assertEqual(rd.browse_name,opcua.QualifiedName())
+        self.assertEqual(rd.is_forward,False)
+        self.assertEqual(rd.reference_type_id,opcua.NodeID())
+        self.assertEqual(rd.target_node_class,opcua.NodeClass.All)
+        self.assertEqual(rd.target_node_id,opcua.NodeID())
+        self.assertEqual(rd.target_node_type_definition,opcua.NodeID())
+
+    def test_attribute_valueid(self):
+        avid=opcua.AttributeValueID()
+        self.assertEqual(avid.node,opcua.NodeID())
+        self.assertEqual(avid.attribute,opcua.AttributeID.VALUE)
+        self.assertEqual(avid.index_range,'')
+        self.assertEqual(avid.data_encoding,opcua.QualifiedName())
+
+    def test_write_value(self):
+        wv=opcua.WriteValue()
+        self.assertEqual(wv.node,opcua.NodeID())
+        self.assertEqual(wv.attribute,opcua.AttributeID())
+        self.assertEqual(wv.numeric_range,'')
+        self.assertEqual(wv.data.value,None)
 
 
 class CommonTests(object):
@@ -116,8 +161,6 @@ class CommonTests(object):
         self.assertEqual(qn, v.get_name())
         val = v.get_value()
         self.assertEqual(['l', 'b'], val)
-
-
 
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
@@ -265,7 +308,7 @@ class ServerProcess(Process):
     def run(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:48410')
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num)
         self.srv.start()
         self.started.set()
         while not self._exit.is_set():
@@ -287,7 +330,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         #start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint('opc.tcp://localhost:48410')
+        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num)
         self.clt.connect()
         self.opc = self.clt
 
@@ -305,7 +348,7 @@ class TestServer(unittest.TestCase, CommonTests):
     def setUpClass(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:48430')
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num_serv)
         self.srv.start()
         self.opc = self.srv 
 

@@ -19,9 +19,9 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-#include "wrap_opcua_enums.h"
+#include "py_opcua_enums.h"
 
-void wrap_opcua_enums()
+void py_opcua_enums()
 {
   enum_<ObjectID>("ObjectID")
 #define _value(X) value(#X, ObjectID:: X)
