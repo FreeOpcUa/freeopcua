@@ -38,8 +38,8 @@ namespace
   };
 }
 
-extern "C" Common::Addon::UniquePtr CreateAddon(const char* configuration)
+extern "C" Common::Addon* CreateAddon(const char* configuration)
 {
-  return Common::Addon::UniquePtr(new TestDynamicAddonImpl());
+  return new TestDynamicAddonImpl();
 }
 

@@ -15,7 +15,7 @@ if(NOT WIN32)
     endif()
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 else(NOT WIN32)
-    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /FS)
+    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /FS /DLIBXML_STATIC)
 endif(NOT WIN32)
 
 
@@ -27,7 +27,11 @@ include_directories(
   tests/gtest/include
 )
 
-link_directories(${BOOST_DIR}/lib32-msvc-12.0)
+link_directories(
+  ${BOOST_DIR}/lib32-msvc-12.0 
+  ${LIBXML_DIR}/bin
+  ${LIBXML_DIR}/lib
+)
 
 add_subdirectory(tests/gtest)
 #add_subdirectory(tests/gmock gtest_build)
@@ -92,33 +96,74 @@ target_compile_options(test_libopcuaprotocol PUBLIC /MTd)
 add_test("Unit tests of protocol library." test_libopcuaprotocol) 
 
 ############################################################################
-# Protocol library
+# core library
 ############################################################################
 
-#add_library(libopcuacore STATIC
-#  src/core/common/addons_core/addon_manager.cpp
-#  src/core/common/addons_core/config_file.cpp
-#  src/core/common/addons_core/dynamic_addon_factory.cpp
-#  src/core/common/addons_core/dynamic_library.h
-#  src/core/common/addons_core/errors_addon_manager.cpp
-#  src/core/common/common_errors.cpp
-#  src/core/common/exception.cpp
-#  src/core/common/object_id.cpp
-#  src/core/common/thread.cpp
-#  src/core/common/value.cpp
-#  src/core/event.cpp
-#  src/core/model_impl.h
-#  src/core/model_node.cpp
-#  src/core/model_object.cpp
-#  src/core/model_object_type.cpp
-#  src/core/model_server.cpp
-#  src/core/model_variable.cpp
-#  src/core/node.cpp
-#  src/core/opcua_errors.cpp
-#  src/core/socket_channel.cpp
-#  src/core/subscription.cpp
-#)
-#
+add_library(libopcuacore STATIC
+  src/core/common/addons_core/addon_manager.cpp
+  src/core/common/addons_core/config_file.cpp
+  src/core/common/addons_core/dynamic_addon_factory.cpp
+  src/core/common/addons_core/dynamic_library.h
+  src/core/common/addons_core/dynamic_library_win.cpp
+  src/core/common/addons_core/errors_addon_manager.cpp
+  src/core/common/common_errors.cpp
+  src/core/common/exception.cpp
+  src/core/common/object_id.cpp
+  src/core/common/thread.cpp
+  src/core/common/uri_facade_win.cpp
+  src/core/common/value.cpp
+  src/core/event.cpp
+  src/core/model_impl.h
+  src/core/model_node.cpp
+  src/core/model_object.cpp
+  src/core/model_object_type.cpp
+  src/core/model_server.cpp
+  src/core/model_variable.cpp
+  src/core/node.cpp
+  src/core/opcua_errors.cpp
+  src/core/socket_channel.cpp
+  src/core/subscription.cpp
+)
+
+#TODO /MTd should be only when compiles tests
+target_compile_options(libopcuacore PUBLIC /MTd)
+
+add_library(test_dynamic_addon MODULE
+  tests/core/test_dynamic_addon.cpp
+  tests/core/test_dynamic_addon.h
+)
+
+target_link_libraries(test_dynamic_addon
+  libopcuacore
+)
+
+add_executable(test_libopcuacore
+  tests/core/test_addon_manager.cpp
+  tests/core/test_config_file.cpp
+  tests/core/test_dynamic_addon.cpp
+  tests/core/test_dynamic_addon.h
+  tests/core/test_dynamic_addon_factory.cpp
+  tests/core/test_dynamic_addon_id.h
+  tests/core/test_uri.cpp
+)
+
+target_link_libraries(test_libopcuacore
+  Wininet.lib
+  libopcuaprotocol
+  libopcuacore
+  gtest
+  gtest_main
+)
+
+target_compile_options(test_libopcuacore PUBLIC /MTd)
+
+
+add_test("Unit tests of core library." test_libopcuacore) 
+
+############################################################################
+# client library
+############################################################################
+
 #add_library(libopcuaclient STATIC
 #  src/client/binary_connection.cpp
 #  src/client/binary_server.cpp
@@ -191,17 +236,6 @@ add_test("Unit tests of protocol library." test_libopcuaprotocol)
 #tests/client/computer_session.cpp
 #tests/client/computer_view.cpp
 #
-#tests/core/common/addons_manager_test.cpp
-#tests/core/common/error_test.cpp
-#tests/core/common/main.cpp
-#tests/core/common/thread_test.cpp
-#tests/core/test_addon_manager.cpp
-#tests/core/test_config_file.cpp
-#tests/core/test_dynamic_addon.cpp
-#tests/core/test_dynamic_addon.h
-#tests/core/test_dynamic_addon_factory.cpp
-#tests/core/test_dynamic_addon_id.h
-#tests/core/test_uri.cpp
 #
 #tests/server/address_space_registry_test.h
 #tests/server/address_space_ut.cpp
