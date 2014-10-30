@@ -23,10 +23,64 @@
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/services/services.h>
 #include <opc/ua/node.h>
+#include <opc/ua/protocol/string_utils.h>
 
 
 namespace OpcUa
 {
+
+
+  KeepAliveThread::KeepAliveThread(Node node, Duration period) : NodeToRead(node), Period(period), StopRequest(false),  Running(false) {}
+
+  void KeepAliveThread::Start()
+  {
+    Running = true;
+    Thread = std::thread([this] { this->Run(); });
+    return;
+  }
+
+  void KeepAliveThread::Start(Node node, Duration period)
+  {
+    NodeToRead = node;
+    Period = period;
+    Start();
+  }
+
+
+  void KeepAliveThread::Run()
+  {
+    if (Debug)  { std::cout << "KeepAliveThread | Starting." << std::endl; }
+    while ( ! StopRequest )
+    {
+      std::unique_lock<std::mutex> lock(Mutex);
+      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds((int64_t)Period)); 
+      if (status == std::cv_status::no_timeout ) 
+      {
+        break;
+      }
+      if (Debug)  { std::cout << "KeepAliveThread | Reading " << std::endl; }
+      NodeToRead.GetValue();
+    }
+    Running = false;
+  }
+
+  void KeepAliveThread::Stop()
+  {
+    if (Debug)  { std::cout << "KeepAliveThread | Stopping." << std::endl; }
+    StopRequest = true;
+    Condition.notify_all();
+  }
+
+  void KeepAliveThread::Join()
+  {
+    if (Debug)  { std::cout << "KeepAliveThread | Joining." << std::endl; }
+    if ( ! Running )
+    {
+      if (Debug)  { std::cout << "KeepAliveThread | Thread was not running..." << std::endl; }
+    }
+    Thread.join();
+    if (Debug)  { std::cout << "KeepAliveThread | Join successfull." << std::endl; }
+  }
 
   void RemoteClient::Connect()
   {
@@ -49,12 +103,21 @@ namespace OpcUa
     session.Timeout = 1200000;
 
     CreateSessionResponse response = Server->CreateSession(session);
-    //FIXME: Here read timeout from server and start a keepalive thread if we need to
+    CheckStatusCode(response.Header.ServiceResult);
     ActivateSessionResponse aresponse = Server->ActivateSession();
+    CheckStatusCode(aresponse.Header.ServiceResult);
+
+    if (response.Session.RevisedSessionTimeout != 0)
+    {
+      KeepAlive.Start(Node(Server, ObjectID::State), 0.4 * response.Session.RevisedSessionTimeout);
+    }
   }
 
   void RemoteClient::Disconnect()
   {
+    KeepAlive.Stop();
+    KeepAlive.Join();
+
     if (  Server ) 
     {
       Server->CloseSession();
