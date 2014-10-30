@@ -89,7 +89,8 @@ namespace OpcUa
     Node GetRootNode() const;
     Node GetObjectsNode() const;
     Node GetServerNode() const;
-    Node GetNode(NodeID nodeid) const;
+    Node GetNode(const NodeID& nodeid) const;
+    Node GetNode(const std::string& nodeid) const;
 
     void Connect();
     void Disconnect();

@@ -36,6 +36,7 @@ namespace OpcUa
       Node GetObjectsNode() const;
       Node GetServerNode() const;
       Node GetNode(const NodeID& nodeid) const;
+      Node GetNode(const std::string& nodeid) const;
       Node GetNodeFromPath(const std::vector<QualifiedName>& path) const;
       Node GetNodeFromPath(const std::vector<std::string>& path) const;
 
