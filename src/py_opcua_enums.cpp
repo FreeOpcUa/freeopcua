@@ -201,7 +201,7 @@ void py_opcua_enums()
   ;
 
   enum_<StatusCode>("StatusCode")
-#define _value(XXX) value(#XXX, StatusCode:: XXX )
+#define _value(X) value(#X, StatusCode:: X )
   ._value(Good)
   ._value(BadUnexpectedError)
   ._value(BadInternalError)
@@ -416,7 +416,7 @@ void py_opcua_enums()
   ;
 
   enum_<VariantType>("VariantType")
-#define _value(XXX) value(#XXX, VariantType:: XXX )
+#define _value(X) value(#X, VariantType:: X )
   ._value(NUL)
   ._value(BOOLEAN)
   ._value(SBYTE)
