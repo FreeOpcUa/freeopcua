@@ -278,7 +278,7 @@ namespace OpcUa
       MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
       if ( it == MonitoredEvents.end() )
       {
-        std::cout << "InternalSubcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
+        if (Debug) std::cout << "InternalSubcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
         return;
       }
       lock.unlock();//Enqueue vill need to set a unique lock

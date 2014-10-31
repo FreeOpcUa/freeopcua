@@ -363,7 +363,6 @@ namespace
     {
       if (results.empty() ) 
       {
-        std::cout << "Server error, it should have returned a lest one result" << std::cout;
         return;
       }
       if (results[0].Referencies.empty())
