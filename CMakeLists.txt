@@ -164,16 +164,40 @@ add_test("Unit tests of core library." test_libopcuacore)
 # client library
 ############################################################################
 
-#add_library(libopcuaclient STATIC
-#  src/client/binary_connection.cpp
-#  src/client/binary_server.cpp
-#  src/client/binary_server_addon.cpp
-#  src/client/client.cpp
-#  src/client/opcua_main.cpp
-#  src/client/opcua_options.cpp
-#  src/client/opcua_options.h
-#)
-#
+add_library(libopcuaclient STATIC
+  src/client/binary_connection.cpp
+  src/client/binary_server.cpp
+  src/client/binary_server_addon.cpp
+  src/client/client.cpp
+)
+
+#TODO /MTd should be only when compiles tests
+target_compile_options(libopcuaclient PUBLIC /MTd)
+
+#tests/client/binary_handshake.cpp
+#tests/client/common.h
+#tests/client/computer_attribute.cpp
+#tests/client/computer_connect.cpp
+#tests/client/computer_endpoints.cpp
+#tests/client/computer_session.cpp
+#tests/client/computer_view.cpp
+
+
+add_executable(opcua
+  src/client/opcua_main.cpp
+  src/client/opcua_options.cpp
+  src/client/opcua_options.h
+)
+
+target_compile_options(opcua PUBLIC /MTd)
+
+target_link_libraries(opcua
+  Wininet.lib
+  libopcuaprotocol
+  libopcuacore
+)
+
+
 #add_executable(opcuaserver
 #  src/server/address_space_addon.cpp
 #  src/server/address_space_addon.h
@@ -228,13 +252,6 @@ add_test("Unit tests of core library." test_libopcuacore)
 #  src/examples/example_server.cpp
 #)
 
-#tests/client/binary_handshake.cpp
-#tests/client/common.h
-#tests/client/computer_attribute.cpp
-#tests/client/computer_connect.cpp
-#tests/client/computer_endpoints.cpp
-#tests/client/computer_session.cpp
-#tests/client/computer_view.cpp
 #
 #
 #tests/server/address_space_registry_test.h
