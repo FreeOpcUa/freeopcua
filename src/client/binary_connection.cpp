@@ -33,6 +33,7 @@ namespace
 
   unsigned long GetIPAddress(const std::string& hostName)
   {
+    // TODO Use getaddrinfo
     hostent* host = gethostbyname(hostName.c_str());
     if (!host)
     {
