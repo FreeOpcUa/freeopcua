@@ -80,14 +80,14 @@ namespace
     {
     }
 
-    virtual std::vector<ReferenceDescription> Browse(const NodesQuery& query) const
+    virtual std::vector<BrowseResult> Browse(const NodesQuery& query) const
     {
-      return std::vector<ReferenceDescription>();
+      return std::vector<BrowseResult>();
     }
 
-    virtual std::vector<ReferenceDescription> BrowseNext() const
+    virtual std::vector<BrowseResult> BrowseNext() const
     {
-      return std::vector<ReferenceDescription>();
+      return std::vector<BrowseResult>();
     }
 
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const

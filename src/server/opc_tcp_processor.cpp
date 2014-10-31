@@ -306,12 +306,10 @@ namespace OpcUa
           NodesQuery query;
           istream >> query;
 
-          OpcUa::BrowseResult result;
-          result.Referencies = Server->Views()->Browse(query);
-
           BrowseResponse response;
+          response.Results =  Server->Views()->Browse(query);
+
           FillResponseHeader(requestHeader, response.Header);
-          response.Results.push_back(result);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
           secureHeader.AddSize(RawSize(algorithmHeader));

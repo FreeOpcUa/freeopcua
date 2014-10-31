@@ -118,15 +118,23 @@ namespace OpcUa
     query.NodesToBrowse.push_back(description);
     query.MaxReferenciesPerNode = 100;
     std::vector<Node> nodes;
-    std::vector<ReferenceDescription> refs = Server->Views()->Browse(query);
-    while(!refs.empty())
+    std::vector<BrowseResult> results = Server->Views()->Browse(query);
+    if ( results.empty() )
     {
-      for (auto refIt : refs)
+      return nodes;
+    }
+    while(!results[0].Referencies.empty())
+    {
+      for (auto refIt : results[0].Referencies)
       {
         Node node(Server, refIt.TargetNodeID);
         nodes.push_back(node);
       }
-      refs = Server->Views()->BrowseNext();
+      results = Server->Views()->BrowseNext();
+      if ( results.empty() )
+      {
+        return nodes;
+      }
     }
     return nodes;
   }

@@ -358,20 +358,25 @@ namespace
     query.NodesToBrowse.push_back(description);
     query.MaxReferenciesPerNode = 100;
 
-    std::vector<OpcUa::ReferenceDescription> refs = view.Browse(query);
+    std::vector<OpcUa::BrowseResult> results = view.Browse(query);
     while(true)
     {
-      if (refs.empty())
+      if (results.empty() ) 
+      {
+        std::cout << "Server error, it should have returned a lest one result" << std::cout;
+        return;
+      }
+      if (results[0].Referencies.empty())
       {
         break;
       }
-      for (auto refIt : refs)
+      for (auto refIt : results[0].Referencies)
       {
         std::cout << "reference:" << std::endl;
         PrintReference(refIt, Tabs(2));
         std::cout << std::endl;
       }
-      refs = view.BrowseNext();
+      results = view.BrowseNext();
     }
   }
 
