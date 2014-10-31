@@ -76,7 +76,7 @@ int main(int argc, char** argv)
       */
 
       //Subscription
-      std::vector<std::string> varpath({"Objects", "NewObject", "MyVariable"});
+      std::vector<std::string> varpath({"Objects", "2:NewObject", "2:MyVariable"});
       OpcUa::Node myvar = root.GetChild(varpath);
 
       std::cout << "got node: " << myvar << std::endl;
