@@ -59,6 +59,7 @@ namespace OpcUa
         bool HasExpired();
         void Stop();
         void TriggerEvent(NodeID node, Event event);
+        void TriggerDataChangeEvent(DataMonitoredItems monitoreditems, AttributeValueID attrval);
 
       private:
         void DeleteAllMonitoredItems(); 
