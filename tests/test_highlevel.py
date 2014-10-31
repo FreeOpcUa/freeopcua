@@ -5,8 +5,6 @@ import unittest
 from multiprocessing import Process, Event
 import time
 from threading import Condition
-
-
 import opcua
 
 port_num = 48410
@@ -14,10 +12,10 @@ port_num_serv = 48430
 
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
-        pass
-
+        pass    
 
 class Unit(unittest.TestCase):
+
     def test_equal_nodeid(self):
         nid1 = opcua.NodeID(999, 2)
         nid2 = opcua.NodeID(999, 2)
@@ -115,6 +113,7 @@ class Unit(unittest.TestCase):
 
 
 class CommonTests(object):
+
     def test_root(self):
         root = self.opc.get_root_node()
         self.assertEqual(opcua.QualifiedName('Root', 0), root.get_name())
@@ -139,7 +138,7 @@ class CommonTests(object):
     def test_add_numeric_variable(self):
         objects = self.opc.get_objects_node()
         v = objects.add_variable('ns=3;i=888;', '3:numericnodefromstring', 99)
-        nid = opcua.NodeID(888, 3) 
+        nid = opcua.NodeID(888, 3)
         qn = opcua.QualifiedName('numericnodefromstring', 3) 
         self.assertEqual(nid, v.get_id())
         self.assertEqual(qn, v.get_name())
@@ -243,6 +242,7 @@ class CommonTests(object):
     def test_subscribe_events(self):
         sub = self.opc.create_subscription(100, sclt)
         handle = sub.subscribe_events()
+        #time.sleep(0.1)
         sub.unsubscribe(handle)
         sub.delete()
 
@@ -284,20 +284,21 @@ class CommonTests(object):
         start = time.time()
         with cond:
             ret = cond.wait(0.5)
-
-        #self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        else: pass # XXX
         self.assertEqual(msclt.value, [5])
         self.assertEqual(msclt.node, v1)
 
         v2.set_value(99)
         with cond:
             ret = cond.wait(0.5)
-        #self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        else: pass # XXX
         self.assertEqual(msclt.value, 99)
         self.assertEqual(msclt.node, v2)
 
         sub.unsubscribe(handle1)
-        #sub.unsubscribe(handle2) #disabled to test one more case
+        #sub.unsubscribe(handle2) # disabled to test one more case
         sub.delete()
 
 

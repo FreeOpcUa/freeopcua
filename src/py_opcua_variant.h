@@ -84,38 +84,38 @@ object ToObject(const Variant & var)
   return var.Visit(VariantToPythonObjectConverter());
 }
 
-Variant ToVariant(const object & object)
+Variant ToVariant(const object & obj)
 {
   Variant var;
 
-  if (extract<std::string>(object).check())
+  if (extract<std::string>(obj).check())
     {
-      var = extract<std::string>(object)();
+      var = extract<std::string>(obj)();
     }
 
-  else if (extract<list>(object).check())
+  else if (extract<list>(obj).check())
     {
 
-      if (len(object) > 0)
+      if (len(obj) > 0)
         {
-          if (extract<int>(object[0]).check())
+          if (extract<long>(obj[0]).check())
             {
-              var = ToVector<int>(object);
+              var = ToVector<long>(obj);
             }
 
-          else if (extract<double>(object[0]).check())
+          else if (extract<double>(obj[0]).check())
             {
-              var = ToVector<double>(object);
+              var = ToVector<double>(obj);
             }
 
-          else if (extract<std::vector<std::string>>(object).check())
+          else if (extract<std::vector<std::string>>(obj).check())
             {
-              var = extract<std::vector<std::string>>(object)();
+              var = extract<std::vector<std::string>>(obj)();
             }
 
-          else if (extract<std::vector<NodeID>>(object).check())
+          else if (extract<std::vector<NodeID>>(obj).check())
             {
-              var = extract<std::vector<NodeID>>(object)();
+              var = extract<std::vector<NodeID>>(obj)();
             }
 
           else
@@ -125,19 +125,19 @@ Variant ToVariant(const object & object)
         }
     }
 
-  else if (extract<int>(object).check())
+  else if (extract<long>(obj).check())
     {
-      var = extract<int>(object)();
+      var = extract<long>(obj)();
     }
 
-  else if (extract<double>(object).check())
+  else if (extract<double>(obj).check())
     {
-      var = extract<double>(object)();
+      var = extract<double>(obj)();
     }
 
-  else if (extract<NodeID>(object).check())
+  else if (extract<NodeID>(obj).check())
     {
-      var = extract<NodeID>(object)();
+      var = extract<NodeID>(obj)();
     }
 
   else
@@ -150,14 +150,14 @@ Variant ToVariant(const object & object)
 
 
 //similar to ToVariant but gives a hint to what c++ object type the python object should be converted to
-Variant ToVariant2(const object & object, VariantType vtype)
+Variant ToVariant2(const object & obj, VariantType vtype)
 {
   Variant var;
 
-  if (extract<list>(object).check())
+  if (extract<list>(obj).check())
     {
 
-      if (len(object) == 0)
+      if (len(obj) == 0)
         {
           return var;
         }
@@ -167,20 +167,20 @@ Variant ToVariant2(const object & object, VariantType vtype)
           switch (vtype)
             {
             case VariantType::BOOLEAN:
-              var = ToVector<bool>(object);
+              var = ToVector<bool>(obj);
               return var;
 
             case VariantType::UINT16:
             case VariantType::UINT32:
-              var = ToVector<uint32_t>(object);
+              var = ToVector<uint32_t>(obj);
               return var;
-            
+
             case VariantType::FLOAT:
-              var = ToVector<float>(object);
+              var = ToVector<float>(obj);
               return var;
 
             default:
-              return ToVariant(object);
+              return ToVariant(obj);
             }
         }
     }
@@ -190,20 +190,20 @@ Variant ToVariant2(const object & object, VariantType vtype)
       switch (vtype)
         {
         case VariantType::BOOLEAN:
-          var = extract<bool>(object)();
+          var = extract<bool>(obj)();
           return var;
 
         case VariantType::UINT16:
         case VariantType::UINT32:
-          var = extract<uint32_t>(object)();
+          var = extract<uint32_t>(obj)();
           return var;
 
         case VariantType::FLOAT:
-          var = extract<float>(object)();
+          var = extract<float>(obj)();
           return var;
 
         default:
-          return ToVariant(object);
+          return ToVariant(obj);
         }
     }
 }
@@ -226,11 +226,9 @@ struct variant_from_python_converter
 
     object obj = object(handle<>(obj_ptr));
 
-    Variant var = ToVariant(obj);
-
     void * storage = ((converter::rvalue_from_python_storage<Variant> *)data)->storage.bytes;
 
-    new(storage) Variant(var);
+    new(storage) Variant(ToVariant(obj));
 
     data->convertible = storage;
 
@@ -250,6 +248,7 @@ struct variant_to_python_converter
       }
 
     object obj = ToObject(v);
+
     return incref(obj.ptr());
   }
 };

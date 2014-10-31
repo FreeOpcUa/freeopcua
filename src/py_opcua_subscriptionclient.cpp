@@ -89,7 +89,7 @@ void PySubscriptionClient::DataChange(uint32_t handle, const Node & node, const 
   catch (const error_already_set & ex)
     {
       std::string perror_str = parse_python_exception();
-      std::cout << "Error in Python: " << perror_str << std::endl;
+      std::cout << "Error in 'data_change': " << perror_str << std::endl;
     }
 
   PyGILState_Release(state);
@@ -107,7 +107,7 @@ void PySubscriptionClient::Event(uint32_t handle, const OpcUa::Event & event) co
   catch (const error_already_set & ex)
     {
       std::string perror_str = parse_python_exception();
-      std::cout << "Error in Python: " << perror_str << std::endl;
+      std::cout << "Error in 'event': " << perror_str << std::endl;
     }
 
   PyGILState_Release(state);
@@ -125,7 +125,7 @@ void PySubscriptionClient::StatusChange(StatusCode status) const
   catch (const error_already_set & ex)
     {
       std::string perror_str = parse_python_exception();
-      std::cout << "Error in Python: " << perror_str << std::endl;
+      std::cout << "Error in 'status_change': " << perror_str << std::endl;
     }
 
   PyGILState_Release(state);
