@@ -286,8 +286,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeID = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceID::Organizes; // FIXME check
-    item.TypeDefinition = ObjectID::Null; //FIXME: check
+    item.ReferenceTypeId = ReferenceID::HasComponent; 
+    item.TypeDefinition = ObjectID::BaseObjectType; 
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
