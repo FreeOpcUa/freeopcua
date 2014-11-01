@@ -9,6 +9,8 @@
 ///
 
 #include <opc/common/class_pointers.h>
+#include <mutex>
+#include <condition_variable>
 
 namespace OpcUa
 {
@@ -24,6 +26,16 @@ namespace OpcUa
 
     void Daemonize(const std::string& str);
     void WaitForTerminate();
+
+    void Terminate();
+
+  private:
+    void SetTerminateHandlers();
+
+  private:
+    std::mutex Mutex;
+    std::condition_variable ExitEvent;
+    volatile bool Terminating = false;
   };
 
 } // namespace OpcUa

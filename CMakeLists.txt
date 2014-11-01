@@ -25,6 +25,7 @@ include_directories(
   ${LIBXML_DIR}/include/libxml2
   ${ICONV_DIR}/include
   tests/gtest/include
+  tests/gmock/include
 )
 
 link_directories(
@@ -183,12 +184,17 @@ target_compile_options(libopcuaclient PUBLIC /MTd)
 #tests/client/computer_view.cpp
 
 
+############################################################################
+# command line client
+############################################################################
+
 add_executable(opcua
   src/client/opcua_main.cpp
   src/client/opcua_options.cpp
   src/client/opcua_options.h
 )
 
+#TODO /MTd should be only when compiles tests
 target_compile_options(opcua PUBLIC /MTd)
 
 target_link_libraries(opcua
@@ -197,52 +203,123 @@ target_link_libraries(opcua
   libopcuacore
 )
 
+############################################################################
+# server library
+############################################################################
 
-#add_executable(opcuaserver
-#  src/server/address_space_addon.cpp
-#  src/server/address_space_addon.h
-#  src/server/address_space_internal.cpp
-#  src/server/address_space_internal.h
-#  src/server/asio_addon.cpp
-#  src/server/common_addons.cpp
-#  src/server/common_addons.h
-#  src/server/daemon.h
-#  src/server/endpoints_parameters.cpp
-#  src/server/endpoints_parameters.h
-#  src/server/endpoints_registry.cpp
-#  src/server/endpoints_services_addon.cpp
-#  src/server/internal_subscription.cpp
-#  src/server/internal_subscription.h
-#  src/server/opcuaserver.cpp
-#  src/server/opcua_protocol.h
-#  src/server/opcua_protocol_addon.cpp
-#  src/server/opc_tcp_async.cpp
-#  src/server/opc_tcp_async_addon.cpp
-#  src/server/opc_tcp_async_parameters.cpp
-#  src/server/opc_tcp_async_parameters.h
-#  src/server/opc_tcp_processor.cpp
-#  src/server/opc_tcp_processor.h
-#  src/server/server_main.cpp
-#  src/server/server_object.cpp
-#  src/server/server_object.h
-#  src/server/server_object_addon.cpp
-#  src/server/server_object_addon.h
-#  src/server/server_options.cpp
-#  src/server/server_options.h
-#  src/server/services_registry_factory.cpp
-#  src/server/services_registry_impl.cpp
-#  src/server/standard_namespace.cpp
-#  src/server/standard_namespace_addon.cpp
-#  src/server/subscription_service_addon.cpp
-#  src/server/subscription_service_internal.cpp
-#  src/server/subscription_service_internal.h
-#  src/server/timer.h
-#  src/server/utils.h
+add_library(libopcuaserver STATIC
+  src/server/address_space_addon.cpp
+  src/server/address_space_addon.h
+  src/server/address_space_internal.cpp
+  src/server/address_space_internal.h
+  src/server/asio_addon.cpp
+  src/server/common_addons.cpp
+  src/server/common_addons.h
+  src/server/daemon.h
+  src/server/endpoints_parameters.cpp
+  src/server/endpoints_parameters.h
+  src/server/endpoints_registry.cpp
+  src/server/endpoints_services_addon.cpp
+  src/server/internal_subscription.cpp
+  src/server/internal_subscription.h
+  src/server/opcuaserver.cpp
+  src/server/opc_tcp_async.cpp
+  src/server/opc_tcp_async_addon.cpp
+  src/server/opc_tcp_async_parameters.cpp
+  src/server/opc_tcp_async_parameters.h
+  src/server/opc_tcp_processor.cpp
+  src/server/opc_tcp_processor.h
+  src/server/server_object.cpp
+  src/server/server_object.h
+  src/server/server_object_addon.cpp
+  src/server/server_object_addon.h
+  src/server/services_registry_factory.cpp
+  src/server/services_registry_impl.cpp
+  src/server/standard_namespace.cpp
+  src/server/standard_namespace_addon.cpp
+  src/server/subscription_service_addon.cpp
+  src/server/subscription_service_internal.cpp
+  src/server/subscription_service_internal.h
+  src/server/timer.h
+  src/server/utils.h
+)
+
 #  src/server/xml_address_space_addon.cpp
 #  src/server/xml_address_space_loader.cpp
 #  src/server/xml_address_space_loader.h
 #  src/server/xml_processor.h
-#)
+
+target_compile_options(libopcuaserver PUBLIC /MTd)
+
+add_executable(test_libopcuaserver
+  src/server/opcua_protocol_addon.cpp
+  src/server/server_options.cpp
+  tests/server/address_space_registry_test.h
+  tests/server/address_space_ut.cpp
+  tests/server/builtin_server.h
+  tests/server/builtin_server_addon.h
+  tests/server/builtin_server_factory.cpp
+  tests/server/builtin_server_impl.cpp
+  tests/server/builtin_server_impl.h
+  tests/server/builtin_server_test.h
+  tests/server/common.cpp
+  tests/server/common.h
+  tests/server/endpoints_services_test.cpp
+  tests/server/endpoints_services_test.h
+  tests/server/model_object_type_ut.cpp
+  tests/server/model_object_ut.cpp
+  tests/server/model_variable_ut.cpp
+  tests/server/opcua_protocol_addon_test.cpp
+  tests/server/opcua_protocol_addon_test.h
+  tests/server/predefined_references.xml
+  tests/server/services_registry_test.h
+  tests/server/standard_namespace_test.h
+  tests/server/standard_namespace_ut.cpp
+  tests/server/test_server_options.cpp
+)
+
+#  tests/server/xml_addressspace_ut.cpp
+#  tests/server/xml_address_space_addon_ut.cpp
+
+
+target_link_libraries(test_libopcuaserver
+  Wininet.lib
+  libopcuaclient
+  libopcuacore
+  libopcuaprotocol
+  libopcuaserver
+  gtest
+  gtest_main
+)
+
+target_compile_options(test_libopcuaserver PUBLIC /MTd)
+
+target_include_directories(test_libopcuaserver
+  PUBLIC .
+)
+
+############################################################################
+# opcua server executable
+############################################################################
+
+add_executable(opcuaserver
+  src/server/daemon.cpp
+  src/server/daemon_win.cpp
+  src/server/server_main.cpp
+  src/server/server_options.cpp
+  src/server/server_options.h
+)
+
+#TODO /MTd should be only when compiles tests
+target_compile_options(opcuaserver PUBLIC /MTd)
+
+target_link_libraries(opcuaserver
+  Wininet.lib
+  libopcuaprotocol
+  libopcuacore
+  libopcuaserver
+)
+
 #
 #add_executable(example_client
 #  src/examples/example_client.cpp
@@ -251,32 +328,3 @@ target_link_libraries(opcua
 #add_executable(example_server
 #  src/examples/example_server.cpp
 #)
-
-#
-#
-#tests/server/address_space_registry_test.h
-#tests/server/address_space_ut.cpp
-#tests/server/builtin_server.h
-#tests/server/builtin_server_addon.h
-#tests/server/builtin_server_factory.cpp
-#tests/server/builtin_server_impl.cpp
-#tests/server/builtin_server_impl.h
-#tests/server/builtin_server_test.h
-#tests/server/common.cpp
-#tests/server/common.h
-#tests/server/endpoints_services_test.cpp
-#tests/server/endpoints_services_test.h
-#tests/server/model_object_type_ut.cpp
-#tests/server/model_object_ut.cpp
-#tests/server/model_variable_ut.cpp
-#tests/server/opcua_protocol_addon_test.cpp
-#tests/server/opcua_protocol_addon_test.h
-#tests/server/predefined_references.xml
-#tests/server/services_registry_test.h
-#tests/server/standard_namespace_test.h
-#tests/server/standard_namespace_ut.cpp
-#tests/server/test_addon.cpp
-#tests/server/test_addon.h
-#tests/server/test_server_options.cpp
-#tests/server/xml_addressspace_ut.cpp
-#tests/server/xml_address_space_addon_ut.cpp

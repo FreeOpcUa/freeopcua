@@ -8,17 +8,31 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "common_addons.h"
 #include "daemon.h"
 #include "server_options.h"
 
 #include <thread>
-#include <chrono>
-
 #include <iostream>
 
+/*
+#ifdef _WIN32
+
+int CALLBACK WinMain(_In_  HINSTANCE hInstance, _In_  HINSTANCE hPrevInstance, _In_  LPSTR lpCmdLine, _In_  int nCmdShow)
+{
+  int argc = __argc;
+  char** argv = __argv;
+
+#else
+*/
 int main(int argc, char** argv)
 {
+
+//#endif
   try
   {
     const char** arv = (const char**)argv;

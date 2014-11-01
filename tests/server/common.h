@@ -78,7 +78,7 @@ namespace OpcUa
     };
 */
 
-    std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
+//    std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
 
   } // namspace Tests
 } // namespace OpcUa

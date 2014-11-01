@@ -10,7 +10,6 @@
 
 #include <src/server/server_options.h>
 #include <opc/common/addons_core/config_file.h>
-#include "test_addon.h"
 
 #include <algorithm>
 #include <gtest/gtest.h>
