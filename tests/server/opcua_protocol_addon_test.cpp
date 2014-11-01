@@ -111,8 +111,9 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
 
-  std::vector<OpcUa::ReferenceDescription> referencies = views->Browse(query);
-  ASSERT_EQ(referencies.size(), 3);
+  std::vector<OpcUa::BrowseResult> results = views->Browse(query);
+  ASSERT_EQ(results.size(), 1);
+  ASSERT_EQ(results[0].Referencies.size(), 3);
 
   views.reset();
   computer.reset();
