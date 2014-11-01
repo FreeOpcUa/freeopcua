@@ -19,7 +19,7 @@ const char* modulePath = "./libtest_dynamic_addon.so";
 TEST(DynamicAddonFactory, CanCreateAddons)
 {
   Common::AddonFactory::UniquePtr dynamicFactory = Common::CreateDynamicAddonFactory(modulePath);
-  ASSERT_TRUE(dynamicFactory->CreateAddon().get());
+  ASSERT_TRUE(static_cast<bool>(dynamicFactory->CreateAddon()));
 }
 
 TEST(DynamicAddonFactory, AddonInterfaceCastsToManagerInterface)

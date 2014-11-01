@@ -700,7 +700,7 @@ TEST_F(ViewDeserialization, BrowseNextRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.ReleaseContinuationPoints, 1);
+  ASSERT_EQ(request.ReleaseContinuationPoints, true);
   ASSERT_TRUE(!request.ContinuationPoints.empty());
   ASSERT_EQ(request.ContinuationPoints[0], std::vector<uint8_t>(1,1));
 }

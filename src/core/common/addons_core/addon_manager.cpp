@@ -61,11 +61,12 @@ namespace
       }
       catch(const Common::Error& err)
       {
-        // TODO: log error
+        std::cerr << err.GetFullMessage() << std::endl;
       }
       catch (...)
       {
-        // TODO: log error
+        std::cerr << "unknown exception" << std::endl;
+        throw;
       }
     }
 

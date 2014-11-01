@@ -121,7 +121,7 @@ namespace OpcUa
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
         ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
-        uint64_t MaxNodeIDNum = 0;
+        uint32_t MaxNodeIDNum = 0;
         std::atomic<uint32_t> DataChangeCallbackHandle;
     };
   }
