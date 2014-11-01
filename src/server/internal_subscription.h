@@ -59,7 +59,6 @@ namespace OpcUa
         bool HasExpired();
         void Stop();
         void TriggerEvent(NodeID node, Event event);
-        void TriggerDataChangeEvent(DataMonitoredItems monitoreditems, AttributeValueID attrval);
 
       private:
         void DeleteAllMonitoredItems(); 
@@ -68,6 +67,7 @@ namespace OpcUa
         NotificationData GetNotificationData();
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
+        void TriggerDataChangeEvent(DataMonitoredItems monitoreditems, AttributeValueID attrval);
 
       private:
         SubscriptionServiceInternal& Service;
