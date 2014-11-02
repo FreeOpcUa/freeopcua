@@ -15,9 +15,17 @@
 
 using namespace testing;
 
+#ifndef TEST_CORE_CONFIG_PATH
+const char* TestConfigFile = "./tests/core/configs/test.conf";
+const char* TestConfigPath = "./tests/core/configs/";
+#else
+const char* TestConfigFile = TEST_CORE_CONFIG_PATH "test.conf";
+const char* TestConfigPath = TEST_CORE_CONFIG_PATH;
+#endif
+
 TEST(ModulesConfiguration, ParsesConfigurationFile)
 {
-  Common::Configuration config = Common::ParseConfiguration("./tests/core/configs/test.conf");
+  Common::Configuration config = Common::ParseConfiguration(TestConfigFile);
   ASSERT_EQ(config.Modules.size(), 1);
 
   ASSERT_EQ(config.Parameters.Parameters.size(), 2);
@@ -100,7 +108,7 @@ TEST(ModulesConfiguration, SavesConfigurationFile)
 
 TEST(ModulesConfiguration, ParsesConfigurationFilesInDirectory)
 {
-  Common::Configuration config = Common::ParseConfigurationFiles("./tests/core/configs");
+  Common::Configuration config = Common::ParseConfigurationFiles(TestConfigPath);
   ASSERT_EQ(config.Modules.size(), 1);
   ASSERT_EQ(config.Modules[0].ID, "child_module");
 }

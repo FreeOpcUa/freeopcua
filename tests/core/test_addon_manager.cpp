@@ -20,7 +20,13 @@ using namespace Common;
 
 namespace
 {
-  const char* modulePath = "./libtest_dynamic_addon.so";
+#define STRINGIFY(S) #S
+
+#ifndef DYNAMIC_ADDON_PATH
+  const char* modulePath "./libtest_dynamic_addon.so";
+#else
+  const char* modulePath = DYNAMIC_ADDON_PATH;
+#endif
 }
 
 TEST(AddonManager, CanCreateDynamicAddons)
@@ -41,7 +47,7 @@ TEST(AddonManager, CanCreateDynamicAddons)
 
   OpcCoreTests::TestDynamicAddon::SharedPtr test = addonsManager->GetAddon<OpcCoreTests::TestDynamicAddon>(OpcCoreTests::TestDynamicAddonID);
   ASSERT_TRUE(static_cast<bool>(test));
-  ASSERT_EQ(test->GetStringWithHello(), "hello");
+  ASSERT_EQ(test->GetStringWithHello(), std::string("hello"));
   Common::AddonParameters params = test->GetParameters();
   ASSERT_EQ(params.Parameters.size(), 1);
   ASSERT_EQ(params.Parameters[0].Name, "name");

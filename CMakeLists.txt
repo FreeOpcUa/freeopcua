@@ -24,8 +24,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 option(CLANG "Build using Clang++" ON)
 option(BOOST_DIR "boost root directory." "")
-option(LIBXML_DIR "lib xml root dir." "")
-option(ICONV_DIR "iconv root dir." "")
+option(BUILD_SHARED_LIBS "" ON)
 
 enable_testing()
 
@@ -36,23 +35,19 @@ if(NOT WIN32)
     endif()
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 else(NOT WIN32)
-    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /FS /DLIBXML_STATIC /D_WIN32_WINNT=0x0600)
+    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
 endif(NOT WIN32)
 
 
 include_directories(
   include 
   ${BOOST_DIR}
-  ${LIBXML_DIR}/include/libxml2
-  ${ICONV_DIR}/include
   tests/gtest/include
   tests/gmock/include
 )
 
 link_directories(
   ${BOOST_DIR}/lib32-msvc-12.0 
-  ${LIBXML_DIR}/bin
-  ${LIBXML_DIR}/lib
 )
 
 add_subdirectory(tests/gtest)
@@ -83,9 +78,7 @@ add_library(libopcuaprotocol STATIC
   src/protocol/subscriptions.cpp
 )
 
-#TODO /MTd should be only when compiles tests
 target_compile_options(libopcuaprotocol PUBLIC /MTd)
-
 
 if (BUILD_TESTING)
   add_executable(test_libopcuaprotocol
@@ -149,25 +142,24 @@ add_library(libopcuacore STATIC
   src/core/subscription.cpp
 )
 
-#TODO /MTd should be only when compiles tests
 target_compile_options(libopcuacore PUBLIC /MTd)
 
-add_library(test_dynamic_addon MODULE
-  tests/core/test_dynamic_addon.cpp
-  tests/core/test_dynamic_addon.h
-)
-
-
 if (BUILD_TESTING)
+  add_library(test_dynamic_addon MODULE
+    tests/core/test_dynamic_addon.cpp
+    tests/core/test_dynamic_addon.h
+  )
+
   target_link_libraries(test_dynamic_addon
     libopcuacore
   )
+  
+  target_compile_options(libopcuacore PUBLIC /LDd)
+
 
   add_executable(test_libopcuacore
     tests/core/test_addon_manager.cpp
     tests/core/test_config_file.cpp
-    tests/core/test_dynamic_addon.cpp
-    tests/core/test_dynamic_addon.h
     tests/core/test_dynamic_addon_factory.cpp
     tests/core/test_dynamic_addon_id.h
     tests/core/test_uri.cpp
@@ -181,7 +173,9 @@ if (BUILD_TESTING)
     gtest_main
   )
 
-  target_compile_options(test_libopcuacore PUBLIC /MTd)
+  STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
+  STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
+  target_compile_options(test_libopcuacore PUBLIC /DDYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MTd)
 
   add_test(NAME libopcuacore COMMAND test_libopcuacore) 
 endif()
@@ -199,7 +193,6 @@ add_library(libopcuaclient STATIC
   src/client/client.cpp
 )
 
-#TODO /MTd should be only when compiles tests
 target_compile_options(libopcuaclient PUBLIC /MTd)
 
 #tests/client/binary_handshake.cpp
@@ -221,14 +214,13 @@ add_executable(opcua
   src/client/opcua_options.h
 )
 
-#TODO /MTd should be only when compiles tests
-target_compile_options(opcua PUBLIC /MTd)
-
 target_link_libraries(opcua
   Wininet.lib
   libopcuaprotocol
   libopcuacore
 )
+
+target_compile_options(opcua PUBLIC /MTd)
 
 ############################################################################
 # server library
@@ -271,12 +263,12 @@ add_library(libopcuaserver STATIC
   src/server/utils.h
 )
 
+target_compile_options(libopcuaserver PUBLIC /MTd)
+
 #  src/server/xml_address_space_addon.cpp
 #  src/server/xml_address_space_loader.cpp
 #  src/server/xml_address_space_loader.h
 #  src/server/xml_processor.h
-
-target_compile_options(libopcuaserver PUBLIC /MTd)
 
 if (BUILD_TESTING)
   add_executable(test_libopcuaserver
@@ -320,9 +312,9 @@ if (BUILD_TESTING)
     gtest_main
   )
 
-  target_compile_options(test_libopcuaserver PUBLIC /MTd)
-
   target_include_directories(test_libopcuaserver PUBLIC .)
+
+  target_compile_options(test_libopcuaserver PUBLIC /MTd)
 
   add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
 endif()
@@ -339,15 +331,14 @@ add_executable(opcuaserver
   src/server/server_options.h
 )
 
-#TODO /MTd should be only when compiles tests
-target_compile_options(opcuaserver PUBLIC /MTd)
-
 target_link_libraries(opcuaserver
   Wininet.lib
   libopcuaprotocol
   libopcuacore
   libopcuaserver
 )
+
+target_compile_options(opcuaserver PUBLIC /MTd)
 
 #
 #add_executable(example_client
