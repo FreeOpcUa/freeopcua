@@ -2,11 +2,32 @@ cmake_minimum_required(VERSION 3.0)
 
 project(freeopcua)
 
+
+SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
+        ${PROJECT_BINARY_DIR}/bin
+        CACHE PATH
+        "Single Directory for all"
+    )
+
+SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
+        ${PROJECT_BINARY_DIR}/bin
+        CACHE PATH
+        "Single Directory for all"
+    )
+
+SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+        ${PROJECT_BINARY_DIR}/lib
+        CACHE PATH
+        "Single Directory for all"
+    )
+
+
 option(CLANG "Build using Clang++" ON)
 option(BOOST_DIR "boost root directory." "")
 option(LIBXML_DIR "lib xml root dir." "")
 option(ICONV_DIR "iconv root dir." "")
 
+enable_testing()
 
 if(NOT WIN32)
     set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -Wall -Werr ${CMAKE_CXX_FLAGS_DEBUG} ") 
@@ -15,7 +36,7 @@ if(NOT WIN32)
     endif()
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 else(NOT WIN32)
-    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /FS /DLIBXML_STATIC)
+    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /FS /DLIBXML_STATIC /D_WIN32_WINNT=0x0600)
 endif(NOT WIN32)
 
 
@@ -65,36 +86,38 @@ add_library(libopcuaprotocol STATIC
 #TODO /MTd should be only when compiles tests
 target_compile_options(libopcuaprotocol PUBLIC /MTd)
 
-add_executable(test_libopcuaprotocol
-  tests/protocol/binary_deserialize.cpp
-  tests/protocol/binary_node_management.cpp
-  tests/protocol/binary_serialize.cpp
-  tests/protocol/binary_serialize_attribute.cpp
-  tests/protocol/binary_serialize_data_value.cpp
-  tests/protocol/binary_serialize_endpoints.cpp
-  tests/protocol/binary_serialize_monitored_items.cpp
-  tests/protocol/binary_serialize_session.cpp
-  tests/protocol/binary_serialize_variant.cpp
-  tests/protocol/binary_serialize_view.cpp
-  tests/protocol/binary_subscriptions.cpp
-  tests/protocol/common.h
-  tests/protocol/message_id.cpp
-  tests/protocol/node_id.cpp
-  tests/protocol/reference_id.cpp
-  tests/protocol/test_input_from_buffer.cpp
-  tests/protocol/utils.cpp
-)
 
-target_link_libraries(test_libopcuaprotocol
-  libopcuaprotocol
-  gtest
-  gtest_main
-)
+if (BUILD_TESTING)
+  add_executable(test_libopcuaprotocol
+    tests/protocol/binary_deserialize.cpp
+    tests/protocol/binary_node_management.cpp
+    tests/protocol/binary_serialize.cpp
+    tests/protocol/binary_serialize_attribute.cpp
+    tests/protocol/binary_serialize_data_value.cpp
+    tests/protocol/binary_serialize_endpoints.cpp
+    tests/protocol/binary_serialize_monitored_items.cpp
+    tests/protocol/binary_serialize_session.cpp
+    tests/protocol/binary_serialize_variant.cpp
+    tests/protocol/binary_serialize_view.cpp
+    tests/protocol/binary_subscriptions.cpp
+    tests/protocol/common.h
+    tests/protocol/message_id.cpp
+    tests/protocol/node_id.cpp
+    tests/protocol/reference_id.cpp
+    tests/protocol/test_input_from_buffer.cpp
+    tests/protocol/utils.cpp
+  )
 
-target_compile_options(test_libopcuaprotocol PUBLIC /MTd)
+  target_link_libraries(test_libopcuaprotocol
+    libopcuaprotocol
+    gtest
+    gtest_main
+  )
 
+  target_compile_options(test_libopcuaprotocol PUBLIC /MTd)
 
-add_test("Unit tests of protocol library." test_libopcuaprotocol) 
+  add_test(NAME libopcuaprotocol COMMAND test_libopcuaprotocol) 
+endif()
 
 ############################################################################
 # core library
@@ -134,32 +157,36 @@ add_library(test_dynamic_addon MODULE
   tests/core/test_dynamic_addon.h
 )
 
-target_link_libraries(test_dynamic_addon
-  libopcuacore
-)
 
-add_executable(test_libopcuacore
-  tests/core/test_addon_manager.cpp
-  tests/core/test_config_file.cpp
-  tests/core/test_dynamic_addon.cpp
-  tests/core/test_dynamic_addon.h
-  tests/core/test_dynamic_addon_factory.cpp
-  tests/core/test_dynamic_addon_id.h
-  tests/core/test_uri.cpp
-)
+if (BUILD_TESTING)
+  target_link_libraries(test_dynamic_addon
+    libopcuacore
+  )
 
-target_link_libraries(test_libopcuacore
-  Wininet.lib
-  libopcuaprotocol
-  libopcuacore
-  gtest
-  gtest_main
-)
+  add_executable(test_libopcuacore
+    tests/core/test_addon_manager.cpp
+    tests/core/test_config_file.cpp
+    tests/core/test_dynamic_addon.cpp
+    tests/core/test_dynamic_addon.h
+    tests/core/test_dynamic_addon_factory.cpp
+    tests/core/test_dynamic_addon_id.h
+    tests/core/test_uri.cpp
+  )
 
-target_compile_options(test_libopcuacore PUBLIC /MTd)
+  target_link_libraries(test_libopcuacore
+    Wininet.lib
+    libopcuaprotocol
+    libopcuacore
+    gtest
+    gtest_main
+  )
+
+  target_compile_options(test_libopcuacore PUBLIC /MTd)
+
+  add_test(NAME libopcuacore COMMAND test_libopcuacore) 
+endif()
 
 
-add_test("Unit tests of core library." test_libopcuacore) 
 
 ############################################################################
 # client library
@@ -251,52 +278,54 @@ add_library(libopcuaserver STATIC
 
 target_compile_options(libopcuaserver PUBLIC /MTd)
 
-add_executable(test_libopcuaserver
-  src/server/opcua_protocol_addon.cpp
-  src/server/server_options.cpp
-  tests/server/address_space_registry_test.h
-  tests/server/address_space_ut.cpp
-  tests/server/builtin_server.h
-  tests/server/builtin_server_addon.h
-  tests/server/builtin_server_factory.cpp
-  tests/server/builtin_server_impl.cpp
-  tests/server/builtin_server_impl.h
-  tests/server/builtin_server_test.h
-  tests/server/common.cpp
-  tests/server/common.h
-  tests/server/endpoints_services_test.cpp
-  tests/server/endpoints_services_test.h
-  tests/server/model_object_type_ut.cpp
-  tests/server/model_object_ut.cpp
-  tests/server/model_variable_ut.cpp
-  tests/server/opcua_protocol_addon_test.cpp
-  tests/server/opcua_protocol_addon_test.h
-  tests/server/predefined_references.xml
-  tests/server/services_registry_test.h
-  tests/server/standard_namespace_test.h
-  tests/server/standard_namespace_ut.cpp
-  tests/server/test_server_options.cpp
-)
+if (BUILD_TESTING)
+  add_executable(test_libopcuaserver
+    src/server/opcua_protocol_addon.cpp
+    src/server/server_options.cpp
+    tests/server/address_space_registry_test.h
+    tests/server/address_space_ut.cpp
+    tests/server/builtin_server.h
+    tests/server/builtin_server_addon.h
+    tests/server/builtin_server_factory.cpp
+    tests/server/builtin_server_impl.cpp
+    tests/server/builtin_server_impl.h
+    tests/server/builtin_server_test.h
+    tests/server/common.cpp
+    tests/server/common.h
+    tests/server/endpoints_services_test.cpp
+    tests/server/endpoints_services_test.h
+    tests/server/model_object_type_ut.cpp
+    tests/server/model_object_ut.cpp
+    tests/server/model_variable_ut.cpp
+    tests/server/opcua_protocol_addon_test.cpp
+    tests/server/opcua_protocol_addon_test.h
+    tests/server/predefined_references.xml
+    tests/server/services_registry_test.h
+    tests/server/standard_namespace_test.h
+    tests/server/standard_namespace_ut.cpp
+    tests/server/test_server_options.cpp
+  )
 
 #  tests/server/xml_addressspace_ut.cpp
 #  tests/server/xml_address_space_addon_ut.cpp
 
 
-target_link_libraries(test_libopcuaserver
-  Wininet.lib
-  libopcuaclient
-  libopcuacore
-  libopcuaprotocol
-  libopcuaserver
-  gtest
-  gtest_main
-)
+  target_link_libraries(test_libopcuaserver
+    Wininet.lib
+    libopcuaclient
+    libopcuacore
+    libopcuaprotocol
+    libopcuaserver
+    gtest
+    gtest_main
+  )
 
-target_compile_options(test_libopcuaserver PUBLIC /MTd)
+  target_compile_options(test_libopcuaserver PUBLIC /MTd)
 
-target_include_directories(test_libopcuaserver
-  PUBLIC .
-)
+  target_include_directories(test_libopcuaserver PUBLIC .)
+
+  add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
+endif()
 
 ############################################################################
 # opcua server executable
