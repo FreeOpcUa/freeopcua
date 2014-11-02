@@ -215,8 +215,23 @@ namespace OpcUa
       mdata.CallbackHandle = callbackHandle;
       MonitoredItemsMap[result.MonitoredItemID] = mdata;
       if (Debug) std::cout << "Created MonitoredItem with id: " << result.MonitoredItemID << " and client handle " << mdata.ClientHandle << std::endl;
+      //Forcing event, 
+      TriggerDataChangeEvent(mdata, request.ItemToMonitor);
 
       return result;
+    }
+
+    void InternalSubscription::TriggerDataChangeEvent(DataMonitoredItems monitoreditems, AttributeValueID attrval)
+    {
+      if (Debug) { std::cout << "InternalSubcsription | Manual Trigger of DataChangeEvent for sub: " << Data.ID << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
+      ReadParameters params;
+      params.AttributesToRead.push_back(attrval);
+      std::vector<DataValue> vals = AddressSpace.Read(params);
+
+      MonitoredItems event;
+      event.ClientHandle = monitoreditems.ClientHandle; 
+      event.Value = vals[0];
+      MonitoredItemsTriggered.push_back(event);
     }
 
     std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std::vector<IntegerID>& monitoreditemsids)
@@ -278,7 +293,7 @@ namespace OpcUa
       MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
       if ( it == MonitoredEvents.end() )
       {
-        std::cout << "InternalSubcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
+        if (Debug) std::cout << "InternalSubcsription | Subscription: " << Data.ID << " has no subcsription for this event" << std::endl;
         return;
       }
       lock.unlock();//Enqueue vill need to set a unique lock

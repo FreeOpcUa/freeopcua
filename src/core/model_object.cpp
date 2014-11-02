@@ -195,7 +195,7 @@ namespace OpcUa
       NodesQuery query;
       query.NodesToBrowse.push_back(desc);
       ViewServices::SharedPtr views = GetServices()->Views();
-      return views->Browse(query);
+      return views->Browse(query)[0].Referencies; //FIME: this method should return BrowseResults
     }
 
     std::map<NodeID, std::vector<ReferenceDescription>> Object::CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs)

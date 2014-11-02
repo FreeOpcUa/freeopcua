@@ -84,14 +84,15 @@ namespace OpcUa
       return results;
     }
 
-    std::vector<ReferenceDescription> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery& query) const
+    std::vector<BrowseResult> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery& query) const
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       if (Debug) std::cout << "AddressSpaceInternal | Browsing." << std::endl;
-      std::vector<ReferenceDescription> result;
+      std::vector<BrowseResult> results;
       for ( BrowseDescription browseDescription: query.NodesToBrowse)
       {
+        BrowseResult result;
         if(Debug)
         {
           std::cout << "AddressSpaceInternal | Browsing ";
@@ -109,24 +110,19 @@ namespace OpcUa
           continue;
         }
 
-        if(Debug)
-        {
-          std::cout << "AddressSpaceInternal | Node found in the address space." << std::endl;
-          std::cout << "AddressSpaceInternal | Finding reference." << std::endl;
-        }
-
-        std::copy_if(node_it->second.References.begin(), node_it->second.References.end(), std::back_inserter(result),
+        std::copy_if(node_it->second.References.begin(), node_it->second.References.end(), std::back_inserter(result.Referencies),
             std::bind(&AddressSpaceInMemory::IsSuitableReference, this, std::cref(browseDescription), std::placeholders::_1)
         );
+        results.push_back(result);
       }
-      return result;
+      return results;
     }
 
-    std::vector<ReferenceDescription> AddressSpaceInMemory::BrowseNext() const
+    std::vector<BrowseResult> AddressSpaceInMemory::BrowseNext() const
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-      return std::vector<ReferenceDescription>();
+      return std::vector<BrowseResult>();
     }
 
     std::vector<DataValue> AddressSpaceInMemory::Read(const ReadParameters& params) const

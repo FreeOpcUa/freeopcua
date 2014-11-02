@@ -322,58 +322,47 @@ namespace
     }
 
 
-    virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
+    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
     {
       if (Debug)  { std::cout << "binary_client| Browse -->" << std::endl; }
       BrowseRequest request;
       request.Header = CreateRequestHeader();
       request.Query = query;
       const BrowseResponse response = Send<BrowseResponse>(request);
-      if (!response.Results.empty())
+      for ( BrowseResult result : response.Results )
       {
-        const BrowseResult& result = *response.Results.begin();
-        ContinuationPoint = result.ContinuationPoint;
-        if (Debug)  { std::cerr << "binary_client| Browse <--" << std::endl; }
-        return result.Referencies;
-      }
-      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
-      return  std::vector<ReferenceDescription>();
-    }
-
-    virtual std::vector<ReferenceDescription> BrowseNext() const
-    {
-      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
-      std::vector<ReferenceDescription> result;
-      if (!ContinuationPoint.empty())
-      {
-        result = Next();
-        if (result.empty())
+        if (! result.ContinuationPoint.empty())
         {
-          Release();
+          ContinuationPoints.push_back(result.ContinuationPoint);
         }
       }
+      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
+      return  response.Results;
+    }
+
+    virtual std::vector<BrowseResult> BrowseNext() const
+    {
+      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
+      if ( ContinuationPoints.empty() )
+      {
+        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
+        return std::vector<BrowseResult>();
+      }
+      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+      BrowseNextRequest request;
+      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
+      request.ContinuationPoints = ContinuationPoints;
+      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
       if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
-      return result;
+      return response.Results;
     }
 
   private:
-    std::vector<ReferenceDescription> Next() const
-    {
-      return SendBrowseNext(false);
-    }
-
+    //FIXME: this method should be removed, better add realease option to BrowseNext
     void Release() const
     {
-      SendBrowseNext(true);
-    }
-
-    std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint) const
-    {
-      BrowseNextRequest request;
-      request.ReleaseContinuationPoints= false;
-      request.ContinuationPoints.push_back(ContinuationPoint);
-      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
-      return !response.Results.empty() ? response.Results.begin()->Referencies :  std::vector<ReferenceDescription>();
+      ContinuationPoints.clear();
+      BrowseNext();
     }
 
   public:
@@ -712,7 +701,7 @@ private:
     mutable std::atomic<uint32_t> RequestNumber;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
-    mutable std::vector<uint8_t> ContinuationPoint;
+    mutable std::vector<std::vector<uint8_t>> ContinuationPoints;
     mutable CallbackMap Callbacks;
     const bool Debug = true;
     bool Finished = false;

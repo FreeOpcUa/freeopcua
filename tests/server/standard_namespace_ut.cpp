@@ -44,7 +44,7 @@ protected:
     description.NodeToBrowse = id;
     OpcUa::NodesQuery query;
     query.NodesToBrowse.push_back(description);
-    return NameSpace->Browse(query);
+    return NameSpace->Browse(query)[0].Referencies;
   }
 
   bool HasReference(std::vector<ReferenceDescription> refs, ReferenceID referenceID,  NodeID targetNode) const
@@ -146,8 +146,9 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_Organizes_RefType)
 
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
-  std::vector<ReferenceDescription> referencies = NameSpace->Browse(query);
-  ASSERT_EQ(referencies.size(), 3);
+  std::vector<BrowseResult> results = NameSpace->Browse(query);
+  ASSERT_EQ(results.size(), 1);
+  ASSERT_EQ(results[0].Referencies.size(), 3);
 }
 
 TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_HierarchicalReferencies_Subtypes)
@@ -161,8 +162,9 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_HierarchicalReferencie
   description.ResultMask = REFERENCE_ALL;
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
-  std::vector<ReferenceDescription> referencies = NameSpace->Browse(query);
-  ASSERT_EQ(referencies.size(), 3);
+  std::vector<BrowseResult> results = NameSpace->Browse(query);
+  ASSERT_EQ(results.size(), 1);
+  ASSERT_EQ(results[0].Referencies.size(), 3);
 }
 
 TEST_F(StandardNamespaceStructure, CheckRoot)

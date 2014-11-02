@@ -125,7 +125,12 @@ namespace OpcUa
     Server.reset(); //SecureChannel is not closed until we destroy server object
   }
 
-  Node RemoteClient::GetNode(NodeID nodeId) const
+  Node RemoteClient::GetNode(const std::string& nodeId) const
+  {
+    return Node(Server, ToNodeID(nodeId));
+  }
+
+  Node RemoteClient::GetNode(const NodeID& nodeId) const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, nodeId);

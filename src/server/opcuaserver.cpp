@@ -19,6 +19,7 @@
 #include <opc/ua/server/opcuaserver.h>
 
 #include "common_addons.h"
+#include "opc/ua/protocol/string_utils.h"
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/subscription_service.h>
@@ -93,6 +94,10 @@ namespace OpcUa
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
   }
 
+  Node OPCUAServer::GetNode(const std::string& nodeid) const
+  {
+    return Node(Registry->GetServer(), ToNodeID(nodeid));
+  }
 
   Node OPCUAServer::GetNode(const NodeID& nodeid) const
   {
