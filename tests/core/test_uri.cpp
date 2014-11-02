@@ -22,6 +22,6 @@ TEST(Uri, CanParseValidURI)
 
 TEST(Uri, ThrowsIfInvalid)
 {
-  ASSERT_THROW(Common::Uri uri("http://host:#8080"), std::exception);
+  ASSERT_THROW(Common::Uri uri("http:/host:#8080"), std::exception);
 }
 

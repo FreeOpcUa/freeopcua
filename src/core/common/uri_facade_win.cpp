@@ -22,6 +22,7 @@ namespace Common
   void Uri::Initialize(const char* uriString, std::size_t size)
   {
     URL_COMPONENTS url = {0};
+    url.dwStructSize = sizeof(url);
     url.dwSchemeLength = 1;
     url.dwHostNameLength = 1;
     DWORD options = 0;
@@ -34,8 +35,8 @@ namespace Common
     }
 
 
-    SchemeStr = std::string(url.lpszScheme, url.lpszScheme + url.dwSchemeLength + 1);
-    HostStr = std::string(url.lpszHostName, url.lpszHostName + url.dwHostNameLength + 1);
+    SchemeStr = std::string(url.lpszScheme, url.lpszScheme + url.dwSchemeLength);
+    HostStr = std::string(url.lpszHostName, url.lpszHostName + url.dwHostNameLength);
     PortNum = url.nPort;
   }
 

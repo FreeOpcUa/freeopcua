@@ -14,7 +14,13 @@
 
 #include <gtest/gtest.h>
 
-const char* modulePath = "./libtest_dynamic_addon.so";
+#define STRINGIFY(S) #S
+
+#ifndef DYNAMIC_ADDON_PATH
+const char* modulePath "./libtest_dynamic_addon.so";
+#else
+const char* modulePath = DYNAMIC_ADDON_PATH;
+#endif
 
 TEST(DynamicAddonFactory, CanCreateAddons)
 {
@@ -35,6 +41,6 @@ TEST(DynamicAddonFactory, CanCallMethodsOfAddon)
   Common::AddonFactory::UniquePtr dynamicFactory = Common::CreateDynamicAddonFactory(modulePath);
   std::shared_ptr<Common::Addon> addon(dynamicFactory->CreateAddon());
   std::shared_ptr<OpcCoreTests::TestDynamicAddon> testAddon = std::dynamic_pointer_cast<OpcCoreTests::TestDynamicAddon>(addon);
-  ASSERT_EQ(testAddon->GetStringWithHello(), "hello");
+  ASSERT_EQ(testAddon->GetStringWithHello(), std::string("hello"));
 }
 
