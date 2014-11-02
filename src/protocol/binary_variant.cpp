@@ -418,7 +418,7 @@ namespace OpcUa
     const std::type_info& t = Value.type();
     if (t == typeid(bool))
       visitor.Visit(any_cast<bool>(Value));
-    if (t == typeid(std::vector<bool>))
+    else if (t == typeid(std::vector<bool>))
       visitor.Visit(any_cast<std::vector<bool>>(Value));
     else if (t == typeid(int8_t))
       visitor.Visit(any_cast<int8_t>(Value));
