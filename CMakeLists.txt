@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(freeopcua)
 
-
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
@@ -21,12 +20,13 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         "Single Directory for all"
     )
 
-
-option(CLANG "Build using Clang++" ON)
-option(BOOST_DIR "boost root directory." "")
-option(BUILD_SHARED_LIBS "" ON)
-
 enable_testing()
+
+option(BUILD_TESTING "" ON)
+option(BOOST_ROOT "boost root directory." "")
+
+SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+
 
 if(NOT WIN32)
     set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -Wall -Werr ${CMAKE_CXX_FLAGS_DEBUG} ") 
@@ -41,17 +41,16 @@ endif(NOT WIN32)
 
 include_directories(
   include 
-  ${BOOST_DIR}
+  ${BOOST_ROOT}
   tests/gtest/include
   tests/gmock/include
 )
 
 link_directories(
-  ${BOOST_DIR}/lib32-msvc-12.0 
+    ${BOOST_ROOT}/lib32-msvc-12.0
 )
 
 add_subdirectory(tests/gtest)
-#add_subdirectory(tests/gmock gtest_build)
 
 ############################################################################
 # Protocol library
@@ -78,7 +77,7 @@ add_library(libopcuaprotocol STATIC
   src/protocol/subscriptions.cpp
 )
 
-target_compile_options(libopcuaprotocol PUBLIC /MTd)
+target_compile_options(libopcuaprotocol PUBLIC /MDd)
 
 if (BUILD_TESTING)
   add_executable(test_libopcuaprotocol
@@ -107,7 +106,7 @@ if (BUILD_TESTING)
     gtest_main
   )
 
-  target_compile_options(test_libopcuaprotocol PUBLIC /MTd)
+  target_compile_options(test_libopcuaprotocol PUBLIC /MDd)
 
   add_test(NAME libopcuaprotocol COMMAND test_libopcuaprotocol) 
 endif()
@@ -142,7 +141,7 @@ add_library(libopcuacore STATIC
   src/core/subscription.cpp
 )
 
-target_compile_options(libopcuacore PUBLIC /MTd)
+target_compile_options(libopcuacore PUBLIC /MDd)
 
 if (BUILD_TESTING)
   add_library(test_dynamic_addon MODULE
@@ -175,7 +174,7 @@ if (BUILD_TESTING)
 
   STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
   STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
-  target_compile_options(test_libopcuacore PUBLIC /DDYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MTd)
+  target_compile_options(test_libopcuacore PUBLIC /DDYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MDd)
 
   add_test(NAME libopcuacore COMMAND test_libopcuacore) 
 endif()
@@ -193,7 +192,7 @@ add_library(libopcuaclient STATIC
   src/client/client.cpp
 )
 
-target_compile_options(libopcuaclient PUBLIC /MTd)
+target_compile_options(libopcuaclient PUBLIC /MDd)
 
 #tests/client/binary_handshake.cpp
 #tests/client/common.h
@@ -220,7 +219,7 @@ target_link_libraries(opcua
   libopcuacore
 )
 
-target_compile_options(opcua PUBLIC /MTd)
+target_compile_options(opcua PUBLIC /MDd)
 
 ############################################################################
 # server library
@@ -263,7 +262,7 @@ add_library(libopcuaserver STATIC
   src/server/utils.h
 )
 
-target_compile_options(libopcuaserver PUBLIC /MTd)
+target_compile_options(libopcuaserver PUBLIC /MDd)
 
 #  src/server/xml_address_space_addon.cpp
 #  src/server/xml_address_space_loader.cpp
@@ -314,7 +313,7 @@ if (BUILD_TESTING)
 
   target_include_directories(test_libopcuaserver PUBLIC .)
 
-  target_compile_options(test_libopcuaserver PUBLIC /MTd)
+  target_compile_options(test_libopcuaserver PUBLIC /MDd)
 
   add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
 endif()
@@ -338,7 +337,7 @@ target_link_libraries(opcuaserver
   libopcuaserver
 )
 
-target_compile_options(opcuaserver PUBLIC /MTd)
+target_compile_options(opcuaserver PUBLIC /MDd)
 
 #
 #add_executable(example_client
