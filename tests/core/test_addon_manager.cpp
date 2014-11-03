@@ -29,7 +29,7 @@ namespace
 #endif
 }
 
-TEST(AddonManager, CanCreateDynamicAddons)
+TEST(AddonManager, DISABLED_CanCreateDynamicAddons)
 {
   AddonsManager::UniquePtr addonsManager = CreateAddonsManager();
   AddonInformation config;
