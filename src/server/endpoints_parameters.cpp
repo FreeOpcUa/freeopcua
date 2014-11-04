@@ -33,7 +33,7 @@ namespace
       std::vector<ApplicationData> applications;
       for (const Common::ParametersGroup subGroup : applicationGroups)
       {
-        std::cout << "Found group : "<< subGroup.Name << std::endl; 
+        Log("Found group : ", subGroup.Name);
         if (subGroup.Name == "application")
         {
           const ApplicationData application = GetApplicationData(subGroup);
@@ -186,7 +186,7 @@ namespace
       EndpointDescription endpoint;
       for (const Common::Parameter param : group.Parameters)
       {
-        std::cout << "Param is: " << param.Name << param.Value << std::endl;
+        Log("Param is: ", param.Name, " = ", param.Value);
         if (param.Name == "security_mode")
           endpoint.SecurityMode = GetSecurityMode(param.Value);
         if (param.Name == "security_level")
@@ -238,7 +238,7 @@ namespace
       ApplicationData data;
       for (const Common::Parameter param : applicationGroup.Parameters)
       {
-        std::cout << "Parsing app paramter " << param.Name << param.Value << std::endl;
+        Log("Parsing app paramter ", param.Name, " = ", param.Value);
         if (param.Name == "uri")
         {
           data.Application.URI = param.Value;
@@ -271,7 +271,7 @@ namespace
 
       for (const Common::ParametersGroup group : applicationGroup.Groups)
       {
-        std::cout << "parsing group " << group.Name << std::endl;
+        Log("parsing group ", group.Name);
         if (group.Name == "endpoint")
         {
           EndpointDescription endpoint = GetEndpointDescription(group);
