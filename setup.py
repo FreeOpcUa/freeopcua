@@ -33,7 +33,7 @@ libraries = [
   'opcuaserver',
 ]
 
-setup(name='opcua',
+setup(name='python-freeopcua',
   version='0.1.2',
   description='Python bindings to freeopcua.',
   author='Alexander Rykovanov',

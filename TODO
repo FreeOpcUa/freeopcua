@@ -1,10 +1,6 @@
 - unittest using Condition.wait: check timeout in a portable way.
-- vector<T> attributes as .def_readwrite (getter ok, setter fail)
-  .add_vector_property workaround
 - srv.get_objects_node()
   coredump if srv has not been started
-- python->Variant int core dump with python3
-  workaround ugly
 
 
 
