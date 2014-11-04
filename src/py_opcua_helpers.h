@@ -37,35 +37,13 @@ struct vector_to_python_converter
 };
 
 
-template<class T, class U>
-struct vector_property_adapter
-{
+//
+// def_readwrite + conversion
+//
 
-  template<std::vector<U> T::* V>
-  static void setter(T & self, std::vector<U> v)
-  {
-    self.*V = v;
-  }
-
-  template<std::vector<U> T::* V>
-  static std::vector<U> getter(const T & self)
-  {
-    return self.*V;
-  }
-
-//  static auto make_adapter(std::vector<U> T::* V) -> decltype(&vector_property_adapter<T, U>)
-//  {
-//    return &vector_property_adapter<T, U>;
-//  }
-
-};
-
-
-// XXX ugly
-#define  add_vector_property(NAME, CLASS, TYPE, FIELD)                          \
-add_property(NAME, &vector_property_adapter<CLASS,TYPE>::getter<&CLASS::FIELD>, \
-                   &vector_property_adapter<CLASS,TYPE>::setter<&CLASS::FIELD>)
-
+#define def_readwrite_vector(NAME, FIELDREF)                                      \
+add_property(NAME, make_getter(FIELDREF, return_value_policy<return_by_value>()), \
+                   make_setter(FIELDREF, return_value_policy<return_by_value>()))
 
 //
 // python [] to vector<T>
@@ -109,7 +87,7 @@ struct vector_from_python_converter
     for (Py_ssize_t i = 0; i < PySequence_Length(obj_ptr); i++)
       {
         PyObject * elt = PySequence_GetItem(obj_ptr, i);
-        vs.push_back(extract<T>(object(handle<>(elt))));
+        vs.push_back(extract<T>(object(handle<>(borrowed(elt)))));
       }
 
     void * storage = ((converter::rvalue_from_python_storage<std::vector<T>> *)data)->storage.bytes;

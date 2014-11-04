@@ -209,8 +209,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("type", &ApplicationDescription::Type)
   .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerURI)
   .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileURI)
-  //.def_readwrite("discovery_urls", &ApplicationDescription::DiscoveryURLs) XXX getter ok, setter not
-  .add_vector_property("discovery_urls", ApplicationDescription, std::string, DiscoveryURLs)
+  .def_readwrite_vector("discovery_urls", &ApplicationDescription::DiscoveryURLs)
   ;
 
   to_python_converter<std::vector<ApplicationDescription>, vector_to_python_converter<ApplicationDescription>>();
@@ -231,8 +230,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("server_description", &EndpointDescription::ServerDescription)
   .def_readwrite("security_mode", &EndpointDescription::SecurityMode)
   .def_readwrite("security_policy_uri", &EndpointDescription::SecurityPolicyURI)
-  //.def_readwrite("user_identify_tokens", &EndpointDescription::UserIdentifyTokens) XXX getter ok, setter not
-  .add_vector_property("user_identify_tokens", EndpointDescription, UserTokenPolicy, UserIdentifyTokens)
+  .def_readwrite_vector("user_identify_tokens", &EndpointDescription::UserIdentifyTokens)
   .def_readwrite("transport_profile_uri", &EndpointDescription::TransportProfileURI)
   .def_readwrite("security_level", &EndpointDescription::SecurityLevel)
   ;
