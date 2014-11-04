@@ -36,7 +36,7 @@ namespace
     if (DaemonInstance)
     {
       DaemonInstance->Terminate();
-      DaemonInstance = nunllptr;
+      DaemonInstance = nullptr;
     }
   }
 

@@ -33,8 +33,14 @@ namespace Common
     {
       HostStr = uri->server;
     }
+
     PortNum = uri->port;
     xmlFreeURI(uri);
+
+    if (SchemeStr.empty() || HostStr.empty())
+    {
+      THROW_ERROR1(CannotParseUri, uriString);
+    }
   }
 
 } // namespace Common

@@ -18,27 +18,27 @@ namespace Common
   class Uri
   {
   public:
-    explicit Uri::Uri(const std::string& uriString)
+    explicit Uri(const std::string& uriString)
     {
       Initialize(uriString.c_str(), uriString.size());
     }
 
-    explicit Uri::Uri(const char* uriString)
+    explicit Uri(const char* uriString)
     {
       Initialize(uriString, 0);
     }
 
-    std::string Uri::Scheme() const
+    std::string Scheme() const
     {
       return SchemeStr;
     }
 
-    std::string Uri::Host() const
+    std::string Host() const
     {
       return HostStr;
     }
 
-    unsigned Uri::Port() const
+    unsigned Port() const
     {
       return PortNum;
     }

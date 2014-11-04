@@ -15,19 +15,18 @@
 #include <gtest/gtest.h>
 
 #ifndef TEST_CORE_CONFIG_PATH
-const char* TestConfigFile = "./tests/core/configs/test.conf";
-const char* TestConfigPath = "./tests/core/configs/";
-#else
+#define TEST_CORE_CONFIG_PATH "./tests/core/configs/"
+#endif
+
 const char* TestConfigFile = TEST_CORE_CONFIG_PATH "test.conf";
 const char* TestConfigPath = TEST_CORE_CONFIG_PATH;
-#endif
 
 TEST(ServerOptions, ParsesCommandLine)
 {
-  const char* argv[4] = { "test.exe", "--config="TEST_CORE_CONFIG_PATH, "--log-file=/path/to/log/server.log", "--daemon" };
+  const char* argv[4] = { "test.exe", "--config=" TEST_CORE_CONFIG_PATH, "--log-file=/path/to/log/server.log", "--daemon" };
   OpcUa::Server::CommandLine cmdline(4, argv);
   EXPECT_EQ(cmdline.GetLogFile(), "/path/to/log/server.log");
-  EXPECT_EQ(cmdline.GetConfigDir(), TEST_CORE_CONFIG_PATH);
+  EXPECT_EQ(cmdline.GetConfigDir(), TestConfigPath);
   EXPECT_TRUE(cmdline.IsDaemonMode());
 }
 
@@ -37,7 +36,7 @@ TEST(ServerOptions, ParsesConfigurationFiles)
   Common::Configuration config = Common::ParseConfigurationFiles(TestConfigPath);
   std::vector<Common::AddonInformation> addons(config.Modules.size());
   std::transform(std::begin(config.Modules), std::end(config.Modules), std::begin(addons), [](const Common::ModuleConfiguration& module){
-	  return Common::GetAddonInfomation(module);
+    return Common::GetAddonInfomation(module);
   });
 
   ASSERT_EQ(addons.size(), 1);

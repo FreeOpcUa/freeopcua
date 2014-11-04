@@ -16,12 +16,11 @@
 using namespace testing;
 
 #ifndef TEST_CORE_CONFIG_PATH
-const char* TestConfigFile = "./tests/core/configs/test.conf";
-const char* TestConfigPath = "./tests/core/configs/";
-#else
+#define TEST_CORE_CONFIG_PATH "./tests/core/configs/"
+#endif
+
 const char* TestConfigFile = TEST_CORE_CONFIG_PATH "test.conf";
 const char* TestConfigPath = TEST_CORE_CONFIG_PATH;
-#endif
 
 TEST(ModulesConfiguration, ParsesConfigurationFile)
 {
