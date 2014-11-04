@@ -25,7 +25,6 @@ TEST(Uri, CanParseFullWithoutPort)
   Common::Uri uri("http://host");
   ASSERT_EQ(uri.Scheme(), "http");
   ASSERT_EQ(uri.Host(), "host");
-  ASSERT_EQ(uri.Port(), 0);
 }
 
 TEST(Uri, ThrowsIfSchemeEmpty)
