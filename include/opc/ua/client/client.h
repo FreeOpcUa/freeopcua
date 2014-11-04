@@ -86,6 +86,7 @@ namespace OpcUa
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
     std::string GetSecurityPolicy() const { return SecurityPolicy; }
 
+    uint32_t GetNamespaceIndex(std::string uri);
     Node GetRootNode() const;
     Node GetObjectsNode() const;
     Node GetServerNode() const;

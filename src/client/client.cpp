@@ -125,6 +125,23 @@ namespace OpcUa
     Server.reset(); //SecureChannel is not closed until we destroy server object
   }
 
+  uint32_t RemoteClient::GetNamespaceIndex(std::string uri)
+  {
+    if ( ! Server ) { throw NotConnectedError();}
+    Node namespacearray(Server, ObjectID::NamespaceArray);
+    std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
+    for ( uint32_t i=0; i<uris.size(); ++i)
+    {
+      if (uris[i] == uri )
+      {
+        return i;
+      }
+    }
+    throw(std::runtime_error("Error namespace uri does not exists in server")); 
+    //return -1;
+  }
+
+
   Node RemoteClient::GetNode(const std::string& nodeId) const
   {
     return Node(Server, ToNodeID(nodeId));

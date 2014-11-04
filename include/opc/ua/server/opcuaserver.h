@@ -28,6 +28,8 @@ namespace OpcUa
       void AddAddressSpace(const std::string& path);
       void SetLoadCppAddressSpace(bool val = true);
       void EnableEventNotification();
+      uint32_t RegisterNamespace(std::string uri);
+      uint32_t GetNamespaceIndex(std::string uri);
 
       void Start();
       void Stop();
@@ -53,6 +55,7 @@ namespace OpcUa
       bool Debug = false;
       bool LoadCppAddressSpace = true;
       OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
+      void CheckStarted() const;
 
       Common::AddonsManager::SharedPtr Addons;
       Server::ServicesRegistry::SharedPtr Registry;
