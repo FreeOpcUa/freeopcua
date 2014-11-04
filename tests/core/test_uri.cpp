@@ -12,7 +12,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(Uri, CanParseValidURI)
+TEST(Uri, CanParseFullURI)
 {
   Common::Uri uri("http://host:8080");
   ASSERT_EQ(uri.Scheme(), "http");
@@ -20,8 +20,27 @@ TEST(Uri, CanParseValidURI)
   ASSERT_EQ(uri.Port(), 8080u);
 }
 
+TEST(Uri, CanParseFullWithoutPort)
+{
+  Common::Uri uri("http://host");
+  ASSERT_EQ(uri.Scheme(), "http");
+  ASSERT_EQ(uri.Host(), "host");
+  ASSERT_EQ(uri.Port(), 0);
+}
+
+TEST(Uri, ThrowsIfSchemeEmpty)
+{
+  ASSERT_THROW(Common::Uri("://host"), std::exception);
+}
+
+TEST(Uri, ThrowsIfHostEmpty)
+{
+  ASSERT_THROW(Common::Uri("htp://"), std::exception);
+  ASSERT_THROW(Common::Uri("htp://:8080"), std::exception);
+}
+
 TEST(Uri, ThrowsIfInvalid)
 {
-  ASSERT_THROW(Common::Uri uri("http:/host:#8080"), std::exception);
+  ASSERT_THROW(Common::Uri("httphost8080"), std::exception);
 }
 

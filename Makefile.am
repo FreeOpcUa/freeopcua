@@ -58,7 +58,12 @@ pkgconfig_DATA = libopcuaprotocol.pc libopcuacore.pc libopcuaserver.pc libopcuac
 
 
 #custom shared libraries required for testing
-all-local : test_addon.so libtest_dynamic_addon.so tests/gtest/lib/.libs/libgtest.a tests/gtest/lib/.libs/libgmock.a
+all-local : libtest_dynamic_addon.so tests/gtest/lib/.libs/libgtest.a tests/gtest/lib/.libs/libgmock.a
+
+
+DYNAMIC_ADDON_PATH = $(top_builddir)/libtest_dynamic_addon.so
+TEST_CORE_CONFIG_PATH = $(top_srcdir)/tests/core/configs/
+
 
 ####################################################
 # opcua server library
@@ -90,8 +95,8 @@ libopcuaserver_la_SOURCES = \
 	src/server/address_space_addon.h \
 	src/server/address_space_internal.cpp \
 	src/server/address_space_internal.h \
-  src/server/common_addons.cpp \
-  src/server/common_addons.h \
+	src/server/common_addons.cpp \
+	src/server/common_addons.h \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_parameters.h \
 	src/server/endpoints_services_addon.cpp \
@@ -113,7 +118,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/server_object_addon.h \
 	src/server/services_registry_impl.cpp \
 	src/server/services_registry_factory.cpp \
-  src/server/subscription_service_addon.cpp \
+	src/server/subscription_service_addon.cpp \
 	src/server/subscription_service_internal.h \
 	src/server/subscription_service_internal.cpp \
 	src/server/standard_namespace_addon.cpp \
@@ -137,6 +142,7 @@ libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_system -lboost
 
 opcuaserver_SOURCES = \
 	src/server/daemon.cpp \
+	src/server/daemon_lin.cpp \
 	src/server/daemon.h \
 	src/server/server_main.cpp \
 	src/server/server_options.cpp \
@@ -146,10 +152,6 @@ opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
 opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCONFIG_PATH=\"$(sysconfdir)/opcua/server\"
 opcuaserver_LDFLAGS = -ldl -lpthread -lboost_filesystem -lboost_program_options -lboost_system -Wl,--no-undefined 
 
-
-test_addon.so: tests/server/test_addon.h tests/server/test_addon.cpp libopcuacore.la
-	$(CC) -o0 -g -Wall -std=c++0x -fPIC -c tests/server/test_addon.cpp -I$(top_srcdir)/include -o test_addon.o
-	$(CC) -o0 -g -Wall -std=c++0x -shared test_addon.o -o test_addon.so $(top_builddir)/.libs/libopcuacore.a
 
 test_opcuaserver_SOURCES = \
 	tests/server/address_space_registry_test.h \
@@ -181,7 +183,8 @@ test_opcuaserver_SOURCES = \
 
 
 test_opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la libopcuaclient.la
-test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+test_opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -I$(top_srcdir)/src/server $(GTEST_INCLUDES) $(GMOCK_INCLUDES) \
+                            -DDYNAMIC_ADDON_PATH="\"${DYNAMIC_ADDON_PATH}\"" -DTEST_CORE_CONFIG_PATH="\"${TEST_CORE_CONFIG_PATH}\""
 test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIBS) $(GCOV_LIBS) -lboost_program_options
 
 ####################################################
@@ -323,6 +326,7 @@ libopcuacore_la_SOURCES = \
                   src/core/common/common_errors.cpp \
                   src/core/common/exception.cpp \
                   src/core/common/object_id.cpp \
+                  src/core/common/uri_facade_lin.cpp \
                   src/core/common/value.cpp \
                   src/core/event.cpp \
                   src/core/model_impl.h \
@@ -338,7 +342,7 @@ libopcuacore_la_SOURCES = \
 
 libopcuacore_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuacore_la_LIBADD = libopcuaprotocol.la
-libopcuacore_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_filesystem -lboost_system $(GCOV_LIBS) -Wl,--no-undefined
+libopcuacore_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_filesystem -lboost_system -lxml2 $(GCOV_LIBS) -Wl,--no-undefined
 
 test_dynamic_addon.o: tests/core/test_dynamic_addon.cpp
 	$(CC) -std=c++0x -I$(top_srcdir)/include -fPIC -g -c -Wall tests/core/test_dynamic_addon.cpp 
@@ -367,7 +371,7 @@ common_gtest_SOURCES = \
   tests/core/test_uri.cpp \
   tests/core/common/thread_test.cpp
 
-common_gtest_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES)
+common_gtest_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES) -DDYNAMIC_ADDON_PATH="\"${DYNAMIC_ADDON_PATH}\"" -DTEST_CORE_CONFIG_PATH="\"${TEST_CORE_CONFIG_PATH}\""
 common_gtest_LDADD = libopcuacore.la libopcuaprotocol.la
 common_gtest_LDFLAGS = -ldl -lpthread -lxml2 $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOCK_LIB) -no-undefined
 

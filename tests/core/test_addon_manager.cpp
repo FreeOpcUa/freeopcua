@@ -20,13 +20,13 @@ using namespace Common;
 
 namespace
 {
-#define STRINGIFY(S) #S
 
 #ifndef DYNAMIC_ADDON_PATH
-  const char* modulePath "./libtest_dynamic_addon.so";
-#else
-  const char* modulePath = DYNAMIC_ADDON_PATH;
+#define DYNAMIC_ADDON_PATH "./libtest_dynamic_addon.so"
 #endif
+
+const char* modulePath = DYNAMIC_ADDON_PATH;
+
 }
 
 TEST(AddonManager, DISABLED_CanCreateDynamicAddons)
