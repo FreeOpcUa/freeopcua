@@ -54,7 +54,9 @@ namespace
        }
 
        size = std::min(size, Buffer.size() - Pos);
-       std::copy(&Buffer[Pos], &Buffer[Pos + size], data);
+       std::vector<char>::const_iterator begin = Buffer.begin() + Pos;
+       std::vector<char>::const_iterator end = begin + size;
+       std::copy(begin, end, data);
        Pos += size;
        return size;
      }

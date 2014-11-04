@@ -36,6 +36,7 @@ if(NOT WIN32)
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 else(NOT WIN32)
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
+    add_compile_options(/Zi /Od /EHsc /W4)
 endif(NOT WIN32)
 
 
@@ -313,7 +314,7 @@ if (BUILD_TESTING)
 
   target_include_directories(test_libopcuaserver PUBLIC .)
 
-  target_compile_options(test_libopcuaserver PUBLIC /MDd)
+  target_compile_options(test_libopcuaserver PUBLIC /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MDd)
 
   add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
 endif()
