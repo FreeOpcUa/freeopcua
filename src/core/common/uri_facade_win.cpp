@@ -38,6 +38,11 @@ namespace Common
     SchemeStr = std::string(url.lpszScheme, url.lpszScheme + url.dwSchemeLength);
     HostStr = std::string(url.lpszHostName, url.lpszHostName + url.dwHostNameLength);
     PortNum = url.nPort;
+
+    if (SchemeStr.empty() || HostStr.empty())
+    {
+      THROW_ERROR1(CannotParseUri, uriString);
+    }
   }
 
 } // namespace Common
