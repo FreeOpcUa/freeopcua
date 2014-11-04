@@ -223,8 +223,9 @@ struct variant_from_python_converter
 
   static void construct(PyObject * obj_ptr, converter::rvalue_from_python_stage1_data * data)
   {
-
-    object obj = object(handle<>(obj_ptr));
+    // Use borrowed to construct the object so that a reference
+    // count will be properly handled.
+    object obj = object(handle<>(borrowed(obj_ptr)));
 
     void * storage = ((converter::rvalue_from_python_storage<Variant> *)data)->storage.bytes;
 

@@ -7,8 +7,8 @@ import time
 from threading import Condition
 import opcua
 
-port_num = 48410
-port_num_serv = 48430
+port_num1 = 48410
+port_num2 = 48430
 
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
@@ -232,7 +232,7 @@ class CommonTests(object):
 
     def test_create_delete_subscription(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:SubscriptioinVariable', [1, 2, 3])
+        v = o.add_variable('3:SubscriptionVariable', [1, 2, 3])
         sub = self.opc.create_subscription(100, sclt)
         handle = sub.subscribe_data_change(v)
         time.sleep(0.1)
@@ -314,7 +314,7 @@ class ServerProcess(Process):
     def run(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num)
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num1)
         self.srv.start()
         self.started.set()
         while not self._exit.is_set():
@@ -334,7 +334,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         #start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num)
+        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num1)
         self.clt.connect()
         self.opc = self.clt
 
@@ -350,7 +350,7 @@ class TestServer(unittest.TestCase, CommonTests):
     def setUpClass(self):
         self.srv = opcua.Server()
         self.srv.load_cpp_addressspace(True)
-        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num_serv)
+        self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num2)
         self.srv.start()
         self.opc = self.srv 
 

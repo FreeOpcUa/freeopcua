@@ -126,43 +126,6 @@ static std::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServer 
   return std::shared_ptr<Subscription>(sub.release());
 }
 
-#if PY_MAJOR_VERSION >= 3
-//--------------------------------------------------------------------------
-// Variants workaround
-//--------------------------------------------------------------------------
-
-static boost::shared_ptr<DataValue> DataValue_constructor0(const object & val)
-{ return boost::shared_ptr<DataValue>(new DataValue(ToVariant(val))); }
-
-static Node Node_AddVariable1(const Node & self, const NodeID & nid, const QualifiedName & qn, const object & val)
-{ return self.AddVariable(nid, qn, ToVariant(val)); }
-
-static Node Node_AddVariable2(const Node & self, const std::string & s1, const std::string & s2, const object & val)
-{ return self.AddVariable(s1, s2, ToVariant(val)); }
-
-static Node Node_AddVariable3(const Node & self, const std::string & s1, const object & val)
-{ return self.AddVariable(s1, ToVariant(val)); }
-
-static Node Node_AddProperty1(const Node & self, const NodeID & nid, const QualifiedName & qn, const object & val)
-{ return self.AddProperty(nid, qn, ToVariant(val)); }
-
-static Node Node_AddProperty2(const Node & self, const std::string & s1, const std::string & s2, const object & val)
-{ return self.AddProperty(s1, s2, ToVariant(val)); }
-
-static Node Node_AddProperty3(const Node & self, const std::string & s1, const object & val)
-{ return self.AddProperty(s1, ToVariant(val)); }
-
-static StatusCode NodeSetValue1(Node & self, const object & val, const DateTime & dt = CurrentDateTime())
-{ return self.SetValue(ToVariant(val), dt); }
-
-BOOST_PYTHON_FUNCTION_OVERLOADS(NodeSetValue1_stubs, NodeSetValue1, 2, 3);
-
-static void Event_SetValue(Event & self, const std::string & s1, const object & val)
-{ return self.SetValue(s1, ToVariant(val)); }
-
-#endif
-
-
 //--------------------------------------------------------------------------
 // module
 //--------------------------------------------------------------------------
@@ -179,9 +142,7 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
   vector_from_python_converter<std::string>();
 
-#if PY_MAJOR_VERSION < 3
   variant_from_python_converter();
-#endif
   to_python_converter<Variant, variant_to_python_converter>();
 
   class_<DateTime>("DateTime", init<>())
@@ -227,11 +188,7 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   class_<DataValue, boost::shared_ptr<DataValue>>("DataValue")
-#if PY_MAJOR_VERSION < 3
   .def(init<const Variant &>())
-#else
-  .def("__init__", make_constructor(DataValue_constructor0))  // 'int' Variant
-#endif
   .def("__init__", make_constructor(DataValue_constructor1))  // Variant, VariantType
 #define _property(X) add_property( #X, &DataValue_get_ ## X, &DataValue_set_ ## X)
   ._property(value)
@@ -328,11 +285,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-#if PY_MAJOR_VERSION < 3
   .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime") = CurrentDateTime()), "set a node value."))
-#else
-  .def("set_value", &NodeSetValue1, NodeSetValue1_stubs((arg("self"), arg("value"), arg("DateTime") = CurrentDateTime()), "set a node value."))
-#endif
   .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
@@ -346,21 +299,12 @@ BOOST_PYTHON_MODULE(opcua)
   .def("add_object", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &) const) &Node::AddObject)
-#if PY_MAJOR_VERSION < 3
   .def("add_variable", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddVariable)
   .def("add_property", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddProperty)
-#else
-  .def("add_variable", &Node_AddVariable1)
-  .def("add_variable", &Node_AddVariable2)
-  .def("add_variable", &Node_AddVariable3)
-  .def("add_property", &Node_AddProperty1)
-  .def("add_property", &Node_AddProperty2)
-  .def("add_property", &Node_AddProperty3)
-#endif
   .def(str(self))
   .def(repr(self))
   .def(self == self)
@@ -380,11 +324,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<Event>("Event", init<const NodeID &>())
   .def("get_value", (Variant(Event::*)(const std::string &) const) &Event::GetValue)
-#if PY_MAJOR_VERSION < 3
   .def("set_value", (void (Event::*)(const std::string &, Variant)) &Event::SetValue)
-#else
-  .def("set_value", &Event_SetValue)
-#endif
   .def_readwrite("event_id", &Event::EventId)
   .def_readwrite("event_type", &Event::EventType)
   .def_readwrite("local_time", &Event::LocalTime)
