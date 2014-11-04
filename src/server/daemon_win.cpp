@@ -61,6 +61,7 @@ namespace OpcUa
     {
       std::cerr << "Cannot set terminate handler. Application may not response on exit event." << std::endl;
     }
+    DaemonInstance = this;
   }
 
 }
