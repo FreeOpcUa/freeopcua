@@ -142,10 +142,10 @@ namespace OpcUa
   // TODO move to separate file with time utils.
   DateTime CurrentDateTime()
   {
-	using namespace std::chrono;
-	const auto t = time_point<system_clock>();
-	const auto us = duration_cast<microseconds>(t.time_since_epoch());
-	const auto n = us.count();
+    using namespace std::chrono;
+    const auto t = time_point<high_resolution_clock>(high_resolution_clock::now());
+    const auto us = duration_cast<microseconds>(t.time_since_epoch());
+    const auto n = us.count();
     return ToDateTime(n / 1000000, n % 1000000);
   }
 
