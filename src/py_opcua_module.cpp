@@ -110,20 +110,20 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 // RemoteClient helpers
 //--------------------------------------------------------------------------
 
-static std::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
-  return std::shared_ptr<Subscription>(sub.release());
+  return boost::shared_ptr<Subscription>(sub.release());
 }
 
 //--------------------------------------------------------------------------
 // OPCUAServer helpers
 //--------------------------------------------------------------------------
 
-static std::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
-  return std::shared_ptr<Subscription>(sub.release());
+  return boost::shared_ptr<Subscription>(sub.release());
 }
 
 //--------------------------------------------------------------------------
@@ -334,7 +334,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("time", &Event::Time)
   ;
 
-  class_<Subscription, std::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
+  class_<Subscription, boost::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
   .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::VALUE)))
   .def("delete", &Subscription::Delete)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
