@@ -1,6 +1,4 @@
 - unittest using Condition.wait: check timeout in a portable way.
-- srv.get_objects_node()
-  coredump if srv has not been started
 
 
 

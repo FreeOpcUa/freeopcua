@@ -246,6 +246,10 @@ class CommonTests(object):
         sub.unsubscribe(handle)
         sub.delete()
 
+    def test_get_namespace_index(self):
+        idx = self.opc.get_namespace_index("http://freeopcua.github.io")
+        self.assertEqual(idx, 1) 
+
     def test_subscription_data_change(self):
         '''
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
@@ -358,8 +362,11 @@ class TestServer(unittest.TestCase, CommonTests):
     def tearDownClass(self):
         self.srv.stop()
 
-
-
+    def test_register_namespace(self):
+        uri = "http://mycustom.namespace.com"
+        idx1 = self.opc.register_namespace(uri)
+        idx2 = self.opc.get_namespace_index(uri)
+        self.assertEqual(idx1, idx2) 
 
 
 if __name__ == '__main__':
