@@ -276,33 +276,32 @@ class CommonTests(object):
         msclt.setup(cond)
 
         o = self.opc.get_objects_node()
-        v1 = o.add_variable('3:SubscriptionVariableV1', [1, 2, 3])
-        v2 = o.add_variable('3:SubscriptionVariableV2', 1)
+
+        #subscribe to a variable
+        startv1 = [1, 2, 3]
+        v1 = o.add_variable('3:SubscriptionVariableV1', startv1)
         sub = self.opc.create_subscription(100, msclt)
         handle1 = sub.subscribe_data_change(v1)
         print('Got handle ', handle1)
-        handle2 = sub.subscribe_data_change(v2)
-        print('Got handle ', handle2)
 
-        v1.set_value([5])
-        start = time.time()
+        #Now check we get the start value
         with cond:
             ret = cond.wait(0.5)
         if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         else: pass # XXX
-        self.assertEqual(msclt.value, [5])
+        self.assertEqual(msclt.value, startv1)
         self.assertEqual(msclt.node, v1)
 
-        v2.set_value(99)
+        #modify v1 and check we get value 
+        v1.set_value([5])
         with cond:
             ret = cond.wait(0.5)
         if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
         else: pass # XXX
-        self.assertEqual(msclt.value, 99)
-        self.assertEqual(msclt.node, v2)
+        self.assertEqual(msclt.node, v1)
+        self.assertEqual(msclt.value, [5])
 
         sub.unsubscribe(handle1)
-        #sub.unsubscribe(handle2) # disabled to test one more case
         sub.delete()
 
 
@@ -328,6 +327,7 @@ class ServerProcess(Process):
     def stop(self):
         self._exit.set()
 
+
 class TestClient(unittest.TestCase, CommonTests):
     @classmethod
     def setUpClass(self):
@@ -346,7 +346,6 @@ class TestClient(unittest.TestCase, CommonTests):
     def tearDownClass(self):
         self.clt.disconnect()
         self.srv.stop()
-
 
 
 class TestServer(unittest.TestCase, CommonTests):
