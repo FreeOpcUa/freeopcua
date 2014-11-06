@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 
 project(freeopcua)
 
@@ -23,32 +23,55 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 enable_testing()
 
 option(BUILD_TESTING "" ON)
-option(BOOST_ROOT "boost root directory." "")
 
-SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+if(WIN32)
+    option(BOOST_ROOT "boost root directory." "")
+
+    SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+    SET(STATIC_LIBRARY_CXX_FLAGS "Static library compile flags" /MDd)
+    SET(EXECUTABLE_CXX_FLAGS "Static library compile flags" /MDd)
+    SET(DYNAMIC_LIBRARY_CXX_FLAGS "Static library compile flags" /MDd)
+    SET(D "Static library compile flags" /D)
+    SET(ADDITIONAL_LINK_LIBRARIES Wininet.lib)
+    SET(OS_SUFFIX _win)
+    STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
+    STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
+
+    SET(ADDITIONAL_INCLUDES ${BOOST_ROOT})
 
 
-if(NOT WIN32)
-    set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -Wall -Werr ${CMAKE_CXX_FLAGS_DEBUG} ") 
+    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
+    add_compile_options(/Zi /Od /EHsc /W4)
+
+    link_directories(${BOOST_ROOT}/lib32-msvc-12.0)
+
+else(WIN32)
+
+    SET(STATIC_LIBRARY_CXX_FLAGS)
+    SET(EXECUTABLE_CXX_FLAGS)
+    SET(DYNAMIC_LIBRARY_CXX_FLAGS)
+    SET(D -D)
+    SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/libtest_dynamic_addon.so")
+    SET(TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
+    SET(OS_SUFFIX _lin)
+
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS_DEBUG} ") 
     if(CLANG)
+        LIST(APPEND CMAKE_CXX_FLAGS "-ggdb -Werr") 
         set(CMAKE_CXX_COMPILER  "clang++")
     endif()
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
-else(NOT WIN32)
-    add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
-    add_compile_options(/Zi /Od /EHsc /W4)
-endif(NOT WIN32)
+
+    SET(ADDITIONAL_INCLUDES /usr/include/libxml2)
+    SET(ADDITIONAL_LINK_LIBRARIES pthread dl boost_thread boost_system boost_filesystem boost_program_options xml2)
+endif(WIN32)
 
 
 include_directories(
-  include 
-  ${BOOST_ROOT}
-  tests/gtest/include
-  tests/gmock/include
-)
-
-link_directories(
-    ${BOOST_ROOT}/lib32-msvc-12.0
+  ${CMAKE_SOURCE_DIR}/include 
+  ${CMAKE_SOURCE_DIR}/tests/gtest/include
+  ${CMAKE_SOURCE_DIR}/tests/gmock/include
+  ${ADDITIONAL_INCLUDES}
 )
 
 add_subdirectory(tests/gtest)
@@ -78,7 +101,8 @@ add_library(libopcuaprotocol STATIC
   src/protocol/subscriptions.cpp
 )
 
-target_compile_options(libopcuaprotocol PUBLIC /MDd)
+target_compile_options(libopcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(libopcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 
 if (BUILD_TESTING)
   add_executable(test_libopcuaprotocol
@@ -107,7 +131,7 @@ if (BUILD_TESTING)
     gtest_main
   )
 
-  target_compile_options(test_libopcuaprotocol PUBLIC /MDd)
+  target_compile_options(test_libopcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
   add_test(NAME libopcuaprotocol COMMAND test_libopcuaprotocol) 
 endif()
@@ -116,18 +140,18 @@ endif()
 # core library
 ############################################################################
 
-add_library(libopcuacore STATIC
+SET(LIBOPCUACORE_SOURCES 
   src/core/common/addons_core/addon_manager.cpp
   src/core/common/addons_core/config_file.cpp
+  src/core/common/addons_core/dynamic_library${OS_SUFFIX}.cpp
   src/core/common/addons_core/dynamic_addon_factory.cpp
   src/core/common/addons_core/dynamic_library.h
-  src/core/common/addons_core/dynamic_library_win.cpp
   src/core/common/addons_core/errors_addon_manager.cpp
   src/core/common/common_errors.cpp
   src/core/common/exception.cpp
   src/core/common/object_id.cpp
   src/core/common/thread.cpp
-  src/core/common/uri_facade_win.cpp
+  src/core/common/uri_facade${OS_SUFFIX}.cpp
   src/core/common/value.cpp
   src/core/event.cpp
   src/core/model_impl.h
@@ -142,7 +166,10 @@ add_library(libopcuacore STATIC
   src/core/subscription.cpp
 )
 
-target_compile_options(libopcuacore PUBLIC /MDd)
+add_library(libopcuacore STATIC ${LIBOPCUACORE_SOURCES})
+
+target_compile_options(libopcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(libopcuacore ${ADDITIONAL_LINK_LIBRARIES} libopcuaprotocol)
 
 if (BUILD_TESTING)
   add_library(test_dynamic_addon MODULE
@@ -154,7 +181,6 @@ if (BUILD_TESTING)
     libopcuacore
   )
   
-  target_compile_options(libopcuacore PUBLIC /LDd)
 
 
   add_executable(test_libopcuacore
@@ -166,18 +192,17 @@ if (BUILD_TESTING)
   )
 
   target_link_libraries(test_libopcuacore
-    Wininet.lib
+    ${ADDITIONAL_LINK_LIBRARIES}
     libopcuaprotocol
     libopcuacore
     gtest
     gtest_main
   )
 
-  STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
-  STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
-  target_compile_options(test_libopcuacore PUBLIC /DDYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MDd)
+  target_compile_options(test_libopcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
 
   add_test(NAME libopcuacore COMMAND test_libopcuacore) 
+
 endif()
 
 
@@ -193,7 +218,8 @@ add_library(libopcuaclient STATIC
   src/client/client.cpp
 )
 
-target_compile_options(libopcuaclient PUBLIC /MDd)
+target_compile_options(libopcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(libopcuaclient ${ADDITIONAL_LINK_LIBRARIES})
 
 #tests/client/binary_handshake.cpp
 #tests/client/common.h
@@ -214,13 +240,15 @@ add_executable(opcua
   src/client/opcua_options.h
 )
 
-target_link_libraries(opcua
-  Wininet.lib
+
+target_link_libraries(opcua 
+  ${ADDITIONAL_LINK_LIBRARIES}
   libopcuaprotocol
   libopcuacore
 )
 
-target_compile_options(opcua PUBLIC /MDd)
+target_compile_options(opcua PUBLIC ${EXECUTABLE_CXX_FLAGS})
+
 
 ############################################################################
 # server library
@@ -234,7 +262,6 @@ add_library(libopcuaserver STATIC
   src/server/asio_addon.cpp
   src/server/common_addons.cpp
   src/server/common_addons.h
-  src/server/daemon.h
   src/server/endpoints_parameters.cpp
   src/server/endpoints_parameters.h
   src/server/endpoints_registry.cpp
@@ -263,7 +290,8 @@ add_library(libopcuaserver STATIC
   src/server/utils.h
 )
 
-target_compile_options(libopcuaserver PUBLIC /MDd)
+target_compile_options(libopcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(libopcuaserver ${ADDITIONAL_LINK_LIBRARIES} libopcuacore libopcuaprotocol)
 
 #  src/server/xml_address_space_addon.cpp
 #  src/server/xml_address_space_loader.cpp
@@ -301,44 +329,43 @@ if (BUILD_TESTING)
 #  tests/server/xml_addressspace_ut.cpp
 #  tests/server/xml_address_space_addon_ut.cpp
 
-
   target_link_libraries(test_libopcuaserver
-    Wininet.lib
+    ${ADDITIONAL_LINK_LIBRARIES}
     libopcuaclient
     libopcuacore
     libopcuaprotocol
     libopcuaserver
     gtest
-    gtest_main
-  )
+    gtest_main)
 
   target_include_directories(test_libopcuaserver PUBLIC .)
-
-  target_compile_options(test_libopcuaserver PUBLIC /DTEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" /MDd)
+  target_compile_options(test_libopcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
 
   add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
-endif()
+
+endif (BUILD_TESTING)
 
 ############################################################################
 # opcua server executable
 ############################################################################
 
-add_executable(opcuaserver
+SET(OPCUASERVER_SOURCES
   src/server/daemon.cpp
-  src/server/daemon_win.cpp
+  src/server/daemon${OS_SUFFIX}.cpp
+  src/server/daemon.h
   src/server/server_main.cpp
   src/server/server_options.cpp
   src/server/server_options.h
 )
 
+add_executable(opcuaserver ${OPCUASERVER_SOURCES})
 target_link_libraries(opcuaserver
-  Wininet.lib
+  ${ADDITIONAL_LINK_LIBRARIES}
   libopcuaprotocol
   libopcuacore
   libopcuaserver
 )
-
-target_compile_options(opcuaserver PUBLIC /MDd)
+target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
 #
 #add_executable(example_client
