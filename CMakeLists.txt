@@ -27,7 +27,7 @@ option(BUILD_TESTING "" ON)
 if(WIN32)
     option(BOOST_ROOT "boost root directory." "")
 
-    SET(gtest_force_shared_crt ON)
+    SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
     SET(STATIC_LIBRARY_CXX_FLAGS  /MDd)
     SET(EXECUTABLE_CXX_FLAGS /MDd)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS /MDd)
@@ -367,11 +367,38 @@ target_link_libraries(opcuaserver
 )
 target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
-#
-#add_executable(example_client
-#  src/examples/example_client.cpp
-#)
-#
-#add_executable(example_server
-#  src/examples/example_server.cpp
-#)
+
+############################################################################
+# example opcua client
+############################################################################
+
+add_executable(example_client
+  src/examples/example_client.cpp
+)
+
+target_link_libraries(example_client
+  ${ADDITIONAL_LINK_LIBRARIES}
+  libopcuaprotocol
+  libopcuacore
+  libopcuaclient
+)
+
+target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+
+
+############################################################################
+# example embedded opcua server
+############################################################################
+
+add_executable(example_server
+  src/examples/example_server.cpp
+)
+
+target_link_libraries(example_server
+  ${ADDITIONAL_LINK_LIBRARIES}
+  libopcuaprotocol
+  libopcuacore
+  libopcuaserver
+)
+
+target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
