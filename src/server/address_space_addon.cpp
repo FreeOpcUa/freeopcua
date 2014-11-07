@@ -72,11 +72,11 @@ namespace OpcUa
       return Registry->AddReferences(items);
     }
 
-    std::vector<ReferenceDescription> AddressSpaceAddon::Browse(const OpcUa::NodesQuery& query) const
+    std::vector<BrowseResult> AddressSpaceAddon::Browse(const OpcUa::NodesQuery& query) const
     {
       return Registry->Browse(query);
     }
-    std::vector<ReferenceDescription> AddressSpaceAddon::BrowseNext() const
+    std::vector<BrowseResult> AddressSpaceAddon::BrowseNext() const
     {
       return Registry->BrowseNext();
     }

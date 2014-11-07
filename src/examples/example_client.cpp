@@ -50,6 +50,7 @@ int main(int argc, char** argv)
       for (OpcUa::Node node : client.GetObjectsNode().GetChildren())
         std::cout << "    " << node << std::endl;
 
+
       std::cout << "NamespaceArray is: " << std::endl;
       std::vector<std::string> nspath ({"Objects", "Server", "NamespaceArray"});
       OpcUa::Node nsnode = root.GetChild(nspath);
@@ -74,10 +75,10 @@ int main(int argc, char** argv)
       }
       */
 
-
       //Subscription
-      std::vector<std::string> varpath({"Objects", "testfolder", "myvar"});
+      std::vector<std::string> varpath({"Objects", "2:NewObject", "2:MyVariable"});
       OpcUa::Node myvar = root.GetChild(varpath);
+
       std::cout << "got node: " << myvar << std::endl;
       SubClient sclt; 
       std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
@@ -87,6 +88,7 @@ int main(int argc, char** argv)
 
 
       std::cout << "Disconnecting" << std::endl;
+      client.Disconnect();
       return 0;
   }
   catch (const std::exception& exc)

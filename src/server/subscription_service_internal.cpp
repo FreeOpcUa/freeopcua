@@ -84,7 +84,7 @@ namespace OpcUa
       data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
       if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
 
-      std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback));
+      std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
       SubscriptionsMap[data.ID] = sub;
       return data;
     }

@@ -109,7 +109,7 @@ namespace
   class CallbackThread
   {
     public:
-      CallbackThread() 
+      CallbackThread() : StopRequest(false)
       {
 
       }
@@ -159,7 +159,7 @@ namespace
     private:
       std::mutex Mutex;
       std::condition_variable Condition;
-      bool StopRequest = false;
+      std::atomic<bool> StopRequest;
       std::queue<std::function<void()>> Queue;
       bool Debug = false;
   };
@@ -226,7 +226,7 @@ namespace
 
     }
 
-    virtual void CreateSession(const RemoteSessionParameters& parameters)
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
     {
       if (Debug)  { std::cout << "binary_client| CreateSession -->" << std::endl; }
       CreateSessionRequest request;
@@ -250,23 +250,26 @@ namespace
       CreateSessionResponse response = Send<CreateSessionResponse>(request);
       AuthenticationToken = response.Session.AuthenticationToken;
       if (Debug)  { std::cout << "binary_client| CreateSession <--" << std::endl; }
+      return response;
     }
 
-    virtual void ActivateSession()
+    virtual ActivateSessionResponse ActivateSession()
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
       request.Parameters.LocaleIDs.push_back("en");
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
+      return response;
     }
 
-    virtual void CloseSession()
+    virtual CloseSessionResponse CloseSession()
     {
       if (Debug)  { std::cout << "binary_client| CloseSession -->" << std::endl; }
       CloseSessionRequest request;
       CloseSessionResponse response = Send<CloseSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| CloseSession <--" << std::endl; }
+      return response;
     }
 
     virtual std::shared_ptr<EndpointServices> Endpoints() override
@@ -319,58 +322,47 @@ namespace
     }
 
 
-    virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const
+    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
     {
       if (Debug)  { std::cout << "binary_client| Browse -->" << std::endl; }
       BrowseRequest request;
       request.Header = CreateRequestHeader();
       request.Query = query;
       const BrowseResponse response = Send<BrowseResponse>(request);
-      if (!response.Results.empty())
+      for ( BrowseResult result : response.Results )
       {
-        const BrowseResult& result = *response.Results.begin();
-        ContinuationPoint = result.ContinuationPoint;
-        if (Debug)  { std::cerr << "binary_client| Browse <--" << std::endl; }
-        return result.Referencies;
-      }
-      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
-      return  std::vector<ReferenceDescription>();
-    }
-
-    virtual std::vector<ReferenceDescription> BrowseNext() const
-    {
-      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
-      std::vector<ReferenceDescription> result;
-      if (!ContinuationPoint.empty())
-      {
-        result = Next();
-        if (result.empty())
+        if (! result.ContinuationPoint.empty())
         {
-          Release();
+          ContinuationPoints.push_back(result.ContinuationPoint);
         }
       }
+      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
+      return  response.Results;
+    }
+
+    virtual std::vector<BrowseResult> BrowseNext() const
+    {
+      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
+      if ( ContinuationPoints.empty() )
+      {
+        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
+        return std::vector<BrowseResult>();
+      }
+      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+      BrowseNextRequest request;
+      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
+      request.ContinuationPoints = ContinuationPoints;
+      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
       if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
-      return result;
+      return response.Results;
     }
 
   private:
-    std::vector<ReferenceDescription> Next() const
-    {
-      return SendBrowseNext(false);
-    }
-
+    //FIXME: this method should be removed, better add realease option to BrowseNext
     void Release() const
     {
-      SendBrowseNext(true);
-    }
-
-    std::vector<ReferenceDescription> SendBrowseNext(bool releasePoint) const
-    {
-      BrowseNextRequest request;
-      request.ReleaseContinuationPoints= false;
-      request.ContinuationPoints.push_back(ContinuationPoint);
-      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
-      return !response.Results.empty() ? response.Results.begin()->Referencies :  std::vector<ReferenceDescription>();
+      ContinuationPoints.clear();
+      BrowseNext();
     }
 
   public:
@@ -490,7 +482,9 @@ namespace
               this->PublishCallbacks[response.Result.SubscriptionID](response.Result);
             });
       };
+      std::unique_lock<std::mutex> lock(Mutex);
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      lock.unlock();
       Send(request);
       if (Debug) {std::cout << "binary_client| Publish  <--" << std::endl;}
     }
@@ -505,7 +499,9 @@ private:
       ResponseCallback responseCallback = [&requestCallback](std::vector<char> buffer){
         requestCallback.OnData(std::move(buffer));
       };
+      std::unique_lock<std::mutex> lock(Mutex);
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      lock.unlock();
 
       Send(request);
 
@@ -562,11 +558,11 @@ private:
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << (uint32_t) header.ServiceResult << std::cout ;//FIXME merge ToString from treeww
+        std::cerr << "Receive ServiceFault from Server with StatusCode " << ToString(header.ServiceResult) << std::cout ;
         std::cerr << std::endl;
         return;
       }
-
+      std::unique_lock<std::mutex> lock(Mutex);
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
       if (callbackIt == Callbacks.end())
       {
@@ -701,17 +697,18 @@ private:
 
     SubscriptionCallbackMap PublishCallbacks;
     SecurityToken ChannelSecurityToken;
-    mutable uint32_t SequenceNumber;
-    mutable uint32_t RequestNumber;
+    mutable std::atomic<uint32_t> SequenceNumber;
+    mutable std::atomic<uint32_t> RequestNumber;
     NodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
-    mutable std::vector<uint8_t> ContinuationPoint;
+    mutable std::vector<std::vector<uint8_t>> ContinuationPoints;
     mutable CallbackMap Callbacks;
     const bool Debug = true;
     bool Finished = false;
 
     std::thread callback_thread;
     CallbackThread CallbackService;
+    mutable std::mutex Mutex;
 
   };
 

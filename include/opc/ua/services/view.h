@@ -27,8 +27,8 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(ViewServices);
 
   public:
-    virtual std::vector<ReferenceDescription> Browse(const OpcUa::NodesQuery& query) const = 0;
-    virtual std::vector<ReferenceDescription> BrowseNext() const = 0;
+    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const = 0;
+    virtual std::vector<BrowseResult> BrowseNext() const = 0;
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const = 0;
   };
 

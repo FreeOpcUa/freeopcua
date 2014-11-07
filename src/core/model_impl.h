@@ -39,10 +39,10 @@ namespace OpcUa
       NodesQuery query;
       query.NodesToBrowse.push_back(desc);
       ViewServices::SharedPtr views = services->Views();
-      std::vector<ReferenceDescription> refs = views->Browse(query);
+      std::vector<BrowseResult> results = views->Browse(query);
 
       std::vector<T> objects;
-      std::for_each(refs.begin(), refs.end(), [&node, &services, &objects](const ReferenceDescription& ref){
+      std::for_each(results[0].Referencies.begin(), results[0].Referencies.end(), [&node, &services, &objects](const ReferenceDescription& ref){
         objects.push_back(T(ref.TargetNodeID, services));
       });
 

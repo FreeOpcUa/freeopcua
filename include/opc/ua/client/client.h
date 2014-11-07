@@ -25,6 +25,11 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/client/binary_server.h>
 
+#include <thread>
+#include <condition_variable>
+#include <chrono>
+#include <atomic>
+
 
 namespace OpcUa
 {
@@ -33,6 +38,28 @@ namespace OpcUa
   {
     public:
       NotConnectedError() : std::runtime_error("NotConnectedError") { }
+  };
+
+  class KeepAliveThread
+  {
+    public:
+      KeepAliveThread() {}
+      KeepAliveThread(Node node, Duration period);
+      void Start(Node node, Duration period);
+      void Start();
+      void Stop();
+      void Join();
+
+    private:
+      void Run();
+      mutable std::thread Thread;
+      bool Debug = false;
+      Node NodeToRead;
+      Duration Period = 1200000;
+      std::atomic<bool> StopRequest;
+      std::atomic<bool> Running;
+      std::condition_variable Condition;
+      std::mutex Mutex;
   };
 
 
@@ -59,10 +86,12 @@ namespace OpcUa
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
     std::string GetSecurityPolicy() const { return SecurityPolicy; }
 
+    uint32_t GetNamespaceIndex(std::string uri);
     Node GetRootNode() const;
     Node GetObjectsNode() const;
     Node GetServerNode() const;
-    Node GetNode(NodeID nodeid) const;
+    Node GetNode(const NodeID& nodeid) const;
+    Node GetNode(const std::string& nodeid) const;
 
     void Connect();
     void Disconnect();
@@ -79,6 +108,10 @@ namespace OpcUa
 
   protected:
     Services::SharedPtr Server;
+
+  private:
+    KeepAliveThread KeepAlive;
+    
 
   };
 

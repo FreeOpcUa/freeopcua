@@ -19,6 +19,7 @@
 #include <opc/ua/server/opcuaserver.h>
 
 #include "common_addons.h"
+#include "opc/ua/protocol/string_utils.h"
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/subscription_service.h>
@@ -37,32 +38,67 @@ namespace OpcUa
 
   void OPCUAServer::SetEndpoint(const std::string& endpoint)
   {
-	Endpoint = endpoint;
+	  Endpoint = endpoint;
   }
 
   void OPCUAServer::SetProductURI(const std::string& uri)
   {
-	ProductUri = uri;
+	  ProductUri = uri;
   }
 
   void OPCUAServer::SetServerURI(const std::string& uri)
   {
-	ServerUri = uri;
+	  ServerUri = uri;
   }
 
   void OPCUAServer::SetServerName(const std::string& name)
   {
-	Name = name;
+	  Name = name;
   }
 
   void OPCUAServer::AddAddressSpace(const std::string& path)
   {
-	XmlAddressSpaces.push_back(path);
+	  XmlAddressSpaces.push_back(path);
   }
 
   void OPCUAServer::SetLoadCppAddressSpace(bool val)
   {
-	LoadCppAddressSpace = val;
+	  LoadCppAddressSpace = val;
+  }
+
+  void OPCUAServer::CheckStarted() const
+  {
+    if ( ! Registry )
+    {
+      throw(std::runtime_error("Server is not started"));
+    }
+  }
+
+  uint32_t OPCUAServer::RegisterNamespace(std::string uri)
+  {
+    CheckStarted();
+    Node namespacearray(Registry->GetServer(), ObjectID::NamespaceArray);
+    std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();
+    uint32_t index = uris.size();
+    uris.push_back(uri);
+    namespacearray.SetValue(uris);
+    return index;
+  }
+
+  uint32_t OPCUAServer::GetNamespaceIndex(std::string uri)
+  {
+    CheckStarted();
+    Node namespacearray(Registry->GetServer(), ObjectID::NamespaceArray);
+    std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
+    for ( uint32_t i=0; i<uris.size(); ++i)
+    {
+      if (uris[i] == uri )
+      {
+        return i;
+      }
+    }
+    throw(std::runtime_error("Error namespace uri does not exists in server")); 
+    //return -1;
   }
 
   void OPCUAServer::Start()
@@ -93,9 +129,14 @@ namespace OpcUa
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
   }
 
+  Node OPCUAServer::GetNode(const std::string& nodeid) const
+  {
+    return GetNode(ToNodeID(nodeid));
+  }
 
   Node OPCUAServer::GetNode(const NodeID& nodeid) const
   {
+    CheckStarted();
     return Node(Registry->GetServer(), nodeid);
   }
 
@@ -145,6 +186,7 @@ namespace OpcUa
 
   std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
   {
+    CheckStarted();
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;
     return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback, Debug));
