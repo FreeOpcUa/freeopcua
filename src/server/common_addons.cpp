@@ -58,12 +58,14 @@ namespace
       {
         AddParameters(endpointsRegistry, group);
       }
+/*
       else if (group.Name == OpcUa::Server::OpcUaProtocolAddonID)
       {
         Common::AddonInformation binaryProtocol = Server::CreateBinaryServerAddon();
         AddParameters(binaryProtocol, group);
         addons.push_back(binaryProtocol);
       }
+*/
       else if (group.Name == OpcUa::Server::AddressSpaceRegistryAddonID)
       {
         AddParameters(addressSpaceRegistry, group);
@@ -176,7 +178,7 @@ namespace OpcUa
     endpoints.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonID);
     return endpoints;
   }
-
+/*
   Common::AddonInformation Server::CreateBinaryServerAddon()
   {
     Common::AddonInformation opcTcp;
@@ -186,7 +188,7 @@ namespace OpcUa
     opcTcp.Dependencies.push_back(OpcUa::Server::SubscriptionServiceAddonID);
     return opcTcp;
   }
-
+*/
   Common::AddonInformation Server::CreateOpcTcpAsyncAddon()
   {
     Common::AddonInformation opcTcp;

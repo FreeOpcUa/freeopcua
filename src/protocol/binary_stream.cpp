@@ -176,6 +176,12 @@ namespace OpcUa
     }
 
     template<>
+    void DataSerializer::Serialize<std::vector<int8_t>>(const std::vector<int8_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
     void DataSerializer::Serialize<uint8_t>(const uint8_t& value)
     {
       Buffer.push_back(value);
@@ -196,6 +202,13 @@ namespace OpcUa
       GetData(In, &data, 1);
       value = data;
     }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<int8_t>>(std::vector<int8_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
 
     template<>
     void DataSerializer::Serialize<int16_t>(const int16_t& value)
@@ -294,12 +307,25 @@ namespace OpcUa
     }
 
     template<>
+    void DataSerializer::Serialize<std::vector<bool>>(const std::vector<bool>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
     void DataDeserializer::Deserialize<bool>(bool& value)
     {
       uint8_t tmp = 0;
       *this >> tmp;
-      value = static_cast<bool>(tmp);
+      value = (tmp != 0);
     }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<bool>>(std::vector<bool>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
 
     template<>
     void DataSerializer::Serialize<float>(const float& value)
@@ -481,6 +507,31 @@ namespace OpcUa
     }
 
     template<>
+    void DataSerializer::Serialize<std::vector<uint16_t>>(const std::vector<uint16_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<uint16_t>>(std::vector<uint16_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<int16_t>>(const std::vector<int16_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<int16_t>>(std::vector<int16_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+
+    template<>
     void DataSerializer::Serialize<std::vector<uint32_t>>(const std::vector<uint32_t>& value)
     {
       SerializeContainer(*this, value);
@@ -492,7 +543,91 @@ namespace OpcUa
       DeserializeContainer(*this, value);
     }
 
+    template<>
+    void DataSerializer::Serialize<std::vector<int32_t>>(const std::vector<int32_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
 
+    template<>
+    void DataDeserializer::Deserialize<std::vector<int32_t>>(std::vector<int32_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<int64_t>>(const std::vector<int64_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<int64_t>>(std::vector<int64_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<uint64_t>>(const std::vector<uint64_t>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<uint64_t>>(std::vector<uint64_t>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+
+    template<>
+    void DataSerializer::Serialize<std::vector<float>>(const std::vector<float>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<double>>(std::vector<double>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<double>>(const std::vector<double>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<float>>(std::vector<float>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+
+    template<>
+    void DataSerializer::Serialize<std::vector<Guid>>(const std::vector<Guid>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<Guid>>(std::vector<Guid>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
+
+    template<>
+    void DataSerializer::Serialize<std::vector<NodeID>>(const std::vector<NodeID>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<NodeID>>(std::vector<NodeID>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
 
     template<>
     void DataSerializer::Serialize<std::vector<std::string>>(const std::vector<std::string>& value)
@@ -1063,6 +1198,19 @@ namespace OpcUa
         *this >> lt.Text;
       }
     };
+
+
+    template<>
+    void DataSerializer::Serialize<std::vector<LocalizedText>>(const std::vector<LocalizedText>& value)
+    {
+      SerializeContainer(*this, value);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<std::vector<LocalizedText>>(std::vector<LocalizedText>& value)
+    {
+      DeserializeContainer(*this, value);
+    }
 
 
     template<>

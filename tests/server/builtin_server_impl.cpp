@@ -294,3 +294,9 @@ void BuiltinServerAddon::OnError(const std::exception& exc)
   ClientInput->Stop();
   if (Debug) std::clog  << "Server thread exited with error: " << exc.what() << std::endl;
 }
+
+OpcUa::Server::TcpServer::UniquePtr OpcUa::Server::CreateTcpServer()
+{
+  return TcpServer::UniquePtr(new BuiltinServerAddon);
+}
+

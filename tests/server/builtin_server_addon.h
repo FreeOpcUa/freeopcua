@@ -12,7 +12,6 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/ua/services/services.h>
-#include <src/server/tcp_server.h>
 
 namespace OpcUa
 {

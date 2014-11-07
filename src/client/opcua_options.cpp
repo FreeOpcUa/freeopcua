@@ -15,6 +15,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <iostream>
 
 #ifndef CONFIG_PATH
 #define CONFIG_PATH "/etc/opcua/client"
@@ -257,12 +258,12 @@ namespace OpcUa
       Attribute = GetAttributeIDOptionValue(vm);
     }
     Value = GetOptionValue(vm);
-    IsGetEndpoints = vm.count(OPTION_GET_ENDPOINTS);
-    IsBrowse = vm.count(OPTION_BROWSE);
-    IsRead = vm.count(OPTION_READ);
-    IsWrite = vm.count(OPTION_WRITE);
-    IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION);
-    IsFindServers = vm.count(OPTION_FIND_SERVERS);
+    IsGetEndpoints = vm.count(OPTION_GET_ENDPOINTS) != 0;
+    IsBrowse = vm.count(OPTION_BROWSE) != 0;
+    IsRead = vm.count(OPTION_READ) != 0;
+    IsWrite = vm.count(OPTION_WRITE) != 0;
+    IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION) != 0;
+    IsFindServers = vm.count(OPTION_FIND_SERVERS) != 0;
     if (vm.count(OPTION_REGISTER_MODULE))
     {
       IsAddModule = true;

@@ -367,12 +367,12 @@ namespace OpcUa
 
   bool NodeID::HasNamespaceURI() const
   {
-    return Encoding & EV_NAMESPACE_URI_FLAG;
+    return (Encoding & EV_NAMESPACE_URI_FLAG) != 0;
   }
 
   bool NodeID::HasServerIndex() const
   {
-    return Encoding & EV_SERVER_INDEX_FLAG;
+    return (Encoding & EV_SERVER_INDEX_FLAG) != 0;
   }
 
   void NodeID::SetNamespaceURI(const std::string& uri)

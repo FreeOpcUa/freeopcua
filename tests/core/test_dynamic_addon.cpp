@@ -24,7 +24,7 @@ namespace
     {
     }
 
-    virtual std::string GetStringWithHello() const
+    virtual const char* GetStringWithHello() const
     {
       return "hello";
     }
@@ -38,8 +38,12 @@ namespace
   };
 }
 
-extern "C" Common::Addon::UniquePtr CreateAddon(const char* configuration)
+extern "C" 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif // _WIN32
+Common::Addon* CreateAddon(const char* configuration)
 {
-  return Common::Addon::UniquePtr(new TestDynamicAddonImpl());
+  return new TestDynamicAddonImpl();
 }
 

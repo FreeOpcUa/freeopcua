@@ -54,7 +54,9 @@ namespace
        }
 
        size = std::min(size, Buffer.size() - Pos);
-       std::copy(&Buffer[Pos], &Buffer[Pos + size], data);
+       std::vector<char>::const_iterator begin = Buffer.begin() + Pos;
+       std::vector<char>::const_iterator end = begin + size;
+       std::copy(begin, end, data);
        Pos += size;
        return size;
      }
@@ -558,7 +560,7 @@ private:
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << ToString(header.ServiceResult) << std::cout ;
+        std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
         std::cerr << std::endl;
         return;
       }

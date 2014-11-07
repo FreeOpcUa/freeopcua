@@ -21,6 +21,7 @@
 #include <string>
 #include <iostream>
 
+
 namespace OpcUa
 {
   // TODO move to appropriate file

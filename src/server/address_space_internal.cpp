@@ -470,7 +470,7 @@ namespace OpcUa
 
       if (id.GetNamespaceIndex() == 0)
       {
-        const uint64_t number = id.GetIntegerIdentifier();
+        const uint32_t number = id.GetIntegerIdentifier();
         if (MaxNodeIDNum < number)
         {
           MaxNodeIDNum = number;

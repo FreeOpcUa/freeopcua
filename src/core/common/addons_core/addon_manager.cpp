@@ -13,8 +13,8 @@
 #include <opc/common/addons_core/errors.h>
 #include <opc/common/exception.h>
 
+#include <iostream>
 #include <map>
-
 
 namespace
 {
@@ -61,11 +61,12 @@ namespace
       }
       catch(const Common::Error& err)
       {
-        // TODO: log error
+        std::cerr << err.GetFullMessage() << std::endl;
       }
       catch (...)
       {
-        // TODO: log error
+        std::cerr << "unknown exception" << std::endl;
+        throw;
       }
     }
 

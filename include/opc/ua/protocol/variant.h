@@ -100,7 +100,59 @@ namespace OpcUa
     struct is_container_not_string<std::string> : std::integral_constant<bool, false> {};
 
 
-  //class DataValue;
+  class Variant;
+
+
+  // Such monster due to msvs.
+  class VariantVisitor
+  {
+  public:
+    typedef void result_type;
+
+  public:
+    virtual void Visit(bool val) = 0;
+    virtual void Visit(const std::vector<bool>& val) = 0;
+    virtual void Visit(int8_t val) = 0;
+    virtual void Visit(const std::vector<int8_t>& val) = 0;
+    virtual void Visit(uint8_t val) = 0;
+    virtual void Visit(const std::vector<uint8_t>& val) = 0;
+    virtual void Visit(int16_t val) = 0;
+    virtual void Visit(const std::vector<int16_t>& val) = 0;
+    virtual void Visit(uint16_t val) = 0;
+    virtual void Visit(const std::vector<uint16_t>& val) = 0;
+    virtual void Visit(int32_t val) = 0;
+    virtual void Visit(const std::vector<int32_t>& val) = 0;
+    virtual void Visit(uint32_t val) = 0;
+    virtual void Visit(const std::vector<uint32_t>& val) = 0;
+    virtual void Visit(int64_t val) = 0;
+    virtual void Visit(const std::vector<int64_t>& val) = 0;
+    virtual void Visit(uint64_t val) = 0;
+    virtual void Visit(const std::vector<uint64_t>& val) = 0;
+    virtual void Visit(float val) = 0;
+    virtual void Visit(const std::vector<float>& val) = 0;
+    virtual void Visit(double val) = 0;
+    virtual void Visit(const std::vector<double>& val) = 0;
+    virtual void Visit(const std::string& val) = 0;
+    virtual void Visit(const std::vector<std::string>& val) = 0;
+    virtual void Visit(const DateTime& val) = 0;
+    virtual void Visit(const std::vector<DateTime>& val) = 0;
+    virtual void Visit(const Guid& val) = 0;
+    virtual void Visit(const std::vector<Guid>& val) = 0;
+    virtual void Visit(const ByteString& val) = 0;
+    virtual void Visit(const std::vector<ByteString>& val) = 0;
+    virtual void Visit(const NodeID& val) = 0;
+    virtual void Visit(const std::vector<NodeID>& val) = 0;
+    virtual void Visit(const StatusCode& val) = 0;
+    virtual void Visit(const std::vector<StatusCode>& val) = 0;
+    virtual void Visit(const LocalizedText& val) = 0;
+    virtual void Visit(const std::vector<LocalizedText>& val) = 0;
+    virtual void Visit(const QualifiedName& val) = 0;
+    virtual void Visit(const std::vector<QualifiedName>& val) = 0;
+    virtual void Visit(const Variant& val) = 0;
+    virtual void Visit(const std::vector<Variant>& val) = 0;
+    virtual void Visit(const DiagnosticInfo& val) = 0;
+    virtual void Visit(const std::vector<DiagnosticInfo>& val) = 0;
+  };
 
 
   class Variant
@@ -214,117 +266,7 @@ namespace OpcUa
     }
 
     VariantType Type() const;
-
-    template <typename VisitorType>
-    typename VisitorType::result_type Visit(VisitorType visitor) const
-    {
-      using namespace boost;
-      const std::type_info& t = Value.type();
-      if (t == typeid(bool))
-        return visitor(any_cast<bool>(Value));
-      if (t == typeid(std::vector<bool>))
-        return visitor(any_cast<std::vector<bool>>(Value));
-      if (t == typeid(int8_t))
-        return visitor(any_cast<int8_t>(Value));
-      if (t == typeid(std::vector<int8_t>))
-        return visitor(any_cast<std::vector<int8_t>>(Value));
-      if (t == typeid(uint8_t))
-        return visitor(any_cast<uint8_t>(Value));
-      if (t == typeid(std::vector<uint8_t>))
-        return visitor(any_cast<std::vector<uint8_t>>(Value));
-      if (t == typeid(int16_t))
-        return visitor(any_cast<int16_t>(Value));
-      if (t == typeid(std::vector<int16_t>))
-        return visitor(any_cast<std::vector<int16_t>>(Value));
-      if (t == typeid(uint16_t))
-        return visitor(any_cast<uint16_t>(Value));
-      if (t == typeid(std::vector<uint16_t>))
-        return visitor(any_cast<std::vector<uint16_t>>(Value));
-
-      if (t == typeid(int32_t))
-        return visitor(any_cast<int32_t>(Value));
-      if (t == typeid(std::vector<int32_t>))
-        return visitor(any_cast<std::vector<int32_t>>(Value));
-      if (t == typeid(uint32_t))
-        return visitor(any_cast<uint32_t>(Value));
-      if (t == typeid(std::vector<uint32_t>))
-        return visitor(any_cast<std::vector<uint32_t>>(Value));
-      if (t == typeid(int64_t))
-        return visitor(any_cast<int64_t>(Value));
-      if (t == typeid(std::vector<int64_t>))
-        return visitor(any_cast<std::vector<int64_t>>(Value));
-      if (t == typeid(uint64_t))
-        return visitor(any_cast<uint64_t>(Value));
-      if (t == typeid(std::vector<uint64_t>))
-        return visitor(any_cast<std::vector<uint64_t>>(Value));
-
-      if (t == typeid(float))
-        return visitor(any_cast<float>(Value));
-      if (t == typeid(std::vector<float>))
-        return visitor(any_cast<std::vector<float>>(Value));
-
-      if (t == typeid(double))
-        return visitor(any_cast<double>(Value));
-      if (t == typeid(std::vector<double>))
-        return visitor(any_cast<std::vector<double>>(Value));
-
-      if (t == typeid(std::string))
-        return visitor(any_cast<std::string>(Value));
-      if (t == typeid(std::vector<std::string>))
-        return visitor(any_cast<std::vector<std::string>>(Value));
-
-      if (t == typeid(DateTime))
-        return visitor(any_cast<DateTime>(Value));
-      if (t == typeid(std::vector<DateTime>))
-        return visitor(any_cast<std::vector<DateTime>>(Value));
-
-      if (t == typeid(Guid))
-        return visitor(any_cast<Guid>(Value));
-      if (t == typeid(std::vector<Guid>))
-        return visitor(any_cast<std::vector<Guid>>(Value));
-
-      if (t == typeid(ByteString))
-        return visitor(any_cast<ByteString>(Value));
-      if (t == typeid(std::vector<ByteString>))
-        return visitor(any_cast<std::vector<ByteString>>(Value));
-
-      if (t == typeid(NodeID))
-        return visitor(any_cast<NodeID>(Value));
-      if (t == typeid(std::vector<NodeID>))
-        return visitor(any_cast<std::vector<NodeID>>(Value));
-
-      if (t == typeid(StatusCode))
-        return visitor(any_cast<StatusCode>(Value));
-      if (t == typeid(std::vector<StatusCode>))
-        return visitor(any_cast<std::vector<StatusCode>>(Value));
-
-      if (t == typeid(LocalizedText))
-        return visitor(any_cast<LocalizedText>(Value));
-      if (t == typeid(std::vector<LocalizedText>))
-        return visitor(any_cast<std::vector<LocalizedText>>(Value));
-
-      if (t == typeid(QualifiedName))
-        return visitor(any_cast<QualifiedName>(Value));
-      if (t == typeid(std::vector<QualifiedName>))
-        return visitor(any_cast<std::vector<QualifiedName>>(Value));
-/*
-      if (t == typeid(DataValue))
-        return visitor(any_cast<DataValue>(Value));
-      if (t == typeid(std::vector<DataValue>))
-        return visitor(any_cast<std::vector<DataValue>>(Value));
-*/
-      if (t == typeid(Variant))
-        return visitor(any_cast<Variant>(Value));
-      if (t == typeid(std::vector<Variant>))
-        return visitor(any_cast<std::vector<Variant>>(Value));
-
-      if (t == typeid(DiagnosticInfo))
-        return visitor(any_cast<DiagnosticInfo>(Value));
-      if (t == typeid(std::vector<DiagnosticInfo>))
-        return visitor(any_cast<std::vector<DiagnosticInfo>>(Value));
-
-      throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
-    }
+    void Visit(VariantVisitor& visitor) const;
   };
 
   ObjectID VariantTypeToDataType(VariantType vt);

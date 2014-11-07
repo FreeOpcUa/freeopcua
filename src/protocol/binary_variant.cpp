@@ -16,6 +16,7 @@
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
+#include <opc/ua/protocol/variant_visitor.h>
 
 #include <algorithm>
 #include <functional>
@@ -114,18 +115,18 @@ namespace
 
   struct RawSizeVisitor
   {
-    typedef size_t result_type;
+    size_t Result = 0;
 
     template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == true, size_t>::type operator()(const T& val)
+    void OnContainer(const T& val)
     {
-      return RawSizeContainer(val);
+      Result = RawSizeContainer(val);
     }
 
     template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == false, size_t>::type operator()(const T& val)
+    void OnScalar(const T& val)
     {
-      return RawSize(val);
+      Result = RawSize(val);
     }
   };
 
@@ -136,19 +137,16 @@ namespace
     explicit VariantSerializer(DataSerializer* serializer)
       : Serializer(serializer)
     {
-
     }
 
-    typedef void result_type;
-
     template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == true>::type operator()(const T& val)
+    void OnContainer(const T& val)
     {
       SerializeContainer(*Serializer, val);
     }
 
     template <typename T>
-    typename std::enable_if<is_container_not_string<T>::value == false>::type operator()(const T& val)
+    void OnScalar(const T& val)
     {
       Serializer->Serialize(val);
     }
@@ -414,6 +412,116 @@ namespace OpcUa
   }
 
 
+  void Variant::Visit(VariantVisitor& visitor) const
+  {
+    using namespace boost;
+    const std::type_info& t = Value.type();
+    if (t == typeid(bool))
+      visitor.Visit(any_cast<bool>(Value));
+    else if (t == typeid(std::vector<bool>))
+      visitor.Visit(any_cast<std::vector<bool>>(Value));
+    else if (t == typeid(int8_t))
+      visitor.Visit(any_cast<int8_t>(Value));
+    else if (t == typeid(std::vector<int8_t>))
+      visitor.Visit(any_cast<std::vector<int8_t>>(Value));
+    else if (t == typeid(uint8_t))
+      visitor.Visit(any_cast<uint8_t>(Value));
+    else if (t == typeid(std::vector<uint8_t>))
+      visitor.Visit(any_cast<std::vector<uint8_t>>(Value));
+    else if (t == typeid(int16_t))
+      visitor.Visit(any_cast<int16_t>(Value));
+    else if (t == typeid(std::vector<int16_t>))
+      visitor.Visit(any_cast<std::vector<int16_t>>(Value));
+    else if (t == typeid(uint16_t))
+      visitor.Visit(any_cast<uint16_t>(Value));
+    else if (t == typeid(std::vector<uint16_t>))
+      visitor.Visit(any_cast<std::vector<uint16_t>>(Value));
+
+    else if (t == typeid(int32_t))
+      visitor.Visit(any_cast<int32_t>(Value));
+    else if (t == typeid(std::vector<int32_t>))
+      visitor.Visit(any_cast<std::vector<int32_t>>(Value));
+    else if (t == typeid(uint32_t))
+      visitor.Visit(any_cast<uint32_t>(Value));
+    else if (t == typeid(std::vector<uint32_t>))
+      visitor.Visit(any_cast<std::vector<uint32_t>>(Value));
+    else if (t == typeid(int64_t))
+      visitor.Visit(any_cast<int64_t>(Value));
+    else if (t == typeid(std::vector<int64_t>))
+      visitor.Visit(any_cast<std::vector<int64_t>>(Value));
+    else if (t == typeid(uint64_t))
+      visitor.Visit(any_cast<uint64_t>(Value));
+    else if (t == typeid(std::vector<uint64_t>))
+      visitor.Visit(any_cast<std::vector<uint64_t>>(Value));
+
+    else if (t == typeid(float))
+      visitor.Visit(any_cast<float>(Value));
+    else if (t == typeid(std::vector<float>))
+      visitor.Visit(any_cast<std::vector<float>>(Value));
+
+    else if (t == typeid(double))
+      visitor.Visit(any_cast<double>(Value));
+    else if (t == typeid(std::vector<double>))
+      visitor.Visit(any_cast<std::vector<double>>(Value));
+
+    else if (t == typeid(std::string))
+      visitor.Visit(any_cast<std::string>(Value));
+    else if (t == typeid(std::vector<std::string>))
+      visitor.Visit(any_cast<std::vector<std::string>>(Value));
+
+    else if (t == typeid(DateTime))
+      visitor.Visit(any_cast<DateTime>(Value));
+    else if (t == typeid(std::vector<DateTime>))
+      visitor.Visit(any_cast<std::vector<DateTime>>(Value));
+
+    else if (t == typeid(Guid))
+      visitor.Visit(any_cast<Guid>(Value));
+    else if (t == typeid(std::vector<Guid>))
+      visitor.Visit(any_cast<std::vector<Guid>>(Value));
+
+    else if (t == typeid(ByteString))
+      visitor.Visit(any_cast<ByteString>(Value));
+    else if (t == typeid(std::vector<ByteString>))
+      visitor.Visit(any_cast<std::vector<ByteString>>(Value));
+
+    else if (t == typeid(NodeID))
+      visitor.Visit(any_cast<NodeID>(Value));
+    else if (t == typeid(std::vector<NodeID>))
+      visitor.Visit(any_cast<std::vector<NodeID>>(Value));
+
+    else if (t == typeid(StatusCode))
+      visitor.Visit(any_cast<StatusCode>(Value));
+    else if (t == typeid(std::vector<StatusCode>))
+      visitor.Visit(any_cast<std::vector<StatusCode>>(Value));
+
+    else if (t == typeid(LocalizedText))
+      visitor.Visit(any_cast<LocalizedText>(Value));
+    else if (t == typeid(std::vector<LocalizedText>))
+      visitor.Visit(any_cast<std::vector<LocalizedText>>(Value));
+
+    else if (t == typeid(QualifiedName))
+      visitor.Visit(any_cast<QualifiedName>(Value));
+    else if (t == typeid(std::vector<QualifiedName>))
+      visitor.Visit(any_cast<std::vector<QualifiedName>>(Value));
+/*
+    else if (t == typeid(DataValue))
+      visitor.Visit(any_cast<DataValue>(Value));
+    else if (t == typeid(std::vector<DataValue>))
+      visitor.Visit(any_cast<std::vector<DataValue>>(Value));
+*/
+    else if (t == typeid(Variant))
+      visitor.Visit(any_cast<Variant>(Value));
+    else if (t == typeid(std::vector<Variant>))
+      visitor.Visit(any_cast<std::vector<Variant>>(Value));
+
+    else if (t == typeid(DiagnosticInfo))
+      visitor.Visit(any_cast<DiagnosticInfo>(Value));
+    else if (t == typeid(std::vector<DiagnosticInfo>))
+      visitor.Visit(any_cast<std::vector<DiagnosticInfo>>(Value));
+    else
+      throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
+  }
+
   ObjectID VariantTypeToDataType(VariantType vt)
   {
     switch (vt)
@@ -509,7 +617,9 @@ namespace OpcUa
       }
 
       RawSizeVisitor rawSizeCalc;
-      size += var.Visit(rawSizeCalc);
+      TypedVisitor<RawSizeVisitor> visitor(rawSizeCalc);
+      var.Visit(visitor);
+      size += rawSizeCalc.Result;
       if (!var.Dimensions.empty())
       {
         size += RawSizeContainer(var.Dimensions);
@@ -537,7 +647,8 @@ namespace OpcUa
       }
 
       VariantSerializer variantSerializer(this);
-      var.Visit(variantSerializer);
+      TypedVisitor<VariantSerializer> visitor(variantSerializer);
+      var.Visit(visitor);
 
       if (!var.Dimensions.empty())
       {
