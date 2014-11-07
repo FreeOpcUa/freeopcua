@@ -23,6 +23,7 @@ include_dirs = [
 
 library_dirs = [
   os.path.join(opcua_server_path,'.libs'),
+  os.path.join(opcua_server_path,'lib'),
 ]
 
 boost_library='boost_python3' if sys.version_info.major == 3 and platform.dist()[0] == 'fedora' else 'boost_python'

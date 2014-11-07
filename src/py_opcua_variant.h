@@ -12,6 +12,7 @@
 #define WRAP_OPCUA_VARIANTS_H
 
 #include <boost/python.hpp>
+#include <opc/ua/protocol/variant_visitor.h>
 
 using namespace boost::python;
 
@@ -59,18 +60,18 @@ std::vector<T> ToVector(const object & list)
 
 struct VariantToPythonObjectConverter
 {
-  typedef object result_type;
+  object Result;
 
   template <typename T>
-  typename std::enable_if<is_container_not_string<T>::value == true, result_type>::type operator()(const T & val)
+  void OnContainer(const T & val)
   {
-    return ToList(val);
+    Result = ToList(val);
   }
 
   template <typename T>
-  typename std::enable_if<is_container_not_string<T>::value == false, result_type>::type operator()(const T & val)
+  void OnScalar(const T & val)
   {
-    return object(val);
+    Result = object(val);
   }
 };
 
@@ -81,7 +82,10 @@ object ToObject(const Variant & var)
       return object();
     }
 
-  return var.Visit(VariantToPythonObjectConverter());
+  VariantToPythonObjectConverter objectConverter;
+  OpcUa::TypedVisitor<VariantToPythonObjectConverter> visitor(objectConverter);
+  var.Visit(visitor);
+  return objectConverter.Result;
 }
 
 Variant ToVariant(const object & obj)
