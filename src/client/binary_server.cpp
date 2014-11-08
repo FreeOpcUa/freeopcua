@@ -222,6 +222,7 @@ namespace
       Channel->Stop();
       if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
+      if (Debug) std::cout << "binary_client| Receive tread stopped." << std::endl;
 
 
     }
@@ -558,9 +559,8 @@ private:
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << ToString(header.ServiceResult) << std::cout ;
+        std::cerr << "Receive ServiceFault from Server with StatusCode: " << ToString(header.ServiceResult) << std::cout ;
         std::cerr << std::endl;
-        return;
       }
       std::unique_lock<std::mutex> lock(Mutex);
       CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
