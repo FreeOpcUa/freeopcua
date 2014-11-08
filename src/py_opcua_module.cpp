@@ -32,6 +32,7 @@ using namespace OpcUa;
 // Overloads
 //--------------------------------------------------------------------------
 
+BOOST_PYTHON_FUNCTION_OVERLOADS(ToDateTime_stubs, ToDateTime, 1, 2)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
@@ -150,7 +151,7 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   def("CurrentDateTime", &CurrentDateTime);
-  def("ToDateTime", &ToDateTime);
+  def("ToDateTime", &ToDateTime, ToDateTime_stubs((arg("sec"), arg("usec") = 0)));
   def("ToTimeT", &ToTimeT);
 
   class_<LocalizedText>("LocalizedText")
