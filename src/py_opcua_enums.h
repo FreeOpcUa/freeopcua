@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef WRAP_OPCUA_ENUMS_H
-#define WRAP_OPCUA_ENUMS_H
+#ifndef PY_OPCUA_ENUMS_H
+#define PY_OPCUA_ENUMS_H
 
 void py_opcua_enums();
 

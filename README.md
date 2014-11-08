@@ -8,7 +8,7 @@ Writting an OPC-UA server is as simple as:
     s = opcua.Server()
     s.set_endpoint("opc.tcp://192.168.56.1:4841")
     s.start()
-    try;
+    try:
         objects = s.get_objects_node()
 
         m = objects.add_folder("2:MyFolder")
