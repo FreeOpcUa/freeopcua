@@ -25,7 +25,12 @@
 class InputFromBuffer : public testing::Test
 {
 protected:
-  const std::vector<char> SourceBuffer{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  InputFromBuffer()
+  {
+    const char data[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    SourceBuffer = std::vector<char>(data, data + sizeof(data));
+  }
+  std::vector<char> SourceBuffer;
 };
 
 TEST_F(InputFromBuffer, CanBeCreated)

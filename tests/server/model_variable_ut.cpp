@@ -105,8 +105,8 @@ TEST_F(ModelVariable, CanSetVariableValue_DataValue)
   data.SetSourceTimestamp(OpcUa::DateTime(12345));
   variable.SetValue(data);
   OpcUa::DataValue result = variable.GetValue();
-  ASSERT_TRUE(result.Encoding & (OpcUa::DATA_VALUE));
-  ASSERT_TRUE(result.Encoding & (OpcUa::DATA_VALUE_SOURCE_TIMESTAMP));
+  ASSERT_NE(result.Encoding & (OpcUa::DATA_VALUE), 0);
+  ASSERT_NE(result.Encoding & (OpcUa::DATA_VALUE_SOURCE_TIMESTAMP), 0);
   EXPECT_EQ(result.Value, 10);
   EXPECT_EQ(result.SourceTimestamp, 12345);
 }

@@ -8,6 +8,9 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "tcp_server.h"
 
@@ -33,7 +36,6 @@
 
 
 #ifdef _WIN32
-#include <WinSock2.h>
 #else
 #include <arpa/inet.h>
 #include <netdb.h>

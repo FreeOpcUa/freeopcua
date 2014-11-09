@@ -23,6 +23,10 @@
 #include <opc/ua/server/addons/services_registry.h>
 #include <functional>
 
+#ifdef WIN32
+#undef GetObject
+#endif
+
 namespace
 {
   OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)

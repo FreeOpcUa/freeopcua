@@ -92,7 +92,7 @@ TEST_F(AddressSpace, ReadAttributes)
   std::vector<OpcUa::DataValue> results = NameSpace->Read(readParams);
   ASSERT_EQ(results.size(), 1);
   const OpcUa::DataValue& result = results[0];
-  ASSERT_TRUE(result.Encoding | OpcUa::DATA_VALUE);
+  ASSERT_NE(result.Encoding | OpcUa::DATA_VALUE, 0);
   EXPECT_EQ(result.Value, OpcUa::QualifiedName(OpcUa::Names::Root));
 }
 

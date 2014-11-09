@@ -16,8 +16,7 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <unistd.h>
-
+#include <thread>
 
 using namespace OpcUa;
 
@@ -40,6 +39,7 @@ int main(int argc, char** argv)
       OpcUa::RemoteClient client(endpoint);
       client.Connect();
 
+      std::cout << "Getting root node: " << endpoint << std::endl;
       OpcUa::Node root = client.GetRootNode();
       std::cout << "Root node is: " << root << std::endl;
       std::vector<std::string> path({"Objects", "Server"});
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
       std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
       uint32_t handle = sub->SubscribeDataChange(myvar);
       std::cout << "Got sub handle: " << handle << ", sleeping Xs" << std::endl;
-      sleep(10);
+      std::this_thread::sleep_for(std::chrono::seconds(10));
 
 
       std::cout << "Disconnecting" << std::endl;

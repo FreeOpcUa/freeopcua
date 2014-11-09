@@ -26,3 +26,48 @@ Not implemented yet (patches are welcome)
 
 
 see examples in src/examples folder or the examples in python repository
+
+### Windows
+
+You need:
+* VS2013
+* cmake
+* boost
+
+### Ubuntu (Debians)
+There is a script debian.soft in the root for installing all required soft to build all repositories.
+Main point is the support of c++11: gcc-4.8+, clang 3.4
+
+### Using cmake
+
+#### Linux
+```sh
+mkdir build
+cd build
+cmake ..
+make
+make test
+```
+#### Windows
+```
+rem compiling
+mkdir build
+cd build
+cmake .. -DBOOST_ROOT=c:\boost_1_56
+cmake --build
+ctest -C Debug
+cd bin\Debug
+example_server.exe
+```
+
+### Using GNU autotools
+
+```sh
+autoreconf -f -i
+./configure --prefix=/path/to/server
+make 
+make check
+make install
+cd /path/to/server
+LD_LIBRARY_PATH=./lib ./bin/opcuaserver
+```

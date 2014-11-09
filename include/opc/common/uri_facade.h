@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Thread wrapper with coockies.
+/// @brief Uri.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include <libxml/uri.h>
-
-#include <opc/common/exception.h>
+#include <string>
 
 namespace Common
 {
@@ -22,12 +20,12 @@ namespace Common
   public:
     explicit Uri(const std::string& uriString)
     {
-      Initialize(uriString.c_str());
+      Initialize(uriString.c_str(), uriString.size());
     }
 
     explicit Uri(const char* uriString)
     {
-      Initialize(uriString);
+      Initialize(uriString, 0);
     }
 
     std::string Scheme() const
@@ -46,24 +44,7 @@ namespace Common
     }
 
   private:
-    void Initialize(const char* uriString)
-    {
-      xmlURIPtr uri = xmlParseURI(uriString);
-      if (!uri)
-      {
-        THROW_ERROR1(CannotParseUri, uriString);
-      }
-      if (uri->scheme)
-      {
-        SchemeStr = uri->scheme;
-      }
-      if (uri->server)
-      {
-        HostStr = uri->server;
-      }
-      PortNum = uri->port;
-      xmlFreeURI(uri);
-    }
+    void Initialize(const char* uriString, std::size_t len);
 
   private:
     std::string SchemeStr;
