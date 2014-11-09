@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef WRAP_OPCUA_VARIANTS_H
-#define WRAP_OPCUA_VARIANTS_H
+#ifndef PY_OPCUA_VARIANT_H
+#define PY_OPCUA_VARIANT_H
 
 #include <boost/python.hpp>
 #include <opc/ua/protocol/variant_visitor.h>

@@ -35,10 +35,10 @@ libraries = [
 ]
 
 setup(name='python-freeopcua',
-  version='0.1.2',
+  version='0.2',
   description='Python bindings to freeopcua.',
-  author='Alexander Rykovanov',
-  author_email='rykovanov.as@gmail.com',
+  author='Matthieu Bec',
+  author_email='mdcb808@gmail.com',
   url='https://github.com/treww/opcua-python',
   license = 'LGPL',
   ext_modules = [

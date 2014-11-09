@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef WRAP_OPCUA_SUBSCRIPTIONCLIENT_H
-#define WRAP_OPCUA_SUBSCRIPTIONCLIENT_H
+#ifndef PY_OPCUA_SUBSCRIPTIONCLIENT_H
+#define PY_OPCUA_SUBSCRIPTIONCLIENT_H
 
 #include <boost/python.hpp>
 
