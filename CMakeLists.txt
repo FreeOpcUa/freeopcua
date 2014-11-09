@@ -1,6 +1,8 @@
+set(CMAKE_CXX_COMPILER  "clang++-3.5") #FIXME_why do I need this line????
 cmake_minimum_required(VERSION 2.8)
 
 project(freeopcua)
+
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
@@ -20,9 +22,13 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         "Single Directory for all"
     )
 
-enable_testing()
+option(CLANG "Build using Clang++" ON)
+option(BUILD_CLIENT "Build Client" ON)
+option(BUILD_SERVER "Build Server" ON)
+option(BUILD_PYTHON "Build Python bindings" ON)
 
-option(BUILD_TESTING "" ON)
+enable_testing()
+option(BUILD_TESTING "Build and run tests" OFF)
 
 if(WIN32)
     option(BOOST_ROOT "boost root directory." "")
@@ -56,14 +62,25 @@ else(WIN32)
     SET(OS_SUFFIX _lin)
 
     set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS_DEBUG} ") 
-    if(CLANG)
-        LIST(APPEND CMAKE_CXX_FLAGS "-ggdb -Werr") 
-        set(CMAKE_CXX_COMPILER  "clang++")
-    endif()
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
+    if(CLANG)
+        set(CMAKE_CXX_COMPILER  "clang++-3.5")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -fPIC ")
+    endif()
 
-    SET(ADDITIONAL_INCLUDES /usr/include/libxml2)
-    SET(ADDITIONAL_LINK_LIBRARIES pthread dl boost_thread boost_system boost_filesystem boost_program_options xml2)
+    #FIIXME find_package stuff should also be used for winwdows!
+
+    find_package( Boost  COMPONENTS system program_options filesystem thread REQUIRED )
+    include_directories( ${Boost_INCLUDE_DIR} )
+    message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIR})
+
+
+    find_package(LibXml2 REQUIRED) 
+    message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
+    include_directories( ${LIBXML2_INCLUDE_DIR} )
+    
+    #FIXME: why this?
+    SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES})
 endif(WIN32)
 
 
@@ -152,6 +169,7 @@ SET(LIBOPCUACORE_SOURCES
   src/core/common/object_id.cpp
   src/core/common/thread.cpp
   src/core/common/uri_facade${OS_SUFFIX}.cpp
+  src/core/common/uri_facade_lin.cpp
   src/core/common/value.cpp
   src/core/event.cpp
   src/core/model_impl.h
@@ -210,44 +228,45 @@ endif()
 ############################################################################
 # client library
 ############################################################################
+if (BUILD_CLIENT)
+    add_library(libopcuaclient STATIC
+    src/client/binary_connection.cpp
+    src/client/binary_server.cpp
+    src/client/binary_server_addon.cpp
+    src/client/client.cpp
+    )
 
-add_library(libopcuaclient STATIC
-  src/client/binary_connection.cpp
-  src/client/binary_server.cpp
-  src/client/binary_server_addon.cpp
-  src/client/client.cpp
-)
+    target_compile_options(libopcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    target_link_libraries(libopcuaclient libopcuacore ${ADDITIONAL_LINK_LIBRARIES})
 
-target_compile_options(libopcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(libopcuaclient ${ADDITIONAL_LINK_LIBRARIES})
-
-#tests/client/binary_handshake.cpp
-#tests/client/common.h
-#tests/client/computer_attribute.cpp
-#tests/client/computer_connect.cpp
-#tests/client/computer_endpoints.cpp
-#tests/client/computer_session.cpp
-#tests/client/computer_view.cpp
-
-
-############################################################################
-# command line client
-############################################################################
-
-add_executable(opcua
-  src/client/opcua_main.cpp
-  src/client/opcua_options.cpp
-  src/client/opcua_options.h
-)
+    #tests/client/binary_handshake.cpp
+    #tests/client/common.h
+    #tests/client/computer_attribute.cpp
+    #tests/client/computer_connect.cpp
+    #tests/client/computer_endpoints.cpp
+    #tests/client/computer_session.cpp
+    #tests/client/computer_view.cpp
 
 
-target_link_libraries(opcua 
-  ${ADDITIONAL_LINK_LIBRARIES}
-  libopcuaprotocol
-  libopcuacore
-)
+    ############################################################################
+    # command line client
+    ############################################################################
 
-target_compile_options(opcua PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    add_executable(opcua_client
+    src/client/opcua_main.cpp
+    src/client/opcua_options.cpp
+    src/client/opcua_options.h
+    )
+    
+
+    target_link_libraries(opcua_client
+    ${ADDITIONAL_LINK_LIBRARIES}
+    libopcuaprotocol
+    libopcuacore
+    )
+
+    target_compile_options(opcua_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+endif(BUILD_CLIENT)
 
 
 ############################################################################
@@ -372,19 +391,22 @@ target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
 # example opcua client
 ############################################################################
 
-add_executable(example_client
-  src/examples/example_client.cpp
-)
+if (BUILD_CLIENT)
+    add_executable(example_client
+    src/examples/example_client.cpp
+    )
 
-target_link_libraries(example_client
-  ${ADDITIONAL_LINK_LIBRARIES}
-  libopcuaprotocol
-  libopcuacore
-  libopcuaclient
-)
+    target_link_libraries(example_client
+        ${ADDITIONAL_LINK_LIBRARIES}
+        libopcuaprotocol
+        libopcuacore
+        libopcuaclient
+        ${Boost_LIBRARIES}
+    )
 
-target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
+endif (BUILD_CLIENT)
 
 ############################################################################
 # example embedded opcua server
@@ -402,3 +424,14 @@ target_link_libraries(example_server
 )
 
 target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
+
+
+############################################################################
+#python binding 
+############################################################################
+
+if (BUILD_PYTHON)
+    add_subdirectory (python)
+endif (BUILD_PYTHON)
+
+
