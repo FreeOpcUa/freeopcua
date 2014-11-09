@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<address_space version="1">
+
+
+  <!-- External is used for regestering referencies from global nodes to the nodes described here. -->
+  <external>
+    <attributes>
+      <id type="numeric">85</id>  <!-- Source node-->
+    </attributes>
+    <references>
+      <organizes>
+        <id type="numeric" ns="3">100</id>
+        <class>object</class>
+        <display_name>Makino02</display_name>
+        <browse_name>Makino02</browse_name>
+      </organizes>
+        <organizes>
+          <id type="numeric" ns="3">200</id>
+          <class>object</class>
+          <display_name>MakinoInBuffer</display_name>
+          <browse_name>MakinoInBuffer</browse_name>
+      </organizes>
+    </references>
+  </external>
+
+  <!-- New node is being reistered in the address space. -->
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">100</id>
+      <class>object</class>
+      <browse_name>Makino02</browse_name>
+      <display_name>Makino02</display_name>
+      <description>Makino Cell</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+    <references>
+     <has_component>
+        <id type="numeric" ns="3">103</id>
+        <class>variable</class>
+        <display_name>state</display_name>
+        <browse_name>state</browse_name>
+    </has_component>
+
+
+      <has_component>
+        <id type="numeric" ns="3">101</id>
+        <class>variable</class>
+        <display_name>OuputQueueSize</display_name>
+      </has_component>
+    </references>
+   </node>
+
+
+
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">101</id>
+      <class>variable</class>
+      <browse_name>OutputQueueSize</browse_name>
+      <display_name>OutputQueueSize</display_name>
+      <description>Level of output buffer</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+  </node>
+
+
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">103</id>
+      <class>variable</class>
+      <browse_name>State</browse_name>
+      <display_name>State</display_name>
+      <description>State</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <data_type>string</data_type>
+      <value>Idle</value>
+      <value_rank>-1</value_rank>
+      <array_dimensions>0</array_dimensions>
+      <minimum_sampling_interval>0</minimum_sampling_interval>
+      <historizing>false</historizing>
+    </attributes>
+  </node>
+
+
+
+
+
+
+
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">200</id>
+      <class>object</class>
+      <browse_name>MakinoInBuffer</browse_name>
+      <display_name>InBuffer</display_name>
+      <description>Makino InBuffer with RFID</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+    </attributes>
+    <references>
+      <has_component>
+        <id type="numeric" ns="3">201</id>
+        <class>variable</class>
+        <display_name>Size</display_name>
+        <browse_name>Size</browse_name>
+    </has_component>
+      <has_component>
+        <id type="numeric" ns="3">202</id>
+        <class>variable</class>
+        <display_name>Tags</display_name>
+        <browse_name>Tags</browse_name>
+    </has_component>
+
+  </references>
+
+
+
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">201</id>
+      <class>variable</class>
+      <browse_name>BufferSize</browse_name>
+      <display_name>BufferSize</display_name>
+      <description>ZZZZZ</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <data_type>uint32</data_type>
+      <value>10</value>
+      <value_rank>-1</value_rank>
+      <array_dimensions>0</array_dimensions>
+      <minimum_sampling_interval>0</minimum_sampling_interval>
+      <historizing>false</historizing>
+    </attributes>
+  </node>
+
+  <node>
+    <attributes>
+      <id type="numeric" ns="3">202</id>
+      <class>variable</class>
+      <browse_name>Tags</browse_name>
+      <display_name>Tags</display_name>
+      <description>Visible Tags</description>
+      <write_mask>0</write_mask>
+      <user_write_mask>0</user_write_mask>
+      <data_type>uint32</data_type>
+      <value>0</value>
+      <value_rank>-1</value_rank>
+      <array_dimensions>1</array_dimensions>
+      <minimum_sampling_interval>0</minimum_sampling_interval>
+      <historizing>false</historizing>
+    </attributes>
+  </node>
+
+
+
+</address_space>
+
