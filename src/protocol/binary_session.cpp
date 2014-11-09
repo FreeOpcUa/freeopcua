@@ -52,7 +52,7 @@ namespace OpcUa
   UserIdentifyToken::UserIdentifyToken()
     : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
   {
-    Anonymous.Data = {9,0,0,0,'A', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'};
+    Anonymous.Data = {9,0,0,0,'a', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'};
   }
 
   ActivateSessionRequest::ActivateSessionRequest()

@@ -82,7 +82,65 @@ namespace OpcUa
     if (Debug)  { std::cout << "KeepAliveThread | Join successfull." << std::endl; }
   }
 
+  std::vector<EndpointDescription> RemoteClient::GetServerEndpoints()
+  {
+    bool doConnect = false;
+    if ( ! Server ) //to avoid surprises we create channel
+    {
+      doConnect = true;
+      const Common::Uri serverUri(Endpoint);
+      OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+    
+      OpcUa::SecureConnectionParams params;
+      params.EndpointUrl = Endpoint;
+      params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
+
+      Server = OpcUa::CreateBinaryServer(channel, params, Debug);
+    }
+
+    EndpointsFilter filter;
+    filter.EndpointURL = Endpoint;
+    filter.ProfileUries.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
+    filter.LocaleIDs.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
+    std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
+    
+    if ( doConnect ) 
+    {
+      Server.reset();
+    }
+
+    return endpoints;
+  }
+
+  EndpointDescription RemoteClient::SelectEndpoint()
+  {
+    std::vector<EndpointDescription> endpoints = GetServerEndpoints();
+    if (Debug)  { std::cout << "RemoteClient | Going through server endpoints and selected one we support" << std::endl; }
+    for ( EndpointDescription ed : endpoints)
+    {
+      if (Debug)  { std::cout << "RemoteClient | Examining endpoint: " << ed.SecurityPolicyURI <<  std::endl; }
+      if ( ed.SecurityPolicyURI == "http://opcfoundation.org/UA/SecurityPolicy#None")
+      {
+        for (  UserTokenPolicy token : ed.UserIdentifyTokens)
+        {
+          if (token.TokenType == UserIdentifyTokenType::ANONYMOUS )
+          {
+            if (Debug)  { std::cout << "RemoteClient | Endpoint selected " <<  std::endl; }
+            return ed;
+          }
+        }
+      }
+    }
+    throw std::runtime_error("No supported endpoints found on server");
+  }
+
   void RemoteClient::Connect()
+  {
+    EndpointDescription endpoint = SelectEndpoint();
+    Connect(endpoint);
+  }
+   
+  void RemoteClient::Connect(const EndpointDescription& endpoint)
   {
     const Common::Uri serverUri(Endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
@@ -93,14 +151,17 @@ namespace OpcUa
 
     Server = OpcUa::CreateBinaryServer(channel, params, Debug);
 
+
+    if (Debug)  { std::cout << "RemoteClient | Creating session " <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = Uri;
-    session.ClientDescription.ProductURI = Uri;
-    session.ClientDescription.Name.Text = SessionName;
+    session.ClientDescription.ProductURI = ProductUri;
+    session.ClientDescription.Name = LocalizedText(SessionName);
     session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
     session.SessionName = SessionName;
-    session.EndpointURL = Endpoint;
+    session.EndpointURL = endpoint.EndpointURL;
     session.Timeout = 1200000;
+    session.ServerURI = endpoint.ServerDescription.URI;
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);

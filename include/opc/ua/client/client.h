@@ -80,7 +80,9 @@ namespace OpcUa
     std::string GetURI() const { return Uri; }
     void SetURI(std::string uri) { Uri = uri; }
 
-    std::string  GetEndpoint() const { return Endpoint; }
+    std::vector<EndpointDescription> GetServerEndpoints();
+    EndpointDescription SelectEndpoint(); //Not sure it should be public
+    std::string GetEndpoint() const { return Endpoint; }
     void SetEndpoint(std::string endpoint) { Endpoint = endpoint; }
 
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
@@ -94,6 +96,7 @@ namespace OpcUa
     Node GetNode(const std::string& nodeid) const;
 
     void Connect();
+    void Connect(const EndpointDescription&);
     void Disconnect();
 
     std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& client);
@@ -101,8 +104,8 @@ namespace OpcUa
   private:
     std::string Endpoint = "opc.tcp:://localhost:4841";
     std::string SessionName = "Open source OPC-UA Client Session";
-    std::string Uri = "https://freeopcua.github.io/opcua-client";
-    std::string ConfigPath=".";
+    std::string Uri = "urn:freeopcua:client";
+    std::string ProductUri = "urn:freeopcua.github.no:client";
     std::string SecurityPolicy = "none";
     bool Debug = false; 
 
