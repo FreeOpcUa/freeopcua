@@ -8,11 +8,9 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef PY_OPCUA_HELPERS_H
-#define PY_OPCUA_HELPERS_H
+#pragma once
 
 #include <vector>
-
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -99,8 +97,4 @@ struct vector_from_python_converter
   }
 
 };
-
-
-#endif
-
 
