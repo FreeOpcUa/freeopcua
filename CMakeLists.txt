@@ -1,36 +1,34 @@
-set(CMAKE_CXX_COMPILER  "clang++-3.5") #FIXME_why do I need this line????
 cmake_minimum_required(VERSION 2.8)
-
 project(freeopcua)
 
+
+option(BUILD_CLIENT "Build Client" ON)
+option(BUILD_SERVER "Build Server" ON)
+option(BUILD_PYTHON "Build Python bindings" ON)
+option(BUILD_TESTING "Build and run tests" OFF)
+enable_testing()
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
-        "Single Directory for all"
+        ""
     )
 
 SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
-        "Single Directory for all"
+        ""
     )
 
 SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/lib
         CACHE PATH
-        "Single Directory for all"
+        ""
     )
 
-option(CLANG "Build using Clang++" ON)
-option(BUILD_CLIENT "Build Client" ON)
-option(BUILD_SERVER "Build Server" ON)
-option(BUILD_PYTHON "Build Python bindings" ON)
-
-enable_testing()
-option(BUILD_TESTING "Build and run tests" OFF)
 
 if(WIN32)
+    #FIXME: boost should be find by find_package and setting correct env variables in windows!!!!
     option(BOOST_ROOT "boost root directory." "")
 
     SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
@@ -58,15 +56,11 @@ else(WIN32)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS)
     SET(D -D)
     SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libtest_dynamic_addon.so")
-    SET(TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
+    SET(TEST_CORE_CONFIG_PATH " ${CMAKE_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
 
-    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS_DEBUG} ") 
+    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ${CMAKE_CXX_FLAGS_DEBUG} ") 
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
-    if(CLANG)
-        set(CMAKE_CXX_COMPILER  "clang++-3.5")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -fPIC ")
-    endif()
 
     #FIIXME find_package stuff should also be used for winwdows!
 
@@ -79,10 +73,10 @@ else(WIN32)
     message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
     include_directories( ${LIBXML2_INCLUDE_DIR} )
     
-    #FIXME: why this?
+    #FIXME: remove that variable and link directly when necessary!!!! 
     SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES})
-endif(WIN32)
 
+endif(WIN32)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/include 
@@ -221,7 +215,7 @@ if (BUILD_TESTING)
 
   add_test(NAME libopcuacore COMMAND test_libopcuacore) 
 
-endif()
+endif(BUILD_TESTING)
 
 
 
@@ -273,119 +267,122 @@ endif(BUILD_CLIENT)
 # server library
 ############################################################################
 
-add_library(libopcuaserver STATIC
-  src/server/address_space_addon.cpp
-  src/server/address_space_addon.h
-  src/server/address_space_internal.cpp
-  src/server/address_space_internal.h
-  src/server/asio_addon.cpp
-  src/server/common_addons.cpp
-  src/server/common_addons.h
-  src/server/endpoints_parameters.cpp
-  src/server/endpoints_parameters.h
-  src/server/endpoints_registry.cpp
-  src/server/endpoints_services_addon.cpp
-  src/server/internal_subscription.cpp
-  src/server/internal_subscription.h
-  src/server/opcuaserver.cpp
-  src/server/opc_tcp_async.cpp
-  src/server/opc_tcp_async_addon.cpp
-  src/server/opc_tcp_async_parameters.cpp
-  src/server/opc_tcp_async_parameters.h
-  src/server/opc_tcp_processor.cpp
-  src/server/opc_tcp_processor.h
-  src/server/server_object.cpp
-  src/server/server_object.h
-  src/server/server_object_addon.cpp
-  src/server/server_object_addon.h
-  src/server/services_registry_factory.cpp
-  src/server/services_registry_impl.cpp
-  src/server/standard_namespace.cpp
-  src/server/standard_namespace_addon.cpp
-  src/server/subscription_service_addon.cpp
-  src/server/subscription_service_internal.cpp
-  src/server/subscription_service_internal.h
-  src/server/timer.h
-  src/server/utils.h
-)
+if(BUILD_SERVER)
+    add_library(libopcuaserver STATIC
+        src/server/address_space_addon.cpp
+        src/server/address_space_addon.h
+        src/server/address_space_internal.cpp
+        src/server/address_space_internal.h
+        src/server/asio_addon.cpp
+        src/server/common_addons.cpp
+        src/server/common_addons.h
+        src/server/endpoints_parameters.cpp
+        src/server/endpoints_parameters.h
+        src/server/endpoints_registry.cpp
+        src/server/endpoints_services_addon.cpp
+        src/server/internal_subscription.cpp
+        src/server/internal_subscription.h
+        src/server/opcuaserver.cpp
+        src/server/opc_tcp_async.cpp
+        src/server/opc_tcp_async_addon.cpp
+        src/server/opc_tcp_async_parameters.cpp
+        src/server/opc_tcp_async_parameters.h
+        src/server/opc_tcp_processor.cpp
+        src/server/opc_tcp_processor.h
+        src/server/server_object.cpp
+        src/server/server_object.h
+        src/server/server_object_addon.cpp
+        src/server/server_object_addon.h
+        src/server/services_registry_factory.cpp
+        src/server/services_registry_impl.cpp
+        src/server/standard_namespace.cpp
+        src/server/standard_namespace_addon.cpp
+        src/server/subscription_service_addon.cpp
+        src/server/subscription_service_internal.cpp
+        src/server/subscription_service_internal.h
+        src/server/timer.h
+        src/server/utils.h
+        )
 
-target_compile_options(libopcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(libopcuaserver ${ADDITIONAL_LINK_LIBRARIES} libopcuacore libopcuaprotocol)
+    target_compile_options(libopcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    target_link_libraries(libopcuaserver ${ADDITIONAL_LINK_LIBRARIES} libopcuacore libopcuaprotocol)
 
-#  src/server/xml_address_space_addon.cpp
-#  src/server/xml_address_space_loader.cpp
-#  src/server/xml_address_space_loader.h
-#  src/server/xml_processor.h
+    #  src/server/xml_address_space_addon.cpp
+    #  src/server/xml_address_space_loader.cpp
+    #  src/server/xml_address_space_loader.h
+    #  src/server/xml_processor.h
+    
+    if (BUILD_TESTING)
+        add_executable(test_libopcuaserver
+            src/server/opcua_protocol_addon.cpp
+            src/server/server_options.cpp
+            tests/server/address_space_registry_test.h
+            tests/server/address_space_ut.cpp
+            tests/server/builtin_server.h
+            tests/server/builtin_server_addon.h
+            tests/server/builtin_server_factory.cpp
+            tests/server/builtin_server_impl.cpp
+            tests/server/builtin_server_impl.h
+            tests/server/builtin_server_test.h
+            tests/server/common.cpp
+            tests/server/common.h
+            tests/server/endpoints_services_test.cpp
+            tests/server/endpoints_services_test.h
+            tests/server/model_object_type_ut.cpp
+            tests/server/model_object_ut.cpp
+            tests/server/model_variable_ut.cpp
+            tests/server/opcua_protocol_addon_test.cpp
+            tests/server/opcua_protocol_addon_test.h
+            tests/server/predefined_references.xml
+            tests/server/services_registry_test.h
+            tests/server/standard_namespace_test.h
+            tests/server/standard_namespace_ut.cpp
+            tests/server/test_server_options.cpp
+        )
 
-if (BUILD_TESTING)
-  add_executable(test_libopcuaserver
-    src/server/opcua_protocol_addon.cpp
-    src/server/server_options.cpp
-    tests/server/address_space_registry_test.h
-    tests/server/address_space_ut.cpp
-    tests/server/builtin_server.h
-    tests/server/builtin_server_addon.h
-    tests/server/builtin_server_factory.cpp
-    tests/server/builtin_server_impl.cpp
-    tests/server/builtin_server_impl.h
-    tests/server/builtin_server_test.h
-    tests/server/common.cpp
-    tests/server/common.h
-    tests/server/endpoints_services_test.cpp
-    tests/server/endpoints_services_test.h
-    tests/server/model_object_type_ut.cpp
-    tests/server/model_object_ut.cpp
-    tests/server/model_variable_ut.cpp
-    tests/server/opcua_protocol_addon_test.cpp
-    tests/server/opcua_protocol_addon_test.h
-    tests/server/predefined_references.xml
-    tests/server/services_registry_test.h
-    tests/server/standard_namespace_test.h
-    tests/server/standard_namespace_ut.cpp
-    tests/server/test_server_options.cpp
-  )
+        #  tests/server/xml_addressspace_ut.cpp
+        #  tests/server/xml_address_space_addon_ut.cpp
+        
+        target_link_libraries(test_libopcuaserver
+            ${ADDITIONAL_LINK_LIBRARIES}
+            libopcuaclient
+            libopcuacore
+            libopcuaprotocol
+            libopcuaserver
+            gtest
+            gtest_main)
+        
+        target_include_directories(test_libopcuaserver PUBLIC .)
+        target_compile_options(test_libopcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
 
-#  tests/server/xml_addressspace_ut.cpp
-#  tests/server/xml_address_space_addon_ut.cpp
+        add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
 
-  target_link_libraries(test_libopcuaserver
-    ${ADDITIONAL_LINK_LIBRARIES}
-    libopcuaclient
-    libopcuacore
-    libopcuaprotocol
-    libopcuaserver
-    gtest
-    gtest_main)
+    endif (BUILD_TESTING)
 
-  target_include_directories(test_libopcuaserver PUBLIC .)
-  target_compile_options(test_libopcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
-
-  add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
-
-endif (BUILD_TESTING)
 
 ############################################################################
 # opcua server executable
 ############################################################################
 
-SET(OPCUASERVER_SOURCES
-  src/server/daemon.cpp
-  src/server/daemon${OS_SUFFIX}.cpp
-  src/server/daemon.h
-  src/server/server_main.cpp
-  src/server/server_options.cpp
-  src/server/server_options.h
-)
+    SET(OPCUASERVER_SOURCES
+        src/server/daemon.cpp
+        src/server/daemon${OS_SUFFIX}.cpp
+        src/server/daemon.h
+        src/server/server_main.cpp
+        src/server/server_options.cpp
+        src/server/server_options.h
+    )
 
-add_executable(opcuaserver ${OPCUASERVER_SOURCES})
-target_link_libraries(opcuaserver
-  ${ADDITIONAL_LINK_LIBRARIES}
-  libopcuaprotocol
-  libopcuacore
-  libopcuaserver
-)
-target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    add_executable(opcuaserver ${OPCUASERVER_SOURCES})
+    target_link_libraries(opcuaserver
+        ${ADDITIONAL_LINK_LIBRARIES}
+        libopcuaprotocol
+        libopcuacore
+        libopcuaserver
+        )
+    target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
+endif(BUILD_SERVER)
 
 ############################################################################
 # example opcua client
@@ -412,19 +409,20 @@ endif (BUILD_CLIENT)
 # example embedded opcua server
 ############################################################################
 
-add_executable(example_server
-  src/examples/example_server.cpp
-)
+if(BUILD_SERVER)
+    add_executable(example_server
+    src/examples/example_server.cpp
+    )
 
-target_link_libraries(example_server
-  ${ADDITIONAL_LINK_LIBRARIES}
-  libopcuaprotocol
-  libopcuacore
-  libopcuaserver
-)
+    target_link_libraries(example_server
+    ${ADDITIONAL_LINK_LIBRARIES}
+    libopcuaprotocol
+    libopcuacore
+    libopcuaserver
+    )
 
-target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
-
+    target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
+endif(BUILD_SERVER)
 
 ############################################################################
 #python binding 
