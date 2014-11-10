@@ -16,10 +16,10 @@
 #include "opc/ua/protocol/variant.h"
 #include "opc/ua/protocol/view.h"
 
+#include "py_opcua_enums.h"
+
 using namespace boost::python;
 using namespace OpcUa;
-
-#include "py_opcua_enums.h"
 
 void py_opcua_enums()
 {

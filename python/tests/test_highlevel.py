@@ -63,7 +63,7 @@ class Unit(unittest.TestCase):
         self.assertEqual(dv.value, 123)
         dv = opcua.DataValue('abc')
         self.assertEqual(dv.value, 'abc')
-        tnow = long(time.time())
+        tnow = int(time.time())
         dv.source_timestamp=opcua.ToDateTime(tnow)
         self.assertEqual(opcua.ToTimeT(dv.source_timestamp), tnow)
         dv = opcua.DataValue(True,opcua.VariantType.BOOLEAN)
