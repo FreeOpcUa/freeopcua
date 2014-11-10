@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef PY_OPCUA_SUBSCRIPTIONCLIENT_H
-#define PY_OPCUA_SUBSCRIPTIONCLIENT_H
+#pragma once
 
 #include <boost/python.hpp>
 
@@ -36,7 +35,4 @@ private:
   PyObject * self;
 
 };
-
-#endif
-
 

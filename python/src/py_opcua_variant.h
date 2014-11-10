@@ -8,11 +8,11 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef PY_OPCUA_VARIANT_H
-#define PY_OPCUA_VARIANT_H
+#pragma once
 
 #include <boost/python.hpp>
-#include <opc/ua/protocol/variant_visitor.h>
+
+#include "opc/ua/protocol/variant_visitor.h"
 
 using namespace boost::python;
 
@@ -257,11 +257,4 @@ struct variant_to_python_converter
     return incref(obj.ptr());
   }
 };
-
-
-
-
-
-
-#endif
 
