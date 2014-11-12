@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
+
+#It seems Cmake does not set default bild type so we force it
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE Debug CACHE STRING "Debug" FORCE )
+endif()
+
 project(freeopcua)
 
 
@@ -50,6 +56,7 @@ if(WIN32)
     link_directories(${BOOST_ROOT}/lib32-msvc-12.0)
 
 else(WIN32)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -ggdb -o0")
 
     SET(STATIC_LIBRARY_CXX_FLAGS)
     SET(EXECUTABLE_CXX_FLAGS)
@@ -59,7 +66,7 @@ else(WIN32)
     SET(TEST_CORE_CONFIG_PATH " ${CMAKE_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
 
-    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ${CMAKE_CXX_FLAGS_DEBUG} ") 
+    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
     set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
     #FIIXME find_package stuff should also be used for winwdows!
