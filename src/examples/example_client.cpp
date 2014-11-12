@@ -24,7 +24,7 @@ class SubClient : public SubscriptionClient
 {
   void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) const override
   {
-    std::cout << "Received DataChange event, value of Node " << node << " is now: "  << std::endl;
+    std::cout << "Received DataChange event, value of Node " << node << " is now: "  << "(Print of arbitrary variant not suported yet)"<< std::endl;
   }
 };
 
