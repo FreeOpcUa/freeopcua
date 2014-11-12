@@ -29,8 +29,7 @@ namespace OpcUa
 
     void InternalSubscription::Stop()
     {
-      if (!TimerStopped)
-        Timer.cancel();
+      Timer.cancel();
     }
 
     void InternalSubscription::DeleteAllMonitoredItems()
@@ -56,12 +55,18 @@ namespace OpcUa
 
     void InternalSubscription::PublishResults(const boost::system::error_code& error)
     {
-      if ( error || HasExpired() )
+      if ( error )
       {
-        TimerStopped = true;
-        if (Debug) { std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means out timer has been deleted. Stopping subscription" << std::endl; }
+        //If we have an error it may be because our class has been deleted, so we must not call any class menber!!!
+        std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means the subscription has stopped, stopping timer" << std::endl;
         return; //It is very important to return, instance of InternalSubscription may have been deleted!
       }
+      if ( HasExpired() )
+      {
+        if (Debug) { std::cout << "InternalSubscription | Subscription has expired" << std::endl; }
+        return; 
+      }
+
       if ( HasPublishResult() && Service.PopPublishRequest(CurrentSession) ) //Check we received a publishrequest before sening respomse
       {
 

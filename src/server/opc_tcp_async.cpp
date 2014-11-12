@@ -273,7 +273,8 @@ namespace
   void OpcTcpConnection::GoodBye()
   {
     TcpServer.RemoveClient(shared_from_this());
-    if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
+    // valgrind complains that Debug  cannot be read at that point, so do not use it
+    //if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
   }
 
   void OpcTcpConnection::Send(const char* message, std::size_t size)
