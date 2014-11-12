@@ -62,8 +62,7 @@ namespace OpcUa
         Server::AddressSpace& GetAddressSpace();
 
       private:
-        //CreateMonitoredItemsResult CreateMonitoredItem( SubscriptionsIDMap::iterator& subscription_it,  const MonitoredItemRequest& request);
-        //void UpdateSubscriptions(AttributeValue& val);
+        void DeleteInternalSubscriptionObject(std::shared_ptr<InternalSubscription> subscription);
 
       private:
         boost::asio::io_service& io;

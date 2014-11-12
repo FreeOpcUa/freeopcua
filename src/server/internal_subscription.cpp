@@ -57,9 +57,8 @@ namespace OpcUa
     {
       if ( error )
       {
-        //If we have an error it may be because our class has been deleted, so we must not call any class menber!!!
-        std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means the subscription has stopped, stopping timer" << std::endl;
-        return; //It is very important to return, instance of InternalSubscription may have been deleted!
+        if (Debug) std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means the subscription has stopped, stopping timer" << std::endl;
+        return; 
       }
       if ( HasExpired() )
       {

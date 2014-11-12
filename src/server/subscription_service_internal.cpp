@@ -58,19 +58,30 @@ namespace OpcUa
       std::vector<StatusCode> result;
       for (const IntegerID& subid: subscriptions)
       {
-        if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
-        size_t count = SubscriptionsMap.erase(subid);
-        if ( count > 0)
-        {
-          result.push_back(StatusCode::Good);
-        }
-        else
+        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(subid);
+        if ( itsub == SubscriptionsMap.end())
         {
           std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
           result.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
+        else
+        {
+          if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+          //stop subscription and post its deletion to asio, so it does not get destroyed before its timer
+          itsub->second->Stop();
+          std::shared_ptr<InternalSubscription> isub = itsub->second;
+          io.post([isub, this](){ this->DeleteInternalSubscriptionObject(isub); });
+          SubscriptionsMap.erase(subid); 
+          result.push_back(StatusCode::Good);
+        }
       }
       return result;
+    }
+
+    void SubscriptionServiceInternal::DeleteInternalSubscriptionObject(std::shared_ptr<InternalSubscription> subscription)
+    {
+      if (Debug) std::cout << "SubscriptionService | Deleting Subscription phase 2" << std::endl;
+      subscription.reset();//maybe not necessary but let the compilers knows why we call that method
     }
 
     SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
