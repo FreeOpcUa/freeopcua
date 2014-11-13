@@ -81,7 +81,9 @@ namespace OpcUa
     void SubscriptionServiceInternal::DeleteInternalSubscriptionObject(std::shared_ptr<InternalSubscription> subscription)
     {
       if (Debug) std::cout << "SubscriptionService | Deleting Subscription phase 2" << std::endl;
-      subscription.reset();//maybe not necessary but let the compilers knows why we call that method
+      //Here we could check that timer is really stopped but this should be ok.
+      //so we just call reset to let the compilers knows why we call that method
+      subscription.reset();
     }
 
     SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)

@@ -43,10 +43,8 @@ namespace OpcUa
   class KeepAliveThread
   {
     public:
-      KeepAliveThread() {}
-      KeepAliveThread(Node node, Duration period);
+      KeepAliveThread() : StopRequest(false), Running(false) {}
       void Start(Node node, Duration period);
-      void Start();
       void Stop();
       void Join();
 
@@ -66,8 +64,8 @@ namespace OpcUa
   class RemoteClient
   {
   public:
-    RemoteClient(bool debug=false) : Debug(debug) {}
-    explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug) {}
+    RemoteClient(bool debug=false) : Debug(debug), KeepAlive() {}
+    explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug), KeepAlive() {}
     ~RemoteClient() {}
 
     RemoteClient(const RemoteClient&&) = delete;
