@@ -1169,9 +1169,9 @@ namespace OpcUa
     {
       return Names::BaseObjectType;
     }
-    else if ( id == ObjectID::ModellingRuleMandatory )
+    else if (id == ObjectID::ModellingRule_Mandatory)
     {
-      return Names::ModellingRuleMandatory;
+      return Names::ModellingRule_Mandatory;
     }
     else if ( id == ObjectID::ServerType )
     {

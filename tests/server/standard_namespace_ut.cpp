@@ -184,11 +184,11 @@ TEST_F(StandardNamespaceStructure, CheckTypes)
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::TypesFolder);
   EXPECT_EQ(SizeOf(refs), 6);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::FolderType));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::DataTypes));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::EventTypes));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::ObjectTypes));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::ReferenceTypes));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::VariableTypes));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::DataTypesFolder));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::EventTypesFolder));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::ObjectTypesFolder));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::ReferenceTypesFolder));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::Organizes, ObjectID::VariableTypesFolder));
 
   ExpectHasBaseAttributes(ObjectID::TypesFolder);
 }

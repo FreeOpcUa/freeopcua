@@ -170,7 +170,7 @@ namespace OpcUa
 
     if (response.Session.RevisedSessionTimeout != 0)
     {
-      KeepAlive.Start(Node(Server, ObjectID::State), 0.4 * response.Session.RevisedSessionTimeout);
+      KeepAlive.Start(Node(Server, ObjectID::Server_ServerStatus_State), 0.4 * response.Session.RevisedSessionTimeout);
     }
   }
 
@@ -189,7 +189,7 @@ namespace OpcUa
   uint32_t RemoteClient::GetNamespaceIndex(std::string uri)
   {
     if ( ! Server ) { throw NotConnectedError();}
-    Node namespacearray(Server, ObjectID::NamespaceArray);
+    Node namespacearray(Server, ObjectID::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
     for ( uint32_t i=0; i<uris.size(); ++i)
     {

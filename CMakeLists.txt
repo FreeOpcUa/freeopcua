@@ -163,7 +163,6 @@ SET(LIBOPCUACORE_SOURCES
   src/core/common/object_id.cpp
   src/core/common/thread.cpp
   src/core/common/uri_facade${OS_SUFFIX}.cpp
-  src/core/common/uri_facade_lin.cpp
   src/core/common/value.cpp
   src/core/event.cpp
   src/core/model_impl.h

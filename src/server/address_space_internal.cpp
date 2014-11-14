@@ -106,7 +106,7 @@ namespace OpcUa
         NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
         if ( node_it == Nodes.end() )
         {
-          if (Debug) std::cout << "AddressSpaceInternal | Node not found in the address space." << std::endl;
+          if (Debug) std::cout << "AddressSpaceInternal | Node '" << OpcUa::ToString(browseDescription.NodeToBrowse) << "' not found in the address space." << std::endl;
           continue;
         }
 
