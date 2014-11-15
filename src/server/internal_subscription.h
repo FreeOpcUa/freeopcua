@@ -44,11 +44,13 @@ namespace OpcUa
     class AddressSpaceInMemory; //pre-declaration
 
     
-    class InternalSubscription
+    class InternalSubscription : public std::enable_shared_from_this<InternalSubscription>
     {
       public:
         InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug=false);
         ~InternalSubscription();
+        void Start();
+        void Stop();
 
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
         std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerID>& ids);
@@ -57,7 +59,6 @@ namespace OpcUa
         CreateMonitoredItemsResult CreateMonitoredItem(const MonitoredItemRequest& request);
         void DataChangeCallback(const IntegerID&, const DataValue& value);
         bool HasExpired();
-        void Stop();
         void TriggerEvent(NodeID node, Event event);
 
       private:
@@ -90,7 +91,6 @@ namespace OpcUa
         bool TimerStopped = false;
         uint32_t LifeTimeCount;
         MonitoredEventsMap MonitoredEvents;
-
         bool Debug = false;
          
     };

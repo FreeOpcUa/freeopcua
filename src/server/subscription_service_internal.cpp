@@ -58,16 +58,18 @@ namespace OpcUa
       std::vector<StatusCode> result;
       for (const IntegerID& subid: subscriptions)
       {
-        if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
-        size_t count = SubscriptionsMap.erase(subid);
-        if ( count > 0)
-        {
-          result.push_back(StatusCode::Good);
-        }
-        else
+        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(subid);
+        if ( itsub == SubscriptionsMap.end())
         {
           std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
           result.push_back(StatusCode::BadSubscriptionIdInvalid);
+        }
+        else
+        {
+          if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
+          itsub->second->Stop();
+          SubscriptionsMap.erase(subid);
+          result.push_back(StatusCode::Good);
         }
       }
       return result;
@@ -85,6 +87,7 @@ namespace OpcUa
       if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
 
       std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
+      sub->Start();
       SubscriptionsMap[data.ID] = sub;
       return data;
     }

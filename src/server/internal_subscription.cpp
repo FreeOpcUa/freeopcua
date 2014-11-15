@@ -18,17 +18,22 @@ namespace OpcUa
       , LifeTimeCount(data.RevisedLifetimeCount)
       , Debug(debug)
     {
-      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
     }
-    
+
+    void InternalSubscription::Start()
+    {
+      std::shared_ptr<InternalSubscription> self = shared_from_this();
+      Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
+    }
+
     InternalSubscription::~InternalSubscription()
     {
-      DeleteAllMonitoredItems();
-      Stop();
+      //Stop(); 
     }
 
     void InternalSubscription::Stop()
     {
+      DeleteAllMonitoredItems();
       Timer.cancel();
     }
 
@@ -57,9 +62,8 @@ namespace OpcUa
     {
       if ( error )
       {
-        //If we have an error it may be because our class has been deleted, so we must not call any class menber!!!
-        std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means the subscription has stopped, stopping timer" << std::endl;
-        return; //It is very important to return, instance of InternalSubscription may have been deleted!
+        if (Debug) std::cout << "InternalSubscription | Stopping subscription timer" << std::endl;
+        return; 
       }
       if ( HasExpired() )
       {
@@ -86,7 +90,8 @@ namespace OpcUa
       }
       TimerStopped = false;
       Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
-      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      std::shared_ptr<InternalSubscription> self = shared_from_this();
+      Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
     }
 
     bool InternalSubscription::HasPublishResult()

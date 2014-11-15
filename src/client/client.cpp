@@ -29,21 +29,12 @@
 namespace OpcUa
 {
 
-
-  KeepAliveThread::KeepAliveThread(Node node, Duration period) : NodeToRead(node), Period(period), StopRequest(false),  Running(false) {}
-
-  void KeepAliveThread::Start()
-  {
-    Running = true;
-    Thread = std::thread([this] { this->Run(); });
-    return;
-  }
-
   void KeepAliveThread::Start(Node node, Duration period)
   {
     NodeToRead = node;
     Period = period;
-    Start();
+    Running = true;
+    Thread = std::thread([this] { this->Run(); });
   }
 
 
