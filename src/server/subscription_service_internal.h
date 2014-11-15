@@ -62,9 +62,6 @@ namespace OpcUa
         Server::AddressSpace& GetAddressSpace();
 
       private:
-        void DeleteInternalSubscriptionObject(std::shared_ptr<InternalSubscription> subscription);
-
-      private:
         boost::asio::io_service& io;
         Server::AddressSpace::SharedPtr AddressSpace;
         bool Debug;

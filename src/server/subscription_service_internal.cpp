@@ -67,23 +67,12 @@ namespace OpcUa
         else
         {
           if (Debug) std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl;
-          //stop subscription and post its deletion to asio, so it does not get destroyed before its timer
           itsub->second->Stop();
-          std::shared_ptr<InternalSubscription> isub = itsub->second;
-          io.post([isub, this](){ this->DeleteInternalSubscriptionObject(isub); });
-          SubscriptionsMap.erase(subid); 
+          SubscriptionsMap.erase(subid);
           result.push_back(StatusCode::Good);
         }
       }
       return result;
-    }
-
-    void SubscriptionServiceInternal::DeleteInternalSubscriptionObject(std::shared_ptr<InternalSubscription> subscription)
-    {
-      if (Debug) std::cout << "SubscriptionService | Deleting Subscription phase 2" << std::endl;
-      //Here we could check that timer is really stopped but this should be ok.
-      //so we just call reset to let the compilers knows why we call that method
-      subscription.reset();
     }
 
     SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
@@ -98,6 +87,7 @@ namespace OpcUa
       if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
 
       std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
+      sub->Start();
       SubscriptionsMap[data.ID] = sub;
       return data;
     }

@@ -18,18 +18,22 @@ namespace OpcUa
       , LifeTimeCount(data.RevisedLifetimeCount)
       , Debug(debug)
     {
+    }
+
+    void InternalSubscription::Start()
+    {
       std::shared_ptr<InternalSubscription> self = shared_from_this();
       Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
     }
-    
+
     InternalSubscription::~InternalSubscription()
     {
-      DeleteAllMonitoredItems();
-      Stop();
+      //Stop(); 
     }
 
     void InternalSubscription::Stop()
     {
+      DeleteAllMonitoredItems();
       Timer.cancel();
     }
 
@@ -58,7 +62,7 @@ namespace OpcUa
     {
       if ( error )
       {
-        if (Debug) std::cout << "InternalSubscription | boost::asio called us with an error code: " << error.value() << ", this probably means the subscription has stopped, stopping timer" << std::endl;
+        if (Debug) std::cout << "InternalSubscription | Stopping subscription timer" << std::endl;
         return; 
       }
       if ( HasExpired() )
