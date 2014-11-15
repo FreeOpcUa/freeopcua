@@ -18,7 +18,8 @@ namespace OpcUa
       , LifeTimeCount(data.RevisedLifetimeCount)
       , Debug(debug)
     {
-      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      std::shared_ptr<InternalSubscription> self = shared_from_this();
+      Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
     }
     
     InternalSubscription::~InternalSubscription()
@@ -85,7 +86,8 @@ namespace OpcUa
       }
       TimerStopped = false;
       Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
-      Timer.async_wait([&](const boost::system::error_code& error){ this->PublishResults(error); });
+      std::shared_ptr<InternalSubscription> self = shared_from_this();
+      Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
     }
 
     bool InternalSubscription::HasPublishResult()

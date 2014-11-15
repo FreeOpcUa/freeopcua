@@ -44,7 +44,7 @@ namespace OpcUa
     class AddressSpaceInMemory; //pre-declaration
 
     
-    class InternalSubscription
+    class InternalSubscription : public std::enable_shared_from_this<InternalSubscription>
     {
       public:
         InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug=false);
