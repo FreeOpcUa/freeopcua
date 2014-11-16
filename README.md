@@ -1,9 +1,10 @@
 Open Source C++ OPC-UA Server and Client Library
 ========
 
-LGPL OPC-UA server and client library written in C++. Python bindings can be found in the opcua-python repository.
-The library is under development but works will all tested clients and servers.
-http://freeopcua.github.io/
+LGPL OPC-UA server and client library written in C++. Python bindings can be found in the python directory.
+
+website: http://freeopcua.github.io/
+
 
 Currently supported:
 * read, write, browse
@@ -16,7 +17,7 @@ Work in progress
 * StatusChange Events
 * Filtering
 * Documentation
-* Windows port (Help welcome to handle shared libraries...)
+* Windows port 
 
 Not implemented yet (patches are welcome)
 * Methods
@@ -25,19 +26,28 @@ Not implemented yet (patches are welcome)
 * Certificates handling
 
 
-see examples in src/examples folder or the examples in python repository
+see examples in src/examples folder or the examples in python directory
 
-### Windows
+##Installation
 
-You need:
-* VS2013
-* cmake
-* boost
+An environment supporting c++11 i snecessary: gcc-4.8+, clang 3.4
+On windows you need VS2013, cmake, boost and libxml2
 
-### Ubuntu (Debians)
+
+#### Ubuntu (Debians)
 There is a script debian.soft in the root for installing all required soft to build all repositories.
-Main point is the support of c++11: gcc-4.8+, clang 3.4
 
+#### Using GNU autotools
+
+```sh
+autoreconf -f -i
+./configure --prefix=/path/to/server
+make 
+make check
+make install
+cd /path/to/server
+LD_LIBRARY_PATH=./lib ./bin/opcuaserver
+```
 ### Using cmake
 
 #### Linux
@@ -60,14 +70,13 @@ cd bin\Debug
 example_server.exe
 ```
 
-### Using GNU autotools
 
-```sh
-autoreconf -f -i
-./configure --prefix=/path/to/server
-make 
-make check
-make install
-cd /path/to/server
-LD_LIBRARY_PATH=./lib ./bin/opcuaserver
-```
+## Tested clients and servers with default settings
+* uaexperts client application
+* node-opcua (client and server tested)
+* ignition server
+* ignition open-source sdk (server tested)
+* quickopc client sdk
+* prosysopc demo client
+* prosysopc demo server (subscription currently broken)
+* unified automation sdk (client and server tested)
