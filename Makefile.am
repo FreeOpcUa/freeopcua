@@ -446,6 +446,9 @@ example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 #############################################################
 
 EXTRA_DIST = \
+  NodeIds.csv \
+  node_ids_gen.py \
+  StatusCodes.csv \
   src/client/configs/opc_tcp.conf \
   src/server/configs/server.conf \
   src/server/configs/opcuaserver \
