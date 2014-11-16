@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 import csv
+import os
+import sys
 
 print(
 """
@@ -31,7 +33,7 @@ namespace OpcUa
 """
 )
 
-with open('NodeIds.csv', 'r') as ids_file:
+with open(os.path.dirname(sys.argv[0]) + '/NodeIds.csv', 'r') as ids_file:
 	ids_reader = csv.reader(ids_file, delimiter=',')
 
 	for row in ids_reader:

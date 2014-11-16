@@ -192,6 +192,10 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 # Protocol library
 ####################################################
 
+
+include/opc/ua/protocol/object_ids.h:
+	python $(top_srcdir)/node_ids_gen.py > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
+
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
   include/opc/ua/protocol/binary/stream.h
