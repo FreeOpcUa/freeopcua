@@ -8,12 +8,16 @@
 # $Date: $
 # $Revision: $
 
+if ENABLE_PYTHON
+SUBDIRS = . python
+endif
 
 #######################################################
 # list of binaries.
 #######################################################
 
 AUTOMAKE_OPTIONS = subdir-objects
+
 
 bin_PROGRAMS = opcuaserver opcua
 lib_LTLIBRARIES = libopcuaprotocol.la libopcuacore.la libopcuaserver.la libopcuaclient.la
