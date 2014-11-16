@@ -101,7 +101,7 @@ add_subdirectory(tests/gtest)
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
   COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/node_ids_gen.py > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/protocol/nodeid.cpp)
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv)
 
 add_library(libopcuaprotocol STATIC
   include/opc/ua/protocol/object_ids.h
