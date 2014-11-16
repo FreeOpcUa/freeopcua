@@ -507,3 +507,5 @@ distclean-local:
 	$(MAKE) -C $(top_srcdir)/tests/gmock distclean
 	$(MAKE) -C $(top_srcdir)/tests/gtest distclean
  
+python-dist: all
+	$(MAKE) -C $(top_builddir)/python python-dist
