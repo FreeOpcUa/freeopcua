@@ -535,6 +535,7 @@ uninstall-am:
 
 
 all:
+	echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
 	$(opcua_paths) python setup.py build
 
 #	$(opcua_paths) $(MAKE) -C tests check

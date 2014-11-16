@@ -14,6 +14,7 @@ TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell 
 
 
 all:
+	echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
 	$(opcua_paths) python setup.py build
 
 #	$(opcua_paths) $(MAKE) -C tests check

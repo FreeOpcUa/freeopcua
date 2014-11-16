@@ -2327,10 +2327,25 @@ fi
 # Check whether --with-opcuaserver was given.
 if test "${with_opcuaserver+set}" = set; then :
   withval=$with_opcuaserver;
-              OPCUA_SERVER_PATH="$with_opcuaserver"
+              if test "x$with_opcuaserver" == "xyes"; then :
 
-              { $as_echo "$as_me:${as_lineno-$LINENO}: opcuaserver path: $with_opcuaserver" >&5
+                     OPCUA_SERVER_PATH="$srcdir/.."
+
+                     { $as_echo "$as_me:${as_lineno-$LINENO}: opcuaserver path: $srcdir/.." >&5
+$as_echo "$as_me: opcuaserver path: $srcdir/.." >&6;}
+
+
+fi
+
+              if test "x$with_opcuaserver" != "xyes"; then :
+
+                     OPCUA_SERVER_PATH="$with_opcuaserver"
+
+                     { $as_echo "$as_me:${as_lineno-$LINENO}: opcuaserver path: $with_opcuaserver" >&5
 $as_echo "$as_me: opcuaserver path: $with_opcuaserver" >&6;}
+
+
+fi
 
 else
 
