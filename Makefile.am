@@ -193,7 +193,7 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 ####################################################
 
 
-include/opc/ua/protocol/object_ids.h:
+include/opc/ua/protocol/object_ids.h: NodeIds.csv
 	python $(top_srcdir)/node_ids_gen.py > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
 
 binaryinclude_HEADERS = \
