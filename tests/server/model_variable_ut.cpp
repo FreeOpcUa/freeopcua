@@ -113,7 +113,7 @@ TEST_F(ModelVariable, CanSetVariableValue_DataValue)
 
 TEST_F(ModelVariable, CanSetListSubVariables)
 {
-  OpcUa::Model::Variable variable(OpcUa::ObjectID::BuildInfo, Services);
+  OpcUa::Model::Variable variable(OpcUa::ObjectID::Server_ServerStatus_BuildInfo, Services);
   std::vector<OpcUa::Model::Variable> vars = variable.Variables();
   EXPECT_FALSE(vars.empty());
 }

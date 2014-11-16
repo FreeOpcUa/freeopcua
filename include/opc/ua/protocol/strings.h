@@ -32,6 +32,7 @@ namespace OpcUa
     const char Boolean[]         = "Boolean";
     const char BuildDate[]       = "BuildDate";
     const char BuildInfo[]       = "BuildInfo";
+    const char BuildInfoVariableType[] = "BuildInfoVariableType";
     const char BuildNumber[]     = "BuildNumber";
     const char Byte[]            = "Byte";
     const char ByteString[]      = "ByteString";
@@ -148,6 +149,7 @@ namespace OpcUa
     const char ServerCapabilitiesType[] = "ServerCapabilitiesType";
     const char ServerDiagnostics[] = "ServerDiagnostics";
     const char SessionsDiagnosticsArrayType[] = "SessionsDiagnosticsArrayType";
+    const char ServerDiagnosticsDataType[] = "ServerDiagnosticsDataType";
     const char ServerDiagnosticsType[] = "ServerDiagnosticsType";
     const char ServerDiagnosticsSummaryType[] = "ServerDiagnosticsSummaryType";
     const char ServerDiagnosticsSummary[] = "ServerDiagnosticsSummary";

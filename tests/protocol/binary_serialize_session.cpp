@@ -258,7 +258,7 @@ TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
   const std::vector<char> expectedData = {
   1, 0, (char)0x41, 0x1, // TypeID
   HAS_BINARY_BODY,
-  0xd,0,0,0, 9,0,0,0,'A','n','o','n','y','m','o','u','s'
+  0xd,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -272,7 +272,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   const std::vector<char> expectedData = {
   1, 0, (char)0x41, 0x1, // TypeID
   HAS_BINARY_BODY,
-  0xd,0,0,0, 9,0,0,0,'A','n','o','n','y','m','o','u','s'
+  0xd,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s'
   };
 
   GetChannel().SetData(expectedData);
@@ -284,7 +284,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   ASSERT_EQ(token.Header.TypeID.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(token.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
-  std::vector<uint8_t> anonymous = {9,0,0,0,'A','n','o','n','y','m','o','u','s'};
+  std::vector<uint8_t> anonymous = {9,0,0,0,'a','n','o','n','y','m','o','u','s'};
   ASSERT_EQ(token.Anonymous.Data, anonymous);
 }
 
@@ -311,7 +311,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.Encoding, HAS_BINARY_BODY);
-  std::vector<uint8_t> anonymous = {9,0,0,0,'A','n','o','n','y','m','o','u','s'};
+  std::vector<uint8_t> anonymous = {9,0,0,0,'a','n','o','n','y','m','o','u','s'};
   ASSERT_EQ(request.Parameters.IdentifyToken.Anonymous.Data, anonymous);
 
   GetStream() << request << flush;
@@ -328,7 +328,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
 
   1, 0, (char)0x41, 0x1, // TypeID
   1,
-  0x0d,0,0,0, 9,0,0,0,'A','n','o','n','y','m','o','u','s',
+  0x0d,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s',
   -1,-1,-1,-1,
   -1,-1,-1,-1
   };
@@ -355,7 +355,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
 
   1, 0, (char)0x41, 0x1, // TypeID
   1,
-  0xd,0,0,0, 9,0,0,0,'A','n','o','n','y','m','o','u','s',
+  0xd,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s',
   -1,-1,-1,-1,
   -1,-1,-1,-1
   };
@@ -379,7 +379,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.Encoding, HAS_BINARY_BODY);
-  std::vector<uint8_t> anonymous = {9,0,0,0,'A','n','o','n','y','m','o','u','s'};
+  std::vector<uint8_t> anonymous = {9,0,0,0,'a','n','o','n','y','m','o','u','s'};
   ASSERT_EQ(request.Parameters.IdentifyToken.Anonymous.Data, anonymous);
 }
 

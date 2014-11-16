@@ -40,7 +40,8 @@ with open('NodeIds.csv', 'r') as ids_file:
 print (
 """
     Server_ServerCapabilities_ModellingRules = 2996,
-    EventTypesFolder = 3048
+    EventTypesFolder = 3048,
+    Server_ServerCapabilities_SoftwareCertificates = 3704
   };
 }
 """

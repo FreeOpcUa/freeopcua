@@ -1504,7 +1504,8 @@ namespace OpcUa
     Dictionary_BinarySchema_SemanticChangeStructureDataType = 2741,
 
     Server_ServerCapabilities_ModellingRules = 2996,
-    EventTypesFolder = 3048
+    EventTypesFolder = 3048,
+    Server_ServerCapabilities_SoftwareCertificates = 3704
   };
 }
 
