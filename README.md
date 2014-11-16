@@ -1,9 +1,12 @@
 Open Source C++ OPC-UA Server and Client Library
 ========
 
-LGPL OPC-UA server and client library written in C++. Python bindings can be found in the python directory.
+LGPL OPC-UA server and client library written in C++.  
+Python bindings can be found in the python directory.
 
-website: http://freeopcua.github.io/
+code: https://github.com/FreeOpcUa/freeopcua  
+website: http://freeopcua.github.io/  
+mailing list: https://groups.google.com/forum/#!forum/freeopcua  
 
 
 Currently supported:
