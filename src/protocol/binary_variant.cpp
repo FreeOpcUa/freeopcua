@@ -542,8 +542,8 @@ namespace OpcUa
       case VariantType::GUID:             return ObjectID::Guid;
       case VariantType::BYTE_STRING:      return ObjectID::ByteString;
       case VariantType::XML_ELEMENT:      return ObjectID::XmlElement;
-      case VariantType::NODE_ID:          return ObjectID::NodeID;
-      case VariantType::EXPANDED_NODE_ID: return ObjectID::ExpandedNodeID;
+      case VariantType::NODE_ID:          return ObjectID::NodeId;
+      case VariantType::EXPANDED_NODE_ID: return ObjectID::ExpandedNodeId;
       case VariantType::STATUS_CODE:      return ObjectID::StatusCode;
       case VariantType::QUALIFIED_NAME:   return ObjectID::QualifiedName;
       case VariantType::LOCALIZED_TEXT:   return ObjectID::LocalizedText;
@@ -585,8 +585,8 @@ namespace OpcUa
       case ObjectID::Guid:           return VariantType::GUID;
       case ObjectID::ByteString:     return VariantType::BYTE_STRING;
       case ObjectID::XmlElement:     return VariantType::XML_ELEMENT;
-      case ObjectID::NodeID:         return VariantType::NODE_ID;
-      case ObjectID::ExpandedNodeID: return VariantType::EXPANDED_NODE_ID;
+      case ObjectID::NodeId:         return VariantType::NODE_ID;
+      case ObjectID::ExpandedNodeId: return VariantType::EXPANDED_NODE_ID;
       case ObjectID::StatusCode:     return VariantType::STATUS_CODE;
       case ObjectID::QualifiedName:  return VariantType::QUALIFIED_NAME;
       case ObjectID::LocalizedText:  return VariantType::LOCALIZED_TEXT;

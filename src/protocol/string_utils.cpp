@@ -246,42 +246,42 @@ std::string OpcUa::ToString(OpcUa::StatusCode code)
   }
 
   std::stringstream stream;
-  stream << "0x" << std::setfill('0') << std::setw(8) << std::hex << (unsigned)code;
   switch (code)
   {
     case StatusCode::BadNodeIdExists:
-      stream << "(NodeId allready exist)";
+      stream << "NodeId allready exist";
       break;
     case StatusCode::BadSourceNodeIdInvalid:
-      stream << "(Source NodeId invalid)";
+      stream << "Source NodeId invalid";
       break;
     case StatusCode::BadNodeIdUnknown:
-      stream << "(NodeId unknown)";
+      stream << "NodeId unknown";
       break;
     case StatusCode::BadParentNodeIdInvalid:
-      stream << "(Parent NodeId invalid)";
+      stream << "Parent NodeId invalid";
       break;
     case StatusCode::BadAttributeIdInvalid:
-      stream << "(Attribute id invalid)";
+      stream << "Attribute id invalid";
       break;
     case StatusCode::BadSubscriptionIdInvalid:
-      stream << "(Subscription id invalid)";
+      stream << "Subscription id invalid";
       break;
     case StatusCode::BadNotReadable:
-      stream << "(Attribute could not be read, it does not exist or you are not allowed to read it)";
+      stream << "Attribute could not be read, it does not exist or you are not allowed to read it";
       break;
     case StatusCode::BadNotWritable:
-      stream << "(Attribute not writable, it does not exist or you are not allowed)";
+      stream << "Attribute not writable, it does not exist or you are not allowed";
       break;
     case StatusCode::BadNoMatch:
-      stream << "(No match for request)";
+      stream << "No match for request";
       break;
     case StatusCode::BadMonitoredItemIdInvalid:
-      stream << "(MonitoredItemID is invalid)";
+      stream << "MonitoredItemID is invalid";
       break;
     default:
       break;
-    stream << ")";
   }
+  stream << " (0x" << std::setfill('0') << std::setw(8) << std::hex << (unsigned)code << ")";
+
   return stream.str();
 }

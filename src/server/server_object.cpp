@@ -76,9 +76,8 @@ namespace OpcUa
     Model::Object ServerObject::CreateServerObject(const Services::SharedPtr& services) const
     {
       Model::Server server(services);
-      Model::Object root = server.GetObject(ObjectID::ObjectsFolder);
-      Model::ObjectType serverType = server.GetObjectType(ObjectID::ServerType);
-      return root.CreateObject(ObjectID::Server, serverType, QualifiedName(OpcUa::Names::Server));
+      Model::Object serverObject = server.GetObject(ObjectID::Server);
+      return serverObject;
     }
 
     void ServerObject::UpdateTime()

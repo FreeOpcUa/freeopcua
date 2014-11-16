@@ -257,9 +257,7 @@ OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
 TEST_F(ModelObject, CanAccessVaraibleByBrowsePath)
 {
   OpcUa::Model::Server server(Services);
-  OpcUa::Model::Object rootObject = server.RootObject();
-  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
-  OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType, OpcUa::QualifiedName("Server"));
+  OpcUa::Model::Object serverObject = server.GetObject(OpcUa::ObjectID::Server);
   OpcUa::RelativePath path;
   path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::ServerStatus));
   path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::BuildInfo));

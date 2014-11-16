@@ -67,7 +67,7 @@ else(WIN32)
     SET(OS_SUFFIX _lin)
 
     set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
-    set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
+    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
     #FIIXME find_package stuff should also be used for winwdows!
 
@@ -98,7 +98,13 @@ add_subdirectory(tests/gtest)
 # Protocol library
 ############################################################################
 
+ADD_CUSTOM_COMMAND(
+  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/node_ids_gen.py > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv)
+
 add_library(libopcuaprotocol STATIC
+  include/opc/ua/protocol/object_ids.h
   src/protocol/binary_attribute.cpp
   src/protocol/binary_data_value.cpp
   src/protocol/binary_endpoints.cpp
@@ -170,7 +176,6 @@ SET(LIBOPCUACORE_SOURCES
   src/core/common/object_id.cpp
   src/core/common/thread.cpp
   src/core/common/uri_facade${OS_SUFFIX}.cpp
-  src/core/common/uri_facade_lin.cpp
   src/core/common/value.cpp
   src/core/event.cpp
   src/core/model_impl.h

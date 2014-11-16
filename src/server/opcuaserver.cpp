@@ -77,7 +77,7 @@ namespace OpcUa
   uint32_t OPCUAServer::RegisterNamespace(std::string uri)
   {
     CheckStarted();
-    Node namespacearray(Registry->GetServer(), ObjectID::NamespaceArray);
+    Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();
     uint32_t index = uris.size();
     uris.push_back(uri);
@@ -88,7 +88,7 @@ namespace OpcUa
   uint32_t OPCUAServer::GetNamespaceIndex(std::string uri)
   {
     CheckStarted();
-    Node namespacearray(Registry->GetServer(), ObjectID::NamespaceArray);
+    Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
     for ( uint32_t i=0; i<uris.size(); ++i)
     {

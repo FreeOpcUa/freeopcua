@@ -31,9 +31,9 @@ class SubClient : public SubscriptionClient
   }
 };
 
-int main(int argc, char** argv)
+void RunServer()
 {
-  const bool debug = false;
+  const bool debug = true;
   OpcUa::OPCUAServer server(debug);
 
   server.SetEndpoint("opc.tcp://localhost:4841");
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
   Node root = server.GetRootNode();
   std::cout << "Root node is: " << root << std::endl;
   std::cout << "Childs are: " << std::endl;
-  for (Node node: root.GetChildren() )
+  for (Node node : root.GetChildren())
   {
     std::cout << "    " << node << std::endl;
   }
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 
   //Uncomment following to subscribe to datachange events inside server
   /*
-  SubClient clt; 
+  SubClient clt;
   std::unique_ptr<Subscription> sub = server.CreateSubscription(100, clt);
   sub->SubscribeDataChange(myvar);
   */
@@ -71,21 +71,33 @@ int main(int argc, char** argv)
   ev.Severity = 2;
   ev.SourceNode = ObjectID::Server;
   ev.SourceName = "Event from FreeOpcUA";
-  ev.Time = CurrentDateTime();  
+  ev.Time = CurrentDateTime();
 
 
   std::cout << "Ctrl-C to exit" << std::endl;
-  for(;;)
+  for (;;)
   {
     myvar.SetValue(Variant(++counter)); //will change value and trigger datachange event
     std::stringstream ss;
-    ss << "This is event number: " << counter ;
+    ss << "This is event number: " << counter;
     ev.Message = LocalizedText(ss.str());
     server.TriggerEvent(ev);
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
   }
 
   server.Stop();
+}
+
+int main(int argc, char** argv)
+{
+  try
+  {
+    RunServer();
+  }
+  catch (const std::exception& exc)
+  {
+    std::cout << exc.what() << std::endl;
+  }
   return 0;
 }
 
