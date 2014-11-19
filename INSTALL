@@ -12,7 +12,7 @@ without warranty of any kind.
 Basic Installation
 ==================
 
-   Briefly, the shell command `autoreconf -f -i && ./configure && make && make install'
+   Briefly, the shell command `./configure && make && make install'
 should configure, build, and install this package.  The following
 more-detailed instructions are generic; see the `README' file for
 instructions specific to this package.  Some packages provide this
@@ -49,9 +49,9 @@ you want to change it or regenerate `configure' using a newer version
 of `autoconf'.
 
    The simplest way to compile this package is:
-  1. cd' to the directory containing the package's source code and type.
-     'autoreconf -f -i' to generate configure script if it is absent.
-     './configure' to configure the package for your system.
+
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.
 
      Running `configure' might take a while.  While running, it prints
      some messages telling which features it is checking for.
