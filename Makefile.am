@@ -197,7 +197,7 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 ####################################################
 
 
-include/opc/ua/protocol/object_ids.h: NodeIds.csv
+include/opc/ua/protocol/object_ids.h: NodeIds.csv node_ids_gen.py
 	python $(top_srcdir)/node_ids_gen.py > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
 
 binaryinclude_HEADERS = \
@@ -446,9 +446,6 @@ example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 #############################################################
 
 EXTRA_DIST = \
-  NodeIds.csv \
-  node_ids_gen.py \
-  StatusCodes.csv \
   src/client/configs/opc_tcp.conf \
   src/server/configs/server.conf \
   src/server/configs/opcuaserver \
@@ -507,5 +504,9 @@ distclean-local:
 	$(MAKE) -C $(top_srcdir)/tests/gmock distclean
 	$(MAKE) -C $(top_srcdir)/tests/gtest distclean
  
-python-dist: all
-	$(MAKE) -C $(top_builddir)/python python-dist
+
+if ENABLE_PYTHON
+python-dist:
+	$(MAKE) -C $(top_srcdir)/python python-dist
+endif
+ 

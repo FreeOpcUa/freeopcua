@@ -32,12 +32,13 @@ AC_ARG_ENABLE([gcov],
               ])
 
 AC_ARG_ENABLE([python-bindings],
-              [AS_HELP_STRING([--disable-python-bindings],[Enable support of coverage analize with gcov.])],
+              [AS_HELP_STRING([--disable-python-bindings],[Disable building of python bindings.])],
               [
-		enable_python_bindings=no
+                enable_python_bindings=no
+                AC_MSG_NOTICE([Disabled support of python bindings.])
               ],
               [
-		enable_python_bindings=yes
+                enable_python_bindings=yes
               ])
 
 
