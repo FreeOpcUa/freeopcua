@@ -121,7 +121,8 @@ Common::Configuration Common::ParseConfigurationFiles(const std::string& directo
 {
   using namespace boost::filesystem;
   Common::Configuration configuration;
-  directory_iterator dirIt(directory);
+  path p(directory);
+  directory_iterator dirIt(p);
   directory_iterator end;
 
   std::for_each(dirIt, end, [&configuration](const directory_entry& entry)
