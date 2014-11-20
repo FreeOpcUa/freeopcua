@@ -40,6 +40,8 @@ namespace OpcUa
     EV_VALUE_MASK = 0x3f,
   };
 
+  struct ExpandedNodeID;
+
   struct NodeID
   {
     NodeIDEncoding Encoding;
@@ -120,6 +122,7 @@ namespace OpcUa
 
     NodeID();
     NodeID(const NodeID& node);
+    NodeID(const ExpandedNodeID& node);
     NodeID(MessageID messageID);
     NodeID(ReferenceID referenceID);
     NodeID(ObjectID objectID);
@@ -128,6 +131,9 @@ namespace OpcUa
     NodeID(std::string stringId, uint16_t index);
 
     NodeID& operator= (const NodeID& node);
+    NodeID& operator= (const ExpandedNodeID& node);
+    
+    explicit operator ExpandedNodeID(); 
 
     NodeID& operator= (MessageID messageID)
     {
@@ -186,6 +192,9 @@ namespace OpcUa
     std::string GetStringIdentifier() const;
     std::vector<uint8_t> GetBinaryIdentifier() const;
     Guid GetGuidIdentifier() const;
+
+    protected:
+    void CopyNodeID(const NodeID& node);
   };
 
   inline NodeID TwoByteNodeID(uint8_t value)
@@ -241,7 +250,10 @@ namespace OpcUa
     return id;
   }
 
-   //std::ostream& operator<<(std::ostream& os, const NodeID& nodeid);
+  struct ExpandedNodeID : public NodeID
+  {
+    using NodeID::NodeID;
+  };
 
 } // namespace OpcUa
 

@@ -177,7 +177,7 @@ namespace OpcUa
 
   struct AdditionalHeader
   {
-    NodeID TypeID;
+    ExpandedNodeID TypeID;
     uint8_t Encoding;
 
     AdditionalHeader()
@@ -188,7 +188,7 @@ namespace OpcUa
 
   struct RequestHeader
   {
-    NodeID SessionAuthenticationToken;
+    ExpandedNodeID SessionAuthenticationToken;
     DateTime UtcTime;
     uint32_t RequestHandle = 0;
     uint32_t ReturnDiagnostics = 0;
@@ -350,7 +350,7 @@ namespace OpcUa
   //TODO serialization tests
   struct ExtensionObjectHeader
   {
-    NodeID TypeID;
+    ExpandedNodeID TypeID;
     ExtensionObjectEncoding Encoding;
 
     ExtensionObjectHeader();
