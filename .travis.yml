@@ -16,5 +16,5 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90
 
-script: autoreconf -f -i && ./configure && make && make check
+script: autoreconf -f -i && ./configure --disable-python-bindings && make && make check
 
