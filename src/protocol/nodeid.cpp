@@ -158,7 +158,7 @@ namespace OpcUa
   {
   }
 
-  NodeID::NodeID(const NodeID& node)
+  void NodeID::CopyNodeID(const NodeID& node)
   {
     Encoding = node.Encoding;
     const NodeIDEncoding enc = node.GetEncodingValue();
@@ -213,63 +213,36 @@ namespace OpcUa
     {
       NamespaceURI = node.NamespaceURI;
     }
+
   }
+
+  NodeID::NodeID(const NodeID& node)
+  {
+    CopyNodeID(node);
+  }
+
+  NodeID::NodeID(const ExpandedNodeID& node)
+  {
+    CopyNodeID(node);
+  }
+
+  NodeID::operator ExpandedNodeID()
+  {
+    ExpandedNodeID node;
+    node.CopyNodeID(*this);
+
+    return node;
+  } 
 
   NodeID& NodeID::operator=(const NodeID& node)
   {
-    Encoding = node.Encoding;
-    const NodeIDEncoding enc = node.GetEncodingValue();
-    switch (enc)
-    {
-      case EV_TWO_BYTE:
-      {
-        TwoByteData.Identifier = node.TwoByteData.Identifier;
-        break;
-      }
-      case EV_FOUR_BYTE:
-      {
-        FourByteData.NamespaceIndex = node.FourByteData.NamespaceIndex;
-        FourByteData.Identifier = node.FourByteData.Identifier;
-        break;
-      }
-      case EV_NUMERIC:
-      {
-        NumericData.NamespaceIndex = node.NumericData.NamespaceIndex;
-        NumericData.Identifier = node.NumericData.Identifier;
-        break;
-      }
-      case EV_STRING:
-      {
-        StringData.NamespaceIndex = node.StringData.NamespaceIndex;
-        StringData.Identifier = node.StringData.Identifier;
-        break;
-      }
-      case EV_GUID:
-      {
-        GuidData.NamespaceIndex = node.GuidData.NamespaceIndex;
-        GuidData.Identifier = node.GuidData.Identifier;
-        break;
-      }
-      case EV_BYTE_STRING:
-      {
-        BinaryData.NamespaceIndex = node.BinaryData.NamespaceIndex;
-        BinaryData.Identifier = node.BinaryData.Identifier;
-        break;
-      }
-      default:
-      {
-        throw std::logic_error("Invalid Node ID encoding value.");
-      }
-    }
+    CopyNodeID(node);
+    return *this;
+  }
 
-    if (node.HasServerIndex())
-    {
-      ServerIndex = node.ServerIndex;
-    }
-    if (node.HasNamespaceURI())
-    {
-      NamespaceURI = node.NamespaceURI;
-    }
+  NodeID& NodeID::operator=(const ExpandedNodeID& node)
+  {
+    CopyNodeID(node);
     return *this;
   }
 
@@ -510,23 +483,18 @@ namespace OpcUa
         throw std::logic_error("Unable serialize NodeID. Unknown encoding type.");
       };
 
-      if (id.HasNamespaceURI())
-      {
-        const std::size_t sizeofSize = 4;
-        size += sizeofSize + id.NamespaceURI.size();
-      }
-      if (id.HasServerIndex())
-      {
-        const std::size_t sizeofServerIndex = 4;
-        size += sizeofServerIndex;
-      }
       return size;
     }
 
     template<>
     void DataSerializer::Serialize<OpcUa::NodeID>(const OpcUa::NodeID& id)
     {
-      *this << id.Encoding;
+      //unset server and namespace flags in encoding, they should only be used in ExpandedNode ID
+      uint8_t nodeid_encoding = id.Encoding;
+      nodeid_encoding &= ~EV_SERVER_INDEX_FLAG;
+      nodeid_encoding &= ~EV_NAMESPACE_URI_FLAG;
+
+      *this << nodeid_encoding;
 
       switch (id.GetEncodingValue())
       {
@@ -570,14 +538,6 @@ namespace OpcUa
         throw std::logic_error("Unable serialize NodeID. Unknown encoding type.");
       };
 
-      if (id.HasNamespaceURI())
-      {
-        *this << id.NamespaceURI;
-      }
-      if (id.HasServerIndex())
-      {
-        *this << id.ServerIndex;
-      }
     }
 
     template<>
@@ -638,6 +598,88 @@ namespace OpcUa
         *this >> id.ServerIndex;
       }
     };
+
+    template<>
+    std::size_t RawSize<ExpandedNodeID>(const ExpandedNodeID& id)
+    {
+      std::size_t size = RawSize((NodeID)id);
+
+      if (id.HasNamespaceURI())
+      {
+        const std::size_t sizeofSize = 4;
+        size += sizeofSize + id.NamespaceURI.size();
+      }
+      if (id.HasServerIndex())
+      {
+        const std::size_t sizeofServerIndex = 4;
+        size += sizeofServerIndex;
+      }
+      return size;
+    }
+
+    template<>
+    void DataSerializer::Serialize<OpcUa::ExpandedNodeID>(const OpcUa::ExpandedNodeID& id)
+    {
+      *this << id.Encoding;
+
+      switch (id.GetEncodingValue())
+      {
+        case EV_TWO_BYTE:
+        {
+          *this << id.TwoByteData.Identifier;
+          break;
+        }
+        case EV_FOUR_BYTE:
+        {
+          *this << id.FourByteData.NamespaceIndex;
+          *this << id.FourByteData.Identifier;
+          break;
+        }
+        case EV_NUMERIC:
+        {
+          *this << id.NumericData.NamespaceIndex;
+          *this << id.NumericData.Identifier;
+          break;
+        }
+        case EV_STRING:
+        {
+          *this << id.StringData.NamespaceIndex;
+          *this << id.StringData.Identifier;
+          break;
+        }
+        case EV_BYTE_STRING:
+        {
+          *this << id.BinaryData.NamespaceIndex;
+          *this << id.BinaryData.Identifier;
+          break;
+        }
+        case EV_GUID:
+        {
+          *this << id.GuidData.NamespaceIndex;
+          *this << id.GuidData.Identifier;
+          break;
+        }
+
+      default:
+        throw std::logic_error("Unable serialize ExpandedNodeID. Unknown encoding type.");
+      };
+
+      if (id.HasNamespaceURI())
+      {
+        *this << id.NamespaceURI;
+      }
+      if (id.HasServerIndex())
+      {
+        *this << id.ServerIndex;
+      }
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<OpcUa::ExpandedNodeID>(OpcUa::ExpandedNodeID& id)
+    {
+      *this >> *(NodeID*) &id;
+    };
+
 
   } // namespace Binary
 } // namespace OpcUa

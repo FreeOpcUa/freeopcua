@@ -25,7 +25,7 @@ namespace OpcUa
 
   struct OpenSecureChannelRequest
   {
-    NodeID TypeID;
+    ExpandedNodeID TypeID;
     RequestHeader Header;
 
     uint32_t ClientProtocolVersion;

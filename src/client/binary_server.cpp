@@ -701,7 +701,7 @@ private:
     SecurityToken ChannelSecurityToken;
     mutable std::atomic<uint32_t> SequenceNumber;
     mutable std::atomic<uint32_t> RequestNumber;
-    NodeID AuthenticationToken;
+    ExpandedNodeID AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<std::vector<uint8_t>> ContinuationPoints;
     mutable CallbackMap Callbacks;

@@ -36,7 +36,7 @@ namespace OpcUa
 
   struct CreateSessionRequest
   {
-    NodeID TypeID;
+    ExpandedNodeID TypeID;
     RequestHeader Header;
     SessionParameters Parameters;
 
@@ -46,8 +46,8 @@ namespace OpcUa
 
   struct SessionData
   {
-    NodeID SessionID;
-    NodeID AuthenticationToken;
+    ExpandedNodeID SessionID;
+    ExpandedNodeID AuthenticationToken;
     Duration RevisedSessionTimeout;
     std::vector<uint8_t> ServerNonce;
     CertificateData ServerCertificate;
@@ -61,7 +61,7 @@ namespace OpcUa
 
   struct CreateSessionResponse
   {
-    NodeID TypeID;
+    ExpandedNodeID TypeID;
     ResponseHeader Header;
     SessionData Session;
 
@@ -139,7 +139,7 @@ namespace OpcUa
     CloseSessionResponse();
   };
 
-  NodeID GenerateSessionId();
+  ExpandedNodeID GenerateSessionId();
 
   struct ServiceFaultResponse
   {
