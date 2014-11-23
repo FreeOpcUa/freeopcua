@@ -181,7 +181,7 @@ namespace OpcUa
       CloseSessionResponse response = Server->CloseSession();
       if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
     }
-    Server.reset(); //SecureChannel is not closed until we destroy server object
+    Server.reset(); //FIXME: check if we still need this
   }
 
   uint32_t RemoteClient::GetNamespaceIndex(std::string uri)

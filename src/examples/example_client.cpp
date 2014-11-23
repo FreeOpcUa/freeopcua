@@ -34,9 +34,11 @@ int main(int argc, char** argv)
   {
       //std::string endpoint = "opc.tcp://192.168.56.101:48030";
       std::string endpoint = "opc.tcp://127.0.0.1:4841";
+      //std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
 
       std::cout << "Connecting to: " << endpoint << std::endl;
-      OpcUa::RemoteClient client(endpoint);
+      bool debug = false;
+      OpcUa::RemoteClient client(endpoint, debug);
       client.Connect();
 
       std::cout << "Getting root node: " << endpoint << std::endl;
@@ -60,32 +62,17 @@ int main(int argc, char** argv)
         std::cout << "    "  << d << std::endl;
 
 
-
-      /*
-      std::vector<std::string> nspath ({"Objects", "Server", "NamespaceArray"});
-        OpcUa::Node node = serv.GetChildNode("ServiceLevel");
-        if (nsnode) {
-          std::cout << "ServiceLevel is: " << node << std::endl;
-            OpcUa::Variant ns  = node.ReadValue();
-            for (uint d : ns.Value.Byte) {
-
-                std::cout << "ServiceLevel is: "  << d << std::endl;
-            }
-        }
-      }
-      */
-
       //Subscription
       std::vector<std::string> varpath({"Objects", "2:NewObject", "2:MyVariable"});
+      //std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); //Example data from prosys server
       OpcUa::Node myvar = root.GetChild(varpath);
 
       std::cout << "got node: " << myvar << std::endl;
       SubClient sclt; 
       std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
       uint32_t handle = sub->SubscribeDataChange(myvar);
-      std::cout << "Got sub handle: " << handle << ", sleeping Xs" << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(10));
-
+      std::cout << "Got sub handle: " << handle << ", sleeping 5 sconds" << std::endl;
+      std::this_thread::sleep_for(std::chrono::seconds(5));
 
       std::cout << "Disconnecting" << std::endl;
       client.Disconnect();
