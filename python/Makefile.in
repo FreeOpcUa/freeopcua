@@ -201,11 +201,18 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = \
-  src/module.cpp \
+  src/py_opcua_enums.cpp \
+  src/py_opcua_enums.h \
+  src/py_opcua_helpers.h \
+  src/py_opcua_module.cpp \
+  src/py_opcua_subscriptionclient.cpp \
+  src/py_opcua_subscriptionclient.h \
+  src/py_opcua_variant.h \
   tests/Makefile \
   tests/setup.py \
   tests/test.py \
   tests/test_computer.cpp \
+  tests/test_highlevel.py \
   Makefile.am \
   Makefile.in \
   setup.py
@@ -535,21 +542,22 @@ uninstall-am:
 
 
 all:
-	$(opcua_paths) python setup.py build
+	echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
+	$(opcua_paths) python $(srcdir)/setup.py build
 
 #	$(opcua_paths) $(MAKE) -C tests check
 check:
-	$(TEST_VARS) python ./tests/test_highlevel.py
+	$(TEST_VARS) python $(srcdir)/tests/test_highlevel.py
 
 debug:
-	$(TEST_VARS) cgdb --args python ./tests/test_highlevel.py
+	$(TEST_VARS) cgdb --args python $(srcdir)/tests/test_highlevel.py
 
 clean:
 	$(MAKE) -C tests clean
 	rm -rvf build dist
 
 python-dist:
-	$(opcua_paths) python setup.py bdist
+	$(opcua_paths) python $(srcdir)/setup.py bdist
 
 dist:
 
@@ -557,7 +565,7 @@ distclean: clean
 	rm -vf Makefile
 
 install: python-dist
-	$(opcua_paths)python setup.py install --prefix=$(prefix)
+	$(opcua_paths)python $(srcdir)/setup.py install --prefix=$(prefix)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

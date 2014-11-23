@@ -8,12 +8,16 @@
 # $Date: $
 # $Revision: $
 
+if ENABLE_PYTHON
+SUBDIRS = . python
+endif
 
 #######################################################
 # list of binaries.
 #######################################################
 
 AUTOMAKE_OPTIONS = subdir-objects
+
 
 bin_PROGRAMS = opcuaserver opcua
 lib_LTLIBRARIES = libopcuaprotocol.la libopcuacore.la libopcuaserver.la libopcuaclient.la
@@ -193,7 +197,7 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 ####################################################
 
 
-include/opc/ua/protocol/object_ids.h: NodeIds.csv
+include/opc/ua/protocol/object_ids.h: NodeIds.csv node_ids_gen.py
 	python $(top_srcdir)/node_ids_gen.py > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
 
 binaryinclude_HEADERS = \
@@ -499,4 +503,10 @@ tests/gtest/lib/.libs/libgtest.a:
 distclean-local:
 	$(MAKE) -C $(top_srcdir)/tests/gmock distclean
 	$(MAKE) -C $(top_srcdir)/tests/gtest distclean
+ 
+
+if ENABLE_PYTHON
+python-dist:
+	$(MAKE) -C $(top_srcdir)/python python-dist
+endif
  

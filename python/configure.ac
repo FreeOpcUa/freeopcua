@@ -17,8 +17,19 @@ AM_INIT_AUTOMAKE
 AC_ARG_WITH([opcuaserver],
             [AS_HELP_STRING([--with-opcuaserver=DIR], [defines path to the root directory of installed opcua-server.])],
             [
-              AC_SUBST([OPCUA_SERVER_PATH], ["$with_opcuaserver"])
-              AC_MSG_NOTICE([opcuaserver path: $with_opcuaserver])
+              AS_IF([test "x$with_opcuaserver" == "xyes"],
+                    [
+                     AC_SUBST([OPCUA_SERVER_PATH], ["$srcdir/.."])
+                     AC_MSG_NOTICE([opcuaserver path: $srcdir/..])
+                    ]
+              )
+
+              AS_IF([test "x$with_opcuaserver" != "xyes"],
+                    [
+                     AC_SUBST([OPCUA_SERVER_PATH], ["$with_opcuaserver"])
+                     AC_MSG_NOTICE([opcuaserver path: $with_opcuaserver])
+                    ]
+              )
             ],
             [
               AC_SUBST([OPCUA_SERVER_PATH], ["$prefix"])
