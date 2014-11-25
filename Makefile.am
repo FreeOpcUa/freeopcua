@@ -200,6 +200,9 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 include/opc/ua/protocol/object_ids.h: schema/NodeIds.csv schema/codegen.py
 	python $(top_srcdir)/schema/codegen.py cxx object_ids > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
 
+include/opc/ua/protocol/status_codes.h: schema/StatusCode.csv schema/codegen.py
+	python $(top_srcdir)/schema/codegen.py cxx status_codes > $(top_srcdir)/include/opc/ua/protocol/status_codes.h
+
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
   include/opc/ua/protocol/binary/stream.h

@@ -2,6 +2,7 @@
 EXTRA_DIST = \
   src/py_opcua_enums.cpp \
   src/py_opcua_enums_ObjectID.cpp \
+  src/py_opcua_enums_StatusCode.cpp \
   src/py_opcua_enums.h \
   src/py_opcua_helpers.h \
   src/py_opcua_module.cpp \
@@ -24,8 +25,10 @@ TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell 
 src/py_opcua_enums_ObjectID.cpp: $(OPCUA_SERVER_PATH)/schema/NodeIds.csv
 	python $(OPCUA_SERVER_PATH)/schema/codegen.py py object_ids > $@
 
+src/py_opcua_enums_StatusCode.cpp: $(OPCUA_SERVER_PATH)/schema/StatusCode.csv
+	python $(OPCUA_SERVER_PATH)/schema/codegen.py py status_codes > $@
 
-all:
+all: src/py_opcua_enums_ObjectID.cpp  src/py_opcua_enums_StatusCode.cpp
 	@echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
 	$(opcua_paths) python $(srcdir)/setup.py build
 
@@ -40,7 +43,7 @@ clean:
 	$(MAKE) -C tests clean
 	rm -rvf build dist
 
-python-dist: src/py_opcua_enums_ObjectID.cpp 
+python-dist: src/py_opcua_enums_ObjectID.cpp  src/py_opcua_enums_StatusCode.cpp
 	$(opcua_paths) python $(srcdir)/setup.py bdist
 
 dist:
