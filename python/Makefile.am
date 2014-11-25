@@ -1,6 +1,7 @@
 
 EXTRA_DIST = \
   src/py_opcua_enums.cpp \
+  src/py_opcua_enums_ObjectID.cpp \
   src/py_opcua_enums.h \
   src/py_opcua_helpers.h \
   src/py_opcua_module.cpp \
@@ -20,9 +21,12 @@ opcua_paths = OPCUA_SERVER_PATH=$(OPCUA_SERVER_PATH)
 libraries_path =$(OPCUA_SERVER_PATH)/lib:$(OPCUA_SERVER_PATH)/.libs
 TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find ./build -name \*.so -exec dirname {} + )
 
+src/py_opcua_enums_ObjectID.cpp: $(OPCUA_SERVER_PATH)/schema/NodeIds.csv
+	python $(OPCUA_SERVER_PATH)/schema/codegen.py py object_ids > $@
+
 
 all:
-	echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
+	@echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)
 	$(opcua_paths) python $(srcdir)/setup.py build
 
 #	$(opcua_paths) $(MAKE) -C tests check
@@ -31,13 +35,12 @@ check:
 
 debug:
 	$(TEST_VARS) cgdb --args python $(srcdir)/tests/test_highlevel.py
-	
 
 clean:
 	$(MAKE) -C tests clean
 	rm -rvf build dist
 
-python-dist:
+python-dist: src/py_opcua_enums_ObjectID.cpp 
 	$(opcua_paths) python $(srcdir)/setup.py bdist
 
 dist:
@@ -46,5 +49,5 @@ distclean: clean
 	rm -vf Makefile
 
 install: python-dist
-	$(opcua_paths)python $(srcdir)/setup.py install --prefix=$(prefix)
+	$(opcua_paths) python $(srcdir)/setup.py install --prefix=$(prefix)
 

@@ -455,12 +455,12 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray;
+        node.RequestedNewNodeID = ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray;
         node.BrowseName = QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsArray);
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::Server_ServerDiagnostics;
         node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::SamplingRateDiagnosticsArrayType;
+        node.TypeDefinition = ObjectID::SamplingIntervalDiagnosticsArrayType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray);
         attrs.DisplayName = LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray);
@@ -472,7 +472,7 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
+        AddReference(ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
       }
 
       void ServerDiagnosticsSummary()
@@ -500,7 +500,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::Server_ServerDiagnostics_SessionDiagnosticsSummary;
+        node.RequestedNewNodeID = ObjectID::Server_ServerDiagnostics_SessionsDiagnosticsSummary;
         node.BrowseName = QualifiedName(0, OpcUa::Names::SessionDiagnosticsSummary);
         node.Class = NodeClass::Object;
         node.ParentNodeId = ObjectID::Server_ServerDiagnostics;
@@ -611,7 +611,7 @@ namespace
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::Server_ServerStatus;
         node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::BuildInfoVariableType;
+        node.TypeDefinition = ObjectID::BuildInfo;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(Names::BuildInfo);
         attrs.DisplayName = LocalizedText(Names::BuildInfo);
@@ -1647,7 +1647,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::UnsignedInteger;
+        node.RequestedNewNodeID = ObjectID::UInteger;
         node.BrowseName = QualifiedName(0, Names::UInteger);
         node.Class = NodeClass::DataType;
         node.ParentNodeId = ObjectID::Number;
@@ -1673,7 +1673,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::UInt16;
         node.BrowseName = QualifiedName(0, Names::UInt16);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::UnsignedInteger;
+        node.ParentNodeId = ObjectID::UInteger;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -1691,7 +1691,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::UInt32;
         node.BrowseName = QualifiedName(0, Names::UInt32);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::UnsignedInteger;
+        node.ParentNodeId = ObjectID::UInteger;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -1709,7 +1709,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::UInt64;
         node.BrowseName = QualifiedName(0, Names::UInt64);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::UnsignedInteger;
+        node.ParentNodeId = ObjectID::UInteger;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -1727,7 +1727,7 @@ namespace
         node.RequestedNewNodeID = ObjectID::Byte;
         node.BrowseName = QualifiedName(0, Names::Byte);
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ObjectID::UnsignedInteger;
+        node.ParentNodeId = ObjectID::UInteger;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         node.TypeDefinition = ObjectID::Null;
         DataTypeAttributes attrs;
@@ -2055,7 +2055,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::SamplingRateDiagnosticsDataType;
+        node.RequestedNewNodeID = ObjectID::SamplingIntervalDiagnosticsDataType;
         node.BrowseName = QualifiedName(0, Names::SamplingIntervalDiagnosticsDataType);
         node.Class = NodeClass::DataType;
         node.ParentNodeId = ObjectID::Structure;
@@ -2754,7 +2754,7 @@ namespace
         DataTypeEncodingType();
         DataTypeSystemType();
         FolderType();
-        HistoricalEventConfigurationType();
+        //HistoricalEventConfigurationType();
         ModellingRuleType();
         ServerCapabilitiesType();
         ServerDiagnosticsType();
@@ -2821,23 +2821,23 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void HistoricalEventConfigurationType()
-      {
-        // Attributes
-        AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::HistoricalEventConfigurationType;
-        node.BrowseName = QualifiedName(0, OpcUa::Names::HistoricalEventConfigurationType);
-        node.Class = NodeClass::ObjectType;
-        node.ParentNodeId = ObjectID::BaseObjectType;
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
-        node.TypeDefinition = ObjectID::Null;
-        ObjectTypeAttributes attrs;
-        attrs.Description = LocalizedText(OpcUa::Names::HistoricalEventConfigurationType);
-        attrs.DisplayName = LocalizedText(OpcUa::Names::HistoricalEventConfigurationType);
-        attrs.IsAbstract = false;
-        node.Attributes = attrs;
-        Registry.AddNodes(std::vector<AddNodesItem>{node});
-      }
+//      void HistoricalEventConfigurationType()
+//      {
+//        // Attributes
+//        AddNodesItem node;
+//        node.RequestedNewNodeID = ObjectID::HistoricalEventConfigurationType;
+//        node.BrowseName = QualifiedName(0, OpcUa::Names::HistoricalEventConfigurationType);
+//        node.Class = NodeClass::ObjectType;
+//        node.ParentNodeId = ObjectID::BaseObjectType;
+//        node.ReferenceTypeId = ReferenceID::HasSubtype;
+//        node.TypeDefinition = ObjectID::Null;
+//        ObjectTypeAttributes attrs;
+//        attrs.Description = LocalizedText(OpcUa::Names::HistoricalEventConfigurationType);
+//        attrs.DisplayName = LocalizedText(OpcUa::Names::HistoricalEventConfigurationType);
+//        attrs.IsAbstract = false;
+//        node.Attributes = attrs;
+//        Registry.AddNodes(std::vector<AddNodesItem>{node});
+//      }
 
       void ModellingRuleType()
       {
@@ -3136,12 +3136,12 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray;
+        node.RequestedNewNodeID = ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray;
         node.BrowseName = QualifiedName(0, OpcUa::Names::SamplingIntervalDiagnosticsArray);
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::ServerDiagnosticsType;
         node.ReferenceTypeId = ReferenceID::HasProperty;
-        node.TypeDefinition = ObjectID::SamplingRateDiagnosticsArrayType;
+        node.TypeDefinition = ObjectID::SamplingIntervalDiagnosticsArrayType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray);
         attrs.DisplayName = LocalizedText(OpcUa::Names::SamplingIntervalDiagnosticsArray);
@@ -3153,7 +3153,7 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
+        AddReference(ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
       }
 
       void ServerTypeServerDiagnosticsSummary()
@@ -3184,7 +3184,7 @@ namespace
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::ServerDiagnosticsType_SessionDiagnosticsSummary;
+        node.RequestedNewNodeID = ObjectID::ServerDiagnosticsType_SessionsDiagnosticsSummary;
         node.BrowseName = QualifiedName(0, OpcUa::Names::SessionDiagnosticsSummary);
         node.Class = NodeClass::Object;
         node.ParentNodeId = ObjectID::ServerDiagnosticsType;
@@ -3197,7 +3197,7 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
         // References
-        AddReference(ObjectID::ServerDiagnosticsType_SessionDiagnosticsSummary, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
+        AddReference(ObjectID::ServerDiagnosticsType_SessionsDiagnosticsSummary, forward, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory, NodeClass::DataType);
       }
 
       void ServerTypeSubscriptionDiagnosticsArray()
@@ -3453,7 +3453,7 @@ namespace
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::ServerStatusType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::BuildInfoVariableType;
+        node.TypeDefinition = ObjectID::BuildInfoType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(Names::BuildInfo);
         attrs.DisplayName = LocalizedText(Names::BuildInfo);
@@ -3465,18 +3465,18 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableType()
+      void BuildInfoType()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType;
-        node.BrowseName = QualifiedName(0, Names::BuildInfoVariableType);
+        node.RequestedNewNodeID = ObjectID::BuildInfoType;
+        node.BrowseName = QualifiedName(0, Names::BuildInfoType);
         node.Class = NodeClass::VariableType;
         node.ParentNodeId = ObjectID::BaseDataVariableType;
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         VariableTypeAttributes attrs;
-        attrs.Description = LocalizedText(Names::BuildInfoVariableType);
-        attrs.DisplayName = LocalizedText(Names::BuildInfoVariableType);
+        attrs.Description = LocalizedText(Names::BuildInfoType);
+        attrs.DisplayName = LocalizedText(Names::BuildInfoType);
         attrs.Type = ObjectID::DateTime;
         attrs.Value = OpcUa::CurrentDateTime(); // TODO
         attrs.Dimensions = {};
@@ -3484,22 +3484,22 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        BuildInfoVariableTypeBuildDate();
-        BuildInfoVariableTypeBuildNumber();
-        BuildInfoVariableTypeManufacturerName();
-        BuildInfoVariableTypeProductName();
-        BuildInfoVariableTypeProductURI();
-        BuildInfoVariableTypeSoftwareVersion();
+        BuildInfoTypeBuildDate();
+        BuildInfoTypeBuildNumber();
+        BuildInfoTypeManufacturerName();
+        BuildInfoTypeProductName();
+        BuildInfoTypeProductURI();
+        BuildInfoTypeSoftwareVersion();
       }
 
-      void BuildInfoVariableTypeBuildDate()
+      void BuildInfoTypeBuildDate()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_BuildDate;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_BuildDate;
         node.BrowseName = QualifiedName(0, Names::BuildDate);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -3513,14 +3513,14 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableTypeBuildNumber()
+      void BuildInfoTypeBuildNumber()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_BuildNumber;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_BuildNumber;
         node.BrowseName = QualifiedName(0, Names::BuildNumber);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -3534,14 +3534,14 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableTypeManufacturerName()
+      void BuildInfoTypeManufacturerName()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_ManufacturerName;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_ManufacturerName;
         node.BrowseName = QualifiedName(0, Names::ManufacturerName);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -3555,14 +3555,14 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableTypeProductName()
+      void BuildInfoTypeProductName()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_ProductName;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_ProductName;
         node.BrowseName = QualifiedName(0, Names::ProductName);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -3576,14 +3576,14 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableTypeProductURI()
+      void BuildInfoTypeProductURI()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_ProductUri;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_ProductUri;
         node.BrowseName = QualifiedName(0, Names::ProductURI);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -3597,14 +3597,14 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void BuildInfoVariableTypeSoftwareVersion()
+      void BuildInfoTypeSoftwareVersion()
       {
         // Attributes
         AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::BuildInfoVariableType_SoftwareVersion;
+        node.RequestedNewNodeID = ObjectID::BuildInfoType_SoftwareVersion;
         node.BrowseName = QualifiedName(0, Names::SoftwareVersion);
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ObjectID::BuildInfoVariableType;
+        node.ParentNodeId = ObjectID::BuildInfoType;
         node.ReferenceTypeId = ReferenceID::HasComponent;
         node.TypeDefinition = ObjectID::BaseDataVariableType;
         VariableAttributes attrs;
@@ -4168,7 +4168,7 @@ namespace
         HasDescription();
         HasEffect();
         HasEncoding();
-        HasModelParent();
+        //HasModelParent();
         HasModellingRule();
         HasTypeDefinition();
         ToState();
@@ -4314,25 +4314,25 @@ namespace
         Registry.AddNodes(std::vector<AddNodesItem>{node});
       }
 
-      void HasModelParent()
-      {
-        // Attributes
-        AddNodesItem node;
-        node.RequestedNewNodeID = ObjectID::HasModelParent;
-        node.BrowseName = QualifiedName(0, OpcUa::Names::HasModelParent);
-        node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ObjectID::NonHierarchicalReferences;
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
-        node.TypeDefinition = ObjectID::Null;
-        ReferenceTypeAttributes attrs;
-        attrs.Description = LocalizedText(OpcUa::Names::HasModelParent);
-        attrs.DisplayName = LocalizedText(OpcUa::Names::HasModelParent);
-        attrs.InverseName = LocalizedText("ModelParentOf");
-        attrs.IsAbstract = false;
-        attrs.Symmetric = false;
-        node.Attributes = attrs;
-        Registry.AddNodes(std::vector<AddNodesItem>{node});
-      }
+//      void HasModelParent()
+//      {
+//        // Attributes
+//        AddNodesItem node;
+//        node.RequestedNewNodeID = ObjectID::HasModelParent;
+//        node.BrowseName = QualifiedName(0, OpcUa::Names::HasModelParent);
+//        node.Class = NodeClass::ReferenceType;
+//        node.ParentNodeId = ObjectID::NonHierarchicalReferences;
+//        node.ReferenceTypeId = ReferenceID::HasSubtype;
+//        node.TypeDefinition = ObjectID::Null;
+//        ReferenceTypeAttributes attrs;
+//        attrs.Description = LocalizedText(OpcUa::Names::HasModelParent);
+//        attrs.DisplayName = LocalizedText(OpcUa::Names::HasModelParent);
+//        attrs.InverseName = LocalizedText("ModelParentOf");
+//        attrs.IsAbstract = false;
+//        attrs.Symmetric = false;
+//        node.Attributes = attrs;
+//        Registry.AddNodes(std::vector<AddNodesItem>{node});
+//      }
 
       void HasModellingRule()
       {
@@ -4455,7 +4455,7 @@ namespace
         node.Attributes = attrs;
         Registry.AddNodes(std::vector<AddNodesItem>{node});
 
-        BuildInfoVariableType();
+        BuildInfoType();
         DataTypeDescriptionType();
         DataTypeDictionaryType();
         SamplingIntervalDiagnosticsArrayType();
@@ -4504,12 +4504,12 @@ namespace
 
       void SamplingIntervalDiagnosticsArrayType()
       {
-        AddVariableType(ObjectID::SamplingRateDiagnosticsArrayType, OpcUa::Names::SamplingIntervalDiagnosticsArrayType, ObjectID::BaseDataVariableType);
+        AddVariableType(ObjectID::SamplingIntervalDiagnosticsArrayType, OpcUa::Names::SamplingIntervalDiagnosticsArrayType, ObjectID::BaseDataVariableType);
       }
 
       void SamplingIntervalDiagnosticsType()
       {
-        AddVariableType(ObjectID::SamplingRateDiagnosticsType, OpcUa::Names::SamplingIntervalDiagnosticsType, ObjectID::BaseDataVariableType);
+        AddVariableType(ObjectID::SamplingIntervalDiagnosticsType, OpcUa::Names::SamplingIntervalDiagnosticsType, ObjectID::BaseDataVariableType);
       }
 
       void ServerDiagnosticsSummaryType()
