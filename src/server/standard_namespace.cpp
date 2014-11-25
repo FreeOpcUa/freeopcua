@@ -611,7 +611,7 @@ namespace
         node.Class = NodeClass::Variable;
         node.ParentNodeId = ObjectID::Server_ServerStatus;
         node.ReferenceTypeId = ReferenceID::HasComponent;
-        node.TypeDefinition = ObjectID::BuildInfo;
+        node.TypeDefinition = ObjectID::BuildInfoType;
         VariableAttributes attrs;
         attrs.Description = LocalizedText(Names::BuildInfo);
         attrs.DisplayName = LocalizedText(Names::BuildInfo);

@@ -404,8 +404,8 @@ TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::ServerDiagnosticsType));
 
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty, ObjectID::Server_ServerDiagnostics_EnabledFlag));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_SessionDiagnosticsSummary));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_SessionsDiagnosticsSummary));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_ServerDiagnosticsSummary));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerDiagnostics_SubscriptionDiagnosticsArray));
 
@@ -421,21 +421,21 @@ TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_EnabledFlag)
   ExpectHasVariableAttributes(ObjectID::Server_ServerDiagnostics_EnabledFlag);
 }
 
-TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_SamplingRateDiagnosticsArray)
+TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SamplingRateDiagnosticsArrayType));
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray);
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SamplingIntervalDiagnosticsArrayType));
 
-  ExpectHasBaseAttributes(ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray);
-  ExpectHasVariableAttributes(ObjectID::Server_ServerDiagnostics_SamplingRateDiagnosticsArray);
+  ExpectHasBaseAttributes(ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray);
+  ExpectHasVariableAttributes(ObjectID::Server_ServerDiagnostics_SamplingIntervalDiagnosticsArray);
 }
 
-TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_SessionDiagnosticsSummary)
+TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_SessionsDiagnosticsSummary)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Server_ServerDiagnostics_SessionDiagnosticsSummary);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::Server_ServerDiagnostics_SessionsDiagnosticsSummary);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SessionsDiagnosticsSummaryType));
 
-  ExpectHasBaseAttributes(ObjectID::Server_ServerDiagnostics_SessionDiagnosticsSummary);
+  ExpectHasBaseAttributes(ObjectID::Server_ServerDiagnostics_SessionsDiagnosticsSummary);
 }
 
 TEST_F(StandardNamespaceStructure, Server_ServerDiagnostics_ServerDiagnosticsSummary)
@@ -483,7 +483,7 @@ TEST_F(StandardNamespaceStructure, Server_ServerStatus)
 TEST_F(StandardNamespaceStructure, Server_BuildInfo)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::Server_ServerStatus_BuildInfo);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BuildInfoVariableType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BuildInfoType));
 
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerStatus_BuildInfo_BuildDate));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::Server_ServerStatus_BuildInfo_BuildNumber));
@@ -842,7 +842,7 @@ TEST_F(StandardNamespaceStructure, Number)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Double));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Float));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Integer));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UnsignedInteger));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInteger));
 
   ExpectHasBaseAttributes(ObjectID::Number);
   ExpectHasTypeAttributes(ObjectID::Number);
@@ -927,15 +927,15 @@ TEST_F(StandardNamespaceStructure, SByte)
 
 TEST_F(StandardNamespaceStructure, UInteger)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UnsignedInteger);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::UInteger);
   EXPECT_EQ(SizeOf(refs), 4);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt16));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt32));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::UInt64));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Byte));
 
-  ExpectHasBaseAttributes(ObjectID::UnsignedInteger);
-  ExpectHasTypeAttributes(ObjectID::UnsignedInteger);
+  ExpectHasBaseAttributes(ObjectID::UInteger);
+  ExpectHasTypeAttributes(ObjectID::UInteger);
 }
 
 TEST_F(StandardNamespaceStructure, UInt16)
@@ -1035,7 +1035,7 @@ TEST_F(StandardNamespaceStructure, Structure)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::EUInformation));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ModelChangeStructureDataType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Range));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingRateDiagnosticsDataType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsDataType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SemanticChangeStructureDataType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsSummaryDataType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerStatusDataType));
@@ -1143,11 +1143,11 @@ TEST_F(StandardNamespaceStructure, StructureRange)
 
 TEST_F(StandardNamespaceStructure, StructureSamplingIntervalDiagnosticsDataType)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingRateDiagnosticsDataType);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingIntervalDiagnosticsDataType);
   EXPECT_EQ(SizeOf(refs), 0);
 
-  ExpectHasBaseAttributes(ObjectID::SamplingRateDiagnosticsDataType);
-  ExpectHasTypeAttributes(ObjectID::SamplingRateDiagnosticsDataType);
+  ExpectHasBaseAttributes(ObjectID::SamplingIntervalDiagnosticsDataType);
+  ExpectHasTypeAttributes(ObjectID::SamplingIntervalDiagnosticsDataType);
 }
 
 TEST_F(StandardNamespaceStructure, StructureSemanticChangeStructureDataType)
@@ -1450,12 +1450,12 @@ TEST_F(StandardNamespaceStructure, ObjectTypes)
 TEST_F(StandardNamespaceStructure, BaseObjectType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::BaseObjectType);
-  EXPECT_EQ(SizeOf(refs), 15);
+  EXPECT_EQ(SizeOf(refs), 15-1); // XXX
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::BaseEventType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::DataTypeEncodingType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::DataTypeSystemType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::FolderType));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HistoricalEventConfigurationType));
+  //EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HistoricalEventConfigurationType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ModellingRuleType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerCapabilitiesType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsType));
@@ -1498,14 +1498,14 @@ TEST_F(StandardNamespaceStructure, FolderType)
   ExpectHasTypeAttributes(ObjectID::FolderType);
 }
 
-TEST_F(StandardNamespaceStructure, HistoricalEventConfigurationType)
-{
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HistoricalEventConfigurationType);
-  EXPECT_EQ(SizeOf(refs), 0);
-
-  ExpectHasBaseAttributes(ObjectID::HistoricalEventConfigurationType);
-  ExpectHasTypeAttributes(ObjectID::HistoricalEventConfigurationType);
-}
+//TEST_F(StandardNamespaceStructure, HistoricalEventConfigurationType)
+//{
+//  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HistoricalEventConfigurationType);
+//  EXPECT_EQ(SizeOf(refs), 0);
+//
+//  ExpectHasBaseAttributes(ObjectID::HistoricalEventConfigurationType);
+//  ExpectHasTypeAttributes(ObjectID::HistoricalEventConfigurationType);
+//}
 
 TEST_F(StandardNamespaceStructure, ModellingRuleType)
 {
@@ -1614,8 +1614,8 @@ TEST_F(StandardNamespaceStructure, ServerDiagnosticsType)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerDiagnosticsType_EnabledFlag));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerDiagnosticsType_ServerDiagnosticsSummary));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerDiagnosticsType_SubscriptionDiagnosticsArray));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerDiagnosticsType_SessionDiagnosticsSummary));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasProperty,  ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent, ObjectID::ServerDiagnosticsType_SessionsDiagnosticsSummary));
 
   ExpectHasBaseAttributes(ObjectID::ServerDiagnosticsType);
   ExpectHasTypeAttributes(ObjectID::ServerDiagnosticsType);
@@ -1634,13 +1634,13 @@ TEST_F(StandardNamespaceStructure, EnableFlag)
 
 TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsArray)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray);
   EXPECT_EQ(SizeOf(refs), 2);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SamplingRateDiagnosticsArrayType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SamplingIntervalDiagnosticsArrayType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory));
 
-  ExpectHasBaseAttributes(ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray);
-  ExpectHasVariableAttributes(ObjectID::ServerDiagnosticsType_SamplingRateDiagnosticsArray);
+  ExpectHasBaseAttributes(ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray);
+  ExpectHasVariableAttributes(ObjectID::ServerDiagnosticsType_SamplingIntervalDiagnosticsArray);
 }
 
 TEST_F(StandardNamespaceStructure, ServerDiagnosticsSummary)
@@ -1656,7 +1656,7 @@ TEST_F(StandardNamespaceStructure, ServerDiagnosticsSummary)
 
 TEST_F(StandardNamespaceStructure, SessionDiagnosticsSummary)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerDiagnosticsType_SessionDiagnosticsSummary);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::ServerDiagnosticsType_SessionsDiagnosticsSummary);
   EXPECT_EQ(SizeOf(refs), 2);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::SessionsDiagnosticsSummaryType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasModellingRule, ObjectID::ModellingRule_Mandatory));
@@ -1775,79 +1775,79 @@ TEST_F(StandardNamespaceStructure, ServerStatus)
   ExpectHasVariableAttributes(ObjectID::ServerType_ServerStatus);
 }
 
-TEST_F(StandardNamespaceStructure, BuildInfoVariableType)
+TEST_F(StandardNamespaceStructure, BuildInfoType)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType);
   EXPECT_EQ(SizeOf(refs), 6);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_BuildDate));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_BuildNumber));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_ManufacturerName));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_ProductName));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_ProductUri));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoVariableType_SoftwareVersion));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_BuildDate));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_BuildNumber));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_ManufacturerName));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_ProductName));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_ProductUri));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasComponent,      ObjectID::BuildInfoType_SoftwareVersion));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType);
-  ExpectHasVariableTypeAttributes(ObjectID::BuildInfoVariableType);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType);
+  ExpectHasVariableTypeAttributes(ObjectID::BuildInfoType);
 }
 
 TEST_F(StandardNamespaceStructure, BuildDate)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_BuildDate);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_BuildDate);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_BuildDate);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_BuildDate);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_BuildDate);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_BuildDate);
 }
 
 TEST_F(StandardNamespaceStructure, BuildNumber)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_BuildNumber);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_BuildNumber);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_BuildNumber);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_BuildNumber);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_BuildNumber);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_BuildNumber);
 }
 
 TEST_F(StandardNamespaceStructure, ManufacturerName)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_ManufacturerName);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_ManufacturerName);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_ManufacturerName);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_ManufacturerName);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_ManufacturerName);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_ManufacturerName);
 }
 
 TEST_F(StandardNamespaceStructure, ProductName)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_ProductName);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_ProductName);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_ProductName);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_ProductName);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_ProductName);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_ProductName);
 }
 
 TEST_F(StandardNamespaceStructure, ProductURI)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_ProductUri);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_ProductUri);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_ProductUri);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_ProductUri);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_ProductUri);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_ProductUri);
 }
 
 TEST_F(StandardNamespaceStructure, SoftwareVersion)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoVariableType_SoftwareVersion);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::BuildInfoType_SoftwareVersion);
   EXPECT_EQ(SizeOf(refs), 1);
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasTypeDefinition, ObjectID::BaseDataVariableType));
 
-  ExpectHasBaseAttributes(ObjectID::BuildInfoVariableType_SoftwareVersion);
-  ExpectHasVariableAttributes(ObjectID::BuildInfoVariableType_SoftwareVersion);
+  ExpectHasBaseAttributes(ObjectID::BuildInfoType_SoftwareVersion);
+  ExpectHasVariableAttributes(ObjectID::BuildInfoType_SoftwareVersion);
 }
 
 TEST_F(StandardNamespaceStructure, CurrentTime)
@@ -2091,14 +2091,14 @@ TEST_F(StandardNamespaceStructure, Organizes)
 TEST_F(StandardNamespaceStructure, NonHierarchicalReferences)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::NonHierarchicalReferences);
-  EXPECT_EQ(SizeOf(refs), 10);
+  EXPECT_EQ(SizeOf(refs), 10-1); // XXX
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::FromState));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::GeneratesEvent));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasCause));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasDescription));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasEffect));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasEncoding));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasModelParent));
+  //EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasModelParent));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasModellingRule));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasTypeDefinition));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ToState));
@@ -2161,14 +2161,14 @@ TEST_F(StandardNamespaceStructure, HasEncoding)
   EXPECT_TRUE(HasAttribute(ObjectID::HasEncoding, AttributeID::INVERSE_NAME));
 }
 
-TEST_F(StandardNamespaceStructure, HasModelParent)
-{
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasModelParent);
-  EXPECT_EQ(SizeOf(refs), 0);
-
-  ExpectHasReferenceTypeAttributes(ObjectID::HasModelParent);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasModelParent, AttributeID::INVERSE_NAME));
-}
+//TEST_F(StandardNamespaceStructure, HasModelParent)
+//{
+//  const std::vector<ReferenceDescription> refs = Browse(ObjectID::HasModelParent);
+//  EXPECT_EQ(SizeOf(refs), 0);
+//
+//  ExpectHasReferenceTypeAttributes(ObjectID::HasModelParent);
+//  EXPECT_TRUE(HasAttribute(ObjectID::HasModelParent, AttributeID::INVERSE_NAME));
+//}
 
 TEST_F(StandardNamespaceStructure, HasModellingRule)
 {
@@ -2222,11 +2222,11 @@ TEST_F(StandardNamespaceStructure, BaseDataVariableType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectID::BaseDataVariableType);
   EXPECT_EQ(SizeOf(refs), 14);
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::BuildInfoVariableType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::BuildInfoType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::DataTypeDescriptionType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::DataTypeDictionaryType));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingRateDiagnosticsArrayType));
-  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingRateDiagnosticsType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsArrayType));
+  EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::SamplingIntervalDiagnosticsType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerDiagnosticsSummaryType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerStatusType));
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ServerVendorCapabilityType));
@@ -2261,20 +2261,20 @@ TEST_F(StandardNamespaceStructure, DataTypeDictionaryType)
 
 TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsArrayType)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingRateDiagnosticsArrayType);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingIntervalDiagnosticsArrayType);
   EXPECT_EQ(SizeOf(refs), 0);
 
-  ExpectHasBaseAttributes(ObjectID::SamplingRateDiagnosticsArrayType);
-  ExpectHasVariableTypeAttributes(ObjectID::SamplingRateDiagnosticsArrayType);
+  ExpectHasBaseAttributes(ObjectID::SamplingIntervalDiagnosticsArrayType);
+  ExpectHasVariableTypeAttributes(ObjectID::SamplingIntervalDiagnosticsArrayType);
 }
 
 TEST_F(StandardNamespaceStructure, SamplingIntervalDiagnosticsType)
 {
-  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingRateDiagnosticsType);
+  const std::vector<ReferenceDescription> refs = Browse(ObjectID::SamplingIntervalDiagnosticsType);
   EXPECT_EQ(SizeOf(refs), 0);
 
-  ExpectHasBaseAttributes(ObjectID::SamplingRateDiagnosticsType);
-  ExpectHasVariableTypeAttributes(ObjectID::SamplingRateDiagnosticsType);
+  ExpectHasBaseAttributes(ObjectID::SamplingIntervalDiagnosticsType);
+  ExpectHasVariableTypeAttributes(ObjectID::SamplingIntervalDiagnosticsType);
 }
 
 TEST_F(StandardNamespaceStructure, ServerDiagnosticsSummaryDataType)

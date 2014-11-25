@@ -254,7 +254,7 @@ OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
   return element;
 }
 
-TEST_F(ModelObject, CanAccessVaraibleByBrowsePath)
+TEST_F(ModelObject, CanAccessVariableByBrowsePath)
 {
   OpcUa::Model::Server server(Services);
   OpcUa::Model::Object serverObject = server.GetObject(OpcUa::ObjectID::Server);
@@ -267,7 +267,7 @@ TEST_F(ModelObject, CanAccessVaraibleByBrowsePath)
   EXPECT_EQ(buildNumber.GetBrowseName(), OpcUa::QualifiedName(OpcUa::Names::BuildNumber));
 }
 
-TEST_F(ModelObject, CanAccessVaraibleByQualifiedName)
+TEST_F(ModelObject, CanAccessVariableByQualifiedName)
 {
   OpcUa::Model::Server server(Services);
   OpcUa::Model::Object rootObject = server.RootObject();
