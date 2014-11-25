@@ -46,5 +46,5 @@ distclean: clean
 	rm -vf Makefile
 
 install: python-dist
-	$(opcua_paths)python $(srcdir)/setup.py install --prefix=$(prefix)
+	$(opcua_paths) python $(srcdir)/setup.py install --prefix=$(prefix)
 
