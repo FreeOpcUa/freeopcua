@@ -27,14 +27,14 @@ CODEGENS += src/py_opcua_enums_ObjectID.cpp
 CODEGENS += src/py_opcua_enums_StatusCode.cpp
 CODEGENS += src/py_opcua_enums_AttributeID.cpp
 
-src/py_opcua_enums_ObjectID.cpp: $(OPCUA_SERVER_PATH)/schema/NodeIds.csv
-	python $(OPCUA_SERVER_PATH)/schema/codegen.py py object_ids > $@
+src/py_opcua_enums_ObjectID.cpp: $(OPCUA_SERVER_PATH)/schemas/NodeIds.csv
+	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py object_ids > $@
 
-src/py_opcua_enums_StatusCode.cpp: $(OPCUA_SERVER_PATH)/schema/StatusCode.csv
-	python $(OPCUA_SERVER_PATH)/schema/codegen.py py status_codes > $@
+src/py_opcua_enums_StatusCode.cpp: $(OPCUA_SERVER_PATH)/schemas/StatusCode.csv
+	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py status_codes > $@
 
-src/py_opcua_enums_AttributeID.cpp: $(OPCUA_SERVER_PATH)/schema/AttributeIds.csv
-	python $(OPCUA_SERVER_PATH)/schema/codegen.py py attribute_ids > $@
+src/py_opcua_enums_AttributeID.cpp: $(OPCUA_SERVER_PATH)/schemas/AttributeIds.csv
+	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py attribute_ids > $@
 
 all: ${CODEGENS}
 	@echo OPCUASERVER_ROOT=$(OPCUASERVER_ROOT)

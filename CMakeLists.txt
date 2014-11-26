@@ -262,6 +262,7 @@ if (BUILD_CLIENT)
     add_executable(opcua_client
     src/client/opcua_main.cpp
     src/client/opcua_options.cpp
+    src/client/opcua_options_attribute_ids.h
     src/client/opcua_options.h
     )
     

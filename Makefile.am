@@ -197,17 +197,20 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 ####################################################
 
 
-include/opc/ua/protocol/object_ids.h: schema/NodeIds.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx object_ids > $@
+include/opc/ua/protocol/object_ids.h: schemas/NodeIds.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx object_ids > $@
 
-include/opc/ua/protocol/status_codes.h: schema/StatusCode.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx status_codes > $@
+include/opc/ua/protocol/status_codes.h: schemas/StatusCode.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx status_codes > $@
 
-src/protocol/string_utils_statuscode_tostring.cpp: schema/StatusCode.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx status_codes_tostring > $@
+src/protocol/string_utils_statuscode_tostring.cpp: schemas/StatusCode.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx status_codes_tostring > $@
 
-include/opc/ua/protocol/attribute_ids.h: schema/AttributeIds.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx attribute_ids > $@
+include/opc/ua/protocol/attribute_ids.h: schemas/AttributeIds.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx attribute_ids > $@
+
+src/client/opcua_options_attribute_ids.h: schemas/AttributeIds.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx attribute_ids_getoptionvalue > $@
 
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
@@ -423,6 +426,7 @@ libopcuaclient_la_LDFLAGS = -ldl -lpthread -lxml2
 opcua_SOURCES = \
   src/client/opcua_main.cpp \
   src/client/opcua_options.cpp \
+	src/client/opcua_options_attribute_ids.h \
   src/client/opcua_options.h
 
 opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCONFIG_PATH=\"$(sysconfdir)/opcua/client\"

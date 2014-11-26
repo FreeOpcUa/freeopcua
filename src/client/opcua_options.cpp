@@ -56,79 +56,14 @@ namespace
   const char* OPTION_VALUE_FLOAT = "value-float";
   const char* OPTION_VALUE_DOUBLE = "value-double";
   const char* OPTION_VALUE_STRING = "value-string";
+  
+  // codegen
+  #include "opcua_options_attribute_ids.h"
 
   NodeID GetNodeIDOptionValue(const po::variables_map& vm)
   {
     const std::string& value = vm[OPTION_NODE_ID].as<std::string>();
     return OpcUa::ToNodeID(value);
-  }
-
-  AttributeID GetAttributeIDOptionValue(const po::variables_map& vm) // TODO: codegen
-  {
-    const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
-    if (name == "node id")
-    {
-      return AttributeID::NodeId;
-    }
-    if (name == "node class")
-    {
-      return AttributeID::NodeClass;
-    }
-    if (name == "browse name")
-    {
-      return AttributeID::BrowseName;
-    }
-    if (name == "display name")
-    {
-      return AttributeID::DisplayName;
-    }
-    if (name == "description")
-    {
-      return AttributeID::Description;
-    }
-    if (name == "write mask")
-    {
-      return AttributeID::WriteMask;
-    }
-    if (name == "user write mask")
-    {
-      return AttributeID::UserWriteMask;
-    }
-    if (name == "is abstract")
-    {
-      return AttributeID::IsAbstract;
-    }
-    if (name == "symmetric")
-    {
-      return AttributeID::Symmetric;
-    }
-    if (name == "inverse name")
-    {
-      return AttributeID::InverseName;
-    }
-    if (name == "value")
-    {
-      return AttributeID::Value;
-    }
-    if (name == "data type")
-    {
-      return AttributeID::DataType;
-    }
-
-/*
-    CONTAINS_NO_LOOPS = 11,
-    EVENT_NOTIFIER = 12,
-    DATA_TYPE = 14,
-    VALUE_RANK = 15,
-    ARRAY_DIMENSIONS = 16,
-    ACCESS_LEVEL = 17,
-    USER_ACCESS_LEVEL = 18,
-    MINIMUM_SAMPLING_INTERVAL = 19,
-    HISTORIZING = 20,
-    EXECUTABLE = 21,
-    USER_EXECUTABLE = 22
-*/
-    throw std::logic_error(std::string("Unknown attribute: ") + name);
   }
 
   Variant GetOptionValue(const po::variables_map& vm)
