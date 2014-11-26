@@ -101,7 +101,7 @@ class Unit(unittest.TestCase):
     def test_attribute_valueid(self):
         avid=opcua.AttributeValueID()
         self.assertEqual(avid.node,opcua.NodeID())
-        self.assertEqual(avid.attribute,opcua.AttributeID.VALUE)
+        self.assertEqual(avid.attribute,opcua.AttributeID.Value)
         self.assertEqual(avid.index_range,'')
         self.assertEqual(avid.data_encoding,opcua.QualifiedName())
 

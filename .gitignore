@@ -2,6 +2,7 @@
 
 # C extensions
 *.so
+*.o
 
 # Packages
 autom4te.cache/
@@ -17,11 +18,16 @@ eggs
 .installed.cfg
 lib
 lib64
+.libs/
 Makefile
 parts
 __pycache__
 sdist
 var
+*.lo
+*.dirstamp
+*.deps/
+m4/
 
 # Installer logs
 pip-log.txt

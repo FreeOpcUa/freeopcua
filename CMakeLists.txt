@@ -100,7 +100,7 @@ add_subdirectory(tests/gtest)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/node_ids_gen.py > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schema/codegen.py cxx object_ids > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv)
 
 add_library(libopcuaprotocol STATIC
@@ -122,6 +122,7 @@ add_library(libopcuaprotocol STATIC
   src/protocol/session.cpp
   src/protocol/status_codes.cpp
   src/protocol/string_utils.cpp
+  src/protocol/string_utils_statuscode_tostring.cpp
   src/protocol/subscriptions.cpp
 )
 
@@ -261,6 +262,7 @@ if (BUILD_CLIENT)
     add_executable(opcua_client
     src/client/opcua_main.cpp
     src/client/opcua_options.cpp
+    src/client/opcua_options_attribute_ids.h
     src/client/opcua_options.h
     )
     

@@ -34,7 +34,7 @@ see examples in src/examples folder or the examples in python directory
 
 ##Installation
 
-An environment supporting c++11 i snecessary: gcc-4.8+, clang 3.4
+An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4.
 On windows you need VS2013, cmake, boost and libxml2
 
 

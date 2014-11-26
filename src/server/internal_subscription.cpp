@@ -189,7 +189,7 @@ namespace OpcUa
       CreateMonitoredItemsResult result;
       uint32_t callbackHandle = 0;
       result.MonitoredItemID = ++LastMonitoredItemID;
-      if (request.ItemToMonitor.Attribute == AttributeID::EVENT_NOTIFIER )
+      if (request.ItemToMonitor.Attribute == AttributeID::EventNotifier )
       {
         if (Debug) std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl;
         //client want to subscribe to events

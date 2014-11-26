@@ -32,7 +32,7 @@ namespace OpcUa
     const char Boolean[]         = "Boolean";
     const char BuildDate[]       = "BuildDate";
     const char BuildInfo[]       = "BuildInfo";
-    const char BuildInfoVariableType[] = "BuildInfoVariableType";
+    const char BuildInfoType[] = "BuildInfoType";
     const char BuildNumber[]     = "BuildNumber";
     const char Byte[]            = "Byte";
     const char ByteString[]      = "ByteString";

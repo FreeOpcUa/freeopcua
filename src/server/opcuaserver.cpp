@@ -181,7 +181,7 @@ namespace OpcUa
     DataValue dval(notifierval);
     dval.SetSourceTimestamp(CurrentDateTime());
 
-    server.SetAttribute(AttributeID::EVENT_NOTIFIER, dval);
+    server.SetAttribute(AttributeID::EventNotifier, dval);
   }
 
   std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)

@@ -30,7 +30,7 @@ namespace OpcUa
   std::string ToString(const Guid& guid);
   std::string ToString(const DateTime& t);
   std::string ToString(const BrowseDirection& direction);
-  std::string ToString(StatusCode code);
+  std::string ToString(const StatusCode& code);
 
   Guid ToGuid(const std::string& str);
   NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
