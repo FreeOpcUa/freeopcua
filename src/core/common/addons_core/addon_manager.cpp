@@ -141,10 +141,10 @@ namespace
       {
         try
         {
-          std::cout << "Stopping addon '" << addonData->ID << "'" <<  std::endl;
+          //std::cout << "Stopping addon '" << addonData->ID << "'" <<  std::endl;
           addonData->Addon->Stop();
           addonData->Addon.reset();
-          std::cout << "Addon '" << addonData->ID << "' successfully stopped." <<  std::endl;
+          //std::cout << "Addon '" << addonData->ID << "' successfully stopped." <<  std::endl;
         }
         catch (const std::exception& exc)
         {
@@ -158,13 +158,13 @@ namespace
     {
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
-        std::cout << "Creating addon '" << addonData->ID << "'" <<  std::endl;
+        //std::cout << "Creating addon '" << addonData->ID << "'" <<  std::endl;
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
-        std::cout << "Initializing addon '" << addonData->ID << "'" <<  std::endl;
+        //std::cout << "Initializing addon '" << addonData->ID << "'" <<  std::endl;
         try
         {
           addon->Initialize(*this, addonData->Parameters);
-          std::cout << "Addon '" << addonData->ID << "' successfully initialized." <<  std::endl;
+          //std::cout << "Addon '" << addonData->ID << "' successfully initialized." <<  std::endl;
         }
         catch (const std::exception& exc)
         {

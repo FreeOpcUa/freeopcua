@@ -474,7 +474,7 @@ TEST_F(NodeSerialization, NamespaceUri)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  NodeID id;
+  ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG);
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";
@@ -499,7 +499,7 @@ TEST_F(NodeSerialization, ServerIndexFlag)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  NodeID id;
+  ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_SERVER_INDEX_FLAG);
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";
@@ -523,7 +523,7 @@ TEST_F(NodeSerialization, NamespaceUriAndServerIndex)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  NodeID id;
+  ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";

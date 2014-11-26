@@ -109,9 +109,15 @@ namespace OpcUa
     if (Debug)  { std::cout << "RemoteClient | Going through server endpoints and selected one we support" << std::endl; }
     for ( EndpointDescription ed : endpoints)
     {
-      if (Debug)  { std::cout << "RemoteClient | Examining endpoint: " << ed.SecurityPolicyURI <<  std::endl; }
+      if (Debug)  { std::cout << "RemoteClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
       if ( ed.SecurityPolicyURI == "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
+        if (Debug)  { std::cout << "RemoteClient | Security policy is OK, now looking at user token" <<  std::endl; }
+        if (ed.UserIdentifyTokens.empty() )
+        {
+          if (Debug)  { std::cout << "RemoteClient | Server does not use user token, OK" <<  std::endl; }
+          return ed;
+        }
         for (  UserTokenPolicy token : ed.UserIdentifyTokens)
         {
           if (token.TokenType == UserIdentifyTokenType::ANONYMOUS )
@@ -172,9 +178,10 @@ namespace OpcUa
 
     if (  Server ) 
     {
-      Server->CloseSession();
+      CloseSessionResponse response = Server->CloseSession();
+      if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
     }
-    Server.reset(); //SecureChannel is not closed until we destroy server object
+    Server.reset(); //FIXME: check if we still need this
   }
 
   uint32_t RemoteClient::GetNamespaceIndex(std::string uri)
@@ -227,6 +234,7 @@ namespace OpcUa
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;
+
     return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));
   }
 } // namespace OpcUa

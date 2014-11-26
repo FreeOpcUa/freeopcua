@@ -327,7 +327,14 @@ namespace
 
     virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
     {
-      if (Debug)  { std::cout << "binary_client| Browse -->" << std::endl; }
+      if (Debug)  { 
+        std::cout << "binary_client| Browse -->" ; 
+        for ( BrowseDescription desc : query.NodesToBrowse )
+        {
+          std::cout << desc.NodeToBrowse << "  ";
+        }
+        std::cout << std::endl; 
+      }
       BrowseRequest request;
       request.Header = CreateRequestHeader();
       request.Query = query;
@@ -403,7 +410,14 @@ namespace
   public:
     virtual std::vector<DataValue> Read(const ReadParameters& params) const
     {
-      if (Debug)  { std::cout << "binary_client| Read -->" << std::endl; }
+      if (Debug)  { 
+        std::cout << "binary_client| Read -->" << std::endl; 
+        for ( AttributeValueID attr : params.AttributesToRead )
+        {
+          std::cout << attr.Node << "  " << (uint32_t)attr.Attribute;
+        }
+        std::cout << std::endl; 
+      }
       ReadRequest request;
       request.Parameters = params;
       const ReadResponse response = Send<ReadResponse>(request);
@@ -474,15 +488,29 @@ namespace
       request.Header.Timeout = 0; //We do not want the request to timeout!
 
       ResponseCallback responseCallback = [this](std::vector<char> buffer){
-        if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server"  << std::endl;}
+        if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server " << std::endl;}
         BufferInputChannel bufferInput(buffer);
         IStreamBinary in(bufferInput);
         PublishResponse response;
         in >> response;
         CallbackService.post([this, response]() 
             { 
-              if (Debug) {std::cout << "BinaryClient | Calling callback for publishresponse "  << std::endl;}
-              this->PublishCallbacks[response.Result.SubscriptionID](response.Result);
+              if (Debug) {std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionID << std::endl;}
+              SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionID);
+              if (callbackIt == this->PublishCallbacks.end())
+              {
+                std::cout << "BinaryClient | Error Uknown SubscriptionID " << response.Result.SubscriptionID << std::endl;
+              }
+              else
+              {
+                try { //calling client code, better put it under try/catch otherwise we crash entire client
+                  callbackIt->second(response.Result);
+                }
+                catch (const std::exception& ex)
+                {
+                  std::cout << "Error calling application callback " << ex.what() << std::endl;
+                }
+              }
             });
       };
       std::unique_lock<std::mutex> lock(Mutex);
