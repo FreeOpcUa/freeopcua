@@ -63,7 +63,7 @@ namespace
     return OpcUa::ToNodeID(value);
   }
 
-  AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
+  AttributeID GetAttributeIDOptionValue(const po::variables_map& vm) // TODO: codegen
   {
     const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
     if (name == "node id")
@@ -72,7 +72,7 @@ namespace
     }
     if (name == "node class")
     {
-      return AttributeID::NodeId;
+      return AttributeID::NodeClass;
     }
     if (name == "browse name")
     {
@@ -84,7 +84,7 @@ namespace
     }
     if (name == "description")
     {
-      return AttributeID::DisplayName;
+      return AttributeID::Description;
     }
     if (name == "write mask")
     {
