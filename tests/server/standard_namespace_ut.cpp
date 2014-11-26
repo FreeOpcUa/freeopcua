@@ -84,56 +84,56 @@ protected:
 
   void ExpectHasBaseAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::NODE_ID));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::NODE_CLASS));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::BROWSE_NAME));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DISPLAY_NAME));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DESCRIPTION));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::WRITE_MASK));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::USER_WRITE_MASK));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::NodeId));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::NodeClass));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::BrowseName));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::DisplayName));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::Description));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::WriteMask));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::UserWriteMask));
   }
 
   void ExpectHasObjectAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::EVENT_NOTIFIER));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::EventNotifier));
   }
 
   void ExpectHasTypeAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::IsAbstract));
   }
 
   void ExpectHasDataTypeAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::IsAbstract));
   }
 
   void ExpectHasVariableAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DATA_TYPE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE_RANK));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::ARRAY_DIMENSIONS));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::ACCESS_LEVEL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::USER_ACCESS_LEVEL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::MINIMUM_SAMPLING_INTERVAL));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::HISTORIZING));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::Value));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::DataType));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ValueRank));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ArrayDimensions));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::AccessLevel));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::UserAccessLevel));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::MinimumSamplingInterval));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::Historizing));
   }
 
   void ExpectHasVariableTypeAttributes(ObjectID id)
   {
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::DATA_TYPE));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::VALUE_RANK));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::ARRAY_DIMENSIONS));
-    EXPECT_TRUE(HasAttribute(id, AttributeID::IS_ABSTRACT));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::Value));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::DataType));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ValueRank));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::ArrayDimensions));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::IsAbstract));
   }
 
   void ExpectHasReferenceTypeAttributes(ObjectID id)
   {
     ExpectHasBaseAttributes(id);
     ExpectHasTypeAttributes(id);
-    EXPECT_TRUE(HasAttribute(id, AttributeID::SYMMETRIC));
+    EXPECT_TRUE(HasAttribute(id, AttributeID::Symmetric));
   }
 };
 
@@ -1976,7 +1976,7 @@ TEST_F(StandardNamespaceStructure, References)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::NonHierarchicalReferences));
 
   ExpectHasReferenceTypeAttributes(ObjectID::References);
-  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::INVERSE_NAME));
+  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HierarchicalReferences)
@@ -1988,7 +1988,7 @@ TEST_F(StandardNamespaceStructure, HierarchicalReferences)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Organizes));
 
   ExpectHasReferenceTypeAttributes(ObjectID::HierarchicalReferences);
-  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::INVERSE_NAME));
+  EXPECT_FALSE(HasAttribute(ObjectID::HierarchicalReferences, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasChild)
@@ -1999,7 +1999,7 @@ TEST_F(StandardNamespaceStructure, HasChild)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::Aggregates));
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasChild);
-  EXPECT_FALSE(HasAttribute(ObjectID::HasChild, AttributeID::INVERSE_NAME));
+  EXPECT_FALSE(HasAttribute(ObjectID::HasChild, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, Aggregates)
@@ -2011,7 +2011,7 @@ TEST_F(StandardNamespaceStructure, Aggregates)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasProperty));
 
   ExpectHasReferenceTypeAttributes(ObjectID::Aggregates);
-  EXPECT_FALSE(HasAttribute(ObjectID::Aggregates, AttributeID::INVERSE_NAME));
+  EXPECT_FALSE(HasAttribute(ObjectID::Aggregates, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasComponent)
@@ -2021,7 +2021,7 @@ TEST_F(StandardNamespaceStructure, HasComponent)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasOrderedComponent));
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasComponent);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasComponent, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasComponent, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasOrderedComponent)
@@ -2030,7 +2030,7 @@ TEST_F(StandardNamespaceStructure, HasOrderedComponent)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasOrderedComponent);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasOrderedComponent, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasOrderedComponent, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasHistoricalConfiguration)
@@ -2039,7 +2039,7 @@ TEST_F(StandardNamespaceStructure, HasHistoricalConfiguration)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasHistoricalConfiguration);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasHistoricalConfiguration, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasHistoricalConfiguration, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasProperty)
@@ -2048,7 +2048,7 @@ TEST_F(StandardNamespaceStructure, HasProperty)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasProperty);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasProperty, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasProperty, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasSubtype)
@@ -2057,7 +2057,7 @@ TEST_F(StandardNamespaceStructure, HasSubtype)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasSubtype);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasSubtype, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasSubtype, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasEventSource)
@@ -2067,7 +2067,7 @@ TEST_F(StandardNamespaceStructure, HasEventSource)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::HasNotifier));
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasEventSource);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasEventSource, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEventSource, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasNotifier)
@@ -2076,7 +2076,7 @@ TEST_F(StandardNamespaceStructure, HasNotifier)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasNotifier);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasNotifier, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasNotifier, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, Organizes)
@@ -2085,7 +2085,7 @@ TEST_F(StandardNamespaceStructure, Organizes)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::Organizes);
-  EXPECT_TRUE(HasAttribute(ObjectID::Organizes, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::Organizes, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, NonHierarchicalReferences)
@@ -2104,7 +2104,7 @@ TEST_F(StandardNamespaceStructure, NonHierarchicalReferences)
   EXPECT_TRUE(HasReference(refs, ReferenceID::HasSubtype, ObjectID::ToState));
 
   ExpectHasReferenceTypeAttributes(ObjectID::NonHierarchicalReferences);
-  EXPECT_FALSE(HasAttribute(ObjectID::NonHierarchicalReferences, AttributeID::INVERSE_NAME));
+  EXPECT_FALSE(HasAttribute(ObjectID::NonHierarchicalReferences, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, FromState)
@@ -2113,7 +2113,7 @@ TEST_F(StandardNamespaceStructure, FromState)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::FromState);
-  EXPECT_TRUE(HasAttribute(ObjectID::FromState, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::FromState, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, GeneratesEvent)
@@ -2122,7 +2122,7 @@ TEST_F(StandardNamespaceStructure, GeneratesEvent)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::GeneratesEvent);
-  EXPECT_TRUE(HasAttribute(ObjectID::GeneratesEvent, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::GeneratesEvent, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasCause)
@@ -2131,7 +2131,7 @@ TEST_F(StandardNamespaceStructure, HasCause)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasCause);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasCause, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasCause, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasDescription)
@@ -2140,7 +2140,7 @@ TEST_F(StandardNamespaceStructure, HasDescription)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasDescription);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasDescription, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasDescription, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasEffect)
@@ -2149,7 +2149,7 @@ TEST_F(StandardNamespaceStructure, HasEffect)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasEffect);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasEffect, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEffect, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasEncoding)
@@ -2158,7 +2158,7 @@ TEST_F(StandardNamespaceStructure, HasEncoding)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasEncoding);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasEncoding, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasEncoding, AttributeID::InverseName));
 }
 
 //TEST_F(StandardNamespaceStructure, HasModelParent)
@@ -2167,7 +2167,7 @@ TEST_F(StandardNamespaceStructure, HasEncoding)
 //  EXPECT_EQ(SizeOf(refs), 0);
 //
 //  ExpectHasReferenceTypeAttributes(ObjectID::HasModelParent);
-//  EXPECT_TRUE(HasAttribute(ObjectID::HasModelParent, AttributeID::INVERSE_NAME));
+//  EXPECT_TRUE(HasAttribute(ObjectID::HasModelParent, AttributeID::InverseName));
 //}
 
 TEST_F(StandardNamespaceStructure, HasModellingRule)
@@ -2176,7 +2176,7 @@ TEST_F(StandardNamespaceStructure, HasModellingRule)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasModellingRule);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasModellingRule, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasModellingRule, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, HasTypeDefinition)
@@ -2185,7 +2185,7 @@ TEST_F(StandardNamespaceStructure, HasTypeDefinition)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::HasTypeDefinition);
-  EXPECT_TRUE(HasAttribute(ObjectID::HasTypeDefinition, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::HasTypeDefinition, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, ToState)
@@ -2194,7 +2194,7 @@ TEST_F(StandardNamespaceStructure, ToState)
   EXPECT_EQ(SizeOf(refs), 0);
 
   ExpectHasReferenceTypeAttributes(ObjectID::ToState);
-  EXPECT_TRUE(HasAttribute(ObjectID::ToState, AttributeID::INVERSE_NAME));
+  EXPECT_TRUE(HasAttribute(ObjectID::ToState, AttributeID::InverseName));
 }
 
 TEST_F(StandardNamespaceStructure, VariableTypes)

@@ -39,11 +39,11 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::EVENT_NOTIFIER] = attr.EventNotifier;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::EventNotifier] = attr.EventNotifier;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const VariableAttributes& attr)
@@ -66,18 +66,18 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::VALUE] = attr.Value;
-    Attributes[AttributeID::DATA_TYPE] = attr.Type;
-    Attributes[AttributeID::VALUE_RANK] = attr.Rank;
-    Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
-    Attributes[AttributeID::ACCESS_LEVEL] = static_cast<uint8_t>(attr.AccessLevel);
-    Attributes[AttributeID::USER_ACCESS_LEVEL] = static_cast<uint8_t>(attr.UserAccessLevel);
-    Attributes[AttributeID::MINIMUM_SAMPLING_INTERVAL] = attr.MinimumSamplingInterval;
-    Attributes[AttributeID::HISTORIZING] = attr.Historizing;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::Value] = attr.Value;
+    Attributes[AttributeID::DataType] = attr.Type;
+    Attributes[AttributeID::ValueRank] = attr.Rank;
+    Attributes[AttributeID::ArrayDimensions] = attr.Dimensions;
+    Attributes[AttributeID::AccessLevel] = static_cast<uint8_t>(attr.AccessLevel);
+    Attributes[AttributeID::UserAccessLevel] = static_cast<uint8_t>(attr.UserAccessLevel);
+    Attributes[AttributeID::MinimumSamplingInterval] = attr.MinimumSamplingInterval;
+    Attributes[AttributeID::Historizing] = attr.Historizing;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const MethodAttributes& attr)
@@ -94,12 +94,12 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::EXECUTABLE] = attr.Executable;
-    Attributes[AttributeID::USER_EXECUTABLE] = attr.UserExecutable;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::Executable] = attr.Executable;
+    Attributes[AttributeID::UserExecutable] = attr.UserExecutable;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
   NodeAttributes::NodeAttributes(const ObjectTypeAttributes& attr)
   {
@@ -114,11 +114,11 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const VariableTypeAttributes& attr)
@@ -138,15 +138,15 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::VALUE] = attr.Value;
-    Attributes[AttributeID::DATA_TYPE] = attr.Type;
-    Attributes[AttributeID::VALUE_RANK] = attr.Rank;
-    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
-    Attributes[AttributeID::ARRAY_DIMENSIONS] = attr.Dimensions;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::Value] = attr.Value;
+    Attributes[AttributeID::DataType] = attr.Type;
+    Attributes[AttributeID::ValueRank] = attr.Rank;
+    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeID::ArrayDimensions] = attr.Dimensions;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const ReferenceTypeAttributes& attr)
@@ -165,14 +165,14 @@ namespace OpcUa
       specattr.set(SpecifiedAttributesEncoding::InverseName);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
-    Attributes[AttributeID::SYMMETRIC] = attr.Symmetric;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeID::Symmetric] = attr.Symmetric;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
     if (!attr.IsAbstract)
-      Attributes[AttributeID::INVERSE_NAME] = attr.InverseName;
+      Attributes[AttributeID::InverseName] = attr.InverseName;
   }
 
   NodeAttributes::NodeAttributes(const DataTypeAttributes& attr)
@@ -188,11 +188,11 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::IS_ABSTRACT] = attr.IsAbstract;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const ViewAttributes& attr)
@@ -208,11 +208,11 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DISPLAY_NAME] = attr.DisplayName;
-    Attributes[AttributeID::DESCRIPTION] = attr.Description;
-    Attributes[AttributeID::CONTAINS_NO_LOOPS] = attr.ContainsNoLoops;
-    Attributes[AttributeID::WRITE_MASK] = attr.WriteMask;
-    Attributes[AttributeID::USER_WRITE_MASK] = attr.UserWriteMask;
+    Attributes[AttributeID::DisplayName] = attr.DisplayName;
+    Attributes[AttributeID::Description] = attr.Description;
+    Attributes[AttributeID::ContainsNoLoops] = attr.ContainsNoLoops;
+    Attributes[AttributeID::WriteMask] = attr.WriteMask;
+    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
   }
 
 
@@ -573,23 +573,23 @@ namespace OpcUa
       total += RawSize(val.SpecifiedAttributes);
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DISPLAY_NAME)->second.As<LocalizedText>()); //We assume the attr exists!!!
+        total += RawSize(val.Attributes.find(AttributeID::DisplayName)->second.As<LocalizedText>()); //We assume the attr exists!!!
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DESCRIPTION)->second.As<LocalizedText>());
+        total += RawSize(val.Attributes.find(AttributeID::Description)->second.As<LocalizedText>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
-        total += 1;//RawSize(val.Attributes.find(AttributeID::EVENT_NOTIFIER)->second.Value.U);
+        total += 1;//RawSize(val.Attributes.find(AttributeID::EventNotifier)->second.Value.U);
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
-        total += RawSize(val.Attributes.find(AttributeID::VALUE)->second);
+        total += RawSize(val.Attributes.find(AttributeID::Value)->second);
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DATA_TYPE)->second.As<NodeID>());
+        total += RawSize(val.Attributes.find(AttributeID::DataType)->second.As<NodeID>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
@@ -597,7 +597,7 @@ namespace OpcUa
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        total += RawSizeContainer(val.Attributes.find(AttributeID::ARRAY_DIMENSIONS)->second.As<std::vector<uint32_t>>());
+        total += RawSizeContainer(val.Attributes.find(AttributeID::ArrayDimensions)->second.As<std::vector<uint32_t>>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
@@ -667,79 +667,79 @@ namespace OpcUa
       *this << val.SpecifiedAttributes;
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        *this << val.Attributes.find(AttributeID::DISPLAY_NAME)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeID::DisplayName)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        *this << val.Attributes.find(AttributeID::DESCRIPTION)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeID::Description)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::WriteMask))
       {
-        *this << val.Attributes.find(AttributeID::WRITE_MASK)->second.As<uint32_t>();
+        *this << val.Attributes.find(AttributeID::WriteMask)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserWriteMask))
       {
-        *this << val.Attributes.find(AttributeID::USER_WRITE_MASK)->second.As<uint32_t>();
+        *this << val.Attributes.find(AttributeID::UserWriteMask)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
-        *this << (uint8_t) val.Attributes.find(AttributeID::EVENT_NOTIFIER)->second.As<uint8_t>();
+        *this << (uint8_t) val.Attributes.find(AttributeID::EventNotifier)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
-        *this << val.Attributes.find(AttributeID::VALUE)->second;
+        *this << val.Attributes.find(AttributeID::Value)->second;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        *this << val.Attributes.find(AttributeID::DATA_TYPE)->second.As<NodeID>();
+        *this << val.Attributes.find(AttributeID::DataType)->second.As<NodeID>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
-        *this << val.Attributes.find(AttributeID::VALUE_RANK)->second.As<int32_t>();
+        *this << val.Attributes.find(AttributeID::ValueRank)->second.As<int32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        *this << val.Attributes.find(AttributeID::ARRAY_DIMENSIONS)->second.As<std::vector<uint32_t>>();
+        *this << val.Attributes.find(AttributeID::ArrayDimensions)->second.As<std::vector<uint32_t>>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::ACCESS_LEVEL)->second.As<uint8_t>();
+        *this << val.Attributes.find(AttributeID::AccessLevel)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserAccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::USER_ACCESS_LEVEL)->second.As<uint8_t>();
+        *this << val.Attributes.find(AttributeID::UserAccessLevel)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::MinimumSamplingInterval))
       {
-        *this << val.Attributes.find(AttributeID::MINIMUM_SAMPLING_INTERVAL)->second.As<double>();
+        *this << val.Attributes.find(AttributeID::MinimumSamplingInterval)->second.As<double>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Historizing))
       {
-        *this << val.Attributes.find(AttributeID::HISTORIZING)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::Historizing)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Executable))
       {
-        *this << val.Attributes.find(AttributeID::EXECUTABLE)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::Executable)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserExecutable))
       {
-        *this << val.Attributes.find(AttributeID::USER_EXECUTABLE)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::UserExecutable)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::IsAbstract))
       {
-        *this << val.Attributes.find(AttributeID::IS_ABSTRACT)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::IsAbstract)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Symmetric))
       {
-        *this << val.Attributes.find(AttributeID::SYMMETRIC)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::Symmetric)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::InverseName))
       {
-        *this << val.Attributes.find(AttributeID::INVERSE_NAME)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeID::InverseName)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ContainsNoLoops))
       {
-        *this << val.Attributes.find(AttributeID::CONTAINS_NO_LOOPS)->second.As<bool>();
+        *this << val.Attributes.find(AttributeID::ContainsNoLoops)->second.As<bool>();
       }
 
     }
@@ -756,79 +756,79 @@ namespace OpcUa
       {
         LocalizedText tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::DISPLAY_NAME] = tmp;
+        val.Attributes[AttributeID::DisplayName] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
         LocalizedText tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::DESCRIPTION] = tmp;
+        val.Attributes[AttributeID::Description] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::WriteMask))
       {
         uint32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::WRITE_MASK] = tmp;
+        val.Attributes[AttributeID::WriteMask] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserWriteMask))
       {
         uint32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::USER_WRITE_MASK] = tmp;
+        val.Attributes[AttributeID::UserWriteMask] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::EVENT_NOTIFIER] = tmp;
+        val.Attributes[AttributeID::EventNotifier] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
         Variant tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::VALUE] = tmp;
+        val.Attributes[AttributeID::Value] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
         NodeID tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::DATA_TYPE] = tmp;
+        val.Attributes[AttributeID::DataType] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
         int32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::VALUE_RANK] = tmp;
+        val.Attributes[AttributeID::ValueRank] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
         std::vector<uint32_t> tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::ARRAY_DIMENSIONS] = tmp;
+        val.Attributes[AttributeID::ArrayDimensions] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::ACCESS_LEVEL] = tmp;
+        val.Attributes[AttributeID::AccessLevel] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserAccessLevel))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::USER_ACCESS_LEVEL] = tmp;
+        val.Attributes[AttributeID::UserAccessLevel] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::MinimumSamplingInterval))
       {
         Duration tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::MINIMUM_SAMPLING_INTERVAL] = tmp;
+        val.Attributes[AttributeID::MinimumSamplingInterval] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Historizing))
       {
         bool tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::HISTORIZING] = tmp;
+        val.Attributes[AttributeID::Historizing] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Executable))
       {

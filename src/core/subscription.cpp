@@ -262,7 +262,7 @@ namespace OpcUa
       if (Debug) std::cout << "      property: "<< child.GetName() << std::endl;
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
-      op.Attribute = AttributeID::VALUE;
+      op.Attribute = AttributeID::Value;
       op.BrowsePath = std::vector<QualifiedName>({child.GetName()});
       filter.SelectClauses.push_back(op);
     }
@@ -278,7 +278,7 @@ namespace OpcUa
 
     AttributeValueID avid;
     avid.Node = node.GetId();
-    avid.Attribute = AttributeID::EVENT_NOTIFIER;
+    avid.Attribute = AttributeID::EventNotifier;
 
     MonitoredItemRequest req;
     req.ItemToMonitor = avid;

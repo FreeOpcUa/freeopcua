@@ -125,7 +125,7 @@ namespace
     AttributeID ID;
     Variant Value;
     Attribute()
-      : ID(AttributeID::UNKNOWN)
+      : ID(AttributeID::Unknown)
     {
     }
 
@@ -534,99 +534,99 @@ namespace
   OpcUa::AttributeID GetAttributeID(xmlNode& node)
   {
     if (IsXmlNode(node, "id"))
-      return AttributeID::NODE_ID;
+      return AttributeID::NodeId;
     else if (IsXmlNode(node, "class"))
-      return AttributeID::NODE_CLASS;
+      return AttributeID::NodeClass;
     else if (IsXmlNode(node, "browse_name"))
-      return AttributeID::BROWSE_NAME;
+      return AttributeID::BrowseName;
     else if (IsXmlNode(node, "display_name"))
-      return AttributeID::DISPLAY_NAME;
+      return AttributeID::DisplayName;
     else if (IsXmlNode(node, "description"))
-      return AttributeID::DESCRIPTION;
+      return AttributeID::Description;
     else if (IsXmlNode(node, "write_mask"))
-      return AttributeID::WRITE_MASK;
+      return AttributeID::WriteMask;
     else if (IsXmlNode(node, "user_write_mask"))
-      return AttributeID::USER_WRITE_MASK;
+      return AttributeID::UserWriteMask;
     else if (IsXmlNode(node, "is_abstract"))
-      return AttributeID::IS_ABSTRACT;
+      return AttributeID::IsAbstract;
     else if (IsXmlNode(node, "symmetric"))
-      return AttributeID::SYMMETRIC;
+      return AttributeID::Symmetric;
     else if (IsXmlNode(node, "inverse_name"))
-      return AttributeID::INVERSE_NAME;
+      return AttributeID::InverseName;
     else if (IsXmlNode(node, "contains_no_loops"))
-      return AttributeID::CONTAINS_NO_LOOPS;
+      return AttributeID::ContainsNoLoops;
     else if (IsXmlNode(node, "event_notifier"))
-      return AttributeID::EVENT_NOTIFIER;
+      return AttributeID::EventNotifier;
     else if (IsXmlNode(node, "value"))
-      return AttributeID::VALUE;
+      return AttributeID::Value;
     else if (IsXmlNode(node, "value_rank"))
-      return AttributeID::VALUE_RANK;
+      return AttributeID::ValueRank;
     else if (IsXmlNode(node, "data_type"))
-      return AttributeID::DATA_TYPE;
+      return AttributeID::DataType;
     else if (IsXmlNode(node, "array_dimensions"))
-      return AttributeID::ARRAY_DIMENSIONS;
+      return AttributeID::ArrayDimensions;
     else if (IsXmlNode(node, "access_level"))
-      return AttributeID::ACCESS_LEVEL;
+      return AttributeID::AccessLevel;
     else if (IsXmlNode(node, "user_access_level"))
-      return AttributeID::USER_ACCESS_LEVEL;
+      return AttributeID::UserAccessLevel;
     else if (IsXmlNode(node, "minimum_sampling_interval"))
-      return AttributeID::MINIMUM_SAMPLING_INTERVAL;
+      return AttributeID::MinimumSamplingInterval;
     else if (IsXmlNode(node, "historizing"))
-      return AttributeID::HISTORIZING;
+      return AttributeID::Historizing;
     else if (IsXmlNode(node, "executable"))
-      return AttributeID::EXECUTABLE;
+      return AttributeID::Executable;
     else if (IsXmlNode(node, "user_executable"))
-      return AttributeID::USER_EXECUTABLE;
+      return AttributeID::UserExecutable;
 
-    return AttributeID::UNKNOWN;
+    return AttributeID::Unknown;
   }
 
   Variant GetAttributeValue(OpcUa::AttributeID id, xmlNode& node)
   {
     switch (id)
     {
-      case AttributeID::NODE_ID:
+      case AttributeID::NodeId:
         return Variant(GetNodeID(node));
 
-      case AttributeID::NODE_CLASS:
+      case AttributeID::NodeClass:
         return Variant((int32_t)GetNodeClass(node));
 
-      case AttributeID::DISPLAY_NAME:
+      case AttributeID::DisplayName:
         return Variant(GetLocalizedText(node));
 
-      case AttributeID::BROWSE_NAME:
+      case AttributeID::BrowseName:
         return Variant(GetQualifiedName(node));
 
-      case AttributeID::DESCRIPTION:
-      case AttributeID::INVERSE_NAME:
+      case AttributeID::Description:
+      case AttributeID::InverseName:
         return Variant(GetText(node));
 
-      case AttributeID::EVENT_NOTIFIER:
+      case AttributeID::EventNotifier:
         return Variant(std::vector<uint8_t>{0});
 
-      case AttributeID::VALUE_RANK:
+      case AttributeID::ValueRank:
         return Variant(GetInt32(node));
 
-      case AttributeID::WRITE_MASK:
-      case AttributeID::USER_WRITE_MASK:
-      case AttributeID::ARRAY_DIMENSIONS:
-      case AttributeID::ACCESS_LEVEL:
-      case AttributeID::USER_ACCESS_LEVEL:
-      case AttributeID::MINIMUM_SAMPLING_INTERVAL:
+      case AttributeID::WriteMask:
+      case AttributeID::UserWriteMask:
+      case AttributeID::ArrayDimensions:
+      case AttributeID::AccessLevel:
+      case AttributeID::UserAccessLevel:
+      case AttributeID::MinimumSamplingInterval:
         return Variant(GetUInt32(node));
 
-      case AttributeID::IS_ABSTRACT:
-      case AttributeID::SYMMETRIC:
-      case AttributeID::CONTAINS_NO_LOOPS:
-      case AttributeID::HISTORIZING:
-      case AttributeID::EXECUTABLE:
-      case AttributeID::USER_EXECUTABLE:
+      case AttributeID::IsAbstract:
+      case AttributeID::Symmetric:
+      case AttributeID::ContainsNoLoops:
+      case AttributeID::Historizing:
+      case AttributeID::Executable:
+      case AttributeID::UserExecutable:
         return Variant(GetBool(node));
 
-      case AttributeID::VALUE:
+      case AttributeID::Value:
         break;
 
-      case AttributeID::DATA_TYPE:
+      case AttributeID::DataType:
         return Variant(GetObjectIdOfType(node));
 
       default:
@@ -654,7 +654,7 @@ namespace
           continue;
         }
         const AttributeID attribute = GetAttributeID(*subNode);
-        if (attribute == AttributeID::NODE_ID)
+        if (attribute == AttributeID::NodeId)
         {
           OpcUaNode.ID = GetNodeID(*subNode);
           continue;
@@ -665,9 +665,9 @@ namespace
       }
 
       // If tag 'data_type' is absent in the xml then need to add data type which will be based on type of value.
-      if (!HasAttribute(AttributeID::DATA_TYPE) && HasAttribute(AttributeID::VALUE))
+      if (!HasAttribute(AttributeID::DataType) && HasAttribute(AttributeID::Value))
       {
-        AddAttribute(AttributeID::DATA_TYPE, GetDataType(AttributeID::VALUE));
+        AddAttribute(AttributeID::DataType, GetDataType(AttributeID::Value));
       }
     }
 
@@ -685,7 +685,7 @@ namespace
 
     bool HasAttribute(AttributeID attr) const
     {
-      return OpcUaNode.Attributes.find(AttributeID::DATA_TYPE) != OpcUaNode.Attributes.end();
+      return OpcUaNode.Attributes.find(AttributeID::DataType) != OpcUaNode.Attributes.end();
     }
 
     ObjectID GetDataType(AttributeID attr) const
@@ -965,7 +965,7 @@ namespace
   private:
     void RegisterNode(const Node& node)
     {
-      //Registry.AddAttribute(node.ID, AttributeID::NODE_ID, Variant(node.ID));
+      //Registry.AddAttribute(node.ID, AttributeID::NodeId, Variant(node.ID));
       for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
       {
         //Registry.AddAttribute(node.ID, attr.first, attr.second);

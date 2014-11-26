@@ -68,51 +68,51 @@ namespace
     const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
     if (name == "node id")
     {
-      return AttributeID::NODE_ID;
+      return AttributeID::NodeId;
     }
     if (name == "node class")
     {
-      return AttributeID::NODE_ID;
+      return AttributeID::NodeId;
     }
     if (name == "browse name")
     {
-      return AttributeID::BROWSE_NAME;
+      return AttributeID::BrowseName;
     }
     if (name == "display name")
     {
-      return AttributeID::DISPLAY_NAME;
+      return AttributeID::DisplayName;
     }
     if (name == "description")
     {
-      return AttributeID::DISPLAY_NAME;
+      return AttributeID::DisplayName;
     }
     if (name == "write mask")
     {
-      return AttributeID::WRITE_MASK;
+      return AttributeID::WriteMask;
     }
     if (name == "user write mask")
     {
-      return AttributeID::USER_WRITE_MASK;
+      return AttributeID::UserWriteMask;
     }
     if (name == "is abstract")
     {
-      return AttributeID::IS_ABSTRACT;
+      return AttributeID::IsAbstract;
     }
     if (name == "symmetric")
     {
-      return AttributeID::SYMMETRIC;
+      return AttributeID::Symmetric;
     }
     if (name == "inverse name")
     {
-      return AttributeID::INVERSE_NAME;
+      return AttributeID::InverseName;
     }
     if (name == "value")
     {
-      return AttributeID::VALUE;
+      return AttributeID::Value;
     }
     if (name == "data type")
     {
-      return AttributeID::DATA_TYPE;
+      return AttributeID::DataType;
     }
 
 /*
@@ -188,7 +188,7 @@ namespace OpcUa
 
   CommandLine::CommandLine(int argc, char** argv)
     : NamespaceIndex(0)
-    , Attribute(AttributeID::UNKNOWN)
+    , Attribute(AttributeID::Unknown)
     , IsHelp(false)
     , IsGetEndpoints(false)
     , IsBrowse(false)

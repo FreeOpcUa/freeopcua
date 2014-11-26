@@ -31,8 +31,8 @@ namespace OpcUa
     {
       Id = objectId;
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::DISPLAY_NAME));
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::BROWSE_NAME));
+      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::DisplayName));
+      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::BrowseName));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
@@ -294,19 +294,19 @@ namespace OpcUa
       const NodeID& nodeID = ref.TargetNodeID;
 
       ReadParameters readParams;
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::DISPLAY_NAME});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::DESCRIPTION});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::VALUE});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::DATA_TYPE});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::VALUE_RANK});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::ARRAY_DIMENSIONS});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::ACCESS_LEVEL});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_ACCESS_LEVEL});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::MINIMUM_SAMPLING_INTERVAL});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::HISTORIZING});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::WRITE_MASK});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_WRITE_MASK});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::BROWSE_NAME});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DisplayName});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::Description});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::Value});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DataType});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::ValueRank});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::ArrayDimensions});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::AccessLevel});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::UserAccessLevel});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::MinimumSamplingInterval});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::Historizing});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::WriteMask});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::UserWriteMask});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::BrowseName});
       std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
 
       VariableAttributes attrs;
@@ -338,11 +338,11 @@ namespace OpcUa
       const NodeID& nodeID = ref.TargetNodeID;
 
       ReadParameters readParams;
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::DISPLAY_NAME});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::DESCRIPTION});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::WRITE_MASK});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::USER_WRITE_MASK});
-      readParams.AttributesToRead.push_back({nodeID, AttributeID::BROWSE_NAME});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::DisplayName});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::Description});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::WriteMask});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::UserWriteMask});
+      readParams.AttributesToRead.push_back({nodeID, AttributeID::BrowseName});
       std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
 
       ObjectAttributes attrs;

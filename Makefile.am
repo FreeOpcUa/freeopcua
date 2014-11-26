@@ -206,6 +206,9 @@ include/opc/ua/protocol/status_codes.h: schema/StatusCode.csv schema/codegen.py
 src/protocol/string_utils_statuscode_tostring.cpp: schema/StatusCode.csv schema/codegen.py
 	python $(top_srcdir)/schema/codegen.py cxx status_codes_tostring > $@
 
+include/opc/ua/protocol/attribute_ids.h: schema/AttributeIds.csv schema/codegen.py
+	python $(top_srcdir)/schema/codegen.py cxx attribute_ids > $@
+
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
   include/opc/ua/protocol/binary/stream.h

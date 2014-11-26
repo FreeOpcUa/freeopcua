@@ -64,7 +64,7 @@ class EndpointsTests(unittest.TestCase):
         attributeParams = opcua.AttributeValueID()
         attributeParams.node.namespace_index = 1
         attributeParams.node.identifier = 2
-        attributeParams.attribute = opcua.AttributeID.VALUE
+        attributeParams.attribute = opcua.AttributeID.Value
         attributeParams.index_range = "1:2"
         attributeParams.data_encoding.namespace_index = 3
         attributeParams.data_encoding.name = "binary"
@@ -87,7 +87,7 @@ class EndpointsTests(unittest.TestCase):
 
     def test_write(self):
         value = opcua.WriteValue()
-        value.attribute = opcua.AttributeID.VALUE
+        value.attribute = opcua.AttributeID.Value
         value.node.namespace_index = 1
         value.node.identifier = "node"
         value.numeric_range = "1:2"

@@ -393,9 +393,9 @@ namespace OpcUa
       const NodeID resultID = GetNewNodeID(item.RequestedNewNodeID);
       NodeStruct nodestruct;
       //Add Common attributes
-      nodestruct.Attributes[AttributeID::NODE_ID].Value = resultID;
-      nodestruct.Attributes[AttributeID::BROWSE_NAME].Value = item.BrowseName;
-      nodestruct.Attributes[AttributeID::NODE_CLASS].Value = static_cast<int32_t>(item.Class);
+      nodestruct.Attributes[AttributeID::NodeId].Value = resultID;
+      nodestruct.Attributes[AttributeID::BrowseName].Value = item.BrowseName;
+      nodestruct.Attributes[AttributeID::NodeClass].Value = static_cast<int32_t>(item.Class);
 
       // Add requested attributes
       for (const auto& attr: item.Attributes.Attributes)

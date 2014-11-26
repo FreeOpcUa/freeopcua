@@ -26,7 +26,7 @@ namespace OpcUa
 {
   // TODO move to appropriate file
   AttributeValueID::AttributeValueID()
-    : Attribute(AttributeID::VALUE)
+    : Attribute(AttributeID::Value)
   {
   }
 

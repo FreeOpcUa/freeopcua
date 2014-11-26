@@ -102,7 +102,7 @@ namespace
       Assert(params.AttributesToRead.size() == 1, "Invalid size of AttributesToRead.");
 
       OpcUa::AttributeValueID id = params.AttributesToRead[0];
-      Assert(id.Attribute == AttributeID::VALUE, "Invalid value of Attribute ID.");
+      Assert(id.Attribute == AttributeID::Value, "Invalid value of Attribute ID.");
       Assert(id.DataEncoding.NamespaceIndex == 3, "Invalid namespace index in DataEncoding.");
       Assert(id.DataEncoding.Name == "binary", "Invalid name in DataEncoding.");
       Assert(id.IndexRange == "1:2", "Invalid value of IndexRange.");
@@ -132,7 +132,7 @@ namespace
     {
       Assert(data.size() == 1, "Invalid number od data for write.");
       const OpcUa::WriteValue& value = data[0];
-      Assert(value.Attribute == OpcUa::AttributeID::VALUE, "Invalid id of attribute.");
+      Assert(value.Attribute == OpcUa::AttributeID::Value, "Invalid id of attribute.");
       Assert(value.Node.Encoding == NodeIDEncoding::EV_STRING, "Invalid encoding of node.");
       Assert(value.Node.StringData.NamespaceIndex == 1, "Invalid namespace of node.");
       Assert(value.Node.StringData.Identifier == "node", "Invalid identifier of node.");

@@ -379,7 +379,7 @@ TEST_F(OpcBinaryHandshake, Read)
   AttributeValueID value;
   value.Node.Encoding = EV_FOUR_BYTE;
   value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder);
-  value.Attribute = AttributeID::DISPLAY_NAME;
+  value.Attribute = AttributeID::DisplayName;
 
 
   OpcUa::Binary::ReadRequest request;
@@ -425,7 +425,7 @@ TEST_F(OpcBinaryHandshake, Write)
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
   value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder); 
-  value.Attribute = AttributeID::DISPLAY_NAME;
+  value.Attribute = AttributeID::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value.Type = VariantType::STRING;
   value.Data.Value.Value.String.push_back("root");

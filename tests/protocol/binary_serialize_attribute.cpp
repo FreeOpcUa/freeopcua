@@ -32,13 +32,13 @@ TEST_F(OpcUaBinarySerialization, AttributeID)
   using namespace OpcUa::Binary;
   using OpcUa::AttributeID;
 
-  GetStream() << AttributeID::VALUE << flush;
+  GetStream() << AttributeID::Value << flush;
 
   const std::vector<char> expectedData = {
   13,0,0,0
   };
 
-  ASSERT_EQ(expectedData.size(), RawSize(AttributeID::VALUE));
+  ASSERT_EQ(expectedData.size(), RawSize(AttributeID::Value));
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
 }
 
@@ -56,7 +56,7 @@ TEST_F(OpcUaBinaryDeserialization, AttributeID)
   AttributeID id;
   GetStream() >> id;
 
-  ASSERT_EQ(id, AttributeID::VALUE);
+  ASSERT_EQ(id, AttributeID::Value);
 }
 
 
@@ -113,7 +113,7 @@ TEST_F(OpcUaBinarySerialization, AttributeValueID)
 
   attr.Node.Encoding = EV_TWO_BYTE;
   attr.Node.TwoByteData.Identifier = 1;
-  attr.Attribute = AttributeID::VALUE;
+  attr.Attribute = AttributeID::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
   attr.DataEncoding.Name = "test";
@@ -153,7 +153,7 @@ TEST_F(OpcUaBinaryDeserialization, AttributeValueID)
   
   ASSERT_EQ(attr.Node.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(attr.Node.TwoByteData.Identifier, 1);
-  ASSERT_EQ(attr.Attribute, AttributeID::VALUE);
+  ASSERT_EQ(attr.Attribute, AttributeID::Value);
   ASSERT_EQ(attr.DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(attr.DataEncoding.Name, "test");
 }
@@ -169,7 +169,7 @@ OpcUa::AttributeValueID CreateAttributeValueID()
 
   attr.Node.Encoding = OpcUa::EV_TWO_BYTE;
   attr.Node.TwoByteData.Identifier = 1;
-  attr.Attribute = OpcUa::AttributeID::VALUE;
+  attr.Attribute = OpcUa::AttributeID::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
   attr.DataEncoding.Name = "test";
@@ -260,7 +260,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
 
   ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.TwoByteData.Identifier, 1);
-  ASSERT_EQ(request.Parameters.AttributesToRead[0].Attribute, OpcUa::AttributeID::VALUE);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].Attribute, OpcUa::AttributeID::Value);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.Name, "test");
 
@@ -398,7 +398,7 @@ TEST_F(OpcUaBinarySerialization, WriteValue)
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
   value.Node.FourByteData.Identifier = 1;
-  value.Attribute = AttributeID::DISPLAY_NAME;
+  value.Attribute = AttributeID::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value = true;
  
@@ -435,7 +435,7 @@ TEST_F(OpcUaBinaryDeserialization, WriteValue)
 
   ASSERT_EQ(value.Node.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(value.Node.FourByteData.Identifier, 1);
-  ASSERT_EQ(value.Attribute, AttributeID::DISPLAY_NAME);
+  ASSERT_EQ(value.Attribute, AttributeID::DisplayName);
   ASSERT_EQ(value.Data.Encoding, DATA_VALUE);
   ASSERT_EQ(value.Data.Value.Type(), VariantType::BOOLEAN);
   ASSERT_EQ(value.Data.Value.As<bool>(), true);
@@ -463,7 +463,7 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
   value.Node.FourByteData.Identifier = 1;
-  value.Attribute = AttributeID::DISPLAY_NAME;
+  value.Attribute = AttributeID::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value = true;
 
@@ -523,7 +523,7 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
   ASSERT_EQ(request.Parameters.NodesToWrite.size(), 1);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DISPLAY_NAME);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DisplayName);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type(), VariantType::BOOLEAN);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.As<bool>(), true);

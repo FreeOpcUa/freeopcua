@@ -682,4 +682,3 @@ std::string ToString(const StatusCode& code)
 
 } // namespace OpcUa
 
-

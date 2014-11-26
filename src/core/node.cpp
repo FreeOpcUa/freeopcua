@@ -95,12 +95,12 @@ namespace OpcUa
   {
     DataValue dval(val);
     dval.SetSourceTimestamp(dt);
-    return SetAttribute(AttributeID::VALUE, dval);
+    return SetAttribute(AttributeID::Value, dval);
   }
 
   StatusCode Node::SetValue(const DataValue &dval) const
   {
-    return SetAttribute(AttributeID::VALUE, dval);
+    return SetAttribute(AttributeID::Value, dval);
   }
 
 
@@ -147,7 +147,7 @@ namespace OpcUa
   QualifiedName Node::GetName(bool force) const
   {
     if ( force || BrowseName == QualifiedName() ){
-      Variant var = GetAttribute(AttributeID::BROWSE_NAME);
+      Variant var = GetAttribute(AttributeID::BrowseName);
       if (var.Type() != VariantType::QUALIFIED_NAME)
       {
         throw std::runtime_error("Could not retrieve browse name.");
@@ -405,12 +405,12 @@ namespace OpcUa
 
   Variant Node::GetValue() const
   {
-    return GetAttribute(AttributeID::VALUE);
+    return GetAttribute(AttributeID::Value);
   }
 
   Variant Node::GetDataType() const
   {
-    return GetAttribute(AttributeID::DATA_TYPE);
+    return GetAttribute(AttributeID::DataType);
   }
 
 } // namespace OpcUa

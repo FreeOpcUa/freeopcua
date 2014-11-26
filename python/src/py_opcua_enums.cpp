@@ -22,6 +22,7 @@ using namespace OpcUa;
 
 extern void py_opcua_enums_ObjectID();
 extern void py_opcua_enums_StatusCode();
+extern void py_opcua_enums_AttributeID();
 
 void py_opcua_enums()
 {
@@ -29,6 +30,7 @@ void py_opcua_enums()
   // codegen
   py_opcua_enums_ObjectID();
   py_opcua_enums_StatusCode();
+  py_opcua_enums_AttributeID();
 
   enum_<ApplicationType>("ApplicationType")
 #define _value(X) value(#X, ApplicationType:: X)
@@ -84,33 +86,6 @@ void py_opcua_enums()
   ._value(SERVER)
   ._value(BOTH)
   ._value(NEITHER)
-#undef _value
-  ;
-
-  enum_<AttributeID>("AttributeID")
-#define _value(X) value(#X, AttributeID:: X)
-  ._value(ACCESS_LEVEL)
-  ._value(ARRAY_DIMENSIONS)
-  ._value(BROWSE_NAME)
-  ._value(CONTAINS_NO_LOOPS)
-  ._value(DATA_TYPE)
-  ._value(DESCRIPTION)
-  ._value(DISPLAY_NAME)
-  ._value(EVENT_NOTIFIER)
-  ._value(EXECUTABLE)
-  ._value(HISTORIZING)
-  ._value(INVERSE_NAME)
-  ._value(IS_ABSTRACT)
-  ._value(MINIMUM_SAMPLING_INTERVAL)
-  ._value(NODE_CLASS)
-  ._value(NODE_ID)
-  ._value(SYMMETRIC)
-  ._value(UNKNOWN)
-  ._value(USER_ACCESS_LEVEL)
-  ._value(USER_EXECUTABLE)
-  ._value(VALUE)
-  ._value(VALUE_RANK)
-  ._value(WRITE_MASK)
 #undef _value
   ;
 

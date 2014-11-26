@@ -336,7 +336,7 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   class_<Subscription, boost::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
-  .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::VALUE)))
+  .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::Value)))
   .def("delete", &Subscription::Delete)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
   .def("subscribe_events", (uint32_t (Subscription::*)()) &Subscription::SubscribeEvents)
