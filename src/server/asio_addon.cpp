@@ -37,22 +37,22 @@ namespace
     void Initialize(Common::AddonsManager&, const Common::AddonParameters& params) override
     {
       const unsigned threadsNumber = GetThreadsNumber(params);
-      std::cout << "asio| Starting " << threadsNumber << "threads." << std::endl;
+      //std::cout << "asio| Starting " << threadsNumber << "threads." << std::endl;
       for (unsigned i = 0; i < threadsNumber; ++i)
       {
         Threads.emplace_back([this, i](){
-          std::cout << "asio| Starting thread " << i << "." << std::endl;
+          //std::cout << "asio| Starting thread " << i << "." << std::endl;
           IoService.run();
-          std::cout << "asio| Thread " << i << "exited." << std::endl;
+          //std::cout << "asio| Thread " << i << "exited." << std::endl;
         });
       }
     }
 
     void Stop() override
     {
-      std::cout << "asio| stopping io service." << std::endl;
+      //std::cout << "asio| stopping io service." << std::endl;
       IoService.stop();
-      std::cout << "asio| joining threads." << std::endl;
+      //std::cout << "asio| joining threads." << std::endl;
       std::for_each(Threads.begin(), Threads.end(), [](std::thread& thread){
         thread.join();
       });
