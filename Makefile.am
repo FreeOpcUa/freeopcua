@@ -198,10 +198,13 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 
 
 include/opc/ua/protocol/object_ids.h: schema/NodeIds.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx object_ids > $(top_srcdir)/include/opc/ua/protocol/object_ids.h
+	python $(top_srcdir)/schema/codegen.py cxx object_ids > $@
 
 include/opc/ua/protocol/status_codes.h: schema/StatusCode.csv schema/codegen.py
-	python $(top_srcdir)/schema/codegen.py cxx status_codes > $(top_srcdir)/include/opc/ua/protocol/status_codes.h
+	python $(top_srcdir)/schema/codegen.py cxx status_codes > $@
+
+src/protocol/string_utils_statuscode_tostring.cpp: schema/StatusCode.csv schema/codegen.py
+	python $(top_srcdir)/schema/codegen.py cxx status_codes_tostring > $@
 
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
@@ -256,7 +259,8 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/session.cpp \
   src/protocol/subscriptions.cpp \
   src/protocol/status_codes.cpp \
-  src/protocol/string_utils.cpp
+  src/protocol/string_utils.cpp \
+  src/protocol/string_utils_statuscode_tostring.cpp
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

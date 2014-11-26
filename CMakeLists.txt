@@ -122,6 +122,7 @@ add_library(libopcuaprotocol STATIC
   src/protocol/session.cpp
   src/protocol/status_codes.cpp
   src/protocol/string_utils.cpp
+  src/protocol/string_utils_statuscode_tostring.cpp
   src/protocol/subscriptions.cpp
 )
 
