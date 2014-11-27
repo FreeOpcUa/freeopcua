@@ -31,7 +31,8 @@ namespace OpcUa
   {
     CreateSubscriptionRequest request;
     request.Parameters = params;
-    Data = Server->Subscriptions()->CreateSubscription(request, [&](PublishResult i){ this->PublishCallback(i); } );
+    Services::SharedPtr serverptr = Server;
+    Data = Server->Subscriptions()->CreateSubscription(request, [this, serverptr](PublishResult i){ this->PublishCallback(serverptr, i); } );
     //After creating the subscription, it is expected to send at least one publish request
     Server->Subscriptions()->Publish(PublishRequest());
     Server->Subscriptions()->Publish(PublishRequest());
@@ -46,104 +47,26 @@ namespace OpcUa
     }
   }
 
-  void Subscription::PublishCallback(PublishResult result)
+  void Subscription::PublishCallback(Services::SharedPtr server, const PublishResult result)
   {
-    std::unique_lock<std::mutex> lock(Mutex); //To be finished
-    //FIXME: finish to handle all types of publishresults!
 
     if (Debug){ std::cout << "Subscription | Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
     for (const NotificationData& data: result.Message.Data )
     {
-      if (Debug) { std::cout << "Subscription | Notification is of type DataChange\n"; }
       if (data.Header.TypeID == ExpandedObjectID::DataChangeNotification)
       {
-        for ( const MonitoredItems& item: data.DataChange.Notification)
-        {
-          AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
-          if ( mapit == AttributeValueMap.end() )
-          {
-            std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
-          }
-          else
-          {
-            if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
-            Client.DataChange( item.ClientHandle, mapit->second.TargetNode, item.Value.Value, mapit->second.Attribute);
-          }
-        }
+        if (Debug) { std::cout << "Subscription | Notification is of type DataChange\n"; }
+        CallDataChangeCallback(data);
       }
       else if (data.Header.TypeID == ExpandedObjectID::EventNotificationList)
       {
         if (Debug) { std::cout << "Subscription | Notification is of type Event\n"; }
-        for ( EventFieldList ef :  data.Events.Events)
-        {
-          AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
-          if ( mapit == AttributeValueMap.end() )
-          {
-            std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
-          }
-          else
-          {
-            Event ev;
-            uint32_t count = 0;
-            if ( mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size() )
-            {
-              throw std::runtime_error("Subscription | Error receive event format does not match requested filter");
-            }
-            for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
-            {
-              if ( op.BrowsePath.size() == 1 )
-              {
-                if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
-                {
-                  ev.EventId = ef.EventFields[count].As<ByteString>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("EventType", 0) )
-                {
-                  ev.EventType = ef.EventFields[count].As<NodeID>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("SourceNode", 0) )
-                {
-                  ev.SourceNode = ef.EventFields[count].As<NodeID>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("SourceName", 0) )
-                {
-                  ev.SourceName = ef.EventFields[count].As<std::string>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("Message", 0) )
-                {
-                  ev.Message = ef.EventFields[count].As<LocalizedText>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("Severity", 0) )
-                {
-                  ev.Severity = ef.EventFields[count].As<uint16_t>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("LocalTime", 0) )
-                {
-                  ev.LocalTime = ef.EventFields[count].As<DateTime>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
-                {
-                  ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
-                }
-                else if ( op.BrowsePath[0] == QualifiedName("Time", 0) )
-                {
-                  ev.Time = ef.EventFields[count].As<DateTime>();
-                }
-              }
-              //Add anyway field as value
-              ev.SetValue(op.BrowsePath, ef.EventFields[count]);
-              ++count;
-            }
-            if (Debug) { std::cout << "Subscription | Debug: Calling client callback\n"; }
-            Client.Event(ef.ClientHandle, ev);
-            if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
-          }
-        }
+        CallEventCallback(data);
       }
       else if (data.Header.TypeID == ExpandedObjectID::StatusChangeNotification)
       {
         if (Debug) { std::cout << "Subscription | Notification is of type StatusChange\n"; }
-        Client.StatusChange(data.StatusChange.Status);
+        CallStatusChangeCallback(data);
       }
       else
       {
@@ -155,8 +78,109 @@ namespace OpcUa
     ack.SequenceNumber = result.Message.SequenceID;
     PublishRequest request;
     request.Parameters.Acknowledgements.push_back(ack);
-    Server->Subscriptions()->Publish(request);
+    server->Subscriptions()->Publish(request);
   }
+
+  void Subscription::CallDataChangeCallback(const NotificationData& data)
+  {
+    for ( const MonitoredItems& item: data.DataChange.Notification)
+    {
+      std::unique_lock<std::mutex> lock(Mutex); //could used boost::shared_lock to improve perf
+
+      AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
+      if ( mapit == AttributeValueMap.end() )
+      {
+        std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
+      }
+      else
+      {
+        AttributeID val = mapit->second.Attribute;
+        Node node = mapit->second.TargetNode;
+        lock.unlock(); //unlock before calling client cades, you never know what they may do
+        if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
+        Client.DataChange( item.ClientHandle, node, item.Value.Value, val);
+      }
+    }
+  }
+
+  void Subscription::CallStatusChangeCallback(const NotificationData& data)
+  {
+     Client.StatusChange(data.StatusChange.Status);
+  }
+
+  void Subscription::CallEventCallback(const NotificationData& data)
+  {
+    for ( EventFieldList ef :  data.Events.Events)
+    {
+      std::unique_lock<std::mutex> lock(Mutex); //could used boost::shared_lock to improve perf
+
+      AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
+      if ( mapit == AttributeValueMap.end() )
+      {
+        std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
+      }
+      else
+      {
+        Event ev;
+        uint32_t count = 0;
+        if ( mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size() )
+        {
+          throw std::runtime_error("Subscription | Error receive event format does not match requested filter");
+        }
+        for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
+        {
+          //set the default fiedls of events into their event attributes
+          if ( op.BrowsePath.size() == 1 )
+          {
+            if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
+            {
+              ev.EventId = ef.EventFields[count].As<ByteString>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("EventType", 0) )
+            {
+              ev.EventType = ef.EventFields[count].As<NodeID>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("SourceNode", 0) )
+            {
+              ev.SourceNode = ef.EventFields[count].As<NodeID>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("SourceName", 0) )
+            {
+              ev.SourceName = ef.EventFields[count].As<std::string>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("Message", 0) )
+            {
+              ev.Message = ef.EventFields[count].As<LocalizedText>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("Severity", 0) )
+            {
+              ev.Severity = ef.EventFields[count].As<uint16_t>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("LocalTime", 0) )
+            {
+              ev.LocalTime = ef.EventFields[count].As<DateTime>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
+            {
+              ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
+            }
+            else if ( op.BrowsePath[0] == QualifiedName("Time", 0) )
+            {
+              ev.Time = ef.EventFields[count].As<DateTime>();
+            }
+          }
+          //Add anyway all fields as value
+          ev.SetValue(op.BrowsePath, ef.EventFields[count]);
+          ++count;
+        }
+        lock.unlock(); 
+        if (Debug) { std::cout << "Subscription | Debug: Calling client event callback\n"; }
+        Client.Event(ef.ClientHandle, ev);
+        if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
+      }
+    }
+  }
+
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
   {

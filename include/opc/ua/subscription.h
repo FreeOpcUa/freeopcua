@@ -91,10 +91,11 @@ namespace OpcUa
       // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
       //uint32_t SubscribeStatusChange(); 
 
-      void PublishCallback(PublishResult); //Not sure it needs to be public
-
     private:
-      //void Publish();
+      void PublishCallback( Services::SharedPtr serverLocalPtr, const PublishResult); //Not sure it needs to be public
+      void CallDataChangeCallback(const NotificationData& data);
+      void CallEventCallback(const NotificationData& data);
+      void CallStatusChangeCallback(const NotificationData& data);
 
       Services::SharedPtr Server;
       SubscriptionData Data;
