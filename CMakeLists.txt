@@ -67,7 +67,8 @@ else(WIN32)
     SET(OS_SUFFIX _lin)
 
     set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
-    set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
+    SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
+    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
     #FIIXME find_package stuff should also be used for winwdows!
 
