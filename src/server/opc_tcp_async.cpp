@@ -322,6 +322,7 @@ namespace
       ep = tcp::endpoint( ip::address::from_string(params.Host), params.Port );
     }
     acceptor.open(ep.protocol());
+    acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
     acceptor.bind(ep);
   }
 

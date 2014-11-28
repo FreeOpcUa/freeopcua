@@ -65,6 +65,7 @@ namespace OpcUa
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
       Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false); 
+
       //Delete the subscription from server
       void Delete();
 
@@ -91,10 +92,11 @@ namespace OpcUa
       // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
       //uint32_t SubscribeStatusChange(); 
 
-      void PublishCallback(PublishResult); //Not sure it needs to be public
-
     private:
-      //void Publish();
+      void PublishCallback( Services::SharedPtr serverLocalPtr, const PublishResult); 
+      void CallDataChangeCallback(const NotificationData& data);
+      void CallEventCallback(const NotificationData& data);
+      void CallStatusChangeCallback(const NotificationData& data);
 
       Services::SharedPtr Server;
       SubscriptionData Data;

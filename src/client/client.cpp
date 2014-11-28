@@ -68,6 +68,7 @@ namespace OpcUa
     if ( ! Running )
     {
       if (Debug)  { std::cout << "KeepAliveThread | Thread was not running..." << std::endl; }
+      return;
     }
     Thread.join();
     if (Debug)  { std::cout << "KeepAliveThread | Join successfull." << std::endl; }
@@ -170,6 +171,11 @@ namespace OpcUa
       KeepAlive.Start(Node(Server, ObjectID::Server_ServerStatus_State), 0.4 * response.Session.RevisedSessionTimeout);
     }
   }
+
+  RemoteClient::~RemoteClient()
+  {
+    Disconnect();//Do not leave any thread or connectino running
+  } 
 
   void RemoteClient::Disconnect()
   {

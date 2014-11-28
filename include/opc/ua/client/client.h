@@ -66,7 +66,7 @@ namespace OpcUa
   public:
     RemoteClient(bool debug=false) : Debug(debug), KeepAlive() {}
     explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug), KeepAlive() {}
-    ~RemoteClient() {}
+    ~RemoteClient(); 
 
     RemoteClient(const RemoteClient&&) = delete;
     RemoteClient(const RemoteClient&) = delete;
