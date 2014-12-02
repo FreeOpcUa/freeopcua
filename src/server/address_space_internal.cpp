@@ -27,9 +27,8 @@ namespace OpcUa
 
     AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
         : Debug(debug)
+        , DataChangeCallbackHandle(0)
     {
-      DataChangeCallbackHandle = 0;
-
       ObjectAttributes attrs;
       attrs.Description = LocalizedText(OpcUa::Names::Root);
       attrs.DisplayName = LocalizedText(OpcUa::Names::Root);

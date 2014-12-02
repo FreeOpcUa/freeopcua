@@ -32,9 +32,9 @@ namespace OpcUa
   public:
     PeriodicTimer(boost::asio::io_service& io)
       : Timer(io)
+      , IsCanceled(true)
+      , Stopped(true)
     {
-      Stopped = true;
-      IsCanceled = true;
     }
 
     ~PeriodicTimer()
@@ -92,8 +92,8 @@ namespace OpcUa
   private:
     std::mutex Mutex;
     std::condition_variable StopEvent;
+    boost::asio::deadline_timer Timer;
     std::atomic<bool> IsCanceled;
     std::atomic<bool> Stopped;
-    boost::asio::deadline_timer Timer;
   };
 }

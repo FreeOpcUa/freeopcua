@@ -126,12 +126,12 @@ namespace OpcUa
       return CreateObject(newNodeId, GetID(), nodeType.GetID(), browseName, browseName.Name);
     }
 
-    Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string displayName)
+    Object Object::CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string& displayName)
     {
       return CreateObject(NodeID(), GetID(), type.GetID(), browseName, displayName);
     }
 
-    Object Object::CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName)
+    Object Object::CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string& displayName)
     {
       Object object(GetServices());
       object.Id = InstantiateType(newNodeID, parentNode, typeID, NodeClass::Object, browseName, displayName);
@@ -141,7 +141,7 @@ namespace OpcUa
 
     }
 
-    NodeID Object::InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName)
+    NodeID Object::InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string& displayName)
     {
       // Creating new node for object
       AddNodesItem newNodeRequest;
