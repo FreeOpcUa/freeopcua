@@ -482,8 +482,8 @@ namespace
 
     virtual void Publish(const PublishRequest& originalrequest)
     {
-      if (Debug) {std::cout << "binary_client| Publish -->" << std::endl << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
-      PublishRequest request(originalrequest); //Should parameter not be const?
+      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
+      PublishRequest request(originalrequest);
       request.Header = CreateRequestHeader();
       request.Header.Timeout = 0; //We do not want the request to timeout!
 
@@ -518,6 +518,18 @@ namespace
       lock.unlock();
       Send(request);
       if (Debug) {std::cout << "binary_client| Publish  <--" << std::endl;}
+    }
+
+    virtual RepublishResponse Republish(const RepublishParameters& params)
+    {
+      if (Debug) {std::cout << "binary_client| Republish -->" << std::endl; }
+      RepublishRequest request;
+      request.Header = CreateRequestHeader();
+      request.Parameters = params;
+
+      RepublishResponse response = Send<RepublishResponse>(request);
+      if (Debug) {std::cout << "binary_client| Republish  <--" << std::endl;}
+      return response;
     }
 
 private:

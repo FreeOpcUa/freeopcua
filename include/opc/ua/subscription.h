@@ -91,9 +91,18 @@ namespace OpcUa
       //Subscribe to server status change
       // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
       //uint32_t SubscribeStatusChange(); 
+      
+      // Override this method if you want raw publish results from server
+      // for example if you want to make sure you do not miss any packets, etc, ...
+      virtual void PublishCallback( Services::SharedPtr serverLocalPtr, const PublishResult result); 
+
+      //Request republish of a notification from server
+      //SequenceNumber are send by server in PublishResult struct
+      RepublishResponse Republish(uint32_t sequenceNumber);
+
+
 
     private:
-      void PublishCallback( Services::SharedPtr serverLocalPtr, const PublishResult); 
       void CallDataChangeCallback(const NotificationData& data);
       void CallEventCallback(const NotificationData& data);
       void CallStatusChangeCallback(const NotificationData& data);

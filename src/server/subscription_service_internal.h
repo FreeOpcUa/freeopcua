@@ -54,6 +54,7 @@ namespace OpcUa
         virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params);
         virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
         virtual void Publish(const PublishRequest& request);
+        virtual RepublishResponse Republish(const RepublishParameters& request);
 
         void DeleteAllSubscriptions();
         boost::asio::io_service& GetIOService();

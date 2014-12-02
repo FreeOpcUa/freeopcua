@@ -94,11 +94,11 @@ namespace OpcUa
       }
       else
       {
-        AttributeID val = mapit->second.Attribute;
+        AttributeID attr = mapit->second.Attribute;
         Node node = mapit->second.TargetNode;
         lock.unlock(); //unlock before calling client cades, you never know what they may do
         if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
-        Client.DataChange( item.ClientHandle, node, item.Value.Value, val);
+        Client.DataChange( item.ClientHandle, node, item.Value.Value, attr);
       }
     }
   }
@@ -181,6 +181,14 @@ namespace OpcUa
     }
   }
 
+  RepublishResponse Subscription::Republish(uint32_t sequenceNumber)
+  {
+    RepublishParameters params;
+    params.Subscription = Data.ID;
+    params.Counter = sequenceNumber;
+    RepublishResponse response = Server->Subscriptions()->Republish(params);
+    return response;
+  }
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeID attr)
   {
@@ -189,7 +197,7 @@ namespace OpcUa
     avid.Attribute = attr;
     //avid.IndexRange //We leave it null, then the entire array is returned
     std::vector<uint32_t> results = SubscribeDataChange(std::vector<AttributeValueID>({avid}));
-    if (results.size() == 0) { throw std::runtime_error("Protocol Error"); }
+    if (results.size() != 1) { throw std::runtime_error("Subscription | Server error, SubscribeDataChange should have returned exactly one result"); }
     return results.front();
   }
 
@@ -218,7 +226,7 @@ namespace OpcUa
 
     if ( results.size() != attributes.size() ) 
     {
-      throw(std::runtime_error("Subscription | Error server did not send answer for all monitoreditem requessts"));
+      throw(std::runtime_error("Subscription | Error server did not send answer for all monitoreditem requests"));
     }
 
     std::vector<uint32_t> monitoredItemsIds;

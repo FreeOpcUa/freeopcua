@@ -94,6 +94,7 @@ namespace OpcUa
       Timer.async_wait([self](const boost::system::error_code& error){ self->PublishResults(error); });
     }
 
+
     bool InternalSubscription::HasPublishResult()
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
@@ -162,6 +163,24 @@ namespace OpcUa
 
       return resultlist;
     };
+
+    RepublishResponse InternalSubscription::Republish(const RepublishParameters& params)
+    {
+      if (Debug) std::cout << "SubscriptionService| RepublishRequest for sequence: " << params.Counter << std::endl;
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      RepublishResponse response;
+      for (const PublishResult& res: NotAcknowledgedResults)
+      {
+        if (res.Message.SequenceID == params.Counter)
+        {
+          response.Message = res.Message;
+          return response;
+        }
+      }
+      response.Header.ServiceResult = StatusCode::BadMessageNotAvailable;
+      return response;
+    }
 
     NotificationData InternalSubscription::GetNotificationData()
     {
