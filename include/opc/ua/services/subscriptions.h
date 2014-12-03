@@ -27,9 +27,10 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(SubscriptionServices);
 
     public:
-      virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callback) = 0; 
+      virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callbackPublish) = 0; 
       virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions) = 0;
       virtual void Publish(const PublishRequest& request) = 0;
+      virtual RepublishResponse Republish(const RepublishParameters& params) = 0;
 
       //FIXME: Spec says MonitoredItems methods should be in their own service
       virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters) = 0; 

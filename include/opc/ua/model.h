@@ -212,14 +212,14 @@ namespace OpcUa
 
       Object CreateObject(const ObjectType& type, const QualifiedName& browseName);
       Object CreateObject(const NodeID& newNodeId, const ObjectType& nodeType, const QualifiedName& browseName);
-      Object CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string displayName);
-      Object CreateObject(const NodeID& newNodeID, const ObjectType& type, const QualifiedName& browseName, const std::string displayName);
+      Object CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string& displayName);
+      Object CreateObject(const NodeID& newNodeID, const ObjectType& type, const QualifiedName& browseName, const std::string& displayName);
 
     private:
-      Object CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName);
-      Variable CreateVariable(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string displayName);
+      Object CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string& displayName);
+      Variable CreateVariable(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string& displayName);
 
-      NodeID InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string displayName);
+      NodeID InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string& displayName);
       std::vector<ReferenceDescription> BrowseObjectsAndVariables(const NodeID& id);
 
       std::map<NodeID, std::vector<ReferenceDescription>> CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs);

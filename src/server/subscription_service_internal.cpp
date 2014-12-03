@@ -142,6 +142,7 @@ namespace OpcUa
     void SubscriptionServiceInternal::Publish(const PublishRequest& request)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
       if ( PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100 )
       {
         PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
@@ -157,6 +158,21 @@ namespace OpcUa
         }
       }
     }
+
+    RepublishResponse SubscriptionServiceInternal::Republish(const RepublishParameters& params)
+    {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+      
+      SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(params.Subscription);
+      if ( sub_it == SubscriptionsMap.end())
+      {
+        RepublishResponse response;
+        response.Header.ServiceResult = StatusCode::BadSubscriptionIdInvalid;
+        return response;
+      }
+      return sub_it->second->Republish(params);
+    }
+
 
     bool SubscriptionServiceInternal::PopPublishRequest(NodeID node)
     {

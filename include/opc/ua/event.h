@@ -35,7 +35,7 @@ namespace OpcUa
       DateTime ReceiveTime;
       DateTime Time;
       LocalizedText Message;
-      uint16_t Severity;
+      uint16_t Severity = 0;
       NodeID SourceNode;
       std::string SourceName;
 

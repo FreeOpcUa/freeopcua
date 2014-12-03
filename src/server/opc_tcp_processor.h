@@ -49,7 +49,7 @@ namespace OpcUa
       uint32_t ChannelID;
       uint32_t TokenID;
       ExpandedNodeID SessionID;
-      ExpandedNodeID AuthenticationToken;
+      //ExpandedNodeID AuthenticationToken;
       uint32_t SequenceNb;
 
       struct PublishRequestElement

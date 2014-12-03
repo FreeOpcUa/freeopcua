@@ -60,6 +60,7 @@ namespace OpcUa
         void DataChangeCallback(const IntegerID&, const DataValue& value);
         bool HasExpired();
         void TriggerEvent(NodeID node, Event event);
+        RepublishResponse Republish(const RepublishParameters& params);
 
       private:
         void DeleteAllMonitoredItems(); 

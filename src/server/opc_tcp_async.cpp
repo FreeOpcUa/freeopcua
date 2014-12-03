@@ -334,7 +334,7 @@ namespace
 
   void OpcTcpServer::Shutdown()
   {
-    std::clog << "opc_tcp_async| Shutdowning server." << std::endl;
+    std::clog << "opc_tcp_async| Shutting down server." << std::endl;
     Clients.clear();
     acceptor.close();
   }

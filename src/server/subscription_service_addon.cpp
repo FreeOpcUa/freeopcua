@@ -65,6 +65,11 @@ namespace
       Subscriptions->Publish(request);
     }
 
+    OpcUa::RepublishResponse Republish(const OpcUa::RepublishParameters& request)
+    {
+      return Subscriptions->Republish(request);
+    }
+
     OpcUa::MonitoredItemsData CreateMonitoredItems(const OpcUa::MonitoredItemsParameters& parameters)
     {
       return Subscriptions->CreateMonitoredItems(parameters);

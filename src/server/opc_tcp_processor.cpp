@@ -50,6 +50,7 @@ namespace OpcUa
       , ChannelID(1)
       , TokenID(2)
       , SessionID(GenerateSessionId())
+      , SequenceNb(0)
     {
       std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
       std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
