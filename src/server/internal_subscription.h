@@ -76,7 +76,7 @@ namespace OpcUa
         Server::AddressSpace& AddressSpace;
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
-        NodeID CurrentSession;
+        const NodeID CurrentSession;
         std::function<void (PublishResult)> Callback;
 
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
