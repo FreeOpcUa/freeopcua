@@ -10,11 +10,35 @@ import opcua
 port_num1 = 48410
 port_num2 = 48430
 
+#Dummy client
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
         pass    
 
+class MySubClient(opcua.SubscriptionClient):
+    """
+    More advanced client using conditions, so we can wait for condition if we want
+    """
+    def setup(self, condition):
+        self.cond = condition
+        self.node = None
+        self.handle = None
+        self.attribute = None
+        self.value = None
+
+    def data_change(self, handle, node, val, attr):
+        self.handle = handle
+        self.node = node
+        self.value = val
+        self.attribute = attr
+        with self.cond:
+            self.cond.notify_all()
+
+
 class Unit(unittest.TestCase):
+    """
+    Simple unit test that do not need to setup a server or a client 
+    """
 
     def test_equal_nodeid(self):
         nid1 = opcua.NodeID(999, 2)
@@ -114,6 +138,11 @@ class Unit(unittest.TestCase):
 
 
 class CommonTests(object):
+    """
+    Tests that will be run twice. Once on server side and once on 
+    client side since we have been carefull to have the exact 
+    same api on server and client side
+    """
 
     def test_root(self):
         root = self.opc.get_root_node()
@@ -218,6 +247,11 @@ class CommonTests(object):
         val = v.get_value()
         self.assertEqual(-4.54, val)
 
+    def test_read_server_state(self):
+        statenode = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_State)
+        state = statenode.get_value()
+        self.assertEqual(state, None)#FIXME: should return a ServerState object or at least an int!!!
+
     def test_array_value(self):
         o = self.opc.get_objects_node()
         v = o.add_variable('3:VariableArrayValue', [1, 2, 3])
@@ -251,27 +285,16 @@ class CommonTests(object):
         idx = self.opc.get_namespace_index("http://freeopcua.github.io")
         self.assertEqual(idx, 1) 
 
+    def test_non_existing_node(self):
+        root = self.opc.get_root_node()
+        with self.assertRaises(RuntimeError):
+            server_time_node = root.get_child(["0:Objects", "0:Server", "0:nonexistingnode"])
+
+
     def test_subscription_data_change(self):
         '''
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
         '''
-
-        class MySubClient(opcua.SubscriptionClient):
-            def setup(self, condition):
-                self.cond = condition
-                self.node = None
-                self.handle = None
-                self.attribute = None
-                self.value = None
-
-            def data_change(self, handle, node, val, attr):
-                self.handle = handle
-                self.node = node
-                self.value = val
-                self.attribute = attr
-                with self.cond:
-                    self.cond.notify_all()
-
         cond = Condition()
         msclt = MySubClient()
         msclt.setup(cond)
@@ -283,7 +306,6 @@ class CommonTests(object):
         v1 = o.add_variable('3:SubscriptionVariableV1', startv1)
         sub = self.opc.create_subscription(100, msclt)
         handle1 = sub.subscribe_data_change(v1)
-        print('Got handle ', handle1)
 
         #Now check we get the start value
         with cond:
@@ -305,11 +327,36 @@ class CommonTests(object):
         sub.unsubscribe(handle1)
         sub.delete()
 
+    def test_get_node_by_nodeid(self):
+        root = self.opc.get_root_node()
+        server_time_node = root.get_child(["0:Objects", "0:Server", "0:ServerStatus", "0:CurrentTime"])
+        correct = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        self.assertEqual(server_time_node, correct)
 
+    def test_subscribe_server_time(self):
+        cond = Condition()
+        msclt = MySubClient()
+        msclt.setup(cond)
+
+        server_time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+
+        sub = self.opc.create_subscription(200, msclt)
+        handle = sub.subscribe_data_change(server_time_node)
+
+        with cond:
+            ret = cond.wait(0.5)
+        if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        else: pass # XXX
+        print("Time value is: ", msclt.value)
+        self.assertEqual(msclt.node, server_time_node)
+        #FIXME: Add test to veridy server clock. How do I convert opcua.DataTime to python datetime?
 
 
 
 class ServerProcess(Process):
+    """
+    Start a server in another process
+    """
     def __init__(self):
         Process.__init__(self)
         self._exit = Event()
@@ -330,6 +377,12 @@ class ServerProcess(Process):
 
 
 class TestClient(unittest.TestCase, CommonTests):
+    """
+    Run common tests on client side
+    Of course we need a server so we start a server in another 
+    process using python Process module
+    Tests that can only be run on client side must be defined here
+    """
     @classmethod
     def setUpClass(self):
         #start server in its own process
@@ -350,6 +403,10 @@ class TestClient(unittest.TestCase, CommonTests):
 
 
 class TestServer(unittest.TestCase, CommonTests):
+    """
+    Run common tests on server side
+    Tests that can only be run on server side must be defined here
+    """
     @classmethod
     def setUpClass(self):
         self.srv = opcua.Server()
