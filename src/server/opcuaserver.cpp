@@ -61,11 +61,6 @@ namespace OpcUa
 	  XmlAddressSpaces.push_back(path);
   }
 
-  void OPCUAServer::SetLoadCppAddressSpace(bool val)
-  {
-	  LoadCppAddressSpace = val;
-  }
-
   void OPCUAServer::CheckStarted() const
   {
     if ( ! Registry )

@@ -158,9 +158,9 @@ class CommonTests(object):
 
     def test_add_nodes(self):
         objects = self.opc.get_objects_node()
-        f = objects.add_folder('3:MyFolder')
-        v = f.add_variable('3:MyVariable', 6)
-        p = f.add_property('3:MyProperty', 10)
+        f = objects.add_folder(3, 'MyFolder')
+        v = f.add_variable(3, 'MyVariable', 6)
+        p = f.add_property(3, 'MyProperty', 10)
         childs = f.get_children()
         self.assertTrue(v in childs)
         self.assertTrue(p in childs)
@@ -230,7 +230,7 @@ class CommonTests(object):
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableTestValue', 4.32)
+        v = o.add_variable(3, 'VariableTestValue', 4.32)
         val = v.get_value()
         self.assertEqual(4.32, val)
 
@@ -242,7 +242,7 @@ class CommonTests(object):
 
     def test_negative_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableNegativeValue', 4)
+        v = o.add_variable(3, 'VariableNegativeValue', 4)
         v.set_value(-4.54)
         val = v.get_value()
         self.assertEqual(-4.54, val)
@@ -254,20 +254,20 @@ class CommonTests(object):
 
     def test_array_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableArrayValue', [1, 2, 3])
+        v = o.add_variable(3, 'VariableArrayValue', [1, 2, 3])
         val = v.get_value()
         self.assertEqual([1, 2, 3], val)
 
     def test_array_size_one_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableArrayValue', [1, 2, 3])
+        v = o.add_variable(3, 'VariableArrayValue', [1, 2, 3])
         v.set_value([1])
         val = v.get_value()
         self.assertEqual([1], val) 
 
     def test_create_delete_subscription(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:SubscriptionVariable', [1, 2, 3])
+        v = o.add_variable(3, 'SubscriptionVariable', [1, 2, 3])
         sub = self.opc.create_subscription(100, sclt)
         handle = sub.subscribe_data_change(v)
         time.sleep(0.1)
@@ -285,11 +285,18 @@ class CommonTests(object):
         idx = self.opc.get_namespace_index("http://freeopcua.github.io")
         self.assertEqual(idx, 1) 
 
+    def test_use_namespace(self):
+        root = self.opc.get_root_node()
+        idx = self.opc.get_namespace_index("http://freeopcua.github.io")
+        o = root.add_object(idx, "test_namespace")
+        self.assertEqual(idx, o.get_id().namespace_index) 
+        o2 = root.get_child("{}:test_namespace".format(idx))
+        self.assertEqual(o, o2) 
+
     def test_non_existing_node(self):
         root = self.opc.get_root_node()
         with self.assertRaises(RuntimeError):
             server_time_node = root.get_child(["0:Objects", "0:Server", "0:nonexistingnode"])
-
 
     def test_subscription_data_change(self):
         '''
@@ -303,7 +310,7 @@ class CommonTests(object):
 
         #subscribe to a variable
         startv1 = [1, 2, 3]
-        v1 = o.add_variable('3:SubscriptionVariableV1', startv1)
+        v1 = o.add_variable(3, 'SubscriptionVariableV1', startv1)
         sub = self.opc.create_subscription(100, msclt)
         handle1 = sub.subscribe_data_change(v1)
 
@@ -351,6 +358,8 @@ class CommonTests(object):
         self.assertEqual(msclt.node, server_time_node)
         #FIXME: Add test to veridy server clock. How do I convert opcua.DataTime to python datetime?
 
+        sub.unsubscribe(handle)
+        sub.delete()
 
 
 class ServerProcess(Process):
@@ -364,7 +373,6 @@ class ServerProcess(Process):
 
     def run(self):
         self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
         self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num1)
         self.srv.start()
         self.started.set()
@@ -410,7 +418,6 @@ class TestServer(unittest.TestCase, CommonTests):
     @classmethod
     def setUpClass(self):
         self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
         self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num2)
         self.srv.start()
         self.opc = self.srv 
@@ -424,6 +431,17 @@ class TestServer(unittest.TestCase, CommonTests):
         idx1 = self.opc.register_namespace(uri)
         idx2 = self.opc.get_namespace_index(uri)
         self.assertEqual(idx1, idx2) 
+
+    def test_register_use_namespace(self):
+        uri = "http://my_very_custom.namespace.com"
+        idx = self.opc.register_namespace(uri)
+        root = self.opc.get_root_node()
+        myvar = root.add_variable(idx, "var_in_custom_namespace", [5])
+        print("Var is: " , myvar)
+        myid = myvar.get_id()
+        self.assertEqual(idx, myid.namespace_index) 
+        #self.assertEqual(uri, myid.namespace_uri) #FIXME: should return uri!!!
+
 
 
 if __name__ == '__main__':

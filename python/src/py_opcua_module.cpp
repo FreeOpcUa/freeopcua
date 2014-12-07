@@ -36,7 +36,6 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(ToDateTime_stubs, ToDateTime, 1, 2)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OPCUAServerSetLoadCppAddressSpace_stubs, OPCUAServer::SetLoadCppAddressSpace, 0, 1);
 
 
 //--------------------------------------------------------------------------
@@ -305,16 +304,16 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_child", (Node(Node::*)(const std::string &) const) &Node::GetChild)
   .def("add_folder", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddFolder)
   .def("add_folder", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddFolder)
-  .def("add_folder", (Node(Node::*)(const std::string &) const) &Node::AddFolder)
+  .def("add_folder", (Node(Node::*)(uint32_t ns, const std::string &) const) &Node::AddFolder)
   .def("add_object", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
-  .def("add_object", (Node(Node::*)(const std::string &) const) &Node::AddObject)
+  .def("add_object", (Node(Node::*)(uint32_t ns, const std::string &) const) &Node::AddObject)
   .def("add_variable", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
-  .def("add_variable", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddVariable)
+  .def("add_variable", (Node(Node::*)(uint32_t ns, const std::string &, const Variant &) const) &Node::AddVariable)
   .def("add_property", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
-  .def("add_property", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddProperty)
+  .def("add_property", (Node(Node::*)(uint32_t ns, const std::string &, const Variant &) const) &Node::AddProperty)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
@@ -394,7 +393,6 @@ BOOST_PYTHON_MODULE(opcua)
   .def("add_xml_address_space", &OPCUAServer::AddAddressSpace)
   .def("set_server_name", &OPCUAServer::SetServerName)
   .def("set_endpoint", &OPCUAServer::SetEndpoint)
-  .def("load_cpp_addressspace", &OPCUAServer::SetLoadCppAddressSpace, OPCUAServerSetLoadCppAddressSpace_stubs((arg("val") = true)))
   .def("create_subscription", &OPCUAServer_CreateSubscription)
   ;
 
