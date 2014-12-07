@@ -26,6 +26,9 @@ if __name__ == "__main__":
     #s.set_endpoint("opc.tcp://192.168.56.101:48030")
     client.connect()
     try:
+        uri = "http://examples.freeopcua.github.io"
+        idx = client.get_namespace_index(uri)
+
         statenode = client.get_node(opcua.ObjectID.Server_ServerStatus_State)
         print("Server state is: ", statenode.get_value())
 
@@ -34,10 +37,10 @@ if __name__ == "__main__":
         print("Childs are: ", root.get_children())
 
         print("Objects is: ", client.get_objects_node())
-        o = client.get_objects_node()
-        print("Children of objects are: ", o.get_children())
+        objects = client.get_objects_node()
+        print("Children of objects are: ", objects.get_children())
 
-        myvar = root.get_child(["0:Objects", "2:NewObject", "2:MyVariable"])
+        myvar = objects.get_child(["{}:NewObject".format(idx), "MyVariable"])
         print("yvar is: ", myvar)
         
         sclt = SubClient()

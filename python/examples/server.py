@@ -17,15 +17,19 @@ if __name__ == "__main__":
     #s.add_xml_address_space("user_address_space.xml")
     server.start()
     try:
+        #registering custom namespace (optional)
+        uri = "http://examples.freeopcua.github.io"
+        idx = server.register_namespace(uri)
+
         root = server.get_root_node()
         print("I got root folder: ", root)
         objects = server.get_objects_node()
         print("I got objects folder: ", objects)
 
         #Now adding some object to our addresse space from server side
-        test = objects.add_object("2:NewObject")
-        myvar = test.add_variable("2:MyVariable", [16, 56])
-        myprop = test.add_property("myprop", 9.9)
+        test = objects.add_object(idx, "NewObject")
+        myvar = test.add_variable(idx, "MyVariable", [16, 56])
+        myprop = test.add_property(idx, "myprop", 9.9)
        
         # uncomment next lines to subscribe to changes on server side
         #sclt = SubClient()

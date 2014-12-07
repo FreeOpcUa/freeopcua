@@ -243,5 +243,6 @@ namespace OpcUa
 
     return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));
   }
+
 } // namespace OpcUa
 

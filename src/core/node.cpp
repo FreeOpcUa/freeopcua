@@ -32,7 +32,7 @@ namespace OpcUa
 {
 
   Node::Node(Services::SharedPtr srv)
-    : Node(srv, ObjectID::RootFolder, QualifiedName("Root", 0))
+    : Node(srv, NumericNodeID(0, 0), QualifiedName("Null", 0))
   {
   }
 
@@ -232,10 +232,10 @@ namespace OpcUa
      return AddFolder(node, qn);
    }
 
-  Node Node::AddFolder(const std::string& name) const
+  Node Node::AddFolder(uint32_t namespaceIdx, const std::string& name) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), namespaceIdx);
+    QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddFolder(nodeid, qn);
   }
 
@@ -271,11 +271,11 @@ namespace OpcUa
      return AddObject(node, qn);
    }
 
-  Node Node::AddObject(const std::string& name) const
+  Node Node::AddObject(uint32_t ns, const std::string& name) const
   {
     //FIXME: should default namespace be the onde from the parent of the browsename?
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    QualifiedName qn = ToQualifiedName(name, ns);
     return AddObject(nodeid, qn);
   }
 
@@ -304,10 +304,10 @@ namespace OpcUa
     return Node(Server, res.AddedNodeID, browsename);
   }
 
-  Node Node::AddVariable(const std::string& name, const Variant& val) const
+  Node Node::AddVariable(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(name, GetName().NamespaceIndex);
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    QualifiedName qn = ToQualifiedName(name, ns);
     return AddVariable(nodeid, qn, val);
   }
 
@@ -353,10 +353,10 @@ namespace OpcUa
   }
 
 
-  Node Node::AddProperty(const std::string& name, const Variant& val) const
+  Node Node::AddProperty(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), this->Id.GetNamespaceIndex());
-    const QualifiedName& qname = ToQualifiedName(name, GetName().NamespaceIndex);
+    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    const QualifiedName& qname = ToQualifiedName(name, ns);
     return AddProperty(nodeid, qname, val);
   }
 
