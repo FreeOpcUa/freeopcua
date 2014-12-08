@@ -28,8 +28,9 @@ namespace OpcUa
     class SubscriptionServiceInternal;
 
     //Structure to store description of a MonitoredItems
-    struct DataMonitoredItems
+    struct MonitoredDataChange
     {
+      IntegerID MonitoredItemId;
       MonitoringMode Mode;
       time_t LastTrigger;
       CreateMonitoredItemsResult Parameters;
@@ -37,8 +38,20 @@ namespace OpcUa
       uint32_t CallbackHandle;
     };
 
+    struct TriggeredDataChange
+    {
+      IntegerID MonitoredItemId;
+      MonitoredItems Data;
+    };
+
+    struct TriggeredEvent
+    {
+      IntegerID MonitoredItemId;
+      EventFieldList Data;
+    };
+
     //typedef std::pair<NodeID, AttributeID> MonitoredItemsIndex;
-    typedef std::map<IntegerID, DataMonitoredItems> MonitoredItemsMapType;
+    typedef std::map<IntegerID, MonitoredDataChange> MonitoredDataChangeMap;
     typedef std::map<NodeID, IntegerID> MonitoredEventsMap;
 
     class AddressSpaceInMemory; //pre-declaration
@@ -64,34 +77,36 @@ namespace OpcUa
 
       private:
         void DeleteAllMonitoredItems(); 
+        bool DeleteMonitoredEvent(IntegerID handle);
+        bool DeleteMonitoredDataChange(IntegerID handle);
         std::vector<PublishResult> PopPublishResult(); 
         bool HasPublishResult(); 
         NotificationData GetNotificationData();
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
-        void TriggerDataChangeEvent(DataMonitoredItems monitoreditems, AttributeValueID attrval);
+        void TriggerDataChangeEvent(MonitoredDataChange monitoreditems, AttributeValueID attrval);
 
       private:
         SubscriptionServiceInternal& Service;
         Server::AddressSpace& AddressSpace;
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
-        NodeID CurrentSession;
+        const NodeID CurrentSession;
         std::function<void (PublishResult)> Callback;
 
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
         uint32_t KeepAliveCount = 0; 
         bool Startup = true; //To force specific behaviour at startup
         uint32_t LastMonitoredItemID = 100;
-        MonitoredItemsMapType MonitoredItemsMap; 
+        MonitoredDataChangeMap MonitoredDataChanges; 
+        MonitoredEventsMap MonitoredEvents;
         std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
-        std::list<MonitoredItems> MonitoredItemsTriggered; 
-        std::list<EventFieldList> EventTriggered; 
+        std::list<TriggeredDataChange> TriggeredDataChangeEvents; 
+        std::list<TriggeredEvent> TriggeredEvents; 
         boost::asio::io_service& io;
         boost::asio::deadline_timer Timer;
         bool TimerStopped = false;
         uint32_t LifeTimeCount;
-        MonitoredEventsMap MonitoredEvents;
         bool Debug = false;
          
     };

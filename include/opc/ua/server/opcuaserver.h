@@ -26,10 +26,11 @@ namespace OpcUa
       void SetServerURI(const std::string& uri);
       void SetServerName(const std::string& name);
       void AddAddressSpace(const std::string& path);
-      void SetLoadCppAddressSpace(bool val = true);
       void EnableEventNotification();
       uint32_t RegisterNamespace(std::string uri);
       uint32_t GetNamespaceIndex(std::string uri);
+      void SetDefaultNamespace(uint32_t index);
+      uint32_t GetDefaultNamespaceIndex();
 
       void Start();
       void Stop();

@@ -22,6 +22,7 @@
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/view.h>
 #include <ostream>
+#include <limits>
 
 namespace OpcUa
 {
@@ -33,8 +34,8 @@ namespace OpcUa
   std::string ToString(const StatusCode& code);
 
   Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace = 0);
-  QualifiedName ToQualifiedName(const std::string& str, uint16_t default_ns = 0);
+  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace=std::numeric_limits<uint32_t>::max());
+  QualifiedName ToQualifiedName(const std::string& str, uint32_t default_ns=std::numeric_limits<uint32_t>::max());
 
   inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
   {

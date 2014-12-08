@@ -98,19 +98,19 @@ namespace OpcUa
     //Helper classes to modify address space model
     Node AddFolder(const NodeID& folderId, const QualifiedName& browseName) const;
     Node AddFolder(const std::string& nodeid, const std::string& browseName) const; 
-    Node AddFolder(const std::string& browseName) const;
+    Node AddFolder(uint32_t namespaceidx, const std::string& browseName) const;
 
     Node AddObject(const NodeID& folderId, const QualifiedName& browseName) const;
     Node AddObject(const std::string& nodeid, const std::string& browseName) const; 
-    Node AddObject(const std::string& browseName) const;
+    Node AddObject(uint32_t namespaceidx, const std::string& browseName) const;
 
     Node AddVariable(const NodeID& variableId, const QualifiedName& browsename, const Variant& val) const;
-    Node AddVariable(const std::string& BrowseName, const Variant& val) const;
+    Node AddVariable(uint32_t namespaceidx, const std::string& BrowseName, const Variant& val) const;
     Node AddVariable(const std::string& nodeId, const std::string& browseName, const Variant& val) const; 
 
     Node AddProperty(const NodeID& propertyId, const QualifiedName& browsename, const Variant& val) const;
     Node AddProperty(const std::string& nodeid, const std::string& browseName, const Variant& val) const;
-    Node AddProperty(const std::string& browseName, const Variant& val) const;
+    Node AddProperty(uint32_t namespaceidx, const std::string& browseName, const Variant& val) const;
 
     std::string ToString() const;
 
