@@ -22,7 +22,7 @@ class SubClient(opcua.SubscriptionClient):
 
 if __name__ == "__main__":
     client = opcua.Client(False)
-    client.set_endpoint("opc.tcp://localhost:4841")
+    client.set_endpoint("opc.tcp://localhost:4841/freeopcua/server/")
     #s.set_endpoint("opc.tcp://192.168.56.101:48030")
     client.connect()
     try:
