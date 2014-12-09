@@ -26,16 +26,12 @@ Work in progress
 Not implemented yet (patches are welcome)
 * Methods
 * History
-* Authentication
-* Certificates handling
+* Security: Authentication, Certificates handling, ..
 
-
-see examples in src/examples folder or the examples in python directory
 
 ##Installation
 
-An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4.
-On windows you need VS2013, cmake, boost and libxml2
+An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4 or VS2013
 
 
 #### Ubuntu (Debians)
@@ -63,6 +59,7 @@ make
 make test
 ```
 #### Windows
+Boost and libxml2 are necessary
 ```
 rem compiling
 mkdir build
@@ -74,6 +71,10 @@ cd bin\Debug
 example_server.exe
 ```
 
+##Usage
+
+see C++ examples in src/examples folder or Python examples in python/examples. test_highlevel.py in python/tests can also be a usefull source of information
+
 
 ## Tested clients and servers with default settings
 * uaexperts client application
@@ -81,6 +82,6 @@ example_server.exe
 * ignition server
 * ignition open-source sdk (server tested)
 * quickopc client sdk
-* prosysopc demo client
-* prosysopc demo server (subscription currently broken)
+* prosysopc demo client (subscription against freeopcua server currently broken)
+* prosysopc demo server 
 * unified automation sdk (client and server tested)
