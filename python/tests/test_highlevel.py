@@ -401,8 +401,7 @@ class TestClient(unittest.TestCase, CommonTests):
 
         # start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num1)
-        self.clt.connect()
+        self.clt.connect('opc.tcp://localhost:%d' % port_num1)
         self.opc = self.clt
 
     @classmethod
