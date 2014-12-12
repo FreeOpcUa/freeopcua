@@ -11,10 +11,37 @@ port_num1 = 48410
 port_num2 = 48430
 
 class SubClient(opcua.SubscriptionClient):
+    '''
+        Dummy subscription client
+    '''
     def data_change(self, handle, node, val, attr):
         pass    
 
+class MySubClient(opcua.SubscriptionClient):
+    '''
+    More advanced subscription client using conditions, so we can wait for events in tests 
+    '''
+    def setup(self):
+        self.cond = Condition()
+        self.node = None
+        self.handle = None
+        self.attribute = None
+        self.value = None
+        return self.cond
+
+    def data_change(self, handle, node, val, attr):
+        self.handle = handle
+        self.node = node
+        self.value = val
+        self.attribute = attr
+        with self.cond:
+            self.cond.notify_all()
+
+
 class Unit(unittest.TestCase):
+    '''
+    Simple unit test that do not need to setup a server or a client 
+    '''
 
     def test_equal_nodeid(self):
         nid1 = opcua.NodeID(999, 2)
@@ -114,6 +141,11 @@ class Unit(unittest.TestCase):
 
 
 class CommonTests(object):
+    '''
+    Tests that will be run twice. Once on server side and once on 
+    client side since we have been carefull to have the exact 
+    same api on server and client side
+    '''
 
     def test_root(self):
         root = self.opc.get_root_node()
@@ -129,9 +161,9 @@ class CommonTests(object):
 
     def test_add_nodes(self):
         objects = self.opc.get_objects_node()
-        f = objects.add_folder('3:MyFolder')
-        v = f.add_variable('3:MyVariable', 6)
-        p = f.add_property('3:MyProperty', 10)
+        f = objects.add_folder(3, 'MyFolder')
+        v = f.add_variable(3, 'MyVariable', 6)
+        p = f.add_property(3, 'MyProperty', 10)
         childs = f.get_children()
         self.assertTrue(v in childs)
         self.assertTrue(p in childs)
@@ -201,7 +233,7 @@ class CommonTests(object):
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableTestValue', 4.32)
+        v = o.add_variable(3, 'VariableTestValue', 4.32)
         val = v.get_value()
         self.assertEqual(4.32, val)
 
@@ -213,27 +245,33 @@ class CommonTests(object):
 
     def test_negative_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableNegativeValue', 4)
+        v = o.add_variable(3, 'VariableNegativeValue', 4)
         v.set_value(-4.54)
         val = v.get_value()
         self.assertEqual(-4.54, val)
 
+    def test_read_server_state(self):
+        statenode = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_State)
+        state = statenode.get_value()
+        self.assertEqual(state, None)# FIXME: should return a ServerState object or at least an int!!!
+        # self.assertEqual(state, 0)# FIXME: This should be the correct result
+
     def test_array_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableArrayValue', [1, 2, 3])
+        v = o.add_variable(3, 'VariableArrayValue', [1, 2, 3])
         val = v.get_value()
         self.assertEqual([1, 2, 3], val)
 
     def test_array_size_one_value(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:VariableArrayValue', [1, 2, 3])
+        v = o.add_variable(3, 'VariableArrayValue', [1, 2, 3])
         v.set_value([1])
         val = v.get_value()
         self.assertEqual([1], val) 
 
     def test_create_delete_subscription(self):
         o = self.opc.get_objects_node()
-        v = o.add_variable('3:SubscriptionVariable', [1, 2, 3])
+        v = o.add_variable(3, 'SubscriptionVariable', [1, 2, 3])
         sub = self.opc.create_subscription(100, sclt)
         handle = sub.subscribe_data_change(v)
         time.sleep(0.1)
@@ -248,44 +286,38 @@ class CommonTests(object):
         sub.delete()
 
     def test_get_namespace_index(self):
-        idx = self.opc.get_namespace_index("http://freeopcua.github.io")
+        idx = self.opc.get_namespace_index('http://freeopcua.github.io')
         self.assertEqual(idx, 1) 
+
+    def test_use_namespace(self):
+        root = self.opc.get_root_node()
+        idx = self.opc.get_namespace_index('http://freeopcua.github.io')
+        o = root.add_object(idx, 'test_namespace')
+        self.assertEqual(idx, o.get_id().namespace_index) 
+        o2 = root.get_child('{}:test_namespace'.format(idx))
+        self.assertEqual(o, o2) 
+
+    def test_non_existing_node(self):
+        root = self.opc.get_root_node()
+        with self.assertRaises(RuntimeError):
+            server_time_node = root.get_child(['0:Objects', '0:Server', '0:nonexistingnode'])
 
     def test_subscription_data_change(self):
         '''
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
         '''
-
-        class MySubClient(opcua.SubscriptionClient):
-            def setup(self, condition):
-                self.cond = condition
-                self.node = None
-                self.handle = None
-                self.attribute = None
-                self.value = None
-
-            def data_change(self, handle, node, val, attr):
-                self.handle = handle
-                self.node = node
-                self.value = val
-                self.attribute = attr
-                with self.cond:
-                    self.cond.notify_all()
-
-        cond = Condition()
         msclt = MySubClient()
-        msclt.setup(cond)
+        cond = msclt.setup()
 
         o = self.opc.get_objects_node()
 
-        #subscribe to a variable
+        # subscribe to a variable
         startv1 = [1, 2, 3]
-        v1 = o.add_variable('3:SubscriptionVariableV1', startv1)
+        v1 = o.add_variable(3, 'SubscriptionVariableV1', startv1)
         sub = self.opc.create_subscription(100, msclt)
         handle1 = sub.subscribe_data_change(v1)
-        print('Got handle ', handle1)
 
-        #Now check we get the start value
+        # Now check we get the start value
         with cond:
             ret = cond.wait(0.5)
         if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
@@ -293,7 +325,7 @@ class CommonTests(object):
         self.assertEqual(msclt.value, startv1)
         self.assertEqual(msclt.node, v1)
 
-        #modify v1 and check we get value 
+        # modify v1 and check we get value 
         v1.set_value([5])
         with cond:
             ret = cond.wait(0.5)
@@ -305,11 +337,36 @@ class CommonTests(object):
         sub.unsubscribe(handle1)
         sub.delete()
 
+    def test_get_node_by_nodeid(self):
+        root = self.opc.get_root_node()
+        server_time_node = root.get_child(['0:Objects', '0:Server', '0:ServerStatus', '0:CurrentTime'])
+        correct = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        self.assertEqual(server_time_node, correct)
 
+    def test_subscribe_server_time(self):
+        msclt = MySubClient()
+        cond = msclt.setup()
 
+        server_time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+
+        sub = self.opc.create_subscription(200, msclt)
+        handle = sub.subscribe_data_change(server_time_node)
+
+        with cond:
+            ret = cond.wait(0.5)
+        if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        else: pass # XXX
+        self.assertEqual(msclt.node, server_time_node)
+        # FIXME: Add test to verify server clock. How do I convert opcua.DataTime to python datetime?
+
+        sub.unsubscribe(handle)
+        sub.delete()
 
 
 class ServerProcess(Process):
+    '''
+    Start a server in another process
+    '''
     def __init__(self):
         Process.__init__(self)
         self._exit = Event()
@@ -317,7 +374,6 @@ class ServerProcess(Process):
 
     def run(self):
         self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
         self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num1)
         self.srv.start()
         self.started.set()
@@ -330,30 +386,42 @@ class ServerProcess(Process):
 
 
 class TestClient(unittest.TestCase, CommonTests):
+    '''
+    Run common tests on client side
+    Of course we need a server so we start a server in another 
+    process using python Process module
+    Tests that can only be run on client side must be defined here
+    '''
     @classmethod
     def setUpClass(self):
-        #start server in its own process
+        # start server in its own process
         self.srv = ServerProcess()
         self.srv.start()
         self.srv.started.wait() # let it initialize
 
-        #start client
+        # start client
         self.clt = opcua.Client();
-        self.clt.set_endpoint('opc.tcp://localhost:%d' % port_num1)
-        self.clt.connect()
+        self.clt.connect('opc.tcp://localhost:%d' % port_num1)
         self.opc = self.clt
 
     @classmethod
     def tearDownClass(self):
         self.clt.disconnect()
+        # stop the server in its own process
         self.srv.stop()
+        # wait for server to stop, otherwise we may try to start a 
+        # new one before this one is really stopped
+        self.srv.join()
 
 
 class TestServer(unittest.TestCase, CommonTests):
+    '''
+    Run common tests on server side
+    Tests that can only be run on server side must be defined here
+    '''
     @classmethod
     def setUpClass(self):
         self.srv = opcua.Server()
-        self.srv.load_cpp_addressspace(True)
         self.srv.set_endpoint('opc.tcp://localhost:%d' % port_num2)
         self.srv.start()
         self.opc = self.srv 
@@ -363,10 +431,20 @@ class TestServer(unittest.TestCase, CommonTests):
         self.srv.stop()
 
     def test_register_namespace(self):
-        uri = "http://mycustom.namespace.com"
+        uri = 'http://mycustom.namespace.com'
         idx1 = self.opc.register_namespace(uri)
         idx2 = self.opc.get_namespace_index(uri)
         self.assertEqual(idx1, idx2) 
+
+    def test_register_use_namespace(self):
+        uri = 'http://my_very_custom.namespace.com'
+        idx = self.opc.register_namespace(uri)
+        root = self.opc.get_root_node()
+        myvar = root.add_variable(idx, 'var_in_custom_namespace', [5])
+        myid = myvar.get_id()
+        self.assertEqual(idx, myid.namespace_index) 
+        #self.assertEqual(uri, myid.namespace_uri) #FIXME: should return uri!!!
+
 
 
 if __name__ == '__main__':

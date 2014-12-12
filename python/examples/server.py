@@ -12,20 +12,21 @@ class SubClient(opcua.SubscriptionClient):
 
 if __name__ == "__main__":
     server = opcua.Server(False)
-    server.set_endpoint("opc.tcp://localhost:4841")
-    #s.add_xml_address_space("standard_address_space.xml")
-    #s.add_xml_address_space("user_address_space.xml")
+    server.set_endpoint("opc.tcp://localhost:4841/freeopcua/server/")
+    server.set_server_name("FreeOpcUa Example Server")
     server.start()
     try:
-        root = server.get_root_node()
-        print("I got root folder: ", root)
+        uri = "http://examples.freeopcua.github.io"
+        idx = server.register_namespace(uri)
+
         objects = server.get_objects_node()
         print("I got objects folder: ", objects)
 
         #Now adding some object to our addresse space from server side
-        test = objects.add_object("2:NewObject")
-        myvar = test.add_variable("2:MyVariable", [16, 56])
-        myprop = test.add_property("myprop", 9.9)
+        myobject = objects.add_object(idx, "NewObject")
+        myvar = myobject.add_variable(idx, "MyVariable", [16, 56])
+        myprop = myobject.add_property(idx, "myprop", 9.9)
+        myfolder = myobject.add_folder(idx, "myfolder")
        
         # uncomment next lines to subscribe to changes on server side
         #sclt = SubClient()

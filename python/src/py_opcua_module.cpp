@@ -36,7 +36,6 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(ToDateTime_stubs, ToDateTime, 1, 2)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OPCUAServerSetLoadCppAddressSpace_stubs, OPCUAServer::SetLoadCppAddressSpace, 0, 1);
 
 
 //--------------------------------------------------------------------------
@@ -117,6 +116,11 @@ static boost::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteCli
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
+static Node RemoteClient_GetNode(RemoteClient & self, ObjectID objectid)
+{
+  return self.GetNode(NodeID(objectid));
+}
+
 //--------------------------------------------------------------------------
 // OPCUAServer helpers
 //--------------------------------------------------------------------------
@@ -126,6 +130,12 @@ static boost::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServe
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
 }
+
+static Node OPCUAServer_GetNode(OPCUAServer & self, ObjectID objectid)
+{
+  return self.GetNode(NodeID(objectid));
+}
+
 
 //--------------------------------------------------------------------------
 // module
@@ -294,16 +304,16 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_child", (Node(Node::*)(const std::string &) const) &Node::GetChild)
   .def("add_folder", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddFolder)
   .def("add_folder", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddFolder)
-  .def("add_folder", (Node(Node::*)(const std::string &) const) &Node::AddFolder)
+  .def("add_folder", (Node(Node::*)(uint32_t, const std::string &) const) &Node::AddFolder)
   .def("add_object", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
-  .def("add_object", (Node(Node::*)(const std::string &) const) &Node::AddObject)
+  .def("add_object", (Node(Node::*)(uint32_t, const std::string &) const) &Node::AddObject)
   .def("add_variable", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
-  .def("add_variable", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddVariable)
+  .def("add_variable", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddVariable)
   .def("add_property", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
-  .def("add_property", (Node(Node::*)(const std::string &, const Variant &) const) &Node::AddProperty)
+  .def("add_property", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddProperty)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
@@ -345,7 +355,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<RemoteClient, boost::noncopyable>("Client", init<>())
   .def(init<bool>())
-  .def("connect", (void (RemoteClient::*)()) &RemoteClient::Connect)
+  .def("connect", (void (RemoteClient::*)(const std::string&)) &RemoteClient::Connect)
   .def("connect", (void (RemoteClient::*)(const EndpointDescription&)) &RemoteClient::Connect)
   .def("disconnect", &RemoteClient::Disconnect)
   .def("get_namespace_index", &RemoteClient::GetNamespaceIndex)
@@ -354,13 +364,14 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_server_node", &RemoteClient::GetServerNode)
   .def("get_node", (Node(RemoteClient::*)(const std::string&) const) &RemoteClient::GetNode)
   .def("get_node", (Node(RemoteClient::*)(const NodeID&) const) &RemoteClient::GetNode)
-  .def("set_endpoint", &RemoteClient::SetEndpoint)
+  .def("get_node", &RemoteClient_GetNode)
   .def("get_endpoint", &RemoteClient::GetEndpoint)
-  .def("get_server_endpoints", &RemoteClient::GetServerEndpoints)
+  .def("get_server_endpoints", (std::vector<EndpointDescription> (RemoteClient::*)(const std::string&)) &RemoteClient::GetServerEndpoints)
+  .def("get_server_endpoints", (std::vector<EndpointDescription> (RemoteClient::*)()) &RemoteClient::GetServerEndpoints)
   .def("set_session_name", &RemoteClient::SetSessionName)
   .def("get_session_name", &RemoteClient::GetSessionName)
-  .def("get_uri", &RemoteClient::GetURI)
-  .def("set_uri", &RemoteClient::SetURI)
+  .def("get_application_uri", &RemoteClient::GetApplicationURI)
+  .def("set_application_uri", &RemoteClient::SetApplicationURI)
   .def("set_security_policy", &RemoteClient::SetSecurityPolicy)
   .def("get_security_policy", &RemoteClient::GetSecurityPolicy)
   .def("create_subscription", &RemoteClient_CreateSubscription)
@@ -377,13 +388,11 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_server_node", &OPCUAServer::GetServerNode)
   .def("get_node", (Node(OPCUAServer::*)(const std::string&) const) &OPCUAServer::GetNode)
   .def("get_node", (Node(OPCUAServer::*)(const NodeID&) const) &OPCUAServer::GetNode)
-  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<QualifiedName>&)) &OPCUAServer::GetNodeFromPath) XXX
-  //.def("get_node_from_path", (Node (OPCUAServer::*)(const std::vector<std::string>&)) &OPCUAServer::GetNodeFromPath) XXX
+  .def("get_node", &OPCUAServer_GetNode)
   .def("set_uri", &OPCUAServer::SetServerURI)
   .def("add_xml_address_space", &OPCUAServer::AddAddressSpace)
   .def("set_server_name", &OPCUAServer::SetServerName)
   .def("set_endpoint", &OPCUAServer::SetEndpoint)
-  .def("load_cpp_addressspace", &OPCUAServer::SetLoadCppAddressSpace, OPCUAServerSetLoadCppAddressSpace_stubs((arg("val") = true)))
   .def("create_subscription", &OPCUAServer_CreateSubscription)
   ;
 

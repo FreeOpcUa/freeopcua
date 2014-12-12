@@ -33,41 +33,42 @@ int main(int argc, char** argv)
   try
   {
     //std::string endpoint = "opc.tcp://192.168.56.101:48030";
-    std::string endpoint = "opc.tcp://127.0.0.1:4841";
+    std::string endpoint = "opc.tcp://127.0.0.1:4841/freeopcua/server/";
     //std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
 
     std::cout << "Connecting to: " << endpoint << std::endl;
     bool debug = false;
-    OpcUa::RemoteClient client(endpoint, debug);
-    client.Connect();
+    OpcUa::RemoteClient client(debug);
+    client.Connect(endpoint);
 
-    std::cout << "Getting root node: " << endpoint << std::endl;
+    //get Root node on server
     OpcUa::Node root = client.GetRootNode();
     std::cout << "Root node is: " << root << std::endl;
-    std::vector<std::string> path({"Objects", "Server"});
-    OpcUa::Node server = root.GetChild(path);
-    std::cout << "Server node obtained by path: " << server << std::endl;
 
+    //get and browse Objects node
     std::cout << "Child of objects node are: " << std::endl;
-    for (OpcUa::Node node : client.GetObjectsNode().GetChildren())
+    Node objects = client.GetObjectsNode();
+    for (OpcUa::Node node : objects.GetChildren())
       std::cout << "    " << node << std::endl;
 
-
+    //get a node from standard namespace using objectID
     std::cout << "NamespaceArray is: " << std::endl;
-    std::vector<std::string> nspath ({"Objects", "Server", "NamespaceArray"});
-    OpcUa::Node nsnode = root.GetChild(nspath);
+    OpcUa::Node nsnode = client.GetNode(ObjectID::Server_NamespaceArray); 
     OpcUa::Variant ns  = nsnode.GetValue();
 
     for (std::string d : ns.As<std::vector<std::string>>())
       std::cout << "    "  << d << std::endl;
-
+    
+    //Get namespace index we are interrested in
+    uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
+    
+    //Get Node using path (BrowsePathToNodeId call)
+    std::vector<std::string> varpath({std::to_string(idx) + ":NewObject", "MyVariable"});
+    //std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); //Example data from prosys server
+    OpcUa::Node myvar = objects.GetChild(varpath);
+    std::cout << "got node: " << myvar << std::endl;
 
     //Subscription
-    std::vector<std::string> varpath({"Objects", "2:NewObject", "2:MyVariable"});
-    //std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); //Example data from prosys server
-    OpcUa::Node myvar = root.GetChild(varpath);
-
-    std::cout << "got node: " << myvar << std::endl;
     SubClient sclt; 
     std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
     uint32_t handle = sub->SubscribeDataChange(myvar);

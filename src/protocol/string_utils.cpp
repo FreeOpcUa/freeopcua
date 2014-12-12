@@ -24,6 +24,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 
 
 std::string OpcUa::ToString(const NodeID& id)
@@ -115,7 +116,7 @@ namespace
     std::size_t colon = 0;
     do
     {
-      // if something foud at previous cycle
+      // if something found at previous cycle
       if (colon)
       {
         ++colon;
@@ -161,11 +162,17 @@ namespace
 OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace)
 {
   OpcUa::NodeID result;
-
   uint32_t ns = defaultNamespace;
 
   const std::string nsString = GetNodeField(data, "ns=");
-  if (!nsString.empty())
+  if (nsString.empty())
+  {
+    if (ns == std::numeric_limits<uint32_t>::max() )
+    {
+      throw(std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + data));
+    }
+  }
+  else
   {
     ns = GetInteger(nsString);
   }
@@ -203,7 +210,7 @@ OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace
   throw(std::runtime_error("No identifier found in string: '" + data +"'"));
 }
 
-OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint16_t default_ns)
+OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint32_t default_ns)
 {
   std::size_t found = str.find(":");
   if (found != std::string::npos)
@@ -211,6 +218,11 @@ OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint16_t def
     uint16_t ns = std::stoi(str.substr(0, found));
     std::string name = str.substr(found+1, str.length() - found);
     return QualifiedName(ns, name);
+  }
+  
+  if (default_ns == std::numeric_limits<uint32_t>::max() )
+  {
+    throw(std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + str));
   }
 
   return QualifiedName(default_ns, str);

@@ -43,6 +43,8 @@ namespace OpcUa
   class KeepAliveThread
   {
     public:
+      /// @brief Internal 
+      // Send keepalive request to server so it does not disconnect us
       KeepAliveThread() : StopRequest(false), Running(false) {}
       void Start(Node node, Duration period);
       void Stop();
@@ -64,45 +66,91 @@ namespace OpcUa
   class RemoteClient
   {
   public:
+    /// @brief create high level client
+    /// this class is meant to be used to quickly/easily connect to an OPCUA server
+    /// it may not offer absolutely all features available in protocol
+    /// you may want to look at code and implement your own client if you need 
+    /// debug argument will make freeopcua write A LOT to stdout
+    /// set endpoint uri on wich server will listen.
+    /// opc.tcp://localhost:4841/opcua/server
+    /// opc.tcp://192.168.1.1:4840/opcua/server
+    /// opc.tcp://server.freeopca.org:4841/opcua/server
     RemoteClient(bool debug=false) : Debug(debug), KeepAlive() {}
-    explicit RemoteClient(const std::string& endpoint, bool debug=false) : Endpoint(endpoint), Debug(debug), KeepAlive() {}
     ~RemoteClient(); 
 
     RemoteClient(const RemoteClient&&) = delete;
     RemoteClient(const RemoteClient&) = delete;
     RemoteClient& operator=(const RemoteClient&) = delete;
 
+    /// @brief set session name 
     void SetSessionName(const std::string& str) { SessionName = str; }
     std::string GetSessionName() const { return SessionName; }
 
-    std::string GetURI() const { return Uri; }
-    void SetURI(std::string uri) { Uri = uri; }
+    /// @brief  connect to a server, specify endpoint as string
+    // a connection will be made to server to get endpoint description
+    // an endpoint description will be selected and then a connection will attempted 
+    void Connect(const std::string& endpoint);
 
+    /// @brief connect to a server, specify endpoint as EndpointDesciption
+    // EndpointDescription can be defined by hand or gotten through
+    // a call to GetServerEndpoints() 
+    void Connect(const EndpointDescription&);
+
+    /// @brief Disconnect from server
+    // close all threads and subcsriptions
+    void Disconnect();
+
+    /// @brief  Connect to server and get endpoints
+    std::vector<EndpointDescription> GetServerEndpoints(const std::string& endpoint);
+
+    /// @brief  Connect to server and select one endpoint
+    EndpointDescription SelectEndpoint(const std::string&); 
+
+    /// @brief  get endpoints from server, assume we are already connected
     std::vector<EndpointDescription> GetServerEndpoints();
-    EndpointDescription SelectEndpoint(); //Not sure it should be public
-    std::string GetEndpoint() const { return Endpoint; }
-    void SetEndpoint(std::string endpoint) { Endpoint = endpoint; }
+    std::string GetEndpoint() const { return Endpoint.EndpointURL; }
 
+    /// @brief  set application description 
+    std::string GetApplicationURI() const { return ApplicationUri; }
+    void SetApplicationURI(std::string uri) { ApplicationUri = uri; }
+    std::string GetProductURI() const { return ProductUri; }
+    void SetProductURI(std::string uri) { ProductUri = uri; }
+
+    /// @brief  set security policy
+    // anyway freeopcua currently only support None 
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
     std::string GetSecurityPolicy() const { return SecurityPolicy; }
 
+    /// @brief Get namespaces used by server.
+    // Deduce index from order or call GetNamespaceIndex(uri)
+    std::vector<std::string>  GetServerNamespaces();
     uint32_t GetNamespaceIndex(std::string uri);
-    Node GetRootNode() const;
-    Node GetObjectsNode() const;
-    Node GetServerNode() const;
+
+    /// @brief Get a specific node by nodeid
+    // you can also access a standard node from addressspace using
+    // ObjectID, for example:
+    // Node mynode = GetNode(ObjectID::Server); 
+    // using a string is also possible:
+    // Node mynode = GetNode("ns=3;i=55"); 
     Node GetNode(const NodeID& nodeid) const;
     Node GetNode(const std::string& nodeid) const;
 
-    void Connect();
-    void Connect(const EndpointDescription&);
-    void Disconnect();
+    /// @brief helper methods for node you will probably want to access
+    Node GetRootNode() const;
+    Node GetObjectsNode() const;
+    Node GetServerNode() const;
 
+
+    /// @brief Create a subscription objects
+    // returned object can then be used to subscribe 
+    // to datachange or custom events from server
     std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& client);
 
   private:
-    std::string Endpoint = "opc.tcp:://localhost:4841";
+    EndpointDescription Endpoint;
+    // defined some sensible defaults that should let us connect to most servers
     std::string SessionName = "Open source OPC-UA Client Session";
-    std::string Uri = "urn:freeopcua:client";
+    std::string ApplicationUri = "urn:freeopcua:client";
     std::string ProductUri = "urn:freeopcua.github.no:client";
     std::string SecurityPolicy = "none";
     bool Debug = false; 
@@ -113,7 +161,6 @@ namespace OpcUa
   private:
     KeepAliveThread KeepAlive;
     
-
   };
 
 } // namespace OpcUa
