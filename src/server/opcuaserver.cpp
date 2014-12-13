@@ -148,6 +148,7 @@ namespace OpcUa
   void OPCUAServer::Stop()
   {
     std::cout << "Stopping opcua server application" << std::endl;
+    CheckStarted();
     Addons->Stop();
   }
 
