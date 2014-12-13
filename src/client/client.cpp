@@ -74,7 +74,7 @@ namespace OpcUa
     if (Debug)  { std::cout << "KeepAliveThread | Join successfull." << std::endl; }
   }
 
-  std::vector<EndpointDescription> RemoteClient::GetServerEndpoints(const std::string& endpoint)
+  std::vector<EndpointDescription> UaClient::GetServerEndpoints(const std::string& endpoint)
   {
     const Common::Uri serverUri(endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
@@ -84,13 +84,13 @@ namespace OpcUa
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
     Server = OpcUa::CreateBinaryServer(channel, params, Debug);
-    std::vector<EndpointDescription> endpoints = RemoteClient::GetServerEndpoints();
+    std::vector<EndpointDescription> endpoints = UaClient::GetServerEndpoints();
     Server.reset();
 
     return endpoints;
   }
 
-  std::vector<EndpointDescription> RemoteClient::GetServerEndpoints()
+  std::vector<EndpointDescription> UaClient::GetServerEndpoints()
   {
     EndpointsFilter filter;
     filter.EndpointURL = Endpoint.EndpointURL;
@@ -101,26 +101,26 @@ namespace OpcUa
     return endpoints;
   }
 
-  EndpointDescription RemoteClient::SelectEndpoint(const std::string& endpoint)
+  EndpointDescription UaClient::SelectEndpoint(const std::string& endpoint)
   {
     std::vector<EndpointDescription> endpoints = GetServerEndpoints(endpoint);
-    if (Debug)  { std::cout << "RemoteClient | Going through server endpoints and selected one we support" << std::endl; }
+    if (Debug)  { std::cout << "UaClient | Going through server endpoints and selected one we support" << std::endl; }
     for ( EndpointDescription ed : endpoints)
     {
-      if (Debug)  { std::cout << "RemoteClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
+      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
       if ( ed.SecurityPolicyURI == "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        if (Debug)  { std::cout << "RemoteClient | Security policy is OK, now looking at user token" <<  std::endl; }
+        if (Debug)  { std::cout << "UaClient | Security policy is OK, now looking at user token" <<  std::endl; }
         if (ed.UserIdentifyTokens.empty() )
         {
-          if (Debug)  { std::cout << "RemoteClient | Server does not use user token, OK" <<  std::endl; }
+          if (Debug)  { std::cout << "UaClient | Server does not use user token, OK" <<  std::endl; }
           return ed;
         }
         for (  UserTokenPolicy token : ed.UserIdentifyTokens)
         {
           if (token.TokenType == UserIdentifyTokenType::ANONYMOUS )
           {
-            if (Debug)  { std::cout << "RemoteClient | Endpoint selected " <<  std::endl; }
+            if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
           }
         }
@@ -129,13 +129,13 @@ namespace OpcUa
     throw std::runtime_error("No supported endpoints found on server");
   }
 
-  void RemoteClient::Connect(const std::string& endpoint)
+  void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
     Connect(endpointdesc);
   }
    
-  void RemoteClient::Connect(const EndpointDescription& endpoint)
+  void UaClient::Connect(const EndpointDescription& endpoint)
   {
     Endpoint = endpoint;
     const Common::Uri serverUri(Endpoint.EndpointURL);
@@ -148,7 +148,7 @@ namespace OpcUa
     Server = OpcUa::CreateBinaryServer(channel, params, Debug);
 
 
-    if (Debug)  { std::cout << "RemoteClient | Creating session " <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Creating session " <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = ApplicationUri;
     session.ClientDescription.ProductURI = ProductUri;
@@ -170,12 +170,12 @@ namespace OpcUa
     }
   }
 
-  RemoteClient::~RemoteClient()
+  UaClient::~UaClient()
   {
     Disconnect();//Do not leave any thread or connectino running
   } 
 
-  void RemoteClient::Disconnect()
+  void UaClient::Disconnect()
   {
     KeepAlive.Stop();
     KeepAlive.Join();
@@ -188,14 +188,14 @@ namespace OpcUa
     Server.reset(); //FIXME: check if we still need this
   }
 
-  std::vector<std::string>  RemoteClient::GetServerNamespaces()
+  std::vector<std::string>  UaClient::GetServerNamespaces()
   {
     if ( ! Server ) { throw NotConnectedError();}
     Node namespacearray(Server, ObjectID::Server_NamespaceArray);
     return namespacearray.GetValue().As<std::vector<std::string>>();;
   }
 
-  uint32_t RemoteClient::GetNamespaceIndex(std::string uri)
+  uint32_t UaClient::GetNamespaceIndex(std::string uri)
   {
     if ( ! Server ) { throw NotConnectedError();}
     Node namespacearray(Server, ObjectID::Server_NamespaceArray);
@@ -212,36 +212,36 @@ namespace OpcUa
   }
 
 
-  Node RemoteClient::GetNode(const std::string& nodeId) const
+  Node UaClient::GetNode(const std::string& nodeId) const
   {
     return Node(Server, ToNodeID(nodeId));
   }
 
-  Node RemoteClient::GetNode(const NodeID& nodeId) const
+  Node UaClient::GetNode(const NodeID& nodeId) const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, nodeId);
   }
 
-  Node RemoteClient::GetRootNode() const
+  Node UaClient::GetRootNode() const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, OpcUa::ObjectID::RootFolder);
   }
 
-  Node RemoteClient::GetObjectsNode() const
+  Node UaClient::GetObjectsNode() const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, OpcUa::ObjectID::ObjectsFolder);
   }
 
-  Node RemoteClient::GetServerNode() const
+  Node UaClient::GetServerNode() const
   {
     if ( ! Server ) { throw NotConnectedError();}
     return Node(Server, OpcUa::ObjectID::Server);
   }
 
-  std::unique_ptr<Subscription> RemoteClient::CreateSubscription(unsigned int period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionClient& callback)
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;

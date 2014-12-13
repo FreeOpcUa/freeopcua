@@ -63,7 +63,7 @@ namespace OpcUa
   };
 
 
-  class RemoteClient
+  class UaClient
   {
   public:
     /// @brief create high level client
@@ -75,12 +75,12 @@ namespace OpcUa
     /// opc.tcp://localhost:4841/opcua/server
     /// opc.tcp://192.168.1.1:4840/opcua/server
     /// opc.tcp://server.freeopca.org:4841/opcua/server
-    RemoteClient(bool debug=false) : Debug(debug), KeepAlive() {}
-    ~RemoteClient(); 
+    UaClient(bool debug=false) : Debug(debug), KeepAlive() {}
+    ~UaClient(); 
 
-    RemoteClient(const RemoteClient&&) = delete;
-    RemoteClient(const RemoteClient&) = delete;
-    RemoteClient& operator=(const RemoteClient&) = delete;
+    UaClient(const UaClient&&) = delete;
+    UaClient(const UaClient&) = delete;
+    UaClient& operator=(const UaClient&) = delete;
 
     /// @brief set session name 
     void SetSessionName(const std::string& str) { SessionName = str; }

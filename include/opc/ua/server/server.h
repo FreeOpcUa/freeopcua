@@ -11,7 +11,7 @@
 
 namespace OpcUa
 {
-  class OPCUAServer
+  class UaServer
   {
     public:
       /// @brief create high level server
@@ -19,8 +19,8 @@ namespace OpcUa
       // it may not offer absolutely all features available in protocol
       // you may want to look at code and implement your own server if you need 
       // debug argument will make freeopcua write A LOT to stdout
-      OPCUAServer();
-      explicit OPCUAServer(bool debug);
+      UaServer();
+      explicit UaServer(bool debug);
 
       /// @brief set endpoint uri on wich server will listen.
       /// opc.tcp://localhost:4841/opcua/server

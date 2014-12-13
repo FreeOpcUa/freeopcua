@@ -14,7 +14,7 @@
 #include "opc/ua/client/binary_server.h"
 #include "opc/ua/node.h"
 #include "opc/ua/event.h"
-#include "opc/ua/server/opcuaserver.h"
+#include "opc/ua/server/server.h"
 #include "opc/ua/protocol/types.h"
 #include "opc/ua/services/services.h"
 #include "opc/ua/subscription.h"
@@ -107,31 +107,31 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 { self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
 
 //--------------------------------------------------------------------------
-// RemoteClient helpers
+// UaClient helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> RemoteClient_CreateSubscription(RemoteClient & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
-static Node RemoteClient_GetNode(RemoteClient & self, ObjectID objectid)
+static Node UaClient_GetNode(UaClient & self, ObjectID objectid)
 {
   return self.GetNode(NodeID(objectid));
 }
 
 //--------------------------------------------------------------------------
-// OPCUAServer helpers
+// UaServer helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> OPCUAServer_CreateSubscription(OPCUAServer & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionClient & callback)
 {
   std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
-static Node OPCUAServer_GetNode(OPCUAServer & self, ObjectID objectid)
+static Node UaServer_GetNode(UaServer & self, ObjectID objectid)
 {
   return self.GetNode(NodeID(objectid));
 }
@@ -353,47 +353,47 @@ BOOST_PYTHON_MODULE(opcua)
   .def("subscribe_events", (uint32_t (Subscription::*)(const Node &, const Node &)) &Subscription::SubscribeEvents)
   ;
 
-  class_<RemoteClient, boost::noncopyable>("Client", init<>())
+  class_<UaClient, boost::noncopyable>("Client", init<>())
   .def(init<bool>())
-  .def("connect", (void (RemoteClient::*)(const std::string&)) &RemoteClient::Connect)
-  .def("connect", (void (RemoteClient::*)(const EndpointDescription&)) &RemoteClient::Connect)
-  .def("disconnect", &RemoteClient::Disconnect)
-  .def("get_namespace_index", &RemoteClient::GetNamespaceIndex)
-  .def("get_root_node", &RemoteClient::GetRootNode)
-  .def("get_objects_node", &RemoteClient::GetObjectsNode)
-  .def("get_server_node", &RemoteClient::GetServerNode)
-  .def("get_node", (Node(RemoteClient::*)(const std::string&) const) &RemoteClient::GetNode)
-  .def("get_node", (Node(RemoteClient::*)(const NodeID&) const) &RemoteClient::GetNode)
-  .def("get_node", &RemoteClient_GetNode)
-  .def("get_endpoint", &RemoteClient::GetEndpoint)
-  .def("get_server_endpoints", (std::vector<EndpointDescription> (RemoteClient::*)(const std::string&)) &RemoteClient::GetServerEndpoints)
-  .def("get_server_endpoints", (std::vector<EndpointDescription> (RemoteClient::*)()) &RemoteClient::GetServerEndpoints)
-  .def("set_session_name", &RemoteClient::SetSessionName)
-  .def("get_session_name", &RemoteClient::GetSessionName)
-  .def("get_application_uri", &RemoteClient::GetApplicationURI)
-  .def("set_application_uri", &RemoteClient::SetApplicationURI)
-  .def("set_security_policy", &RemoteClient::SetSecurityPolicy)
-  .def("get_security_policy", &RemoteClient::GetSecurityPolicy)
-  .def("create_subscription", &RemoteClient_CreateSubscription)
+  .def("connect", (void (UaClient::*)(const std::string&)) &UaClient::Connect)
+  .def("connect", (void (UaClient::*)(const EndpointDescription&)) &UaClient::Connect)
+  .def("disconnect", &UaClient::Disconnect)
+  .def("get_namespace_index", &UaClient::GetNamespaceIndex)
+  .def("get_root_node", &UaClient::GetRootNode)
+  .def("get_objects_node", &UaClient::GetObjectsNode)
+  .def("get_server_node", &UaClient::GetServerNode)
+  .def("get_node", (Node(UaClient::*)(const std::string&) const) &UaClient::GetNode)
+  .def("get_node", (Node(UaClient::*)(const NodeID&) const) &UaClient::GetNode)
+  .def("get_node", &UaClient_GetNode)
+  .def("get_endpoint", &UaClient::GetEndpoint)
+  .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)(const std::string&)) &UaClient::GetServerEndpoints)
+  .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)()) &UaClient::GetServerEndpoints)
+  .def("set_session_name", &UaClient::SetSessionName)
+  .def("get_session_name", &UaClient::GetSessionName)
+  .def("get_application_uri", &UaClient::GetApplicationURI)
+  .def("set_application_uri", &UaClient::SetApplicationURI)
+  .def("set_security_policy", &UaClient::SetSecurityPolicy)
+  .def("get_security_policy", &UaClient::GetSecurityPolicy)
+  .def("create_subscription", &UaClient_CreateSubscription)
   ;
 
-  class_<OPCUAServer, boost::noncopyable >("Server", init<>())
+  class_<UaServer, boost::noncopyable >("Server", init<>())
   .def(init<bool>())
-  .def("start", &OPCUAServer::Start)
-  .def("stop", &OPCUAServer::Stop)
-  .def("register_namespace", &OPCUAServer::RegisterNamespace)
-  .def("get_namespace_index", &OPCUAServer::GetNamespaceIndex)
-  .def("get_root_node", &OPCUAServer::GetRootNode)
-  .def("get_objects_node", &OPCUAServer::GetObjectsNode)
-  .def("get_server_node", &OPCUAServer::GetServerNode)
-  .def("get_node", (Node(OPCUAServer::*)(const std::string&) const) &OPCUAServer::GetNode)
-  .def("get_node", (Node(OPCUAServer::*)(const NodeID&) const) &OPCUAServer::GetNode)
-  .def("get_node", &OPCUAServer_GetNode)
-  .def("set_uri", &OPCUAServer::SetServerURI)
-  .def("add_xml_address_space", &OPCUAServer::AddAddressSpace)
-  .def("set_server_name", &OPCUAServer::SetServerName)
-  .def("set_endpoint", &OPCUAServer::SetEndpoint)
-  .def("create_subscription", &OPCUAServer_CreateSubscription)
+  .def("start", &UaServer::Start)
+  .def("stop", &UaServer::Stop)
+  .def("register_namespace", &UaServer::RegisterNamespace)
+  .def("get_namespace_index", &UaServer::GetNamespaceIndex)
+  .def("get_root_node", &UaServer::GetRootNode)
+  .def("get_objects_node", &UaServer::GetObjectsNode)
+  .def("get_server_node", &UaServer::GetServerNode)
+  .def("get_node", (Node(UaServer::*)(const std::string&) const) &UaServer::GetNode)
+  .def("get_node", (Node(UaServer::*)(const NodeID&) const) &UaServer::GetNode)
+  .def("get_node", &UaServer_GetNode)
+  .def("set_uri", &UaServer::SetServerURI)
+  .def("add_xml_address_space", &UaServer::AddAddressSpace)
+  .def("set_server_name", &UaServer::SetServerName)
+  .def("set_endpoint", &UaServer::SetEndpoint)
+  .def("create_subscription", &UaServer_CreateSubscription)
   ;
 
 }

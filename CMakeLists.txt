@@ -298,7 +298,7 @@ if(BUILD_SERVER)
         src/server/endpoints_services_addon.cpp
         src/server/internal_subscription.cpp
         src/server/internal_subscription.h
-        src/server/opcuaserver.cpp
+        src/server/server.cpp
         src/server/opc_tcp_async.cpp
         src/server/opc_tcp_async_addon.cpp
         src/server/opc_tcp_async_parameters.cpp
