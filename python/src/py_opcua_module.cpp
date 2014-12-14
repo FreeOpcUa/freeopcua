@@ -9,6 +9,10 @@
 ///
 
 #include <boost/python.hpp>
+//#include <Python.h>
+#include <datetime.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 #include "opc/ua/client/client.h"
 #include "opc/ua/client/binary_server.h"
@@ -38,6 +42,34 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
 
+static  boost::python::object ToPyDateTime(OpcUa::DateTime& self )
+{
+  double timestamp = ToTimeT(self);
+  boost::python::object pytimestamp = boost::python::long_(timestamp);
+  boost::python::object args = boost::python::make_tuple(timestamp);
+  PyObject* obj = PyDateTime_FromTimestamp(args.ptr());
+  return boost::python::object(boost::python::handle<>(obj));
+}
+
+static OpcUa::DateTime ToOpcUaDateTime(boost::python::object bobj)
+{
+  PyObject* pydate = bobj.ptr();
+  if ( ! PyDateTime_Check(pydate) )
+  {
+    throw std::runtime_error("method take a python datetime as argument");
+  }
+
+  boost::gregorian::date _date(PyDateTime_GET_YEAR(pydate), PyDateTime_GET_MONTH(pydate), PyDateTime_GET_DAY(pydate));
+  boost::posix_time::time_duration _duration(PyDateTime_DATE_GET_HOUR(pydate), PyDateTime_DATE_GET_MINUTE(pydate), PyDateTime_DATE_GET_SECOND(pydate), 0);
+  _duration += boost::posix_time::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydate));
+
+	boost::posix_time::ptime myptime(_date, _duration);
+  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
+  uint64_t d = (myptime - ref).total_microseconds();
+  OpcUa::DateTime dt(d*10);
+  return dt;
+}
+      
 //--------------------------------------------------------------------------
 // NodeID helpers
 //--------------------------------------------------------------------------
@@ -143,6 +175,7 @@ static Node UaServer_GetNode(UaServer & self, ObjectID objectid)
 
 BOOST_PYTHON_MODULE(opcua)
 {
+  PyDateTime_IMPORT; //necessary begore any use of python datetime methods
 
   using self_ns::str; // hack to enable __str__ in python classes with str(self)
 
@@ -156,12 +189,16 @@ BOOST_PYTHON_MODULE(opcua)
   variant_from_python_converter();
   to_python_converter<Variant, variant_to_python_converter>();
 
-  class_<DateTime>("DateTime", init<>())
+  class_<OpcUa::DateTime>("DateTime", init<>())
   .def(init<int64_t>())
+  .def("to_datetime", &ToPyDateTime)
+  .def_readwrite("value", &OpcUa::DateTime::Value)
   ;
 
   def("CurrentDateTime", &CurrentDateTime);
   def("ToDateTime", &ToDateTime, ToDateTime_stubs((arg("sec"), arg("usec") = 0)));
+  def("to_opcua_datetime", &ToOpcUaDateTime);
+  def("to_python_datetime", &ToPyDateTime);
   def("ToTimeT", &ToTimeT);
 
   class_<LocalizedText>("LocalizedText")
