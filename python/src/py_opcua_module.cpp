@@ -13,6 +13,7 @@
 #include <datetime.h>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include "opc/ua/client/client.h"
 #include "opc/ua/client/binary_server.h"
@@ -42,12 +43,38 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
 
+//taken from stackoverflow
+boost::posix_time::time_duration get_utc_offset() {
+    using namespace boost::posix_time;
+
+    // boost::date_time::c_local_adjustor uses the C-API to adjust a
+    // moment given in utc to the same moment in the local time zone.
+    typedef boost::date_time::c_local_adjustor<ptime> local_adj;
+
+    const ptime utc_now = second_clock::universal_time();
+    const ptime now = local_adj::utc_to_local(utc_now);
+
+    return utc_now - now;
+}
+
 static  boost::python::object ToPyDateTime(OpcUa::DateTime& self )
 {
-  double timestamp = ToTimeT(self);
-  boost::python::object pytimestamp = boost::python::long_(timestamp);
-  boost::python::object args = boost::python::make_tuple(timestamp);
-  PyObject* obj = PyDateTime_FromTimestamp(args.ptr());
+  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
+  boost::posix_time::ptime dt = ref + boost::posix_time::microseconds(self.Value/10);
+  //FIXME: the constructor of the python datetime objects creates a dateimt object using a timezone
+  // but returns a naive timezone objects...this sound completely stupide...
+  //the best thing to do would be to return a timezone aware python datetime offset
+  // but I could not find out how, so we add timezone offsett to our timestamp to make sure
+  // utc time is returned
+  dt += boost::posix_time::seconds(get_utc_offset().total_seconds()); //hack
+  uint32_t precision = dt.time_of_day().num_fractional_digits();
+  PyObject* obj = PyDateTime_FromDateAndTime((int)dt.date().year(),
+					  (int)dt.date().month(),
+					  (int)dt.date().day(),
+					  dt.time_of_day().hours(),
+					  dt.time_of_day().minutes(),
+					  dt.time_of_day().seconds(),
+					  dt.time_of_day().fractional_seconds() / pow(10, precision-6));
   return boost::python::object(boost::python::handle<>(obj));
 }
 
