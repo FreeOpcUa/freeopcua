@@ -122,6 +122,10 @@ Variant ToVariant(const object & obj)
               var = extract<std::vector<NodeID>>(obj)();
             }
 
+          else if (extract<std::vector<DateTime>>(obj).check())
+            {
+              var = extract<std::vector<DateTime>>(obj)();
+            }
           else
             {
               throw std::logic_error("Cannot create variant from python list. Unsupported type.");
@@ -143,7 +147,10 @@ Variant ToVariant(const object & obj)
     {
       var = extract<NodeID>(obj)();
     }
-
+  else if (extract<DateTime>(obj).check())
+    {
+      var = extract<DateTime>(obj)();
+    }
   else
     {
       throw std::logic_error("Cannot create variant from python object. Unsupported type.");
