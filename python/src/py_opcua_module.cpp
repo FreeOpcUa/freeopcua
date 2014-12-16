@@ -43,7 +43,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
 
-//taken from stackoverflow
+//method taken from stackoverflow
 boost::posix_time::time_duration get_utc_offset() {
     using namespace boost::posix_time;
 
@@ -57,16 +57,13 @@ boost::posix_time::time_duration get_utc_offset() {
     return utc_now - now;
 }
 
-static  boost::python::object ToPyDateTime(OpcUa::DateTime& self )
+static  boost::python::object ToPyDateTime(const OpcUa::DateTime& self )
 {
   boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
   boost::posix_time::ptime dt = ref + boost::posix_time::microseconds(self.Value/10);
-  //FIXME: the constructor of the python datetime objects creates a dateimt object using a timezone
+  // The constructor of the python datetime objects creates a datetime object using the locale timezone
   // but returns a naive timezone objects...this sound completely stupide...
-  //the best thing to do would be to return a timezone aware python datetime offset
-  // but I could not find out how, so we add timezone offsett to our timestamp to make sure
-  // utc time is returned
-  dt += boost::posix_time::seconds(get_utc_offset().total_seconds()); //hack
+  // we may want to add timezone... I do not know how
   uint32_t precision = dt.time_of_day().num_fractional_digits();
   PyObject* obj = PyDateTime_FromDateAndTime((int)dt.date().year(),
 					  (int)dt.date().month(),
@@ -78,7 +75,18 @@ static  boost::python::object ToPyDateTime(OpcUa::DateTime& self )
   return boost::python::object(boost::python::handle<>(obj));
 }
 
-static OpcUa::DateTime ToOpcUaDateTime(boost::python::object bobj)
+static uint64_t ToWinEpoch(PyObject* pydate)
+{
+  boost::gregorian::date _date(PyDateTime_GET_YEAR(pydate), PyDateTime_GET_MONTH(pydate), PyDateTime_GET_DAY(pydate));
+  boost::posix_time::time_duration _duration(PyDateTime_DATE_GET_HOUR(pydate), PyDateTime_DATE_GET_MINUTE(pydate), PyDateTime_DATE_GET_SECOND(pydate), 0);
+  _duration += boost::posix_time::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydate));
+
+	boost::posix_time::ptime myptime(_date, _duration);
+  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
+  return (myptime - ref).total_microseconds() * 10;
+}
+
+static OpcUa::DateTime ToOpcUaDateTime(const boost::python::object& bobj)
 {
   PyObject* pydate = bobj.ptr();
   if ( ! PyDateTime_Check(pydate) )
@@ -86,17 +94,49 @@ static OpcUa::DateTime ToOpcUaDateTime(boost::python::object bobj)
     throw std::runtime_error("method take a python datetime as argument");
   }
 
-  boost::gregorian::date _date(PyDateTime_GET_YEAR(pydate), PyDateTime_GET_MONTH(pydate), PyDateTime_GET_DAY(pydate));
-  boost::posix_time::time_duration _duration(PyDateTime_DATE_GET_HOUR(pydate), PyDateTime_DATE_GET_MINUTE(pydate), PyDateTime_DATE_GET_SECOND(pydate), 0);
-  _duration += boost::posix_time::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydate));
-
-	boost::posix_time::ptime myptime(_date, _duration);
-  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
-  uint64_t d = (myptime - ref).total_microseconds();
-  OpcUa::DateTime dt(d*10);
+  OpcUa::DateTime dt(ToWinEpoch(pydate));
   return dt;
 }
-      
+
+struct DateTimeOpcUaToPythonConverter
+{
+  static PyObject* convert(const OpcUa::DateTime& dt)
+  {
+    return boost::python::incref( ToPyDateTime(dt).ptr());
+  }
+};
+
+struct DateTimePythonToOpcUaConverter
+{
+
+  DateTimePythonToOpcUaConverter()
+  {
+    boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<OpcUa::DateTime>());
+  }
+
+  // Determine if obj_ptr can be converted in a QString
+  static void* convertible(PyObject* obj_ptr)
+  {
+    if (!PyDateTime_Check(obj_ptr)) return 0;
+    return obj_ptr;
+  }
+ // Convert obj_ptr into a QString
+  static void construct( PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
+  {
+      // Grab pointer to memory into which to construct the new QString
+      void* storage = (
+        (boost::python::converter::rvalue_from_python_storage<OpcUa::DateTime>*)
+        data)->storage.bytes;
+ 
+      // in-place construct the new QString using the character data
+      // extraced from the python object
+      new (storage) OpcUa::DateTime(ToWinEpoch(obj_ptr));
+ 
+      // Stash the memory chunk pointer for later use by boost.python
+      data->convertible = storage;
+  }
+};
+
 //--------------------------------------------------------------------------
 // NodeID helpers
 //--------------------------------------------------------------------------
@@ -202,7 +242,7 @@ static Node UaServer_GetNode(UaServer & self, ObjectID objectid)
 
 BOOST_PYTHON_MODULE(opcua)
 {
-  PyDateTime_IMPORT; //necessary begore any use of python datetime methods
+  PyDateTime_IMPORT; // necessary before any use of python datetime methods
 
   using self_ns::str; // hack to enable __str__ in python classes with str(self)
 
@@ -219,8 +259,13 @@ BOOST_PYTHON_MODULE(opcua)
   class_<OpcUa::DateTime>("DateTime", init<>())
   .def(init<int64_t>())
   .def("to_datetime", &ToPyDateTime)
+  .def("to_epoch", &ToTimeT)
   .def_readwrite("value", &OpcUa::DateTime::Value)
   ;
+
+  // Enable next line to return PyDateTime instead og OpcUa::DateTime in python
+  // to_python_converter<OpcUa::DateTime, DateTimeOpcUaToPythonConverter>(); 
+  DateTimePythonToOpcUaConverter(); //Register PyDateTime to OpcUa::DateTime convertor
 
   def("CurrentDateTime", &CurrentDateTime);
   def("ToDateTime", &ToDateTime, ToDateTime_stubs((arg("sec"), arg("usec") = 0)));
