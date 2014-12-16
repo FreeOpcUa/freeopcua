@@ -77,7 +77,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/address_space.h \
 	include/opc/ua/server/endpoints_services.h \
 	include/opc/ua/server/opc_tcp_async.h \
-	include/opc/ua/server/opcuaserver.h \
+	include/opc/ua/server/server.h \
 	include/opc/ua/server/services_registry.h \
   include/opc/ua/server/standard_namespace.h \
   include/opc/ua/server/subscription_service.h
@@ -115,7 +115,7 @@ libopcuaserver_la_SOURCES = \
 	src/server/opc_tcp_processor.h \
 	src/server/opcua_protocol.h \
 	src/server/opcua_protocol_addon.cpp \
-	src/server/opcuaserver.cpp \
+	src/server/server.cpp \
 	src/server/server_object.cpp \
 	src/server/server_object.h \
 	src/server/server_object_addon.cpp \
