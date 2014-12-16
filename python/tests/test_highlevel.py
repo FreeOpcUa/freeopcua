@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+import datetime
 import unittest
 from multiprocessing import Process, Event
 import time
@@ -138,6 +139,22 @@ class Unit(unittest.TestCase):
         self.assertEqual(wv.attribute,opcua.AttributeID())
         self.assertEqual(wv.numeric_range,'')
         self.assertEqual(wv.data.value,None)
+
+    def test_datetime(self):
+        tnow1 = int(time.time())
+        tnow = int((datetime.datetime.utcnow() - datetime.datetime(1970,1,1)).total_seconds())
+        self.assertEqual(tnow, tnow1) #if this one fails this is a system error, not freopcua
+
+        dt = opcua.ToDateTime(tnow)
+        self.assertEqual(tnow, dt.to_epoch())
+
+        pydt = dt.to_datetime()
+        self.assertEqual(tnow, int((pydt - datetime.datetime(1970,1,1)).total_seconds()))
+
+        dt2 = opcua.to_opcua_datetime(pydt)
+        #self.assertEqual(dt2, dt) #FIXME: not implemented
+        pydt2 = dt.to_datetime()
+        self.assertEqual(pydt, pydt2)
 
 
 class CommonTests(object):
@@ -361,6 +378,24 @@ class CommonTests(object):
 
         sub.unsubscribe(handle)
         sub.delete()
+
+    def test_datetime_read(self):
+        time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        dt = time_node.get_value()
+        pydt = dt.to_datetime()
+        utcnow = datetime.datetime.utcnow()
+        delta = utcnow - pydt
+        self.assertTrue(delta < datetime.timedelta(seconds=1))
+
+    def test_datetime_write(self):
+        time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        now = datetime.datetime.now()
+        objects = self.opc.get_objects_node()
+        v1 = objects.add_variable(4, "test_datetime", now)
+        tid = v1.get_value()
+        self.assertEqual(now, tid.to_datetime())
+
+
 
 
 class ServerProcess(Process):
