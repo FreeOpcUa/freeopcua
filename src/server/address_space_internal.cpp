@@ -294,7 +294,7 @@ namespace OpcUa
         if ( ait != it->second.Attributes.end() )
         {
           DataValue value(data);
-          value.SetServerTimestamp(CurrentDateTime());
+          value.SetServerTimestamp(DateTime::Current());
           ait->second.Value = value;
           //call registered callback
           for (auto pair : ait->second.DataChangeCallbacks)

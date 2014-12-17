@@ -175,7 +175,7 @@ namespace OpcUa
     notifierval |= EventNotifier::SubscribeToEvents;
 
     DataValue dval(notifierval);
-    dval.SetSourceTimestamp(CurrentDateTime());
+    dval.SetSourceTimestamp(DateTime::Current());
 
     server.SetAttribute(AttributeID::EventNotifier, dval);
   }

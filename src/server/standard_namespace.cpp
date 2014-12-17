@@ -643,7 +643,7 @@ namespace
         attrs.Description = LocalizedText(Names::BuildDate);
         attrs.DisplayName = LocalizedText(Names::BuildDate);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime(); // TODO
+        attrs.Value = OpcUa::DateTime::Current(); // TODO
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -769,7 +769,7 @@ namespace
         attrs.Description = LocalizedText(Names::CurrentTime);
         attrs.DisplayName = LocalizedText(Names::CurrentTime);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime();
+        attrs.Value = OpcUa::DateTime::Current();
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -833,7 +833,7 @@ namespace
         attrs.Description = LocalizedText(Names::StartTime);
         attrs.DisplayName = LocalizedText(Names::StartTime);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime();
+        attrs.Value = OpcUa::DateTime::Current();
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -3478,7 +3478,7 @@ namespace
         attrs.Description = LocalizedText(Names::BuildInfoType);
         attrs.DisplayName = LocalizedText(Names::BuildInfoType);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime(); // TODO
+        attrs.Value = OpcUa::DateTime::Current(); // TODO
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -3506,7 +3506,7 @@ namespace
         attrs.Description = LocalizedText(Names::BuildDate);
         attrs.DisplayName = LocalizedText(Names::BuildDate);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime(); // TODO
+        attrs.Value = OpcUa::DateTime::Current(); // TODO
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -3632,7 +3632,7 @@ namespace
         attrs.Description = LocalizedText(Names::CurrentTime);
         attrs.DisplayName = LocalizedText(Names::CurrentTime);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime();
+        attrs.Value = OpcUa::DateTime::Current();
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
@@ -3696,7 +3696,7 @@ namespace
         attrs.Description = LocalizedText(Names::StartTime);
         attrs.DisplayName = LocalizedText(Names::StartTime);
         attrs.Type = ObjectID::DateTime;
-        attrs.Value = OpcUa::CurrentDateTime();
+        attrs.Value = OpcUa::DateTime::Current();
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;

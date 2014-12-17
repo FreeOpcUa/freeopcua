@@ -37,32 +37,18 @@ using namespace OpcUa;
 // Overloads
 //--------------------------------------------------------------------------
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(ToDateTime_stubs, ToDateTime, 1, 2)
+BOOST_PYTHON_FUNCTION_OVERLOADS(FromTimeT_stub, DateTime::FromTimeT, 1, 2)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
 
-//method taken from stackoverflow
-boost::posix_time::time_duration get_utc_offset() {
-    using namespace boost::posix_time;
-
-    // boost::date_time::c_local_adjustor uses the C-API to adjust a
-    // moment given in utc to the same moment in the local time zone.
-    typedef boost::date_time::c_local_adjustor<ptime> local_adj;
-
-    const ptime utc_now = second_clock::universal_time();
-    const ptime now = local_adj::utc_to_local(utc_now);
-
-    return utc_now - now;
-}
-
-static  boost::python::object ToPyDateTime(const OpcUa::DateTime& self )
+static  boost::python::object ToPyDateTime(const DateTime& self )
 {
   boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
   boost::posix_time::ptime dt = ref + boost::posix_time::microseconds(self.Value/10);
   // The constructor of the python datetime objects creates a datetime object using the locale timezone
-  // but returns a naive timezone objects...this sound completely stupide...
+  // but returns a naive timezone objects...this sounds a bit crazy...
   // we may want to add timezone... I do not know how
   uint32_t precision = dt.time_of_day().num_fractional_digits();
   PyObject* obj = PyDateTime_FromDateAndTime((int)dt.date().year(),
@@ -86,7 +72,7 @@ static uint64_t ToWinEpoch(PyObject* pydate)
   return (myptime - ref).total_microseconds() * 10;
 }
 
-static OpcUa::DateTime ToOpcUaDateTime(const boost::python::object& bobj)
+static boost::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object& bobj)
 {
   PyObject* pydate = bobj.ptr();
   if ( ! PyDateTime_Check(pydate) )
@@ -94,13 +80,12 @@ static OpcUa::DateTime ToOpcUaDateTime(const boost::python::object& bobj)
     throw std::runtime_error("method take a python datetime as argument");
   }
 
-  OpcUa::DateTime dt(ToWinEpoch(pydate));
-  return dt;
+  return boost::shared_ptr<DateTime>(new DateTime(ToWinEpoch(pydate)));
 }
 
 struct DateTimeOpcUaToPythonConverter
 {
-  static PyObject* convert(const OpcUa::DateTime& dt)
+  static PyObject* convert(const DateTime& dt)
   {
     return boost::python::incref( ToPyDateTime(dt).ptr());
   }
@@ -111,28 +96,23 @@ struct DateTimePythonToOpcUaConverter
 
   DateTimePythonToOpcUaConverter()
   {
-    boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<OpcUa::DateTime>());
+    boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<DateTime>());
   }
 
-  // Determine if obj_ptr can be converted in a QString
   static void* convertible(PyObject* obj_ptr)
   {
     if (!PyDateTime_Check(obj_ptr)) return 0;
     return obj_ptr;
   }
- // Convert obj_ptr into a QString
+
   static void construct( PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
   {
-      // Grab pointer to memory into which to construct the new QString
       void* storage = (
-        (boost::python::converter::rvalue_from_python_storage<OpcUa::DateTime>*)
+        (boost::python::converter::rvalue_from_python_storage<DateTime>*)
         data)->storage.bytes;
  
-      // in-place construct the new QString using the character data
-      // extraced from the python object
-      new (storage) OpcUa::DateTime(ToWinEpoch(obj_ptr));
+      new (storage) DateTime(ToWinEpoch(obj_ptr));
  
-      // Stash the memory chunk pointer for later use by boost.python
       data->convertible = storage;
   }
 };
@@ -211,7 +191,7 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 
 static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionClient & callback)
 {
-  std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
+  std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
@@ -226,7 +206,7 @@ static Node UaClient_GetNode(UaClient & self, ObjectID objectid)
 
 static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionClient & callback)
 {
-  std::unique_ptr<OpcUa::Subscription> sub  = self.CreateSubscription(period, callback);
+  std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
@@ -242,7 +222,7 @@ static Node UaServer_GetNode(UaServer & self, ObjectID objectid)
 
 BOOST_PYTHON_MODULE(opcua)
 {
-  PyDateTime_IMPORT; // necessary before any use of python datetime methods
+  PyDateTime_IMPORT; 
 
   using self_ns::str; // hack to enable __str__ in python classes with str(self)
 
@@ -256,22 +236,19 @@ BOOST_PYTHON_MODULE(opcua)
   variant_from_python_converter();
   to_python_converter<Variant, variant_to_python_converter>();
 
-  class_<OpcUa::DateTime>("DateTime", init<>())
+  class_<DateTime>("DateTime", init<>())
   .def(init<int64_t>())
+  .def("now", &DateTime::DateTime::Current)
+  .def("__init__", make_constructor(makeOpcUaDateTime))
+  .def("from_time_t", &DateTime::FromTimeT, FromTimeT_stub((arg("sec"), arg("usec") = 0)))
   .def("to_datetime", &ToPyDateTime)
-  .def("to_epoch", &ToTimeT)
-  .def_readwrite("value", &OpcUa::DateTime::Value)
+  .def("to_time_t", &DateTime::ToTimeT)
+  .def_readwrite("value", &DateTime::Value)
   ;
 
-  // Enable next line to return PyDateTime instead og OpcUa::DateTime in python
-  // to_python_converter<OpcUa::DateTime, DateTimeOpcUaToPythonConverter>(); 
-  DateTimePythonToOpcUaConverter(); //Register PyDateTime to OpcUa::DateTime convertor
-
-  def("CurrentDateTime", &CurrentDateTime);
-  def("ToDateTime", &ToDateTime, ToDateTime_stubs((arg("sec"), arg("usec") = 0)));
-  def("to_opcua_datetime", &ToOpcUaDateTime);
-  def("to_python_datetime", &ToPyDateTime);
-  def("ToTimeT", &ToTimeT);
+  // Enable next line to return PyDateTime instead og DateTime in python
+  // to_python_converter<DateTime, DateTimeOpcUaToPythonConverter>(); 
+  DateTimePythonToOpcUaConverter(); //Register PyDateTime to DateTime convertor
 
   class_<LocalizedText>("LocalizedText")
   .def_readwrite("Encoding", &LocalizedText::Encoding)
@@ -403,7 +380,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime") = CurrentDateTime()), "set a node value."))
+  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime") = DateTime::Current()), "set a node value."))
   .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)

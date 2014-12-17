@@ -82,7 +82,7 @@ void RunServer()
   ev.Severity = 2;
   ev.SourceNode = ObjectID::Server;
   ev.SourceName = "Event from FreeOpcUA";
-  ev.Time = CurrentDateTime();
+  ev.Time = DateTime::Current();
 
 
   std::cout << "Ctrl-C to exit" << std::endl;

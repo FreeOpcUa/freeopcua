@@ -92,11 +92,11 @@ class Unit(unittest.TestCase):
         dv = opcua.DataValue('abc')
         self.assertEqual(dv.value, 'abc')
         tnow = int(time.time())
-        dv.source_timestamp=opcua.ToDateTime(tnow)
-        self.assertEqual(opcua.ToTimeT(dv.source_timestamp), tnow)
-        dv = opcua.DataValue(True,opcua.VariantType.BOOLEAN)
-        self.assertEqual(dv.value,True)
-        self.assertEqual(type(dv.value),bool)
+        dv.source_timestamp = opcua.DateTime.from_time_t(tnow)
+        self.assertEqual(dv.source_timestamp.to_time_t(), tnow)
+        dv = opcua.DataValue(True, opcua.VariantType.BOOLEAN)
+        self.assertEqual(dv.value, True)
+        self.assertEqual(type(dv.value), bool)
 
     def test_application_description(self):
         ad=opcua.ApplicationDescription()
@@ -145,13 +145,13 @@ class Unit(unittest.TestCase):
         tnow = int((datetime.datetime.utcnow() - datetime.datetime(1970,1,1)).total_seconds())
         self.assertEqual(tnow, tnow1) #if this one fails this is a system error, not freopcua
 
-        dt = opcua.ToDateTime(tnow)
-        self.assertEqual(tnow, dt.to_epoch())
+        dt = opcua.DateTime.from_time_t(tnow)
+        self.assertEqual(tnow, dt.to_time_t())
 
         pydt = dt.to_datetime()
         self.assertEqual(tnow, int((pydt - datetime.datetime(1970,1,1)).total_seconds()))
 
-        dt2 = opcua.to_opcua_datetime(pydt)
+        dt2 = opcua.DateTime(pydt)
         #self.assertEqual(dt2, dt) #FIXME: not implemented
         pydt2 = dt.to_datetime()
         self.assertEqual(pydt, pydt2)

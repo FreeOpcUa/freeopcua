@@ -123,7 +123,7 @@ namespace OpcUa
       //std::cout << "PopPublishresult for subscription: " << Data.ID << " with " << TriggeredDataChangeEvents.size() << " triggered items in queue" << std::endl;
       PublishResult result;
       result.SubscriptionID = Data.ID;
-      result.Message.PublishTime = CurrentDateTime();
+      result.Message.PublishTime = DateTime::Current();
 
       if ( ! TriggeredDataChangeEvents.empty() )
       {
