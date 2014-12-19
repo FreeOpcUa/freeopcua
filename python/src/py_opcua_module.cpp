@@ -37,10 +37,16 @@ using namespace OpcUa;
 // Overloads
 //--------------------------------------------------------------------------
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(FromTimeT_stub, DateTime::FromTimeT, 1, 2)
+BOOST_PYTHON_FUNCTION_OVERLOADS(DateTimeFromTimeT_stub, DateTime::FromTimeT, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
+
+
+//--------------------------------------------------------------------------
+// DateTime helpers
+//--------------------------------------------------------------------------
+
 
 
 static  boost::python::object ToPyDateTime(const DateTime& self )
@@ -240,7 +246,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def(init<int64_t>())
   .def("now", &DateTime::DateTime::Current)
   .def("__init__", make_constructor(makeOpcUaDateTime))
-  .def("from_time_t", &DateTime::FromTimeT, FromTimeT_stub((arg("sec"), arg("usec") = 0)))
+  .def("from_time_t", &DateTime::FromTimeT, DateTimeFromTimeT_stub((arg("sec"), arg("usec")=0)))
+  .staticmethod("from_time_t")
   .def("to_datetime", &ToPyDateTime)
   .def("to_time_t", &DateTime::ToTimeT)
   .def_readwrite("value", &DateTime::Value)
@@ -380,7 +387,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime") = DateTime::Current()), "set a node value."))
+  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime")=DateTime::Current()), "set a node value."))
   .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
