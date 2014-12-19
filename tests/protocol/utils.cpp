@@ -21,48 +21,48 @@ TEST(DateTime, FixedTimeT_to_DateTime)
 {
   time_t timet03_10_1980 = 321494400;
   unsigned usec = 1;
-  const DateTime dateTime_03_10_1980 = ToDateTime(timet03_10_1980, usec);
+  const DateTime dateTime_03_10_1980 = DateTime::FromTimeT(timet03_10_1980, usec);
   ASSERT_EQ(dateTime_03_10_1980, 138495*24*3600LL*10000000LL + 10);
 }
 
 TEST(DateTime, FixedDateTime_to_TimeT)
 {
   const DateTime dateTime_03_10_1980(138495*24*3600LL*10000000LL);
-  time_t timet_03_10_1980 = ToTimeT(dateTime_03_10_1980);
+  time_t timet_03_10_1980 = DateTime::ToTimeT(dateTime_03_10_1980);
   ASSERT_EQ(timet_03_10_1980, 321494400);
 }
 
 TEST(DateTime, ToTimeT_And_Back)
 {
   time_t timet = time(0);
-  const time_t t = ToTimeT(ToDateTime(timet));
+  const time_t t = DateTime::ToTimeT(DateTime::FromTimeT(timet));
   ASSERT_EQ(t, timet);
 }
 
 TEST(DateTime, FromTimeT)
 {
   time_t t = 1;
-  const time_t converted = OpcUa::ToTimeT(OpcUa::ToDateTime(t));
+  const time_t converted = OpcUa::DateTime::ToTimeT(OpcUa::DateTime::FromTimeT(t));
   ASSERT_EQ(t, converted);
 }
 
 TEST(DateTime, FromDateTime)
 {
-  OpcUa::DateTime t = OpcUa::CurrentDateTime();
-  const OpcUa::DateTime converted = OpcUa::ToDateTime(OpcUa::ToTimeT(t));
+  OpcUa::DateTime t = OpcUa::DateTime::Current();
+  const OpcUa::DateTime converted = OpcUa::DateTime::FromTimeT(OpcUa::DateTime::ToTimeT(t));
   ASSERT_EQ(t/10000000LL*10000000LL, converted);
 }
 
-TEST(DateTime, ZeroToTimeT_ThrowInvalidArgument)
+TEST(DateTime, ZeroDateTime_ThrowInvalidArgument)
 {
   DateTime t(0);
-  ASSERT_THROW(OpcUa::ToTimeT(t), std::invalid_argument);
+  ASSERT_THROW(OpcUa::DateTime::ToTimeT(t), std::invalid_argument);
 }
 
 TEST(DateTime, ZeroTimeT)
 {
   time_t t = 0;
-  const DateTime converted = OpcUa::ToDateTime(t);
+  const DateTime converted = OpcUa::DateTime::FromTimeT(t);
   const DateTime expected(134774LL*24*3600*10000000LL);
   ASSERT_EQ(converted, expected);
 }

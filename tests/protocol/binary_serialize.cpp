@@ -137,7 +137,7 @@ TEST_F(OpcUaBinarySerialization, Guid)
 TEST_F(OpcUaBinarySerialization, Float)
 {
   float dataForSerialize = -6.5;
-  const std::vector<char> expectedData = {(char)0xC0, (char)0xD0, 0, 0};
+  const std::vector<char> expectedData = {0, 0, (char)0xD0, (char)0xC0};
   GetStream() << dataForSerialize << flush;
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
 }
