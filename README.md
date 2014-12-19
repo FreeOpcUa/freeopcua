@@ -22,11 +22,43 @@ Work in progress
 * Filtering
 * Documentation
 * Windows port 
+* Automatic generation of binary protocol from OPC schema files 
 
 Not implemented yet (patches are welcome)
 * Methods
 * History
 * Security: Authentication, Certificates handling, ..
+
+
+##Usage
+
+see C++ examples in src/examples folder or Python examples in python/examples. test_highlevel.py in python/tests can also be a usefull source of information
+
+### Example minimal client in python
+```
+  client = opcua.Client(False)
+  client.connect("opc.tcp://10.10.10.4:4841/OPCUA/AnyServer/")
+
+  objects = client.get_objects_node()
+  print("Children of objects are: ", objects.get_children())
+
+  var = objects.get_child(["3:AnObject", "AVariable"])
+  print("Value of variable is: ", var.get_value())
+  
+  client.disconnect()
+```
+
+
+## Tested clients and servers with default settings
+* uaexperts client application
+* node-opcua (client and server tested)
+* ignition server
+* Beckhoff PLC (seems to be some issues, but working)
+* ignition open-source sdk (server tested)
+* quickopc client sdk
+* prosysopc demo client (subscription against freeopcua server currently broken)
+* prosysopc demo server 
+* unified automation sdk (client and server tested)
 
 
 ##Installation
@@ -71,17 +103,4 @@ cd bin\Debug
 example_server.exe
 ```
 
-##Usage
 
-see C++ examples in src/examples folder or Python examples in python/examples. test_highlevel.py in python/tests can also be a usefull source of information
-
-
-## Tested clients and servers with default settings
-* uaexperts client application
-* node-opcua (client and server tested)
-* ignition server
-* ignition open-source sdk (server tested)
-* quickopc client sdk
-* prosysopc demo client (subscription against freeopcua server currently broken)
-* prosysopc demo server 
-* unified automation sdk (client and server tested)
