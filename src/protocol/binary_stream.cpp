@@ -17,10 +17,41 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
+#include <netinet/in.h>
 
 
 namespace
 {
+
+  float float_htonl(float value){
+    std::cout << "sizez: " << sizeof(float) << "  " << sizeof(uint32_t) << std::endl;
+    union v {
+        float       f;
+        uint32_t    i;
+    };
+     
+    union v val;
+     
+    val.f = value;
+    val.i = htonl(val.i);
+                   
+    return val.f;
+  }
+
+  float float_ntohl(float value){
+    union v {
+        float       f;
+        uint32_t    i;
+    };
+     
+    union v val;
+     
+    val.f = value;
+    val.i = ntohl(val.i);
+                   
+    return val.f;
+  }
+
 
   template <typename Integer16>
   inline int8_t LoByte(Integer16 value)
@@ -330,24 +361,25 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<float>(const float& value)
     {
-      const uint32_t& tmp = reinterpret_cast<const uint32_t&>(value);
-      const uint16_t lo = LoWord(tmp);
-      const uint16_t hi = HiWord(tmp);
-
-      *this << HiByte(hi) << LoByte(hi) << HiByte(lo) << LoByte(lo);
+      //float network_value = float_htonl(value); 
+      const uint8_t* data = reinterpret_cast<const uint8_t*>(&value);
+      for (int i = 0; i < 4; ++i)
+      {
+        Serialize(data[i]);
+      }
     }
 
     template<>
     void DataDeserializer::Deserialize<float>(float& value)
     {
+      //float network_value = float_htonl(value); 
       uint8_t data[4] = {0};
-      for (int i = 3; i >= 0; --i)
+      for (int i = 0; i < 4; ++i)
       {
         *this >> data[i];
       }
-      const uint32_t tmp = MakeNumber<uint32_t>((char*)data);
-      value = *reinterpret_cast<const float*>(&tmp);
-    }
+      value = *reinterpret_cast<const float*>(data); // FIXME: probably broken on ARM
+     }
 
     template<>
     void DataSerializer::Serialize<double>(const double& value)
@@ -367,7 +399,7 @@ namespace OpcUa
       {
         *this >> data[i];
       }
-      value = *reinterpret_cast<const double*>(data); // TODO works on Intel
+      value = *reinterpret_cast<const double*>(data); //FIXME: probably broken on ARM
     }
 
     template<>

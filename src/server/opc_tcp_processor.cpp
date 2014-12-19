@@ -211,7 +211,7 @@ namespace OpcUa
       FillResponseHeader(request.Header, response.Header);
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
       response.ChannelSecurityToken.TokenID = TokenID;
-      response.ChannelSecurityToken.CreatedAt = OpcUa::CurrentDateTime();
+      response.ChannelSecurityToken.CreatedAt = OpcUa::DateTime::Current();
       response.ChannelSecurityToken.RevisedLifetime = request.RequestLifeTime;
 
       SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
@@ -726,7 +726,7 @@ namespace OpcUa
     void OpcTcpMessages::FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader)
     {
        //responseHeader.InnerDiagnostics.push_back(DiagnosticInfo());
-       responseHeader.Timestamp = CurrentDateTime();
+       responseHeader.Timestamp = DateTime::Current();
        responseHeader.RequestHandle = requestHeader.RequestHandle;
     }
 

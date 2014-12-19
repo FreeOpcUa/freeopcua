@@ -54,7 +54,7 @@ namespace OpcUa
     void Variable::SetValue(const Variant& value)
     {
       DataValue data(value);
-      data.SetSourceTimestamp(OpcUa::CurrentDateTime());
+      data.SetSourceTimestamp(OpcUa::DateTime::Current());
       SetValue(data);
     }
 

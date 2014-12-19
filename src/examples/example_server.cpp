@@ -14,7 +14,7 @@
 
 #include <opc/ua/node.h>
 #include <opc/ua/subscription.h>
-#include <opc/ua/server/opcuaserver.h>
+#include <opc/ua/server/server.h>
 
 
 
@@ -33,7 +33,7 @@ void RunServer()
 {
   //First setup our server
   const bool debug = true;
-  OpcUa::OPCUAServer server(debug);
+  OpcUa::UaServer server(debug);
   server.SetEndpoint("opc.tcp://localhost:4841/freeopcua/server");
   server.SetServerURI("urn://exampleserver.freeopcua.github.io");
   server.Start();
@@ -82,7 +82,7 @@ void RunServer()
   ev.Severity = 2;
   ev.SourceNode = ObjectID::Server;
   ev.SourceName = "Event from FreeOpcUA";
-  ev.Time = CurrentDateTime();
+  ev.Time = DateTime::Current();
 
 
   std::cout << "Ctrl-C to exit" << std::endl;

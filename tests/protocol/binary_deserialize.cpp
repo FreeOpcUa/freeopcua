@@ -94,7 +94,7 @@ TEST_F(OpcUaBinaryDeserialization, Int64)
 
 TEST_F(OpcUaBinaryDeserialization, Float)
 {
-  const std::vector<char> serializedData = {(char)0xC0, (char)0xD0, 0, 0};
+  const std::vector<char> serializedData = {0, 0, (char)0xD0, (char)0xC0};
   GetChannel().SetData(serializedData);
   float num = 0;
   GetStream() >> num;

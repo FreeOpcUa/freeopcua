@@ -29,6 +29,10 @@ namespace OpcUa
     {
     }
 
+    static DateTime Current();
+    static DateTime FromTimeT(time_t t, unsigned usec = 0);
+    static time_t ToTimeT(DateTime dateTime);
+
     DateTime(const DateTime&) = default;
     DateTime& operator=(const DateTime&) = default;
     DateTime& operator+=(const DateTime& val)
@@ -45,9 +49,6 @@ namespace OpcUa
     int64_t Value;
   };
 
-  DateTime CurrentDateTime();
-  DateTime ToDateTime(time_t t, unsigned usec = 0);
-  time_t ToTimeT(DateTime dateTime);
 
   typedef double Duration; // Time duration in miliseconds.
 

@@ -84,7 +84,7 @@ namespace OpcUa
     {
       try
       {
-        DateTime t = OpcUa::CurrentDateTime();
+        DateTime t = OpcUa::DateTime::Current();
         DataValue timeData(t);
         timeData.SetSourceTimestamp(t);
         timeData.SetServerTimestamp(t);

@@ -881,7 +881,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT)
 
   const std::vector<char> expectedData = {
     encodingMask,
-    (char)0xC0, (char)0xD0, 0, 0 // -6.5
+    //(char)0xC0, (char)0xD0, 0, 0 // -6.5
+    0, 0, (char)0xD0, (char)0xC0 // -6.5
   };
 
   GetChannel().SetData(expectedData);
@@ -906,8 +907,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT_Array)
   const std::vector<char> expectedData = {
   encodingMask,
   2,0,0,0,
-  (char)0xC0, (char)0xD0, 0, 0, // -6.5
-  (char)0xC0, (char)0xD0, 0, 0 // -6.5
+  0, 0, (char)0xD0, (char)0xC0, // -6.5
+  0, 0, (char)0xD0, (char)0xC0 // -6.5
+  //(char)0xC0, (char)0xD0, 0, 0, // -6.5
+  //(char)0xC0, (char)0xD0, 0, 0 // -6.5
   };
 
   GetChannel().SetData(expectedData);
@@ -936,7 +939,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT_DIMENSIONS)
 
   const std::vector<char> expectedData = {
   encodingMask,
-  (char)0xC0, (char)0xD0, 0, 0, // -6.5
+  0, 0, (char)0xD0, (char)0xC0, // -6.5
+  //(char)0xC0, (char)0xD0, 0, 0, // -6.5
   1,0,0,0,
   1,0,0,0,
   };

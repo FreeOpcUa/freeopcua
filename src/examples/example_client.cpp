@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 
     std::cout << "Connecting to: " << endpoint << std::endl;
     bool debug = false;
-    OpcUa::RemoteClient client(debug);
+    OpcUa::UaClient client(debug);
     client.Connect(endpoint);
 
     //get Root node on server

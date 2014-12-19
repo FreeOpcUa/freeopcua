@@ -245,7 +245,7 @@ std::string OpcUa::ToString(const OpcUa::BrowseDirection& direction)
 
 std::string OpcUa::ToString(const OpcUa::DateTime& t)
 {
-  std::time_t st = OpcUa::ToTimeT(t);
+  std::time_t st = OpcUa::DateTime::ToTimeT(t);
   return std::ctime(&st);
 }
 

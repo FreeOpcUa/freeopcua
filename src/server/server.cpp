@@ -16,7 +16,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                *
  ******************************************************************************/
 
-#include <opc/ua/server/opcuaserver.h>
+#include <opc/ua/server/server.h>
 
 #include "common_addons.h"
 #include "opc/ua/protocol/string_utils.h"
@@ -27,41 +27,41 @@
 
 namespace OpcUa
 {
-  OPCUAServer::OPCUAServer()
+  UaServer::UaServer()
   {
   }
 
-  OPCUAServer::OPCUAServer(bool debug)
+  UaServer::UaServer(bool debug)
     : Debug(debug)
   {
   }
 
-  void OPCUAServer::SetEndpoint(const std::string& endpoint)
+  void UaServer::SetEndpoint(const std::string& endpoint)
   {
 	  Endpoint = endpoint;
   }
 
-  void OPCUAServer::SetProductURI(const std::string& uri)
+  void UaServer::SetProductURI(const std::string& uri)
   {
 	  ProductUri = uri;
   }
 
-  void OPCUAServer::SetServerURI(const std::string& uri)
+  void UaServer::SetServerURI(const std::string& uri)
   {
 	  ServerUri = uri;
   }
 
-  void OPCUAServer::SetServerName(const std::string& name)
+  void UaServer::SetServerName(const std::string& name)
   {
 	  Name = name;
   }
 
-  void OPCUAServer::AddAddressSpace(const std::string& path)
+  void UaServer::AddAddressSpace(const std::string& path)
   {
 	  XmlAddressSpaces.push_back(path);
   }
 
-  void OPCUAServer::CheckStarted() const
+  void UaServer::CheckStarted() const
   {
     if ( ! Registry )
     {
@@ -69,7 +69,7 @@ namespace OpcUa
     }
   }
 
-  uint32_t OPCUAServer::RegisterNamespace(std::string uri)
+  uint32_t UaServer::RegisterNamespace(std::string uri)
   {
     CheckStarted();
     Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
@@ -80,7 +80,7 @@ namespace OpcUa
     return index;
   }
 
-  uint32_t OPCUAServer::GetNamespaceIndex(std::string uri)
+  uint32_t UaServer::GetNamespaceIndex(std::string uri)
   {
     CheckStarted();
     Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
@@ -96,7 +96,7 @@ namespace OpcUa
     //return -1;
   }
 
-  void OPCUAServer::Start()
+  void UaServer::Start()
   {
     ApplicationDescription appDesc;
     appDesc.Name = LocalizedText(Name);
@@ -124,49 +124,50 @@ namespace OpcUa
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
   }
 
-  Node OPCUAServer::GetNode(const std::string& nodeid) const
+  Node UaServer::GetNode(const std::string& nodeid) const
   {
     return GetNode(ToNodeID(nodeid));
   }
 
-  Node OPCUAServer::GetNode(const NodeID& nodeid) const
+  Node UaServer::GetNode(const NodeID& nodeid) const
   {
     CheckStarted();
     return Node(Registry->GetServer(), nodeid);
   }
 
-  Node OPCUAServer::GetNodeFromPath(const std::vector<QualifiedName>& path) const
+  Node UaServer::GetNodeFromPath(const std::vector<QualifiedName>& path) const
   {
     return GetRootNode().GetChild(path);
   }
 
-  Node OPCUAServer::GetNodeFromPath(const std::vector<std::string>& path) const
+  Node UaServer::GetNodeFromPath(const std::vector<std::string>& path) const
   {
     return GetRootNode().GetChild(path);
   }
 
-  void OPCUAServer::Stop()
+  void UaServer::Stop()
   {
     std::cout << "Stopping opcua server application" << std::endl;
+    CheckStarted();
     Addons->Stop();
   }
 
-  Node OPCUAServer::GetRootNode() const
+  Node UaServer::GetRootNode() const
   {
     return GetNode(OpcUa::ObjectID::RootFolder);
   }
 
-  Node OPCUAServer::GetObjectsNode() const
+  Node UaServer::GetObjectsNode() const
   {
     return GetNode(ObjectID::ObjectsFolder);
   }
 
-  Node OPCUAServer::GetServerNode() const
+  Node UaServer::GetServerNode() const
   {
     return GetNode(ObjectID::Server);
   }
 
-  void OPCUAServer::EnableEventNotification()
+  void UaServer::EnableEventNotification()
   {
     Node server = GetServerNode();
     
@@ -174,12 +175,12 @@ namespace OpcUa
     notifierval |= EventNotifier::SubscribeToEvents;
 
     DataValue dval(notifierval);
-    dval.SetSourceTimestamp(CurrentDateTime());
+    dval.SetSourceTimestamp(DateTime::Current());
 
     server.SetAttribute(AttributeID::EventNotifier, dval);
   }
 
-  std::unique_ptr<Subscription> OPCUAServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
   {
     CheckStarted();
     SubscriptionParameters params;
@@ -188,7 +189,7 @@ namespace OpcUa
   }
 
 
-  void OPCUAServer::TriggerEvent(Event event)
+  void UaServer::TriggerEvent(Event event)
   {
     SubscriptionService->TriggerEvent(ObjectID::Server, event);
   }

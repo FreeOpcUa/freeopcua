@@ -129,7 +129,7 @@ namespace OpcUa
   } // namespace Binary
 
 
-  DateTime ToDateTime(time_t t, unsigned usec)
+  DateTime DateTime::FromTimeT(time_t t, unsigned usec)
   {
     const int64_t daysBetween1601And1970 = 134774;
     const int64_t secsFrom1601To1970 = daysBetween1601And1970 * 24 * 3600LL;
@@ -139,17 +139,16 @@ namespace OpcUa
     return DateTime(t1);
   }
 
-  // TODO move to separate file with time utils.
-  DateTime CurrentDateTime()
+  DateTime DateTime::Current()
   {
     using namespace std::chrono;
     const auto t = time_point<high_resolution_clock>(high_resolution_clock::now());
     const auto us = duration_cast<microseconds>(t.time_since_epoch());
     const auto n = us.count();
-    return ToDateTime(n / 1000000, n % 1000000);
+    return DateTime::FromTimeT(n / 1000000, n % 1000000);
   }
 
-  time_t ToTimeT(DateTime dateTime)
+  time_t DateTime::ToTimeT(DateTime dateTime)
   {
     const int64_t daysBetween1601And1970 = 134774;
     const int64_t secsFrom1601To1970 = daysBetween1601And1970 * 24 * 3600LL;
@@ -168,7 +167,7 @@ namespace OpcUa
   {
     SessionAuthenticationToken.Encoding = EV_TWO_BYTE;
     SessionAuthenticationToken.TwoByteData.Identifier = 0;
-    UtcTime = CurrentDateTime();
+    UtcTime = DateTime::Current();
     RequestHandle = 0;
     ReturnDiagnostics = 0;
     AuditEntryID = "";
@@ -187,7 +186,7 @@ namespace OpcUa
   }
 
   ResponseHeader::ResponseHeader()
-    : Timestamp(CurrentDateTime())
+    : Timestamp(DateTime::Current())
     , RequestHandle(0)
     , ServiceResult(StatusCode::Good)
   {

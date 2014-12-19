@@ -151,7 +151,7 @@ namespace OpcUa
 
   NotificationMessage::NotificationMessage()
     : SequenceID(0)
-    , PublishTime(CurrentDateTime())
+    , PublishTime(DateTime::Current())
   {
   }
 
