@@ -32,7 +32,11 @@ Not implemented yet (patches are welcome)
 
 ##Usage
 
-see C++ examples in src/examples folder or Python examples in python/examples. test_highlevel.py in python/tests can also be a usefull source of information
+Documentation is sparse but several examples are availables:
+
+C++ examples in https://github.com/FreeOpcUa/freeopcua/tree/master/src/examples  
+Python examples in https://github.com/FreeOpcUa/freeopcua/tree/master/python/src  
+https://github.com/FreeOpcUa/freeopcua/blob/master/python/tests/test_highlevel.py can also be a usefull source of information
 
 ### Example minimal client in python
 ```
