@@ -18,8 +18,8 @@
 
 #include <opc/ua/server/server.h>
 
-#include "common_addons.h"
-#include "opc/ua/protocol/string_utils.h"
+#include <opc/ua/server/addons/common_addons.h>
+#include <opc/ua/protocol/string_utils.h>
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/subscription_service.h>

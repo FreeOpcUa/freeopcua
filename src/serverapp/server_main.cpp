@@ -12,7 +12,7 @@
 #include <windows.h>
 #endif
 
-#include "common_addons.h"
+#include <opc/ua/server/addons/common_addons.h>
 #include "daemon.h"
 #include "server_options.h"
 

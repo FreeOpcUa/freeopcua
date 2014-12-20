@@ -40,7 +40,7 @@ ADD_LIBRARY(opcua SHARED
     ${PYTHONDIR}/src/py_opcua_module.cpp
     )
 set_target_properties(opcua PROPERTIES PREFIX "")
-TARGET_LINK_LIBRARIES(opcua libopcuaserver libopcuaprotocol libopcuacore libopcuaclient ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+TARGET_LINK_LIBRARIES(opcua opcuaserver opcuaprotocol opcuacore opcuaclient ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 
 
