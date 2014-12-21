@@ -1,4 +1,4 @@
-
+import time
 import sys
 sys.path.append(".")
 
@@ -8,6 +8,9 @@ import opcua
 class SubClient(opcua.SubscriptionClient):
     def data_change(self, handle, node, val, attr):
         print("New data change event", handle, node, val, attr)
+
+    def event(self, handle, event):
+        print("Python: New event", handle, event)
 
 
 if __name__ == "__main__":
@@ -39,9 +42,17 @@ if __name__ == "__main__":
         #sub = server.create_subscription(100, sclt)
         #handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
         
-
+        ev = opcua.Event(server.get_server_node().get_id())
+        counter = 0
+        while True:
+            counter += 1
+            ev.message = "This is event nr: " + str(counter)
+            print("Sending event: ", ev)
+            server.trigger_event(ev)
+            myvar.set_value([counter, counter+10])
+            time.sleep(1)
         # start ipython shell so users can test things
-        embed()
+        #embed()
     finally:
         server.stop()
 

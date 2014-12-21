@@ -249,5 +249,10 @@ std::string OpcUa::ToString(const OpcUa::DateTime& t)
   return std::ctime(&st);
 }
 
+std::string OpcUa::ToString(const OpcUa::LocalizedText& t)
+{
+  return t.Text;
+}
+
 
 

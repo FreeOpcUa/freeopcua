@@ -13,6 +13,16 @@ namespace OpcUa
 
   Event::Event(const NodeID& type) : EventType(type) {}
 
+  std::vector<std::vector<QualifiedName>> Event::GetValueKeys()
+  {
+    std::vector<std::vector<QualifiedName>> qns;
+    for (auto qn : PathValues)
+    {
+      qns.push_back(qn.first);
+    }
+    return qns;
+  }
+
   void Event::SetValue(const QualifiedName& path, Variant value)
   {
     SetValue(std::vector<QualifiedName>({path}), value);
@@ -81,4 +91,10 @@ namespace OpcUa
     }
   }
 
+  std::string ToString(const Event& event)
+  {
+    std::stringstream stream;
+    stream << "Event(type:" << event.EventType << ", time:" << event.Time << ", source:" << event.SourceNode << ", severity:" << event.Severity << ", message:" << event.Message << ")" ;
+    return stream.str();
+  }
 }
