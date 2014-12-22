@@ -42,7 +42,7 @@ if __name__ == "__main__":
         #sub = server.create_subscription(100, sclt)
         #handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
         
-        ev = opcua.Event(server.get_server_node().get_id())
+        ev = opcua.Event()
         counter = 0
         while True:
             counter += 1
