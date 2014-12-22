@@ -132,6 +132,7 @@ namespace OpcUa
   void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
+    endpointdesc.EndpointURL = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
    
