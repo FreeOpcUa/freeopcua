@@ -13,6 +13,8 @@ namespace OpcUa
 
   Event::Event(const NodeID& type) : EventType(type) {}
 
+  Event::Event(const Node& type) : EventType(type.GetId()) {}
+
   std::vector<std::vector<QualifiedName>> Event::GetValueKeys()
   {
     std::vector<std::vector<QualifiedName>> qns;

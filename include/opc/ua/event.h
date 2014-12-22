@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <opc/ua/node.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
@@ -26,6 +27,7 @@ namespace OpcUa
       //The attributes of BaseEventType are accesible as class member,
       //Other attributes must be set using SetValue and accessed using GetValue
       // This API is a draft, it WILL change
+      Event(const Node& type);
       Event(const NodeID& type);
       Event();
       

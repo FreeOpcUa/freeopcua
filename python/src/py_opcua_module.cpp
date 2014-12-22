@@ -471,6 +471,7 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   class_<Event>("Event", init<const NodeID &>())
+  .def(init<>())
   .def("get_value", (Variant(Event::*)(const std::string &) const) &Event::GetValue)
   .def("set_value", (void (Event::*)(const std::string &, Variant)) &Event::SetValue)
   .def("get_value_keys", &Event::GetValueKeys)
