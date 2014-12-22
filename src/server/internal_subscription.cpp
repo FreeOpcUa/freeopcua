@@ -251,7 +251,10 @@ namespace OpcUa
       MonitoredDataChanges[result.MonitoredItemID] = mdata;
       if (Debug) std::cout << "Created MonitoredItem with id: " << result.MonitoredItemID << " and client handle " << mdata.ClientHandle << std::endl;
       //Forcing event, 
-      TriggerDataChangeEvent(mdata, request.ItemToMonitor);
+      if (request.ItemToMonitor.Attribute != AttributeID::EventNotifier )
+      {
+        TriggerDataChangeEvent(mdata, request.ItemToMonitor);
+      }
 
       return result;
     }
