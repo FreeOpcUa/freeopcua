@@ -1,3 +1,4 @@
+import datetime
 import time
 import sys
 sys.path.append(".")
@@ -47,6 +48,8 @@ if __name__ == "__main__":
         while True:
             counter += 1
             ev.message = "This is event nr: " + str(counter)
+            ev.source_node = objects.get_id()
+            ev.time = datetime.datetime.now()
             print("Sending event: ", ev)
             server.trigger_event(ev)
             myvar.set_value([counter, counter+10])

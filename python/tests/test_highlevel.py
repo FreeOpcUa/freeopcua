@@ -47,7 +47,6 @@ class MySubClient(opcua.SubscriptionClient):
             self.cond.notify_all()
 
     def event(self, handle, event):
-        print("Python: New event", handle, event)
         self.ev = event
         with self.cond:
             self.cond.notify_all()
@@ -333,7 +332,9 @@ class CommonTests(object):
         ev.message = msg
         tid = datetime.datetime.now()
         ev.time = tid
-        #ev.source_node = self.srv.get_server_node().get_id()
+        ev.source_node = self.opc.get_server_node().get_id()
+        ev.source_name = "our server node"
+        ev.severity = 500
         self.srv.trigger_event(ev)
         
         with cond:
@@ -343,6 +344,8 @@ class CommonTests(object):
         self.assertIsNot(msclt.ev, None)# we did not receive event
         self.assertEqual(msclt.ev.message, msg)
         self.assertEqual(msclt.ev.time.to_datetime(), tid)
+        self.assertEqual(msclt.ev.severity, 500)
+        self.assertEqual(msclt.ev.source_node, self.opc.get_server_node().get_id())
 
         #time.sleep(0.1)
         sub.unsubscribe(handle)
@@ -464,7 +467,6 @@ class ServerProcess(Thread):
             time.sleep(0.1)
             if not self._queue.empty():
                 ev = self._queue.get()
-                print("ev is: ", ev)
                 self.srv.trigger_event(ev)
         self.srv.stop()
 

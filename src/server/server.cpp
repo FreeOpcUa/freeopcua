@@ -122,6 +122,8 @@ namespace OpcUa
 
     Registry = Addons->GetAddon<Server::ServicesRegistry>(Server::ServicesRegistryAddonID);
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
+
+    EnableEventNotification(); //Enabling event notification, it probably does hurt anyway and users will forgot to set it up
   }
 
   Node UaServer::GetNode(const std::string& nodeid) const
