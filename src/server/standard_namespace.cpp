@@ -588,7 +588,7 @@ namespace
         attrs.Description = LocalizedText(Names::ServerStatus);
         attrs.DisplayName = LocalizedText(Names::ServerStatus);
         attrs.Type = ObjectID::ServerStatusDataType;
-        attrs.Value = NodeID(); // TODO
+        attrs.Value = Variant();
         attrs.Dimensions = {0};
         attrs.Rank = 1;
         node.Attributes = attrs;
@@ -854,7 +854,7 @@ namespace
         attrs.Description = LocalizedText(Names::State);
         attrs.DisplayName = LocalizedText(Names::State);
         attrs.Type = ObjectID::ServerState;
-        attrs.Value; // TODO
+        attrs.Value = (int32_t) 0; 
         attrs.Dimensions = {};
         attrs.Rank = -1;
         node.Attributes = attrs;
