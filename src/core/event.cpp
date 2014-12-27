@@ -62,7 +62,7 @@ namespace OpcUa
       std::cout << std::endl;
     if ( it == PathValues.end() )
     {
-      std::cout << "Bad Not found ";
+      std::cout << "Bad Not found " << std::endl;
       return Variant();
     }
     else
@@ -70,7 +70,6 @@ namespace OpcUa
       std::cout << "ok" << std::endl;
       return it->second;
     }
-      std::cout << std::endl;
   }
 
   Variant Event::GetValue(const std::string& qualifiedname) const

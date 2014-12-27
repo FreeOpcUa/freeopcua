@@ -132,7 +132,7 @@ namespace OpcUa
           //set the default fiedls of events into their event attributes
           if ( op.BrowsePath.size() == 1 )
           {
-            if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
+            if ( op.BrowsePath[0] == QualifiedName("EventId", 0) )
             {
               ev.EventId = ef.EventFields[count].As<ByteString>();
             }

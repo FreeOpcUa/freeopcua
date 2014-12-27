@@ -205,6 +205,13 @@ namespace OpcUa
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
+      //A new id must be generated every time we trigger an event, 
+      //if user have not set it manually we force something
+      if ( event.EventId.Data.empty() ) 
+      {
+        event.EventId = GenerateEventId();
+      }
+
       for (auto sub : SubscriptionsMap)
       {
         sub.second->TriggerEvent(node, event);

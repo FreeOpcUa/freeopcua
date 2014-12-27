@@ -240,8 +240,7 @@ namespace OpcUa
       result.Status = OpcUa::StatusCode::Good;
       result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
       result.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
-      result.Filter = request.Parameters.Filter;
-      //res.FilterResult = //We can omit that one if we do not change anything in filter
+      //result.Filter = request.Parameters.Filter; //We can omit that one if we do not change anything in filter
       MonitoredDataChange mdata;
       mdata.Parameters = result;
       mdata.Mode = request.Mode;
@@ -422,7 +421,7 @@ namespace OpcUa
       if(Debug) std::cout << "InternalSubscription | InternalGetEventField " << filter.SelectClauses.size() << std::endl;
       for (SimpleAttributeOperand sattr : filter.SelectClauses)
       {
-        if(Debug) std::cout << "InternalSubscription | BrowsePAth size " << sattr.BrowsePath.size() << std::endl;
+        if(Debug) std::cout << "InternalSubscription | BrowsePath size " << sattr.BrowsePath.size() << std::endl;
         if ( sattr.BrowsePath.size() == 0 )
         {
           fields.push_back(event.GetValue(sattr.Attribute));
@@ -430,7 +429,7 @@ namespace OpcUa
         else
         {
           if(Debug) std::cout << "InternalSubscription | sending value for : " << sattr.BrowsePath[0] << std::endl;
-          if ( sattr.BrowsePath[0] == QualifiedName("EventID", 0) )
+          if ( sattr.BrowsePath[0] == QualifiedName("EventId", 0) )
           {
             fields.push_back(event.EventId);
           }
