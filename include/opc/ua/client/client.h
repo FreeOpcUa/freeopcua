@@ -45,7 +45,7 @@ namespace OpcUa
     public:
       /// @brief Internal 
       // Send keepalive request to server so it does not disconnect us
-      KeepAliveThread() : StopRequest(false), Running(false) {}
+      KeepAliveThread(bool debug=false) : Debug(debug), StopRequest(false), Running(false) {}
       void Start(Node node, Duration period);
       void Stop();
       void Join();
@@ -75,7 +75,7 @@ namespace OpcUa
     /// opc.tcp://localhost:4841/opcua/server
     /// opc.tcp://192.168.1.1:4840/opcua/server
     /// opc.tcp://server.freeopca.org:4841/opcua/server
-    UaClient(bool debug=false) : Debug(debug), KeepAlive() {}
+    UaClient(bool debug=false) : Debug(debug), KeepAlive(debug) {}
     ~UaClient(); 
 
     UaClient(const UaClient&&) = delete;
