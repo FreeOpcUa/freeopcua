@@ -14,7 +14,7 @@
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/endpoints_services.h>
-#include <src/server/common_addons.h>
+#include <opc/ua/server/addons/common_addons.h>
 namespace OpcUa
 {
   namespace Test

@@ -179,8 +179,8 @@ test_opcuaserver_SOURCES = \
 	tests/server/standard_namespace_test.h \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
-	src/server/server_options.cpp \
-	src/server/server_options.h
+	src/serverapp/server_options.cpp \
+	src/serverapp/server_options.h
 
 # temporary disabled until new format is discussed.
 #	tests/server/xml_addressspace_ut.cpp
