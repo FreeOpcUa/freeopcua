@@ -117,7 +117,7 @@ namespace
   class CallbackThread
   {
     public:
-      CallbackThread() : StopRequest(false)
+      CallbackThread(bool debug=false) : Debug(debug), StopRequest(false)
       {
 
       }
@@ -135,7 +135,7 @@ namespace
       {
         while (true)
         {
-          if (Debug)  { std::cout << "binary_client| CallbackThread : waiting for nest post" << std::endl; }
+          if (Debug)  { std::cout << "binary_client| CallbackThread : waiting for next post" << std::endl; }
           std::unique_lock<std::mutex> lock(Mutex);
           Condition.wait(lock, [&]() { return (StopRequest == true) || ( ! Queue.empty() ) ;} );
           if (StopRequest)
@@ -165,11 +165,11 @@ namespace
       }
 
     private:
+      bool Debug = false;
       std::mutex Mutex;
       std::condition_variable Condition;
       std::atomic<bool> StopRequest;
       std::queue<std::function<void()>> Queue;
-      bool Debug = false;
   };
 
   class BinaryServer
@@ -194,7 +194,7 @@ namespace
       , RequestNumber(1)
       , RequestHandle(0)
       , Debug(debug)
-      , CallbackService()
+      , CallbackService(debug)
 
     {
       //Initialize the worker thread for subscriptions
