@@ -126,8 +126,10 @@ namespace
   template <typename ChannelType>
   inline void GetData(ChannelType& channel, char* data, std::size_t size)
   {
-    if (channel.Read(data, size) != size)
+    size_t recv = channel.Read(data, size);
+    if (recv != size)
     {
+      std::cout << "expecting " << size << "  received: " << recv << std::endl;
       ThrowReceivedNotEnoughData();
     }
   }
@@ -1110,11 +1112,11 @@ namespace OpcUa
     {
       *this << request.TypeID;
       *this << request.Header;
-      *this << request.ClientProtocolVersion;
-      *this << (uint32_t)request.RequestType;
-      *this << (uint32_t)request.SecurityMode;
-      SerializeContainer(*this, request.ClientNonce);
-      *this << request.RequestLifeTime;
+      *this << request.Parameters.ClientProtocolVersion;
+      *this << (uint32_t)request.Parameters.RequestType;
+      *this << (uint32_t)request.Parameters.SecurityMode;
+      SerializeContainer(*this, request.Parameters.ClientNonce);
+      *this << request.Parameters.RequestLifeTime;
     }
 
     template<>
@@ -1123,18 +1125,18 @@ namespace OpcUa
       *this >> request.TypeID;
       *this >> request.Header;
 
-      *this >> request.ClientProtocolVersion;
+      *this >> request.Parameters.ClientProtocolVersion;
 
       uint32_t tmp = 0;
       *this >> tmp;
-      request.RequestType = static_cast<SecurityTokenRequestType>(tmp);
+      request.Parameters.RequestType = static_cast<SecurityTokenRequestType>(tmp);
 
       uint32_t tmp2 = 0;
       *this >> tmp2;
-      request.SecurityMode = static_cast<MessageSecurityMode>(tmp2);
+      request.Parameters.SecurityMode = static_cast<MessageSecurityMode>(tmp2);
 
-      DeserializeContainer(*this, request.ClientNonce);
-      *this >> request.RequestLifeTime;
+      DeserializeContainer(*this, request.Parameters.ClientNonce);
+      *this >> request.Parameters.RequestLifeTime;
     };
 
 

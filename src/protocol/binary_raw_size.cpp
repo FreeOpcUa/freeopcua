@@ -248,7 +248,7 @@ namespace OpcUa
       const std::size_t sizeofClientProtocolVersion = 4;
       const std::size_t sizeofRequestType = 4;
       const std::size_t sizeofSecurityMode = 4;
-      const std::size_t sizeofClientNonce = 4 + request.ClientNonce.size();
+      const std::size_t sizeofClientNonce = 4 + request.Parameters.ClientNonce.size();
       const std::size_t sizeofRequestLifeTime = 4;
 
       return sizeofTypeID + sizeofHeader + sizeofClientProtocolVersion + sizeofRequestType + sizeofSecurityMode + sizeofClientNonce + sizeofRequestLifeTime;

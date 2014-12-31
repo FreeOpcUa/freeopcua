@@ -240,7 +240,7 @@ namespace OpcUa
       result.Status = OpcUa::StatusCode::Good;
       result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
       result.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
-      //result.Filter = request.Parameters.Filter; //We can omit that one if we do not change anything in filter
+      result.Filter = request.Parameters.Filter; //We can omit that one if we do not change anything in filter
       MonitoredDataChange mdata;
       mdata.Parameters = result;
       mdata.Mode = request.Mode;
@@ -394,6 +394,8 @@ namespace OpcUa
       if (Debug) { std::cout << "InternalSubcsription | Enqueing event to be send" << std::endl; }
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
+      if (Debug) { std::cout << "enqueueing event: " << event << std::endl;}
+
       //Find monitoredItem 
       std::map<IntegerID, MonitoredDataChange>::iterator mii_it =  MonitoredDataChanges.find( monitoreditemid );
       if  (mii_it == MonitoredDataChanges.end() ) 
@@ -447,6 +449,7 @@ namespace OpcUa
           }
           else if ( sattr.BrowsePath[0] == QualifiedName("Message", 0) )
           {
+            if (Debug) std::cout << "msg is: " << event.Message << std::endl;
             fields.push_back(event.Message);
           }
           else if ( sattr.BrowsePath[0] == QualifiedName("Severity", 0) )

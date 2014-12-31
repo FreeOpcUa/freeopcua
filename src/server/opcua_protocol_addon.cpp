@@ -14,8 +14,8 @@
 #include "opc_tcp_processor.h"
 #include "endpoints_parameters.h"
 #include "tcp_server.h"
-#include "utils.h"
 
+#include <opc/ua/protocol/utils.h>
 #include <opc/common/uri_facade.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/protocol/endpoints.h>

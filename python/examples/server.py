@@ -16,7 +16,7 @@ class SubClient(opcua.SubscriptionClient):
 
 if __name__ == "__main__":
     # create our server, the argument is for debugging
-    server = opcua.Server(False)
+    server = opcua.Server(True)
     server.set_endpoint("opc.tcp://localhost:4841/freeopcua/server/")
     server.set_server_name("FreeOpcUa Example Server")
 

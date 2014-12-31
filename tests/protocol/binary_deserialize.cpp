@@ -840,11 +840,11 @@ TEST_F(OpcUaBinaryDeserialization, OpenSequreChannelRequest)
   OpenSecureChannelRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.ClientProtocolVersion, 1);
-  ASSERT_EQ(request.RequestType, STR_RENEW);
-  ASSERT_EQ(request.SecurityMode, MSM_SIGN);
-  ASSERT_EQ(request.ClientNonce, std::vector<uint8_t>(1, 1));
-  ASSERT_EQ(request.RequestLifeTime, 5);
+  ASSERT_EQ(request.Parameters.ClientProtocolVersion, 1);
+  ASSERT_EQ(request.Parameters.RequestType, STR_RENEW);
+  ASSERT_EQ(request.Parameters.SecurityMode, MSM_SIGN);
+  ASSERT_EQ(request.Parameters.ClientNonce, std::vector<uint8_t>(1, 1));
+  ASSERT_EQ(request.Parameters.RequestLifeTime, 5);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 }

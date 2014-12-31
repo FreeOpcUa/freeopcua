@@ -194,12 +194,12 @@ namespace OpcUa
       OpenSecureChannelRequest request;
       istream >> request;
 
-      if (request.SecurityMode != MSM_NONE)
+      if (request.Parameters.SecurityMode != MSM_NONE)
       {
         throw std::logic_error("Unsupported security mode.");
       }
 
-      if (request.RequestType == STR_RENEW)
+      if (request.Parameters.RequestType == STR_RENEW)
       {
         //FIXME:Should check that channel has been issued first
         ++TokenID;
@@ -212,7 +212,7 @@ namespace OpcUa
       response.ChannelSecurityToken.SecureChannelID = ChannelID;
       response.ChannelSecurityToken.TokenID = TokenID;
       response.ChannelSecurityToken.CreatedAt = OpcUa::DateTime::Current();
-      response.ChannelSecurityToken.RevisedLifetime = request.RequestLifeTime;
+      response.ChannelSecurityToken.RevisedLifetime = request.Parameters.RequestLifeTime;
 
       SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
       responseHeader.AddSize(RawSize(algorithmHeader));

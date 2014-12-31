@@ -21,7 +21,7 @@ class SubClient(opcua.SubscriptionClient):
 
 
 if __name__ == "__main__":
-    client = opcua.Client(True)
+    client = opcua.Client(False)
     client.connect("opc.tcp://localhost:53530/OPCUA/SimulationServer/")
     try:
         root = client.get_root_node()
@@ -40,10 +40,10 @@ if __name__ == "__main__":
         myint32 = client.get_node("ns=4;s=Int32")
         myuint32 = client.get_node("ns=4;s=UInt32")
         
-        #sclt = SubClient()
-        #sub = client.create_subscription(100, sclt)
-        #handle = sub.subscribe_data_change(myvar)
-        #print("Subscribe handle is: ", handle)
+        sclt = SubClient()
+        sub = client.create_subscription(100, sclt)
+        handle = sub.subscribe_data_change(myvar)
+        print("Subscribe handle is: ", handle)
 
 
         embed()

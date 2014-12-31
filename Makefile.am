@@ -130,7 +130,6 @@ libopcuaserver_la_SOURCES = \
 	src/server/tcp_server.cpp \
 	src/server/tcp_server.h \
 	src/server/timer.h \
-	src/server/utils.h \
 	src/server/xml_address_space_loader.cpp \
 	src/server/xml_address_space_loader.h \
 	src/server/xml_address_space_addon.cpp \
@@ -245,6 +244,7 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/variable_access_level.h \
   include/opc/ua/protocol/variant.h \
   include/opc/ua/protocol/variant_visitor.h \
+  include/opc/ua/protocol/utils.h \
   include/opc/ua/protocol/view.h
 
 libopcuaprotocol_la_SOURCES = \

@@ -289,8 +289,7 @@ class CommonTests(object):
     def test_read_server_state(self):
         statenode = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_State)
         state = statenode.get_value()
-        self.assertEqual(state, None)# FIXME: should return a ServerState object or at least an int!!!
-        # self.assertEqual(state, 0)# FIXME: This should be the correct result
+        self.assertEqual(state, 0)
 
     def test_array_value(self):
         o = self.opc.get_objects_node()
