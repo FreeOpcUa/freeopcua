@@ -405,14 +405,14 @@ common_gtest_LDFLAGS = -ldl -lpthread -lxml2 $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GM
 
 clientinclude_HEADERS = \
   include/opc/ua/client/addon.h \
-  include/opc/ua/client/binary_server.h \
+  include/opc/ua/client/binary_client.h \
   include/opc/ua/client/client.h \
   include/opc/ua/client/remote_connection.h
 
 libopcuaclient_la_SOURCES = \
   src/client/client.cpp \
-  src/client/binary_server_addon.cpp \
-  src/client/binary_server.cpp \
+  src/client/binary_client_addon.cpp \
+  src/client/binary_client.cpp \
   src/client/binary_connection.cpp
 
 libopcuaclient_la_CPPFLAGS =  -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

@@ -23,7 +23,7 @@
 #include <opc/ua/node.h>
 #include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 
 #include <thread>
 #include <condition_variable>

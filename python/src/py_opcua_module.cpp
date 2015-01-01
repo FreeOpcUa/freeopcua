@@ -16,7 +16,7 @@
 #include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include "opc/ua/client/client.h"
-#include "opc/ua/client/binary_server.h"
+#include "opc/ua/client/binary_client.h"
 #include "opc/ua/node.h"
 #include "opc/ua/event.h"
 #include "opc/ua/server/server.h"

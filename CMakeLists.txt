@@ -244,8 +244,8 @@ endif(BUILD_TESTING)
 if (BUILD_CLIENT)
     add_library(opcuaclient STATIC
     src/client/binary_connection.cpp
-    src/client/binary_server.cpp
-    src/client/binary_server_addon.cpp
+    src/client/binary_client.cpp
+    src/client/binary_client_addon.cpp
     src/client/client.cpp
     )
 

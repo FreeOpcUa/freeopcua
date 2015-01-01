@@ -9,7 +9,7 @@
 ///
 
 #include <opc/ua/protocol/utils.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 #include <opc/ua/client/remote_connection.h>
 
 #include <opc/common/uri_facade.h>
@@ -172,21 +172,21 @@ namespace
       std::queue<std::function<void()>> Queue;
   };
 
-  class BinaryServer
+  class BinaryClient
     : public Services
     , public EndpointServices
     , public ViewServices
     , public SubscriptionServices
     , public AttributeServices
     , public NodeManagementServices
-    , public std::enable_shared_from_this<BinaryServer>
+    , public std::enable_shared_from_this<BinaryClient>
   {
   private:
     typedef std::function<void(std::vector<char>)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
-    BinaryServer(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
+    BinaryClient(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
       , Params(params)
@@ -216,7 +216,7 @@ namespace
       }));
     }
 
-    ~BinaryServer()
+    ~BinaryClient()
     {
       Finished = true;
 
@@ -765,7 +765,7 @@ private:
   };
 
   template <>
-  void BinaryServer::Send<OpenSecureChannelRequest>(OpenSecureChannelRequest request) const
+  void BinaryClient::Send<OpenSecureChannelRequest>(OpenSecureChannelRequest request) const
   {
     SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
     AsymmetricAlgorithmHeader algorithmHeader;
@@ -783,17 +783,17 @@ private:
 } // namespace
 
 
-OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Services::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Services::SharedPtr(new BinaryClient(channel, params, debug));
 }
 
-OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(const std::string& endpointUrl, bool debug)
 {
   const Common::Uri serverUri(endpointUrl);
   OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  return CreateBinaryServer(channel, params, debug);
+  return CreateBinaryClient(channel, params, debug);
 }

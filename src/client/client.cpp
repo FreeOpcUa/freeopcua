@@ -91,7 +91,7 @@ namespace OpcUa
     params.EndpointUrl = endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryClient(channel, params, Debug);
 
     OpenSecureChannel();
     std::vector<EndpointDescription> endpoints = UaClient::GetServerEndpoints();
@@ -158,7 +158,7 @@ namespace OpcUa
     params.EndpointUrl = Endpoint.EndpointURL;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryClient(channel, params, Debug);
 
     OpenSecureChannel();
 

@@ -10,18 +10,18 @@
 
 
 #include <opc/ua/client/addon.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 #include <opc/common/addons_core/addon_manager.h>
 
 #include <opc/common/uri_facade.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 #include <opc/ua/client/remote_connection.h>
 
 
 
 namespace
 {
-  class BinaryServerAddon : public OpcUa::Client::Addon
+  class BinaryClientAddon : public OpcUa::Client::Addon
   {
   public:
     virtual void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
@@ -47,7 +47,7 @@ namespace
 
     virtual OpcUa::Services::SharedPtr Connect(const std::string& url)
     {
-      return OpcUa::CreateBinaryServer(url, Debug);
+      return OpcUa::CreateBinaryClient(url, Debug);
     }
 
   private:
@@ -57,5 +57,5 @@ namespace
 
 extern "C" Common::Addon* CreateAddon()
 {
-  return new BinaryServerAddon();
+  return new BinaryClientAddon();
 }
