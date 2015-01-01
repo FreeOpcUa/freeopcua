@@ -39,7 +39,7 @@ namespace OpcUa
     public:
       /// @brief Internal 
       // Send keepalive request to server so it does not disconnect us
-      KeepAliveThread() : StopRequest(false), Running(false) {}
+      KeepAliveThread(bool debug=false) : StopRequest(false), Running(false), Debug(debug) {}
       void Start( Services::SharedPtr server, Node node, Duration period);
       void Stop();
       void Join();
@@ -47,7 +47,6 @@ namespace OpcUa
     private:
       void Run();
       mutable std::thread Thread;
-      bool Debug = false;
       Node NodeToRead;
       Services::SharedPtr Server;
       Duration Period = 1200000;
@@ -55,6 +54,7 @@ namespace OpcUa
       std::atomic<bool> Running;
       std::condition_variable Condition;
       std::mutex Mutex;
+      bool Debug = false;
   };
 
 
@@ -70,7 +70,7 @@ namespace OpcUa
     /// opc.tcp://localhost:4841/opcua/server
     /// opc.tcp://192.168.1.1:4840/opcua/server
     /// opc.tcp://server.freeopca.org:4841/opcua/server
-    UaClient(bool debug=false) :  KeepAlive(), Debug(debug) {}
+    UaClient(bool debug=false) :  KeepAlive(debug), Debug(debug) {}
     ~UaClient(); 
 
     UaClient(const UaClient&&) = delete;
@@ -153,7 +153,6 @@ namespace OpcUa
     std::string SecurityPolicy = "none";
     KeepAliveThread KeepAlive;
     uint32_t SecureChannelId;
-    bool ChannelOpen = false;
     bool Debug = false; 
     uint32_t DefaultTimeout = 3600000;
 

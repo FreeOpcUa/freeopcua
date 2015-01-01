@@ -45,19 +45,26 @@ namespace OpcUa
     while ( ! StopRequest )
     {
       std::unique_lock<std::mutex> lock(Mutex);
-      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds((int64_t)Period)); 
+      if (Debug)  { std::cout << "KeepAliveThread | Sleeping for: " << (int64_t) ( Period * 0.7 )<< std::endl; }
+      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) )); 
       if (status == std::cv_status::no_timeout ) 
       {
         break;
       }
-      if (Debug)  { std::cout << "KeepAliveThread | Reading " << std::endl; }
+      if (Debug)  { std::cout << "KeepAliveThread | renewing secure channel " << std::endl; }
       OpenSecureChannelParameters params;
       params.ClientProtocolVersion = 0;
       params.RequestType = STR_RENEW;
       params.SecurityMode = MSM_NONE;
       params.ClientNonce = std::vector<uint8_t>(1, 0);
-      params.RequestLifeTime = Period * 2; //FIXME: should use DefualtTimeout from client!
-      Server->OpenSecureChannel(params);
+      params.RequestLifeTime = Period;
+      OpenSecureChannelResponse response = Server->OpenSecureChannel(params);
+      if ( (response.ChannelSecurityToken.RevisedLifetime < Period) && (response.ChannelSecurityToken.RevisedLifetime > 0) )
+      {
+        Period = response.ChannelSecurityToken.RevisedLifetime;
+      }
+
+      if (Debug)  { std::cout << "KeepAliveThread | read a variable from address space to keep session open " << std::endl; }
       NodeToRead.GetValue();
     }
     Running = false;
@@ -179,10 +186,11 @@ namespace OpcUa
     ActivateSessionResponse aresponse = Server->ActivateSession();
     CheckStatusCode(aresponse.Header.ServiceResult);
 
-    if (response.Session.RevisedSessionTimeout != 0)
+    if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
     {
-      KeepAlive.Start(Server, Node(Server, ObjectID::Server_ServerStatus_State), DefaultTimeout * 0.7);
+      DefaultTimeout = response.Session.RevisedSessionTimeout;
     }
+    KeepAlive.Start(Server, Node(Server, ObjectID::Server_ServerStatus_State), DefaultTimeout);
   }
 
   void UaClient::OpenSecureChannel()
@@ -193,11 +201,15 @@ namespace OpcUa
     channelparams.SecurityMode = MSM_NONE;
     channelparams.ClientNonce = std::vector<uint8_t>(1, 0);
     channelparams.RequestLifeTime = DefaultTimeout;
-    const OpenSecureChannelResponse& channelresponse = Server->OpenSecureChannel(channelparams);
+    const OpenSecureChannelResponse& response = Server->OpenSecureChannel(channelparams);
 
-    CheckStatusCode(channelresponse.Header.ServiceResult);
+    CheckStatusCode(response.Header.ServiceResult);
     
-    SecureChannelId = channelresponse.ChannelSecurityToken.SecureChannelID;
+    SecureChannelId = response.ChannelSecurityToken.SecureChannelID;
+    if ( response.ChannelSecurityToken.RevisedLifetime > 0 )
+    {
+      DefaultTimeout = response.ChannelSecurityToken.RevisedLifetime;
+    }
   }
 
   void UaClient::CloseSecureChannel()
