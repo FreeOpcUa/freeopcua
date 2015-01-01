@@ -19,17 +19,17 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-class PySubscriptionClient: public SubscriptionClient
+class PySubscriptionHandler: public SubscriptionHandler
 {
 public:
 
-  PySubscriptionClient(PyObject * p);
+  PySubscriptionHandler(PyObject * p);
   void DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const override;
   void Event(uint32_t handle, const OpcUa::Event & event) const override;
   void StatusChange(StatusCode status)  const override;
-  static void DefaultDataChange(const SubscriptionClient & self_, uint32_t handle, const Node & node, const object & val, uint32_t attribute);
-  static void DefaultEvent(const SubscriptionClient & self_, uint32_t handle, const OpcUa::Event & event);
-  static void DefaultStatusChange(const SubscriptionClient & self_, StatusCode status);
+  static void DefaultDataChange(const SubscriptionHandler & self_, uint32_t handle, const Node & node, const object & val, uint32_t attribute);
+  static void DefaultEvent(const SubscriptionHandler & self_, uint32_t handle, const OpcUa::Event & event);
+  static void DefaultStatusChange(const SubscriptionHandler & self_, StatusCode status);
 
 private:
   PyObject * self;

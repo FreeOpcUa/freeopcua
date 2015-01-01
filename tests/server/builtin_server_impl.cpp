@@ -191,7 +191,7 @@ OpcUa::Services::SharedPtr BuiltinServerAddon::GetServices() const
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = "opc.tcp://localhost:4841";
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  return OpcUa::CreateBinaryServer(ClientChannel, params);
+  return OpcUa::CreateBinaryClient(ClientChannel, params);
 }
 
 BuiltinServerAddon::~BuiltinServerAddon()

@@ -16,7 +16,7 @@
 
 #include "opcua_protocol.h"
 #include "opc_tcp_processor.h"
-#include "utils.h"
+#include <opc/ua/protocol/utils.h>
 
 #include <opc/common/thread.h>
 #include <opc/common/uri_facade.h>

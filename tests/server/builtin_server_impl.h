@@ -17,7 +17,7 @@
 
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/thread.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 #include <src/server/opcua_protocol.h>
 
 #include <atomic>

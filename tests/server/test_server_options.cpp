@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <src/server/server_options.h>
+#include <src/serverapp/server_options.h>
 #include <opc/common/addons_core/config_file.h>
 
 #include <algorithm>

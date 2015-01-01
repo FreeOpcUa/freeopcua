@@ -12,12 +12,14 @@ class SubHandler(opcua.SubscriptionHandler):
     """
     def __init__(self, *args):
         opcua.SubscriptionHandler.__init__(self, *args)
+        self.ev = None
 
     def data_change(self, handle, node, val, attr):
         print("Python: New data change event", handle, node, val, attr)
 
     def event(self, handle, event):
         print("Python: New event", handle, event)
+        self.ev = event
 
 
 if __name__ == "__main__":
@@ -55,8 +57,8 @@ if __name__ == "__main__":
         sub = client.create_subscription(100, sclt)
 
         # subscribe to a specific node  
-        handle = sub.subscribe_data_change(myvar)
-        print("Subscribe handle is: ", handle)
+        #handle = sub.subscribe_data_change(myvar)
+        #print("Subscribe handle is: ", handle)
 
         # subscribe to events from server  
         evhandle = sub.subscribe_events()

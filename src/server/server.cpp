@@ -18,8 +18,8 @@
 
 #include <opc/ua/server/server.h>
 
-#include "common_addons.h"
-#include "opc/ua/protocol/string_utils.h"
+#include <opc/ua/server/addons/common_addons.h>
+#include <opc/ua/protocol/string_utils.h>
 
 #include <opc/ua/server/addons/services_registry.h>
 #include <opc/ua/server/addons/subscription_service.h>
@@ -122,6 +122,8 @@ namespace OpcUa
 
     Registry = Addons->GetAddon<Server::ServicesRegistry>(Server::ServicesRegistryAddonID);
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
+
+    EnableEventNotification(); //Enabling event notification, it probably does hurt anyway and users will forgot to set it up
   }
 
   Node UaServer::GetNode(const std::string& nodeid) const
@@ -180,7 +182,7 @@ namespace OpcUa
     server.SetAttribute(AttributeID::EventNotifier, dval);
   }
 
-  std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
     CheckStarted();
     SubscriptionParameters params;

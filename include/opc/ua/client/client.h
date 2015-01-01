@@ -23,7 +23,7 @@
 #include <opc/ua/node.h>
 #include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/client/binary_client.h>
 
 #include <thread>
 #include <condition_variable>
@@ -34,19 +34,13 @@
 namespace OpcUa
 {
 
-  class NotConnectedError : public std::runtime_error 
-  {
-    public:
-      NotConnectedError() : std::runtime_error("NotConnectedError") { }
-  };
-
   class KeepAliveThread
   {
     public:
       /// @brief Internal 
       // Send keepalive request to server so it does not disconnect us
       KeepAliveThread() : StopRequest(false), Running(false) {}
-      void Start(Node node, Duration period);
+      void Start( Services::SharedPtr server, Node node, Duration period);
       void Stop();
       void Join();
 
@@ -55,6 +49,7 @@ namespace OpcUa
       mutable std::thread Thread;
       bool Debug = false;
       Node NodeToRead;
+      Services::SharedPtr Server;
       Duration Period = 1200000;
       std::atomic<bool> StopRequest;
       std::atomic<bool> Running;
@@ -75,7 +70,7 @@ namespace OpcUa
     /// opc.tcp://localhost:4841/opcua/server
     /// opc.tcp://192.168.1.1:4840/opcua/server
     /// opc.tcp://server.freeopca.org:4841/opcua/server
-    UaClient(bool debug=false) : Debug(debug), KeepAlive() {}
+    UaClient(bool debug=false) :  KeepAlive(), Debug(debug) {}
     ~UaClient(); 
 
     UaClient(const UaClient&&) = delete;
@@ -144,23 +139,27 @@ namespace OpcUa
     /// @brief Create a subscription objects
     // returned object can then be used to subscribe 
     // to datachange or custom events from server
-    std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& client);
+    std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& client);
 
   private:
+    void OpenSecureChannel();
+    void CloseSecureChannel();
+
     EndpointDescription Endpoint;
     // defined some sensible defaults that should let us connect to most servers
     std::string SessionName = "Open source OPC-UA Client Session";
     std::string ApplicationUri = "urn:freeopcua:client";
     std::string ProductUri = "urn:freeopcua.github.no:client";
     std::string SecurityPolicy = "none";
+    KeepAliveThread KeepAlive;
+    uint32_t SecureChannelId;
+    bool ChannelOpen = false;
     bool Debug = false; 
+    uint32_t DefaultTimeout = 3600000;
 
   protected:
     Services::SharedPtr Server;
 
-  private:
-    KeepAliveThread KeepAlive;
-    
   };
 
 } // namespace OpcUa

@@ -407,6 +407,68 @@ namespace OpcUa
     return *this == NodeID(messageID);
   }
 
+
+  ///ExpandednNdeID
+  ExpandedNodeID::ExpandedNodeID()
+  {
+    Encoding = EV_TWO_BYTE;
+    ServerIndex = 0;
+  }
+
+  ExpandedNodeID::ExpandedNodeID(uint32_t integerId, uint16_t index)
+  {
+    Encoding = EV_NUMERIC;
+    NumericData.Identifier = integerId;
+    NumericData.NamespaceIndex = index;
+  }
+
+  ExpandedNodeID::ExpandedNodeID(std::string stringId, uint16_t index)
+  {
+    Encoding = EV_STRING;
+    StringData.Identifier = stringId;
+    StringData.NamespaceIndex = index;
+  }
+
+  ExpandedNodeID::ExpandedNodeID(const NodeID& node)
+  {
+    CopyNodeID(node);
+  }
+
+  ExpandedNodeID::ExpandedNodeID(const ExpandedNodeID& node)
+  {
+    CopyNodeID(node);
+  }
+
+
+  ExpandedNodeID::ExpandedNodeID(MessageID messageID)
+  {
+    Encoding = EV_FOUR_BYTE;
+    ServerIndex = 0;
+    FourByteData.Identifier = messageID;
+  }
+
+  ExpandedNodeID::ExpandedNodeID(ReferenceID referenceID)
+  {
+    Encoding = EV_NUMERIC;
+    ServerIndex = 0;
+    NumericData.Identifier = static_cast<uint32_t>(referenceID);
+  }
+
+  ExpandedNodeID::ExpandedNodeID(ObjectID objectID)
+  {
+    Encoding = EV_NUMERIC;
+    ServerIndex = 0;
+    NumericData.Identifier = static_cast<uint32_t>(objectID);
+  }
+
+  ExpandedNodeID::ExpandedNodeID(ExpandedObjectID objectID)
+  {
+    Encoding = EV_FOUR_BYTE;
+    ServerIndex = 0;
+    FourByteData.Identifier = static_cast<uint32_t>(objectID);
+  }
+
+
   namespace Binary
   {
     template<>

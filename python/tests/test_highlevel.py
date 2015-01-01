@@ -3,7 +3,11 @@
 import sys
 import datetime
 import unittest
-from multiprocessing import Process, Event
+from threading import Thread, Event
+try:
+    from queue import Queue
+except ImportError:
+    from Queue import Queue
 import time
 from threading import Condition
 import opcua
@@ -11,14 +15,17 @@ import opcua
 port_num1 = 48410
 port_num2 = 48430
 
-class SubClient(opcua.SubscriptionClient):
+class SubHandler(opcua.SubscriptionHandler):
     '''
         Dummy subscription client
     '''
     def data_change(self, handle, node, val, attr):
         pass    
 
-class MySubClient(opcua.SubscriptionClient):
+    def event(self, handle, event):
+        pass 
+
+class MySubHandler(opcua.SubscriptionHandler):
     '''
     More advanced subscription client using conditions, so we can wait for events in tests 
     '''
@@ -28,6 +35,7 @@ class MySubClient(opcua.SubscriptionClient):
         self.handle = None
         self.attribute = None
         self.value = None
+        self.ev = None
         return self.cond
 
     def data_change(self, handle, node, val, attr):
@@ -38,6 +46,10 @@ class MySubClient(opcua.SubscriptionClient):
         with self.cond:
             self.cond.notify_all()
 
+    def event(self, handle, event):
+        self.ev = event
+        with self.cond:
+            self.cond.notify_all()
 
 class Unit(unittest.TestCase):
     '''
@@ -156,6 +168,13 @@ class Unit(unittest.TestCase):
         pydt2 = dt.to_datetime()
         self.assertEqual(pydt, pydt2)
 
+    def test_localized_text(self):
+        event = opcua.Event()
+        txt = "This is string"
+        event.message = txt #message is of type LocalizedText
+        self.assertEqual(txt, event.message)
+
+
 
 class CommonTests(object):
     '''
@@ -270,8 +289,7 @@ class CommonTests(object):
     def test_read_server_state(self):
         statenode = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_State)
         state = statenode.get_value()
-        self.assertEqual(state, None)# FIXME: should return a ServerState object or at least an int!!!
-        # self.assertEqual(state, 0)# FIXME: This should be the correct result
+        self.assertEqual(state, 0)
 
     def test_array_value(self):
         o = self.opc.get_objects_node()
@@ -302,6 +320,37 @@ class CommonTests(object):
         sub.unsubscribe(handle)
         sub.delete()
 
+    def test_events(self):
+        msclt = MySubHandler()
+        cond = msclt.setup()
+        sub = self.opc.create_subscription(100, msclt)
+        handle = sub.subscribe_events()
+        
+        ev = opcua.Event()
+        msg = "this is my msg " 
+        ev.message = msg
+        tid = datetime.datetime.now()
+        ev.time = tid
+        ev.source_node = self.opc.get_server_node().get_id()
+        ev.source_name = "our server node"
+        ev.severity = 500
+        self.srv.trigger_event(ev)
+        
+        with cond:
+            ret = cond.wait(50000)
+        if sys.version_info.major>2: self.assertEqual(ret, True) # we went into timeout waiting for subcsription callback
+        else: pass # XXX
+        self.assertIsNot(msclt.ev, None)# we did not receive event
+        self.assertEqual(msclt.ev.message, msg)
+        self.assertEqual(msclt.ev.time.to_datetime(), tid)
+        self.assertEqual(msclt.ev.severity, 500)
+        self.assertEqual(msclt.ev.source_node, self.opc.get_server_node().get_id())
+
+        #time.sleep(0.1)
+        sub.unsubscribe(handle)
+        sub.delete()
+
+
     def test_get_namespace_index(self):
         idx = self.opc.get_namespace_index('http://freeopcua.github.io')
         self.assertEqual(idx, 1) 
@@ -323,7 +372,7 @@ class CommonTests(object):
         '''
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
         '''
-        msclt = MySubClient()
+        msclt = MySubHandler()
         cond = msclt.setup()
 
         o = self.opc.get_objects_node()
@@ -361,7 +410,7 @@ class CommonTests(object):
         self.assertEqual(server_time_node, correct)
 
     def test_subscribe_server_time(self):
-        msclt = MySubClient()
+        msclt = MySubHandler()
         cond = msclt.setup()
 
         server_time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
@@ -398,14 +447,15 @@ class CommonTests(object):
 
 
 
-class ServerProcess(Process):
+class ServerProcess(Thread):
     '''
     Start a server in another process
     '''
     def __init__(self):
-        Process.__init__(self)
+        Thread.__init__(self)
         self._exit = Event()
         self.started = Event()
+        self._queue = Queue()
 
     def run(self):
         self.srv = opcua.Server()
@@ -414,10 +464,16 @@ class ServerProcess(Process):
         self.started.set()
         while not self._exit.is_set():
             time.sleep(0.1)
+            if not self._queue.empty():
+                ev = self._queue.get()
+                self.srv.trigger_event(ev)
         self.srv.stop()
 
     def stop(self):
         self._exit.set()
+
+    def trigger_event(self, ev):
+        self._queue.put(ev)
 
 
 class TestClient(unittest.TestCase, CommonTests):
@@ -430,7 +486,8 @@ class TestClient(unittest.TestCase, CommonTests):
     @classmethod
     def setUpClass(self):
         # start server in its own process
-        self.srv = ServerProcess()
+        global globalserver
+        self.srv = globalserver 
         self.srv.start()
         self.srv.started.wait() # let it initialize
 
@@ -482,7 +539,12 @@ class TestServer(unittest.TestCase, CommonTests):
 
 
 
+
 if __name__ == '__main__':
-    sclt = SubClient()
-    unittest.main(verbosity=3)
+    globalserver = ServerProcess() #server process will be started by client tests
+    try:
+        sclt = SubHandler()
+        unittest.main(verbosity=3)
+    finally:
+        globalserver.stop()
 

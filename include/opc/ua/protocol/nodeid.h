@@ -8,8 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_MAPPING_NODE_ID_H__
-#define __OPC_UA_MAPPING_NODE_ID_H__
+#pragma once
 
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/object_ids.h>
@@ -252,10 +251,20 @@ namespace OpcUa
 
   struct ExpandedNodeID : public NodeID
   {
-    using NodeID::NodeID;
+    ExpandedNodeID();
+    ExpandedNodeID(const NodeID& node);
+    ExpandedNodeID(const ExpandedNodeID& node);
+    ExpandedNodeID(MessageID messageID);
+    ExpandedNodeID(ReferenceID referenceID);
+    ExpandedNodeID(ObjectID objectID);
+    ExpandedNodeID(ExpandedObjectID objectID);
+    ExpandedNodeID(uint32_t integerId, uint16_t index);
+    ExpandedNodeID(std::string stringId, uint16_t index);
+
+   //using NodeID::NodeID;
+   //using base::base;
   };
 
 } // namespace OpcUa
 
-#endif // __OPC_UA_MAPPING_NODE_ID_H__
 

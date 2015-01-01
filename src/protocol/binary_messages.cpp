@@ -176,12 +176,16 @@ namespace OpcUa
     Additional.TypeID.TwoByteData.Identifier = 0;
   }
 
+  OpenSecureChannelParameters::OpenSecureChannelParameters()
+    : ClientProtocolVersion(0)
+    , RequestType(STR_ISSUE)
+    , SecurityMode(MSM_NONE)
+    , RequestLifeTime(300000)
+  {
+  }
+
   OpenSecureChannelRequest::OpenSecureChannelRequest()
     : TypeID(OPEN_SECURE_CHANNEL_REQUEST)
-    , ClientProtocolVersion(0)
-    , RequestType(STR_ISSUE)
-    , SecurityMode(MSM_INVALID)
-    , RequestLifeTime(0)
   {
   }
 

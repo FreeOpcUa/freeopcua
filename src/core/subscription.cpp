@@ -26,7 +26,7 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug)
+  Subscription::Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug)
     : Server(server), Client(callback), Debug(debug)
   {
     CreateSubscriptionRequest request;
@@ -132,7 +132,7 @@ namespace OpcUa
           //set the default fiedls of events into their event attributes
           if ( op.BrowsePath.size() == 1 )
           {
-            if ( op.BrowsePath[0] == QualifiedName("EventID", 0) )
+            if ( op.BrowsePath[0] == QualifiedName("EventId", 0) )
             {
               ev.EventId = ef.EventFields[count].As<ByteString>();
             }

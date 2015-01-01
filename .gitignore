@@ -1,4 +1,5 @@
 *.py[cod]
+*.swn
 
 # C extensions
 *.so
@@ -28,11 +29,21 @@ var
 *.dirstamp
 *.deps/
 m4/
+cov-int
+config.*
+*.in
+aclocal.m4
+build-aux
+configure
+ar-lib
+depcomp
+missing
+
 
 # Installer logs
 pip-log.txt
 
-# Unit test / coverage reports
+# Unit tst / coverage reports
 .coverage
 .tox
 nosetests.xml

@@ -54,10 +54,10 @@ namespace OpcUa
     const char EnumStrings[]     = "EnumStrings";
     const char EnableFlag[]      = "EnableFlag";
     const char EUInformation[]   = "EUInformation";
-    const char EventID[]         = "EventID";
+    const char EventID[]         = "EventId";
     const char EventType[]       = "EventType";
     const char EventTypes[]      = "EventTypes";
-    const char ExpandedNodeID[]  = "ExpandedNodeID";
+    const char ExpandedNodeID[]  = "ExpandedNodeId";
     const char Float[]           = "Float";
     const char FolderType[]      = "FolderType";
     const char FromState[]       = "FromState";

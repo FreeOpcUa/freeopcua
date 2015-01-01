@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 #It seems Cmake does not set default bild type so we force it
 if( NOT CMAKE_BUILD_TYPE )
-  set( CMAKE_BUILD_TYPE Debug CACHE STRING "Debug" FORCE )
+    set( CMAKE_BUILD_TYPE Debug CACHE STRING "Debug" FORCE )
 endif()
 
 project(freeopcua)
@@ -12,8 +12,6 @@ option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
-enable_testing()
-
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
@@ -87,148 +85,154 @@ else(WIN32)
 endif(WIN32)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/include 
-  ${CMAKE_SOURCE_DIR}/tests/gtest/include
-  ${CMAKE_SOURCE_DIR}/tests/gmock/include
-  ${ADDITIONAL_INCLUDES}
-)
+    ${CMAKE_SOURCE_DIR}/include 
+    if(BUILD_TESTING)
+        ${CMAKE_SOURCE_DIR}/tests/gtest/include
+        ${CMAKE_SOURCE_DIR}/tests/gmock/include
+    endif(BUILD_TESTING)
+    ${ADDITIONAL_INCLUDES}
+    )
 
-add_subdirectory(tests/gtest)
+
+if(BUILD_TESTING)
+    set(TESTING_LIB "gtest gtest_main")
+    enable_testing()
+    add_subdirectory(tests/gtest)
+endif(BUILD_TESTING)
 
 ############################################################################
 # Protocol library
 ############################################################################
 
 ADD_CUSTOM_COMMAND(
-  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-  COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/codegen.py cxx object_ids > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-  #DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+    COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/codegen.py cxx object_ids > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+    #DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv
   )
 
-add_library(libopcuaprotocol STATIC
-  include/opc/ua/protocol/object_ids.h
-  src/protocol/binary_attribute.cpp
-  src/protocol/binary_data_value.cpp
-  src/protocol/binary_endpoints.cpp
-  src/protocol/binary_messages.cpp
-  src/protocol/binary_node_management.cpp
-  src/protocol/binary_raw_size.cpp
-  src/protocol/binary_serialization.h
-  src/protocol/binary_session.cpp
-  src/protocol/binary_stream.cpp
-  src/protocol/binary_variant.cpp
-  src/protocol/binary_view.cpp
-  src/protocol/input_from_buffer.cpp
-  src/protocol/monitored_items.cpp
-  src/protocol/nodeid.cpp
-  src/protocol/session.cpp
-  src/protocol/status_codes.cpp
-  src/protocol/string_utils.cpp
-  src/protocol/string_utils_statuscode_tostring.cpp
-  src/protocol/subscriptions.cpp
+add_library(opcuaprotocol STATIC
+    include/opc/ua/protocol/object_ids.h
+    src/protocol/binary_attribute.cpp
+    src/protocol/binary_data_value.cpp
+    src/protocol/binary_endpoints.cpp
+    src/protocol/binary_messages.cpp
+    src/protocol/binary_node_management.cpp
+    src/protocol/binary_raw_size.cpp
+    src/protocol/binary_serialization.h
+    src/protocol/binary_session.cpp
+    src/protocol/binary_stream.cpp
+    src/protocol/binary_variant.cpp
+    src/protocol/binary_view.cpp
+    src/protocol/input_from_buffer.cpp
+    src/protocol/monitored_items.cpp
+    src/protocol/nodeid.cpp
+    src/protocol/session.cpp
+    src/protocol/status_codes.cpp
+    src/protocol/string_utils.cpp
+    src/protocol/string_utils_statuscode_tostring.cpp
+    src/protocol/subscriptions.cpp
 )
 
-target_compile_options(libopcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(libopcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
+target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 
 if (BUILD_TESTING)
-  add_executable(test_libopcuaprotocol
-    tests/protocol/binary_deserialize.cpp
-    tests/protocol/binary_node_management.cpp
-    tests/protocol/binary_serialize.cpp
-    tests/protocol/binary_serialize_attribute.cpp
-    tests/protocol/binary_serialize_data_value.cpp
-    tests/protocol/binary_serialize_endpoints.cpp
-    tests/protocol/binary_serialize_monitored_items.cpp
-    tests/protocol/binary_serialize_session.cpp
-    tests/protocol/binary_serialize_variant.cpp
-    tests/protocol/binary_serialize_view.cpp
-    tests/protocol/binary_subscriptions.cpp
-    tests/protocol/common.h
-    tests/protocol/message_id.cpp
-    tests/protocol/node_id.cpp
-    tests/protocol/reference_id.cpp
-    tests/protocol/test_input_from_buffer.cpp
-    tests/protocol/utils.cpp
-  )
+    add_executable(test_opcuaprotocol
+        tests/protocol/binary_deserialize.cpp
+        tests/protocol/binary_node_management.cpp
+        tests/protocol/binary_serialize.cpp
+        tests/protocol/binary_serialize_attribute.cpp
+        tests/protocol/binary_serialize_data_value.cpp
+        tests/protocol/binary_serialize_endpoints.cpp
+        tests/protocol/binary_serialize_monitored_items.cpp
+        tests/protocol/binary_serialize_session.cpp
+        tests/protocol/binary_serialize_variant.cpp
+        tests/protocol/binary_serialize_view.cpp
+        tests/protocol/binary_subscriptions.cpp
+        tests/protocol/common.h
+        tests/protocol/message_id.cpp
+        tests/protocol/node_id.cpp
+        tests/protocol/reference_id.cpp
+        tests/protocol/test_input_from_buffer.cpp
+        tests/protocol/utils.cpp
+    )
 
-  target_link_libraries(test_libopcuaprotocol
-    libopcuaprotocol
-    gtest
-    gtest_main
-  )
+    target_link_libraries(test_opcuaprotocol
+        opcuaprotocol
+        gtest
+        gtest_main
+    )
 
-  target_compile_options(test_libopcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    target_compile_options(test_opcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
-  add_test(NAME libopcuaprotocol COMMAND test_libopcuaprotocol) 
+    add_test(NAME opcuaprotocol COMMAND test_opcuaprotocol) 
 endif()
 
 ############################################################################
 # core library
 ############################################################################
 
-SET(LIBOPCUACORE_SOURCES 
-  src/core/common/addons_core/addon_manager.cpp
-  src/core/common/addons_core/config_file.cpp
-  src/core/common/addons_core/dynamic_library${OS_SUFFIX}.cpp
-  src/core/common/addons_core/dynamic_addon_factory.cpp
-  src/core/common/addons_core/dynamic_library.h
-  src/core/common/addons_core/errors_addon_manager.cpp
-  src/core/common/common_errors.cpp
-  src/core/common/exception.cpp
-  src/core/common/object_id.cpp
-  src/core/common/thread.cpp
-  src/core/common/uri_facade${OS_SUFFIX}.cpp
-  src/core/common/value.cpp
-  src/core/event.cpp
-  src/core/model_impl.h
-  src/core/model_node.cpp
-  src/core/model_object.cpp
-  src/core/model_object_type.cpp
-  src/core/model_server.cpp
-  src/core/model_variable.cpp
-  src/core/node.cpp
-  src/core/opcua_errors.cpp
-  src/core/socket_channel.cpp
-  src/core/subscription.cpp
+SET(opcuacore_SOURCES 
+    src/core/common/addons_core/addon_manager.cpp
+    src/core/common/addons_core/config_file.cpp
+    src/core/common/addons_core/dynamic_library${OS_SUFFIX}.cpp
+    src/core/common/addons_core/dynamic_addon_factory.cpp
+    src/core/common/addons_core/dynamic_library.h
+    src/core/common/addons_core/errors_addon_manager.cpp
+    src/core/common/common_errors.cpp
+    src/core/common/exception.cpp
+    src/core/common/object_id.cpp
+    src/core/common/thread.cpp
+    src/core/common/uri_facade${OS_SUFFIX}.cpp
+    src/core/common/value.cpp
+    src/core/event.cpp
+    src/core/model_impl.h
+    src/core/model_node.cpp
+    src/core/model_object.cpp
+    src/core/model_object_type.cpp
+    src/core/model_server.cpp
+    src/core/model_variable.cpp
+    src/core/node.cpp
+    src/core/opcua_errors.cpp
+    src/core/socket_channel.cpp
+    src/core/subscription.cpp
 )
 
-add_library(libopcuacore STATIC ${LIBOPCUACORE_SOURCES})
+add_library(opcuacore STATIC ${opcuacore_SOURCES})
 
-target_compile_options(libopcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(libopcuacore ${ADDITIONAL_LINK_LIBRARIES} libopcuaprotocol)
+target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
 
 if (BUILD_TESTING)
-  add_library(test_dynamic_addon MODULE
-    tests/core/test_dynamic_addon.cpp
-    tests/core/test_dynamic_addon.h
-  )
+    add_library(test_dynamic_addon MODULE
+        tests/core/test_dynamic_addon.cpp
+        tests/core/test_dynamic_addon.h
+    )
 
-  target_link_libraries(test_dynamic_addon
-    libopcuacore
-  )
+    target_link_libraries(test_dynamic_addon
+        opcuacore
+    )
   
 
 
-  add_executable(test_libopcuacore
-    tests/core/test_addon_manager.cpp
-    tests/core/test_config_file.cpp
-    tests/core/test_dynamic_addon_factory.cpp
-    tests/core/test_dynamic_addon_id.h
-    tests/core/test_uri.cpp
-  )
+    add_executable(test_opcuacore
+        tests/core/test_addon_manager.cpp
+        tests/core/test_config_file.cpp
+        tests/core/test_dynamic_addon_factory.cpp
+        tests/core/test_dynamic_addon_id.h
+        tests/core/test_uri.cpp
+    )
 
-  target_link_libraries(test_libopcuacore
-    ${ADDITIONAL_LINK_LIBRARIES}
-    libopcuaprotocol
-    libopcuacore
-    gtest
-    gtest_main
-  )
+    target_link_libraries(test_opcuacore
+        ${ADDITIONAL_LINK_LIBRARIES}
+        opcuaprotocol
+        opcuacore
+        ${TEST_LIBS}
+    )
 
-  target_compile_options(test_libopcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
+    target_compile_options(test_opcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
 
-  add_test(NAME libopcuacore COMMAND test_libopcuacore) 
+    add_test(NAME opcuacore COMMAND test_opcuacore) 
 
 endif(BUILD_TESTING)
 
@@ -238,15 +242,15 @@ endif(BUILD_TESTING)
 # client library
 ############################################################################
 if (BUILD_CLIENT)
-    add_library(libopcuaclient STATIC
+    add_library(opcuaclient STATIC
     src/client/binary_connection.cpp
-    src/client/binary_server.cpp
-    src/client/binary_server_addon.cpp
+    src/client/binary_client.cpp
+    src/client/binary_client_addon.cpp
     src/client/client.cpp
     )
 
-    target_compile_options(libopcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-    target_link_libraries(libopcuaclient libopcuacore ${ADDITIONAL_LINK_LIBRARIES})
+    target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    target_link_libraries(opcuaclient opcuacore ${ADDITIONAL_LINK_LIBRARIES})
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -261,21 +265,21 @@ if (BUILD_CLIENT)
     # command line client
     ############################################################################
 
-    add_executable(opcua_client
-    src/client/opcua_main.cpp
-    src/client/opcua_options.cpp
-    src/client/opcua_options_attribute_ids.h
-    src/client/opcua_options.h
+    add_executable(opcuaclientapp
+    src/clientapp/opcua_main.cpp
+    src/clientapp/opcua_options.cpp
+    src/clientapp/opcua_options_attribute_ids.h
+    src/clientapp/opcua_options.h
     )
     
 
-    target_link_libraries(opcua_client
+    target_link_libraries(opcuaclientapp
     ${ADDITIONAL_LINK_LIBRARIES}
-    libopcuaprotocol
-    libopcuacore
+    opcuaprotocol
+    opcuacore
     )
 
-    target_compile_options(opcua_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    target_compile_options(opcuaclient PUBLIC ${EXECUTABLE_CXX_FLAGS})
 endif(BUILD_CLIENT)
 
 
@@ -284,14 +288,14 @@ endif(BUILD_CLIENT)
 ############################################################################
 
 if(BUILD_SERVER)
-    add_library(libopcuaserver STATIC
+    add_library(opcuaserver STATIC
         src/server/address_space_addon.cpp
         src/server/address_space_addon.h
         src/server/address_space_internal.cpp
         src/server/address_space_internal.h
         src/server/asio_addon.cpp
         src/server/common_addons.cpp
-        src/server/common_addons.h
+        #src/server/common_addons.h
         src/server/endpoints_parameters.cpp
         src/server/endpoints_parameters.h
         src/server/endpoints_registry.cpp
@@ -317,11 +321,10 @@ if(BUILD_SERVER)
         src/server/subscription_service_internal.cpp
         src/server/subscription_service_internal.h
         src/server/timer.h
-        src/server/utils.h
         )
 
-    target_compile_options(libopcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-    target_link_libraries(libopcuaserver ${ADDITIONAL_LINK_LIBRARIES} libopcuacore libopcuaprotocol)
+    target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
@@ -329,7 +332,7 @@ if(BUILD_SERVER)
     #  src/server/xml_processor.h
     
     if (BUILD_TESTING)
-        add_executable(test_libopcuaserver
+        add_executable(test_opcuaserver
             src/server/opcua_protocol_addon.cpp
             src/server/server_options.cpp
             tests/server/address_space_registry_test.h
@@ -359,19 +362,19 @@ if(BUILD_SERVER)
         #  tests/server/xml_addressspace_ut.cpp
         #  tests/server/xml_address_space_addon_ut.cpp
         
-        target_link_libraries(test_libopcuaserver
+        target_link_libraries(test_opcuaserver
             ${ADDITIONAL_LINK_LIBRARIES}
-            libopcuaclient
-            libopcuacore
-            libopcuaprotocol
-            libopcuaserver
-            gtest
-            gtest_main)
+            opcuaclient
+            opcuacore
+            opcuaprotocol
+            opcuaserver
+            ${TEST_LIBS}
+            )
         
-        target_include_directories(test_libopcuaserver PUBLIC .)
-        target_compile_options(test_libopcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
+        target_include_directories(test_opcuaserver PUBLIC .)
+        target_compile_options(test_opcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
 
-        add_test(NAME libopcuaserver COMMAND test_libopcuaserver)
+        add_test(NAME opcuaserverapp COMMAND test_opcuaserver)
 
     endif (BUILD_TESTING)
 
@@ -380,23 +383,23 @@ if(BUILD_SERVER)
 # opcua server executable
 ############################################################################
 
-    SET(OPCUASERVER_SOURCES
-        src/server/daemon.cpp
-        src/server/daemon${OS_SUFFIX}.cpp
-        src/server/daemon.h
-        src/server/server_main.cpp
-        src/server/server_options.cpp
-        src/server/server_options.h
+    SET(OPCUASERVERAPP_SOURCES
+        src/serverapp/daemon.cpp
+        src/serverapp/daemon${OS_SUFFIX}.cpp
+        src/serverapp/daemon.h
+        src/serverapp/server_main.cpp
+        src/serverapp/server_options.cpp
+        src/serverapp/server_options.h
     )
 
-    add_executable(opcuaserver ${OPCUASERVER_SOURCES})
-    target_link_libraries(opcuaserver
+    add_executable(opcuaserverapp ${OPCUASERVERAPP_SOURCES})
+    target_link_libraries(opcuaserverapp
         ${ADDITIONAL_LINK_LIBRARIES}
-        libopcuaprotocol
-        libopcuacore
-        libopcuaserver
+        opcuaprotocol
+        opcuacore
+        opcuaserver
         )
-    target_compile_options(opcuaserver PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
 endif(BUILD_SERVER)
 
@@ -411,9 +414,9 @@ if (BUILD_CLIENT)
 
     target_link_libraries(example_client
         ${ADDITIONAL_LINK_LIBRARIES}
-        libopcuaprotocol
-        libopcuacore
-        libopcuaclient
+        opcuaprotocol
+        opcuacore
+        opcuaclient
         ${Boost_LIBRARIES}
     )
 
@@ -432,9 +435,9 @@ if(BUILD_SERVER)
 
     target_link_libraries(example_server
     ${ADDITIONAL_LINK_LIBRARIES}
-    libopcuaprotocol
-    libopcuacore
-    libopcuaserver
+    opcuaprotocol
+    opcuacore
+    opcuaserver
     )
 
     target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})

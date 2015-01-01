@@ -23,16 +23,22 @@ namespace OpcUa
   //    << RequestHeader
   //    << OpenSecureChannel
 
-  struct OpenSecureChannelRequest
+  struct OpenSecureChannelParameters
   {
-    ExpandedNodeID TypeID;
-    RequestHeader Header;
-
     uint32_t ClientProtocolVersion;
     SecurityTokenRequestType RequestType;
     MessageSecurityMode SecurityMode;
     std::vector<uint8_t> ClientNonce;
     uint32_t RequestLifeTime;
+
+    OpenSecureChannelParameters();
+  };
+
+  struct OpenSecureChannelRequest
+  {
+    ExpandedNodeID TypeID;
+    RequestHeader Header;
+    OpenSecureChannelParameters Parameters;
 
     OpenSecureChannelRequest();
   };

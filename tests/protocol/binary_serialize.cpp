@@ -753,11 +753,11 @@ TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
   OpenSecureChannelRequest request;
   FILL_TEST_REQUEST_HEADER(request.Header);
   
-  request.ClientProtocolVersion = 1;
-  request.RequestType = STR_RENEW;
-  request.SecurityMode = MSM_SIGN;
-  request.ClientNonce = std::vector<uint8_t>(1, 1);
-  request.RequestLifeTime = 5;
+  request.Parameters.ClientProtocolVersion = 1;
+  request.Parameters.RequestType = STR_RENEW;
+  request.Parameters.SecurityMode = MSM_SIGN;
+  request.Parameters.ClientNonce = std::vector<uint8_t>(1, 1);
+  request.Parameters.RequestLifeTime = 5;
 
   GetStream() << request << flush;
 

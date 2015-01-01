@@ -16,7 +16,7 @@
 #include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include "opc/ua/client/client.h"
-#include "opc/ua/client/binary_server.h"
+#include "opc/ua/client/binary_client.h"
 #include "opc/ua/node.h"
 #include "opc/ua/event.h"
 #include "opc/ua/server/server.h"
@@ -29,6 +29,11 @@
 #include "py_opcua_helpers.h"
 #include "py_opcua_subscriptionclient.h"
 #include "py_opcua_variant.h"
+
+#if PY_MAJOR_VERSION >= 3
+  #define PyString_Check               PyUnicode_Check
+  #define PyString_AsString(S)           PyBytes_AsString(PyUnicode_AsUTF8String(S)) 
+#endif
 
 using namespace boost::python;
 using namespace OpcUa;
@@ -46,8 +51,6 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2)
 //--------------------------------------------------------------------------
 // DateTime helpers
 //--------------------------------------------------------------------------
-
-
 
 static  boost::python::object ToPyDateTime(const DateTime& self )
 {
@@ -124,6 +127,42 @@ struct DateTimePythonToOpcUaConverter
 };
 
 //--------------------------------------------------------------------------
+//LocalizedText
+//--------------------------------------------------------------------------
+
+struct LocalizedTextToPythonConverter
+{
+  static PyObject* convert(const LocalizedText& text)
+  {
+    return boost::python::incref(boost::python::object(text.Text.c_str()).ptr());
+  }
+};
+
+struct PythonStringToLocalizedTextConverter
+{
+
+  PythonStringToLocalizedTextConverter()
+  {
+    boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<LocalizedText>());
+  }
+
+  static void* convertible(PyObject* obj_ptr)
+  {
+    if (!PyString_Check(obj_ptr)) return 0;
+    return obj_ptr;
+  }
+
+  static void construct( PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
+  {
+      void* storage = ( (boost::python::converter::rvalue_from_python_storage<LocalizedText>*)data)->storage.bytes;
+      const char* value = PyString_AsString(obj_ptr);
+      new (storage) LocalizedText(std::string(value));
+      data->convertible = storage;
+  }
+};
+
+
+//--------------------------------------------------------------------------
 // NodeID helpers
 //--------------------------------------------------------------------------
 
@@ -195,7 +234,7 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 // UaClient helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
 {
   std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
@@ -210,7 +249,7 @@ static Node UaClient_GetNode(UaClient & self, ObjectID objectid)
 // UaServer helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
 {
   std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
@@ -236,6 +275,14 @@ BOOST_PYTHON_MODULE(opcua)
 
   py_opcua_enums();
 
+  DateTimePythonToOpcUaConverter(); 
+  PythonStringToLocalizedTextConverter(); 
+  to_python_converter<LocalizedText, LocalizedTextToPythonConverter>(); 
+  // Enable next line to return PyDateTime instead og DateTime in python
+  //to_python_converter<DateTime, DateTimeOpcUaToPythonConverter>(); 
+
+
+
   to_python_converter<std::vector<std::string>, vector_to_python_converter<std::string>>();
   vector_from_python_converter<std::string>();
 
@@ -253,16 +300,13 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("value", &DateTime::Value)
   ;
 
-  // Enable next line to return PyDateTime instead og DateTime in python
-  // to_python_converter<DateTime, DateTimeOpcUaToPythonConverter>(); 
-  DateTimePythonToOpcUaConverter(); //Register PyDateTime to DateTime convertor
+  //class_<LocalizedText>("LocalizedText")
+  //.def_readwrite("Encoding", &LocalizedText::Encoding)
+  //.def_readwrite("Locale", &LocalizedText::Locale)
+  //.def_readwrite("Text", &LocalizedText::Text)
+  //;
 
-  class_<LocalizedText>("LocalizedText")
-  .def_readwrite("Encoding", &LocalizedText::Encoding)
-  .def_readwrite("Locale", &LocalizedText::Locale)
-  .def_readwrite("Text", &LocalizedText::Text)
-  ;
-
+  
   class_<NodeID, boost::shared_ptr<NodeID>>("NodeID")
   .def(init<uint32_t, uint16_t>())
   .def(init<std::string, uint16_t>())
@@ -280,6 +324,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def(self == self)
   ;
 
+  to_python_converter<std::vector<QualifiedName>, vector_to_python_converter<QualifiedName>>();
+  to_python_converter<std::vector<std::vector<QualifiedName>>, vector_to_python_converter<std::vector<QualifiedName>>>();
   class_<QualifiedName>("QualifiedName")
   .def(init<uint16_t, std::string>())
   .def(init<std::string, uint16_t>()) // XXX A.D.D, right
@@ -415,27 +461,31 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<Node>, vector_to_python_converter<Node>>();
   vector_from_python_converter<Node>();
   
-  class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
-  .def("data_change", &PySubscriptionClient::DefaultDataChange)
+  class_<SubscriptionHandler, PySubscriptionHandler, boost::noncopyable>("SubscriptionHandler", init<>())
+  .def("data_change", &PySubscriptionHandler::DefaultDataChange)
   .staticmethod("data_change")
-  .def("event", &PySubscriptionClient::DefaultEvent)
+  .def("event", &PySubscriptionHandler::DefaultEvent)
   .staticmethod("event")
-  .def("status_change", &PySubscriptionClient::DefaultStatusChange)
+  .def("status_change", &PySubscriptionHandler::DefaultStatusChange)
   .staticmethod("status_change")
   ;
 
   class_<Event>("Event", init<const NodeID &>())
+  .def(init<>())
   .def("get_value", (Variant(Event::*)(const std::string &) const) &Event::GetValue)
   .def("set_value", (void (Event::*)(const std::string &, Variant)) &Event::SetValue)
+  .def("get_value_keys", &Event::GetValueKeys)
   .def_readwrite("event_id", &Event::EventId)
   .def_readwrite("event_type", &Event::EventType)
   .def_readwrite("local_time", &Event::LocalTime)
-  .def_readwrite("message", &Event::Message)
+  .add_property("message", make_getter(&Event::Message, return_value_policy<return_by_value>()), make_setter(&Event::Message, return_value_policy<return_by_value>()))
   .def_readwrite("receive_time", &Event::ReceiveTime)
   .def_readwrite("severity", &Event::Severity)
   .def_readwrite("source_name", &Event::SourceName)
   .def_readwrite("source_node", &Event::SourceNode)
   .def_readwrite("time", &Event::Time)
+  .def(str(self))
+  .def(repr(self))
   ;
 
   class_<Subscription, boost::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
@@ -444,6 +494,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
   .def("subscribe_events", (uint32_t (Subscription::*)()) &Subscription::SubscribeEvents)
   .def("subscribe_events", (uint32_t (Subscription::*)(const Node &, const Node &)) &Subscription::SubscribeEvents)
+  //.def(str(self))
+  //.def(repr(self))
   ;
 
   class_<UaClient, boost::noncopyable>("Client", init<>())
@@ -468,6 +520,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_security_policy", &UaClient::SetSecurityPolicy)
   .def("get_security_policy", &UaClient::GetSecurityPolicy)
   .def("create_subscription", &UaClient_CreateSubscription)
+  //.def(str(self))
+  //.def(repr(self))
   ;
 
   class_<UaServer, boost::noncopyable >("Server", init<>())
@@ -487,6 +541,9 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_server_name", &UaServer::SetServerName)
   .def("set_endpoint", &UaServer::SetEndpoint)
   .def("create_subscription", &UaServer_CreateSubscription)
+  .def("trigger_event", &UaServer::TriggerEvent)
+  //.def(str(self))
+  //.def(repr(self))
   ;
 
 }

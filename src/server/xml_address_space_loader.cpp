@@ -136,14 +136,14 @@ namespace
     }
   };
 
-  struct Node
+  struct INode
   {
     NodeID ID;
     std::map<AttributeID, Variant> Attributes;
     std::vector<Reference> References;
     bool IsExternal;
 
-    Node()
+    INode()
       : IsExternal(false)
     {
     }
@@ -639,7 +639,7 @@ namespace
   class AttributesCollector : private Internal::XmlProcessor
   {
   public:
-    AttributesCollector(Node& node, bool debug)
+    AttributesCollector(INode& node, bool debug)
       : OpcUaNode(node)
       , Debug(debug)
     {
@@ -699,14 +699,14 @@ namespace
     }
 
   private:
-    Node& OpcUaNode;
+    INode& OpcUaNode;
     const bool Debug;
   };
 
   class ReferencesCollector : private Internal::XmlProcessor
   {
   public:
-    ReferencesCollector(Node& node, bool debug)
+    ReferencesCollector(INode& node, bool debug)
       : OpcUaNode(node)
       , Debug(debug)
     {
@@ -795,14 +795,14 @@ namespace
     }
 
   private:
-    Node& OpcUaNode;
+    INode& OpcUaNode;
     const bool Debug;
   };
 
   class NodesCollector : private Internal::XmlProcessor
   {
   public:
-    NodesCollector(std::map<NodeID, Node>& nodes, bool debug)
+    NodesCollector(std::map<NodeID, INode>& nodes, bool debug)
       : Nodes(nodes)
       , Debug(debug)
     {
@@ -815,7 +815,7 @@ namespace
         return;
       }
 
-      Node opcuaNode;
+      INode opcuaNode;
       if (IsXmlNode(node, "node"))
       {
         opcuaNode.IsExternal = false;
@@ -839,17 +839,17 @@ namespace
     }
 
   private:
-    void EnsureNodeIsValid(const Node& opcuaNode, const xmlNode& node) const
+    void EnsureNodeIsValid(const INode& opcuaNode, const xmlNode& node) const
     {
       if (opcuaNode.ID == NodeID())
       {
         std::stringstream stream;
-        stream << "Node at line '" << node.line << "' has no ID.";
+        stream << "INode at line '" << node.line << "' has no ID.";
         throw std::logic_error(stream.str());
       }
     }
 
-    void FillNode(const xmlNode& node, Node& opcuaNode) const
+    void FillNode(const xmlNode& node, INode& opcuaNode) const
     {
       AttributesCollector attributeCollector(opcuaNode, Debug);
       ReferencesCollector referencCollector(opcuaNode, Debug);
@@ -873,7 +873,7 @@ namespace
     }
 
   private:
-    std::map<NodeID, Node>& Nodes;
+    std::map<NodeID, INode>& Nodes;
     const bool Debug;
   };
 
@@ -887,12 +887,12 @@ namespace
 
     }
 
-    std::map<NodeID, Node> Process(xmlDoc& doc)
+    std::map<NodeID, INode> Process(xmlDoc& doc)
     {
       xmlNodePtr rootNode = xmlDocGetRootElement(&doc);
       EnsureRootNodeValid(*rootNode);
 
-      std::map<NodeID, Node> nodes;
+      std::map<NodeID, INode> nodes;
       NodesCollector nodesBuilder(nodes, Debug);
       for (xmlNodePtr cur = rootNode->children; cur; cur = cur->next)
       {
@@ -929,7 +929,7 @@ namespace
     const bool Debug;
   };
 
-  std::map<NodeID, Node> ParseConfig(const char* configPath, bool debug)
+  std::map<NodeID, INode> ParseConfig(const char* configPath, bool debug)
   {
     std::unique_ptr<xmlDoc, XmlDocDeleter> doc(xmlParseFile(configPath), XmlDocDeleter());
     if (!doc)
@@ -950,7 +950,7 @@ namespace
     {
     }
 
-    void RegisterNodes(const std::map<NodeID, Node>& nodes)
+    void RegisterNodes(const std::map<NodeID, INode>& nodes)
     {
       for (const auto& node : nodes)
       {
@@ -963,7 +963,7 @@ namespace
     }
 
   private:
-    void RegisterNode(const Node& node)
+    void RegisterNode(const INode& node)
     {
       //Registry.AddAttribute(node.ID, AttributeID::NodeId, Variant(node.ID));
       for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
@@ -972,7 +972,7 @@ namespace
       }
     }
 
-    void AddReferences(const Node& node)
+    void AddReferences(const INode& node)
     {
       for (const Reference& ref : node.References)
       {
@@ -1007,7 +1007,7 @@ namespace OpcUa
 
     void XmlAddressSpaceLoader::Load(const char* fileName)
     {
-      std::map<NodeID, Node> nodes = ParseConfig(fileName, Debug);
+      std::map<NodeID, INode> nodes = ParseConfig(fileName, Debug);
       NodesRegistrator reg(Registry, Debug);
       reg.RegisterNodes(nodes);
     }

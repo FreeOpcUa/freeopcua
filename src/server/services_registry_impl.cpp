@@ -163,6 +163,15 @@ namespace
       return ActivateSessionResponse();
     }
 
+    virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters)
+    {
+      return OpenSecureChannelResponse();
+    }
+
+    virtual void CloseSecureChannel(uint32_t channelId)
+    {
+    }
+
     virtual CloseSessionResponse CloseSession()
     {
       return CloseSessionResponse();

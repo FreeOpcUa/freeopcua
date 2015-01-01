@@ -12,6 +12,7 @@
 
 #include <opc/common/class_pointers.h>
 #include <opc/ua/protocol/session.h>
+#include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/endpoints.h>
 #include <opc/ua/services/node_management.h>
@@ -40,6 +41,8 @@ namespace OpcUa
     DEFINE_CLASS_POINTERS(Services);
 
   public:
+    virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) = 0;
+    virtual void CloseSecureChannel(uint32_t channelId) = 0;
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
     virtual ActivateSessionResponse ActivateSession() = 0;
     virtual CloseSessionResponse CloseSession() = 0;

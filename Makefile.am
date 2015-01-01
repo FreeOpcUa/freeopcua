@@ -42,13 +42,13 @@ binaryincludedir = $(protocolincludedir)/binary
 
 configdir = ${sysconfdir}/opcua
 serverconfigdir=${configdir}/server
-serverconfig_DATA = src/server/configs/server.conf
+serverconfig_DATA = src/serverapp/configs/server.conf
 
 clientconfigdir=${configdir}/client
-clientconfig_DATA = src/client/configs/opc_tcp.conf
+clientconfig_DATA = src/clientapp/configs/opc_tcp.conf
 
 sysvdir=$(sysconfdir)/init.d
-sysv_DATA=src/server/configs/opcuaserver
+sysv_DATA=src/serverapp/configs/opcuaserver
 
 #upstartdir=$(sysconfdir)/init
 #upstart_DATA=configs/opcuaserver.conf
@@ -90,7 +90,8 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/services_registry.h \
 	include/opc/ua/server/addons/standard_namespace.h \
-  include/opc/ua/server/addons/subscription_service.h \
+    include/opc/ua/server/addons/subscription_service.h \
+	include/opc/ua/server/addons/common_addons.h \
 	include/opc/ua/server/addons/xml_ns.h
 
 libopcuaserver_la_SOURCES = \
@@ -100,7 +101,6 @@ libopcuaserver_la_SOURCES = \
 	src/server/address_space_internal.cpp \
 	src/server/address_space_internal.h \
 	src/server/common_addons.cpp \
-	src/server/common_addons.h \
 	src/server/endpoints_parameters.cpp \
 	src/server/endpoints_parameters.h \
 	src/server/endpoints_services_addon.cpp \
@@ -130,7 +130,6 @@ libopcuaserver_la_SOURCES = \
 	src/server/tcp_server.cpp \
 	src/server/tcp_server.h \
 	src/server/timer.h \
-	src/server/utils.h \
 	src/server/xml_address_space_loader.cpp \
 	src/server/xml_address_space_loader.h \
 	src/server/xml_address_space_addon.cpp \
@@ -146,12 +145,12 @@ libopcuaserver_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_system -lboost
 ####################################################
 
 opcuaserver_SOURCES = \
-	src/server/daemon.cpp \
-	src/server/daemon_lin.cpp \
-	src/server/daemon.h \
-	src/server/server_main.cpp \
-	src/server/server_options.cpp \
-	src/server/server_options.h
+	src/serverapp/daemon.cpp \
+	src/serverapp/daemon_lin.cpp \
+	src/serverapp/daemon.h \
+	src/serverapp/server_main.cpp \
+	src/serverapp/server_options.cpp \
+	src/serverapp/server_options.h
 
 opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
 opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCONFIG_PATH=\"$(sysconfdir)/opcua/server\"
@@ -179,8 +178,8 @@ test_opcuaserver_SOURCES = \
 	tests/server/standard_namespace_test.h \
 	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
-	src/server/server_options.cpp \
-	src/server/server_options.h
+	src/serverapp/server_options.cpp \
+	src/serverapp/server_options.h
 
 # temporary disabled until new format is discussed.
 #	tests/server/xml_addressspace_ut.cpp
@@ -245,6 +244,7 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/variable_access_level.h \
   include/opc/ua/protocol/variant.h \
   include/opc/ua/protocol/variant_visitor.h \
+  include/opc/ua/protocol/utils.h \
   include/opc/ua/protocol/view.h
 
 libopcuaprotocol_la_SOURCES = \
@@ -405,14 +405,14 @@ common_gtest_LDFLAGS = -ldl -lpthread -lxml2 $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GM
 
 clientinclude_HEADERS = \
   include/opc/ua/client/addon.h \
-  include/opc/ua/client/binary_server.h \
+  include/opc/ua/client/binary_client.h \
   include/opc/ua/client/client.h \
   include/opc/ua/client/remote_connection.h
 
 libopcuaclient_la_SOURCES = \
   src/client/client.cpp \
-  src/client/binary_server_addon.cpp \
-  src/client/binary_server.cpp \
+  src/client/binary_client_addon.cpp \
+  src/client/binary_client.cpp \
   src/client/binary_connection.cpp
 
 libopcuaclient_la_CPPFLAGS =  -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
@@ -424,10 +424,10 @@ libopcuaclient_la_LDFLAGS = -ldl -lpthread -lxml2
 #########################################################
 
 opcua_SOURCES = \
-  src/client/opcua_main.cpp \
-  src/client/opcua_options.cpp \
-	src/client/opcua_options_attribute_ids.h \
-  src/client/opcua_options.h
+  src/clientapp/opcua_main.cpp \
+  src/clientapp/opcua_options.cpp \
+  src/clientapp/opcua_options_attribute_ids.h \
+  src/clientapp/opcua_options.h
 
 opcua_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCONFIG_PATH=\"$(sysconfdir)/opcua/client\"
 opcua_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
@@ -460,11 +460,11 @@ example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 #############################################################
 
 EXTRA_DIST = \
-  src/client/configs/opc_tcp.conf \
-  src/server/configs/server.conf \
-  src/server/configs/opcuaserver \
-  src/server/configs/opcuaserver.conf \
-  tests/core/configs \
+  src/clientapp/configs/opc_tcp.conf \
+  src/serverapp/configs/server.conf \
+  src/serverapp/configs/opcuaserver \
+  src/serverapp/configs/opcuaserver.conf \
+  tests/coreapp/configs \
   tests/gtest \
   tests/gmock \
   tests/server/common.cpp \

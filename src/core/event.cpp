@@ -13,6 +13,18 @@ namespace OpcUa
 
   Event::Event(const NodeID& type) : EventType(type) {}
 
+  Event::Event(const Node& type) : EventType(type.GetId()) {}
+
+  std::vector<std::vector<QualifiedName>> Event::GetValueKeys()
+  {
+    std::vector<std::vector<QualifiedName>> qns;
+    for (auto qn : PathValues)
+    {
+      qns.push_back(qn.first);
+    }
+    return qns;
+  }
+
   void Event::SetValue(const QualifiedName& path, Variant value)
   {
     SetValue(std::vector<QualifiedName>({path}), value);
@@ -50,7 +62,7 @@ namespace OpcUa
       std::cout << std::endl;
     if ( it == PathValues.end() )
     {
-      std::cout << "Bad Not found ";
+      std::cout << "Bad Not found " << std::endl;
       return Variant();
     }
     else
@@ -58,7 +70,6 @@ namespace OpcUa
       std::cout << "ok" << std::endl;
       return it->second;
     }
-      std::cout << std::endl;
   }
 
   Variant Event::GetValue(const std::string& qualifiedname) const
@@ -81,4 +92,10 @@ namespace OpcUa
     }
   }
 
+  std::string ToString(const Event& event)
+  {
+    std::stringstream stream;
+    stream << "Event(type:" << event.EventType << ", time:" << event.Time << ", source:" << event.SourceNode << ", severity:" << event.Severity << ", message:" << event.Message << ")" ;
+    return stream.str();
+  }
 }

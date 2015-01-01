@@ -29,8 +29,9 @@
 namespace OpcUa
 {
 
-  void KeepAliveThread::Start(Node node, Duration period)
+  void KeepAliveThread::Start(Services::SharedPtr server, Node node, Duration period)
   {
+    Server = server;
     NodeToRead = node;
     Period = period;
     Running = true;
@@ -50,6 +51,13 @@ namespace OpcUa
         break;
       }
       if (Debug)  { std::cout << "KeepAliveThread | Reading " << std::endl; }
+      OpenSecureChannelParameters params;
+      params.ClientProtocolVersion = 0;
+      params.RequestType = STR_RENEW;
+      params.SecurityMode = MSM_NONE;
+      params.ClientNonce = std::vector<uint8_t>(1, 0);
+      params.RequestLifeTime = Period * 2; //FIXME: should use DefualtTimeout from client!
+      Server->OpenSecureChannel(params);
       NodeToRead.GetValue();
     }
     Running = false;
@@ -83,9 +91,13 @@ namespace OpcUa
     params.EndpointUrl = endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryClient(channel, params, Debug);
+
+    OpenSecureChannel();
     std::vector<EndpointDescription> endpoints = UaClient::GetServerEndpoints();
-    Server.reset();
+    CloseSecureChannel();
+
+    Server.reset(); //close channel
 
     return endpoints;
   }
@@ -132,6 +144,7 @@ namespace OpcUa
   void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
+    endpointdesc.EndpointURL = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
    
@@ -145,7 +158,9 @@ namespace OpcUa
     params.EndpointUrl = Endpoint.EndpointURL;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-    Server = OpcUa::CreateBinaryServer(channel, params, Debug);
+    Server = OpcUa::CreateBinaryClient(channel, params, Debug);
+
+    OpenSecureChannel();
 
 
     if (Debug)  { std::cout << "UaClient | Creating session " <<  std::endl; }
@@ -156,7 +171,7 @@ namespace OpcUa
     session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
     session.SessionName = SessionName;
     session.EndpointURL = endpoint.EndpointURL;
-    session.Timeout = 1200000;
+    session.Timeout = DefaultTimeout;
     session.ServerURI = endpoint.ServerDescription.URI;
 
     CreateSessionResponse response = Server->CreateSession(session);
@@ -166,8 +181,28 @@ namespace OpcUa
 
     if (response.Session.RevisedSessionTimeout != 0)
     {
-      KeepAlive.Start(Node(Server, ObjectID::Server_ServerStatus_State), 0.4 * response.Session.RevisedSessionTimeout);
+      KeepAlive.Start(Server, Node(Server, ObjectID::Server_ServerStatus_State), DefaultTimeout * 0.7);
     }
+  }
+
+  void UaClient::OpenSecureChannel()
+  {
+    OpenSecureChannelParameters channelparams;
+    channelparams.ClientProtocolVersion = 0;
+    channelparams.RequestType = STR_ISSUE;
+    channelparams.SecurityMode = MSM_NONE;
+    channelparams.ClientNonce = std::vector<uint8_t>(1, 0);
+    channelparams.RequestLifeTime = DefaultTimeout;
+    const OpenSecureChannelResponse& channelresponse = Server->OpenSecureChannel(channelparams);
+
+    CheckStatusCode(channelresponse.Header.ServiceResult);
+    
+    SecureChannelId = channelresponse.ChannelSecurityToken.SecureChannelID;
+  }
+
+  void UaClient::CloseSecureChannel()
+  {
+      Server->CloseSecureChannel(SecureChannelId);
   }
 
   UaClient::~UaClient()
@@ -184,20 +219,21 @@ namespace OpcUa
     {
       CloseSessionResponse response = Server->CloseSession();
       if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
+      CloseSecureChannel();
     }
     Server.reset(); //FIXME: check if we still need this
   }
 
   std::vector<std::string>  UaClient::GetServerNamespaces()
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     Node namespacearray(Server, ObjectID::Server_NamespaceArray);
     return namespacearray.GetValue().As<std::vector<std::string>>();;
   }
 
   uint32_t UaClient::GetNamespaceIndex(std::string uri)
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     Node namespacearray(Server, ObjectID::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
     for ( uint32_t i=0; i<uris.size(); ++i)
@@ -219,29 +255,29 @@ namespace OpcUa
 
   Node UaClient::GetNode(const NodeID& nodeId) const
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, nodeId);
   }
 
   Node UaClient::GetRootNode() const
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, OpcUa::ObjectID::RootFolder);
   }
 
   Node UaClient::GetObjectsNode() const
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, OpcUa::ObjectID::ObjectsFolder);
   }
 
   Node UaClient::GetServerNode() const
   {
-    if ( ! Server ) { throw NotConnectedError();}
+    if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, OpcUa::ObjectID::Server);
   }
 
-  std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
     SubscriptionParameters params;
     params.RequestedPublishingInterval = period;

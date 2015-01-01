@@ -8,7 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <opc/ua/client/binary_server.h>
+#include <opc/ua/protocol/utils.h>
+#include <opc/ua/client/binary_client.h>
 #include <opc/ua/client/remote_connection.h>
 
 #include <opc/common/uri_facade.h>
@@ -87,6 +88,7 @@ namespace
 
     void OnData(std::vector<char> data)
     {
+      //PrintBlob(data);
       Data = std::move(data);
       doneEvent.notify_all();
     }
@@ -95,6 +97,10 @@ namespace
     {
       doneEvent.wait_for(lock, msec);
       T result;
+      if ( Data.empty() )
+      {
+        std::cout << "Error received empty packet form server" << std::endl;
+      }
       BufferInputChannel bufferInput(Data);
       IStreamBinary in(bufferInput);
       in >> result;
@@ -166,21 +172,21 @@ namespace
       std::queue<std::function<void()>> Queue;
   };
 
-  class BinaryServer
+  class BinaryClient
     : public Services
     , public EndpointServices
     , public ViewServices
     , public SubscriptionServices
     , public AttributeServices
     , public NodeManagementServices
-    , public std::enable_shared_from_this<BinaryServer>
+    , public std::enable_shared_from_this<BinaryClient>
   {
   private:
     typedef std::function<void(std::vector<char>)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
-    BinaryServer(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
+    BinaryClient(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
       : Channel(channel)
       , Stream(channel)
       , Params(params)
@@ -195,8 +201,7 @@ namespace
       callback_thread = std::thread([&](){ CallbackService.Run(); });
 
       const Acknowledge& ack = HelloServer(params);
-      const OpenSecureChannelResponse& response = OpenChannel();
-      ChannelSecurityToken = response.ChannelSecurityToken;
+
       ReceiveThread = std::move(std::thread([this](){
         try
         {
@@ -205,13 +210,13 @@ namespace
         }
         catch (const std::exception& exc)
         {
-          if (Debug)  { std::cerr << "binary_client| CallbackThread : "; }
+          if (Debug)  { std::cerr << "binary_client| CallbackThread : Error receivind data: "; }
           std::cerr << exc.what() << std::endl;
         }
       }));
     }
 
-    ~BinaryServer()
+    ~BinaryClient()
     {
       Finished = true;
 
@@ -220,7 +225,6 @@ namespace
       if (Debug) std::cout << "binary_client| Joining service thread." << std::endl;
       callback_thread.join(); //Not sure it is necessary
 
-      CloseSecureChannel();
       Channel->Stop();
       if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
@@ -531,6 +535,49 @@ namespace
       if (Debug) {std::cout << "binary_client| Republish  <--" << std::endl;}
       return response;
     }
+    
+    virtual OpcUa::OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& params)
+    {
+      if (Debug) {std::cout << "binary_client| OpenChannel -->" << std::endl;}
+
+      OpenSecureChannelRequest request;
+      request.Parameters = params;
+
+      OpenSecureChannelResponse response = Send<OpenSecureChannelResponse>(request);
+
+      ChannelSecurityToken = response.ChannelSecurityToken; //Save security token, we need it
+
+      if (Debug) {std::cout << "binary_client| OpenChannel <--" << std::endl;}
+      return response;
+    }
+    
+
+    virtual void CloseSecureChannel(uint32_t channelId)
+    {
+      try
+      {
+        if (Debug) {std::cout << "binary_client| CloseSecureChannel -->" << std::endl;}
+        SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+
+        const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
+        hdr.AddSize(RawSize(algorithmHeader));
+
+        const SequenceHeader sequence = CreateSequenceHeader();
+        hdr.AddSize(RawSize(sequence));
+
+        CloseSecureChannelRequest request;
+        //request. ChannelId = channelId; FIXME: spec says it hsould be here, in practice it is not even sent?!?!
+        hdr.AddSize(RawSize(request));
+
+        Stream << hdr << algorithmHeader << sequence << request << flush;
+        if (Debug) {std::cout << "binary_client| Secure channel closed." << std::endl;}
+      }
+      catch (const std::exception& exc)
+      {
+        std::cerr << "Closing secure channel failed with error: " << exc.what() << std::endl;
+      }
+      if (Debug) {std::cout << "binary_client| CloseSecureChannel <--" << std::endl;}
+    }
 
 private:
     template <typename Response, typename Request>
@@ -566,18 +613,43 @@ private:
       Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
+    
+
     void Receive() const
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
-
-      Binary::SymmetricAlgorithmHeader responseAlgo;
-      Stream >> responseAlgo;
+      
+      size_t algo_size;
+      if (responseHeader.Type == MessageType::MT_SECURE_OPEN )
+      {
+        AsymmetricAlgorithmHeader responseAlgo;
+        Stream >> responseAlgo;
+        algo_size = RawSize(responseAlgo);
+      }
+      else if (responseHeader.Type == MessageType::MT_ERROR )
+      {
+        //FIXME: read error message!!
+        throw std::runtime_error("Got error message from server");
+      }
+      else //(responseHeader.Type == MessageType::MT_SECURE_MESSAGE )
+      {
+        Binary::SymmetricAlgorithmHeader responseAlgo;
+        Stream >> responseAlgo;
+        algo_size = RawSize(responseAlgo);
+      }
+      /*
+      else
+      {
+        std::cout << "Error unsupported message type: " << (uint32_t ) responseHeader.Type << std::endl;
+        throw std::runtime_error("Not implemented");
+      }
+      */
 
       Binary::SequenceHeader responseSequence;
       Stream >> responseSequence; // TODO Check for request Number
 
-      const std::size_t expectedHeaderSize = RawSize(responseHeader) + RawSize(responseAlgo) + RawSize(responseSequence);
+      const std::size_t expectedHeaderSize = RawSize(responseHeader) + algo_size + RawSize(responseSequence);
       if (expectedHeaderSize >= responseHeader.Size)
       {
         std::stringstream stream;
@@ -639,42 +711,6 @@ private:
       return ack;
     }
 
-    OpcUa::OpenSecureChannelResponse OpenChannel()
-    {
-      if (Debug) {std::cout << "binary_client| OpenChannel -->" << std::endl;}
-      SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, 0);
-      AsymmetricAlgorithmHeader algorithmHeader;
-      algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
-      algorithmHeader.SenderCertificate = Params.SenderCertificate;
-      algorithmHeader.ReceiverCertificateThumbPrint = Params.ReceiverCertificateThumbPrint;
-      hdr.AddSize(RawSize(algorithmHeader));
-
-      const SequenceHeader sequence = CreateSequenceHeader();
-      hdr.AddSize(RawSize(sequence));
-
-      OpenSecureChannelRequest openChannel;
-      openChannel.ClientProtocolVersion = 0;
-      openChannel.RequestType = STR_ISSUE;
-      openChannel.SecurityMode = MSM_NONE;
-      openChannel.ClientNonce = std::vector<uint8_t>(1, 0);
-      openChannel.RequestLifeTime = 300000;
-      hdr.AddSize(RawSize(openChannel));
-
-      Stream << hdr << algorithmHeader << sequence << openChannel << flush;
-
-      SecureHeader responseHeader;
-      Stream >> responseHeader;
-      AsymmetricAlgorithmHeader responseAlgo;
-      Stream >> responseAlgo;
-
-      SequenceHeader responseSequence;
-      Stream >> responseSequence;
-      OpenSecureChannelResponse response;
-      Stream >> response;
-
-      if (Debug) {std::cout << "binary_client| OpenChannel <--" << std::endl;}
-      return response;
-    }
 
     SymmetricAlgorithmHeader CreateAlgorithmHeader() const
     {
@@ -689,32 +725,6 @@ private:
       sequence.SequenceNumber = ++SequenceNumber;
       sequence.RequestID = ++RequestNumber;
       return sequence;
-    }
-
-    void CloseSecureChannel()
-    {
-      try
-      {
-        if (Debug) {std::cout << "binary_client| CloseSecureChannel -->" << std::endl;}
-        SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
-
-        const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
-        hdr.AddSize(RawSize(algorithmHeader));
-
-        const SequenceHeader sequence = CreateSequenceHeader();
-        hdr.AddSize(RawSize(sequence));
-
-        CloseSecureChannelRequest request;
-        hdr.AddSize(RawSize(request));
-
-        Stream << hdr << algorithmHeader << sequence << request << flush;
-        if (Debug) {std::cout << "binary_client| Secure channel closed." << std::endl;}
-      }
-      catch (const std::exception& exc)
-      {
-        std::cerr << "Closing secure channel failed with error: " << exc.what() << std::endl;
-      }
-      if (Debug) {std::cout << "binary_client| CloseSecureChannel <--" << std::endl;}
     }
 
     RequestHeader CreateRequestHeader() const
@@ -754,20 +764,36 @@ private:
 
   };
 
+  template <>
+  void BinaryClient::Send<OpenSecureChannelRequest>(OpenSecureChannelRequest request) const
+  {
+    SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+    AsymmetricAlgorithmHeader algorithmHeader;
+    algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
+    algorithmHeader.SenderCertificate = Params.SenderCertificate;
+    algorithmHeader.ReceiverCertificateThumbPrint = Params.ReceiverCertificateThumbPrint;
+    hdr.AddSize(RawSize(algorithmHeader));
+    hdr.AddSize(RawSize(request));
+
+    const SequenceHeader sequence = CreateSequenceHeader();
+    hdr.AddSize(RawSize(sequence));
+    Stream << hdr << algorithmHeader << sequence << request << flush;
+  }
+
 } // namespace
 
 
-OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Services::SharedPtr(new BinaryServer(channel, params, debug));
+  return OpcUa::Services::SharedPtr(new BinaryClient(channel, params, debug));
 }
 
-OpcUa::Services::SharedPtr OpcUa::CreateBinaryServer(const std::string& endpointUrl, bool debug)
+OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(const std::string& endpointUrl, bool debug)
 {
   const Common::Uri serverUri(endpointUrl);
   OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
-  return CreateBinaryServer(channel, params, debug);
+  return CreateBinaryClient(channel, params, debug);
 }
