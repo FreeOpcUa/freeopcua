@@ -321,7 +321,6 @@ if(BUILD_SERVER)
         src/server/subscription_service_internal.cpp
         src/server/subscription_service_internal.h
         src/server/timer.h
-        src/server/utils.h
         )
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
