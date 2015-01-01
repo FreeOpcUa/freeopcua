@@ -57,10 +57,10 @@ https://github.com/FreeOpcUa/freeopcua/blob/master/python/tests/test_highlevel.p
 * uaexperts client application
 * node-opcua (client and server tested)
 * ignition server
-* Beckhoff PLC (seems to be some issues, but working)
+* Beckhoff PLC (seems to be some issues, but mostly working)
 * ignition open-source sdk (server tested)
 * quickopc client sdk
-* prosysopc demo client (subscription against freeopcua server currently broken)
+* prosysopc demo client 
 * prosysopc demo server 
 * unified automation sdk (client and server tested)
 
