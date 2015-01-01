@@ -234,7 +234,7 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 // UaClient helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
 {
   std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
@@ -249,7 +249,7 @@ static Node UaClient_GetNode(UaClient & self, ObjectID objectid)
 // UaServer helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionClient & callback)
+static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
 {
   std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
   return boost::shared_ptr<Subscription>(sub.release());
@@ -461,12 +461,12 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<Node>, vector_to_python_converter<Node>>();
   vector_from_python_converter<Node>();
   
-  class_<SubscriptionClient, PySubscriptionClient, boost::noncopyable>("SubscriptionClient", init<>())
-  .def("data_change", &PySubscriptionClient::DefaultDataChange)
+  class_<SubscriptionHandler, PySubscriptionHandler, boost::noncopyable>("SubscriptionHandler", init<>())
+  .def("data_change", &PySubscriptionHandler::DefaultDataChange)
   .staticmethod("data_change")
-  .def("event", &PySubscriptionClient::DefaultEvent)
+  .def("event", &PySubscriptionHandler::DefaultEvent)
   .staticmethod("event")
-  .def("status_change", &PySubscriptionClient::DefaultStatusChange)
+  .def("status_change", &PySubscriptionHandler::DefaultStatusChange)
   .staticmethod("status_change")
   ;
 

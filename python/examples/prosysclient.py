@@ -6,9 +6,9 @@ sys.path.append(".")
 from IPython import embed
 import opcua
 
-class SubClient(opcua.SubscriptionClient):
+class SubHandler(opcua.SubscriptionHandler):
     def __init__(self, *args):
-        opcua.SubscriptionClient.__init__(self, *args)
+        opcua.SubscriptionHandler.__init__(self, *args)
         self.val = None
 
     def data_change(self, handle, node, val, attr):
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         myint32 = client.get_node("ns=4;s=Int32")
         myuint32 = client.get_node("ns=4;s=UInt32")
         
-        sclt = SubClient()
+        sclt = SubHandler()
         sub = client.create_subscription(100, sclt)
         handle = sub.subscribe_data_change(myvar)
         print("Subscribe handle is: ", handle)

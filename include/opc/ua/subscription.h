@@ -43,7 +43,7 @@ namespace OpcUa
   typedef std::map<IntegerID, MonitoredItemData> AttValMap;
   typedef std::map<IntegerID, EventFilter> SimpleAttOpMap;
 
-  class SubscriptionClient
+  class SubscriptionHandler
   {
     public:
       //Called for each datachange events
@@ -64,7 +64,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionClient& callback, bool debug=false); 
+      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
 
       //Delete the subscription from server
       void Delete();
@@ -109,7 +109,7 @@ namespace OpcUa
 
       Services::SharedPtr Server;
       SubscriptionData Data;
-      SubscriptionClient& Client;
+      SubscriptionHandler& Client;
       uint32_t LastMonitoredItemHandle = 1;
       AttValMap AttributeValueMap; 
       SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently

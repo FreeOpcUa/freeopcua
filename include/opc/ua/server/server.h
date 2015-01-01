@@ -81,7 +81,7 @@ namespace OpcUa
       /// @brief Create a subscription objects
       // returned object can then be used to subscribe to 
       // datachange or custom events on server side
-      std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& callback);
+      std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& callback);
 
     protected:
       std::vector<std::string> XmlAddressSpaces;

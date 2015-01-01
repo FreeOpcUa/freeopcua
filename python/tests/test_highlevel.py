@@ -15,7 +15,7 @@ import opcua
 port_num1 = 48410
 port_num2 = 48430
 
-class SubClient(opcua.SubscriptionClient):
+class SubHandler(opcua.SubscriptionHandler):
     '''
         Dummy subscription client
     '''
@@ -25,7 +25,7 @@ class SubClient(opcua.SubscriptionClient):
     def event(self, handle, event):
         pass 
 
-class MySubClient(opcua.SubscriptionClient):
+class MySubHandler(opcua.SubscriptionHandler):
     '''
     More advanced subscription client using conditions, so we can wait for events in tests 
     '''
@@ -321,7 +321,7 @@ class CommonTests(object):
         sub.delete()
 
     def test_events(self):
-        msclt = MySubClient()
+        msclt = MySubHandler()
         cond = msclt.setup()
         sub = self.opc.create_subscription(100, msclt)
         handle = sub.subscribe_events()
@@ -372,7 +372,7 @@ class CommonTests(object):
         '''
         test subscriptions. This is far too complicated for a unittest but, setting up subscriptions requires a lot of code, so when we first set it up, it is best to test as many things as possible
         '''
-        msclt = MySubClient()
+        msclt = MySubHandler()
         cond = msclt.setup()
 
         o = self.opc.get_objects_node()
@@ -410,7 +410,7 @@ class CommonTests(object):
         self.assertEqual(server_time_node, correct)
 
     def test_subscribe_server_time(self):
-        msclt = MySubClient()
+        msclt = MySubHandler()
         cond = msclt.setup()
 
         server_time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
@@ -543,7 +543,7 @@ class TestServer(unittest.TestCase, CommonTests):
 if __name__ == '__main__':
     globalserver = ServerProcess() #server process will be started by client tests
     try:
-        sclt = SubClient()
+        sclt = SubHandler()
         unittest.main(verbosity=3)
     finally:
         globalserver.stop()

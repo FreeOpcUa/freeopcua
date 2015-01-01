@@ -20,7 +20,7 @@
 
 using namespace OpcUa;
 
-class SubClient : public SubscriptionClient
+class SubClient : public SubscriptionHandler
 {
   void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) const override
   {

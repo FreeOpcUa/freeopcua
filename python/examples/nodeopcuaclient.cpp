@@ -6,7 +6,7 @@ sys.path.append(".")
 from IPython import embed
 import opcua
 
-class SubClient(opcua.SubscriptionClient):
+class SubClient(opcua.SubscriptionHandler):
     def __init_(self, *args):
         self.val = None
         #self.c = Condition()

@@ -6,7 +6,7 @@ sys.path.append(".")
 from IPython import embed
 import opcua
 
-class SubClient(opcua.SubscriptionClient):
+class SubHandler(opcua.SubscriptionHandler):
     def data_change(self, handle, node, val, attr):
         print("New data change event", handle, node, val, attr)
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         myfolder = myobject.add_folder(idx, "myfolder")
        
         # uncomment next lines to subscribe to changes on server side
-        #sclt = SubClient()
+        #sclt = SubHandler()
         #sub = server.create_subscription(100, sclt)
         #handle = sub.subscribe_data_change(myvar) #keep handle if you want to delete the particular subscription later
         

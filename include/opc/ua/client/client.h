@@ -139,7 +139,7 @@ namespace OpcUa
     /// @brief Create a subscription objects
     // returned object can then be used to subscribe 
     // to datachange or custom events from server
-    std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionClient& client);
+    std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& client);
 
   private:
     void OpenSecureChannel();

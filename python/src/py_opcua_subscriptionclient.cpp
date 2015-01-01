@@ -73,11 +73,11 @@ static std::string parse_python_exception()
   return ret;
 }
 
-PySubscriptionClient::PySubscriptionClient(PyObject * p)
+PySubscriptionHandler::PySubscriptionHandler(PyObject * p)
   : self(p)
 {}
 
-void PySubscriptionClient::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const
+void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const
 {
   PyGILState_STATE state = PyGILState_Ensure();
 
@@ -95,7 +95,7 @@ void PySubscriptionClient::DataChange(uint32_t handle, const Node & node, const 
   PyGILState_Release(state);
 }
 
-void PySubscriptionClient::Event(uint32_t handle, const OpcUa::Event & event) const
+void PySubscriptionHandler::Event(uint32_t handle, const OpcUa::Event & event) const
 {
   PyGILState_STATE state = PyGILState_Ensure();
 
@@ -112,7 +112,7 @@ void PySubscriptionClient::Event(uint32_t handle, const OpcUa::Event & event) co
   PyGILState_Release(state);
 }
 
-void PySubscriptionClient::StatusChange(StatusCode status) const
+void PySubscriptionHandler::StatusChange(StatusCode status) const
 {
   PyGILState_STATE state = PyGILState_Ensure();
 
@@ -130,17 +130,17 @@ void PySubscriptionClient::StatusChange(StatusCode status) const
   PyGILState_Release(state);
 }
 
-void PySubscriptionClient::DefaultDataChange(const SubscriptionClient & self_, uint32_t handle, const Node & node, const object & val, uint32_t attribute)
+void PySubscriptionHandler::DefaultDataChange(const SubscriptionHandler & self_, uint32_t handle, const Node & node, const object & val, uint32_t attribute)
 {
   std::cout << "'data_change' virtual in this context" << std::endl;
 }
 
-void PySubscriptionClient::DefaultEvent(const SubscriptionClient & self_, uint32_t handle, const OpcUa::Event & event)
+void PySubscriptionHandler::DefaultEvent(const SubscriptionHandler & self_, uint32_t handle, const OpcUa::Event & event)
 {
   std::cout << "'event' virtual in this context" << std::endl;
 }
 
-void PySubscriptionClient::DefaultStatusChange(const SubscriptionClient & self_, StatusCode status)
+void PySubscriptionHandler::DefaultStatusChange(const SubscriptionHandler & self_, StatusCode status)
 {
   std::cout << "'status_change' virtual in this context" << std::endl;
 }

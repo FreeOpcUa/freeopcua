@@ -6,12 +6,12 @@ sys.path.append(".")
 from IPython import embed
 import opcua
 
-class SubClient(opcua.SubscriptionClient):
+class SubHandler(opcua.SubscriptionHandler):
     """
     Client to subcsription. It will receive events from server
     """
     def __init__(self, *args):
-        opcua.SubscriptionClient.__init__(self, *args)
+        opcua.SubscriptionHandler.__init__(self, *args)
 
     def data_change(self, handle, node, val, attr):
         print("Python: New data change event", handle, node, val, attr)
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         print("yvar is: ", myvar)
         
         # create a subsription we will use to subscribe to nodes or events
-        sclt = SubClient()
+        sclt = SubHandler()
         sub = client.create_subscription(100, sclt)
 
         # subscribe to a specific node  

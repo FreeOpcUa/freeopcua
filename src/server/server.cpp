@@ -182,7 +182,7 @@ namespace OpcUa
     server.SetAttribute(AttributeID::EventNotifier, dval);
   }
 
-  std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionClient& callback)
+  std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
     CheckStarted();
     SubscriptionParameters params;
