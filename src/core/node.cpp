@@ -94,7 +94,9 @@ namespace OpcUa
   StatusCode Node::SetValue(const Variant& val, const DateTime& dt) const
   {
     DataValue dval(val);
-    dval.SetSourceTimestamp(dt);
+    if (dt != 0) {
+        dval.SetSourceTimestamp(dt);
+    }
     return SetAttribute(AttributeID::Value, dval);
   }
 
@@ -102,7 +104,6 @@ namespace OpcUa
   {
     return SetAttribute(AttributeID::Value, dval);
   }
-
 
   std::vector<Node> Node::GetChildren(const ReferenceID& refid) const
   {
