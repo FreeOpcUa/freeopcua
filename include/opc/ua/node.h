@@ -85,7 +85,7 @@ namespace OpcUa
     
     //Helper method to get/set VALUE attribute of a node (Not all nodes support VALUE attribute)
     Variant GetValue() const;
-    StatusCode SetValue(const Variant& val, const DateTime& = DateTime::Current()) const;
+    StatusCode SetValue(const Variant& val) const;
     StatusCode SetValue(const DataValue& dval) const;
 
     Variant GetDataType() const;

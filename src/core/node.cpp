@@ -91,10 +91,9 @@ namespace OpcUa
     return codes.front();
   }
 
-  StatusCode Node::SetValue(const Variant& val, const DateTime& dt) const
+  StatusCode Node::SetValue(const Variant& val) const
   {
     DataValue dval(val);
-    dval.SetSourceTimestamp(dt);
     return SetAttribute(AttributeID::Value, dval);
   }
 
