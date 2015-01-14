@@ -234,8 +234,8 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 //--------------------------------------------------------------------------
 //
 
-static StatusCode Node_SetValue(Node & self, const object & obj, VariantType vtype)
-{ return self.SetValue(ToVariant2(obj, vtype)); }
+static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
+{ self.SetValue(ToVariant2(obj, vtype)); }
 
 //--------------------------------------------------------------------------
 // UaClient helpers
@@ -440,8 +440,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-  .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
-  .def("set_value", (StatusCode(Node::*)(const Variant &) const) &Node::SetValue)
+  .def("set_value", (void(Node::*)(const DataValue &) const) &Node::SetValue)
+  .def("set_value", (void(Node::*)(const Variant &) const) &Node::SetValue)
   .def("set_value", &Node_SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
