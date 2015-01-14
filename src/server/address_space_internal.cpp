@@ -29,6 +29,7 @@ namespace OpcUa
         : Debug(debug)
         , DataChangeCallbackHandle(0)
     {
+      /*
       ObjectAttributes attrs;
       attrs.Description = LocalizedText(OpcUa::Names::Root);
       attrs.DisplayName = LocalizedText(OpcUa::Names::Root);
@@ -40,6 +41,7 @@ namespace OpcUa
       rootNode.TypeDefinition = ObjectID::FolderType;
       rootNode.Attributes = attrs;
       AddNode(rootNode);
+      */
     }
 
     AddressSpaceInMemory::~AddressSpaceInMemory()
@@ -199,10 +201,18 @@ namespace OpcUa
     DataValue AddressSpaceInMemory::GetValue(const NodeID& node, AttributeID attribute) const
     {
       NodesMap::const_iterator nodeit = Nodes.find(node);
-      if ( nodeit != Nodes.end() )
+      if ( nodeit == Nodes.end() )
+      {
+        if (Debug) std::cout << "AddressSpaceInternal | Bad node not found: " << node << std::endl;
+      }
+      else
       {
         AttributesMap::const_iterator attrit = nodeit->second.Attributes.find(attribute);
-        if ( attrit != nodeit->second.Attributes.end() )
+        if ( attrit == nodeit->second.Attributes.end() )
+        {
+          if (Debug) std::cout << "AddressSpaceInternal | node " << node << " has not attribute: " << (uint32_t)attribute << std::endl;
+        }
+        else
         {
           if ( attrit->second.GetValueCallback )
           {
@@ -309,7 +319,7 @@ namespace OpcUa
 
     bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const
     {
-      if (Debug) std::cout << "AddressSpaceInternal | Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << "_." << std::endl;
+      if (Debug) std::cout << "AddressSpaceInternal | Checking reference '" << reference.ReferenceTypeID << "' to the node '" << reference.TargetNodeID << "' (" << reference.BrowseName << ") which must fit ref: " << desc.ReferenceTypeID << " with include subtype: " << desc.IncludeSubtypes << std::endl;
 
       if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
       {
@@ -383,7 +393,7 @@ namespace OpcUa
         parent_node_it = Nodes.find(item.ParentNodeId);
         if ( parent_node_it == Nodes.end() )
         {
-          std::cout << "AddressSpaceInternal | Error: Parent node '"<< item.ParentNodeId << "'does not exist" << std::endl;
+          if (Debug) std::cout << "AddressSpaceInternal | Error: Parent node '"<< item.ParentNodeId << "'does not exist" << std::endl;
           result.Status = StatusCode::BadParentNodeIdInvalid;
           return result;
         }
@@ -447,15 +457,34 @@ namespace OpcUa
       {
         return StatusCode::BadSourceNodeIdInvalid;
       }
+      NodesMap::iterator targetnode_it = Nodes.find(item.TargetNodeID);
+      if ( targetnode_it == Nodes.end() )
+      {
+        return StatusCode::BadTargetNodeIdInvalid;
+      }
       ReferenceDescription desc;
       desc.ReferenceTypeID = item.ReferenceTypeId;
       desc.IsForward = item.IsForward;
       desc.TargetNodeID = item.TargetNodeID;
       desc.TargetNodeClass = item.TargetNodeClass;
-      // FIXME: these fields have to be filled from address space dynamically.
-      // FIXME: note! Target node ID can be absent according standard.
-      desc.BrowseName = QualifiedName(GetObjectIdName(item.TargetNodeID));
-      desc.DisplayName = LocalizedText(GetObjectIdName(item.TargetNodeID));
+      DataValue dv = GetValue(item.TargetNodeID, AttributeID::BrowseName);
+      if (dv.Status == StatusCode::Good)
+      {
+        desc.BrowseName = dv.Value.As<QualifiedName>();
+      }
+      else
+      {
+        desc.BrowseName = QualifiedName("NONAME", 0);
+      }
+      dv = GetValue(item.TargetNodeID, AttributeID::DisplayName);
+      if (dv.Status == StatusCode::Good)
+      {
+        desc.DisplayName = dv.Value.As<LocalizedText>();
+      }
+      else
+      {
+        desc.DisplayName = LocalizedText(desc.BrowseName.Name);
+      }
       node_it->second.References.push_back(desc);
       return StatusCode::Good;
     }

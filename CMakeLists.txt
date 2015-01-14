@@ -110,6 +110,7 @@ ADD_CUSTOM_COMMAND(
     #DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv
   )
 
+
 add_library(opcuaprotocol STATIC
     include/opc/ua/protocol/object_ids.h
     src/protocol/binary_attribute.cpp
@@ -288,6 +289,13 @@ endif(BUILD_CLIENT)
 ############################################################################
 
 if(BUILD_SERVER)
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_namespace.cpp 
+        COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.xml > ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_namespace.cpp
+    )
+
+
     add_library(opcuaserver STATIC
         src/server/address_space_addon.cpp
         src/server/address_space_addon.h

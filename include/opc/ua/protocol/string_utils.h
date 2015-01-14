@@ -35,8 +35,8 @@ namespace OpcUa
   std::string ToString(const LocalizedText& code);
 
   Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace=std::numeric_limits<uint32_t>::max());
-  QualifiedName ToQualifiedName(const std::string& str, uint32_t default_ns=std::numeric_limits<uint32_t>::max());
+  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace=0);
+  QualifiedName ToQualifiedName(const std::string& str, uint32_t default_ns=0);
 
   inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
   {
