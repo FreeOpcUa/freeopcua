@@ -3,8 +3,6 @@ Generate address space c++ code from xml file specification
 """
 import sys
 
-from IPython import embed
-
 import xml.etree.ElementTree as ET
 
 class ObjectStruct(object):
@@ -51,6 +49,7 @@ class CodeGenerator(object):
         self.part = self.input_path.split(".")[-2]
 
     def run(self):
+        sys.stderr.write("Generating C++ {} for XML file {}".format(self.output_path, self.input_path) + "\n")
         self.output_file = open(self.output_path, "w")
         self.make_header()
         tree = ET.parse(xmlpath)
@@ -264,14 +263,21 @@ namespace OpcUa
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) == 2 and sys.argv[1] == "all":
+        for i in (3, 4, 5, 8, 9, 10, 11, 13):
+            xmlpath = "Opc.Ua.NodeSet2.Part{}.xml".format(str(i))
+            cpppath = "../src/server/standard_address_space_part{}.cpp".format(str(i))
+            c = CodeGenerator(xmlpath, cpppath)
+            c.run()
+
+
+    elif len(sys.argv) != 3:
         print(sys.argv)
         print("usage: generate_address_space.py xml_input_file cpp_output_file")
         sys.exit(1)
     else:
         xmlpath = sys.argv[1] 
         cpppath = sys.argv[2]
-    sys.stderr.write("Generating C++ {} for XML file {}".format(cpppath, xmlpath) + "\n")
     c = CodeGenerator(xmlpath, cpppath)
     c.run()
 

@@ -1,7 +1,7 @@
 
 #include "standard_address_space_parts.h"
 
-#include <opc/ua/server/standard_namespace.h>
+#include <opc/ua/server/standard_address_space.h>
 
 #include <opc/ua/services/node_management.h>
 

@@ -12,7 +12,7 @@
 #pragma once
 
 #include <opc/common/addons_core/addon_manager.h>
-#include <opc/ua/server/addons/standard_namespace.h>
+#include <opc/ua/server/addons/standard_address_space.h>
 
 namespace OpcUa
 {

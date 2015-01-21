@@ -83,7 +83,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/opc_tcp_async.h \
 	include/opc/ua/server/server.h \
 	include/opc/ua/server/services_registry.h \
-  include/opc/ua/server/standard_namespace.h \
+  include/opc/ua/server/standard_address_space.h \
   include/opc/ua/server/subscription_service.h
 	
 addonsinclude_HEADERS = \
@@ -93,7 +93,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/opc_tcp_async.h \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/services_registry.h \
-	include/opc/ua/server/addons/standard_namespace.h \
+	include/opc/ua/server/addons/standard_address_space.h \
     include/opc/ua/server/addons/subscription_service.h \
 	include/opc/ua/server/addons/common_addons.h \
 	include/opc/ua/server/addons/xml_ns.h
@@ -129,8 +129,17 @@ libopcuaserver_la_SOURCES = \
 	src/server/subscription_service_addon.cpp \
 	src/server/subscription_service_internal.h \
 	src/server/subscription_service_internal.cpp \
-	src/server/standard_namespace_addon.cpp \
-	src/server/standard_namespace.cpp \
+	src/server/standard_address_space_addon.cpp \
+	src/server/standard_address_space.cpp \
+	src/server/standard_address_space_parts.h \
+	src/server/standard_address_space_part3.cpp \
+	src/server/standard_address_space_part4.cpp \
+	src/server/standard_address_space_part5.cpp \
+	src/server/standard_address_space_part8.cpp \
+	src/server/standard_address_space_part9.cpp \
+	src/server/standard_address_space_part10.cpp \
+	src/server/standard_address_space_part11.cpp \
+	src/server/standard_address_space_part13.cpp \
 	src/server/tcp_server.cpp \
 	src/server/tcp_server.h \
 	src/server/timer.h \

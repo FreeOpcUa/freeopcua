@@ -13,7 +13,7 @@
 #include <opc/ua/protocol/status_codes.h>
 
 #include <opc/ua/server/address_space.h>
-#include <opc/ua/server/standard_namespace.h>
+#include <opc/ua/server/standard_address_space.h>
 
 #include <functional>
 #include <gmock/gmock.h>

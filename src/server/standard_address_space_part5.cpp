@@ -19434,7 +19434,7 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=9");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("A mask of 32 bits that can be updated individually by using the top 32 bits as a mask.");
+        attrs.Description = LocalizedText("b'A mask of 32 bits that can be updated individually by using the top 32 bits as a mask.'");
         attrs.DisplayName = LocalizedText("BitFieldMaskDataType");
         attrs.IsAbstract = false;
         node.Attributes = attrs;

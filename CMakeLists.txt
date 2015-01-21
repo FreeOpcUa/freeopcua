@@ -324,7 +324,7 @@ if(BUILD_SERVER)
         src/server/standard_address_space_part11.cpp
         src/server/standard_address_space_part13.cpp
         src/server/standard_address_space.cpp
-        src/server/standard_namespace_addon.cpp
+        src/server/standard_address_space_addon.cpp
         src/server/subscription_service_addon.cpp
         src/server/subscription_service_internal.cpp
         )

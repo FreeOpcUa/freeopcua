@@ -17,8 +17,6 @@
 
 namespace OpcUa
 {
-  using namespace OpcUa;
-
   void CreateAddressSpacePart3(OpcUa::NodeManagementServices& registry)
   {
        
@@ -54,12 +52,11 @@ namespace OpcUa
         node.BrowseName = ToQualifiedName("BaseDataType");
         node.Class = NodeClass::DataType;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that can have any valid DataType.");
+        attrs.Description = LocalizedText("b'Describes a value that can have any valid DataType.'");
         attrs.DisplayName = LocalizedText("BaseDataType");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -70,12 +67,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that can have any numeric DataType.");
+        attrs.Description = LocalizedText("b'Describes a value that can have any numeric DataType.'");
         attrs.DisplayName = LocalizedText("Number");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -86,12 +82,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=26");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that can have any integer DataType.");
+        attrs.Description = LocalizedText("b'Describes a value that can have any integer DataType.'");
         attrs.DisplayName = LocalizedText("Integer");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -102,12 +97,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=27");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that can have any unsigned integer DataType.");
+        attrs.Description = LocalizedText("b'Describes a value that can have any unsigned integer DataType.'");
         attrs.DisplayName = LocalizedText("UInteger");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -118,12 +112,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an enumerated DataType.");
+        attrs.Description = LocalizedText("b'Describes a value that is an enumerated DataType.'");
         attrs.DisplayName = LocalizedText("Enumeration");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -134,12 +127,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is either TRUE or FALSE.");
+        attrs.Description = LocalizedText("b'Describes a value that is either TRUE or FALSE.'");
         attrs.DisplayName = LocalizedText("Boolean");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -150,12 +142,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=27");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between -128 and 127.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between -128 and 127.'");
         attrs.DisplayName = LocalizedText("SByte");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -166,12 +157,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=28");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 255.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 255.'");
         attrs.DisplayName = LocalizedText("Byte");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -182,12 +172,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=27");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?32,768 and 32,767.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between ?32,768 and 32,767.'");
         attrs.DisplayName = LocalizedText("Int16");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -198,12 +187,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=28");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 65535.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 65535.'");
         attrs.DisplayName = LocalizedText("UInt16");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -214,12 +202,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=27");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?2,147,483,648  and 2,147,483,647.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between ?2,147,483,648  and 2,147,483,647.'");
         attrs.DisplayName = LocalizedText("Int32");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -230,12 +217,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=28");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 4,294,967,295.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 4,294,967,295.'");
         attrs.DisplayName = LocalizedText("UInt32");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -246,12 +232,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=27");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between ?9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.'");
         attrs.DisplayName = LocalizedText("Int64");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -262,12 +247,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=28");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 18,446,744,073,709,551,615.");
+        attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 18,446,744,073,709,551,615.'");
         attrs.DisplayName = LocalizedText("UInt64");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -278,12 +262,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=26");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 single precision floating point number.");
+        attrs.Description = LocalizedText("b'Describes a value that is an IEEE 754-1985 single precision floating point number.'");
         attrs.DisplayName = LocalizedText("Float");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -294,12 +277,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=26");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 double precision floating point number.");
+        attrs.Description = LocalizedText("b'Describes a value that is an IEEE 754-1985 double precision floating point number.'");
         attrs.DisplayName = LocalizedText("Double");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -310,12 +292,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is a sequence of printable Unicode characters.");
+        attrs.Description = LocalizedText("b'Describes a value that is a sequence of printable Unicode characters.'");
         attrs.DisplayName = LocalizedText("String");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -326,12 +307,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is a Gregorian calender date and time.");
+        attrs.Description = LocalizedText("b'Describes a value that is a Gregorian calender date and time.'");
         attrs.DisplayName = LocalizedText("DateTime");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -342,12 +322,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is a 128-bit globally unique identifier.");
+        attrs.Description = LocalizedText("b'Describes a value that is a 128-bit globally unique identifier.'");
         attrs.DisplayName = LocalizedText("Guid");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -358,12 +337,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is a sequence of bytes.");
+        attrs.Description = LocalizedText("b'Describes a value that is a sequence of bytes.'");
         attrs.DisplayName = LocalizedText("ByteString");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -374,12 +352,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an XML element.");
+        attrs.Description = LocalizedText("b'Describes a value that is an XML element.'");
         attrs.DisplayName = LocalizedText("XmlElement");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -390,12 +367,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an identifier for a node within a Server address space.");
+        attrs.Description = LocalizedText("b'Describes a value that is an identifier for a node within a Server address space.'");
         attrs.DisplayName = LocalizedText("NodeId");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -406,12 +382,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is a name qualified by a namespace.");
+        attrs.Description = LocalizedText("b'Describes a value that is a name qualified by a namespace.'");
         attrs.DisplayName = LocalizedText("QualifiedName");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -422,12 +397,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is human readable Unicode text with a locale identifier.");
+        attrs.Description = LocalizedText("b'Describes a value that is human readable Unicode text with a locale identifier.'");
         attrs.DisplayName = LocalizedText("LocalizedText");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -438,12 +412,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=24");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is any type of structure that can be described with a data encoding.");
+        attrs.Description = LocalizedText("b'Describes a value that is any type of structure that can be described with a data encoding.'");
         attrs.DisplayName = LocalizedText("Structure");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -454,12 +427,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=15");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an image encoded as a string of bytes.");
+        attrs.Description = LocalizedText("b'Describes a value that is an image encoded as a string of bytes.'");
         attrs.DisplayName = LocalizedText("Image");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -475,7 +447,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -493,7 +464,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -511,7 +481,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -529,7 +498,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -547,7 +515,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -565,7 +532,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -583,7 +549,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -601,7 +566,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -619,7 +583,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -637,7 +600,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -655,7 +617,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -673,7 +634,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -691,7 +651,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -709,7 +668,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -727,7 +685,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -745,7 +702,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -763,7 +719,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -781,7 +736,6 @@ namespace OpcUa
         attrs.Symmetric = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -792,12 +746,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=29");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that specifies the significance of the BrowseName for an instance declaration.");
+        attrs.Description = LocalizedText("b'Describes a value that specifies the significance of the BrowseName for an instance declaration.'");
         attrs.DisplayName = LocalizedText("NamingRuleType");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -825,7 +778,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -852,7 +804,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -868,7 +819,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -884,7 +834,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -900,7 +849,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -916,7 +864,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -932,7 +879,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -948,7 +894,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -964,7 +909,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -980,7 +924,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -996,7 +939,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1012,7 +954,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1028,7 +969,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1044,7 +984,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1055,12 +994,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=30");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An image encoded in BMP format.");
+        attrs.Description = LocalizedText("b'An image encoded in BMP format.'");
         attrs.DisplayName = LocalizedText("ImageBMP");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1071,12 +1009,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=30");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An image encoded in GIF format.");
+        attrs.Description = LocalizedText("b'An image encoded in GIF format.'");
         attrs.DisplayName = LocalizedText("ImageGIF");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1087,12 +1024,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=30");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An image encoded in JPEG format.");
+        attrs.Description = LocalizedText("b'An image encoded in JPEG format.'");
         attrs.DisplayName = LocalizedText("ImageJPG");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1103,12 +1039,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=30");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An image encoded in PNG format.");
+        attrs.Description = LocalizedText("b'An image encoded in PNG format.'");
         attrs.DisplayName = LocalizedText("ImagePNG");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1119,12 +1054,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=29");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("The type of identifier used in a node id.");
+        attrs.Description = LocalizedText("b'The type of identifier used in a node id.'");
         attrs.DisplayName = LocalizedText("IdType");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -1152,7 +1086,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -1174,12 +1107,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=29");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("A mask specifying the class of the node.");
+        attrs.Description = LocalizedText("b'A mask specifying the class of the node.'");
         attrs.DisplayName = LocalizedText("NodeClass");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -1207,7 +1139,6 @@ namespace OpcUa
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         std::vector<AddReferencesItem> refs;
         {
         AddReferencesItem ref;
@@ -1229,12 +1160,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=22");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An argument for a method.");
+        attrs.Description = LocalizedText("b'An argument for a method.'");
         attrs.DisplayName = LocalizedText("Argument");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1245,12 +1175,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=22");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("A mapping between a value of an enumerated type and a name and description.");
+        attrs.Description = LocalizedText("b'A mapping between a value of an enumerated type and a name and description.'");
         attrs.DisplayName = LocalizedText("EnumValueType");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1261,12 +1190,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=11");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("A period of time measured in seconds.");
+        attrs.Description = LocalizedText("b'A period of time measured in seconds.'");
         attrs.DisplayName = LocalizedText("Duration");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1277,12 +1205,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=13");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("A date/time value specified in Universal Coordinated Time (UTC).");
+        attrs.Description = LocalizedText("b'A date/time value specified in Universal Coordinated Time (UTC).'");
         attrs.DisplayName = LocalizedText("UtcTime");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1293,12 +1220,11 @@ namespace OpcUa
         node.ParentNodeId = ToNodeID("i=12");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("An identifier for a user locale.");
+        attrs.Description = LocalizedText("b'An identifier for a user locale.'");
         attrs.DisplayName = LocalizedText("LocaleId");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
@@ -1313,7 +1239,6 @@ namespace OpcUa
         attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
-       
         }
        
         {
