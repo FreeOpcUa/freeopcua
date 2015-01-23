@@ -47,6 +47,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2330");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryServerCapabilities");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -422,6 +423,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=61");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateFunctions");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -435,7 +437,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Annotations");
         attrs.Type = ToNodeID("i=891");
-        attrs.Rank = -1;
+        attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -447,8 +449,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=58");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoricalDataConfigurationType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -555,6 +558,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=11187");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateConfiguration");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -724,6 +728,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=61");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateFunctions");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -963,6 +968,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2318");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("HA Configuration");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -997,6 +1003,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=11187");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateConfiguration");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1128,7 +1135,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoricalEventFilter");
         attrs.Type = ToNodeID("i=725");
-        attrs.Rank = -1;
+        attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -1140,8 +1147,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=58");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryServerCapabilitiesType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1671,6 +1679,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=61");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateFunctions");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1693,8 +1702,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2104");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryEventUpdateEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1888,8 +1898,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2104");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryValueUpdateEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1997,7 +2008,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("NewValues");
         attrs.Type = ToNodeID("i=23");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2024,7 +2035,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("OldValues");
         attrs.Type = ToNodeID("i=23");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2047,8 +2058,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2104");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryDeleteEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2098,8 +2110,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=3012");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryRawModifyDeleteEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2234,7 +2247,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("OldValues");
         attrs.Type = ToNodeID("i=23");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2257,8 +2270,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=3012");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryAtTimeDeleteEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2294,7 +2308,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ReqTimes");
         attrs.Type = ToNodeID("i=294");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2321,7 +2335,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("OldValues");
         attrs.Type = ToNodeID("i=23");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2344,8 +2358,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=3012");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditHistoryEventDeleteEventType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2381,7 +2396,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EventIds");
         attrs.Type = ObjectID::ByteString;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2474,7 +2489,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2500,6 +2515,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2525,6 +2541,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;

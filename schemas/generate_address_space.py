@@ -18,12 +18,16 @@ class ObjectStruct(object):
         self.typedef = None
         self.refs = []
         self.nodeclass = None
+        self.eventnotifier = 0 
 
         #variable
         self.datatype = None
         self.rank = -1 # checl default value
         self.value = []
         self.dimensions = None
+        self.accesslevel = None 
+        self.useraccesslevel = None
+        self.minsample = None
 
         #referencetype
         self.inversename = ""
@@ -32,6 +36,8 @@ class ObjectStruct(object):
 
         #datatype
         self.definition = []
+
+        #types
 
 
 class RefStruct():
@@ -55,12 +61,18 @@ class CodeGenerator(object):
         tree = ET.parse(xmlpath)
         root = tree.getroot()
         for child in root:
-            if child.tag[51:] in ('UAObject', 'UAObjectType'):
+            if child.tag[51:] == 'UAObject':
                 node = self.parse_node(child)
                 self.make_object_code(node)
-            elif child.tag[51:] in ('UAVariable', 'UAVariableType'):
+            elif child.tag[51:] == 'UAObjectType':
+                node = self.parse_node(child)
+                self.make_object_type_code(node)
+            elif child.tag[51:] == 'UAVariable':
                 node = self.parse_node(child)
                 self.make_variable_code(node)
+            elif child.tag[51:] == 'UAVariableType':
+                node = self.parse_node(child)
+                self.make_variable_type_code(node)
             elif child.tag[51:] == 'UAReferenceType':
                 node = self.parse_node(child)
                 self.make_reference_code(node)
@@ -108,18 +120,45 @@ namespace OpcUa
     def parse_node(self, child):
         obj = ObjectStruct()
         obj.nodetype = child.tag[53:]
-        obj.nodeid = child.attrib["NodeId"]
-        obj.browsename = child.attrib["BrowseName"]
-        if "Symbolicname" in child.attrib: obj.symname = child.attrib["SymbolicName"]
-        if "ParentNodeId" in child.attrib: obj.parent = child.attrib["ParentNodeId"]
-        if "DataType" in child.attrib: obj.datatype = child.attrib["DataType"]
+        for key, val in child.attrib.items():
+            if key == "NodeId":
+                obj.nodeid = val
+            elif key == "BrowseName":
+                obj.browsename = val
+            elif key == "SymbolicName":
+                obj.symname = val
+            elif key == "ParentNodeId":
+                obj.parent = val
+            elif key == "DataType":
+                obj.datatype = val
+            elif key == "IsAbstract":
+                obj.abstract = val
+            elif key == "EventNotifier":
+                obj.eventnotifier = val
+            elif key == "ValueRank":
+                obj.rank = val
+            elif key == "ArrayDimensions":
+                obj.dimensions = val
+            elif key == "MinimumSamplingInterval":
+                obj.minsample = val
+            elif key == "AccessLevel":
+                obj.accesslevel = val
+            elif key == "UserAccessLevel":
+                obj.useraccesslevel = val
+            elif key == "Symmetric":
+                obj.symmetric = val
+            else:
+                sys.stderr.write("Attribute not implemented: " + key + " " + val + "\n")
+
         obj.displayname = obj.browsename#FIXME
         for el in child:
-            if el.tag[51:] == "DisplayName":
+            tag = el.tag[51:]
+
+            if tag == "DisplayName":
                 obj.displayname = el.text
-            elif el.tag[51:] == "Description":
+            elif tag == "Description":
                 obj.desc = el.text
-            elif el.tag[51:] == "References":
+            elif tag == "References":
                 for ref in el:
                     #self.writecode("ref", ref, "IsForward" in ref, ref.text )
                     if ref.attrib["ReferenceType"] == "HasTypeDefinition":
@@ -135,26 +174,25 @@ namespace OpcUa
                         struct.target = ref.text
                         struct.reftype = ref.attrib["ReferenceType"] 
                         obj.refs.append(struct)
-
-            elif el.tag[51:] == "Value":
+            elif tag == "Value":
                 for val in el:
-                    tag = val.tag[47:]
-                    if tag == "Int32":
+                    ntag = val.tag[47:]
+                    if ntag == "Int32":
                         obj.value.append("(int32_t) " + val.text)
-                    elif tag == "UInt32":
+                    elif ntag == "UInt32":
                         obj.value.append("(uint32_t) " + val.text)
-                    elif tag in ('ByteString', 'String'):
+                    elif ntag in ('ByteString', 'String'):
                         mytext = val.text.replace('\n', '').replace('\r', '')
                         obj.value.append('+"{}"'.format(mytext))
-                    elif tag == "ListOfExtensionObject":
+                    elif ntag == "ListOfExtensionObject":
                         pass
-                    elif tag == "ListOfLocalizedText":
+                    elif ntag == "ListOfLocalizedText":
                         pass
                     else:
-                        self.writecode("Missing type: ", tag)
-            elif el.tag[51:] == "InverseName":
+                        self.writecode("Missing type: ", ntag)
+            elif tag == "InverseName":
                 obj.inversename = el.text
-            elif el.tag[51:] == "Definition":
+            elif tag == "Definition":
                 for field in el:
                     obj.definition.append(field)
             else:
@@ -170,18 +208,11 @@ namespace OpcUa
         if obj.parent: self.writecode(indent, 'node.ReferenceTypeId = {};'.format(self.to_ref_type(obj.parentlink)))
         if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeID("{}");'.format(obj.typedef))
 
-    def make_object_code(self, obj):
-        indent = "       "
-        self.writecode(indent)
-        self.writecode(indent, "{")
-        self.make_node_code(obj, indent)
-        self.writecode(indent, 'ObjectAttributes attrs;')
-        if obj.desc: self.writecode(indent, 'attrs.Description = LocalizedText("{}");'.format(obj.desc))
-        self.writecode(indent, 'attrs.DisplayName = LocalizedText("{}");'.format(obj.displayname))
-        self.writecode(indent, 'node.Attributes = attrs;')
-        self.writecode(indent, 'registry.AddNodes(std::vector<AddNodesItem>{node});')
-        self.make_refs_code(obj, indent)
-        self.writecode(indent, "}")
+    def to_vector(self, dims):
+        s = "std::vector<uint32_t>({"
+        s += dims
+        s+= "})"
+        return s
 
     def to_data_type(self, nodeid):
         if not nodeid:
@@ -197,6 +228,34 @@ namespace OpcUa
         else:
             return 'ReferenceID::{}'.format(nodeid)
 
+    def make_object_code(self, obj):
+        indent = "       "
+        self.writecode(indent)
+        self.writecode(indent, "{")
+        self.make_node_code(obj, indent)
+        self.writecode(indent, 'ObjectAttributes attrs;')
+        if obj.desc: self.writecode(indent, 'attrs.Description = LocalizedText("{}");'.format(obj.desc))
+        self.writecode(indent, 'attrs.DisplayName = LocalizedText("{}");'.format(obj.displayname))
+        self.writecode(indent, 'attrs.EventNotifier = {};'.format(obj.eventnotifier))
+        self.writecode(indent, 'node.Attributes = attrs;')
+        self.writecode(indent, 'registry.AddNodes(std::vector<AddNodesItem>{node});')
+        self.make_refs_code(obj, indent)
+        self.writecode(indent, "}")
+
+    def make_object_type_code(self, obj):
+        indent = "       "
+        self.writecode(indent)
+        self.writecode(indent, "{")
+        self.make_node_code(obj, indent)
+        self.writecode(indent, 'ObjectTypeAttributes attrs;')
+        if obj.desc: self.writecode(indent, 'attrs.Description = LocalizedText("{}");'.format(obj.desc))
+        self.writecode(indent, 'attrs.DisplayName = LocalizedText("{}");'.format(obj.displayname))
+        self.writecode(indent, 'attrs.IsAbstract = {};'.format(obj.abstract))
+        self.writecode(indent, 'node.Attributes = attrs;')
+        self.writecode(indent, 'registry.AddNodes(std::vector<AddNodesItem>{node});')
+        self.make_refs_code(obj, indent)
+        self.writecode(indent, "}")
+
 
     def make_variable_code(self, obj):
         indent = "       "
@@ -209,10 +268,33 @@ namespace OpcUa
         self.writecode(indent, 'attrs.Type = {};'.format(self.to_data_type(obj.datatype)))
         if obj.value and len(obj.value) == 1: self.writecode(indent, 'attrs.Value = {};'.format(obj.value[0]))
         if obj.rank: self.writecode(indent, 'attrs.Rank = {};'.format(obj.rank))
+        if obj.accesslevel: self.writecode(indent, 'attrs.AccessLevel = (VariableAccessLevel) {};'.format(obj.accesslevel))
+        if obj.useraccesslevel: self.writecode(indent, 'attrs.UserAccessLevel = (VariableAccessLevel) {};'.format(obj.useraccesslevel))
+        if obj.minsample: self.writecode(indent, 'attrs.MinimumSamplingInterval = {};'.format(obj.minsample))
+        if obj.dimensions: self.writecode(indent, 'attrs.Dimensions = {};'.format(self.to_vector(obj.dimensions)))
         self.writecode(indent, 'node.Attributes = attrs;')
         self.writecode(indent, 'registry.AddNodes(std::vector<AddNodesItem>{node});')
         self.make_refs_code(obj, indent)
         self.writecode(indent, "}")
+
+    def make_variable_type_code(self, obj):
+        indent = "       "
+        self.writecode(indent)
+        self.writecode(indent, "{")
+        self.make_node_code(obj, indent)
+        self.writecode(indent, 'VariableTypeAttributes attrs;')
+        if obj.desc: self.writecode(indent, 'attrs.Description = LocalizedText("{}");'.format(obj.desc))
+        self.writecode(indent, 'attrs.DisplayName = LocalizedText("{}");'.format(obj.displayname))
+        self.writecode(indent, 'attrs.Type = {};'.format(self.to_data_type(obj.datatype)))
+        if obj.value and len(obj.value) == 1: self.writecode(indent, 'attrs.Value = {};'.format(obj.value[0]))
+        if obj.rank: self.writecode(indent, 'attrs.Rank = {};'.format(obj.rank))
+        if obj.abstract: self.writecode(indent, 'attrs.IsAbstract = {};'.format(obj.abstract))
+        if obj.dimensions: self.writecode(indent, 'attrs.Dimensions = {};'.format(self.to_vector(obj.dimensions)))
+        self.writecode(indent, 'node.Attributes = attrs;')
+        self.writecode(indent, 'registry.AddNodes(std::vector<AddNodesItem>{node});')
+        self.make_refs_code(obj, indent)
+        self.writecode(indent, "}")
+
 
 
     def make_reference_code(self, obj):

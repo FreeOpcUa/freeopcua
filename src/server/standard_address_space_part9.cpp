@@ -27,10 +27,11 @@ namespace OpcUa
         node.Class = NodeClass::VariableType;
         node.ParentNodeId = ToNodeID("i=2755");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        VariableAttributes attrs;
+        VariableTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("TwoStateVariableType");
         attrs.Type = ObjectID::LocalizedText;
         attrs.Rank = -1;
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -224,10 +225,11 @@ namespace OpcUa
         node.Class = NodeClass::VariableType;
         node.ParentNodeId = ToNodeID("i=63");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        VariableAttributes attrs;
+        VariableTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ConditionVariableType");
         attrs.Type = ObjectID::String;
-        attrs.Rank = -1;
+        attrs.Rank = -2;
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -309,8 +311,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2041");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ConditionType");
+        attrs.IsAbstract = true;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -976,7 +979,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1003,7 +1006,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1026,8 +1029,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2782");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("DialogConditionType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1324,7 +1328,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ResponseOptionSet");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1459,7 +1463,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1482,8 +1486,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2782");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AcknowledgeableConditionType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1825,7 +1830,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1852,7 +1857,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1875,8 +1880,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2881");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AlarmConditionType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2343,6 +2349,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2929");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("ShelvingState");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2612,7 +2619,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2689,8 +2696,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2771");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ShelvedStateMachineType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2851,6 +2859,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Unshelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2903,6 +2912,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("TimedShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2955,6 +2965,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("OneShotShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3007,6 +3018,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("UnshelvedToTimedShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3095,6 +3107,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("UnshelvedToOneShotShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3183,6 +3196,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("TimedShelvedToUnshelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3271,6 +3285,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("TimedShelvedToOneShotShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3359,6 +3374,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("OneShotShelvedToUnshelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3447,6 +3463,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("OneShotShelvedToTimedShelved");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3536,7 +3553,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("InputArguments");
         attrs.Type = ToNodeID("i=296");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3559,8 +3576,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2915");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("LimitAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3718,8 +3736,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2771");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ExclusiveLimitStateMachineType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3808,6 +3827,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("HighHigh");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3860,6 +3880,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("High");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3912,6 +3933,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Low");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -3964,6 +3986,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2307");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("LowLow");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4016,6 +4039,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("LowLowToLow");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4086,6 +4110,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("LowToLowLow");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4156,6 +4181,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("HighHighToHigh");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4226,6 +4252,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=2310");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("HighToHighHigh");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4293,8 +4320,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2955");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ExclusiveLimitAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4401,6 +4429,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=9318");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("LimitState");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -4603,8 +4632,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2955");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("NonExclusiveLimitAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5158,8 +5188,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9906");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("NonExclusiveLevelAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5171,8 +5202,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9341");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ExclusiveLevelAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5184,8 +5216,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9906");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("NonExclusiveDeviationAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5235,8 +5268,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9341");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ExclusiveDeviationAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5286,8 +5320,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9906");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("NonExclusiveRateOfChangeAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5299,8 +5334,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=9341");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ExclusiveRateOfChangeAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5312,8 +5348,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2915");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("DiscreteAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5325,8 +5362,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=10523");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("OffNormalAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5376,8 +5414,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=10637");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("SystemOffNormalAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5389,8 +5428,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=10637");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("TripAlarmType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5402,8 +5442,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=58");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("BaseConditionClassType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5415,8 +5456,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=11163");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("ProcessConditionClassType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5428,8 +5470,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=11163");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("MaintenanceConditionClassType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5441,8 +5484,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=11163");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("SystemConditionClassType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5454,8 +5498,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2127");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5467,8 +5512,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionEnableEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5480,8 +5526,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionCommentEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5568,8 +5615,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionRespondEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5619,8 +5667,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionAcknowledgeEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5707,8 +5756,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionConfirmEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5795,8 +5845,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2790");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AuditConditionShelvingEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -5846,8 +5897,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2130");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("RefreshStartEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5859,8 +5911,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2130");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("RefreshEndEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -5872,8 +5925,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=2130");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("RefreshRequiredEventType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }

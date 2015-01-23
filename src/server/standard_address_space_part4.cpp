@@ -132,7 +132,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -215,7 +215,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -268,7 +268,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -366,7 +366,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -524,7 +524,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
         attrs.Type = ToNodeID("i=7594");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -637,7 +637,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
         attrs.Type = ToNodeID("i=7594");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -778,7 +778,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -858,7 +858,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
         attrs.Type = ObjectID::LocalizedText;
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1022,7 +1022,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
         attrs.Type = ToNodeID("i=7594");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1074,7 +1074,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
         attrs.Type = ToNodeID("i=7594");
-        attrs.Rank = -1;
+        attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1156,6 +1156,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1181,6 +1182,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1206,6 +1208,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1231,6 +1234,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1256,6 +1260,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1281,6 +1286,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1306,6 +1312,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1331,6 +1338,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1356,6 +1364,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1381,6 +1390,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1406,6 +1416,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1431,6 +1442,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1456,6 +1468,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1481,6 +1494,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1506,6 +1520,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1531,6 +1546,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1556,6 +1572,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1581,6 +1598,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1606,6 +1624,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1631,6 +1650,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1656,6 +1676,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1681,6 +1702,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1706,6 +1728,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1731,6 +1754,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1756,6 +1780,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1781,6 +1806,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1806,6 +1832,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1831,6 +1858,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1856,6 +1884,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1881,6 +1910,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1906,6 +1936,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1931,6 +1962,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1956,6 +1988,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -1981,6 +2014,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2006,6 +2040,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2031,6 +2066,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2056,6 +2092,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2081,6 +2118,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2106,6 +2144,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2131,6 +2170,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2156,6 +2196,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2181,6 +2222,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2206,6 +2248,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2231,6 +2274,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2256,6 +2300,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2281,6 +2326,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2306,6 +2352,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2331,6 +2378,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2356,6 +2404,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2381,6 +2430,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2406,6 +2456,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2431,6 +2482,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2456,6 +2508,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2481,6 +2534,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2506,6 +2560,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2531,6 +2586,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2556,6 +2612,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -2581,6 +2638,7 @@ namespace OpcUa
         node.TypeDefinition = ToNodeID("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;

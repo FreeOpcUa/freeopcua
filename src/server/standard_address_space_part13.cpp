@@ -27,8 +27,9 @@ namespace OpcUa
         node.Class = NodeClass::ObjectType;
         node.ParentNodeId = ToNodeID("i=58");
         node.ReferenceTypeId = ReferenceID::HasSubtype;
-        ObjectAttributes attrs;
+        ObjectTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateConfigurationType");
+        attrs.IsAbstract = false;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -188,6 +189,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("At the beginning of each interval, retrieve the calculated value from the data points on either side of the requested timestamp.");
         attrs.DisplayName = LocalizedText("Interpolative");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -201,6 +203,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the average value of the data over the interval.");
         attrs.DisplayName = LocalizedText("Average");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -214,6 +217,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the time weighted average data over the interval using Interpolated Bounding Values.");
         attrs.DisplayName = LocalizedText("TimeAverage");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -227,6 +231,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the time weighted average data over the interval using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("TimeAverage2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -240,6 +245,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the total (time integral) of the data over the interval using Interpolated Bounding Values.");
         attrs.DisplayName = LocalizedText("Total");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -253,6 +259,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the total (time integral) of the data over the interval using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("Total2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -266,6 +273,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the minimum raw value in the interval with the timestamp of the start of the interval.");
         attrs.DisplayName = LocalizedText("Minimum");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -279,6 +287,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the maximum raw value in the interval with the timestamp of the start of the interval.");
         attrs.DisplayName = LocalizedText("Maximum");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -292,6 +301,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the minimum value in the interval and the Timestamp of the minimum value.");
         attrs.DisplayName = LocalizedText("MinimumActualTime");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -305,6 +315,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the maximum value in the interval and the Timestamp of the maximum value.");
         attrs.DisplayName = LocalizedText("MaximumActualTime");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -318,6 +329,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the difference between the minimum and maximum Value over the interval.");
         attrs.DisplayName = LocalizedText("Range");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -331,6 +343,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the minimum value in the interval including the Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("Minimum2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -344,6 +357,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the maximum value in the interval including the Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("Maximum2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -357,6 +371,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the minimum value with the actual timestamp including the Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("MinimumActualTime2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -370,6 +385,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the maximum value with the actual timestamp including the Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("MaximumActualTime2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -383,6 +399,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the difference between the Minimum2 and Maximum2 value over the interval.");
         attrs.DisplayName = LocalizedText("Range2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -396,6 +413,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the number of Annotations in the interval.");
         attrs.DisplayName = LocalizedText("AnnotationCount");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -409,6 +427,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the number of raw values over the interval.");
         attrs.DisplayName = LocalizedText("Count");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -422,6 +441,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the time a Boolean or numeric was in a zero state using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("DurationInStateZero");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -435,6 +455,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the time a Boolean or numeric was in a non-zero state using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("DurationInStateNonZero");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -448,6 +469,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the number of changes between zero and non-zero that a Boolean or Numeric value experienced in the interval.");
         attrs.DisplayName = LocalizedText("NumberOfTransitions");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -461,6 +483,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the value at the beginning of the interval using Interpolated Bounding Values.");
         attrs.DisplayName = LocalizedText("Start");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -474,6 +497,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the value at the end of the interval using Interpolated Bounding Values.");
         attrs.DisplayName = LocalizedText("End");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -487,6 +511,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the difference between the Start and End value in the interval.");
         attrs.DisplayName = LocalizedText("Delta");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -500,6 +525,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the value at the beginning of the interval using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("StartBound");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -513,6 +539,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the value at the end of the interval using Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("EndBound");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -526,6 +553,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the difference between the StartBound and EndBound value in the interval.");
         attrs.DisplayName = LocalizedText("DeltaBounds");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -539,6 +567,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the total duration of time in the interval during which the data is good.");
         attrs.DisplayName = LocalizedText("DurationGood");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -552,6 +581,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the total duration of time in the interval during which the data is bad.");
         attrs.DisplayName = LocalizedText("DurationBad");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -565,6 +595,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the percent of data (0 to 100) in the interval which has a good StatusCode.");
         attrs.DisplayName = LocalizedText("PercentGood");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -578,6 +609,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the percent of data (0 to 100) in the interval which has a bad StatusCode.");
         attrs.DisplayName = LocalizedText("PercentBad");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -591,6 +623,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the worst StatusCode of data in the interval.");
         attrs.DisplayName = LocalizedText("WorstQuality");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -604,6 +637,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the worst StatusCode of data in the interval including the Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("WorstQuality2");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -617,6 +651,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the standard deviation for the interval for a sample of the population (n-1).");
         attrs.DisplayName = LocalizedText("StandardDeviationSample");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -630,6 +665,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the standard deviation for the interval for a complete population (n) which includes Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("StandardDeviationPopulation");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -643,6 +679,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the variance for the interval as calculated by the StandardDeviationSample.");
         attrs.DisplayName = LocalizedText("VarianceSample");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
@@ -656,6 +693,7 @@ namespace OpcUa
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("Retrieve the variance for the interval as calculated by the StandardDeviationPopulation which includes Simple Bounding Values.");
         attrs.DisplayName = LocalizedText("VariancePopulation");
+        attrs.EventNotifier = 0;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         }
