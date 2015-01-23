@@ -188,11 +188,11 @@ test_opcuaserver_SOURCES = \
 	tests/server/opcua_protocol_addon_test.cpp \
 	tests/server/opcua_protocol_addon_test.h \
 	tests/server/services_registry_test.h \
-	tests/server/standard_namespace_test.h \
-	tests/server/standard_namespace_ut.cpp \
 	tests/server/test_server_options.cpp \
 	src/serverapp/server_options.cpp \
 	src/serverapp/server_options.h
+#tests/server/standard_namespace_test.h \ #completely outdated 
+#tests/server/standard_namespace_ut.cpp \ #completely outdated
 
 # temporary disabled until new format is discussed.
 #	tests/server/xml_addressspace_ut.cpp

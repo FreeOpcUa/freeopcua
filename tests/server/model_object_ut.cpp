@@ -269,10 +269,17 @@ TEST_F(ModelObject, CanAccessVariableByBrowsePath)
 
 TEST_F(ModelObject, CanAccessVariableByQualifiedName)
 {
+  std::cout << "1" << std::endl;
   OpcUa::Model::Server server(Services);
+  std::cout << "2" << std::endl;
   OpcUa::Model::Object rootObject = server.RootObject();
+  std::cout << "3" << std::endl;
   OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  std::cout << "4" << std::endl;
   OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType, OpcUa::QualifiedName("Server"));
+  std::cout << "5" << std::endl;
   OpcUa::Model::Variable serverStatus = serverObject.GetVariable(OpcUa::QualifiedName(OpcUa::Names::ServerStatus));
+  std::cout << "6" << std::endl;
   EXPECT_EQ(serverStatus.GetBrowseName(), OpcUa::QualifiedName(OpcUa::Names::ServerStatus));
+  std::cout << "7" << std::endl;
 }
