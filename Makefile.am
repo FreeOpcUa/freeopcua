@@ -74,9 +74,6 @@ TEST_CORE_CONFIG_PATH = $(top_srcdir)/tests/core/configs/
 ####################################################
 
 
-src/server/standard_namespace.cpp: schemas/AttributeIds.csv schemas/codegen.py
-	python $(top_srcdir)/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.xml > $@
-
 serverinclude_HEADERS = \
 	include/opc/ua/server/address_space.h \
 	include/opc/ua/server/endpoints_services.h \

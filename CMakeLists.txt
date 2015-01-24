@@ -290,12 +290,12 @@ endif(BUILD_CLIENT)
 
 if(BUILD_SERVER)
     
-    FOREACH(PART 3 4 5 8 9 10 11 13)
-    ADD_CUSTOM_COMMAND(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp 
-        COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.Part${PART}.xml ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
-    )
-    ENDFOREACH(PART)
+    #FOREACH(PART 3 4 5 8 9 10 11 13)
+    #ADD_CUSTOM_COMMAND(
+    #OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp 
+    #COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.Part${PART}.xml ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
+    #)
+    #ENDFOREACH(PART)
 
     add_library(opcuaserver STATIC
         src/server/address_space_addon.cpp
