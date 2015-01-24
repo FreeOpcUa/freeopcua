@@ -110,6 +110,7 @@ ADD_CUSTOM_COMMAND(
     #DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv
   )
 
+
 add_library(opcuaprotocol STATIC
     include/opc/ua/protocol/object_ids.h
     src/protocol/binary_attribute.cpp
@@ -288,39 +289,44 @@ endif(BUILD_CLIENT)
 ############################################################################
 
 if(BUILD_SERVER)
+    
+    #FOREACH(PART 3 4 5 8 9 10 11 13)
+    #ADD_CUSTOM_COMMAND(
+    #OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp 
+    #COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.Part${PART}.xml ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
+    #)
+    #ENDFOREACH(PART)
+
     add_library(opcuaserver STATIC
         src/server/address_space_addon.cpp
-        src/server/address_space_addon.h
         src/server/address_space_internal.cpp
-        src/server/address_space_internal.h
         src/server/asio_addon.cpp
         src/server/common_addons.cpp
-        #src/server/common_addons.h
         src/server/endpoints_parameters.cpp
-        src/server/endpoints_parameters.h
         src/server/endpoints_registry.cpp
         src/server/endpoints_services_addon.cpp
         src/server/internal_subscription.cpp
-        src/server/internal_subscription.h
         src/server/server.cpp
         src/server/opc_tcp_async.cpp
         src/server/opc_tcp_async_addon.cpp
         src/server/opc_tcp_async_parameters.cpp
-        src/server/opc_tcp_async_parameters.h
         src/server/opc_tcp_processor.cpp
-        src/server/opc_tcp_processor.h
         src/server/server_object.cpp
-        src/server/server_object.h
         src/server/server_object_addon.cpp
-        src/server/server_object_addon.h
         src/server/services_registry_factory.cpp
         src/server/services_registry_impl.cpp
-        src/server/standard_namespace.cpp
-        src/server/standard_namespace_addon.cpp
+        src/server/standard_address_space_part3.cpp
+        src/server/standard_address_space_part4.cpp
+        src/server/standard_address_space_part5.cpp
+        src/server/standard_address_space_part8.cpp
+        src/server/standard_address_space_part9.cpp
+        src/server/standard_address_space_part10.cpp
+        src/server/standard_address_space_part11.cpp
+        src/server/standard_address_space_part13.cpp
+        src/server/standard_address_space.cpp
+        src/server/standard_address_space_addon.cpp
         src/server/subscription_service_addon.cpp
         src/server/subscription_service_internal.cpp
-        src/server/subscription_service_internal.h
-        src/server/timer.h
         )
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
