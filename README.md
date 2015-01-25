@@ -16,6 +16,7 @@ Currently supported:
 * DataChange Events
 * Events
 * Subscriptions
+* complete opc-ua address space generated from xml specification
 
 Work in progress
 * StatusChange Events
