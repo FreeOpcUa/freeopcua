@@ -20,6 +20,8 @@
 #include "server_object.h"
 
 #include <boost/chrono.hpp>
+#include <opc/ua/node.h>
+#include <opc/common/object_id.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <functional>
 
@@ -64,6 +66,27 @@ namespace OpcUa
       Timer.Start(boost::posix_time::seconds(1), [this](){
         UpdateTime();
       });
+      //Set many values in address space which are expected by clients
+      std::vector<std::string> uris; 
+      uris.push_back("http://opcfoundation.org/UA/");
+      uris.push_back("http://freeopcua.github.io");
+      Node node = Node(Server, ObjectID::Server_NamespaceArray);
+      node.SetValue(uris);
+      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ManufacturerName);
+      node.SetValue(std::string("FreeOpcUa"));
+      node = Node(Server, ObjectID::Server_ServerCapabilities_LocaleIdArray);
+      node.SetValue(std::vector<std::string>({ "en" }));
+      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_BuildNumber);
+      node.SetValue(std::string("0.8"));
+      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ProductName);
+      node.SetValue(std::string("FreeOpcUa"));
+      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ProductUri);
+      node.SetValue(std::string("https://freeopcua.github.io"));
+      node = Node(Server, ObjectID::Server_ServerStatus_State);
+      node.SetValue((int32_t) 0);
+      node = Node(Server, ObjectID::Server_ServerStatus_CurrentTime);
+      node.SetValue(DateTime::Current());//Set time before the thread does it
+
     }
 
     ServerObject::~ServerObject()

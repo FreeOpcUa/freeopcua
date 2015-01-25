@@ -28,7 +28,7 @@
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/opc_tcp_async.h>
 #include <opc/ua/server/addons/services_registry.h>
-#include <opc/ua/server/addons/standard_namespace.h>
+#include <opc/ua/server/addons/standard_address_space.h>
 #include <opc/ua/server/addons/subscription_service.h>
 
 #include <algorithm>

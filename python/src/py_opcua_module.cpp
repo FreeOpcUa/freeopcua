@@ -45,7 +45,6 @@ using namespace OpcUa;
 BOOST_PYTHON_FUNCTION_OVERLOADS(DateTimeFromTimeT_stub, DateTime::FromTimeT, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeSetValue_stubs, Node::SetValue, 1, 2);
 
 
 //--------------------------------------------------------------------------
@@ -229,6 +228,14 @@ static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
 
 static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 { self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
+
+//--------------------------------------------------------------------------
+// Node helpers
+//--------------------------------------------------------------------------
+//
+
+static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
+{ self.SetValue(ToVariant2(obj, vtype)); }
 
 //--------------------------------------------------------------------------
 // UaClient helpers
@@ -433,8 +440,9 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-  .def("set_value", (StatusCode(Node::*)(const Variant &, const DateTime &) const) &Node::SetValue, NodeSetValue_stubs((arg("value"), arg("DateTime")=DateTime::Current()), "set a node value."))
-  .def("set_value", (StatusCode(Node::*)(const DataValue &) const) &Node::SetValue)
+  .def("set_value", (void(Node::*)(const DataValue &) const) &Node::SetValue)
+  .def("set_value", (void(Node::*)(const Variant &) const) &Node::SetValue)
+  .def("set_value", &Node_SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
   .def("get_name", &Node::GetName, NodeGetName_stubs((arg("force") = false)))
