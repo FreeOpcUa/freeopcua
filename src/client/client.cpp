@@ -124,6 +124,8 @@ namespace OpcUa
   {
     std::vector<EndpointDescription> endpoints = GetServerEndpoints(endpoint);
     if (Debug)  { std::cout << "UaClient | Going through server endpoints and selected one we support" << std::endl; }
+    Common::Uri uri(endpoint);
+    bool has_login = !uri.User().empty();
     for ( EndpointDescription ed : endpoints)
     {
       if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
@@ -137,7 +139,12 @@ namespace OpcUa
         }
         for (  UserTokenPolicy token : ed.UserIdentifyTokens)
         {
-          if (token.TokenType == UserIdentifyTokenType::ANONYMOUS )
+          if (token.TokenType == UserIdentifyTokenType::USERNAME && has_login)
+          {
+            if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
+            return ed;
+          }
+          if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
           {
             if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
@@ -170,7 +177,7 @@ namespace OpcUa
     OpenSecureChannel();
 
 
-    if (Debug)  { std::cout << "UaClient | Creating session " <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Creating session ..." <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = ApplicationUri;
     session.ClientDescription.ProductURI = ProductUri;
@@ -183,8 +190,11 @@ namespace OpcUa
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);
+	if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
+	if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
     ActivateSessionResponse aresponse = Server->ActivateSession();
     CheckStatusCode(aresponse.Header.ServiceResult);
+	if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 
     if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
     {

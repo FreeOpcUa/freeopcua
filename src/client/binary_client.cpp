@@ -265,6 +265,12 @@ namespace
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
       request.Parameters.LocaleIDs.push_back("en");
+
+      Common::Uri uri(Params.EndpointUrl);
+      std::string user = uri.User();
+      std::string password = uri.Password();
+      if(!user.empty())
+        request.Parameters.IdentifyToken.setUser(user, password);
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
       return response;

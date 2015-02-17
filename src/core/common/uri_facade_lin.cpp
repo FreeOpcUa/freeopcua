@@ -29,6 +29,15 @@ namespace Common
     {
       SchemeStr = uri->scheme;
     }
+    if (uri->user)
+    {
+      UserStr = uri->user;
+      int ix = UserStr.find(':');
+      if(ix > 0) {
+        PasswordStr = UserStr.substr(ix + 1);
+        UserStr = UserStr.substr(0, ix);
+      }
+    }
     if (uri->server)
     {
       HostStr = uri->server;

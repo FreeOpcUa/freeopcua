@@ -75,12 +75,19 @@ namespace OpcUa
   struct UserIdentifyToken
   {
     ExtensionObjectHeader Header;
-    struct AnonymousStruct
+    std::vector<uint8_t> PolicyId; // "0": anonymous, "1": user_name
+
+    struct UserNameStruct
     {
-      std::vector<uint8_t> Data;
-    } Anonymous;
+      std::string UserName;
+      std::string Password;
+      std::string EncryptionAlgorithm;
+    } UserName;
 
     UserIdentifyToken();
+
+    UserIdentifyTokenType type() const;
+    void setUser(const std::string &user, const std::string &password);
   };
 
   struct UpdatedSessionParameters

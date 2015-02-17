@@ -52,7 +52,24 @@ namespace OpcUa
   UserIdentifyToken::UserIdentifyToken()
     : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
   {
-    Anonymous.Data = {9,0,0,0,'a', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'};
+    PolicyId = {1,0,0,0,'0'}; // default is anonymous
+  }
+
+  UserIdentifyTokenType UserIdentifyToken::type() const
+  {
+    UserIdentifyTokenType type = UserIdentifyTokenType::ANONYMOUS;
+    if(Header.TypeID.FourByteData.Identifier == USER_IDENTIFY_TOKEN_USERNAME)
+      type = UserIdentifyTokenType::USERNAME;
+    return type;
+  }
+
+  void UserIdentifyToken::setUser(const std::string &user, const std::string &password)
+  {
+    Header.TypeID.FourByteData.Identifier = USER_IDENTIFY_TOKEN_USERNAME;
+    PolicyId = {1,0,0,0,'1'};
+    UserName.UserName = user;
+    UserName.Password = password;
+    //UserName.EncryptionAlgorithm = "http://www.w3.org/2001/04/xmlenc#rsa-oaep";
   }
 
   ActivateSessionRequest::ActivateSessionRequest()
@@ -225,23 +242,52 @@ namespace OpcUa
     //---------------------------------------------------
 
     template<>
+    std::size_t RawSize<UserIdentifyToken::UserNameStruct>(const UserIdentifyToken::UserNameStruct& uname)
+    {
+      return RawSize(uname.UserName) + RawSize(uname.Password) + RawSize(uname.EncryptionAlgorithm);
+    }
+
+    template<>
+    void DataSerializer::Serialize<UserIdentifyToken::UserNameStruct>(const UserIdentifyToken::UserNameStruct& uname)
+    {
+      *this << uname.UserName;
+      *this << uname.Password;
+      *this << uname.EncryptionAlgorithm;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<UserIdentifyToken::UserNameStruct>(UserIdentifyToken::UserNameStruct& uname)
+    {
+      *this >> uname.UserName;
+      *this >> uname.Password;
+      *this >> uname.EncryptionAlgorithm;
+    }
+
+    template<>
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
-      return RawSize(token.Header) + RawSize(token.Anonymous.Data);
-    };
+      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId);
+      if(token.type() == UserIdentifyTokenType::USERNAME)
+        ret += RawSize(token.UserName);
+      return ret;
+    }
 
     template<>
     void DataSerializer::Serialize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
       *this << token.Header;
-      *this << token.Anonymous.Data;
+      *this << token.PolicyId;
+      if(token.type() == UserIdentifyTokenType::USERNAME)
+        *this << token.UserName;
     }
 
     template<>
     void DataDeserializer::Deserialize<UserIdentifyToken>(UserIdentifyToken& token)
     {
       *this >> token.Header;
-      *this >> token.Anonymous.Data;
+      *this >> token.PolicyId;
+      if(token.type() == UserIdentifyTokenType::USERNAME)
+        *this >> token.UserName;
     }
 
     //---------------------------------------------------
