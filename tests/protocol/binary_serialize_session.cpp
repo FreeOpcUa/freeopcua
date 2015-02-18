@@ -258,7 +258,7 @@ TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
   const std::vector<char> expectedData = {
   1, 0, (char)0x41, 0x1, // TypeID
   HAS_BINARY_BODY,
-  0xd,0,0,0, 1,0,0,0,'0'
+  0x5,0,0,0, 1,0,0,0,'0'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -272,7 +272,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   const std::vector<char> expectedData = {
   1, 0, (char)0x41, 0x1, // TypeID
   HAS_BINARY_BODY,
-  0xd,0,0,0, 1,0,0,0,'0'
+  0x5,0,0,0, 1,0,0,0,'0'
   };
 
   GetChannel().SetData(expectedData);
@@ -328,7 +328,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
 
   1, 0, (char)0x41, 0x1, // TypeID
   1,
-  0x0d,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s',
+  0x5,0,0,0, 1,0,0,0,'0',
   -1,-1,-1,-1,
   -1,-1,-1,-1
   };
@@ -355,7 +355,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
 
   1, 0, (char)0x41, 0x1, // TypeID
   1,
-  0xd,0,0,0, 9,0,0,0,'a','n','o','n','y','m','o','u','s',
+  0x5,0,0,0, 1,0,0,0,'0',
   -1,-1,-1,-1,
   -1,-1,-1,-1
   };
