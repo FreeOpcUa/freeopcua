@@ -24,6 +24,7 @@
 
 #include <opc/common/object_id.h>
 #include <opc/ua/protocol/node_management.h>
+#include <opc/ua/protocol/method.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/variable_access_level.h>
@@ -79,6 +80,23 @@ namespace OpcUa
     {
       return Variant(); //FIXME: What does it mean when not value is found?
     }
+  }
+
+  std::vector<Variant> Node::CallMethod(const NodeID methodId, const std::vector<Variant> inputArguments) const
+  {
+    std::vector<CallMethodRequest> methodsToCall;
+    CallMethodRequest callMethod;
+    callMethod.ObjectId = Id;
+    callMethod.MethodId = methodId;
+    callMethod.InputArguments = inputArguments;
+
+    methodsToCall.push_back(callMethod);
+
+    std::vector<CallMethodResult> results = Server->Method()->Call(methodsToCall);
+    // TODO: add checking of StatusCode
+
+    // TODO: add to call multiple methods --> Rename to CallMethods and check how to return them as list of Variants
+    return results.front().OutputArguments;
   }
 
   void Node::SetAttribute(AttributeID attr, const DataValue &dval) const

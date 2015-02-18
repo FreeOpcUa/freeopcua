@@ -174,11 +174,12 @@ namespace
 
   class BinaryClient
     : public Services
-    , public EndpointServices
-    , public ViewServices
-    , public SubscriptionServices
     , public AttributeServices
+    , public EndpointServices
+    , public MethodServices
     , public NodeManagementServices
+    , public SubscriptionServices
+    , public ViewServices
     , public std::enable_shared_from_this<BinaryClient>
   {
   private:
@@ -230,9 +231,11 @@ namespace
       ReceiveThread.join();
       if (Debug) std::cout << "binary_client| Receive tread stopped." << std::endl;
 
-
     }
 
+    ////////////////////////////////////////////////////////////////
+    /// Session Services
+    ////////////////////////////////////////////////////////////////
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
     {
       if (Debug)  { std::cout << "binary_client| CreateSession -->" << std::endl; }
@@ -279,6 +282,45 @@ namespace
       return response;
     }
 
+    ////////////////////////////////////////////////////////////////
+    /// Attribute Services
+    ////////////////////////////////////////////////////////////////
+    virtual std::shared_ptr<AttributeServices> Attributes() override
+    {
+      return shared_from_this();
+    }
+
+  public:
+    virtual std::vector<DataValue> Read(const ReadParameters& params) const
+    {
+      if (Debug)  {
+        std::cout << "binary_client| Read -->" << std::endl;
+        for ( AttributeValueID attr : params.AttributesToRead )
+        {
+          std::cout << attr.Node << "  " << (uint32_t)attr.Attribute;
+        }
+        std::cout << std::endl;
+      }
+      ReadRequest request;
+      request.Parameters = params;
+      const ReadResponse response = Send<ReadResponse>(request);
+      if (Debug)  { std::cout << "binary_client| Read <--" << std::endl; }
+      return response.Result.Results;
+    }
+
+    virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
+    {
+      if (Debug)  { std::cout << "binary_client| Write -->" << std::endl; }
+      WriteRequest request;
+      request.Parameters.NodesToWrite = values;
+      const WriteResponse response = Send<WriteResponse>(request);
+      if (Debug)  { std::cout << "binary_client| Write <--" << std::endl; }
+      return response.Result.StatusCodes;
+    }
+
+    ////////////////////////////////////////////////////////////////
+    /// Endpoint Services
+    ////////////////////////////////////////////////////////////////
     virtual std::shared_ptr<EndpointServices> Endpoints() override
     {
       return shared_from_this();
@@ -311,81 +353,32 @@ namespace
     {
     }
 
-    // ViewServices
-    virtual std::shared_ptr<ViewServices> Views() override
+    ////////////////////////////////////////////////////////////////
+    /// Method Services
+    ////////////////////////////////////////////////////////////////
+    virtual std::shared_ptr<MethodServices> Method() override
     {
       return shared_from_this();
     }
 
-    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+    virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall)
     {
-      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
-      TranslateBrowsePathsToNodeIDsRequest request;
-      request.Header = CreateRequestHeader();
-      request.Parameters = params;
-      const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
-      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
-      return response.Result.Paths;
-    }
-
-
-    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
-    {
-      if (Debug)  { 
-        std::cout << "binary_client| Browse -->" ; 
-        for ( BrowseDescription desc : query.NodesToBrowse )
-        {
-          std::cout << desc.NodeToBrowse << "  ";
-        }
-        std::cout << std::endl; 
-      }
-      BrowseRequest request;
-      request.Header = CreateRequestHeader();
-      request.Query = query;
-      const BrowseResponse response = Send<BrowseResponse>(request);
-      for ( BrowseResult result : response.Results )
-      {
-        if (! result.ContinuationPoint.empty())
-        {
-          ContinuationPoints.push_back(result.ContinuationPoint);
-        }
-      }
-      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
-      return  response.Results;
-    }
-
-    virtual std::vector<BrowseResult> BrowseNext() const
-    {
-      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
-      if ( ContinuationPoints.empty() )
-      {
-        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
-        return std::vector<BrowseResult>();
-      }
-      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
-      BrowseNextRequest request;
-      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
-      request.ContinuationPoints = ContinuationPoints;
-      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
-      if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
+      if (Debug) {std::cout << "binary_clinent | Call -->" << std::endl;}
+      CallRequest request;
+      request.MethodsToCall = methodsToCall;
+      const CallResponse response = Send<CallResponse>(request);
+      if (Debug) {std::cout << "binary_clinent | Call <--" << std::endl;}
       return response.Results;
     }
 
-  private:
-    //FIXME: this method should be removed, better add realease option to BrowseNext
-    void Release() const
-    {
-      ContinuationPoints.clear();
-      BrowseNext();
-    }
-
-  public:
+    ////////////////////////////////////////////////////////////////
+    /// Node management Services
+    ////////////////////////////////////////////////////////////////
     virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return shared_from_this();
     }
 
-  public:
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
     {
       if (Debug)  { std::cout << "binary_client| AddNodes -->" << std::endl; }
@@ -406,39 +399,9 @@ namespace
       return response.Results;
     }
 
-    virtual std::shared_ptr<AttributeServices> Attributes() override
-    {
-      return shared_from_this();
-    }
-
-  public:
-    virtual std::vector<DataValue> Read(const ReadParameters& params) const
-    {
-      if (Debug)  { 
-        std::cout << "binary_client| Read -->" << std::endl; 
-        for ( AttributeValueID attr : params.AttributesToRead )
-        {
-          std::cout << attr.Node << "  " << (uint32_t)attr.Attribute;
-        }
-        std::cout << std::endl; 
-      }
-      ReadRequest request;
-      request.Parameters = params;
-      const ReadResponse response = Send<ReadResponse>(request);
-      if (Debug)  { std::cout << "binary_client| Read <--" << std::endl; }
-      return response.Result.Results;
-    }
-
-    virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
-    {
-      if (Debug)  { std::cout << "binary_client| Write -->" << std::endl; }
-      WriteRequest request;
-      request.Parameters.NodesToWrite = values;
-      const WriteResponse response = Send<WriteResponse>(request);
-      if (Debug)  { std::cout << "binary_client| Write <--" << std::endl; }
-      return response.Result.StatusCodes;
-    }
-
+    ////////////////////////////////////////////////////////////////
+    /// Subscriptions Services
+    ////////////////////////////////////////////////////////////////
     virtual std::shared_ptr<SubscriptionServices> Subscriptions() override
     {
       return shared_from_this();
@@ -536,6 +499,81 @@ namespace
       return response;
     }
     
+    ////////////////////////////////////////////////////////////////
+    /// View Services
+    ////////////////////////////////////////////////////////////////
+    virtual std::shared_ptr<ViewServices> Views() override
+    {
+      return shared_from_this();
+    }
+
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+    {
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
+      TranslateBrowsePathsToNodeIDsRequest request;
+      request.Header = CreateRequestHeader();
+      request.Parameters = params;
+      const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
+      return response.Result.Paths;
+    }
+
+
+    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
+    {
+      if (Debug)  {
+        std::cout << "binary_client| Browse -->" ;
+        for ( BrowseDescription desc : query.NodesToBrowse )
+        {
+          std::cout << desc.NodeToBrowse << "  ";
+        }
+        std::cout << std::endl;
+      }
+      BrowseRequest request;
+      request.Header = CreateRequestHeader();
+      request.Query = query;
+      const BrowseResponse response = Send<BrowseResponse>(request);
+      for ( BrowseResult result : response.Results )
+      {
+        if (! result.ContinuationPoint.empty())
+        {
+          ContinuationPoints.push_back(result.ContinuationPoint);
+        }
+      }
+      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
+      return  response.Results;
+    }
+
+    virtual std::vector<BrowseResult> BrowseNext() const
+    {
+      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
+      if ( ContinuationPoints.empty() )
+      {
+        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
+        return std::vector<BrowseResult>();
+      }
+      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+      BrowseNextRequest request;
+      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
+      request.ContinuationPoints = ContinuationPoints;
+      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
+      if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
+      return response.Results;
+    }
+
+  private:
+    //FIXME: this method should be removed, better add realease option to BrowseNext
+    void Release() const
+    {
+      ContinuationPoints.clear();
+      BrowseNext();
+    }
+
+  public:
+
+    ////////////////////////////////////////////////////////////////
+    /// SecureChannel Services
+    ////////////////////////////////////////////////////////////////
     virtual OpcUa::OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& params)
     {
       if (Debug) {std::cout << "binary_client| OpenChannel -->" << std::endl;}
@@ -550,7 +588,6 @@ namespace
       if (Debug) {std::cout << "binary_client| OpenChannel <--" << std::endl;}
       return response;
     }
-    
 
     virtual void CloseSecureChannel(uint32_t channelId)
     {

@@ -34,6 +34,9 @@ namespace OpcUa
       virtual void RegisterAttributeServices(OpcUa::AttributeServices::SharedPtr attributes) = 0;
       virtual void UnregisterAttributeServices() = 0;
 
+      virtual void RegisterMethodServices(MethodServices::SharedPtr method) = 0;
+      virtual void UnregisterMethodServices() = 0;
+
       virtual void RegisterNodeManagementServices(OpcUa::NodeManagementServices::SharedPtr attributes) = 0;
       virtual void UnregisterNodeManagementServices() = 0;
 
