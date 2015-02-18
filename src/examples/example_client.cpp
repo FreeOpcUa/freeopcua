@@ -36,6 +36,9 @@ int main(int argc, char** argv)
     std::string endpoint = "opc.tcp://127.0.0.1:4841/freeopcua/server/";
     //std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
 
+    if(argc > 1)
+      endpoint = argv[1];
+
     std::cout << "Connecting to: " << endpoint << std::endl;
     bool debug = false;
     OpcUa::UaClient client(debug);

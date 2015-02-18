@@ -75,7 +75,7 @@ namespace OpcUa
   struct UserIdentifyToken
   {
     ExtensionObjectHeader Header;
-    std::vector<uint8_t> PolicyId; // "0": anonymous, "1": user_name
+    std::vector<uint8_t> PolicyId; // "0": Anonymous, "1": UserName, "2": Certificate
 
     struct UserNameStruct
     {

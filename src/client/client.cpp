@@ -139,12 +139,15 @@ namespace OpcUa
         }
         for (  UserTokenPolicy token : ed.UserIdentifyTokens)
         {
-          if (token.TokenType == UserIdentifyTokenType::USERNAME && has_login)
+          if (has_login)
           {
-            if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
-            return ed;
+            if (token.TokenType == UserIdentifyTokenType::USERNAME)
+            {
+              if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
+              return ed;
+            }
           }
-          if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
+          else if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
           {
             if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
@@ -190,11 +193,11 @@ namespace OpcUa
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);
-	if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
-	if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
     ActivateSessionResponse aresponse = Server->ActivateSession();
     CheckStatusCode(aresponse.Header.ServiceResult);
-	if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 
     if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
     {
