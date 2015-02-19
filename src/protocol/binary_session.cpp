@@ -52,7 +52,6 @@ namespace OpcUa
   UserIdentifyToken::UserIdentifyToken()
     : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
   {
-    PolicyId = {1,0,0,0,'0'}; // default is anonymous
   }
 
   UserIdentifyTokenType UserIdentifyToken::type() const
@@ -66,10 +65,22 @@ namespace OpcUa
   void UserIdentifyToken::setUser(const std::string &user, const std::string &password)
   {
     Header.TypeID.FourByteData.Identifier = USER_IDENTIFY_TOKEN_USERNAME;
-    PolicyId = {1,0,0,0,'1'};
     UserName.UserName = user;
     UserName.Password = password;
     //UserName.EncryptionAlgorithm = "http://www.w3.org/2001/04/xmlenc#rsa-oaep";
+  }
+
+  void UserIdentifyToken::setPolicyID(const std::string &id)
+  {
+    int sz = id.length();
+    PolicyID.resize(sz + 4);
+    for(int i=0; i<sz; i++) {
+      PolicyID[i + 4] = id[i];
+    }
+    for(int i=0; i<4; i++) {
+      PolicyID[i] = (uint8_t)sz;
+      sz /= 256;
+    }
   }
 
   ActivateSessionRequest::ActivateSessionRequest()
@@ -266,7 +277,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
-      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId);
+      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyID);
       if(token.type() == UserIdentifyTokenType::USERNAME)
         ret += RawSize(token.UserName);
       return ret;
@@ -276,7 +287,7 @@ namespace OpcUa
     void DataSerializer::Serialize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
       *this << token.Header;
-      *this << token.PolicyId;
+      *this << token.PolicyID;
       if(token.type() == UserIdentifyTokenType::USERNAME)
         *this << token.UserName;
     }
@@ -285,7 +296,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<UserIdentifyToken>(UserIdentifyToken& token)
     {
       *this >> token.Header;
-      *this >> token.PolicyId;
+      *this >> token.PolicyID;
       if(token.type() == UserIdentifyTokenType::USERNAME)
         *this >> token.UserName;
     }

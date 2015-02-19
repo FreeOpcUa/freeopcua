@@ -260,7 +260,7 @@ namespace
       return response;
     }
 
-    virtual ActivateSessionResponse ActivateSession()
+    ActivateSessionResponse ActivateSession(const SessionData &session_data) override
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
@@ -269,8 +269,31 @@ namespace
       Common::Uri uri(Params.EndpointUrl);
       std::string user = uri.User();
       std::string password = uri.Password();
-      if(!user.empty())
-        request.Parameters.IdentifyToken.setUser(user, password);
+      bool user_identify_token_found = false;
+      for(auto ep : session_data.ServerEndpoints) {
+        if(ep.SecurityMode == MSM_NONE) {
+          for(auto token : ep.UserIdentifyTokens) {
+            if(user.empty()) {
+              if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
+                request.Parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                user_identify_token_found = true;
+                break;
+              }
+            }
+            else {
+              if(token.TokenType == UserIdentifyTokenType::USERNAME) {
+                request.Parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                request.Parameters.IdentifyToken.setUser(user, password);
+                user_identify_token_found = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      if(!user_identify_token_found) {
+        throw std::runtime_error("Cannot find suitable user identify token for session");
+      }
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
       return response;

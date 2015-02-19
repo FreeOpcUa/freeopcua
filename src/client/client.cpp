@@ -195,7 +195,7 @@ namespace OpcUa
     CheckStatusCode(response.Header.ServiceResult);
     if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
     if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
-    ActivateSessionResponse aresponse = Server->ActivateSession();
+    ActivateSessionResponse aresponse = Server->ActivateSession(response.Session);
     CheckStatusCode(aresponse.Header.ServiceResult);
     if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 

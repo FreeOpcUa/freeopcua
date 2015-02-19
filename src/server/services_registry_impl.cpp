@@ -158,8 +158,9 @@ namespace
       return CreateSessionResponse();
     }
 
-    virtual ActivateSessionResponse ActivateSession()
+    virtual ActivateSessionResponse ActivateSession(const SessionData &session_data)
     {
+      (void)session_data;
       return ActivateSessionResponse();
     }
 

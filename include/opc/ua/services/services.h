@@ -44,7 +44,7 @@ namespace OpcUa
     virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) = 0;
     virtual void CloseSecureChannel(uint32_t channelId) = 0;
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
-    virtual ActivateSessionResponse ActivateSession() = 0;
+    virtual ActivateSessionResponse ActivateSession(const SessionData &session_data) = 0;
     virtual CloseSessionResponse CloseSession() = 0;
 
     virtual EndpointServices::SharedPtr Endpoints() = 0;
