@@ -684,6 +684,7 @@ private:
         return;
       }
       callbackIt->second(std::move(buffer));
+      Callbacks.erase(callbackIt);
     }
 
     Binary::Acknowledge HelloServer(const SecureConnectionParams& params)
