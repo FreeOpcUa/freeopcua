@@ -75,7 +75,7 @@ namespace OpcUa
 
     
 
-    //TODO: How to get Referencies?
+    //TODO: How to get References?
 
     //The Read and Write methods read or write attributes of the node
     //FIXME: add possibility to read and write several nodes at once
@@ -89,6 +89,9 @@ namespace OpcUa
     void SetValue(const DataValue& dval) const;
 
     Variant GetDataType() const;
+
+    // CallMethod
+    std::vector<Variant> CallMethod(NodeID methodId, std::vector<Variant> inputArguments) const;
 
     //OpcUa low level methods to to modify address space model
     std::vector<AddNodesResult> AddNodes(std::vector<AddNodesItem> items) const;

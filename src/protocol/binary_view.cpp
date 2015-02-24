@@ -1,6 +1,6 @@
-// @author Alexander Rykovanov 2012
+/// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Opc Ua binary session services.
+/// @brief Opc Ua binary view services.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License

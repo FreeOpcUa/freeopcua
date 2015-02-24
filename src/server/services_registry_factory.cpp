@@ -65,6 +65,16 @@ namespace
       Impl->UnregisterAttributeServices();
     }
 
+    virtual void RegisterMethodServices(std::shared_ptr<OpcUa::MethodServices> method)
+    {
+      Impl->RegisterMethodServices(method);
+    }
+
+    virtual void UnregisterMethodServices()
+    {
+      Impl->UnregisterMethodServices();
+    }
+
     virtual void RegisterNodeManagementServices(std::shared_ptr<OpcUa::NodeManagementServices> nodes)
     {
       Impl->RegisterNodeManagementServices(nodes);

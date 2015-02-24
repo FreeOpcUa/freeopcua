@@ -15,6 +15,7 @@
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/endpoints.h>
+#include <opc/ua/services/method.h>
 #include <opc/ua/services/node_management.h>
 #include <opc/ua/services/subscriptions.h>
 #include <opc/ua/services/view.h>
@@ -47,11 +48,12 @@ namespace OpcUa
     virtual ActivateSessionResponse ActivateSession() = 0;
     virtual CloseSessionResponse CloseSession() = 0;
 
-    virtual EndpointServices::SharedPtr Endpoints() = 0;
-    virtual ViewServices::SharedPtr Views() = 0;
-    virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
     virtual AttributeServices::SharedPtr Attributes() = 0;
+    virtual EndpointServices::SharedPtr Endpoints() = 0;
+    virtual MethodServices::SharedPtr Method() = 0;
+    virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
     virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
+    virtual ViewServices::SharedPtr Views() = 0;
   };
 
 }

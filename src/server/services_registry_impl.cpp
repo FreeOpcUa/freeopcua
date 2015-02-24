@@ -27,6 +27,8 @@ namespace
     virtual void UnregisterEndpointsServices()  override;
     virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
     virtual void UnregisterViewServices() override;
+    virtual void RegisterMethodServices(MethodServices::SharedPtr method) override;
+    virtual void UnregisterMethodServices() override;
     virtual void RegisterNodeManagementServices(NodeManagementServices::SharedPtr addr) override;
     virtual void UnregisterNodeManagementServices() override;
     virtual void RegisterAttributeServices(AttributeServices::SharedPtr attributes) override;
@@ -44,6 +46,7 @@ namespace
     : public EndpointServices
     , public ViewServices
     , public AttributeServices
+    , public MethodServices
     , public NodeManagementServices
     , public SubscriptionServices
   {
@@ -60,6 +63,11 @@ namespace
 
     virtual void RegisterServer(const ServerParameters& parameters)
     {
+    }
+
+    virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall)
+    {
+      return std::vector<CallMethodResult>();
     }
 
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
@@ -187,6 +195,11 @@ namespace
       return ViewsServices;
     }
 
+    virtual std::shared_ptr<MethodServices> Method() override
+    {
+      return MethodsServices;
+    }
+
     virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return NodeServices;
@@ -213,6 +226,11 @@ namespace
       ViewsServices = views ? views : Services;
     }
 
+    void SetMethod(std::shared_ptr<MethodServices> method)
+    {
+      MethodsServices = method ? method : Services;
+    }
+
     void SetAddressSpace(std::shared_ptr<NodeManagementServices> addrs)
     {
       NodeServices = addrs ? addrs : Services;
@@ -231,6 +249,7 @@ namespace
   public:
     OpcUa::AttributeServices::SharedPtr AttributesServices;
     OpcUa::ViewServices::SharedPtr ViewsServices;
+    OpcUa::MethodServices::SharedPtr MethodsServices;
     OpcUa::NodeManagementServices::SharedPtr NodeServices;
     OpcUa::EndpointServices::SharedPtr EndpointsServices;
     OpcUa::SubscriptionServices::SharedPtr SubscriptionsServices;
@@ -266,6 +285,16 @@ namespace
   void ServicesRegistry::UnregisterViewServices()
   {
     Comp->SetViews(ViewServices::SharedPtr());
+  }
+
+  void ServicesRegistry::RegisterMethodServices(MethodServices::SharedPtr method)
+  {
+    Comp->SetMethod(method);
+  }
+
+  void ServicesRegistry::UnregisterMethodServices()
+  {
+    Comp->SetMethod(MethodServices::SharedPtr());
   }
 
   void ServicesRegistry::RegisterNodeManagementServices(NodeManagementServices::SharedPtr addr)
