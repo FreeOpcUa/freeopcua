@@ -17,6 +17,7 @@ Currently supported:
 * Events
 * Subscriptions
 * complete opc-ua address space generated from xml specification
+* Method call from client
 
 Work in progress
 * StatusChange Events
@@ -26,7 +27,7 @@ Work in progress
 * Automatic generation of binary protocol from OPC schema files 
 
 Not implemented yet (patches are welcome)
-* Methods
+* Methods on server side
 * History
 * Security: Authentication, Certificates handling, ..
 
