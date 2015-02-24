@@ -639,7 +639,8 @@ namespace
     session.Timeout = 1200000;
 
     CreateSessionResponse resp = computer->CreateSession(session);
-    computer->ActivateSession(resp.Session);
+    UpdatedSessionParameters session_parameters;
+    computer->ActivateSession(session_parameters);
 
     if (cmd.IsBrowseOperation())
     {
