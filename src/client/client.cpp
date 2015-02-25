@@ -35,6 +35,7 @@ namespace OpcUa
     NodeToRead = node;
     Period = period;
     Running = true;
+    StopRequest = false;
     Thread = std::thread([this] { this->Run(); });
   }
 
@@ -44,8 +45,8 @@ namespace OpcUa
     if (Debug)  { std::cout << "KeepAliveThread | Starting." << std::endl; }
     while ( ! StopRequest )
     {
-      std::unique_lock<std::mutex> lock(Mutex);
       if (Debug)  { std::cout << "KeepAliveThread | Sleeping for: " << (int64_t) ( Period * 0.7 )<< std::endl; }
+      std::unique_lock<std::mutex> lock(Mutex);
       std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) )); 
       if (status == std::cv_status::no_timeout ) 
       {
