@@ -18,6 +18,7 @@ namespace OpcUa
   enum ExtensionObjectID : uint16_t
   {
     USER_IDENTIFY_TOKEN_ANONYMOUS = 0x141, // 321
+    USER_IDENTIFY_TOKEN_USERNAME = 0x144, // 324
   };
 }
 

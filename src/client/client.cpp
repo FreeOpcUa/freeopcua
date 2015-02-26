@@ -124,6 +124,8 @@ namespace OpcUa
   {
     std::vector<EndpointDescription> endpoints = GetServerEndpoints(endpoint);
     if (Debug)  { std::cout << "UaClient | Going through server endpoints and selected one we support" << std::endl; }
+    Common::Uri uri(endpoint);
+    bool has_login = !uri.User().empty();
     for ( EndpointDescription ed : endpoints)
     {
       if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
@@ -137,7 +139,15 @@ namespace OpcUa
         }
         for (  UserTokenPolicy token : ed.UserIdentifyTokens)
         {
-          if (token.TokenType == UserIdentifyTokenType::ANONYMOUS )
+          if (has_login)
+          {
+            if (token.TokenType == UserIdentifyTokenType::USERNAME)
+            {
+              if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
+              return ed;
+            }
+          }
+          else if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
           {
             if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
@@ -170,7 +180,7 @@ namespace OpcUa
     OpenSecureChannel();
 
 
-    if (Debug)  { std::cout << "UaClient | Creating session " <<  std::endl; }
+    if (Debug)  { std::cout << "UaClient | Creating session ..." <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
     session.ClientDescription.URI = ApplicationUri;
     session.ClientDescription.ProductURI = ProductUri;
@@ -183,8 +193,44 @@ namespace OpcUa
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);
-    ActivateSessionResponse aresponse = Server->ActivateSession();
+    if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
+
+    if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
+    UpdatedSessionParameters session_parameters;
+    {
+      //const SessionData &session_data = response.Session;
+      Common::Uri uri(session.EndpointURL);
+      std::string user = uri.User();
+      std::string password = uri.Password();
+      bool user_identify_token_found = false;
+      for(auto ep : response.Session.ServerEndpoints) {
+        if(ep.SecurityMode == MSM_NONE) {
+          for(auto token : ep.UserIdentifyTokens) {
+            if(user.empty()) {
+              if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
+                session_parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                user_identify_token_found = true;
+                break;
+              }
+            }
+            else {
+              if(token.TokenType == UserIdentifyTokenType::USERNAME) {
+                session_parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                session_parameters.IdentifyToken.setUser(user, password);
+                user_identify_token_found = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      if(!user_identify_token_found) {
+        throw std::runtime_error("Cannot find suitable user identify token for session");
+      }
+    }
+    ActivateSessionResponse aresponse = Server->ActivateSession(session_parameters);
     CheckStatusCode(aresponse.Header.ServiceResult);
+    if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 
     if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
     {

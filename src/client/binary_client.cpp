@@ -263,10 +263,11 @@ namespace
       return response;
     }
 
-    virtual ActivateSessionResponse ActivateSession()
+    ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) override
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
+      request.Parameters = session_parameters;
       request.Parameters.LocaleIDs.push_back("en");
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }

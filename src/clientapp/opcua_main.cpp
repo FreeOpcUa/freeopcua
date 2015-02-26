@@ -638,8 +638,9 @@ namespace
     session.EndpointURL = serverURI;
     session.Timeout = 1200000;
 
-    computer->CreateSession(session);
-    computer->ActivateSession();
+    CreateSessionResponse resp = computer->CreateSession(session);
+    UpdatedSessionParameters session_parameters;
+    computer->ActivateSession(session_parameters);
 
     if (cmd.IsBrowseOperation())
     {

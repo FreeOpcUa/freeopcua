@@ -33,6 +33,16 @@ namespace Common
       return SchemeStr;
     }
 
+    std::string User() const
+    {
+      return UserStr;
+    }
+
+    std::string Password() const
+    {
+      return PasswordStr;
+    }
+
     std::string Host() const
     {
       return HostStr;
@@ -48,6 +58,8 @@ namespace Common
 
   private:
     std::string SchemeStr;
+    std::string UserStr;
+    std::string PasswordStr;
     std::string HostStr;
     unsigned PortNum;
   };
