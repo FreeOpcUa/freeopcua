@@ -28,7 +28,7 @@ namespace
     {
       OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::Server::AddressSpaceRegistryAddonID);
       const bool debug = false;
-      OpcUa::Server::FillStandardNamespace(*registry, false);
+      OpcUa::Server::FillStandardNamespace(*registry, debug);
     }
 
     void Stop()
