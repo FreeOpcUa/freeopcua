@@ -201,7 +201,7 @@ namespace
       //Initialize the worker thread for subscriptions
       callback_thread = std::thread([&](){ CallbackService.Run(); });
 
-      const Acknowledge& ack = HelloServer(params);
+      HelloServer(params);
 
       ReceiveThread = std::move(std::thread([this](){
         try
