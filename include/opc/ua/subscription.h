@@ -47,6 +47,7 @@ namespace OpcUa
   class SubscriptionHandler
   {
     public:
+    virtual ~SubscriptionHandler() {}
     //Called for each datachange events
     virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const
     {
@@ -81,6 +82,7 @@ namespace OpcUa
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
       Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
+      virtual ~Subscription() {}
 
       //Delete the subscription from server
       void Delete();
