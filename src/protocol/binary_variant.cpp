@@ -667,7 +667,9 @@ namespace OpcUa
 
       const uint8_t encodingMask = encoding & (~HAS_DIMENSIONS_MASK);
       // TODO check validity of type value after decoding.
-      if(encodingMask == (uint8_t)VariantType::BOOLEAN)
+      if(encodingMask == (uint8_t)VariantType::NUL)
+         ;
+      else  if(encodingMask == (uint8_t)VariantType::BOOLEAN)
         var = deserializer.get<bool>();
       else if(encodingMask == ((uint8_t)VariantType::BOOLEAN | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<bool>>();
