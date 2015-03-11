@@ -667,83 +667,83 @@ namespace OpcUa
 
       const uint8_t encodingMask = encoding & (~HAS_DIMENSIONS_MASK);
       // TODO check validity of type value after decoding.
-      if(encodingMask == (uint8_t)VariantType::BOOLEAN)
+      if(encodingMask == (uint8_t)VariantType::NUL)
+         ;
+      else  if(encodingMask == (uint8_t)VariantType::BOOLEAN)
         var = deserializer.get<bool>();
-      if(encodingMask == ((uint8_t)VariantType::BOOLEAN | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::BOOLEAN | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<bool>>();
-      if(encodingMask == (uint8_t)VariantType::SBYTE)
+      else if(encodingMask == (uint8_t)VariantType::SBYTE)
         var = deserializer.get<int8_t>();
-      if(encodingMask == ((uint8_t)VariantType::SBYTE | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::SBYTE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<int8_t>>();
-      if(encodingMask == (uint8_t)VariantType::BYTE)
+      else if(encodingMask == (uint8_t)VariantType::BYTE)
         var = deserializer.get<uint8_t>();
-      if(encodingMask == ((uint8_t)VariantType::BYTE | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::BYTE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<uint8_t>>();
-      if(encodingMask == ((uint8_t)VariantType::INT16))
+      else if(encodingMask == ((uint8_t)VariantType::INT16))
         var = deserializer.get<int16_t>();
-      if(encodingMask == ((uint8_t)VariantType::INT16 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::INT16 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<int16_t>>();
-      if(encodingMask == ((uint8_t)VariantType::UINT16))
+      else if(encodingMask == ((uint8_t)VariantType::UINT16))
         var = deserializer.get<uint16_t>();
-      if(encodingMask == ((uint8_t)VariantType::UINT16 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::UINT16 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<uint16_t>>();
-      if(encodingMask == ((uint8_t)VariantType::INT32))
+      else if(encodingMask == ((uint8_t)VariantType::INT32))
         var = deserializer.get<int32_t>();
-      if(encodingMask == ((uint8_t)VariantType::INT32 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::INT32 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<int32_t>>();
-      if(encodingMask == ((uint8_t)VariantType::UINT32))
+      else if(encodingMask == ((uint8_t)VariantType::UINT32))
         var = deserializer.get<uint32_t>();
-      if(encodingMask == ((uint8_t)VariantType::UINT32 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::UINT32 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<uint32_t>>();
-      if(encodingMask == ((uint8_t)VariantType::INT64))
+      else if(encodingMask == ((uint8_t)VariantType::INT64))
         var = deserializer.get<int64_t>();
-      if(encodingMask == ((uint8_t)VariantType::INT64 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::INT64 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<int64_t>>();
-      if(encodingMask == ((uint8_t)VariantType::UINT64))
+      else if(encodingMask == ((uint8_t)VariantType::UINT64))
         var = deserializer.get<uint64_t>();
-      if(encodingMask == ((uint8_t)VariantType::UINT64 | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::UINT64 | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<uint64_t>>();
-      if(encodingMask == ((uint8_t)VariantType::FLOAT))
+      else if(encodingMask == ((uint8_t)VariantType::FLOAT))
         var = deserializer.get<float>();
-      if(encodingMask == ((uint8_t)VariantType::FLOAT | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::FLOAT | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<float>>();
-      if(encodingMask == ((uint8_t)VariantType::DOUBLE))
+      else if(encodingMask == ((uint8_t)VariantType::DOUBLE))
         var = deserializer.get<double>();
-      if(encodingMask == ((uint8_t)VariantType::DOUBLE | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::DOUBLE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<double>>();
-      if(encodingMask == ((uint8_t)VariantType::STRING))
+      else if(encodingMask == ((uint8_t)VariantType::STRING))
         var = deserializer.get<std::string>();
-      if(encodingMask == ((uint8_t)VariantType::STRING | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::STRING | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<std::string>>();
-      if(encodingMask == ((uint8_t)VariantType::DATE_TIME))
+      else if(encodingMask == ((uint8_t)VariantType::DATE_TIME))
         var = deserializer.get<DateTime>();
-      if(encodingMask == ((uint8_t)VariantType::DATE_TIME | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::DATE_TIME | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DateTime>>();
-      if(encodingMask == ((uint8_t)VariantType::GUID))
+      else if(encodingMask == ((uint8_t)VariantType::GUID))
         var = deserializer.get<Guid>();
-      if(encodingMask == ((uint8_t)VariantType::GUID | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::GUID | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<Guid>>();
-      if(encodingMask == ((uint8_t)VariantType::BYTE_STRING))
+      else if(encodingMask == ((uint8_t)VariantType::BYTE_STRING))
         var = deserializer.get<ByteString>();
-      if(encodingMask == ((uint8_t)VariantType::BYTE_STRING | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::BYTE_STRING | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<ByteString>>();
-      if(encodingMask == ((uint8_t)VariantType::NODE_ID))
+      else if(encodingMask == ((uint8_t)VariantType::NODE_ID))
         var = deserializer.get<NodeID>();
-      if(encodingMask == ((uint8_t)VariantType::NODE_ID | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::NODE_ID | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<NodeID>>();
-      if(encodingMask == ((uint8_t)VariantType::STATUS_CODE))
+      else if(encodingMask == ((uint8_t)VariantType::STATUS_CODE))
         var = deserializer.get<StatusCode>();
-      if(encodingMask == ((uint8_t)VariantType::STATUS_CODE | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::STATUS_CODE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<StatusCode>>();
-
-      if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT))
+      else if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT))
         var = deserializer.get<LocalizedText>();
-      if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::LOCALIZED_TEXT | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<LocalizedText>>();
-
-      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME))
+      else if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME))
         var = deserializer.get<QualifiedName>();
-      if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::QUALIFIED_NAME | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<QualifiedName>>();
 /*
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE))
@@ -751,14 +751,20 @@ namespace OpcUa
       if(encodingMask == ((uint8_t)VariantType::DATA_VALUE | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DataValue>>();
 */
-      if(encodingMask == ((uint8_t)VariantType::VARIANT))
+      else if(encodingMask == ((uint8_t)VariantType::VARIANT))
         var = deserializer.get<Variant>();
-      if(encodingMask == ((uint8_t)VariantType::VARIANT | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::VARIANT | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<Variant>>();
-      if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO))
+      else if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO))
         var = deserializer.get<DiagnosticInfo>();
-      if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DiagnosticInfo>>();
+      else if(encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT))
+        throw std::logic_error("Deserialization of VariantType::EXTENSION_OBJECT is not supported yet.");
+      else if(encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT | HAS_ARRAY_MASK))
+        throw std::logic_error("Deserialization of VariantType::EXTENSION_OBJECT[] array is not supported yet.");
+      else
+        throw std::logic_error("Deserialization of VariantType: " + std::to_string(encodingMask) + " is not supported yet.");
 
       if (encoding & HAS_DIMENSIONS_MASK)
       {
