@@ -254,14 +254,14 @@ namespace OpcUa
       istream >> requestHeader;
 
       sequence.SequenceNumber = ++SequenceNb;
-
+/*
       const std::size_t receivedSize =
         RawSize(channelID) +
         RawSize(algorithmHeader) +
         RawSize(sequence) +
         RawSize(typeID) +
         RawSize(requestHeader);
-
+*/
       const OpcUa::MessageID message = GetMessageID(typeID);
       switch (message)
       {

@@ -98,7 +98,7 @@ namespace OpcUa
         Node node = mapit->second.TargetNode;
         lock.unlock(); //unlock before calling client cades, you never know what they may do
         if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
-        Client.DataChange( item.ClientHandle, node, item.Value.Value, attr);
+        Client.DataChange(mapit->second.MonitoredItemID, node, item.Value.Value, attr);
       }
     }
   }
@@ -175,7 +175,7 @@ namespace OpcUa
         }
         lock.unlock(); 
         if (Debug) { std::cout << "Subscription | Debug: Calling client event callback\n"; }
-        Client.Event(ef.ClientHandle, ev);
+        Client.Event(mapit->second.MonitoredItemID, ev);
         if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
       }
     }

@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <opc/ua/global.h>
 #include <opc/ua/node.h>
 #include <opc/ua/event.h>
 #include <opc/ua/protocol/subscriptions.h>
@@ -46,12 +47,28 @@ namespace OpcUa
   class SubscriptionHandler
   {
     public:
-      //Called for each datachange events
-      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const {std::cout << "default dc" << std::endl;};
-      //Called for every events receive from server
-      virtual void Event(uint32_t handle, const Event& event) const {std::cout << "default c++ event callback has been called" << std::endl;}; 
-      //Called at server state changed
-      virtual void StatusChange(StatusCode status) const  {}; 
+    virtual ~SubscriptionHandler() {}
+    //Called for each datachange events
+    virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const
+    {
+      OPCUA_UNUSED(handle);
+      OPCUA_UNUSED(node);
+      OPCUA_UNUSED(val);
+      OPCUA_UNUSED(attribute);
+      std::cout << "default dc" << std::endl;
+    }
+    //Called for every events receive from server
+    virtual void Event(uint32_t handle, const Event& event) const
+    {
+      OPCUA_UNUSED(handle);
+      OPCUA_UNUSED(event);
+      std::cout << "default c++ event callback has been called" << std::endl;
+    }
+    //Called at server state changed
+    virtual void StatusChange(StatusCode status) const
+    {
+      OPCUA_UNUSED(status);
+    }
   };
 
 
@@ -65,6 +82,7 @@ namespace OpcUa
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
       Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
+      virtual ~Subscription() {}
 
       //Delete the subscription from server
       void Delete();
