@@ -708,6 +708,10 @@ private:
       in >> header;
       if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
 
+      if (header.ServiceResult != StatusCode::Good) {
+        std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
+      }
+
       if (id == SERVICE_FAULT) 
       {
         std::cerr << std::endl;
