@@ -11,6 +11,7 @@
 #ifndef __OPC_UA_BINARY_SERIALIZATION_TOOLS_H__
 #define __OPC_UA_BINARY_SERIALIZATION_TOOLS_H__
 
+#include <algorithm>
 #include <stdint.h>
 
 
@@ -19,15 +20,11 @@ namespace OpcUa
   template<class Stream, class Container>
   inline void SerializeContainer(Stream& out, const Container& c, uint32_t emptySizeValue = ~uint32_t())
   {
-    if (c.size() == 0)
-    {
+    if (c.empty()) {
       out.Serialize(emptySizeValue);
-      return;
-    }
-    out.Serialize((uint32_t)c.size());
-    for (auto it = c.begin(); it != c.end(); ++ it)
-    {
-      out.Serialize(*it);
+    } else {
+      out.Serialize(static_cast<uint32_t>(c.size()));
+      std::for_each(c.begin(), c.end(), [&](typename Container::value_type const& v) { out.Serialize(v); });
     }
   }
 
