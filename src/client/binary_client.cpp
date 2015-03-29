@@ -828,7 +828,7 @@ private:
 
 OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(OpcUa::IOChannel::SharedPtr channel, const OpcUa::SecureConnectionParams& params, bool debug)
 {
-  return OpcUa::Services::SharedPtr(new BinaryClient(channel, params, debug));
+  return std::make_shared<BinaryClient>(channel, params, debug);
 }
 
 OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(const std::string& endpointUrl, bool debug)
