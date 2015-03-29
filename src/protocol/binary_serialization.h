@@ -20,9 +20,12 @@ namespace OpcUa
   template<class Stream, class Container>
   inline void SerializeContainer(Stream& out, const Container& c, uint32_t emptySizeValue = ~uint32_t())
   {
-    if (c.empty()) {
+    if (c.empty())
+    {
       out.Serialize(emptySizeValue);
-    } else {
+    }
+    else
+    {
       out.Serialize(static_cast<uint32_t>(c.size()));
       std::for_each(c.begin(), c.end(), [&](typename Container::value_type const& v) { out.Serialize(v); });
     }
