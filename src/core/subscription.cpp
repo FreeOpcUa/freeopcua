@@ -291,11 +291,11 @@ namespace OpcUa
     if (Debug) std::cout << "Subscription | Subscribing events with filter for properties:" << std::endl;
     for ( Node& child: eventtype.GetProperties() )
     {
-      if (Debug) std::cout << "      property: "<< child.GetName() << std::endl;
+      if (Debug) std::cout << "      property: "<< child.GetBrowseName() << std::endl;
       SimpleAttributeOperand op;
       op.TypeID = eventtype.GetId();
       op.Attribute = AttributeID::Value;
-      op.BrowsePath = std::vector<QualifiedName>({child.GetName()});
+      op.BrowsePath = std::vector<QualifiedName>({child.GetBrowseName()});
       filter.SelectClauses.push_back(op);
     }
     return SubscribeEvents(node, filter);

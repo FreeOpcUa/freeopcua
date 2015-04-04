@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+sys.path.insert(0, "../../build/bin/")
 import datetime
 import unittest
 from threading import Thread, Event
@@ -185,13 +186,13 @@ class CommonTests(object):
 
     def test_root(self):
         root = self.opc.get_root_node()
-        self.assertEqual(opcua.QualifiedName('Root', 0), root.get_name())
+        self.assertEqual(opcua.QualifiedName('Root', 0), root.get_browse_name())
         nid = opcua.NodeID(84, 0) 
         self.assertEqual(nid, root.get_id())
 
     def test_objects(self):
         objects = self.opc.get_objects_node()
-        self.assertEqual(opcua.QualifiedName('Objects', 0), objects.get_name())
+        self.assertEqual(opcua.QualifiedName('Objects', 0), objects.get_browse_name())
         nid = opcua.NodeID(85, 0) 
         self.assertEqual(nid, objects.get_id())
 
@@ -210,7 +211,7 @@ class CommonTests(object):
         nid = opcua.NodeID(888, 3)
         qn = opcua.QualifiedName('numericnodefromstring', 3) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
 
     def test_add_string_variable(self):
         objects = self.opc.get_objects_node()
@@ -218,7 +219,7 @@ class CommonTests(object):
         nid = opcua.NodeID('stringid', 3) 
         qn = opcua.QualifiedName('stringnodefromstring', 3) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
 
     def test_add_string_array_variable(self):
         objects = self.opc.get_objects_node()
@@ -226,7 +227,7 @@ class CommonTests(object):
         nid = opcua.NodeID('stringarrayid', 3) 
         qn = opcua.QualifiedName('stringarray', 9) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
         val = v.get_value()
         self.assertEqual(['l', 'b'], val)
 
@@ -236,7 +237,7 @@ class CommonTests(object):
         qn = opcua.QualifiedName('AddNodeVar1', 3)
         v1 = objects.add_variable(nid, qn, 0)
         self.assertEqual(nid, v1.get_id())
-        self.assertEqual(qn, v1.get_name())
+        self.assertEqual(qn, v1.get_browse_name())
 
     def test_add_string_node(self):
         objects = self.opc.get_objects_node()
@@ -244,7 +245,7 @@ class CommonTests(object):
         nid = opcua.NodeID('AddNodeVar2Id', 3)
         v2 = objects.add_variable(nid, qn, 0)
         self.assertEqual(nid, v2.get_id())
-        self.assertEqual(qn, v2.get_name())
+        self.assertEqual(qn, v2.get_browse_name())
 
     def test_add_find_node_(self):
         objects = self.opc.get_objects_node()
@@ -265,7 +266,7 @@ class CommonTests(object):
         nid = opcua.NodeID(102, 2)
         self.assertEqual(o.get_id(), nid)
         qn = opcua.QualifiedName('AddReadObject', 2)
-        self.assertEqual(o.get_name(), qn)
+        self.assertEqual(o.get_browse_name(), qn)
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()

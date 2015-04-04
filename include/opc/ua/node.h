@@ -45,14 +45,13 @@ namespace OpcUa
     // Creating Root Node.
     explicit Node(Services::SharedPtr srv);
     Node(Services::SharedPtr srv, const NodeID& id);
-    Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name);
     Node(const Node& other); 
     Node(){}
 
     NodeID GetId() const;
 
-    QualifiedName GetName(bool force=false) const;
-    void SetName(const QualifiedName& name) const;
+    QualifiedName GetBrowseName() const;
+    //void SetBrowseName(const QualifiedName& name) const;
 
     /// @brief List childrenn nodes by specified reference
     /// @return One or zero chilren nodes.
@@ -126,7 +125,6 @@ namespace OpcUa
   protected:
     OpcUa::Services::SharedPtr Server;
     NodeID Id;
-    mutable QualifiedName BrowseName;
   };
 
 

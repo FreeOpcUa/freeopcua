@@ -44,7 +44,7 @@ using namespace OpcUa;
 
 BOOST_PYTHON_FUNCTION_OVERLOADS(DateTimeFromTimeT_stub, DateTime::FromTimeT, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Subscription::SubscribeDataChange, 1, 2);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetName_stubs, Node::GetName, 0, 1);
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(NodeGetBrowseName_stubs, Node::GetBrowseName, 0, 1);
 
 
 //--------------------------------------------------------------------------
@@ -445,7 +445,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("set_value", &Node_SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
-  .def("get_name", &Node::GetName, NodeGetName_stubs((arg("force") = false)))
+  .def("get_browse_name", &Node::GetBrowseName)
   .def("get_children", (std::vector<Node> (Node::*)() const) &Node::GetChildren)
   .def("get_child", (Node(Node::*)(const std::vector<std::string> &) const) &Node::GetChild)
   .def("get_child", (Node(Node::*)(const std::string &) const) &Node::GetChild)

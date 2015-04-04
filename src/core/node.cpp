@@ -33,7 +33,7 @@ namespace OpcUa
 {
 
   Node::Node(Services::SharedPtr srv)
-    : Node(srv, NumericNodeID(0, 0), QualifiedName("Null", 0))
+    : Node(srv, NumericNodeID(0, 0))
   {
   }
 
@@ -41,20 +41,11 @@ namespace OpcUa
     : Server(srv)
     , Id(id)
   {
-    GetName();
-  }
-
-  Node::Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name)
-    : Server(srv)
-    , Id(id)
-    , BrowseName(name)
-  {
   }
 
   Node::Node(const Node& other)
     : Server(other.Server)
     , Id(other.Id)
-    , BrowseName(other.BrowseName)
   {
   }
 
@@ -161,26 +152,15 @@ namespace OpcUa
     return GetChildren(ReferenceID::HierarchicalReferences);
   }
 
-  QualifiedName Node::GetName(bool force) const
+  QualifiedName Node::GetBrowseName() const
   {
-    if ( force || BrowseName == QualifiedName() ){
-      Variant var = GetAttribute(AttributeID::BrowseName);
-      if (var.Type() != VariantType::QUALIFIED_NAME)
-      {
-        throw std::runtime_error("Could not retrieve browse name.");
-      }
-      BrowseName = var.As<QualifiedName>();
+    Variant var = GetAttribute(AttributeID::BrowseName);
+    if (var.Type() != VariantType::QUALIFIED_NAME)
+    {
+      throw std::runtime_error("Could not retrieve browse name.");
     }
-    return BrowseName;
+    return var.As<QualifiedName>();
   }
-
-  //QualifiedName Node::GetName() const
-  //{
-    //if (BrowseName == QualifiedName()){
-      //GetName();
-    //}
-    //return BrowseName;
-  //} 
 
   std::vector<AddNodesResult> Node::AddNodes(std::vector<AddNodesItem> items) const
   {
@@ -200,7 +180,7 @@ namespace OpcUa
   Node Node::GetChild(const std::vector<std::string>& path) const
   {
     std::vector<QualifiedName> vec;
-    uint16_t ns = GetName().NamespaceIndex;
+    uint16_t ns = Id.GetNamespaceIndex();
     for (std::string str: path)
     {
       QualifiedName qname = ToQualifiedName(str, ns);
@@ -238,14 +218,14 @@ namespace OpcUa
   std::string Node::ToString() const
   {
     std::ostringstream os;
-    os << "Node(" << GetName() << ", " << Id << ")";
+    os << "Node(" << Id << ")";
     return os.str();
   }
 
   Node Node::AddFolder(const std::string& nodeid, const std::string& browsename) const
    {
      NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
      return AddFolder(node, qn);
    }
 
@@ -278,13 +258,13 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeID);
   }
 
   Node Node::AddObject(const std::string& nodeid, const std::string& browsename) const
    {
      NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
      return AddObject(node, qn);
    }
 
@@ -318,7 +298,7 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeID);
   }
 
   Node Node::AddVariable(uint32_t ns, const std::string& name, const Variant& val) const
@@ -331,7 +311,7 @@ namespace OpcUa
   Node Node::AddVariable(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
     return AddVariable(node, qn, val);
   }
 
@@ -366,7 +346,7 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeID);
   }
 
 
@@ -380,7 +360,7 @@ namespace OpcUa
   Node Node::AddProperty(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+    QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
     return AddProperty(node, qn, val);
   }
 
@@ -416,7 +396,7 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeID);
 
   }
 

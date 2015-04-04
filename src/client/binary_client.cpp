@@ -667,8 +667,13 @@ private:
       }
       else if (responseHeader.Type == MessageType::MT_ERROR )
       {
-        //FIXME: read error message!!
-        throw std::runtime_error("Got error message from server");
+        StatusCode error;
+        std::string msg;
+        Stream >> error;
+        Stream >> msg;
+        std::stringstream stream;
+        stream << "Received error messge from server: " << ToString(error) << ", " << msg ;
+        throw std::runtime_error(stream.str());
       }
       else //(responseHeader.Type == MessageType::MT_SECURE_MESSAGE )
       {
@@ -676,13 +681,6 @@ private:
         Stream >> responseAlgo;
         algo_size = RawSize(responseAlgo);
       }
-      /*
-      else
-      {
-        std::cout << "Error unsupported message type: " << (uint32_t ) responseHeader.Type << std::endl;
-        throw std::runtime_error("Not implemented");
-      }
-      */
 
       Binary::SequenceHeader responseSequence;
       Stream >> responseSequence; // TODO Check for request Number
