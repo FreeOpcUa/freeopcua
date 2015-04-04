@@ -112,35 +112,35 @@ TEST(Guid, InvalidString)
   EXPECT_EQ(OpcUa::ToGuid("0102030400506007080090A0B0C0D0E0F10"), OpcUa::Guid());
 }
 
-TEST(NodeID, NumericToString)
+TEST(NodeId, NumericToString)
 {
-  OpcUa::NodeID id = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "ns=2;i=1;");
 }
 
-TEST(NodeID, NumericFromString)
+TEST(NodeId, NumericFromString)
 {
-  OpcUa::NodeID expected = OpcUa::NumericNodeID(1,2);
-  OpcUa::NodeID converted = OpcUa::ToNodeID("ns=2;i=1;");
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId converted = OpcUa::ToNodeId("ns=2;i=1;");
   ASSERT_EQ(expected, converted);
 }
 
-TEST(NodeID, StringToString)
+TEST(NodeId, StringToString)
 {
-  OpcUa::NodeID id = OpcUa::StringNodeID("string", 1);
+  OpcUa::NodeId id = OpcUa::StringNodeId("string", 1);
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "ns=1;s=string;");
 }
 
-TEST(NodeID, StringFromString)
+TEST(NodeId, StringFromString)
 {
-  OpcUa::NodeID expected = OpcUa::StringNodeID("str",2);
-  OpcUa::NodeID converted = OpcUa::ToNodeID("ns=2;s=str;");
+  OpcUa::NodeId expected = OpcUa::StringNodeId("str",2);
+  OpcUa::NodeId converted = OpcUa::ToNodeId("ns=2;s=str;");
   ASSERT_EQ(expected, converted);
 }
 
-TEST(NodeID, GuidToString)
+TEST(NodeId, GuidToString)
 {
   OpcUa::Guid guid;
   guid.Data1 = 0x01020304;
@@ -155,12 +155,12 @@ TEST(NodeID, GuidToString)
   guid.Data4[6] = 0x0F;
   guid.Data4[7] = 0x10;
 
-  OpcUa::NodeID id = OpcUa::GuidNodeID(guid, 1);
+  OpcUa::NodeId id = OpcUa::GuidNodeId(guid, 1);
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
 }
 
-TEST(NodeID, GuidFromString)
+TEST(NodeId, GuidFromString)
 {
   OpcUa::Guid guid;
   guid.Data1 = 0x01020304;
@@ -175,53 +175,53 @@ TEST(NodeID, GuidFromString)
   guid.Data4[6] = 0x0F;
   guid.Data4[7] = 0x10;
 
-  OpcUa::NodeID expected = OpcUa::GuidNodeID(guid,2);
-  OpcUa::NodeID converted = OpcUa::ToNodeID("ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
+  OpcUa::NodeId expected = OpcUa::GuidNodeId(guid,2);
+  OpcUa::NodeId converted = OpcUa::ToNodeId("ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
   ASSERT_EQ(expected.Encoding, converted.Encoding);
 
   OpcUa::Guid expectedGuid = converted.GetGuidIdentifier();
   ASSERT_EQ(guid.Data1, expectedGuid.Data1);
 }
 
-TEST(NodeID, NamespaceUriToString)
+TEST(NodeId, NamespaceUriToString)
 {
-  OpcUa::NodeID id = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
   id.SetNamespaceURI("uri");
 
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "nsu=uri;ns=2;i=1;");
 }
 
-TEST(NodeID, NamespaceUriFromString)
+TEST(NodeId, NamespaceUriFromString)
 {
-  OpcUa::NodeID expected = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
   expected.SetNamespaceURI("uri");
 
-  OpcUa::NodeID converted = OpcUa::ToNodeID("nsu=uri;ns=2;i=1;");
+  OpcUa::NodeId converted = OpcUa::ToNodeId("nsu=uri;ns=2;i=1;");
   ASSERT_EQ(converted, expected);
 }
 
-TEST(NodeID, ServerIndexToString)
+TEST(NodeId, ServerIndexToString)
 {
-  OpcUa::NodeID id = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
   id.SetServerIndex(3);
 
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "srv=3;ns=2;i=1;");
 }
 
-TEST(NodeID, ServerIndexFromString)
+TEST(NodeId, ServerIndexFromString)
 {
-  OpcUa::NodeID expected = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
   expected.SetServerIndex(3);
 
-  OpcUa::NodeID converted = OpcUa::ToNodeID("srv=3;ns=2;i=1;");
+  OpcUa::NodeId converted = OpcUa::ToNodeId("srv=3;ns=2;i=1;");
   ASSERT_EQ(converted, expected);
 }
 
-TEST(NodeID, ServerIndexAndNamespaceUriToString)
+TEST(NodeId, ServerIndexAndNamespaceUriToString)
 {
-  OpcUa::NodeID id = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
   id.SetServerIndex(3);
   id.SetNamespaceURI("uri");
 
@@ -229,19 +229,19 @@ TEST(NodeID, ServerIndexAndNamespaceUriToString)
   ASSERT_EQ(strId, "srv=3;nsu=uri;ns=2;i=1;");
 }
 
-TEST(NodeID, ServerIndexAndNamespaceUriString)
+TEST(NodeId, ServerIndexAndNamespaceUriString)
 {
-  OpcUa::NodeID expected = OpcUa::NumericNodeID(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
   expected.SetServerIndex(3);
   expected.SetNamespaceURI("uri");
 
-  OpcUa::NodeID converted = OpcUa::ToNodeID("srv=3;nsu=uri;ns=2;i=1;");
+  OpcUa::NodeId converted = OpcUa::ToNodeId("srv=3;nsu=uri;ns=2;i=1;");
   ASSERT_EQ(converted, expected);
 }
 
-TEST(NodeID, WithDefaultNamespace)
+TEST(NodeId, WithDefaultNamespace)
 {
-  OpcUa::NodeID expected = OpcUa::NumericNodeID(1, 2);
-  OpcUa::NodeID converted = OpcUa::ToNodeID("i=1;", 2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1, 2);
+  OpcUa::NodeId converted = OpcUa::ToNodeId("i=1;", 2);
   ASSERT_EQ(expected, converted);
 }

@@ -28,7 +28,7 @@ namespace OpcUa
 
   NodeAttributes::NodeAttributes(const ObjectAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::ObjectAttribute;
+    Header.TypeId = ExpandedObjectId::ObjectAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -39,16 +39,16 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::EventNotifier] = attr.EventNotifier;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::EventNotifier] = attr.EventNotifier;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const VariableAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::VariableAttribute;
+    Header.TypeId = ExpandedObjectId::VariableAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -66,23 +66,23 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::Value] = attr.Value;
-    Attributes[AttributeID::DataType] = attr.Type;
-    Attributes[AttributeID::ValueRank] = attr.Rank;
-    Attributes[AttributeID::ArrayDimensions] = attr.Dimensions;
-    Attributes[AttributeID::AccessLevel] = static_cast<uint8_t>(attr.AccessLevel);
-    Attributes[AttributeID::UserAccessLevel] = static_cast<uint8_t>(attr.UserAccessLevel);
-    Attributes[AttributeID::MinimumSamplingInterval] = attr.MinimumSamplingInterval;
-    Attributes[AttributeID::Historizing] = attr.Historizing;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::Value] = attr.Value;
+    Attributes[AttributeId::DataType] = attr.Type;
+    Attributes[AttributeId::ValueRank] = attr.Rank;
+    Attributes[AttributeId::ArrayDimensions] = attr.Dimensions;
+    Attributes[AttributeId::AccessLevel] = static_cast<uint8_t>(attr.AccessLevel);
+    Attributes[AttributeId::UserAccessLevel] = static_cast<uint8_t>(attr.UserAccessLevel);
+    Attributes[AttributeId::MinimumSamplingInterval] = attr.MinimumSamplingInterval;
+    Attributes[AttributeId::Historizing] = attr.Historizing;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const MethodAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::MethodAttribute;
+    Header.TypeId = ExpandedObjectId::MethodAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -94,16 +94,16 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::Executable] = attr.Executable;
-    Attributes[AttributeID::UserExecutable] = attr.UserExecutable;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::Executable] = attr.Executable;
+    Attributes[AttributeId::UserExecutable] = attr.UserExecutable;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
   NodeAttributes::NodeAttributes(const ObjectTypeAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::ObjectTypeAttribute;
+    Header.TypeId = ExpandedObjectId::ObjectTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -114,16 +114,16 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const VariableTypeAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::VariableTypeAttribute;
+    Header.TypeId = ExpandedObjectId::VariableTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -138,20 +138,20 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::Value] = attr.Value;
-    Attributes[AttributeID::DataType] = attr.Type;
-    Attributes[AttributeID::ValueRank] = attr.Rank;
-    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
-    Attributes[AttributeID::ArrayDimensions] = attr.Dimensions;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::Value] = attr.Value;
+    Attributes[AttributeId::DataType] = attr.Type;
+    Attributes[AttributeId::ValueRank] = attr.Rank;
+    Attributes[AttributeId::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeId::ArrayDimensions] = attr.Dimensions;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const ReferenceTypeAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::ReferenceTypeAttribute;
+    Header.TypeId = ExpandedObjectId::ReferenceTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -165,19 +165,19 @@ namespace OpcUa
       specattr.set(SpecifiedAttributesEncoding::InverseName);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
-    Attributes[AttributeID::Symmetric] = attr.Symmetric;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeId::Symmetric] = attr.Symmetric;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
     if (!attr.IsAbstract)
-      Attributes[AttributeID::InverseName] = attr.InverseName;
+      Attributes[AttributeId::InverseName] = attr.InverseName;
   }
 
   NodeAttributes::NodeAttributes(const DataTypeAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::DataTypeAttribute;
+    Header.TypeId = ExpandedObjectId::DataTypeAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -188,16 +188,16 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::IsAbstract] = attr.IsAbstract;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::IsAbstract] = attr.IsAbstract;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
   NodeAttributes::NodeAttributes(const ViewAttributes& attr)
   {
-    Header.TypeID = ExpandedObjectID::ViewAttribute;
+    Header.TypeId = ExpandedObjectId::ViewAttribute;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
 
     std::bitset<32> specattr;
@@ -208,32 +208,32 @@ namespace OpcUa
     specattr.set(SpecifiedAttributesEncoding::UserWriteMask);
     SpecifiedAttributes = (uint32_t) specattr.to_ulong();
 
-    Attributes[AttributeID::DisplayName] = attr.DisplayName;
-    Attributes[AttributeID::Description] = attr.Description;
-    Attributes[AttributeID::ContainsNoLoops] = attr.ContainsNoLoops;
-    Attributes[AttributeID::WriteMask] = attr.WriteMask;
-    Attributes[AttributeID::UserWriteMask] = attr.UserWriteMask;
+    Attributes[AttributeId::DisplayName] = attr.DisplayName;
+    Attributes[AttributeId::Description] = attr.Description;
+    Attributes[AttributeId::ContainsNoLoops] = attr.ContainsNoLoops;
+    Attributes[AttributeId::WriteMask] = attr.WriteMask;
+    Attributes[AttributeId::UserWriteMask] = attr.UserWriteMask;
   }
 
 
 
   AddNodesRequest::AddNodesRequest()
-    : TypeID(ADD_NODES_REQUEST)
+    : TypeId(ADD_NODES_REQUEST)
   {
   }
 
   AddNodesResponse::AddNodesResponse()
-    : TypeID(ADD_NODES_RESPONSE)
+    : TypeId(ADD_NODES_RESPONSE)
   {
   }
 
  AddReferencesRequest::AddReferencesRequest()
-    : TypeID(ADD_REFERENCES_REQUEST)
+    : TypeId(ADD_REFERENCES_REQUEST)
   {
   }
 
   AddReferencesResponse::AddReferencesResponse()
-    : TypeID(ADD_REFERENCES_RESPONSE)
+    : TypeId(ADD_REFERENCES_RESPONSE)
   {
   }
 
@@ -573,23 +573,23 @@ namespace OpcUa
       total += RawSize(val.SpecifiedAttributes);
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DisplayName)->second.As<LocalizedText>()); //We assume the attr exists!!!
+        total += RawSize(val.Attributes.find(AttributeId::DisplayName)->second.As<LocalizedText>()); //We assume the attr exists!!!
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        total += RawSize(val.Attributes.find(AttributeID::Description)->second.As<LocalizedText>());
+        total += RawSize(val.Attributes.find(AttributeId::Description)->second.As<LocalizedText>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
-        total += 1;//RawSize(val.Attributes.find(AttributeID::EventNotifier)->second.Value.U);
+        total += 1;//RawSize(val.Attributes.find(AttributeId::EventNotifier)->second.Value.U);
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
-        total += RawSize(val.Attributes.find(AttributeID::Value)->second);
+        total += RawSize(val.Attributes.find(AttributeId::Value)->second);
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        total += RawSize(val.Attributes.find(AttributeID::DataType)->second.As<NodeID>());
+        total += RawSize(val.Attributes.find(AttributeId::DataType)->second.As<NodeId>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
@@ -597,7 +597,7 @@ namespace OpcUa
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        total += RawSizeContainer(val.Attributes.find(AttributeID::ArrayDimensions)->second.As<std::vector<uint32_t>>());
+        total += RawSizeContainer(val.Attributes.find(AttributeId::ArrayDimensions)->second.As<std::vector<uint32_t>>());
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
@@ -667,79 +667,79 @@ namespace OpcUa
       *this << val.SpecifiedAttributes;
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DisplayName))
       {
-        *this << val.Attributes.find(AttributeID::DisplayName)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeId::DisplayName)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
-        *this << val.Attributes.find(AttributeID::Description)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeId::Description)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::WriteMask))
       {
-        *this << val.Attributes.find(AttributeID::WriteMask)->second.As<uint32_t>();
+        *this << val.Attributes.find(AttributeId::WriteMask)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserWriteMask))
       {
-        *this << val.Attributes.find(AttributeID::UserWriteMask)->second.As<uint32_t>();
+        *this << val.Attributes.find(AttributeId::UserWriteMask)->second.As<uint32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
-        *this << (uint8_t) val.Attributes.find(AttributeID::EventNotifier)->second.As<uint8_t>();
+        *this << (uint8_t) val.Attributes.find(AttributeId::EventNotifier)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
-        *this << val.Attributes.find(AttributeID::Value)->second;
+        *this << val.Attributes.find(AttributeId::Value)->second;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        *this << val.Attributes.find(AttributeID::DataType)->second.As<NodeID>();
+        *this << val.Attributes.find(AttributeId::DataType)->second.As<NodeId>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
-        *this << val.Attributes.find(AttributeID::ValueRank)->second.As<int32_t>();
+        *this << val.Attributes.find(AttributeId::ValueRank)->second.As<int32_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
-        *this << val.Attributes.find(AttributeID::ArrayDimensions)->second.As<std::vector<uint32_t>>();
+        *this << val.Attributes.find(AttributeId::ArrayDimensions)->second.As<std::vector<uint32_t>>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::AccessLevel)->second.As<uint8_t>();
+        *this << val.Attributes.find(AttributeId::AccessLevel)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserAccessLevel))
       {
-        *this << val.Attributes.find(AttributeID::UserAccessLevel)->second.As<uint8_t>();
+        *this << val.Attributes.find(AttributeId::UserAccessLevel)->second.As<uint8_t>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::MinimumSamplingInterval))
       {
-        *this << val.Attributes.find(AttributeID::MinimumSamplingInterval)->second.As<double>();
+        *this << val.Attributes.find(AttributeId::MinimumSamplingInterval)->second.As<double>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Historizing))
       {
-        *this << val.Attributes.find(AttributeID::Historizing)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::Historizing)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Executable))
       {
-        *this << val.Attributes.find(AttributeID::Executable)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::Executable)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserExecutable))
       {
-        *this << val.Attributes.find(AttributeID::UserExecutable)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::UserExecutable)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::IsAbstract))
       {
-        *this << val.Attributes.find(AttributeID::IsAbstract)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::IsAbstract)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Symmetric))
       {
-        *this << val.Attributes.find(AttributeID::Symmetric)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::Symmetric)->second.As<bool>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::InverseName))
       {
-        *this << val.Attributes.find(AttributeID::InverseName)->second.As<LocalizedText>();
+        *this << val.Attributes.find(AttributeId::InverseName)->second.As<LocalizedText>();
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ContainsNoLoops))
       {
-        *this << val.Attributes.find(AttributeID::ContainsNoLoops)->second.As<bool>();
+        *this << val.Attributes.find(AttributeId::ContainsNoLoops)->second.As<bool>();
       }
 
     }
@@ -756,79 +756,79 @@ namespace OpcUa
       {
         LocalizedText tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::DisplayName] = tmp;
+        val.Attributes[AttributeId::DisplayName] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Description))
       {
         LocalizedText tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::Description] = tmp;
+        val.Attributes[AttributeId::Description] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::WriteMask))
       {
         uint32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::WriteMask] = tmp;
+        val.Attributes[AttributeId::WriteMask] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserWriteMask))
       {
         uint32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::UserWriteMask] = tmp;
+        val.Attributes[AttributeId::UserWriteMask] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::EventNotifier))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::EventNotifier] = tmp;
+        val.Attributes[AttributeId::EventNotifier] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Value))
       {
         Variant tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::Value] = tmp;
+        val.Attributes[AttributeId::Value] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::DataType))
       {
-        NodeID tmp;
+        NodeId tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::DataType] = tmp;
+        val.Attributes[AttributeId::DataType] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ValueRank))
       {
         int32_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::ValueRank] = tmp;
+        val.Attributes[AttributeId::ValueRank] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::ArrayDimensions))
       {
         std::vector<uint32_t> tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::ArrayDimensions] = tmp;
+        val.Attributes[AttributeId::ArrayDimensions] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::AccessLevel))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::AccessLevel] = tmp;
+        val.Attributes[AttributeId::AccessLevel] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::UserAccessLevel))
       {
         uint8_t tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::UserAccessLevel] = tmp;
+        val.Attributes[AttributeId::UserAccessLevel] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::MinimumSamplingInterval))
       {
         Duration tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::MinimumSamplingInterval] = tmp;
+        val.Attributes[AttributeId::MinimumSamplingInterval] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Historizing))
       {
         bool tmp;
         *this >> tmp;
-        val.Attributes[AttributeID::Historizing] = tmp;
+        val.Attributes[AttributeId::Historizing] = tmp;
       }
       if (std::bitset<32>(val.SpecifiedAttributes).test(SpecifiedAttributesEncoding::Executable))
       {
@@ -856,7 +856,7 @@ namespace OpcUa
     {
       return RawSize(resp.ParentNodeId) + 
         RawSize(resp.ReferenceTypeId) +
-        RawSize(resp.RequestedNewNodeID) +
+        RawSize(resp.RequestedNewNodeId) +
         RawSize(resp.BrowseName) +
         RawSize(resp.Class) +
         RawSize(resp.Attributes) +
@@ -868,7 +868,7 @@ namespace OpcUa
     {
       *this << resp.ParentNodeId;
       *this << resp.ReferenceTypeId;
-      *this << resp.RequestedNewNodeID;
+      *this << resp.RequestedNewNodeId;
       *this << resp.BrowseName;
       *this << resp.Class;
       *this << resp.Attributes;
@@ -880,7 +880,7 @@ namespace OpcUa
     {
       *this >> resp.ParentNodeId;
       *this >> resp.ReferenceTypeId;
-      *this >> resp.RequestedNewNodeID;
+      *this >> resp.RequestedNewNodeId;
       *this >> resp.BrowseName;
       *this >> resp.Class;
       *this >> resp.Attributes;
@@ -929,13 +929,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<AddNodesRequest>(const AddNodesRequest& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Parameters);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<AddNodesRequest>(const AddNodesRequest& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Parameters;
     }
@@ -943,7 +943,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AddNodesRequest>(AddNodesRequest& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Parameters;
     }
@@ -951,21 +951,21 @@ namespace OpcUa
     template<>
     std::size_t RawSize<AddNodesResult>(const AddNodesResult& resp)
     {
-      return RawSize(resp.Status) + RawSize(resp.AddedNodeID);
+      return RawSize(resp.Status) + RawSize(resp.AddedNodeId);
     }
 
     template<>
     void DataSerializer::Serialize<AddNodesResult>(const AddNodesResult& resp)
     {
       *this << resp.Status;
-      *this << resp.AddedNodeID;
+      *this << resp.AddedNodeId;
     }
 
     template<>
     void DataDeserializer::Deserialize<AddNodesResult>(AddNodesResult& resp)
     {
       *this >> resp.Status;
-      *this >> resp.AddedNodeID;
+      *this >> resp.AddedNodeId;
     }
 
 
@@ -989,13 +989,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<AddNodesResponse>(const AddNodesResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSizeContainer(resp.results) + RawSize(resp.Diagnostics);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSizeContainer(resp.results) + RawSize(resp.Diagnostics);
     }
 
     template<>
     void DataSerializer::Serialize<AddNodesResponse>(const AddNodesResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.results;
       *this << resp.Diagnostics;
@@ -1004,7 +1004,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AddNodesResponse>(AddNodesResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.results;
       *this >> resp.Diagnostics;
@@ -1021,13 +1021,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<AddReferencesResponse>(const AddReferencesResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSizeContainer(resp.Results) + RawSize(resp.Diagnostics);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSizeContainer(resp.Results) + RawSize(resp.Diagnostics);
     }
 
     template<>
     void DataSerializer::Serialize<AddReferencesResponse>(const AddReferencesResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Results;
       *this << resp.Diagnostics;
@@ -1036,7 +1036,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AddReferencesResponse>(AddReferencesResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Results;
       *this >> resp.Diagnostics;
@@ -1045,11 +1045,11 @@ namespace OpcUa
      template<>
     std::size_t RawSize<AddReferencesItem>(const AddReferencesItem& val)
     {
-      return RawSize(val.SourceNodeID) + 
+      return RawSize(val.SourceNodeId) + 
         RawSize(val.ReferenceTypeId) + 
         RawSize(val.IsForward) + 
         RawSize(val.TargetServerUri) + 
-        RawSize(val.TargetNodeID) + 
+        RawSize(val.TargetNodeId) + 
         RawSize(val.TargetNodeClass)
         ;
     }
@@ -1057,22 +1057,22 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<AddReferencesItem>(const AddReferencesItem& val)
     {
-      *this << val.SourceNodeID;
+      *this << val.SourceNodeId;
       *this << val.ReferenceTypeId;
       *this << val.IsForward;
       *this << val.TargetServerUri;
-      *this << val.TargetNodeID;
+      *this << val.TargetNodeId;
       *this << val.TargetNodeClass;
     }
 
     template<>
     void DataDeserializer::Deserialize<AddReferencesItem>(AddReferencesItem& val)
     {
-      *this >> val.SourceNodeID;
+      *this >> val.SourceNodeId;
       *this >> val.ReferenceTypeId;
       *this >> val.IsForward;
       *this >> val.TargetServerUri;
-      *this >> val.TargetNodeID;
+      *this >> val.TargetNodeId;
       *this >> val.TargetNodeClass;
     }
 
@@ -1121,7 +1121,7 @@ namespace OpcUa
      template<>
     std::size_t RawSize<AddReferencesRequest>(const AddReferencesRequest& val)
     {
-      return RawSize(val.TypeID) +  RawSize(val.Header) + 
+      return RawSize(val.TypeId) +  RawSize(val.Header) + 
         RawSize(val.Parameters)
         ;
     }
@@ -1129,7 +1129,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<AddReferencesRequest>(const AddReferencesRequest& val)
     {
-      *this << val.TypeID;
+      *this << val.TypeId;
       *this << val.Header;
       *this << val.Parameters;
     }
@@ -1137,7 +1137,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AddReferencesRequest>(AddReferencesRequest& val)
     {
-      *this >> val.TypeID;
+      *this >> val.TypeId;
       *this >> val.Header;
       *this >> val.Parameters;
     }
@@ -1147,33 +1147,33 @@ namespace OpcUa
 
   } // namespace Binary
 
-  const char* GetObjectIdName(const NodeID& id)
+  const char* GetObjectIdName(const NodeId& id)
   {
-    if ( id == ObjectID::FolderType )
+    if ( id == ObjectId::FolderType )
     {
       return Names::FolderType;
     }
-    else if ( id == ObjectID::BaseVariableType )
+    else if ( id == ObjectId::BaseVariableType )
     {
       return Names::BaseVariableType;
     }
-    else if ( id == ObjectID::BaseDataVariableType )
+    else if ( id == ObjectId::BaseDataVariableType )
     {
       return Names::BaseDataVariableType;
     }
-    else if ( id == ObjectID::PropertyType )
+    else if ( id == ObjectId::PropertyType )
     {
       return Names::PropertyType;
     }
-    else if ( id == ObjectID::BaseObjectType )
+    else if ( id == ObjectId::BaseObjectType )
     {
       return Names::BaseObjectType;
     }
-    else if (id == ObjectID::ModellingRule_Mandatory)
+    else if (id == ObjectId::ModellingRule_Mandatory)
     {
       return Names::ModellingRule_Mandatory;
     }
-    else if ( id == ObjectID::ServerType )
+    else if ( id == ObjectId::ServerType )
     {
       return Names::ServerType;
     }

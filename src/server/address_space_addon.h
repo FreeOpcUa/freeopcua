@@ -51,9 +51,9 @@ namespace OpcUa
       virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter);
 
     public: // Server internal methods
-      virtual uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback);
+      virtual uint32_t AddDataChangeCallback(const NodeId& node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
       virtual void DeleteDataChangeCallback(uint32_t clienthandle);
-      virtual StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
+      virtual StatusCode SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback);
 
     private:
       struct Options

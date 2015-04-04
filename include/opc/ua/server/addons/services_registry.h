@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char ServicesRegistryAddonID[] = "services_registry";
+    const char ServicesRegistryAddonId[] = "services_registry";
 
     class ServicesRegistryFactory : public Common::AddonFactory
     {

@@ -47,9 +47,9 @@ namespace OpcUa
 
   struct SimpleAttributeOperand
   {
-    NodeID TypeID;
+    NodeId TypeId;
     std::vector<QualifiedName> BrowsePath;
-    AttributeID Attribute;
+    AttributeId Attribute;
     std::vector<std::string> IndexRange; 
   };
 
@@ -85,10 +85,10 @@ namespace OpcUa
 
   struct AttributeOperand
   {
-    NodeID Node;
+    NodeId Node;
     std::string Alias;
     RelativePath Path;
-    IntegerID AttributeID;
+    IntegerId AttributeId;
     std::vector<std::string> IndexRange;
   };
 
@@ -116,7 +116,7 @@ namespace OpcUa
   struct AggregateFilter
   {
     DateTime StartTime;
-    NodeID AggregateType;
+    NodeId AggregateType;
     Duration ProcessingInterval;
     //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
     bool UseServerCapabilitiesDefaults;
@@ -140,7 +140,7 @@ namespace OpcUa
 
   struct MonitoringParameters
   {
-    IntegerID ClientHandle;
+    IntegerId ClientHandle;
     Duration SamplingInterval;
     MonitoringFilter Filter;
     uint32_t QueueSize;
@@ -149,14 +149,14 @@ namespace OpcUa
 
   struct MonitoredItemRequest
   {
-    AttributeValueID ItemToMonitor;
+    AttributeValueId ItemToMonitor;
     MonitoringMode Mode;
     MonitoringParameters Parameters;
   };
 
   struct MonitoredItemsParameters
   {
-    IntegerID SubscriptionID;
+    IntegerId SubscriptionId;
     TimestampsToReturn Timestamps;
     std::vector<MonitoredItemRequest> ItemsToCreate;
 
@@ -165,7 +165,7 @@ namespace OpcUa
 
   struct CreateMonitoredItemsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     MonitoredItemsParameters Parameters;
 
@@ -175,13 +175,13 @@ namespace OpcUa
 
   struct DeleteMonitoredItemsParameters
   {
-    IntegerID SubscriptionId;
-    std::vector<IntegerID> MonitoredItemsIds;
+    IntegerId SubscriptionId;
+    std::vector<IntegerId> MonitoredItemsIds;
   };
 
   struct DeleteMonitoredItemsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     DeleteMonitoredItemsParameters Parameters;
 
@@ -190,7 +190,7 @@ namespace OpcUa
 
   struct DeleteMonitoredItemsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
     DiagnosticInfoList Diagnostics;
@@ -203,7 +203,7 @@ namespace OpcUa
   struct CreateMonitoredItemsResult
   {
     StatusCode Status;
-    IntegerID MonitoredItemID;
+    IntegerId MonitoredItemId;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
     MonitoringFilter Filter;
@@ -221,7 +221,7 @@ namespace OpcUa
 
   struct CreateMonitoredItemsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     MonitoredItemsData Data;
 

@@ -5,98 +5,98 @@
 
 #pragma once
 
-inline AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
+inline AttributeId GetAttributeIdOptionValue(const po::variables_map& vm)
   {
     const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();
     if (name == "node id")
     {
-      return AttributeID::NodeId;
+      return AttributeId::NodeId;
     }
     if (name == "node class")
     {
-      return AttributeID::NodeClass;
+      return AttributeId::NodeClass;
     }
     if (name == "browse name")
     {
-      return AttributeID::BrowseName;
+      return AttributeId::BrowseName;
     }
     if (name == "display name")
     {
-      return AttributeID::DisplayName;
+      return AttributeId::DisplayName;
     }
     if (name == "description")
     {
-      return AttributeID::Description;
+      return AttributeId::Description;
     }
     if (name == "write mask")
     {
-      return AttributeID::WriteMask;
+      return AttributeId::WriteMask;
     }
     if (name == "user write mask")
     {
-      return AttributeID::UserWriteMask;
+      return AttributeId::UserWriteMask;
     }
     if (name == "is abstract")
     {
-      return AttributeID::IsAbstract;
+      return AttributeId::IsAbstract;
     }
     if (name == "symmetric")
     {
-      return AttributeID::Symmetric;
+      return AttributeId::Symmetric;
     }
     if (name == "inverse name")
     {
-      return AttributeID::InverseName;
+      return AttributeId::InverseName;
     }
     if (name == "contains no loops")
     {
-      return AttributeID::ContainsNoLoops;
+      return AttributeId::ContainsNoLoops;
     }
     if (name == "event notifier")
     {
-      return AttributeID::EventNotifier;
+      return AttributeId::EventNotifier;
     }
     if (name == "value")
     {
-      return AttributeID::Value;
+      return AttributeId::Value;
     }
     if (name == "data type")
     {
-      return AttributeID::DataType;
+      return AttributeId::DataType;
     }
     if (name == "value rank")
     {
-      return AttributeID::ValueRank;
+      return AttributeId::ValueRank;
     }
     if (name == "array dimensions")
     {
-      return AttributeID::ArrayDimensions;
+      return AttributeId::ArrayDimensions;
     }
     if (name == "access level")
     {
-      return AttributeID::AccessLevel;
+      return AttributeId::AccessLevel;
     }
     if (name == "user access level")
     {
-      return AttributeID::UserAccessLevel;
+      return AttributeId::UserAccessLevel;
     }
     if (name == "minimum sampling interval")
     {
-      return AttributeID::MinimumSamplingInterval;
+      return AttributeId::MinimumSamplingInterval;
     }
     if (name == "historizing")
     {
-      return AttributeID::Historizing;
+      return AttributeId::Historizing;
     }
     if (name == "executable")
     {
-      return AttributeID::Executable;
+      return AttributeId::Executable;
     }
     if (name == "user executable")
     {
-      return AttributeID::UserExecutable;
+      return AttributeId::UserExecutable;
     }
 
-    throw std::logic_error(std::string("Unknown AttributeID: ") + name);
+    throw std::logic_error(std::string("Unknown AttributeId: ") + name);
   };
 

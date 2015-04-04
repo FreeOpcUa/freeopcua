@@ -17,7 +17,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char SubscriptionServiceAddonID[] = "subscriptions";
+    const char SubscriptionServiceAddonId[] = "subscriptions";
 
     class SubscriptionServiceAddonFactory : public Common::AddonFactory
     {

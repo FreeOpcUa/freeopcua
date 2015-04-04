@@ -54,10 +54,10 @@ namespace OpcUa
     const char EnumStrings[]     = "EnumStrings";
     const char EnableFlag[]      = "EnableFlag";
     const char EUInformation[]   = "EUInformation";
-    const char EventID[]         = "EventId";
+    const char EventId[]         = "EventId";
     const char EventType[]       = "EventType";
     const char EventTypes[]      = "EventTypes";
-    const char ExpandedNodeID[]  = "ExpandedNodeId";
+    const char ExpandedNodeId[]  = "ExpandedNodeId";
     const char Float[]           = "Float";
     const char FolderType[]      = "FolderType";
     const char FromState[]       = "FromState";
@@ -91,8 +91,8 @@ namespace OpcUa
     const char Int32[]           = "Int32";
     const char Int64[]           = "Int64";
     const char Integer[]         = "Integer";
-    const char LocaleID[]        = "LocaleId";
-    const char LocaleIDArray[]   = "LocaleIdArray";
+    const char LocaleId[]        = "LocaleId";
+    const char LocaleIdArray[]   = "LocaleIdArray";
     const char LocalizedText[]   = "LocalizedText";
     const char LocalTime[]       = "LocalTime";
     const char ManufacturerName[] = "ManufacturerName";
@@ -113,7 +113,7 @@ namespace OpcUa
     const char NamespaceArray[]  = "NamespaceArray";
     const char NamingRule[]      = "NamingRule";
     const char NodeClass[]       = "NodeClass";
-    const char NodeID[]          = "NodeID";
+    const char NodeId[]          = "NodeId";
     const char NumericRange[]    = "NumericRange";
     const char NonHierarchicalReferences[] = "NonHierarchicalReferences";
     const char Number[]          = "Number";

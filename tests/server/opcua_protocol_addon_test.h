@@ -53,8 +53,8 @@ namespace OpcUa
     {
       Common::AddonInformation opcTcp;
       opcTcp.Factory.reset(new OpcUa::UaServer::OpcUaProtocolAddonFactory());
-      opcTcp.ID = OpcUa::UaServer::OpcUaProtocolAddonID;
-      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonID);
+      opcTcp.Id = OpcUa::UaServer::OpcUaProtocolAddonId;
+      opcTcp.Dependencies.push_back(OpcUa::UaServer::EndpointsRegistryAddonId);
 
       Common::ParametersGroup application("application");
       application.Parameters.push_back(Common::Parameter("application_name","Test OPC UA Server"));

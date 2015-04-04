@@ -60,8 +60,8 @@ namespace OpcUa
     virtual void Visit(const std::vector<Guid>& val) { Impl.OnContainer(val); }
     virtual void Visit(const ByteString& val) { Impl.OnScalar(val); }
     virtual void Visit(const std::vector<ByteString>& val) { Impl.OnContainer(val); }
-    virtual void Visit(const NodeID& val) { Impl.OnScalar(val); }
-    virtual void Visit(const std::vector<NodeID>& val) { Impl.OnContainer(val); }
+    virtual void Visit(const NodeId& val) { Impl.OnScalar(val); }
+    virtual void Visit(const std::vector<NodeId>& val) { Impl.OnContainer(val); }
     virtual void Visit(const StatusCode& val) { Impl.OnScalar(val); }
     virtual void Visit(const std::vector<StatusCode>& val) { Impl.OnContainer(val); }
     virtual void Visit(const LocalizedText& val) { Impl.OnScalar(val); }

@@ -190,7 +190,7 @@ namespace
       applicationDescriptions.push_back(application.Application);
       endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
     }
-    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -199,7 +199,7 @@ namespace
     endpointsAddon->AddEndpoints(endpointDescriptions);
     endpointsAddon->AddApplications(applicationDescriptions);
 
-    InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+    InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
 
     TcpServer = OpcUa::Server::CreateTcpServer();
     Protocol.reset(new OpcUaProtocol(*TcpServer, Debug));
@@ -227,7 +227,7 @@ namespace
 
   void OpcUaProtocolAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
   {
-    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;

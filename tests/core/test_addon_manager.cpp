@@ -33,7 +33,7 @@ TEST(AddonManager, DISABLED_CanCreateDynamicAddons)
 {
   AddonsManager::UniquePtr addonsManager = CreateAddonsManager();
   AddonInformation config;
-  config.ID = OpcCoreTests::TestDynamicAddonID;
+  config.Id = OpcCoreTests::TestDynamicAddonId;
   config.Factory = Common::CreateDynamicAddonFactory(modulePath);
   Common::Parameter param;
   param.Name = "name";
@@ -42,10 +42,10 @@ TEST(AddonManager, DISABLED_CanCreateDynamicAddons)
 
   addonsManager->Register(config);
   addonsManager->Start();
-  Addon::SharedPtr addon = addonsManager->GetAddon(OpcCoreTests::TestDynamicAddonID);
+  Addon::SharedPtr addon = addonsManager->GetAddon(OpcCoreTests::TestDynamicAddonId);
   ASSERT_TRUE(static_cast<bool>(addon));
 
-  OpcCoreTests::TestDynamicAddon::SharedPtr test = addonsManager->GetAddon<OpcCoreTests::TestDynamicAddon>(OpcCoreTests::TestDynamicAddonID);
+  OpcCoreTests::TestDynamicAddon::SharedPtr test = addonsManager->GetAddon<OpcCoreTests::TestDynamicAddon>(OpcCoreTests::TestDynamicAddonId);
   ASSERT_TRUE(static_cast<bool>(test));
   ASSERT_EQ(test->GetStringWithHello(), std::string("hello"));
   Common::AddonParameters params = test->GetParameters();

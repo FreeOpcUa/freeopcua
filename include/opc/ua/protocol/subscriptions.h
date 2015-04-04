@@ -38,16 +38,16 @@ namespace OpcUa
 
   struct DeleteSubscriptionRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
-    std::vector<IntegerID> SubscriptionsIds;
+    std::vector<IntegerId> SubscriptionsIds;
 
     DeleteSubscriptionRequest();
   };
 
   struct DeleteSubscriptionResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
     DiagnosticInfoList Diagnostic;
@@ -61,7 +61,7 @@ namespace OpcUa
 
   struct CreateSubscriptionRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     SubscriptionParameters Parameters;
 
@@ -74,7 +74,7 @@ namespace OpcUa
 
   struct SubscriptionData
   {
-    IntegerID ID;
+    IntegerId Id;
     Duration RevisedPublishingInterval;
     uint32_t RevisedLifetimeCount;
     uint32_t RevizedMaxKeepAliveCount;
@@ -88,7 +88,7 @@ namespace OpcUa
 
   struct CreateSubscriptionResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     SubscriptionData Data;
 
@@ -101,7 +101,7 @@ namespace OpcUa
 
   struct SubscriptionAcknowledgement
   {
-    IntegerID SubscriptionID;
+    IntegerId SubscriptionId;
     uint32_t SequenceNumber;
 
     SubscriptionAcknowledgement();
@@ -118,7 +118,7 @@ namespace OpcUa
 
   struct RepublishParameters
   {
-    IntegerID Subscription;
+    IntegerId Subscription;
     uint32_t Counter = 0;
   };
 
@@ -129,7 +129,7 @@ namespace OpcUa
 
   struct PublishRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     PublishParameters Parameters;
 
@@ -138,7 +138,7 @@ namespace OpcUa
 
   struct RepublishRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     RepublishParameters Parameters;
 
@@ -158,7 +158,7 @@ namespace OpcUa
 
   struct EventFieldList
   {
-    IntegerID ClientHandle;
+    IntegerId ClientHandle;
     std::vector<Variant> EventFields; 
   };
 
@@ -169,7 +169,7 @@ namespace OpcUa
 
   struct MonitoredItems
   {
-    IntegerID ClientHandle;
+    IntegerId ClientHandle;
     DataValue Value;
   };
 
@@ -200,7 +200,7 @@ namespace OpcUa
 
   struct NotificationMessage
   {
-    uint32_t SequenceID;
+    uint32_t SequenceId;
     DateTime PublishTime;
     std::vector<NotificationData> Data;
 
@@ -213,7 +213,7 @@ namespace OpcUa
 
   struct PublishResult
   {
-    IntegerID SubscriptionID;
+    IntegerId SubscriptionId;
     std::vector<uint32_t> AvailableSequenceNumber;
     bool MoreNotifications;
     NotificationMessage Message;
@@ -229,7 +229,7 @@ namespace OpcUa
 
   struct PublishResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     PublishResult Result;
 
@@ -238,7 +238,7 @@ namespace OpcUa
 
   struct RepublishResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     NotificationMessage Message;
 
@@ -249,14 +249,14 @@ namespace OpcUa
   struct PublishingModeParameters
   {
     bool Enabled;
-    std::vector<IntegerID> SubscriptionIDs;
+    std::vector<IntegerId> SubscriptionIds;
 
     PublishingModeParameters();
   };
 
   struct SetPublishingModeRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     PublishingModeParameters Parameters;
 
@@ -271,7 +271,7 @@ namespace OpcUa
 
   struct SetPublishingModeResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     PublishingModeResult Result;
 

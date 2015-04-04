@@ -27,7 +27,7 @@
 namespace OpcUa
 {
 
-  std::string ToString(const NodeID& id);
+  std::string ToString(const NodeId& id);
   std::string ToString(const Guid& guid);
   std::string ToString(const DateTime& t);
   std::string ToString(const BrowseDirection& direction);
@@ -35,10 +35,10 @@ namespace OpcUa
   std::string ToString(const LocalizedText& code);
 
   Guid ToGuid(const std::string& str);
-  NodeID ToNodeID(const std::string& str, uint32_t defaultNamespace=0);
+  NodeId ToNodeId(const std::string& str, uint32_t defaultNamespace=0);
   QualifiedName ToQualifiedName(const std::string& str, uint32_t default_ns=0);
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeID& nodeid)
+  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeId& nodeid)
   {
     os << OpcUa::ToString(nodeid).c_str();
     return os;

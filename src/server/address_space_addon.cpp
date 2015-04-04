@@ -47,7 +47,7 @@ namespace OpcUa
     {
       Options options = GetOptions(params);
       Registry = Server::CreateAddressSpace(options.Debug);
-      InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+      InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
       InternalServer->RegisterNodeManagementServices(Registry);
@@ -96,7 +96,7 @@ namespace OpcUa
       return Registry->Write(filter);
     }
 
-    uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback)
+    uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeId& node, AttributeId attribute, std::function<Server::DataChangeCallback> callback)
     {
       return Registry->AddDataChangeCallback(node, attribute, callback);
     }
@@ -106,7 +106,7 @@ namespace OpcUa
       return Registry->DeleteDataChangeCallback(clienthandle);
     }
 
-    StatusCode AddressSpaceAddon::SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback)
+    StatusCode AddressSpaceAddon::SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback)
     {
       return Registry->SetValueCallback(node, attribute, callback);
     }

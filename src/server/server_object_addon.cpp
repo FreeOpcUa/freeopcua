@@ -38,8 +38,8 @@ namespace
           Debug = param.Value == "false" || param.Value == "0" ? false : true;
       }
 
-      OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
-      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
+      OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
+      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
       OpcUa::Services::SharedPtr services = registry->GetServer();
       Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService(), Debug));
     }

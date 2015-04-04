@@ -35,7 +35,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   CreateSubscriptionRequest::CreateSubscriptionRequest()
-    : TypeID(CREATE_SUBSCRIPTION_REQUEST)
+    : TypeId(CREATE_SUBSCRIPTION_REQUEST)
   {
   }
 
@@ -44,12 +44,12 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   DeleteSubscriptionRequest::DeleteSubscriptionRequest()
-    : TypeID(DELETE_SUBSCRIPTION_REQUEST)
+    : TypeId(DELETE_SUBSCRIPTION_REQUEST)
   {
   }
 
   DeleteSubscriptionResponse::DeleteSubscriptionResponse()
-    : TypeID(DELETE_SUBSCRIPTION_RESPONSE)
+    : TypeId(DELETE_SUBSCRIPTION_RESPONSE)
   {
   }
 
@@ -70,7 +70,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   CreateSubscriptionResponse::CreateSubscriptionResponse()
-    : TypeID(CREATE_SUBSCRIPTION_RESPONSE)
+    : TypeId(CREATE_SUBSCRIPTION_RESPONSE)
   {
   }
 
@@ -88,12 +88,12 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   PublishRequest::PublishRequest()
-    : TypeID(PUBLISH_REQUEST)
+    : TypeId(PUBLISH_REQUEST)
   {
   }
 
   RepublishRequest::RepublishRequest()
-    : TypeID(REPUBLISH_REQUEST)
+    : TypeId(REPUBLISH_REQUEST)
   {
   }
 
@@ -111,12 +111,12 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   PublishResponse::PublishResponse()
-    : TypeID(PUBLISH_RESPONSE)
+    : TypeId(PUBLISH_RESPONSE)
   {
   }
 
   RepublishResponse::RepublishResponse()
-    : TypeID(REPUBLISH_RESPONSE)
+    : TypeId(REPUBLISH_RESPONSE)
   {
   }
 
@@ -127,20 +127,20 @@ namespace OpcUa
 
     NotificationData::NotificationData(DataChangeNotification notification) : DataChange(notification)
     {
-      //Header.TypeID  = ObjectID::DataChangeNotification; 
-      Header.TypeID  = ExpandedObjectID::DataChangeNotification;
+      //Header.TypeId  = ObjectId::DataChangeNotification; 
+      Header.TypeId  = ExpandedObjectId::DataChangeNotification;
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
     }
 
     NotificationData::NotificationData(EventNotificationList notification) : Events(notification)
     {
-      Header.TypeID  = ExpandedObjectID::EventNotificationList; 
+      Header.TypeId  = ExpandedObjectId::EventNotificationList; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
     }
 
     NotificationData::NotificationData(StatusChangeNotification notification) : StatusChange(notification)
     {
-      Header.TypeID  = ExpandedObjectID::StatusChangeNotification; 
+      Header.TypeId  = ExpandedObjectId::StatusChangeNotification; 
       Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
     }
 
@@ -150,7 +150,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   NotificationMessage::NotificationMessage()
-    : SequenceID(0)
+    : SequenceId(0)
     , PublishTime(DateTime::Current())
   {
   }
@@ -169,7 +169,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   SetPublishingModeRequest::SetPublishingModeRequest()
-    : TypeID(SET_PUBLISHING_MODE_REQUEST)
+    : TypeId(SET_PUBLISHING_MODE_REQUEST)
   {
   }
 
@@ -178,7 +178,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   SetPublishingModeResponse::SetPublishingModeResponse()
-    : TypeID(OpcUa::SET_PUBLISHING_MODE_RESPONSE)
+    : TypeId(OpcUa::SET_PUBLISHING_MODE_RESPONSE)
   {
   }
 
@@ -230,7 +230,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const DeleteSubscriptionRequest& request)
     {
-      return RawSize(request.TypeID) +
+      return RawSize(request.TypeId) +
         RawSize(request.Header) +
         RawSizeContainer(request.SubscriptionsIds);
     }
@@ -238,7 +238,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DeleteSubscriptionRequest>(DeleteSubscriptionRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.SubscriptionsIds;
     }
@@ -246,7 +246,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionRequest>(const DeleteSubscriptionRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.SubscriptionsIds;
     }
@@ -260,7 +260,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const DeleteSubscriptionResponse& request)
     {
-      return RawSize(request.TypeID) +
+      return RawSize(request.TypeId) +
         RawSize(request.Header) +
         RawSizeContainer(request.Results) +
         RawSizeContainer(request.Diagnostic);
@@ -269,7 +269,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DeleteSubscriptionResponse>(DeleteSubscriptionResponse& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Results;
       *this >> request.Diagnostic;
@@ -278,7 +278,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionResponse>(const DeleteSubscriptionResponse& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Results;
       *this << request.Diagnostic;
@@ -292,7 +292,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const CreateSubscriptionRequest& request)
     {
-      return RawSize(request.TypeID) +
+      return RawSize(request.TypeId) +
         RawSize(request.Header) +
         RawSize(request.Parameters);
     }
@@ -300,7 +300,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionRequest>(CreateSubscriptionRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -308,7 +308,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -320,7 +320,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const SubscriptionData& data)
     {
-      return RawSize(data.ID) +
+      return RawSize(data.Id) +
         RawSize(data.RevisedPublishingInterval) +
         RawSize(data.RevisedLifetimeCount) +
         RawSize(data.RevizedMaxKeepAliveCount);
@@ -329,7 +329,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<SubscriptionData>(SubscriptionData& data)
     {
-      *this >> data.ID;
+      *this >> data.Id;
       *this >> data.RevisedPublishingInterval;
       *this >> data.RevisedLifetimeCount;
       *this >> data.RevizedMaxKeepAliveCount;
@@ -338,7 +338,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData& data)
     {
-      *this << data.ID;
+      *this << data.Id;
       *this << data.RevisedPublishingInterval;
       *this << data.RevisedLifetimeCount;
       *this << data.RevizedMaxKeepAliveCount;
@@ -351,7 +351,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const CreateSubscriptionResponse& response)
     {
-      return RawSize(response.TypeID) +
+      return RawSize(response.TypeId) +
         RawSize(response.Header) +
         RawSize(response.Data);
     }
@@ -359,7 +359,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionResponse>(CreateSubscriptionResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Data;
     }
@@ -367,7 +367,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Data;
     }
@@ -379,20 +379,20 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const SubscriptionAcknowledgement& ack)
     {
-      return RawSize(ack.SubscriptionID) + RawSize(ack.SequenceNumber);
+      return RawSize(ack.SubscriptionId) + RawSize(ack.SequenceNumber);
     }
 
     template<>
     void DataDeserializer::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement& ack)
     {
-      *this >> ack.SubscriptionID;
+      *this >> ack.SubscriptionId;
       *this >> ack.SequenceNumber;
     }
 
     template<>
     void DataSerializer::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& ack)
     {
-      *this << ack.SubscriptionID;
+      *this << ack.SubscriptionId;
       *this << ack.SequenceNumber;
     }
 
@@ -464,13 +464,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataDeserializer::Deserialize<PublishRequest>(PublishRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -478,7 +478,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<PublishRequest>(const PublishRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -486,13 +486,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const RepublishRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -500,7 +500,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -667,15 +667,15 @@ namespace OpcUa
     {
       size_t total = 0;
       total += RawSize(data.Header);
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeNotification) 
       {
         total += RawSize(data.DataChange);
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventNotificationList) 
       {
         total += RawSize(data.Events);
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification) 
+      else if ( data.Header.TypeId == ExpandedObjectId::StatusChangeNotification) 
       {
         total += RawSize(data.StatusChange);
       }
@@ -691,15 +691,15 @@ namespace OpcUa
     void DataDeserializer::Deserialize<NotificationData>(NotificationData& data)
     {
       *this >> data.Header;
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification ) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeNotification ) 
       {
           *this >> data.DataChange;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventNotificationList ) 
       {
           *this >> data.Events;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::StatusChangeNotification ) 
       {
           *this >> data.StatusChange;
       }
@@ -714,22 +714,22 @@ namespace OpcUa
     void DataSerializer::Serialize<NotificationData>(const NotificationData& data)
     {
       *this << data.Header;
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeNotification ) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeNotification ) 
       {
         *this << data.DataChange;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventNotificationList ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventNotificationList ) 
       {
         *this << data.Events;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::StatusChangeNotification ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::StatusChangeNotification ) 
       {
         *this << data.StatusChange;
       }
       else
       {
         //Unknown type, we just ignore it
-        //throw std::runtime_error("Uknown notification data type found in NotificationData");// + itos(data.Header.TypeID.FourByteData.Identifier) );
+        //throw std::runtime_error("Uknown notification data type found in NotificationData");// + itos(data.Header.TypeId.FourByteData.Identifier) );
       }
     }
 
@@ -740,7 +740,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const NotificationMessage& message)
     {
-      return RawSize(message.SequenceID) +
+      return RawSize(message.SequenceId) +
         RawSize(message.PublishTime) +
         RawSizeContainer(message.Data);
     }
@@ -748,7 +748,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& message)
     {
-      *this >> message.SequenceID;
+      *this >> message.SequenceId;
       *this >> message.PublishTime;
       DeserializeContainer(*this, message.Data);
     }
@@ -756,7 +756,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& message)
     {
-      *this << message.SequenceID;
+      *this << message.SequenceId;
       *this << message.PublishTime;
       SerializeContainer(*this, message.Data, 0);
     }
@@ -768,7 +768,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishResult& result)
     {
-      return RawSize(result.SubscriptionID) +
+      return RawSize(result.SubscriptionId) +
         RawSizeContainer(result.AvailableSequenceNumber) +
         RawSize(result.MoreNotifications) +
         RawSize(result.Message) +
@@ -779,7 +779,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<PublishResult>(PublishResult& result)
     {
-      *this >> result.SubscriptionID;
+      *this >> result.SubscriptionId;
       DeserializeContainer(*this, result.AvailableSequenceNumber);
       *this >> result.MoreNotifications;
       *this >> result.Message;
@@ -790,7 +790,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<PublishResult>(const PublishResult& result)
     {
-      *this << result.SubscriptionID;
+      *this << result.SubscriptionId;
       SerializeContainer(*this, result.AvailableSequenceNumber, 0);
       *this << result.MoreNotifications;
       *this << result.Message;
@@ -805,13 +805,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
     }
 
     template<>
     void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Result;
     }
@@ -819,7 +819,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<PublishResponse>(const PublishResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Result;
     }
@@ -827,13 +827,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const RepublishResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Message);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Message);
     }
 
     template<>
     void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Message;
     }
@@ -841,7 +841,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Message;
     }
@@ -853,21 +853,21 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const PublishingModeParameters& params)
     {
-      return RawSize(params.Enabled) + RawSizeContainer(params.SubscriptionIDs);
+      return RawSize(params.Enabled) + RawSizeContainer(params.SubscriptionIds);
     }
 
     template<>
     void DataDeserializer::Deserialize<PublishingModeParameters>(PublishingModeParameters& params)
     {
       *this >> params.Enabled;
-      DeserializeContainer(*this, params.SubscriptionIDs);
+      DeserializeContainer(*this, params.SubscriptionIds);
     }
 
     template<>
     void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters& params)
     {
       *this << params.Enabled;
-      SerializeContainer(*this, params.SubscriptionIDs, 0);
+      SerializeContainer(*this, params.SubscriptionIds, 0);
     }
 
     ////////////////////////////////////////////////////////
@@ -877,13 +877,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const SetPublishingModeRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataDeserializer::Deserialize<SetPublishingModeRequest>(SetPublishingModeRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -891,7 +891,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -927,13 +927,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize(const SetPublishingModeResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
     }
 
     template<>
     void DataDeserializer::Deserialize<SetPublishingModeResponse>(SetPublishingModeResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Result;
     }
@@ -941,7 +941,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Result;
     }

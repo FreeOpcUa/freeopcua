@@ -29,7 +29,7 @@ namespace OpcUa
 
 
   CreateSessionRequest::CreateSessionRequest()
-    : TypeID(CREATE_SESSION_REQUEST)
+    : TypeId(CREATE_SESSION_REQUEST)
   {
   }
 
@@ -40,67 +40,67 @@ namespace OpcUa
   }
 
   CreateSessionResponse::CreateSessionResponse()
-    : TypeID(CREATE_SESSION_RESPONSE)
+    : TypeId(CREATE_SESSION_RESPONSE)
   {
   }
 
   CloseSessionResponse::CloseSessionResponse()
-    : TypeID(CLOSE_SESSION_RESPONSE)
+    : TypeId(CLOSE_SESSION_RESPONSE)
   {
   }
 
   UserIdentifyToken::UserIdentifyToken()
-    : Header(USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
+    : Header(USER_IdENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY)
   {
   }
 
   UserIdentifyTokenType UserIdentifyToken::type() const
   {
     UserIdentifyTokenType type = UserIdentifyTokenType::ANONYMOUS;
-    if(Header.TypeID.FourByteData.Identifier == USER_IDENTIFY_TOKEN_USERNAME)
+    if(Header.TypeId.FourByteData.Identifier == USER_IdENTIFY_TOKEN_USERNAME)
       type = UserIdentifyTokenType::USERNAME;
     return type;
   }
 
   void UserIdentifyToken::setUser(const std::string &user, const std::string &password)
   {
-    Header.TypeID.FourByteData.Identifier = USER_IDENTIFY_TOKEN_USERNAME;
+    Header.TypeId.FourByteData.Identifier = USER_IdENTIFY_TOKEN_USERNAME;
     UserName.UserName = user;
     UserName.Password = password;
     //UserName.EncryptionAlgorithm = "http://www.w3.org/2001/04/xmlenc#rsa-oaep";
   }
 
-  void UserIdentifyToken::setPolicyID(const std::string &id)
+  void UserIdentifyToken::setPolicyId(const std::string &id)
   {
     int sz = id.length();
-    PolicyID.resize(sz + 4);
+    PolicyId.resize(sz + 4);
     for(int i=0; i<sz; i++) {
-      PolicyID[i + 4] = id[i];
+      PolicyId[i + 4] = id[i];
     }
     for(int i=0; i<4; i++) {
-      PolicyID[i] = (uint8_t)sz;
+      PolicyId[i] = (uint8_t)sz;
       sz /= 256;
     }
   }
 
   ActivateSessionRequest::ActivateSessionRequest()
-    : TypeID(ACTIVATE_SESSION_REQUEST)
+    : TypeId(ACTIVATE_SESSION_REQUEST)
   {
   }
 
   ActivateSessionResponse::ActivateSessionResponse()
-    : TypeID(ACTIVATE_SESSION_RESPONSE)
+    : TypeId(ACTIVATE_SESSION_RESPONSE)
   {
   }
 
   CloseSessionRequest::CloseSessionRequest()
-    : TypeID(CLOSE_SESSION_REQUEST)
+    : TypeId(CLOSE_SESSION_REQUEST)
     , DeleteSubscriptions(true)
   {
   }
 
   ServiceFaultResponse::ServiceFaultResponse()
-    : TypeID(SERVICE_FAULT)
+    : TypeId(SERVICE_FAULT)
   {
   }
 
@@ -157,13 +157,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -171,7 +171,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateSessionRequest>(CreateSessionRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -183,7 +183,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<SessionData>(const SessionData& data)
     {
-      return RawSize(data.SessionID) +
+      return RawSize(data.SessionId) +
       RawSize(data.AuthenticationToken) +
       sizeof(data.RevisedSessionTimeout) +
       RawSize(data.ServerNonce) +
@@ -197,7 +197,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<SessionData>(const SessionData& data)
     {
-      *this << data.SessionID;
+      *this << data.SessionId;
       *this << data.AuthenticationToken;
       *this << data.RevisedSessionTimeout;
       *this << data.ServerNonce;
@@ -211,7 +211,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<SessionData>(SessionData& data)
     {
-      *this >> data.SessionID;
+      *this >> data.SessionId;
       *this >> data.AuthenticationToken;
       *this >> data.RevisedSessionTimeout;
       *this >> data.ServerNonce;
@@ -229,13 +229,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Session);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Session);
     }
 
     template<>
     void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Session;
     }
@@ -243,7 +243,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Session;
     }
@@ -277,7 +277,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
-      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyID);
+      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId);
       if(token.type() == UserIdentifyTokenType::USERNAME)
         ret += RawSize(token.UserName);
       return ret;
@@ -287,7 +287,7 @@ namespace OpcUa
     void DataSerializer::Serialize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
       *this << token.Header;
-      *this << token.PolicyID;
+      *this << token.PolicyId;
       if(token.type() == UserIdentifyTokenType::USERNAME)
         *this << token.UserName;
     }
@@ -296,7 +296,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<UserIdentifyToken>(UserIdentifyToken& token)
     {
       *this >> token.Header;
-      *this >> token.PolicyID;
+      *this >> token.PolicyId;
       if(token.type() == UserIdentifyTokenType::USERNAME)
         *this >> token.UserName;
     }
@@ -310,7 +310,7 @@ namespace OpcUa
     {
       return RawSize(params.ClientSignature) +
              RawSizeContainer(params.ClientCertificates) +
-             RawSizeContainer(params.LocaleIDs) +
+             RawSizeContainer(params.LocaleIds) +
              RawSize(params.IdentifyToken) + 
              RawSize(params.UserTokenSignature);
     };
@@ -327,9 +327,9 @@ namespace OpcUa
       {
         *this << (uint32_t)0;
       }
-      if (!params.LocaleIDs.empty())
+      if (!params.LocaleIds.empty())
       {
-        *this << params.LocaleIDs;
+        *this << params.LocaleIds;
       }
       else
       {
@@ -345,7 +345,7 @@ namespace OpcUa
     {
       *this >> params.ClientSignature;
       *this >> params.ClientCertificates;
-      *this >> params.LocaleIDs;
+      *this >> params.LocaleIds;
       *this >> params.IdentifyToken;
       *this >> params.UserTokenSignature;
     }
@@ -358,7 +358,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& request)
     {
-      return RawSize(request.TypeID) +
+      return RawSize(request.TypeId) +
              RawSize(request.Header) +
              RawSize(request.Parameters);
     };
@@ -366,7 +366,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<ActivateSessionRequest>(const ActivateSessionRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -374,7 +374,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ActivateSessionRequest>(ActivateSessionRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -430,7 +430,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& response)
     {
-      return RawSize(response.TypeID) +
+      return RawSize(response.TypeId) +
              RawSize(response.Header) +
              RawSize(response.Session);
     };
@@ -438,7 +438,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<ActivateSessionResponse>(const ActivateSessionResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Session;
     }
@@ -446,7 +446,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ActivateSessionResponse>(ActivateSessionResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Session;
     }
@@ -458,14 +458,14 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CloseSessionRequest>(const CloseSessionRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
+      return RawSize(request.TypeId) + RawSize(request.Header) +
         RawSize(request.DeleteSubscriptions);
     }
 
     template<>
     void DataSerializer::Serialize<CloseSessionRequest>(const CloseSessionRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
 
       *this << request.DeleteSubscriptions;
@@ -474,7 +474,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CloseSessionRequest>(CloseSessionRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
 
       *this >> request.DeleteSubscriptions;
@@ -487,20 +487,20 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CloseSessionResponse>(const CloseSessionResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header);
+      return RawSize(response.TypeId) + RawSize(response.Header);
     }
 
     template<>
     void DataSerializer::Serialize<CloseSessionResponse>(const CloseSessionResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
     }
 
     template<>
     void DataDeserializer::Deserialize<CloseSessionResponse>(CloseSessionResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
     }
 
@@ -511,20 +511,20 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ServiceFaultResponse>(const ServiceFaultResponse& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header);
+      return RawSize(request.TypeId) + RawSize(request.Header);
     }
 
     template<>
     void DataSerializer::Serialize<ServiceFaultResponse>(const ServiceFaultResponse& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
     }
 
     template<>
     void DataDeserializer::Deserialize<ServiceFaultResponse>(ServiceFaultResponse& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
     }
 

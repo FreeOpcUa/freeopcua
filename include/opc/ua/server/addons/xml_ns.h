@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char XmlAddressSpaceAddonID[] = "xml_address_space";
+    const char XmlAddressSpaceAddonId[] = "xml_address_space";
 
     class XmlAddressSpace : public Common::Addon
     {

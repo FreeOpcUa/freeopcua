@@ -7,14 +7,14 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_EXPANDED_OBJECTS_IDS
-#define __OPC_UA_EXPANDED_OBJECTS_IDS
+#ifndef __OPC_UA_EXPANDED_OBJECTS_IdS
+#define __OPC_UA_EXPANDED_OBJECTS_IdS
 
 #include <stdint.h>
 
 namespace OpcUa
 {
-  enum class ExpandedObjectID : uint32_t
+  enum class ExpandedObjectId : uint32_t
   {
     Null           = 0,
     ObjectAttribute = 354,
@@ -43,4 +43,4 @@ namespace OpcUa
   };
 }
 
-#endif // __OPC_UA_BINARY_IDENTIFIERS
+#endif // __OPC_UA_BINARY_IdENTIFIERS

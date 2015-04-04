@@ -31,7 +31,7 @@ namespace
       ApplyAddonParameters(params);
 
       Endpoints = OpcUa::Server::CreateEndpointsRegistry();
-      InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonID);
+      InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonId);
       InternalServer->RegisterEndpointsServices(Endpoints);
 
       const std::vector<OpcUa::Server::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);

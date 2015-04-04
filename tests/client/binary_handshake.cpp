@@ -183,9 +183,9 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   OpcUa::Binary::CreateSessionResponse response;
   ASSERT_NO_THROW(stream >> response);
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
 }
 
 //----------------------------------------------------------------------
@@ -234,7 +234,7 @@ TEST_F(OpcBinaryHandshake, ActivateSession)
 
   ActivateSessionRequest activate;
   activate.Header.SessionAuthenticationToken = session.AuthenticationToken;
-  activate.LocaleIDs.push_back("en");
+  activate.LocaleIds.push_back("en");
   stream << activate << flush;
 
   ActivateSessionResponse response;
@@ -261,7 +261,7 @@ TEST_F(OpcBinaryHandshake, CloseSession)
 
   ActivateSessionRequest activate;
   activate.Header.SessionAuthenticationToken = session.AuthenticationToken;
-  activate.LocaleIDs.push_back("en");
+  activate.LocaleIds.push_back("en");
   stream << activate << flush;
 
   ActivateSessionResponse response;
@@ -294,7 +294,7 @@ void ActivateSession(OpcUa::Binary::IOStream& stream, const OpcUa::Binary::Creat
   using namespace OpcUa::Binary;
   ActivateSessionRequest activate;
   activate.Header.SessionAuthenticationToken = session.AuthenticationToken;
-  activate.LocaleIDs.push_back("en");
+  activate.LocaleIds.push_back("en");
   stream << activate << flush;
 
   ActivateSessionResponse response;
@@ -324,8 +324,8 @@ TEST_F(OpcBinaryHandshake, Browse)
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
   desc.NodeToBrowse.TwoByteData.Identifier = 84; // root node.
   desc.Direction = BrowseDirection::FORWARD;
-  desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-  desc.ReferenceTypeID.TwoByteData.Identifier = 33;
+  desc.ReferenceTypeId.Encoding = EV_TWO_BYTE;
+  desc.ReferenceTypeId.TwoByteData.Identifier = 33;
   desc.IncludeSubtypes = true;
   desc.NodeClasses = NODE_CLASS_ALL;
   desc.ResultMask = REFERENCE_ALL;
@@ -376,10 +376,10 @@ TEST_F(OpcBinaryHandshake, Read)
 
 
 
-  AttributeValueID value;
+  AttributeValueId value;
   value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder);
-  value.Attribute = AttributeID::DisplayName;
+  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectId::RootFolder);
+  value.Attribute = AttributeId::DisplayName;
 
 
   OpcUa::Binary::ReadRequest request;
@@ -424,8 +424,8 @@ TEST_F(OpcBinaryHandshake, Write)
 
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder); 
-  value.Attribute = AttributeID::DisplayName;
+  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectId::RootFolder); 
+  value.Attribute = AttributeId::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value.Type = VariantType::STRING;
   value.Data.Value.Value.String.push_back("root");

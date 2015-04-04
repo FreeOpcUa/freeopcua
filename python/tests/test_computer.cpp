@@ -73,7 +73,7 @@ namespace
       OpcUa::UserTokenPolicy policy;
       policy.IssuedTokenType = "IssuedTokenType";
       policy.IssuerEndpointURL = "IssuerEndpointURL";
-      policy.PolicyID = "PolicyID";
+      policy.PolicyId = "PolicyId";
       policy.SecurityPolicyURI = "SecurityPolicyURI";
       policy.TokenType = UserIdentifyTokenType::USERNAME;
       return std::vector<OpcUa::UserTokenPolicy>(1, policy);
@@ -101,8 +101,8 @@ namespace
       Assert(params.TimestampsType == TimestampsToReturn::BOTH, "Invalid value of TimestampsToReturn.");
       Assert(params.AttributesToRead.size() == 1, "Invalid size of AttributesToRead.");
 
-      OpcUa::AttributeValueID id = params.AttributesToRead[0];
-      Assert(id.Attribute == AttributeID::Value, "Invalid value of Attribute ID.");
+      OpcUa::AttributeValueId id = params.AttributesToRead[0];
+      Assert(id.Attribute == AttributeId::Value, "Invalid value of Attribute Id.");
       Assert(id.DataEncoding.NamespaceIndex == 3, "Invalid namespace index in DataEncoding.");
       Assert(id.DataEncoding.Name == "binary", "Invalid name in DataEncoding.");
       Assert(id.IndexRange == "1:2", "Invalid value of IndexRange.");
@@ -132,8 +132,8 @@ namespace
     {
       Assert(data.size() == 1, "Invalid number od data for write.");
       const OpcUa::WriteValue& value = data[0];
-      Assert(value.Attribute == OpcUa::AttributeID::Value, "Invalid id of attribute.");
-      Assert(value.Node.Encoding == NodeIDEncoding::EV_STRING, "Invalid encoding of node.");
+      Assert(value.Attribute == OpcUa::AttributeId::Value, "Invalid id of attribute.");
+      Assert(value.Node.Encoding == NodeIdEncoding::EV_STRING, "Invalid encoding of node.");
       Assert(value.Node.StringData.NamespaceIndex == 1, "Invalid namespace of node.");
       Assert(value.Node.StringData.Identifier == "node", "Invalid identifier of node.");
       Assert(value.NumericRange == "1:2", "Invalid numeric range.");
@@ -170,14 +170,14 @@ namespace
       ref.BrowseName.NamespaceIndex = 1;
       ref.DisplayName.Text = "Text";
       ref.IsForward = true;
-      ref.ReferenceTypeID.Encoding = OpcUa::NodeIDEncoding::EV_STRING;
-      ref.ReferenceTypeID.StringData.NamespaceIndex = 2;
-      ref.ReferenceTypeID.StringData.Identifier = "Identifier";
+      ref.ReferenceTypeId.Encoding = OpcUa::NodeIdEncoding::EV_STRING;
+      ref.ReferenceTypeId.StringData.NamespaceIndex = 2;
+      ref.ReferenceTypeId.StringData.Identifier = "Identifier";
       ref.TargetNodeClass = OpcUa::NodeClass::Variable;
-      ref.TargetNodeID.Encoding = OpcUa::NodeIDEncoding::EV_FOUR_BYTE;
-      ref.TargetNodeID.FourByteData.NamespaceIndex = 3;
-      ref.TargetNodeID.FourByteData.Identifier = 4;
-      ref.TargetNodeTypeDefinition.Encoding = OpcUa::NodeIDEncoding::EV_NUMERIC;
+      ref.TargetNodeId.Encoding = OpcUa::NodeIdEncoding::EV_FOUR_BYTE;
+      ref.TargetNodeId.FourByteData.NamespaceIndex = 3;
+      ref.TargetNodeId.FourByteData.Identifier = 4;
+      ref.TargetNodeTypeDefinition.Encoding = OpcUa::NodeIdEncoding::EV_NUMERIC;
       ref.TargetNodeTypeDefinition.NumericData.NamespaceIndex = 5;
       ref.TargetNodeTypeDefinition.NumericData.Identifier = 6;
       return std::vector<ReferenceDescription>(1, ref);

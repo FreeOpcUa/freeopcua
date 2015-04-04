@@ -25,8 +25,8 @@
 namespace OpcUa
 {
   // TODO move to appropriate file
-  AttributeValueID::AttributeValueID()
-    : Attribute(AttributeID::Value)
+  AttributeValueId::AttributeValueId()
+    : Attribute(AttributeId::Value)
   {
   }
 
@@ -38,25 +38,25 @@ namespace OpcUa
   }
 
   ReadRequest::ReadRequest()
-    : TypeID(READ_REQUEST)
+    : TypeId(READ_REQUEST)
   {
   }
 
 
   ReadResponse::ReadResponse()
-    : TypeID(READ_RESPONSE)
+    : TypeId(READ_RESPONSE)
   {
   }
 
 
   WriteRequest::WriteRequest()
-    : TypeID(WRITE_REQUEST)
+    : TypeId(WRITE_REQUEST)
   {
   }
 
 
   WriteResponse::WriteResponse()
-    : TypeID(WRITE_RESPONSE)
+    : TypeId(WRITE_RESPONSE)
   {
   }
 
@@ -64,23 +64,23 @@ namespace OpcUa
   {
 
     template<> 
-    std::size_t RawSize<AttributeID>(const AttributeID&)
+    std::size_t RawSize<AttributeId>(const AttributeId&)
     {
       return 4;
     }
 
     template<>
-    void DataSerializer::Serialize<AttributeID>(const AttributeID& attr)
+    void DataSerializer::Serialize<AttributeId>(const AttributeId& attr)
     {
       *this << static_cast<uint32_t>(attr);
     }
 
     template<>
-    void DataDeserializer::Deserialize<AttributeID>(AttributeID& t)
+    void DataDeserializer::Deserialize<AttributeId>(AttributeId& t)
     {
       uint32_t tmp = 0;
       *this >> tmp;
-      t = static_cast<AttributeID>(tmp);
+      t = static_cast<AttributeId>(tmp);
     }
 
 
@@ -109,17 +109,17 @@ namespace OpcUa
       t = static_cast<TimestampsToReturn>(tmp);
     }
     //---------------------------------------------------
-    // AttributeValueID
+    // AttributeValueId
     //---------------------------------------------------
 
     template<>
-    std::size_t RawSize<AttributeValueID>(const AttributeValueID& attr)
+    std::size_t RawSize<AttributeValueId>(const AttributeValueId& attr)
     {
       return RawSize(attr.Node) + RawSize(attr.Attribute) + RawSize(attr.IndexRange) + RawSize(attr.DataEncoding);
     }
 
     template<>
-    void DataSerializer::Serialize<AttributeValueID>(const AttributeValueID& attr)
+    void DataSerializer::Serialize<AttributeValueId>(const AttributeValueId& attr)
     {
       *this << attr.Node;
       *this << attr.Attribute;
@@ -128,7 +128,7 @@ namespace OpcUa
     }
 
     template<>
-    void DataDeserializer::Deserialize<AttributeValueID>(AttributeValueID& attr)
+    void DataDeserializer::Deserialize<AttributeValueId>(AttributeValueId& attr)
     {
       *this >> attr.Node;
       *this >> attr.Attribute;
@@ -171,13 +171,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ReadRequest>(const ReadRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<ReadRequest>(const ReadRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -185,7 +185,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ReadRequest>(ReadRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -221,13 +221,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ReadResponse>(const ReadResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Result);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Result);
     }
 
     template<>
     void DataSerializer::Serialize<ReadResponse>(const ReadResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Result;
     }
@@ -235,7 +235,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ReadResponse>(ReadResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Result;
     }
@@ -300,13 +300,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<WriteRequest>(const WriteRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<WriteRequest>(const WriteRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -314,7 +314,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<WriteRequest>(WriteRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -348,13 +348,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<WriteResponse>(const WriteResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Result);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Result);
     }
 
     template<>
     void DataSerializer::Serialize<WriteResponse>(const WriteResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Result;
     }
@@ -362,7 +362,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<WriteResponse>(WriteResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Result;
     }

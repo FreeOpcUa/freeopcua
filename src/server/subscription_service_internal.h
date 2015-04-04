@@ -39,7 +39,7 @@ namespace OpcUa
 
     class InternalSubscription;
 
-    typedef std::map <IntegerID, std::shared_ptr<InternalSubscription>> SubscriptionsIDMap; // Map SubscptioinID, SubscriptionData
+    typedef std::map <IntegerId, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
 
 
     class SubscriptionServiceInternal : public Server::SubscriptionService
@@ -49,7 +49,7 @@ namespace OpcUa
 
        ~SubscriptionServiceInternal();
 
-        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions);
+        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions);
         virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
         virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params);
         virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
@@ -58,8 +58,8 @@ namespace OpcUa
 
         void DeleteAllSubscriptions();
         boost::asio::io_service& GetIOService();
-        bool PopPublishRequest(NodeID node);
-        void TriggerEvent(NodeID node, Event event);
+        bool PopPublishRequest(NodeId node);
+        void TriggerEvent(NodeId node, Event event);
         Server::AddressSpace& GetAddressSpace();
 
       private:
@@ -67,9 +67,9 @@ namespace OpcUa
         Server::AddressSpace::SharedPtr AddressSpace;
         bool Debug;
         mutable boost::shared_mutex DbMutex;
-        SubscriptionsIDMap SubscriptionsMap; // Map SubscptioinID, SubscriptionData
-        uint32_t LastSubscriptionID = 2;
-        std::map<NodeID, uint32_t> PublishRequestQueues;
+        SubscriptionsIdMap SubscriptionsMap; // Map SubscptioinId, SubscriptionData
+        uint32_t LastSubscriptionId = 2;
+        std::map<NodeId, uint32_t> PublishRequestQueues;
     };
 
 

@@ -50,7 +50,7 @@ namespace OpcUa
 
   struct ViewDescription
   {
-    NodeID ID;
+    NodeId Id;
     DateTime Timestamp;
     uint32_t Version;
 
@@ -59,10 +59,10 @@ namespace OpcUa
 
   struct BrowseDescription
   {
-    NodeID NodeToBrowse;
+    NodeId NodeToBrowse;
     BrowseDirection Direction;
-    NodeID ReferenceTypeID;
-    bool IncludeSubtypes; // If false will follow strctly ReferenceTypeID. if true will follow subtypes of ReferenceTypeID.
+    NodeId ReferenceTypeId;
+    bool IncludeSubtypes; // If false will follow strctly ReferenceTypeId. if true will follow subtypes of ReferenceTypeId.
     uint32_t NodeClasses;
     uint32_t ResultMask;
 
@@ -80,7 +80,7 @@ namespace OpcUa
 
   struct BrowseRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     NodesQuery Query;
 
@@ -90,13 +90,13 @@ namespace OpcUa
 
   struct ReferenceDescription
   {
-    NodeID ReferenceTypeID;
+    NodeId ReferenceTypeId;
     bool IsForward = true;
-    NodeID TargetNodeID;
+    NodeId TargetNodeId;
     QualifiedName BrowseName;
     LocalizedText DisplayName;
     NodeClass TargetNodeClass;
-    NodeID TargetNodeTypeDefinition;
+    NodeId TargetNodeTypeDefinition;
 
     ReferenceDescription();
   };
@@ -112,7 +112,7 @@ namespace OpcUa
 
   struct BrowseResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
@@ -127,7 +127,7 @@ namespace OpcUa
 
   struct BrowseNextRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
 
     bool ReleaseContinuationPoints;
@@ -138,7 +138,7 @@ namespace OpcUa
 
   struct BrowseNextResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
@@ -148,12 +148,12 @@ namespace OpcUa
   };
 
   //---------------------------------------------------
-  // TranslateBrowsePathsToNodeIDs
+  // TranslateBrowsePathsToNodeIds
   //---------------------------------------------------
 
   struct BrowsePath
   {
-    NodeID StartingNode;
+    NodeId StartingNode;
     RelativePath Path;
   };
 
@@ -162,22 +162,22 @@ namespace OpcUa
     std::vector<BrowsePath> BrowsePaths;
   };
 
-  struct TranslateBrowsePathsToNodeIDsRequest
+  struct TranslateBrowsePathsToNodeIdsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     TranslateBrowsePathsParameters Parameters;
 
-    TranslateBrowsePathsToNodeIDsRequest();
+    TranslateBrowsePathsToNodeIdsRequest();
   };
 
   //---------------------------------------------------
-  // TranslateBrowsePathsToNodeIDs
+  // TranslateBrowsePathsToNodeIds
   //---------------------------------------------------
 
   struct BrowsePathTarget
   {
-    NodeID Node;
+    NodeId Node;
     uint32_t RemainingPathIndex;
 
     BrowsePathTarget();
@@ -197,13 +197,13 @@ namespace OpcUa
     DiagnosticInfoList Diagnostics;
   };
 
-  struct TranslateBrowsePathsToNodeIDsResponse
+  struct TranslateBrowsePathsToNodeIdsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     TranslateBrowsePathsResult Result;
 
-    TranslateBrowsePathsToNodeIDsResponse();
+    TranslateBrowsePathsToNodeIdsResponse();
   };
 
 } // namespace OpcUa

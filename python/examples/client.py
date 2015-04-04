@@ -32,7 +32,7 @@ if __name__ == "__main__":
         idx = client.get_namespace_index(uri)
         
         # read a node from standard opcua address space
-        statenode = client.get_node(opcua.ObjectID.Server_ServerStatus_State)
+        statenode = client.get_node(opcua.ObjectId.Server_ServerStatus_State)
         print("Server state is: ", statenode.get_value())
 
         # get root node of server and browse it

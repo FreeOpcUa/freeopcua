@@ -162,13 +162,13 @@ struct PythonStringToLocalizedTextConverter
 
 
 //--------------------------------------------------------------------------
-// NodeID helpers
+// NodeId helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<NodeID> NodeID_constructor(const std::string & encodedNodeID)
-{ return boost::shared_ptr<NodeID>(new NodeID(ToNodeID(encodedNodeID))); }
+static boost::shared_ptr<NodeId> NodeId_constructor(const std::string & encodedNodeId)
+{ return boost::shared_ptr<NodeId>(new NodeId(ToNodeId(encodedNodeId))); }
 
-static object NodeID_GetIdentifier(const NodeID & self)
+static object NodeId_GetIdentifier(const NodeId & self)
 {
   if (self.IsInteger())
     { return object(self.GetIntegerIdentifier()); }
@@ -247,9 +247,9 @@ static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & se
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
-static Node UaClient_GetNode(UaClient & self, ObjectID objectid)
+static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
 {
-  return self.GetNode(NodeID(objectid));
+  return self.GetNode(NodeId(objectid));
 }
 
 //--------------------------------------------------------------------------
@@ -262,9 +262,9 @@ static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & se
   return boost::shared_ptr<Subscription>(sub.release());
 }
 
-static Node UaServer_GetNode(UaServer & self, ObjectID objectid)
+static Node UaServer_GetNode(UaServer & self, ObjectId objectid)
 {
-  return self.GetNode(NodeID(objectid));
+  return self.GetNode(NodeId(objectid));
 }
 
 
@@ -314,18 +314,18 @@ BOOST_PYTHON_MODULE(opcua)
   //;
 
   
-  class_<NodeID, boost::shared_ptr<NodeID>>("NodeID")
+  class_<NodeId, boost::shared_ptr<NodeId>>("NodeId")
   .def(init<uint32_t, uint16_t>())
   .def(init<std::string, uint16_t>())
-  .def("__init__", make_constructor(NodeID_constructor)) // XXX add this constructor to freeopcua
-  .add_property("namespace_index", &NodeID::GetNamespaceIndex)
-  .add_property("identifier", &NodeID_GetIdentifier)
-  .add_property("encoding", &NodeID::GetEncodingValue)
-  .add_property("is_integer", &NodeID::IsInteger)
-  .add_property("is_binary", &NodeID::IsBinary)
-  .add_property("is_guid", &NodeID::IsGuid)
-  .add_property("is_string", &NodeID::IsString)
-  .def_readonly("namespace_uri", &NodeID::NamespaceURI)
+  .def("__init__", make_constructor(NodeId_constructor)) // XXX add this constructor to freeopcua
+  .add_property("namespace_index", &NodeId::GetNamespaceIndex)
+  .add_property("identifier", &NodeId_GetIdentifier)
+  .add_property("encoding", &NodeId::GetEncodingValue)
+  .add_property("is_integer", &NodeId::IsInteger)
+  .add_property("is_binary", &NodeId::IsBinary)
+  .add_property("is_guid", &NodeId::IsGuid)
+  .add_property("is_string", &NodeId::IsString)
+  .def_readonly("namespace_uri", &NodeId::NamespaceURI)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
@@ -372,7 +372,7 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<ApplicationDescription>, vector_to_python_converter<ApplicationDescription>>();
 
   class_<UserTokenPolicy>("UserTokenPolicy")
-  .def_readwrite("policy_id", &UserTokenPolicy::PolicyID)
+  .def_readwrite("policy_id", &UserTokenPolicy::PolicyId)
   .def_readwrite("token_type", &UserTokenPolicy::TokenType)
   .def_readwrite("issued_token_type", &UserTokenPolicy::IssuedTokenType)
   .def_readwrite("issuer_endpoint_url", &UserTokenPolicy::IssuerEndpointURL)
@@ -395,9 +395,9 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<EndpointDescription>, vector_to_python_converter<EndpointDescription>>();
 
   class_<ReferenceDescription>("ReferenceDescription")
-  .def_readwrite("reference_type_id", &ReferenceDescription::ReferenceTypeID)
+  .def_readwrite("reference_type_id", &ReferenceDescription::ReferenceTypeId)
   .def_readwrite("is_forward", &ReferenceDescription::IsForward)
-  .def_readwrite("target_node_id", &ReferenceDescription::TargetNodeID)
+  .def_readwrite("target_node_id", &ReferenceDescription::TargetNodeId)
   .def_readwrite("browse_name", &ReferenceDescription::BrowseName)
   .def_readwrite("display_name", &ReferenceDescription::DisplayName)
   .def_readwrite("target_node_class", &ReferenceDescription::TargetNodeClass)
@@ -406,14 +406,14 @@ BOOST_PYTHON_MODULE(opcua)
 
   to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
 
-  class_<AttributeValueID>("AttributeValueID")
-  .def_readwrite("node", &AttributeValueID::Node)
-  .def_readwrite("attribute", &AttributeValueID::Attribute)
-  .def_readwrite("index_range", &AttributeValueID::IndexRange)
-  .def_readwrite("data_encoding", &AttributeValueID::DataEncoding)
+  class_<AttributeValueId>("AttributeValueId")
+  .def_readwrite("node", &AttributeValueId::Node)
+  .def_readwrite("attribute", &AttributeValueId::Attribute)
+  .def_readwrite("index_range", &AttributeValueId::IndexRange)
+  .def_readwrite("data_encoding", &AttributeValueId::DataEncoding)
   ;
 
-  to_python_converter<std::vector<AttributeValueID>, vector_to_python_converter<AttributeValueID>>();
+  to_python_converter<std::vector<AttributeValueId>, vector_to_python_converter<AttributeValueId>>();
 
   class_<WriteValue>("WriteValue")
   .def_readwrite("node", &WriteValue::Node)
@@ -434,7 +434,7 @@ BOOST_PYTHON_MODULE(opcua)
 //  .def("is_null", &Variant::IsNul)
 //  ;
 
-  class_<Node>("Node", init<Services::SharedPtr, NodeID>())
+  class_<Node>("Node", init<Services::SharedPtr, NodeId>())
   .def(init<Node>())
   .def("get_id", &Node::GetId)
   .def("get_attribute", &Node::GetAttribute)
@@ -449,16 +449,16 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_children", (std::vector<Node> (Node::*)() const) &Node::GetChildren)
   .def("get_child", (Node(Node::*)(const std::vector<std::string> &) const) &Node::GetChild)
   .def("get_child", (Node(Node::*)(const std::string &) const) &Node::GetChild)
-  .def("add_folder", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddFolder)
+  .def("add_folder", (Node(Node::*)(const NodeId &, const QualifiedName &) const) &Node::AddFolder)
   .def("add_folder", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddFolder)
   .def("add_folder", (Node(Node::*)(uint32_t, const std::string &) const) &Node::AddFolder)
-  .def("add_object", (Node(Node::*)(const NodeID &, const QualifiedName &) const) &Node::AddObject)
+  .def("add_object", (Node(Node::*)(const NodeId &, const QualifiedName &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(uint32_t, const std::string &) const) &Node::AddObject)
-  .def("add_variable", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
+  .def("add_variable", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
   .def("add_variable", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddVariable)
-  .def("add_property", (Node(Node::*)(const NodeID &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
+  .def("add_property", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
   .def("add_property", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddProperty)
   .def(str(self))
@@ -478,7 +478,7 @@ BOOST_PYTHON_MODULE(opcua)
   .staticmethod("status_change")
   ;
 
-  class_<Event>("Event", init<const NodeID &>())
+  class_<Event>("Event", init<const NodeId &>())
   .def(init<>())
   .def("get_value", (Variant(Event::*)(const std::string &) const) &Event::GetValue)
   .def("set_value", (void (Event::*)(const std::string &, Variant)) &Event::SetValue)
@@ -497,7 +497,7 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   class_<Subscription, boost::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
-  .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeID)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeID::Value)))
+  .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeId)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeId::Value)))
   .def("delete", &Subscription::Delete)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
   .def("subscribe_events", (uint32_t (Subscription::*)()) &Subscription::SubscribeEvents)
@@ -516,7 +516,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_objects_node", &UaClient::GetObjectsNode)
   .def("get_server_node", &UaClient::GetServerNode)
   .def("get_node", (Node(UaClient::*)(const std::string&) const) &UaClient::GetNode)
-  .def("get_node", (Node(UaClient::*)(const NodeID&) const) &UaClient::GetNode)
+  .def("get_node", (Node(UaClient::*)(const NodeId&) const) &UaClient::GetNode)
   .def("get_node", &UaClient_GetNode)
   .def("get_endpoint", &UaClient::GetEndpoint)
   .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)(const std::string&)) &UaClient::GetServerEndpoints)
@@ -542,7 +542,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_objects_node", &UaServer::GetObjectsNode)
   .def("get_server_node", &UaServer::GetServerNode)
   .def("get_node", (Node(UaServer::*)(const std::string&) const) &UaServer::GetNode)
-  .def("get_node", (Node(UaServer::*)(const NodeID&) const) &UaServer::GetNode)
+  .def("get_node", (Node(UaServer::*)(const NodeId&) const) &UaServer::GetNode)
   .def("get_node", &UaServer_GetNode)
   .def("set_uri", &UaServer::SetServerURI)
   .def("add_xml_address_space", &UaServer::AddAddressSpace)

@@ -89,8 +89,8 @@ namespace
     }
 
     PublishApplicationsInformation(applicationDescriptions, endpointDescriptions, addons);
-    OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
-    OpcUa::Server::AsioAddon::SharedPtr asio = addons.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
+    OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
+    OpcUa::Server::AsioAddon::SharedPtr asio = addons.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
 
     params.Port = Common::Uri(endpointDescriptions[0].EndpointURL).Port();
     Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer(), asio->GetIoService());
@@ -99,7 +99,7 @@ namespace
 
   void AsyncOpcTcpAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
   {
-    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
+    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
     if (!endpointsAddon)
     {
       std::cerr << "Cannot publish information about endpoints. Endpoints services addon didn't' registered." << std::endl;

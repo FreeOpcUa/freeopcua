@@ -50,9 +50,9 @@ protected:
   Common::AddonInformation CreateXmlAddressSpaceAddonConfig()
   {
     Common::AddonInformation config;
-    config.ID = OpcUa::Server::XmlAddressSpaceAddonID;
+    config.Id = OpcUa::Server::XmlAddressSpaceAddonId;
     config.Factory.reset(new OpcUa::Internal::XmlAddressSpaceAddonFactory());
-    config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonID);
+    config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonId);
     return config;
   }
 
@@ -62,5 +62,5 @@ protected:
 
 TEST_F(XmlSpaceAddon, CanBeLoaded)
 {
-  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::XmlAddressSpaceAddonID)));
+  ASSERT_TRUE(static_cast<bool>(Addons->GetAddon(OpcUa::Server::XmlAddressSpaceAddonId)));
 }

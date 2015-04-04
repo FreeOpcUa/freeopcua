@@ -74,7 +74,7 @@ namespace OpcUa
       }
     };
 
-    const char XmlAddressSpaceAddonID[] = "xml_address_space_loader";
+    const char XmlAddressSpaceAddonId[] = "xml_address_space_loader";
 
   } // namespace Internal
 } // namespace OpcUa

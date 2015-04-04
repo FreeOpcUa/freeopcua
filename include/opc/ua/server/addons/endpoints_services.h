@@ -19,7 +19,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char EndpointsRegistryAddonID[] = "endpoints_services";
+    const char EndpointsRegistryAddonId[] = "endpoints_services";
 
 
     class EndpointsRegistryAddonFactory : public Common::AddonFactory

@@ -29,7 +29,7 @@
 namespace OpcUa
 {
 
-  typedef std::string LocaleID;
+  typedef std::string LocaleId;
 
   enum class TimestampsToReturn
   {
@@ -58,14 +58,14 @@ namespace OpcUa
     }
   };
 
-  class IntegerID
+  class IntegerId
   {
   public:
-    IntegerID();
-    IntegerID(const IntegerID& id);
-    explicit IntegerID(uint32_t num);
-    IntegerID& operator= (const IntegerID& id);
-    IntegerID& operator= (uint32_t value);
+    IntegerId();
+    IntegerId(const IntegerId& id);
+    explicit IntegerId(uint32_t num);
+    IntegerId& operator= (const IntegerId& id);
+    IntegerId& operator= (uint32_t value);
     operator uint32_t() const;
 
   private:
@@ -117,7 +117,7 @@ namespace OpcUa
 
   struct RelativePathElement
   {
-    NodeID ReferenceTypeID;
+    NodeId ReferenceTypeId;
     bool IsInverse = false;
     bool IncludeSubtypes = false;
     QualifiedName TargetName;
@@ -177,7 +177,7 @@ namespace OpcUa
 
   struct AdditionalHeader
   {
-    ExpandedNodeID TypeID;
+    ExpandedNodeId TypeId;
     uint8_t Encoding;
 
     AdditionalHeader()
@@ -188,11 +188,11 @@ namespace OpcUa
 
   struct RequestHeader
   {
-    ExpandedNodeID SessionAuthenticationToken;
+    ExpandedNodeId SessionAuthenticationToken;
     DateTime UtcTime;
     uint32_t RequestHandle = 0;
     uint32_t ReturnDiagnostics = 0;
-    std::string AuditEntryID;
+    std::string AuditEntryId;
     uint32_t Timeout = 0; // in miliseconds
     AdditionalHeader Additional;
 
@@ -203,7 +203,7 @@ namespace OpcUa
   enum DiagnosticInfoMask : uint8_t
   {
     DIM_NONE                  = 0,
-    DIM_SYMBOLIC_ID           = 0x1,
+    DIM_SYMBOLIC_Id           = 0x1,
     DIM_NAMESPACE             = 0x2,
     DIM_LOCALIZED_TEXT        = 0x4,
     DIM_LOCALE                = 0x8,
@@ -215,7 +215,7 @@ namespace OpcUa
   struct DiagnosticInfo
   {
     DiagnosticInfoMask EncodingMask;
-    int32_t SymbolicID;
+    int32_t SymbolicId;
     int32_t NamespaceURI;
     int32_t LocalizedText;
     int32_t Locale;
@@ -225,7 +225,7 @@ namespace OpcUa
 
     DiagnosticInfo()
       : EncodingMask(DiagnosticInfoMask::DIM_NONE)
-      , SymbolicID(0)
+      , SymbolicId(0)
       , NamespaceURI(0)
       , LocalizedText(0)
       , Locale(0)
@@ -237,7 +237,7 @@ namespace OpcUa
     {
       if (
         EncodingMask == info.EncodingMask &&
-        SymbolicID == info.SymbolicID &&
+        SymbolicId == info.SymbolicId &&
         NamespaceURI == info.NamespaceURI &&
         LocalizedText == info.LocalizedText &&
         Locale == info.Locale &&
@@ -274,7 +274,7 @@ namespace OpcUa
 
   enum MessageSecurityMode : uint32_t
   {
-    MSM_INVALID = 0,
+    MSM_INVALId = 0,
     MSM_NONE = 1,
     MSM_SIGN = 2,
     MSM_SIGN_AND_ENCRYPT = 3,
@@ -320,7 +320,7 @@ namespace OpcUa
 
   struct UserTokenPolicy
   {
-    std::string PolicyID;
+    std::string PolicyId;
     UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
     std::string IssuedTokenType;
     std::string IssuerEndpointURL;
@@ -350,11 +350,11 @@ namespace OpcUa
   //TODO serialization tests
   struct ExtensionObjectHeader
   {
-    ExpandedNodeID TypeID;
+    ExpandedNodeId TypeId;
     ExtensionObjectEncoding Encoding;
 
     ExtensionObjectHeader();
-    ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding);
+    ExtensionObjectHeader(ExtensionObjectId objectId, ExtensionObjectEncoding encoding);
   };
 
 } // namespace OpcUa

@@ -35,7 +35,7 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  typedef std::map<IntegerID, std::function<void (PublishResult)>> SubscriptionCallbackMap;
+  typedef std::map<IntegerId, std::function<void (PublishResult)>> SubscriptionCallbackMap;
 
   class BufferInputChannel : public OpcUa::InputChannel
   {
@@ -268,7 +268,7 @@ namespace
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
       request.Parameters = session_parameters;
-      request.Parameters.LocaleIDs.push_back("en");
+      request.Parameters.LocaleIds.push_back("en");
       ActivateSessionResponse response = Send<ActivateSessionResponse>(request);
       if (Debug)  { std::cout << "binary_client| ActivateSession <--" << std::endl; }
       return response;
@@ -296,7 +296,7 @@ namespace
     {
       if (Debug)  {
         std::cout << "binary_client| Read -->" << std::endl;
-        for ( AttributeValueID attr : params.AttributesToRead )
+        for ( AttributeValueId attr : params.AttributesToRead )
         {
           std::cout << attr.Node << "  " << (uint32_t)attr.Attribute;
         }
@@ -343,7 +343,7 @@ namespace
       OpcUa::GetEndpointsRequest request;
       request.Header = CreateRequestHeader();
       request.Filter.EndpointURL = filter.EndpointURL;
-      request.Filter.LocaleIDs = filter.LocaleIDs;
+      request.Filter.LocaleIds = filter.LocaleIds;
       request.Filter.ProfileUries = filter.ProfileUries;
       const GetEndpointsResponse response = Send<GetEndpointsResponse>(request);
       if (Debug)  { std::cout << "binary_client| GetEndpoints <--" << std::endl; }
@@ -413,12 +413,12 @@ namespace
       if (Debug)  { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
-      PublishCallbacks[response.Data.ID] = callback;// TODO Pass calback to the Publish method.
+      PublishCallbacks[response.Data.Id] = callback;// TODO Pass calback to the Publish method.
       if (Debug)  { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
     {
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
       DeleteSubscriptionRequest request;
@@ -463,11 +463,11 @@ namespace
         in >> response;
         CallbackService.post([this, response]() 
             { 
-              if (Debug) {std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionID << std::endl;}
-              SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionID);
+              if (Debug) {std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionId << std::endl;}
+              SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionId);
               if (callbackIt == this->PublishCallbacks.end())
               {
-                std::cout << "BinaryClient | Error Uknown SubscriptionID " << response.Result.SubscriptionID << std::endl;
+                std::cout << "BinaryClient | Error Uknown SubscriptionId " << response.Result.SubscriptionId << std::endl;
               }
               else
               {
@@ -511,10 +511,10 @@ namespace
     virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
     {
       if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
-      TranslateBrowsePathsToNodeIDsRequest request;
+      TranslateBrowsePathsToNodeIdsRequest request;
       request.Header = CreateRequestHeader();
       request.Parameters = params;
-      const TranslateBrowsePathsToNodeIDsResponse response = Send<TranslateBrowsePathsToNodeIDsResponse>(request);
+      const TranslateBrowsePathsToNodeIdsResponse response = Send<TranslateBrowsePathsToNodeIdsResponse>(request);
       if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
       return response.Result.Paths;
     }
@@ -595,7 +595,7 @@ namespace
       try
       {
         if (Debug) {std::cout << "binary_client| CloseSecureChannel -->" << std::endl;}
-        SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+        SecureHeader hdr(MT_SECURE_CLOSE, CHT_SINGLE, ChannelSecurityToken.SecureChannelId);
 
         const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
         hdr.AddSize(RawSize(algorithmHeader));
@@ -640,7 +640,7 @@ private:
     void Send(Request request) const
     {
       // TODO add support for breaking message into multiple chunks
-      SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+      SecureHeader hdr(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelSecurityToken.SecureChannelId);
       const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
       hdr.AddSize(RawSize(algorithmHeader));
 
@@ -700,7 +700,7 @@ private:
       Stream >> raw;
 
       IStreamBinary in(bufferInput);
-      NodeID id;
+      NodeId id;
       in >> id;
       ResponseHeader header;
       in >> header;
@@ -756,7 +756,7 @@ private:
     SymmetricAlgorithmHeader CreateAlgorithmHeader() const
     {
       SymmetricAlgorithmHeader algorithmHeader;
-      algorithmHeader.TokenID = ChannelSecurityToken.TokenID;
+      algorithmHeader.TokenId = ChannelSecurityToken.TokenId;
       return algorithmHeader;
     }
 
@@ -764,7 +764,7 @@ private:
     {
       SequenceHeader sequence;
       sequence.SequenceNumber = ++SequenceNumber;
-      sequence.RequestID = ++RequestNumber;
+      sequence.RequestId = ++RequestNumber;
       return sequence;
     }
 
@@ -792,7 +792,7 @@ private:
     SecurityToken ChannelSecurityToken;
     mutable std::atomic<uint32_t> SequenceNumber;
     mutable std::atomic<uint32_t> RequestNumber;
-    ExpandedNodeID AuthenticationToken;
+    ExpandedNodeId AuthenticationToken;
     mutable std::atomic<uint32_t> RequestHandle;
     mutable std::vector<std::vector<uint8_t>> ContinuationPoints;
     mutable CallbackMap Callbacks;
@@ -808,7 +808,7 @@ private:
   template <>
   void BinaryClient::Send<OpenSecureChannelRequest>(OpenSecureChannelRequest request) const
   {
-    SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelID);
+    SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelId);
     AsymmetricAlgorithmHeader algorithmHeader;
     algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
     algorithmHeader.SenderCertificate = Params.SenderCertificate;
