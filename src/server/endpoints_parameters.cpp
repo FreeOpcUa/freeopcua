@@ -153,7 +153,7 @@ namespace
       for (const Common::Parameter& param : params)
       {
         if (param.Name == "id")
-          tokenPolicy.PolicyID = param.Value;//"Anonymous";
+          tokenPolicy.PolicyId = param.Value;//"Anonymous";
         else if (param.Name == "type")
           tokenPolicy.TokenType = GetTokenType(param.Value);
         else if (param.Name == "uri")
@@ -172,7 +172,7 @@ namespace
     {
       Log("Parsing user token policy.");
       Common::ParametersGroup policyGroup("user_token_policy");
-      policyGroup.Parameters.push_back(Common::Parameter("id", policy.PolicyID));
+      policyGroup.Parameters.push_back(Common::Parameter("id", policy.PolicyId));
       policyGroup.Parameters.push_back(Common::Parameter("type", GetTokenType(policy.TokenType)));
       policyGroup.Parameters.push_back(Common::Parameter("uri", policy.SecurityPolicyURI));
       policyGroup.Parameters.push_back(Common::Parameter("issuer_endpoint_url", policy.IssuerEndpointURL));

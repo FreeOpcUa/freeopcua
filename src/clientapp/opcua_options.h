@@ -28,7 +28,7 @@ namespace OpcUa
       return ServerURI;
     }
 
-    NodeID GetNodeID() const
+    NodeId GetNodeId() const
     {
       return Node;
     }
@@ -43,14 +43,14 @@ namespace OpcUa
       return Value;
     }
 
-    AttributeID GetAttribute() const
+    AttributeId GetAttribute() const
     {
       return Attribute;
     }
 
-    std::string GetModuleID() const
+    std::string GetModuleId() const
     {
-      return ModuleID;
+      return ModuleId;
     }
 
     std::string GetModulePath() const
@@ -110,11 +110,11 @@ namespace OpcUa
 
   private:
     std::string ServerURI;
-    NodeID Node;
+    NodeId Node;
     uint16_t NamespaceIndex;
     Variant Value;
-    AttributeID Attribute;
-    std::string ModuleID;
+    AttributeId Attribute;
+    std::string ModuleId;
     std::string ModulePath;
     std::string ConfigDir;
 

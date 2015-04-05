@@ -25,24 +25,24 @@ namespace OpcUa
 {
   namespace Model
   {
-    Variable::Variable(NodeID variableID, Services::SharedPtr services)
+    Variable::Variable(NodeId variableId, Services::SharedPtr services)
       : Node(services)
     {
-      Id = variableID;
+      Id = variableId;
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::DisplayName));
-      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::BrowseName));
-      attrs.AttributesToRead.push_back(AttributeValueID(variableID, AttributeID::DataType));
+      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::DisplayName));
+      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::BrowseName));
+      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::DataType));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
-      DataType = OpcUa::DataTypeToVariantType(values[2].Value.As<NodeID>());
+      DataType = OpcUa::DataTypeToVariantType(values[2].Value.As<NodeId>());
     }
 
     DataValue Variable::GetValue() const
     {
       ReadParameters params;
-      params.AttributesToRead.push_back(AttributeValueID(GetID(), AttributeID::Value));
+      params.AttributesToRead.push_back(AttributeValueId(GetId(), AttributeId::Value));
       const std::vector<DataValue> result = GetServices()->Attributes()->Read(params);
       if (result.size() != 1)
       {
@@ -61,7 +61,7 @@ namespace OpcUa
     void Variable::SetValue(const DataValue& value)
     {
       WriteValue writeValue;
-      writeValue.Attribute = AttributeID::Value;
+      writeValue.Attribute = AttributeId::Value;
       writeValue.Data = value;
       writeValue.Node = Id;
       std::vector<StatusCode> result = GetServices()->Attributes()->Write({writeValue});
@@ -74,7 +74,7 @@ namespace OpcUa
 
     std::vector<Variable> Variable::Variables() const
     {
-      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
+      return Browse<Variable>(GetId(), NODE_CLASS_VARIABLE, GetServices());
     }
   }
 }

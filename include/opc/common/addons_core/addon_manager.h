@@ -20,16 +20,16 @@
 
 namespace Common
 {
-  typedef std::string AddonID;
+  typedef std::string AddonId;
 
   class Addon;
   class AddonFactory;
 
   struct AddonInformation
   {
-    AddonID ID;
+    AddonId Id;
     std::shared_ptr<AddonFactory> Factory;
-    std::vector<AddonID> Dependencies;
+    std::vector<AddonId> Dependencies;
     AddonParameters Parameters;
   };
 
@@ -49,25 +49,25 @@ namespace Common
     /// @param id id of unregistering addon
     /// @throws if addon not found
     /// For unregistering addon will be called method Addon::Stop() and addon data will be removed.
-    virtual void Unregister(const AddonID& id) = 0;
+    virtual void Unregister(const AddonId& id) = 0;
 
     /// @brief getting addon by id
     /// @param id id of the required addon
     /// @return addon instance
     /// @throws if addon is not registered or not initialized yet.
 
-    virtual std::shared_ptr<Addon> GetAddon(const AddonID& id) const = 0;
+    virtual std::shared_ptr<Addon> GetAddon(const AddonId& id) const = 0;
 
     virtual std::shared_ptr<Addon> GetAddon(const char id[]) const
     {
-      return GetAddon(AddonID(id));
+      return GetAddon(AddonId(id));
     }
  
     /// @brief Get instance of addon
     /// @return instance of addon casted to specified type
     /// @throws if unable to cast addon, unable to find addon, or in casr of error
     template <class AddonClass>
-    typename std::shared_ptr<AddonClass> GetAddon(const AddonID& id) const;
+    typename std::shared_ptr<AddonClass> GetAddon(const AddonId& id) const;
 
 //    template <class AddonClass>
 //    typename std::shared_ptr<AddonClass> GetAddon(const char* id) const;
@@ -93,7 +93,7 @@ namespace Common
   AddonsManager::UniquePtr CreateAddonsManager();
 
   template <class AddonClass>
-  typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const AddonID& id) const
+  typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const AddonId& id) const
   {
     return std::dynamic_pointer_cast<AddonClass>(GetAddon(id));
   }
@@ -101,7 +101,7 @@ namespace Common
   template <class AddonClass>
   typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const char id[]) const
   {
-    return std::dynamic_pointer_cast<AddonClass>(GetAddon(AddonID(id)));
+    return std::dynamic_pointer_cast<AddonClass>(GetAddon(AddonId(id)));
   }
 
 

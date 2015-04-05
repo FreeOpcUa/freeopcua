@@ -20,17 +20,17 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-extern void py_opcua_enums_ObjectID();
+extern void py_opcua_enums_ObjectId();
 extern void py_opcua_enums_StatusCode();
-extern void py_opcua_enums_AttributeID();
+extern void py_opcua_enums_AttributeId();
 
 void py_opcua_enums()
 {
 
   // codegen
-  py_opcua_enums_ObjectID();
+  py_opcua_enums_ObjectId();
   py_opcua_enums_StatusCode();
-  py_opcua_enums_AttributeID();
+  py_opcua_enums_AttributeId();
 
   enum_<ApplicationType>("ApplicationType")
 #define _value(X) value(#X, ApplicationType:: X)
@@ -105,11 +105,11 @@ void py_opcua_enums()
   ._value(DOUBLE)
   ._value(STRING)
   ._value(DATE_TIME)
-  ._value(GUID)
+  ._value(GUId)
   ._value(BYTE_STRING)
   ._value(XML_ELEMENT)
-  ._value(NODE_ID)
-  ._value(EXPANDED_NODE_ID)
+  ._value(NODE_Id)
+  ._value(EXPANDED_NODE_Id)
   ._value(STATUS_CODE)
   ._value(QUALIFIED_NAME)
   ._value(LOCALIZED_TEXT)

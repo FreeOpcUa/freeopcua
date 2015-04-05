@@ -33,9 +33,9 @@ namespace OpcUa
     class Node
     {
     public:
-      Node(NodeID id, Services::SharedPtr services);
+      Node(NodeId id, Services::SharedPtr services);
 
-      NodeID GetID() const;
+      NodeId GetId() const;
 
 
       QualifiedName GetBrowseName() const;
@@ -53,7 +53,7 @@ namespace OpcUa
       Node(Services::SharedPtr services);
 
     protected:
-      NodeID Id;
+      NodeId Id;
       QualifiedName BrowseName;
       LocalizedText DisplayName;
       Services::SharedPtr OpcUaServices;
@@ -63,7 +63,7 @@ namespace OpcUa
     class ReferenceType : public Node
     {
     public:
-      ReferenceType(NodeID typeId, Services::SharedPtr services);
+      ReferenceType(NodeId typeId, Services::SharedPtr services);
 
       ReferenceType Parent() const;
 
@@ -83,7 +83,7 @@ namespace OpcUa
     class DataType : public Node
     {
     public:
-      DataType(NodeID typeID, Services::SharedPtr services);
+      DataType(NodeId typeId, Services::SharedPtr services);
 
       bool IsAbstrasct() const;
       DataType Parent() const;
@@ -92,16 +92,16 @@ namespace OpcUa
 
     private:
       bool IsAbstract = false;
-      NodeID ParentTypeID;
+      NodeId ParentTypeId;
     };
 
     class VariableType : public Node
     {
     public:
-      VariableType(NodeID typeID, Services::SharedPtr services);
+      VariableType(NodeId typeId, Services::SharedPtr services);
 
       // Existing variable type.
-      VariableType(Services::SharedPtr services, const NodeID& typeId);
+      VariableType(Services::SharedPtr services, const NodeId& typeId);
 
       bool IsBase() const;
       bool IsAbstract() const;
@@ -120,15 +120,15 @@ namespace OpcUa
     private:
       bool Abstract = false;
       DataValue DefaultValue;
-      NodeID ValueTypeID;
-      NodeID ParentTypeID;
+      NodeId ValueTypeId;
+      NodeId ParentTypeId;
     };
 
 
     class Variable : public Node
     {
     public:
-      Variable(NodeID variableID, Services::SharedPtr services);
+      Variable(NodeId variableId, Services::SharedPtr services);
 
       VariableType GetType() const;
 
@@ -150,7 +150,7 @@ namespace OpcUa
       }
 
     private:
-      NodeID TypeID;
+      NodeId TypeId;
       VariantType DataType = VariantType::NUL;
     };
 
@@ -160,7 +160,7 @@ namespace OpcUa
     class ObjectType : public Node
     {
     public:
-      ObjectType(NodeID objectID, Services::SharedPtr services);
+      ObjectType(NodeId objectId, Services::SharedPtr services);
 
       bool IsBase() const;
       bool IsAbstract() const;
@@ -174,14 +174,14 @@ namespace OpcUa
 
     private:
       bool Abstract = false;
-      NodeID ParentTypeID;
+      NodeId ParentTypeId;
     };
 
 
     class Object : public Node
     {
     public:
-      Object(NodeID objectId, Services::SharedPtr services);
+      Object(NodeId objectId, Services::SharedPtr services);
       Object(Object&& object);
       Object(const Object& object);
 
@@ -202,29 +202,29 @@ namespace OpcUa
       /// @note If id of the new variable is not specified then it will be generated.
       /// @return new variable.
       Variable CreateVariable(const QualifiedName& browseName, const Variant& value);
-      Variable CreateVariable(const NodeID& newVariableID, const QualifiedName& browseName, const Variant& value);
+      Variable CreateVariable(const NodeId& newVariableId, const QualifiedName& browseName, const Variant& value);
       Variable CreateVariable(const QualifiedName& browseName, const VariableType& type);
-      Variable CreateVariable(const NodeID& newVariableID, const QualifiedName& browseName, const VariableType& type);
+      Variable CreateVariable(const NodeId& newVariableId, const QualifiedName& browseName, const VariableType& type);
 
       std::vector<Object> GetObjects() const;
       Object GetObject(const QualifiedName& name) const;
       Object GetObject(const RelativePath& name) const;
 
       Object CreateObject(const ObjectType& type, const QualifiedName& browseName);
-      Object CreateObject(const NodeID& newNodeId, const ObjectType& nodeType, const QualifiedName& browseName);
+      Object CreateObject(const NodeId& newNodeId, const ObjectType& nodeType, const QualifiedName& browseName);
       Object CreateObject(const ObjectType& type, const QualifiedName& browseName, const std::string& displayName);
-      Object CreateObject(const NodeID& newNodeID, const ObjectType& type, const QualifiedName& browseName, const std::string& displayName);
+      Object CreateObject(const NodeId& newNodeId, const ObjectType& type, const QualifiedName& browseName, const std::string& displayName);
 
     private:
-      Object CreateObject(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string& displayName);
-      Variable CreateVariable(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, const QualifiedName& browseName, const std::string& displayName);
+      Object CreateObject(const NodeId& newNodeId, const NodeId& parentNode, const NodeId& typeId, const QualifiedName& browseName, const std::string& displayName);
+      Variable CreateVariable(const NodeId& newNodeId, const NodeId& parentNode, const NodeId& typeId, const QualifiedName& browseName, const std::string& displayName);
 
-      NodeID InstantiateType(const NodeID& newNodeID, const NodeID& parentNode, const NodeID& typeID, NodeClass nodeClass, const QualifiedName& browseName, const std::string& displayName);
-      std::vector<ReferenceDescription> BrowseObjectsAndVariables(const NodeID& id);
+      NodeId InstantiateType(const NodeId& newNodeId, const NodeId& parentNode, const NodeId& typeId, NodeClass nodeClass, const QualifiedName& browseName, const std::string& displayName);
+      std::vector<ReferenceDescription> BrowseObjectsAndVariables(const NodeId& id);
 
-      std::map<NodeID, std::vector<ReferenceDescription>> CopyObjectsAndVariables(const NodeID& targetNode, const std::vector<ReferenceDescription>& refs);
-      AddNodesItem CreateVariableCopy(const NodeID& parentID, const ReferenceDescription& ref);
-      AddNodesItem CreateObjectCopy(const NodeID& parentID, const ReferenceDescription& ref);
+      std::map<NodeId, std::vector<ReferenceDescription>> CopyObjectsAndVariables(const NodeId& targetNode, const std::vector<ReferenceDescription>& refs);
+      AddNodesItem CreateVariableCopy(const NodeId& parentId, const ReferenceDescription& ref);
+      AddNodesItem CreateObjectCopy(const NodeId& parentId, const ReferenceDescription& ref);
 
     private:
       explicit Object(Services::SharedPtr services);
@@ -236,8 +236,8 @@ namespace OpcUa
       Server(Services::SharedPtr services);
 
       Object RootObject() const;
-      Object GetObject(const NodeID& id) const;
-      ObjectType GetObjectType(const NodeID& typeId) const;
+      Object GetObject(const NodeId& id) const;
+      ObjectType GetObjectType(const NodeId& typeId) const;
 
     public:
       Services::SharedPtr GetServices() const;

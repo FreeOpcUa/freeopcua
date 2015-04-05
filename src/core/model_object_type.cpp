@@ -26,14 +26,14 @@ namespace OpcUa
   namespace Model
   {
 
-    ObjectType::ObjectType(NodeID objectId, Services::SharedPtr services)
+    ObjectType::ObjectType(NodeId objectId, Services::SharedPtr services)
       : Node(services)
     {
       Id = objectId;
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::DisplayName));
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::BrowseName));
-      attrs.AttributesToRead.push_back(AttributeValueID(objectId, AttributeID::IsAbstract));
+      attrs.AttributesToRead.push_back(AttributeValueId(objectId, AttributeId::DisplayName));
+      attrs.AttributesToRead.push_back(AttributeValueId(objectId, AttributeId::BrowseName));
+      attrs.AttributesToRead.push_back(AttributeValueId(objectId, AttributeId::IsAbstract));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
@@ -47,22 +47,22 @@ namespace OpcUa
 
     std::vector<Variable> ObjectType::Variables() const
     {
-      return Browse<Variable>(GetID(), NODE_CLASS_VARIABLE, GetServices());
+      return Browse<Variable>(GetId(), NODE_CLASS_VARIABLE, GetServices());
     }
 
     std::vector<Object> ObjectType::Objects() const
     {
-      return Browse<Object>(GetID(), NODE_CLASS_OBJECT, GetServices());
+      return Browse<Object>(GetId(), NODE_CLASS_OBJECT, GetServices());
     }
 
     std::vector<ObjectType> ObjectType::SubTypes() const
     {
-      return Browse<ObjectType>(GetID(), NODE_CLASS_OBJECT_TYPE, GetServices());
+      return Browse<ObjectType>(GetId(), NODE_CLASS_OBJECT_TYPE, GetServices());
     }
 
     ObjectType ObjectType::Parent() const
     {
-      return ObjectType(ObjectID::Null, GetServices());
+      return ObjectType(ObjectId::Null, GetServices());
     }
 
   }

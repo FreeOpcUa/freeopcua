@@ -20,14 +20,14 @@ namespace
 {
   struct AddonData
   {
-    Common::AddonID ID;
+    Common::AddonId Id;
     Common::AddonFactory::SharedPtr Factory;
-    std::vector<Common::AddonID> Dependencies;
+    std::vector<Common::AddonId> Dependencies;
     Common::AddonParameters Parameters;
     Common::Addon::SharedPtr Addon;
 
     AddonData(const Common::AddonInformation& configuration)
-      : ID(configuration.ID)
+      : Id(configuration.Id)
       , Factory(configuration.Factory)
       , Dependencies(configuration.Dependencies)
       , Parameters(configuration.Parameters)
@@ -35,14 +35,14 @@ namespace
     }
   };
 
-  bool IsAddonNotStarted(const std::pair<Common::AddonID, AddonData>& addonData)
+  bool IsAddonNotStarted(const std::pair<Common::AddonId, AddonData>& addonData)
   {
     return addonData.second.Addon == Common::Addon::SharedPtr();
   }
 
   class AddonsManagerImpl : public Common::AddonsManager
   {
-    typedef std::map<Common::AddonID, AddonData> AddonList;
+    typedef std::map<Common::AddonId, AddonData> AddonList;
 
   public:
     AddonsManagerImpl()
@@ -75,18 +75,18 @@ namespace
       // TODO lock manager
       if (ManagerStarted && !addonConfiguration.Dependencies.empty())
       {
-        THROW_ERROR1(UnableToRegisterAddonWhenStarted, addonConfiguration.ID);
+        THROW_ERROR1(UnableToRegisterAddonWhenStarted, addonConfiguration.Id);
       }
 
-      EnsureAddonNotRegistered(addonConfiguration.ID);
-      Addons.insert(std::make_pair(addonConfiguration.ID, AddonData(addonConfiguration)));
+      EnsureAddonNotRegistered(addonConfiguration.Id);
+      Addons.insert(std::make_pair(addonConfiguration.Id, AddonData(addonConfiguration)));
       if (ManagerStarted)
       {
         DoStart();
       }
     }
 
-    virtual void Unregister(const Common::AddonID& id)
+    virtual void Unregister(const Common::AddonId& id)
     {
       // TODO lock manager
       EnsureAddonRegistered(id);
@@ -98,7 +98,7 @@ namespace
       Addons.erase(id);
     }
 
-    virtual Common::Addon::SharedPtr GetAddon(const Common::AddonID& id) const
+    virtual Common::Addon::SharedPtr GetAddon(const Common::AddonId& id) const
     {
       // TODO lock manager
       EnsureAddonRegistered(id);
@@ -141,14 +141,14 @@ namespace
       {
         try
         {
-          //std::cout << "Stopping addon '" << addonData->ID << "'" <<  std::endl;
+          //std::cout << "Stopping addon '" << addonData->Id << "'" <<  std::endl;
           addonData->Addon->Stop();
           addonData->Addon.reset();
-          //std::cout << "Addon '" << addonData->ID << "' successfully stopped." <<  std::endl;
+          //std::cout << "Addon '" << addonData->Id << "' successfully stopped." <<  std::endl;
         }
         catch (const std::exception& exc)
         {
-          std::cerr << "Failed to initialize addon '" << addonData->ID << "': "<< exc.what() <<  std::endl;
+          std::cerr << "Failed to initialize addon '" << addonData->Id << "': "<< exc.what() <<  std::endl;
         }
       }
       Addons.clear();
@@ -158,17 +158,17 @@ namespace
     {
       while (AddonData* addonData = GetNextAddonDataForStart())
       {
-        //std::cout << "Creating addon '" << addonData->ID << "'" <<  std::endl;
+        //std::cout << "Creating addon '" << addonData->Id << "'" <<  std::endl;
         Common::Addon::SharedPtr addon = addonData->Factory->CreateAddon();
-        //std::cout << "Initializing addon '" << addonData->ID << "'" <<  std::endl;
+        //std::cout << "Initializing addon '" << addonData->Id << "'" <<  std::endl;
         try
         {
           addon->Initialize(*this, addonData->Parameters);
-          //std::cout << "Addon '" << addonData->ID << "' successfully initialized." <<  std::endl;
+          //std::cout << "Addon '" << addonData->Id << "' successfully initialized." <<  std::endl;
         }
         catch (const std::exception& exc)
         {
-          std::cerr << "Failed to initialize addon '" << addonData->ID << "': "<< exc.what() <<  std::endl;
+          std::cerr << "Failed to initialize addon '" << addonData->Id << "': "<< exc.what() <<  std::endl;
           return false;
         }
         addonData->Addon = addon;
@@ -207,9 +207,9 @@ namespace
      return static_cast<bool>(addonData.Addon);
    }
 
-   bool IsAllAddonsStarted(const std::vector<Common::AddonID>& ids) const
+   bool IsAllAddonsStarted(const std::vector<Common::AddonId>& ids) const
    {
-     for (std::vector<Common::AddonID>::const_iterator it = ids.begin(); it != ids.end(); ++it)
+     for (std::vector<Common::AddonId>::const_iterator it = ids.begin(); it != ids.end(); ++it)
      {
        const AddonList::const_iterator addonIt = Addons.find(*it);
        if (addonIt == Addons.end())
@@ -225,7 +225,7 @@ namespace
      return true;
    }
 
-   bool IsAllDependentAddonsStopped(const Common::AddonID& id) const
+   bool IsAllDependentAddonsStopped(const Common::AddonId& id) const
    {
      for (const AddonList::value_type& addonIt : Addons)
      {
@@ -235,7 +235,7 @@ namespace
          continue;
        }
        // If current addon depends on passed.
-       const std::vector<Common::AddonID>& deps = addonIt.second.Dependencies;
+       const std::vector<Common::AddonId>& deps = addonIt.second.Dependencies;
        if (std::find(deps.begin(), deps.end(), id) != deps.end())
        {
          return false;
@@ -244,7 +244,7 @@ namespace
      return true;
    }
 
-   void EnsureAddonInitialized(Common::AddonID id) const
+   void EnsureAddonInitialized(Common::AddonId id) const
    {
      if (!Addons.find(id)->second.Addon)
      {
@@ -252,7 +252,7 @@ namespace
      }
    }
 
-   void EnsureAddonRegistered(Common::AddonID id) const
+   void EnsureAddonRegistered(Common::AddonId id) const
    {
      if (!IsAddonRegistered(id))
      {
@@ -260,7 +260,7 @@ namespace
      }
    }
 
-   void EnsureAddonNotRegistered(Common::AddonID id) const
+   void EnsureAddonNotRegistered(Common::AddonId id) const
    {
      if (IsAddonRegistered(id))
      {
@@ -268,7 +268,7 @@ namespace
      }
    }
 
-   bool IsAddonRegistered(Common::AddonID id) const
+   bool IsAddonRegistered(Common::AddonId id) const
    {
      return Addons.find(id) != Addons.end();
    }

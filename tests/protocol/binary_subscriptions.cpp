@@ -99,9 +99,9 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionRequest)
 
   CreateSubscriptionRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -115,7 +115,7 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionRequest)
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x13, 0x3, // TypeID
+    1, 0, (char)0x13, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -138,7 +138,7 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x13, 0x3, // TypeID
+    1, 0, (char)0x13, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -156,9 +156,9 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionRequest)
   CreateSubscriptionRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -181,7 +181,7 @@ TEST_F(SubscriptionSerialization, SubscriptionData)
   using namespace OpcUa::Binary;
 
   SubscriptionData data;
-  data.ID = 2;
+  data.Id = 2;
   data.RevisedPublishingInterval = 1200000;
   data.RevisedLifetimeCount = 3;
   data.RevizedMaxKeepAliveCount = 4;
@@ -216,7 +216,7 @@ TEST_F(SubscriptionDeserialization, SubscriptionData)
   SubscriptionData data;
   GetStream() >> data;
 
-  ASSERT_EQ(data.ID, 2);
+  ASSERT_EQ(data.Id, 2);
   ASSERT_EQ(data.RevisedPublishingInterval, 1200000);
   ASSERT_EQ(data.RevisedLifetimeCount, 3);
   ASSERT_EQ(data.RevizedMaxKeepAliveCount, 4);
@@ -232,13 +232,13 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
 
   CreateSubscriptionResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  response.Data.ID = 2;
+  response.Data.Id = 2;
   response.Data.RevisedPublishingInterval = 1200000;
   response.Data.RevisedLifetimeCount = 3;
   response.Data.RevizedMaxKeepAliveCount = 4;
@@ -246,7 +246,7 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x16, 0x3, // TypeID
+    1, 0, (char)0x16, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -267,7 +267,7 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x16, 0x3, // TypeID
+    1, 0, (char)0x16, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -283,13 +283,13 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
   CreateSubscriptionResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Data.ID, 2);
+  ASSERT_EQ(response.Data.Id, 2);
   ASSERT_EQ(response.Data.RevisedPublishingInterval, 1200000);
   ASSERT_EQ(response.Data.RevisedLifetimeCount, 3);
   ASSERT_EQ(response.Data.RevizedMaxKeepAliveCount, 4);
@@ -306,7 +306,7 @@ TEST_F(SubscriptionSerialization, SubscriptionAcknowledgement)
   using namespace OpcUa::Binary;
 
   SubscriptionAcknowledgement ack;
-  ack.SubscriptionID = 1;
+  ack.SubscriptionId = 1;
   ack.SequenceNumber = 2;
 
   GetStream() << ack << flush;
@@ -335,7 +335,7 @@ TEST_F(SubscriptionDeserialization, SubscriptionAcknowledgement)
   SubscriptionAcknowledgement ack;
   GetStream() >> ack;
 
-  ASSERT_EQ(ack.SubscriptionID, 1);
+  ASSERT_EQ(ack.SubscriptionId, 1);
   ASSERT_EQ(ack.SequenceNumber, 2);
 }
 
@@ -349,7 +349,7 @@ TEST_F(SubscriptionSerialization, PublishParameters)
   using namespace OpcUa::Binary;
 
   SubscriptionAcknowledgement ack;
-  ack.SubscriptionID = 1;
+  ack.SubscriptionId = 1;
   ack.SequenceNumber = 2;
 
   PublishParameters params;
@@ -397,14 +397,14 @@ TEST_F(SubscriptionSerialization, PublishRequest)
 
   PublishRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   SubscriptionAcknowledgement ack;
-  ack.SubscriptionID = 1;
+  ack.SubscriptionId = 1;
   ack.SequenceNumber = 2;
 
   request.Parameters.Acknowledgements.push_back(ack);
@@ -412,7 +412,7 @@ TEST_F(SubscriptionSerialization, PublishRequest)
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x3A, 0x3, // TypeID
+    1, 0, (char)0x3A, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -433,7 +433,7 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x3A, 0x3, // TypeID
+    1, 0, (char)0x3A, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -449,9 +449,9 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
   PublishRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -468,19 +468,19 @@ TEST_F(SubscriptionSerialization, NotificationMessage)
   using namespace OpcUa::Binary;
 
   NotificationMessage data;
-  data.SequenceID = 1;
+  data.SequenceId = 1;
   data.PublishTime.Value = 2;
   data.Data.push_back(NotificationData());
 
   GetStream() << data << flush;
 
   const std::vector<char> expectedData = {
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
 
     1,0,0,0, // Count of data
     //Message.Header
-    0,0, // TypeID
+    0,0, // TypeId
     0,   // Encoding
   };
 
@@ -494,11 +494,11 @@ TEST_F(SubscriptionDeserialization, NotificationMessage)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeID
+    0,0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
   };
 
@@ -507,7 +507,7 @@ TEST_F(SubscriptionDeserialization, NotificationMessage)
   NotificationMessage message;
   GetStream() >> message;
 
-  ASSERT_EQ(message.SequenceID, IntegerID(1));
+  ASSERT_EQ(message.SequenceId, IntegerId(1));
   ASSERT_EQ(message.PublishTime, 2);
 }
 
@@ -521,11 +521,11 @@ TEST_F(SubscriptionSerialization, PublishResult)
   using namespace OpcUa::Binary;
 
   PublishResult result;
-  result.SubscriptionID = 1;
+  result.SubscriptionId = 1;
   result.AvailableSequenceNumber.push_back(2);
   result.MoreNotifications = true;
 
-  result.Message.SequenceID = 1;
+  result.Message.SequenceId = 1;
   result.Message.PublishTime.Value = 2;
   result.Message.Data.push_back(NotificationData());
 
@@ -542,7 +542,7 @@ TEST_F(SubscriptionSerialization, PublishResult)
   GetStream() << result << flush;
 
   const std::vector<char> expectedData = {
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     //AvailableSequenceNumbers
     1,0,0,0, // count
     2,0,0,0,
@@ -550,11 +550,11 @@ TEST_F(SubscriptionSerialization, PublishResult)
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeID
+    0,0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
@@ -576,7 +576,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     //AvailableSequenceNumbers
     1,0,0,0, // count
     2,0,0,0,
@@ -584,11 +584,11 @@ TEST_F(SubscriptionDeserialization, PublishResult)
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeID
+    0,0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
@@ -605,7 +605,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   PublishResult result;
   GetStream() >> result;
 
-  ASSERT_EQ(result.SubscriptionID, 1);
+  ASSERT_EQ(result.SubscriptionId, 1);
   ASSERT_EQ(result.AvailableSequenceNumber.size(), 1);
   ASSERT_EQ(result.MoreNotifications, true);
   ASSERT_EQ(result.Message.Data.size(), 1);
@@ -624,17 +624,17 @@ TEST_F(SubscriptionSerialization, PublishResponse)
 
   PublishResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   PublishResult result;
-  response.Result.SubscriptionID = 1;
+  response.Result.SubscriptionId = 1;
   response.Result.AvailableSequenceNumber.push_back(2);
   response.Result.MoreNotifications = true;
-  response.Result.Message.SequenceID = 1;
+  response.Result.Message.SequenceId = 1;
   response.Result.Message.PublishTime.Value = 2;
   response.Result.Message.Data.push_back(NotificationData());
   response.Result.Statuses.push_back(StatusCode::Good);
@@ -650,12 +650,12 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x3D, 0x3, // TypeID
+    1, 0, (char)0x3D, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     //AvailableSequenceNumbers
     1,0,0,0, // count
     2,0,0,0,
@@ -663,11 +663,11 @@ TEST_F(SubscriptionSerialization, PublishResponse)
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeID
+    0,0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
@@ -690,9 +690,9 @@ TEST_F(SubscriptionSerialization, PublishResponse_Empty)
 
   PublishResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -702,19 +702,19 @@ TEST_F(SubscriptionSerialization, PublishResponse_Empty)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x3D, 0x3, // TypeID
+    1, 0, (char)0x3D, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     //AvailableSequenceNumbers
     0,0,0,0, // count
     // MoreNotifications
     0,
 
     // NotificationData
-    0,0,0,0, // SequenceID
+    0,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     0,0,0,0, //Count
@@ -735,12 +735,12 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x3D, 0x3, // TypeID
+    1, 0, (char)0x3D, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     //AvailableSequenceNumbers
     1,0,0,0, // count
     2,0,0,0,
@@ -748,11 +748,11 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceID
+    1,0,0,0, // SequenceId
     2,0,0,0,0,0,0,0, // PublishTime
     // Data vector
     1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeID
+    0,0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
@@ -769,9 +769,9 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
   PublishResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -789,13 +789,13 @@ TEST_F(SubscriptionSerialization, PublishingModeParameters)
 
   PublishingModeParameters params;
   params.Enabled = true;
-  params.SubscriptionIDs.push_back(IntegerID());
+  params.SubscriptionIds.push_back(IntegerId());
 
   GetStream() << params << flush;
 
   const std::vector<char> expectedData = {
     1,
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     1,0,0,0
   };
 
@@ -829,7 +829,7 @@ TEST_F(SubscriptionDeserialization, PublishingModeParameters)
 
   const std::vector<char> expectedData = {
     1,
-    1,0,0,0, // SubscriptionID
+    1,0,0,0, // SubscriptionId
     1,0,0,0
   };
 
@@ -839,8 +839,8 @@ TEST_F(SubscriptionDeserialization, PublishingModeParameters)
   GetStream() >> params;
 
   ASSERT_EQ(params.Enabled, true);
-  ASSERT_EQ(params.SubscriptionIDs.size(), 1);
-  ASSERT_EQ(params.SubscriptionIDs[0], 1);
+  ASSERT_EQ(params.SubscriptionIds.size(), 1);
+  ASSERT_EQ(params.SubscriptionIds[0], 1);
 }
 
 //-------------------------------------------------------
@@ -854,19 +854,19 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
 
   SetPublishingModeRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   request.Parameters.Enabled = true;
-  request.Parameters.SubscriptionIDs.push_back(IntegerID());
+  request.Parameters.SubscriptionIds.push_back(IntegerId());
 
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x1F, 0x3, // TypeID
+    1, 0, (char)0x1F, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -887,7 +887,7 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x1F, 0x3, // TypeID
+    1, 0, (char)0x1F, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
@@ -903,15 +903,15 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
   SetPublishingModeRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.Enabled, true);
-  ASSERT_EQ(request.Parameters.SubscriptionIDs.size(), 1);
-  ASSERT_EQ(request.Parameters.SubscriptionIDs[0], 1);
+  ASSERT_EQ(request.Parameters.SubscriptionIds.size(), 1);
+  ASSERT_EQ(request.Parameters.SubscriptionIds[0], 1);
 }
 
 //-------------------------------------------------------
@@ -989,9 +989,9 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
 
   SetPublishingModeResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -1000,7 +1000,7 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x22, 0x3, // TypeID
+    1, 0, (char)0x22, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -1021,16 +1021,16 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse_Empty)
 
   SetPublishingModeResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x22, 0x3, // TypeID
+    1, 0, (char)0x22, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -1049,7 +1049,7 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0x22, 0x3, // TypeID
+    1, 0, (char)0x22, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -1064,9 +1064,9 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
   SetPublishingModeResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 

@@ -221,8 +221,8 @@ protected:
   header.InnerDiagnostics.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO; \
   header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo = "add"; \
   header.StringTable = std::vector<std::string>(2, std::string("str")); \
-  header.Additional.TypeID.Encoding = EV_TWO_BYTE; \
-  header.Additional.TypeID.TwoByteData.Identifier = 7; \
+  header.Additional.TypeId.Encoding = EV_TWO_BYTE; \
+  header.Additional.TypeId.TwoByteData.Identifier = 7; \
   header.Additional.Encoding = 8;
 
 #define ASSERT_RESPONSE_HEADER_EQ(header) \
@@ -235,8 +235,8 @@ protected:
   ASSERT_EQ(header.InnerDiagnostics.InnerDiagnostics->EncodingMask, DIM_ADDITIONAL_INFO); \
   ASSERT_EQ(header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo, "add"); \
   ASSERT_EQ(header.StringTable, std::vector<std::string>(2, std::string("str"))); \
-  ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE); \
-  ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 7); \
+  ASSERT_EQ(header.Additional.TypeId.Encoding, EV_TWO_BYTE); \
+  ASSERT_EQ(header.Additional.TypeId.TwoByteData.Identifier, 7); \
   ASSERT_EQ(header.Additional.Encoding, 8);
 
 
@@ -258,10 +258,10 @@ protected:
   header.UtcTime.Value = 2; \
   header.RequestHandle = 3; \
   header.ReturnDiagnostics = 4; \
-  header.AuditEntryID = "audit"; \
+  header.AuditEntryId = "audit"; \
   header.Timeout = 5; \
-  header.Additional.TypeID.Encoding = EV_TWO_BYTE; \
-  header.Additional.TypeID.TwoByteData.Identifier = 6; \
+  header.Additional.TypeId.Encoding = EV_TWO_BYTE; \
+  header.Additional.TypeId.TwoByteData.Identifier = 6; \
   header.Additional.Encoding = 8;
 
 #define ASSERT_REQUEST_HEADER_EQ(header) \
@@ -270,10 +270,10 @@ protected:
   ASSERT_EQ(header.UtcTime.Value, 2); \
   ASSERT_EQ(header.RequestHandle, 3); \
   ASSERT_EQ(header.ReturnDiagnostics, 4); \
-  ASSERT_EQ(header.AuditEntryID, "audit"); \
+  ASSERT_EQ(header.AuditEntryId, "audit"); \
   ASSERT_EQ(header.Timeout, 5); \
-  ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE); \
-  ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 6); \
+  ASSERT_EQ(header.Additional.TypeId.Encoding, EV_TWO_BYTE); \
+  ASSERT_EQ(header.Additional.TypeId.TwoByteData.Identifier, 6); \
   ASSERT_EQ(header.Additional.Encoding, 8);
 
 
@@ -317,7 +317,7 @@ protected:
   endpoint.SecurityMode = MSM_NONE; \
   endpoint.SecurityPolicyURI = "spu"; \
   UserTokenPolicy token; \
-  token.PolicyID = "pi"; \
+  token.PolicyId = "pi"; \
   token.TokenType = UserIdentifyTokenType::USERNAME; \
   token.IssuedTokenType = "itt"; \
   token.IssuerEndpointURL = "ieu"; \
@@ -349,7 +349,7 @@ protected:
   ASSERT_EQ(e.SecurityMode, MSM_NONE); \
   ASSERT_EQ(e.SecurityPolicyURI, "spu"); \
   ASSERT_EQ(e.UserIdentifyTokens.size(), 1); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].PolicyID, "pi"); \
+  ASSERT_EQ(e.UserIdentifyTokens[0].PolicyId, "pi"); \
   ASSERT_EQ(e.UserIdentifyTokens[0].TokenType, UserIdentifyTokenType::USERNAME); \
   ASSERT_EQ(e.UserIdentifyTokens[0].IssuedTokenType, "itt"); \
   ASSERT_EQ(e.UserIdentifyTokens[0].IssuerEndpointURL, "ieu"); \

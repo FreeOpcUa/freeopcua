@@ -24,7 +24,7 @@ class PySubscriptionHandler: public SubscriptionHandler
 public:
 
   PySubscriptionHandler(PyObject * p);
-  void DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const override;
+  void DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeId attribute) const override;
   void Event(uint32_t handle, const OpcUa::Event & event) const override;
   void StatusChange(StatusCode status)  const override;
   static void DefaultDataChange(const SubscriptionHandler & self_, uint32_t handle, const Node & node, const object & val, uint32_t attribute);

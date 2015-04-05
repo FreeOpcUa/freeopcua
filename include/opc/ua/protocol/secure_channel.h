@@ -19,7 +19,7 @@ namespace OpcUa
   // os << SecureHeader 
   //    << AssymmetricAlgoripthmHeader
   //    << SequenceHeader
-  //    << NodeID << ExpandedNodeId // if present
+  //    << NodeId << ExpandedNodeId // if present
   //    << RequestHeader
   //    << OpenSecureChannel
 
@@ -36,7 +36,7 @@ namespace OpcUa
 
   struct OpenSecureChannelRequest
   {
-    ExpandedNodeID TypeID;
+    ExpandedNodeId TypeId;
     RequestHeader Header;
     OpenSecureChannelParameters Parameters;
 
@@ -53,14 +53,14 @@ namespace OpcUa
 
   struct SecurityToken
   {
-    uint32_t SecureChannelID;
-    uint32_t TokenID;
+    uint32_t SecureChannelId;
+    uint32_t TokenId;
     DateTime CreatedAt;
     int32_t RevisedLifetime;
 
     SecurityToken()
-      : SecureChannelID(0)
-      , TokenID(0)
+      : SecureChannelId(0)
+      , TokenId(0)
       , CreatedAt(0)
       , RevisedLifetime(0)
     {
@@ -69,7 +69,7 @@ namespace OpcUa
 
   struct OpenSecureChannelResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     uint32_t ServerProtocolVersion;
@@ -81,7 +81,7 @@ namespace OpcUa
 
   struct CloseSecureChannelRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
 
     CloseSecureChannelRequest();

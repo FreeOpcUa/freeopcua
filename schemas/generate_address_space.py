@@ -201,12 +201,12 @@ namespace OpcUa
 
     def make_node_code(self, obj, indent):
         self.writecode(indent, 'AddNodesItem node;')
-        self.writecode(indent, 'node.RequestedNewNodeID = ToNodeID("{}");'.format(obj.nodeid))
+        self.writecode(indent, 'node.RequestedNewNodeId = ToNodeId("{}");'.format(obj.nodeid))
         self.writecode(indent, 'node.BrowseName = ToQualifiedName("{}");'.format(obj.browsename))
         self.writecode(indent, 'node.Class = NodeClass::{};'.format(obj.nodetype))
-        if obj.parent: self.writecode(indent, 'node.ParentNodeId = ToNodeID("{}");'.format(obj.parent))
+        if obj.parent: self.writecode(indent, 'node.ParentNodeId = ToNodeId("{}");'.format(obj.parent))
         if obj.parent: self.writecode(indent, 'node.ReferenceTypeId = {};'.format(self.to_ref_type(obj.parentlink)))
-        if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeID("{}");'.format(obj.typedef))
+        if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeId("{}");'.format(obj.typedef))
 
     def to_vector(self, dims):
         s = "std::vector<uint32_t>({"
@@ -216,17 +216,17 @@ namespace OpcUa
 
     def to_data_type(self, nodeid):
         if not nodeid:
-            return "ObjectID::String"
+            return "ObjectId::String"
         if "=" in nodeid:
-            return 'ToNodeID("{}")'.format(nodeid)
+            return 'ToNodeId("{}")'.format(nodeid)
         else:
-            return 'ObjectID::{}'.format(nodeid)
+            return 'ObjectId::{}'.format(nodeid)
 
     def to_ref_type(self, nodeid):
         if "=" in nodeid:
-            return 'ToNodeID("{}")'.format(nodeid)
+            return 'ToNodeId("{}")'.format(nodeid)
         else:
-            return 'ReferenceID::{}'.format(nodeid)
+            return 'ReferenceId::{}'.format(nodeid)
 
     def make_object_code(self, obj):
         indent = "       "
@@ -336,9 +336,9 @@ namespace OpcUa
             self.writecode(indent, 'AddReferencesItem ref;')
             self.writecode(indent, 'ref.IsForward = true;')
             self.writecode(indent, 'ref.ReferenceTypeId = {};'.format(self.to_ref_type(ref.reftype)))
-            self.writecode(indent, 'ref.SourceNodeID = ToNodeID("{}");'.format(obj.nodeid))
+            self.writecode(indent, 'ref.SourceNodeId = ToNodeId("{}");'.format(obj.nodeid))
             self.writecode(indent, 'ref.TargetNodeClass = NodeClass::DataType;')
-            self.writecode(indent, 'ref.TargetNodeID = ToNodeID("{}");'.format(ref.target))
+            self.writecode(indent, 'ref.TargetNodeId = ToNodeId("{}");'.format(ref.target))
             self.writecode(indent, "refs.push_back(ref);")
             self.writecode(indent, "}")
         self.writecode(indent, 'registry.AddReferences(refs);')

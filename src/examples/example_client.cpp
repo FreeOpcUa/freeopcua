@@ -22,7 +22,7 @@ using namespace OpcUa;
 
 class SubClient : public SubscriptionHandler
 {
-  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attr) const override
+  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attr) const override
   {
     std::cout << "Received DataChange event, value of Node " << node << " is now: "  << "(Print of arbitrary variant not suported yet)"<< std::endl;
   }
@@ -55,9 +55,9 @@ int main(int argc, char** argv)
     for (OpcUa::Node node : objects.GetChildren())
       std::cout << "    " << node << std::endl;
 
-    //get a node from standard namespace using objectID
+    //get a node from standard namespace using objectId
     std::cout << "NamespaceArray is: " << std::endl;
-    OpcUa::Node nsnode = client.GetNode(ObjectID::Server_NamespaceArray); 
+    OpcUa::Node nsnode = client.GetNode(ObjectId::Server_NamespaceArray); 
     OpcUa::Variant ns  = nsnode.GetValue();
 
     for (std::string d : ns.As<std::vector<std::string>>())

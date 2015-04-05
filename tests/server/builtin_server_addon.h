@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char BuiltinServerAddonID[] = "builtin_server_addon";
+    const char BuiltinServerAddonId[] = "builtin_server_addon";
 
     class BuiltingServerFactory : public Common::AddonFactory
     {

@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef TEST_DYNAMIC_ADDON_ID_H
-#define TEST_DYNAMIC_ADDON_ID_H
+#ifndef TEST_DYNAMIC_ADDON_Id_H
+#define TEST_DYNAMIC_ADDON_Id_H
 
 #include <opc/common/addons_core/addon.h>
 
@@ -18,8 +18,8 @@
 namespace OpcCoreTests
 {
 
-  const char TestDynamicAddonID[] = "test_dynamic_addon";
+  const char TestDynamicAddonId[] = "test_dynamic_addon";
 
 }
 
-#endif // TEST_DYNAMIC_ADDON_ID_H
+#endif // TEST_DYNAMIC_ADDON_Id_H

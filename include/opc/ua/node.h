@@ -44,19 +44,18 @@ namespace OpcUa
   public:
     // Creating Root Node.
     explicit Node(Services::SharedPtr srv);
-    Node(Services::SharedPtr srv, const NodeID& id);
-    Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name);
+    Node(Services::SharedPtr srv, const NodeId& id);
     Node(const Node& other); 
     Node(){}
 
-    NodeID GetId() const;
+    NodeId GetId() const;
 
-    QualifiedName GetName(bool force=false) const;
-    void SetName(const QualifiedName& name) const;
+    QualifiedName GetBrowseName() const;
+    //void SetBrowseName(const QualifiedName& name) const;
 
     /// @brief List childrenn nodes by specified reference
     /// @return One or zero chilren nodes.
-    std::vector<Node> GetChildren(const OpcUa::ReferenceID& refid) const;
+    std::vector<Node> GetChildren(const OpcUa::ReferenceId& refid) const;
 
     /// @brief Get ghildren by hierarchal referencies.
     /// @return One or zero chilren nodes.
@@ -70,8 +69,8 @@ namespace OpcUa
     Node GetChild(const std::vector<std::string>& path) const;
     Node GetChild(const std::string& browsename) const ;
 
-    std::vector<Node> GetProperties() const {return GetChildren(OpcUa::ReferenceID::HasProperty);}
-    std::vector<Node> GetVariables() const {return GetChildren(OpcUa::ReferenceID::HasComponent);} //Not correct should filter by variable type
+    std::vector<Node> GetProperties() const {return GetChildren(OpcUa::ReferenceId::HasProperty);}
+    std::vector<Node> GetVariables() const {return GetChildren(OpcUa::ReferenceId::HasComponent);} //Not correct should filter by variable type
 
     
 
@@ -79,9 +78,9 @@ namespace OpcUa
 
     //The Read and Write methods read or write attributes of the node
     //FIXME: add possibility to read and write several nodes at once
-    Variant GetAttribute(AttributeID attr) const;
-    void SetAttribute(AttributeID attr, const DataValue &dval) const;
-    //std::vector<StatusCode> WriteAttrs(OpcUa::AttributeID attr, const Variant &val);
+    Variant GetAttribute(AttributeId attr) const;
+    void SetAttribute(AttributeId attr, const DataValue &dval) const;
+    //std::vector<StatusCode> WriteAttrs(OpcUa::AttributeId attr, const Variant &val);
     
     //Helper method to get/set VALUE attribute of a node (Not all nodes support VALUE attribute)
     Variant GetValue() const;
@@ -91,7 +90,7 @@ namespace OpcUa
     Variant GetDataType() const;
 
     // CallMethod
-    std::vector<Variant> CallMethod(NodeID methodId, std::vector<Variant> inputArguments) const;
+    std::vector<Variant> CallMethod(NodeId methodId, std::vector<Variant> inputArguments) const;
 
     //OpcUa low level methods to to modify address space model
     std::vector<AddNodesResult> AddNodes(std::vector<AddNodesItem> items) const;
@@ -99,19 +98,19 @@ namespace OpcUa
 
 
     //Helper classes to modify address space model
-    Node AddFolder(const NodeID& folderId, const QualifiedName& browseName) const;
+    Node AddFolder(const NodeId& folderId, const QualifiedName& browseName) const;
     Node AddFolder(const std::string& nodeid, const std::string& browseName) const; 
     Node AddFolder(uint32_t namespaceidx, const std::string& browseName) const;
 
-    Node AddObject(const NodeID& folderId, const QualifiedName& browseName) const;
+    Node AddObject(const NodeId& folderId, const QualifiedName& browseName) const;
     Node AddObject(const std::string& nodeid, const std::string& browseName) const; 
     Node AddObject(uint32_t namespaceidx, const std::string& browseName) const;
 
-    Node AddVariable(const NodeID& variableId, const QualifiedName& browsename, const Variant& val) const;
+    Node AddVariable(const NodeId& variableId, const QualifiedName& browsename, const Variant& val) const;
     Node AddVariable(uint32_t namespaceidx, const std::string& BrowseName, const Variant& val) const;
     Node AddVariable(const std::string& nodeId, const std::string& browseName, const Variant& val) const; 
 
-    Node AddProperty(const NodeID& propertyId, const QualifiedName& browsename, const Variant& val) const;
+    Node AddProperty(const NodeId& propertyId, const QualifiedName& browsename, const Variant& val) const;
     Node AddProperty(const std::string& nodeid, const std::string& browseName, const Variant& val) const;
     Node AddProperty(uint32_t namespaceidx, const std::string& browseName, const Variant& val) const;
 
@@ -125,8 +124,7 @@ namespace OpcUa
 
   protected:
     OpcUa::Services::SharedPtr Server;
-    NodeID Id;
-    mutable QualifiedName BrowseName;
+    NodeId Id;
   };
 
 
@@ -134,7 +132,7 @@ namespace OpcUa
 
   //FIXME: The following methods should be moved somewhere else!!!
 
-  ObjectID VariantTypeToDataType(VariantType vt);
+  ObjectId VariantTypeToDataType(VariantType vt);
 
 
 } // namespace OpcUa

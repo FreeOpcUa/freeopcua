@@ -38,7 +38,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char AsioAddonID[] = "async";
+    const char AsioAddonId[] = "async";
 
 
     class AsioAddon : public Common::Addon

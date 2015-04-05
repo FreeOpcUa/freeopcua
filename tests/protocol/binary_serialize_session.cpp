@@ -33,9 +33,9 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
 
   CreateSessionRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CREATE_SESSION_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -52,7 +52,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xcd, 0x1, // TypeID
+  1, 0, (char)0xcd, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
@@ -75,7 +75,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xcd, 0x1, // TypeID
+  1, 0, (char)0xcd, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
@@ -93,9 +93,9 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   CreateSessionRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CREATE_SESSION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
   ASSERT_APPLICATION_DESCRIPTION_EQ(request.Parameters.ClientDescription);
@@ -124,15 +124,15 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
 
   CreateSessionResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  response.Session.SessionID.Encoding = EV_FOUR_BYTE;
-  response.Session.SessionID.FourByteData.NamespaceIndex = 1;
-  response.Session.SessionID.FourByteData.Identifier = 2;
+  response.Session.SessionId.Encoding = EV_FOUR_BYTE;
+  response.Session.SessionId.FourByteData.NamespaceIndex = 1;
+  response.Session.SessionId.FourByteData.Identifier = 2;
 
   response.Session.AuthenticationToken.Encoding = EV_FOUR_BYTE;
   response.Session.AuthenticationToken.FourByteData.NamespaceIndex = 1;
@@ -154,7 +154,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
 
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd0, 0x1, // TypeID
+  1, 0, (char)0xd0, 0x1, // TypeId
   // ResponseHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,1,2,0,
@@ -180,7 +180,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd0, 0x1, // TypeID
+  1, 0, (char)0xd0, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,1,2,0,
@@ -201,15 +201,15 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
   CreateSessionResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_SESSION_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Session.SessionID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.Session.SessionID.FourByteData.NamespaceIndex, 1);
-  ASSERT_EQ(response.Session.SessionID.FourByteData.Identifier, 2);
+  ASSERT_EQ(response.Session.SessionId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.Session.SessionId.FourByteData.NamespaceIndex, 1);
+  ASSERT_EQ(response.Session.SessionId.FourByteData.Identifier, 2);
 
   ASSERT_EQ(response.Session.AuthenticationToken.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(response.Session.AuthenticationToken.FourByteData.NamespaceIndex, 1);
@@ -246,18 +246,18 @@ TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
   using namespace OpcUa::Binary;
 
   UserIdentifyToken token;
-  token.setPolicyID("0");
+  token.setPolicyId("0");
 /*
-  ASSERT_EQ(token.Header.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(token.Header.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(token.Hader.TypeID.FourByteData.Identifier, USER_IDENTIFY_TOKEN_ANONYMOUS);
+  ASSERT_EQ(token.Header.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(token.Header.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(token.Hader.TypeId.FourByteData.Identifier, USER_IdENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
   ASSERT_EQ(token.Anonymous.Data, std::vector{});
 */
   GetStream() << token << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeID
+  1, 0, (char)0x41, 0x1, // TypeId
   HAS_BINARY_BODY,
   0x5,0,0,0, 1,0,0,0,'0'
   };
@@ -271,7 +271,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
   const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeID
+  1, 0, (char)0x41, 0x1, // TypeId
   HAS_BINARY_BODY,
   0x5,0,0,0, 1,0,0,0,'0'
   };
@@ -281,12 +281,12 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   UserIdentifyToken token;
   GetStream() >> token;
 
-  ASSERT_EQ(token.Header.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(token.Header.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(token.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
+  ASSERT_EQ(token.Header.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(token.Header.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(token.Header.TypeId.FourByteData.Identifier, OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
   std::vector<uint8_t> policy_id = {1,0,0,0,'0'};
-  ASSERT_EQ(token.PolicyID, policy_id);
+  ASSERT_EQ(token.PolicyId, policy_id);
 }
 
 
@@ -301,25 +301,25 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
   using namespace OpcUa::Binary;
 
   ActivateSessionRequest request;
-  request.Parameters.IdentifyToken.setPolicyID("0");
+  request.Parameters.IdentifyToken.setPolicyId("0");
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.FourByteData.Identifier, OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.Encoding, HAS_BINARY_BODY);
   std::vector<uint8_t> policy_id = {1,0,0,0,'0'};
-  ASSERT_EQ(request.Parameters.IdentifyToken.PolicyID, policy_id);
+  ASSERT_EQ(request.Parameters.IdentifyToken.PolicyId, policy_id);
 
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd3, 0x1, // TypeID
+  1, 0, (char)0xd3, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   -1,-1,-1,-1,
@@ -328,7 +328,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionRequest)
   0,0,0,0,
   0,0,0,0,
 
-  1, 0, (char)0x41, 0x1, // TypeID
+  1, 0, (char)0x41, 0x1, // TypeId
   1,
   0x5,0,0,0, 1,0,0,0,'0',
   -1,-1,-1,-1,
@@ -346,7 +346,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd3, 0x1, // TypeID
+  1, 0, (char)0xd3, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   -1,-1,-1,-1,
@@ -355,7 +355,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   1,0,0,0, 1,0,0,0, 1,
   0,0,0,0,
 
-  1, 0, (char)0x41, 0x1, // TypeID
+  1, 0, (char)0x41, 0x1, // TypeId
   1,
   0x5,0,0,0, 1,0,0,0,'0',
   -1,-1,-1,-1,
@@ -367,9 +367,9 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   ActivateSessionRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -377,12 +377,12 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   ASSERT_EQ(request.Parameters.ClientCertificates[0].size(), 1);
   ASSERT_EQ(request.Parameters.ClientCertificates[0][0], 1);
 
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.Parameters.IdentifyToken.Header.TypeId.FourByteData.Identifier, OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(request.Parameters.IdentifyToken.Header.Encoding, HAS_BINARY_BODY);
   std::vector<uint8_t> policy_id = {1,0,0,0,'0'};
-  ASSERT_EQ(request.Parameters.IdentifyToken.PolicyID, policy_id);
+  ASSERT_EQ(request.Parameters.IdentifyToken.PolicyId, policy_id);
 }
 
 //-------------------------------------------------------
@@ -397,9 +397,9 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionResponse)
 
   ActivateSessionResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
   response.Session.ServerNonce = std::vector<uint8_t>(1,1);
@@ -408,7 +408,7 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd6, 0x1, // TypeID
+  1, 0, (char)0xd6, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,0,0,0, 1,
@@ -426,7 +426,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd6, 0x1, // TypeID
+  1, 0, (char)0xd6, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,0,0,0, 1,
@@ -439,9 +439,9 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
   ActivateSessionResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::ACTIVATE_SESSION_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -462,16 +462,16 @@ TEST_F(OpcUaBinarySerialization, CloseSessionRequest)
 
   CloseSessionRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SESSION_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd9, 0x1, // TypeID
+  1, 0, (char)0xd9, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   1
@@ -488,7 +488,7 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xd9, 0x1, // TypeID
+  1, 0, (char)0xd9, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   1,
@@ -499,9 +499,9 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionRequest)
   CloseSessionRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SESSION_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SESSION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -520,16 +520,16 @@ TEST_F(OpcUaBinarySerialization, CloseSessionResponse)
 
   CloseSessionResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SESSION_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xdc, 0x1, // TypeID
+  1, 0, (char)0xdc, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   };
@@ -545,7 +545,7 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xdc, 0x1, // TypeID
+  1, 0, (char)0xdc, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
   1,
@@ -556,9 +556,9 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionResponse)
   CloseSessionResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SESSION_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SESSION_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 }

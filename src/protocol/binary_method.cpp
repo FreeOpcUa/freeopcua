@@ -27,7 +27,7 @@ namespace OpcUa
   }
 
   CallRequest::CallRequest()
-    : TypeID(CALL_REQUEST)
+    : TypeId(CALL_REQUEST)
   {
   }
 
@@ -37,7 +37,7 @@ namespace OpcUa
   }
 
   CallResponse::CallResponse()
-    : TypeID(CALL_RESPONSE)
+    : TypeId(CALL_RESPONSE)
   {
   }
 
@@ -78,13 +78,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CallRequest>(const CallRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSizeContainer(request.MethodsToCall);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSizeContainer(request.MethodsToCall);
     }
 
     template<>
     void DataSerializer::Serialize<CallRequest>(const CallRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       SerializeContainer(*this, request.MethodsToCall);
     }
@@ -92,7 +92,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CallRequest>(CallRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       DeserializeContainer(*this, request.MethodsToCall);
     }
@@ -134,14 +134,14 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CallResponse>(const CallResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) +
+      return RawSize(response.TypeId) + RawSize(response.Header) +
           RawSizeContainer(response.Results) + RawSizeContainer(response.Diagnostics);
     }
 
     template<>
     void DataSerializer::Serialize<CallResponse>(const CallResponse& response)
     {
-       *this << response.TypeID;
+       *this << response.TypeId;
        *this << response.Header;
        SerializeContainer(*this, response.Results, 0);
        SerializeContainer(*this, response.Diagnostics, 0);
@@ -150,7 +150,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CallResponse>(CallResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       DeserializeContainer(*this, response.Results);
       DeserializeContainer(*this, response.Diagnostics);

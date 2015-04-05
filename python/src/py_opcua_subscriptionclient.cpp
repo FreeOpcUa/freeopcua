@@ -77,7 +77,7 @@ PySubscriptionHandler::PySubscriptionHandler(PyObject * p)
   : self(p)
 {}
 
-void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeID attribute) const
+void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeId attribute) const
 {
   PyGILState_STATE state = PyGILState_Ensure();
 

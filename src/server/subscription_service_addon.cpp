@@ -29,9 +29,9 @@ namespace
     void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
     {
       ApplyAddonParameters(parameters);
-      Services = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
-      OpcUa::Server::AddressSpace::SharedPtr addressSpace = manager.GetAddon<OpcUa::Server::AddressSpace>(OpcUa::Server::AddressSpaceRegistryAddonID);
-      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonID);
+      Services = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
+      OpcUa::Server::AddressSpace::SharedPtr addressSpace = manager.GetAddon<OpcUa::Server::AddressSpace>(OpcUa::Server::AddressSpaceRegistryAddonId);
+      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
       Subscriptions = OpcUa::Server::CreateSubscriptionService(addressSpace, asio->GetIoService(), Debug);
       Services->RegisterSubscriptionServices(Subscriptions);
     }
@@ -44,7 +44,7 @@ namespace
     }
 
   public:
-    void TriggerEvent(OpcUa::NodeID node, OpcUa::Event event)
+    void TriggerEvent(OpcUa::NodeId node, OpcUa::Event event)
     {
       Subscriptions->TriggerEvent(node, event);
     }
@@ -55,7 +55,7 @@ namespace
       return Subscriptions->CreateSubscription(request, callback);
     }
 
-    std::vector<OpcUa::StatusCode> DeleteSubscriptions(const std::vector<OpcUa::IntegerID>& subscriptions)
+    std::vector<OpcUa::StatusCode> DeleteSubscriptions(const std::vector<OpcUa::IntegerId>& subscriptions)
     {
       return Subscriptions->DeleteSubscriptions(subscriptions);
     }

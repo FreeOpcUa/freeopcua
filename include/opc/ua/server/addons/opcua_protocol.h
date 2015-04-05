@@ -20,7 +20,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char OpcUaProtocolAddonID[] = "opcua_protocol";
+    const char OpcUaProtocolAddonId[] = "opcua_protocol";
 
     class OpcUaProtocolAddonFactory : public Common::AddonFactory
     {

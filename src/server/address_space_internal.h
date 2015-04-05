@@ -40,18 +40,18 @@ namespace OpcUa
 
     struct NodeAttribute
     {
-      NodeID Node;
-      AttributeID Attribute;
-      NodeAttribute(NodeID node, AttributeID attribute) : Node(node), Attribute(attribute) {}
+      NodeId Node;
+      AttributeId Attribute;
+      NodeAttribute(NodeId node, AttributeId attribute) : Node(node), Attribute(attribute) {}
       NodeAttribute() {} //seems compiler wants this one
     };
 
-    typedef std::map<uint32_t, NodeAttribute> ClientIDToAttributeMapType;
+    typedef std::map<uint32_t, NodeAttribute> ClientIdToAttributeMapType;
     
     struct DataChangeCallbackData
     {
       std::function<Server::DataChangeCallback> Callback;
-      IntegerID ClientHandle;
+      IntegerId ClientHandle;
     };
 
     typedef std::map<uint32_t, DataChangeCallbackData> DataChangeCallbackMap;
@@ -64,7 +64,7 @@ namespace OpcUa
       std::function<DataValue(void)> GetValueCallback;
     };
 
-    typedef std::map<AttributeID, AttributeValue> AttributesMap;
+    typedef std::map<AttributeId, AttributeValue> AttributesMap;
     
     //Store all data related to a Node
     struct NodeStruct
@@ -73,7 +73,7 @@ namespace OpcUa
       std::vector<ReferenceDescription> References;
     };
 
-    typedef std::map<NodeID, NodeStruct> NodesMap;
+    typedef std::map<NodeId, NodeStruct> NodesMap;
 
     //In memory storage of server opc-ua data model
     class AddressSpaceInMemory : public Server::AddressSpace
@@ -96,32 +96,32 @@ namespace OpcUa
 
         /// @brief Add callback which will be called when values of attribute is changed.
         /// @return handle of a callback which should be passed to the DeletDataChangeCallabck
-        uint32_t AddDataChangeCallback(const NodeID& node, AttributeID attribute, std::function<Server::DataChangeCallback> callback);
+        uint32_t AddDataChangeCallback(const NodeId& node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
 
         /// @bried Delete data change callback assosioated with handle.
         void DeleteDataChangeCallback(uint32_t serverhandle);
 
         /// @brief Set callback which will be called to read new value of the attribue.
-        StatusCode SetValueCallback(const NodeID& node, AttributeID attribute, std::function<DataValue(void)> callback);
+        StatusCode SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback);
 
       private:
-        std::tuple<bool, NodeID> FindElementInNode(const NodeID& nodeid, const RelativePathElement& element) const;
+        std::tuple<bool, NodeId> FindElementInNode(const NodeId& nodeid, const RelativePathElement& element) const;
         BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const;
-        DataValue GetValue(const NodeID& node, AttributeID attribute) const;
-        StatusCode SetValue(const NodeID& node, AttributeID attribute, const DataValue& data);
+        DataValue GetValue(const NodeId& node, AttributeId attribute) const;
+        StatusCode SetValue(const NodeId& node, AttributeId attribute, const DataValue& data);
         bool IsSuitableReference(const BrowseDescription& desc, const ReferenceDescription& reference) const;
-        bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeID& typeID, bool includeSubtypes) const;
-        std::vector<NodeID> SelectNodesHierarchy(std::vector<NodeID> sourceNodes) const;
+        bool IsSuitableReferenceType(const ReferenceDescription& reference, const NodeId& typeId, bool includeSubtypes) const;
+        std::vector<NodeId> SelectNodesHierarchy(std::vector<NodeId> sourceNodes) const;
         AddNodesResult AddNode( const AddNodesItem& item );
         StatusCode AddReference(const AddReferencesItem& item);
-        NodeID GetNewNodeID(const NodeID& id);
+        NodeId GetNewNodeId(const NodeId& id);
 
       private:
         bool Debug = false;
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
-        ClientIDToAttributeMapType ClientIDToAttributeMap; //Use to find callback using callback subcsriptionid
-        uint32_t MaxNodeIDNum = 0;
+        ClientIdToAttributeMapType ClientIdToAttributeMap; //Use to find callback using callback subcsriptionid
+        uint32_t MaxNodeIdNum = 0;
         std::atomic<uint32_t> DataChangeCallbackHandle;
     };
   }

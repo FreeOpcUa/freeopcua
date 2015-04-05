@@ -54,7 +54,7 @@ TEST(ModulesConfiguration, ParsesConfigurationFile)
 
 
   const Common::ModuleConfiguration module = config.Modules.front();
-  ASSERT_EQ(module.ID, "child_module");
+  ASSERT_EQ(module.Id, "child_module");
   ASSERT_EQ(module.Path, "child_module.so");
   ASSERT_EQ(module.Dependencies.size(), 2);
   ASSERT_EQ(module.Dependencies[0], "parent_module1");
@@ -76,7 +76,7 @@ TEST(ModulesConfiguration, ParsesConfigurationFile)
 TEST(ModulesConfiguration, SavesConfigurationFile)
 {
   Common::ModuleConfiguration addon;
-  addon.ID = "test_addon";
+  addon.Id = "test_addon";
   addon.Dependencies.push_back("id1");
   addon.Dependencies.push_back("id2");
   addon.Path = "path";
@@ -90,7 +90,7 @@ TEST(ModulesConfiguration, SavesConfigurationFile)
   const Common::Configuration& config = Common::ParseConfiguration("test_config.config");
   ASSERT_EQ(config.Modules.size(), 1);
   const Common::ModuleConfiguration& module = config.Modules[0];
-  ASSERT_EQ(module.ID, "test_addon");
+  ASSERT_EQ(module.Id, "test_addon");
   ASSERT_EQ(module.Path, "path");
   ASSERT_EQ(module.Dependencies.size(), 2);
   ASSERT_EQ(module.Dependencies[0], "id1");
@@ -109,6 +109,6 @@ TEST(ModulesConfiguration, ParsesConfigurationFilesInDirectory)
 {
   Common::Configuration config = Common::ParseConfigurationFiles(TestConfigPath);
   ASSERT_EQ(config.Modules.size(), 1);
-  ASSERT_EQ(config.Modules[0].ID, "child_module");
+  ASSERT_EQ(config.Modules[0].Id, "child_module");
 }
 

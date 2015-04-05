@@ -193,16 +193,16 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
 TEST(DataValue, ConstructivbeFromDataValue)
 {
   using namespace OpcUa;
-  NodeID node(ObjectID::RootFolder);
+  NodeId node(ObjectId::RootFolder);
   DataValue data;
   data = node;
   ASSERT_TRUE(data.Encoding && DATA_VALUE);
-  ASSERT_TRUE(data.Value.Type() == VariantType::NODE_ID);
+  ASSERT_TRUE(data.Value.Type() == VariantType::NODE_Id);
 
   DataValue newValue(data);
   ASSERT_TRUE(newValue.Encoding && DATA_VALUE);
-  ASSERT_EQ(newValue.Value.Type(), VariantType::NODE_ID);
-  ASSERT_NO_THROW(newValue.Value.As<NodeID>());
+  ASSERT_EQ(newValue.Value.Type(), VariantType::NODE_Id);
+  ASSERT_NO_THROW(newValue.Value.As<NodeId>());
 }
 
 TEST(DataValue, ComparableByValue)

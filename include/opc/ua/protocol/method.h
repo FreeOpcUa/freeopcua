@@ -24,8 +24,8 @@ namespace OpcUa
 
   struct CallMethodRequest
   {
-    NodeID ObjectId;
-    NodeID MethodId;
+    NodeId ObjectId;
+    NodeId MethodId;
 //    std::vector<BaseDataType> InputArguments; //TODO
     std::vector<Variant> InputArguments;
 
@@ -39,7 +39,7 @@ namespace OpcUa
 
   struct CallRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
 //    CallParamters Parameters;
     std::vector<CallMethodRequest> MethodsToCall;
@@ -61,7 +61,7 @@ namespace OpcUa
 
   struct CallResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<CallMethodResult> Results;

@@ -122,17 +122,17 @@ namespace
   class BufferedIO : public OpcUa::IOChannel
   {
   public:
-    BufferedIO(const char* channelID, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output, bool debug)
+    BufferedIO(const char* channelId, std::weak_ptr<InputChannel> input, std::weak_ptr<BufferedInput> output, bool debug)
       : Input(input)
       , Output(output)
-      , ID(channelID)
+      , Id(channelId)
       , Debug(debug)
     {
     }
 
     virtual std::size_t Receive(char* data, std::size_t size)
     {
-      if (Debug) std::clog << ID << ": receive data." << std::endl;
+      if (Debug) std::clog << Id << ": receive data." << std::endl;
 
       if (std::shared_ptr<InputChannel> input = Input.lock())
       {
@@ -143,7 +143,7 @@ namespace
 
     virtual void Send(const char* message, std::size_t size)
     {
-      if (Debug) std::clog << ID << ": send data." << std::endl;
+      if (Debug) std::clog << Id << ": send data." << std::endl;
 
       if (std::shared_ptr<BufferedInput> output = Output.lock())
       {
@@ -163,7 +163,7 @@ namespace
   private:
     std::weak_ptr<InputChannel> Input;
     std::weak_ptr<BufferedInput> Output;
-    const std::string ID;
+    const std::string Id;
     bool Debug;
   };
 
@@ -228,7 +228,7 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
     endpointDescriptions.insert(endpointDescriptions.end(), application.Endpoints.begin(), application.Endpoints.end());
   }
 
-  OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonID);
+  OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
   if (!endpointsAddon)
   {
     std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
@@ -237,7 +237,7 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
   endpointsAddon->AddEndpoints(endpointDescriptions);
   endpointsAddon->AddApplications(applicationDescriptions);
 
-  OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+  OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
 
   Protocol = OpcUa::Server::CreateOpcUaProtocol(*this, Debug);
   Protocol->StartEndpoints(endpointDescriptions, internalServer->GetServer());

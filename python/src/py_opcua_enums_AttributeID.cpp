@@ -10,10 +10,10 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-void py_opcua_enums_AttributeID()
+void py_opcua_enums_AttributeId()
 {
-  enum_<AttributeID>("AttributeID")
-#define _value(X) value(#X, AttributeID:: X)
+  enum_<AttributeId>("AttributeId")
+#define _value(X) value(#X, AttributeId:: X)
   ._value(NodeId)
   ._value(NodeClass)
   ._value(BrowseName)

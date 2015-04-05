@@ -28,7 +28,7 @@ namespace OpcUa
 
     public:
       virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callbackPublish) = 0; 
-      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions) = 0;
+      virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions) = 0;
       virtual void Publish(const PublishRequest& request) = 0;
       virtual RepublishResponse Republish(const RepublishParameters& params) = 0;
 

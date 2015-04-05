@@ -10,10 +10,10 @@
 using namespace boost::python;
 using namespace OpcUa;
 
-void py_opcua_enums_ObjectID()
+void py_opcua_enums_ObjectId()
 {
-  enum_<ObjectID>("ObjectID")
-#define _value(X) value(#X, ObjectID:: X)
+  enum_<ObjectId>("ObjectId")
+#define _value(X) value(#X, ObjectId:: X)
   ._value(Boolean)
   ._value(SByte)
   ._value(Byte)

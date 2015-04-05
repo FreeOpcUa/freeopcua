@@ -23,13 +23,13 @@ namespace OpcUa
   struct EndpointsFilter
   {
     std::string EndpointURL;
-    std::vector<std::string> LocaleIDs;
+    std::vector<std::string> LocaleIds;
     std::vector<std::string> ProfileUries;
   };
 
   struct GetEndpointsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     EndpointsFilter Filter;
 
@@ -39,7 +39,7 @@ namespace OpcUa
 
   struct GetEndpointsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<EndpointDescription> Endpoints;
@@ -53,13 +53,13 @@ namespace OpcUa
   struct FindServersParameters
   {
     std::string EndpointURL;
-    std::vector<LocaleID> Locales;
+    std::vector<LocaleId> Locales;
     std::vector<std::string> ServersToReturn;
   };
 
   struct FindServersRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     FindServersParameters Parameters;
 
@@ -73,7 +73,7 @@ namespace OpcUa
 
   struct FindServersResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     FindServersData Data;
 

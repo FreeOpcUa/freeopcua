@@ -27,7 +27,7 @@
 #include <limits>
 
 
-std::string OpcUa::ToString(const NodeID& id)
+std::string OpcUa::ToString(const NodeId& id)
 {
   std::stringstream stream;
 
@@ -159,9 +159,9 @@ namespace
 
 }
 
-OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace)
+OpcUa::NodeId OpcUa::ToNodeId(const std::string& data, uint32_t defaultNamespace)
 {
-  OpcUa::NodeID result;
+  OpcUa::NodeId result;
   uint32_t ns = defaultNamespace;
 
   const std::string nsString = GetNodeField(data, "ns=");
@@ -192,19 +192,19 @@ OpcUa::NodeID OpcUa::ToNodeID(const std::string& data, uint32_t defaultNamespace
   const std::string integer = GetNodeField(data, "i=");
   if (!integer.empty())
   {
-    return OpcUa::NumericNodeID(GetInteger(integer), ns);
+    return OpcUa::NumericNodeId(GetInteger(integer), ns);
   }
 
   const std::string str = GetNodeField(data, "s=");
   if (!str.empty())
   {
-    return OpcUa::StringNodeID(str, ns);
+    return OpcUa::StringNodeId(str, ns);
   }
 
   const std::string g = GetNodeField(data, "g=");
   if (!g.empty())
   {
-    return OpcUa::GuidNodeID(ToGuid(g), ns);
+    return OpcUa::GuidNodeId(ToGuid(g), ns);
   }
 
   throw(std::runtime_error("No identifier found in string: '" + data +"'"));

@@ -42,23 +42,23 @@ namespace OpcUa
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
 
-      std::vector<IntegerID> ids(SubscriptionsMap.size());
+      std::vector<IntegerId> ids(SubscriptionsMap.size());
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIDMap::value_type& i){return i.first;});
+        std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIdMap::value_type& i){return i.first;});
       }
 
       DeleteSubscriptions(ids);
     }
 
-    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<StatusCode> result;
-      for (const IntegerID& subid: subscriptions)
+      for (const IntegerId& subid: subscriptions)
       {
-        SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(subid);
+        SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(subid);
         if ( itsub == SubscriptionsMap.end())
         {
           std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
@@ -80,15 +80,15 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       SubscriptionData data;
-      data.ID = ++LastSubscriptionID;
+      data.Id = ++LastSubscriptionId;
       data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
       data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
       data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-      if (Debug) std::cout << "SubscriptionService | Creating Subscription with ID: " << data.ID << std::endl;
+      if (Debug) std::cout << "SubscriptionService | Creating Subscription with Id: " << data.Id << std::endl;
 
       std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
       sub->Start();
-      SubscriptionsMap[data.ID] = sub;
+      SubscriptionsMap[data.Id] = sub;
       return data;
     }
 
@@ -98,8 +98,8 @@ namespace OpcUa
 
       MonitoredItemsData data;
 
-      SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionID);
-      if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+      SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
+      if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
         for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
         {
@@ -125,8 +125,8 @@ namespace OpcUa
 
       std::vector<StatusCode> results;
 
-      SubscriptionsIDMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
-      if ( itsub == SubscriptionsMap.end()) //SubscriptionID does not exist, return errors for all items
+      SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
+      if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
         for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
         {
@@ -151,7 +151,7 @@ namespace OpcUa
 
       for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
       {
-        SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionID);
+        SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionId);
         if ( sub_it != SubscriptionsMap.end())
         {
           sub_it->second->NewAcknowlegment(ack);
@@ -163,7 +163,7 @@ namespace OpcUa
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       
-      SubscriptionsIDMap::iterator sub_it = SubscriptionsMap.find(params.Subscription);
+      SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(params.Subscription);
       if ( sub_it == SubscriptionsMap.end())
       {
         RepublishResponse response;
@@ -174,9 +174,9 @@ namespace OpcUa
     }
 
 
-    bool SubscriptionServiceInternal::PopPublishRequest(NodeID node)
+    bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
     {
-      std::map<NodeID, uint32_t>::iterator queue_it = PublishRequestQueues.find(node);
+      std::map<NodeId, uint32_t>::iterator queue_it = PublishRequestQueues.find(node);
       if ( queue_it == PublishRequestQueues.end() )
       {
         std::cout << "SubscriptionService | Error request for publish queue for unknown session: " << node << " queue are available for: ";
@@ -201,7 +201,7 @@ namespace OpcUa
       }
     }
 
-    void SubscriptionServiceInternal::TriggerEvent(NodeID node, Event event)
+    void SubscriptionServiceInternal::TriggerEvent(NodeId node, Event event)
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 

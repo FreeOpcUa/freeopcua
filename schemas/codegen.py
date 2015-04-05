@@ -36,7 +36,7 @@ def cxx_object_ids(fname):
 
 namespace OpcUa
 {
-  enum class ObjectID : uint32_t
+  enum class ObjectId : uint32_t
   {
     Null = 0,''')
 
@@ -133,7 +133,7 @@ def cxx_attribute_ids(fname):
 
 namespace OpcUa
 {
-  enum class AttributeID : uint32_t
+  enum class AttributeId : uint32_t
   {''')
 
   with open(fname) as fd:
@@ -153,7 +153,7 @@ def cxx_attribute_ids_getoptionvalue(fname):
 
 #pragma once
 
-inline AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
+inline AttributeId GetAttributeIdOptionValue(const po::variables_map& vm)
   {
     const std::string name = vm[OPTION_ATTRIBUTE].as<std::string>();''')
 
@@ -161,11 +161,11 @@ inline AttributeID GetAttributeIDOptionValue(const po::variables_map& vm)
     for e in csv.reader(fd, delimiter=','):
       print ('''    if (name == "{0}")
     {{
-      return AttributeID::{1};
+      return AttributeId::{1};
     }}'''.format(camel_to_spacedstring(e[0]), e[0]))
 
   print ('''
-    throw std::logic_error(std::string("Unknown AttributeID: ") + name);
+    throw std::logic_error(std::string("Unknown AttributeId: ") + name);
   };
 ''')
 
@@ -183,10 +183,10 @@ def py_object_ids(fname):
 using namespace boost::python;
 using namespace OpcUa;
 
-void py_opcua_enums_ObjectID()
+void py_opcua_enums_ObjectId()
 {
-  enum_<ObjectID>("ObjectID")
-#define _value(X) value(#X, ObjectID:: X)''')
+  enum_<ObjectId>("ObjectId")
+#define _value(X) value(#X, ObjectId:: X)''')
 
   with open(fname) as fd:
     for e in csv.reader(fd, delimiter=','):
@@ -240,10 +240,10 @@ def py_attribute_ids(fname):
 using namespace boost::python;
 using namespace OpcUa;
 
-void py_opcua_enums_AttributeID()
+void py_opcua_enums_AttributeId()
 {
-  enum_<AttributeID>("AttributeID")
-#define _value(X) value(#X, AttributeID:: X)''')
+  enum_<AttributeId>("AttributeId")
+#define _value(X) value(#X, AttributeId:: X)''')
 
   with open(fname) as fd:
     for e in csv.reader(fd, delimiter=','):

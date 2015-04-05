@@ -80,11 +80,11 @@ namespace
       return std::vector<StatusCode>();
     }
 
-    virtual void AddAttribute(const NodeID& node, AttributeID attribute, const Variant& value)
+    virtual void AddAttribute(const NodeId& node, AttributeId attribute, const Variant& value)
     {
     }
 
-    virtual void AddReference(const NodeID& sourceNode, const ReferenceDescription& reference)
+    virtual void AddReference(const NodeId& sourceNode, const ReferenceDescription& reference)
     {
     }
 
@@ -121,7 +121,7 @@ namespace
       return SubscriptionData();
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerID>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
     {
       return std::vector<StatusCode>();
     }

@@ -18,8 +18,8 @@ namespace Common
 
   struct ModuleConfiguration
   {
-    AddonID ID;
-    std::vector<AddonID> Dependencies;
+    AddonId Id;
+    std::vector<AddonId> Dependencies;
     std::string Path;
     AddonParameters Parameters;
   };

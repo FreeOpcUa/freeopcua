@@ -8,14 +8,14 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
-#define __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
+#ifndef __OPC_UA_BINARY_MESSAGE_IdENTIFIERS
+#define __OPC_UA_BINARY_MESSAGE_IdENTIFIERS
 
 namespace OpcUa
 {
-  enum MessageID
+  enum MessageId
   {
-    INVALID = 0,
+    INVALId = 0,
 
     ACTIVATE_SESSION_REQUEST   = 0x1d3, //467;
     ACTIVATE_SESSION_RESPONSE = 0x1d6, //470;
@@ -46,8 +46,8 @@ namespace OpcUa
     OPEN_SECURE_CHANNEL_REQUEST  = 0x1be, // 446
     OPEN_SECURE_CHANNEL_RESPONSE = 0x1c1, // 449
 
-    TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST  = 0x22A, // 554
-    TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE = 0x22D, // 557
+    TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_REQUEST  = 0x22A, // 554
+    TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_RESPONSE = 0x22D, // 557
 
     READ_REQUEST  = 0x277, // 631
     READ_RESPONSE = 0x27A, // 634
@@ -95,10 +95,10 @@ namespace OpcUa
     SERVICE_FAULT = 0x18d, //397;
   };
 
-  struct NodeID;
+  struct NodeId;
 
-  MessageID GetMessageID(const NodeID& id);
+  MessageId GetMessageId(const NodeId& id);
 
 }
 
-#endif // __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
+#endif // __OPC_UA_BINARY_MESSAGE_IdENTIFIERS

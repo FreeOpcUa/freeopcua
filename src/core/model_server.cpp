@@ -30,15 +30,15 @@ namespace OpcUa
 
     Object Server::RootObject() const
     {
-      return Object(ObjectID::RootFolder, Connection);
+      return Object(ObjectId::RootFolder, Connection);
     }
 
-    Object Server::GetObject(const NodeID& id) const
+    Object Server::GetObject(const NodeId& id) const
     {
       return Object(id, Connection);
     }
 
-    ObjectType Server::GetObjectType(const NodeID& typeId) const
+    ObjectType Server::GetObjectType(const NodeId& typeId) const
     {
       return ObjectType(typeId, Connection);
     }

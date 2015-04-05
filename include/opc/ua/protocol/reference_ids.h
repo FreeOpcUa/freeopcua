@@ -16,7 +16,7 @@
 namespace OpcUa
 {
 
-  enum class ReferenceID : uint32_t
+  enum class ReferenceId : uint32_t
   {
     References = 31,
     NonHierarchicalReferences = 32,

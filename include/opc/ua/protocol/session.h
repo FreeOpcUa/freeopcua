@@ -36,7 +36,7 @@ namespace OpcUa
 
   struct CreateSessionRequest
   {
-    ExpandedNodeID TypeID;
+    ExpandedNodeId TypeId;
     RequestHeader Header;
     SessionParameters Parameters;
 
@@ -46,8 +46,8 @@ namespace OpcUa
 
   struct SessionData
   {
-    ExpandedNodeID SessionID;
-    ExpandedNodeID AuthenticationToken;
+    ExpandedNodeId SessionId;
+    ExpandedNodeId AuthenticationToken;
     Duration RevisedSessionTimeout;
     std::vector<uint8_t> ServerNonce;
     CertificateData ServerCertificate;
@@ -61,7 +61,7 @@ namespace OpcUa
 
   struct CreateSessionResponse
   {
-    ExpandedNodeID TypeID;
+    ExpandedNodeId TypeId;
     ResponseHeader Header;
     SessionData Session;
 
@@ -75,7 +75,7 @@ namespace OpcUa
   struct UserIdentifyToken
   {
     ExtensionObjectHeader Header;
-    std::vector<uint8_t> PolicyID;
+    std::vector<uint8_t> PolicyId;
 
     struct UserNameStruct
     {
@@ -88,21 +88,21 @@ namespace OpcUa
 
     UserIdentifyTokenType type() const;
     void setUser(const std::string &user, const std::string &password);
-    void setPolicyID(const std::string &id);
+    void setPolicyId(const std::string &id);
   };
 
   struct UpdatedSessionParameters
   {
     SignatureData ClientSignature;
     std::vector<CertificateData> ClientCertificates;
-    std::vector<std::string> LocaleIDs;
+    std::vector<std::string> LocaleIds;
     UserIdentifyToken IdentifyToken;
     SignatureData UserTokenSignature;
   };
 
   struct ActivateSessionRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     UpdatedSessionParameters Parameters;
 
@@ -118,7 +118,7 @@ namespace OpcUa
 
   struct ActivateSessionResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     UpdatedSessionData Session;
 
@@ -131,7 +131,7 @@ namespace OpcUa
 
   struct CloseSessionRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
 
     bool DeleteSubscriptions;
@@ -141,17 +141,17 @@ namespace OpcUa
 
   struct CloseSessionResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     CloseSessionResponse();
   };
 
-  ExpandedNodeID GenerateSessionId();
+  ExpandedNodeId GenerateSessionId();
 
   struct ServiceFaultResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     ServiceFaultResponse();
