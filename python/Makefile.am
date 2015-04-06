@@ -1,7 +1,7 @@
 
 EXTRA_DIST = \
   src/py_opcua_enums.cpp \
-  src/py_opcua_enums_ObjectID.cpp \
+  src/py_opcua_enums_ObjectId.cpp \
   src/py_opcua_enums_StatusCode.cpp \
   src/py_opcua_enums.h \
   src/py_opcua_helpers.h \
@@ -23,17 +23,17 @@ libraries_path =$(OPCUA_SERVER_PATH)/lib:$(OPCUA_SERVER_PATH)/.libs
 TEST_VARS = $(opcua_paths) LD_LIBRARY_PATH=$(libraries_path) PYTHONPATH=$(shell find ./build -name \*.so -exec dirname {} + )
 
 CODEGENS =
-CODEGENS += src/py_opcua_enums_ObjectID.cpp
+CODEGENS += src/py_opcua_enums_ObjectId.cpp
 CODEGENS += src/py_opcua_enums_StatusCode.cpp
-CODEGENS += src/py_opcua_enums_AttributeID.cpp
+CODEGENS += src/py_opcua_enums_AttributeId.cpp
 
-src/py_opcua_enums_ObjectID.cpp: $(OPCUA_SERVER_PATH)/schemas/NodeIds.csv
+src/py_opcua_enums_ObjectId.cpp: $(OPCUA_SERVER_PATH)/schemas/NodeIds.csv
 	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py object_ids > $@
 
 src/py_opcua_enums_StatusCode.cpp: $(OPCUA_SERVER_PATH)/schemas/StatusCode.csv
 	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py status_codes > $@
 
-src/py_opcua_enums_AttributeID.cpp: $(OPCUA_SERVER_PATH)/schemas/AttributeIds.csv
+src/py_opcua_enums_AttributeId.cpp: $(OPCUA_SERVER_PATH)/schemas/AttributeIds.csv
 	python $(OPCUA_SERVER_PATH)/schemas/codegen.py py attribute_ids > $@
 
 all: ${CODEGENS}

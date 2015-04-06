@@ -106,7 +106,7 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(app.name, "Name", "Application has invalid name.")
         self.assertEqual(app.uri, "URI", "Application has invalid uri.")
         self.assertEqual(app.product_uri, "ProductURI", "Application has invalid ProductURI.")
-        self.assertEqual(app.type, opcua.ApplicationType.CLIENT, "Application has unexpected Type of application.")
+        self.assertEqual(app.type, opcua.ApplicationType.Client, "Application has unexpected Type of application.")
         self.assertEqual(app.gateway_server_uri, "GatewayServerURI", "Application has invalid GatewayServerURI.")
         self.assertEqual(app.discovery_profile_uri, "DiscoveryProfileURI", "Application has invalid DiscoveryProfileURI.")
         self.assertEqual(len(app.discovery_urls), 1, "Application has invalid number of DiscoveryURLs.")

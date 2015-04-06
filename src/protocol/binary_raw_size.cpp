@@ -374,12 +374,6 @@ namespace OpcUa
     };
 
     template<>
-    std::size_t RawSize<MessageSecurityMode>(const MessageSecurityMode&)
-    {
-      return 4;
-    };
-
-    template<>
     std::size_t RawSize<SignatureData>(const SignatureData& s)
     {
       return RawSize(s.Signature) + RawSize(s.Algorithm);

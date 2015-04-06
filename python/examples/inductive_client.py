@@ -9,7 +9,7 @@ import opcua
 class SubHandler(opcua.SubscriptionHandler):
     def __init__(self, *args):
         opcua.SubscriptionHandler.__init__(self, *args)
-        self.val = None
+        self.val = MessageSecurityMode::None
 
     def data_change(self, handle, node, val, attr):
         print("Python: New data change event", handle, node, val, attr)

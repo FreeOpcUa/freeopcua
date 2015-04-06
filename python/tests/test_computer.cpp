@@ -45,7 +45,7 @@ namespace
     {
       ApplicationDescription app;
       app.URI = "URI";
-      app.Type = ApplicationType::CLIENT;
+      app.Type = ApplicationType::Client;
       app.ProductURI = "ProductURI";
       app.Name.Text = "Name";
       app.GatewayServerURI = "GatewayServerURI";
@@ -59,7 +59,7 @@ namespace
       EndpointDescription endpoint;
       endpoint.EndpointURL = url;
       endpoint.SecurityLevel = 1;
-      endpoint.SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
+      endpoint.SecurityMode = OpcUa::MessageSecurityMode::None;
       endpoint.SecurityPolicyURI = "SecurityPolicyURI";
       endpoint.ServerCertificate.push_back(1);
       endpoint.ServerDescription = GetApplications(url).front();
@@ -115,9 +115,9 @@ namespace
         DATA_VALUE |
         DATA_VALUE_STATUS_CODE |
         DATA_VALUE_SOURCE_TIMESTAMP |
-        DATA_VALUE_SERVER_TIMESTAMP |
+        DATA_VALUE_Server_TIMESTAMP |
         DATA_VALUE_SOURCE_PICOSECONDS |
-        DATA_VALUE_SERVER_PICOSECONDS;
+        DATA_VALUE_Server_PICOSECONDS;
       data.ServerPicoseconds = 1;
       data.ServerTimestamp.Value = 2;
       data.SourcePicoseconds = 3;
@@ -150,9 +150,9 @@ namespace
           DATA_VALUE |
           DATA_VALUE_STATUS_CODE |
           DATA_VALUE_SOURCE_TIMESTAMP |
-          DATA_VALUE_SERVER_TIMESTAMP |
+          DATA_VALUE_Server_TIMESTAMP |
           DATA_VALUE_SOURCE_PICOSECONDS |
-          DATA_VALUE_SERVER_PICOSECONDS;
+          DATA_VALUE_Server_PICOSECONDS;
 
       Assert(value.Data.Encoding == encoding, "Invalid encoding mask.");
 

@@ -25,168 +25,168 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpenFileMode>(const OpenFileMode& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<NodeClass>(const NodeClass& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<ApplicationType>(const ApplicationType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<MessageSecurityMode>(const MessageSecurityMode& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<UserTokenType>(const UserTokenType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<SecurityTokenRequestType>(const SecurityTokenRequestType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<NodeAttributesMask>(const NodeAttributesMask& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<AttributeWriteMask>(const AttributeWriteMask& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<BrowseDirection>(const BrowseDirection& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<BrowseResultMask>(const BrowseResultMask& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<ComplianceLevel>(const ComplianceLevel& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<FilterOperator>(const FilterOperator& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<TimestampsToReturn>(const TimestampsToReturn& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<HistoryUpdateType>(const HistoryUpdateType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<PerformUpdateType>(const PerformUpdateType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<DeadbandType>(const DeadbandType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<EnumeratedTestType>(const EnumeratedTestType& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<RedundancySupport>(const RedundancySupport& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<ServerState>(const ServerState& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<AxisScaleEnumeration>(const AxisScaleEnumeration& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
     template<>
     void DataSerializer::Serialize<ExceptionDeviationFormat>(const ExceptionDeviationFormat& data)
     {
-        *this << static_cast<uintUInt32_t>(data);
+        *this << static_cast<uint32_t>(data);
     }
 
 
@@ -208,19 +208,6 @@ namespace OpcUa
 
 
     template<>
-    void DataSerializer::Serialize<DiagnosticInfo>(const DiagnosticInfo& data)
-    {
-        *this << data.Encoding;
-        if ((data.Encoding) & (1<<(0))) *this << data.SymbolicId;
-        if ((data.Encoding) & (1<<(1))) *this << data.NamespaceURI;
-        if ((data.Encoding) & (1<<(2))) *this << data.LocalizedText;
-        if ((data.Encoding) & (1<<(4))) *this << data.AdditionalInfo;
-        if ((data.Encoding) & (1<<(5))) *this << data.InnerStatusCode;
-        if ((data.Encoding) & (1<<(6))) *this << data.InnerDiagnosticInfo;
-    }
-
-
-    template<>
     void DataSerializer::Serialize<Argument>(const Argument& data)
     {
         *this << data.Name;
@@ -230,6 +217,8 @@ namespace OpcUa
         *this << data.Description;
     }
 
+
+/* START HACK
 
     template<>
     void DataSerializer::Serialize<EnumValueType>(const EnumValueType& data)
@@ -2886,6 +2875,7 @@ namespace OpcUa
         *this << data.AnnotationTime;
     }
 
+*/ //END HACK
 
    }
 

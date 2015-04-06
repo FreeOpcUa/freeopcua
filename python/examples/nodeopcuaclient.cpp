@@ -8,7 +8,7 @@ import opcua
 
 class SubClient(opcua.SubscriptionHandler):
     def __init_(self, *args):
-        self.val = None
+        self.val = MessageSecurityMode::None
         #self.c = Condition()
     def data_change(self, handle, node, val, attr):
         print("Python: New data change event", handle, node, val, attr)

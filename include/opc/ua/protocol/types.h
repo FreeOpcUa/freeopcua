@@ -11,6 +11,7 @@
 #ifndef __OPC_UA_MAPPING_TYPES_H__
 #define __OPC_UA_MAPPING_TYPES_H__
 
+#include <opc/ua/protocol/enums.h>
 #include <opc/ua/protocol/extension_identifiers.h>
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/object_ids.h>
@@ -30,14 +31,6 @@ namespace OpcUa
 {
 
   typedef std::string LocaleId;
-
-  enum class TimestampsToReturn
-  {
-    SOURCE = 0,
-    SERVER = 1,
-    BOTH   = 2,
-    NEITHER = 3
-  };
 
   struct ByteString
   {
@@ -266,20 +259,6 @@ namespace OpcUa
     ResponseHeader();
   };
 
-  enum SecurityTokenRequestType : uint32_t
-  {
-    STR_ISSUE = 0,
-    STR_RENEW = 1,
-  };
-
-  enum MessageSecurityMode : uint32_t
-  {
-    MSM_INVALId = 0,
-    MSM_NONE = 1,
-    MSM_SIGN = 2,
-    MSM_SIGN_AND_ENCRYPT = 3,
-  };
-
   typedef std::vector<uint8_t> CertificateData;
 
   // TODO Serialization, RawSize
@@ -289,20 +268,12 @@ namespace OpcUa
     std::string Algorithm;
   };
 
-  enum class ApplicationType : uint32_t
-  {
-    SERVER = 0,
-    CLIENT = 1,
-    CLIENT_AND_SERVER = 2,
-    DISCOVERY_SERVER = 3,
-  };
-
   struct ApplicationDescription
   {
     std::string URI;
     std::string ProductURI;
     LocalizedText Name;
-    ApplicationType Type = ApplicationType::CLIENT;
+    ApplicationType Type = ApplicationType::Client;
     std::string GatewayServerURI;
     std::string DiscoveryProfileURI;
     std::vector<std::string> DiscoveryURLs;
@@ -332,7 +303,7 @@ namespace OpcUa
     std::string EndpointURL;
     ApplicationDescription ServerDescription;
     CertificateData ServerCertificate;
-    MessageSecurityMode SecurityMode = MessageSecurityMode::MSM_NONE;
+    MessageSecurityMode SecurityMode = MessageSecurityMode::None;
     std::string SecurityPolicyURI;
     std::vector<UserTokenPolicy> UserIdentifyTokens;
     std::string TransportProfileURI;

@@ -74,9 +74,9 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
      DATA_VALUE |
      DATA_VALUE_STATUS_CODE |
      DATA_VALUE_SOURCE_TIMESTAMP |
-     DATA_VALUE_SERVER_TIMESTAMP |
+     DATA_VALUE_Server_TIMESTAMP |
      DATA_VALUE_SOURCE_PICOSECONDS |
-     DATA_VALUE_SERVER_PICOSECONDS;
+     DATA_VALUE_Server_PICOSECONDS;
 
   DataValue data;
   data.Encoding = encodingMask;
@@ -159,9 +159,9 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
      DATA_VALUE |
      DATA_VALUE_STATUS_CODE |
      DATA_VALUE_SOURCE_TIMESTAMP |
-     DATA_VALUE_SERVER_TIMESTAMP |
+     DATA_VALUE_Server_TIMESTAMP |
      DATA_VALUE_SOURCE_PICOSECONDS |
-     DATA_VALUE_SERVER_PICOSECONDS;
+     DATA_VALUE_Server_PICOSECONDS;
 
 
   char variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);

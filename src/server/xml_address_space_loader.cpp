@@ -115,7 +115,7 @@ namespace
     Reference()
       : Id(ReferenceId::Unknown)
       , IsForward(true)
-      , TargetClass(NodeClass::All)
+      , TargetClass(NodeClass::Unspecified)
     {
     }
   };

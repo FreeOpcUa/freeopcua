@@ -32,7 +32,7 @@ namespace OpcUa
 
   ReadParameters::ReadParameters()
     : MaxAge(0)
-    , TimestampsType(TimestampsToReturn::NEITHER)
+    , TimestampsType(TimestampsToReturn::Neither)
   {
 
   }
@@ -84,30 +84,6 @@ namespace OpcUa
     }
 
 
-    //---------------------------------------------------
-    // TimestampsToReturn
-    //---------------------------------------------------
-
-
-    template<> 
-    std::size_t RawSize<TimestampsToReturn>(const TimestampsToReturn&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<TimestampsToReturn>(const TimestampsToReturn& t)
-    {
-      *this << static_cast<uint32_t>(t);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<TimestampsToReturn>(TimestampsToReturn& t)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      t = static_cast<TimestampsToReturn>(tmp);
-    }
     //---------------------------------------------------
     // AttributeValueId
     //---------------------------------------------------

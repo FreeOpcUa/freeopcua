@@ -331,7 +331,7 @@ namespace OpcUa
         if (Debug) std::cout << "AddressSpaceInternal | Reference has wrong type." << std::endl;
         return false;
       }
-      if (desc.NodeClasses && (desc.NodeClasses & static_cast<int32_t>(reference.TargetNodeClass)) == 0)
+      if (desc.NodeClasses != NodeClass::Unspecified && (desc.NodeClasses & reference.TargetNodeClass) == NodeClass::Unspecified)
       {
         if (Debug) std::cout << "AddressSpaceInternal | Reference has wrong class." << std::endl;
         return false;

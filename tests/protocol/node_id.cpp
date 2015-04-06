@@ -283,7 +283,7 @@ TEST_F(NodeDeserialization, ServerIndexFlag)
   using namespace OpcUa;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',
@@ -295,7 +295,7 @@ TEST_F(NodeDeserialization, ServerIndexFlag)
   NodeId id;
   GetStream() >> id;
 
-  ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_SERVER_INDEX_FLAG));
+  ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_Server_INDEX_FLAG));
   ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
   ASSERT_EQ(id.StringData.Identifier, "id");
   ASSERT_EQ(id.ServerIndex, 1);
@@ -306,7 +306,7 @@ TEST_F(NodeDeserialization, NamespaceUriAndServerIndex)
   using namespace OpcUa;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',
@@ -320,7 +320,7 @@ TEST_F(NodeDeserialization, NamespaceUriAndServerIndex)
   NodeId id;
   GetStream() >> id;
 
-  ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG));
+  ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG));
   ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
   ASSERT_EQ(id.StringData.Identifier, "id");
   ASSERT_EQ(id.NamespaceURI, "uri");
@@ -500,13 +500,13 @@ TEST_F(NodeSerialization, ServerIndexFlag)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
   ExpandedNodeId id;
-  id.Encoding = static_cast<NodeIdEncoding>(EV_STRING | EV_SERVER_INDEX_FLAG);
+  id.Encoding = static_cast<NodeIdEncoding>(EV_STRING | EV_Server_INDEX_FLAG);
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";
   id.ServerIndex = 1;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',
@@ -524,14 +524,14 @@ TEST_F(NodeSerialization, NamespaceUriAndServerIndex)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
   ExpandedNodeId id;
-  id.Encoding = static_cast<NodeIdEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
+  id.Encoding = static_cast<NodeIdEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG);
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";
   id.NamespaceURI = "uri";
   id.ServerIndex = 1;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',

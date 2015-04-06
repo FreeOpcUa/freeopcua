@@ -118,8 +118,8 @@ namespace OpcUa
     description.NodeToBrowse = Id;
     description.Direction = BrowseDirection::Forward;
     description.IncludeSubtypes = true;
-    description.NodeClasses = NODE_CLASS_ALL;
-    description.ResultMask = REFERENCE_ALL;
+    description.NodeClasses = NodeClass::Unspecified;
+    description.ResultMask = BrowseResultMask::All;
     description.ReferenceTypeId =  refid;
 
     NodesQuery query;

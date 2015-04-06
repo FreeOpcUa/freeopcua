@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_CLIENT_SUBSCRIPTIONS_H
-#define __OPC_UA_CLIENT_SUBSCRIPTIONS_H
+#ifndef __OPC_UA_Client_SUBSCRIPTIONS_H
+#define __OPC_UA_Client_SUBSCRIPTIONS_H
 
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
@@ -39,4 +39,4 @@ namespace OpcUa
 
 }
 
-#endif // __OPC_UA_CLIENT_SUBSCRIPTIONS_H
+#endif // __OPC_UA_Client_SUBSCRIPTIONS_H

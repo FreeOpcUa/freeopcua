@@ -25,7 +25,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<OpenFileMode>(OpenFileMode& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<OpenFileMode>(tmp);
     }
@@ -34,7 +34,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<NodeClass>(NodeClass& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<NodeClass>(tmp);
     }
@@ -43,7 +43,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ApplicationType>(ApplicationType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<ApplicationType>(tmp);
     }
@@ -52,7 +52,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<MessageSecurityMode>(tmp);
     }
@@ -61,7 +61,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<UserTokenType>(UserTokenType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<UserTokenType>(tmp);
     }
@@ -70,7 +70,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<SecurityTokenRequestType>(SecurityTokenRequestType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<SecurityTokenRequestType>(tmp);
     }
@@ -79,7 +79,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<NodeAttributesMask>(NodeAttributesMask& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<NodeAttributesMask>(tmp);
     }
@@ -88,7 +88,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AttributeWriteMask>(AttributeWriteMask& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<AttributeWriteMask>(tmp);
     }
@@ -97,7 +97,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseDirection>(BrowseDirection& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<BrowseDirection>(tmp);
     }
@@ -106,7 +106,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseResultMask>(BrowseResultMask& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<BrowseResultMask>(tmp);
     }
@@ -115,7 +115,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ComplianceLevel>(ComplianceLevel& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<ComplianceLevel>(tmp);
     }
@@ -124,7 +124,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<FilterOperator>(FilterOperator& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<FilterOperator>(tmp);
     }
@@ -133,7 +133,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<TimestampsToReturn>(TimestampsToReturn& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<TimestampsToReturn>(tmp);
     }
@@ -142,7 +142,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<HistoryUpdateType>(HistoryUpdateType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<HistoryUpdateType>(tmp);
     }
@@ -151,7 +151,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<PerformUpdateType>(PerformUpdateType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<PerformUpdateType>(tmp);
     }
@@ -160,7 +160,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<MonitoringMode>(tmp);
     }
@@ -169,7 +169,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<DataChangeTrigger>(tmp);
     }
@@ -178,7 +178,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DeadbandType>(DeadbandType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<DeadbandType>(tmp);
     }
@@ -187,7 +187,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<EnumeratedTestType>(EnumeratedTestType& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<EnumeratedTestType>(tmp);
     }
@@ -196,7 +196,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<RedundancySupport>(RedundancySupport& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<RedundancySupport>(tmp);
     }
@@ -205,7 +205,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ServerState>(ServerState& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<ServerState>(tmp);
     }
@@ -214,7 +214,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ModelChangeStructureVerbMask>(ModelChangeStructureVerbMask& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<ModelChangeStructureVerbMask>(tmp);
     }
@@ -223,7 +223,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<AxisScaleEnumeration>(AxisScaleEnumeration& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<AxisScaleEnumeration>(tmp);
     }
@@ -232,7 +232,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ExceptionDeviationFormat>(ExceptionDeviationFormat& data)
     {
-        uintUInt32_t tmp;
+        uint32_t tmp;
         *this >> tmp;
         data = static_cast<ExceptionDeviationFormat>(tmp);
     }
@@ -256,19 +256,6 @@ namespace OpcUa
 
 
     template<>
-    void DataDeserializer::Deserialize<DiagnosticInfo>(DiagnosticInfo& data)
-    {
-        *this >> data.Encoding;
-        if ((data.Encoding) & (1>>(0))) *this >> data.SymbolicId;
-        if ((data.Encoding) & (1>>(1))) *this >> data.NamespaceURI;
-        if ((data.Encoding) & (1>>(2))) *this >> data.LocalizedText;
-        if ((data.Encoding) & (1>>(4))) *this >> data.AdditionalInfo;
-        if ((data.Encoding) & (1>>(5))) *this >> data.InnerStatusCode;
-        if ((data.Encoding) & (1>>(6))) *this >> data.InnerDiagnosticInfo;
-    }
-
-
-    template<>
     void DataDeserializer::Deserialize<Argument>(Argument& data)
     {
         *this >> data.Name;
@@ -278,6 +265,8 @@ namespace OpcUa
         *this >> data.Description;
     }
 
+
+/* START HACK
 
     template<>
     void DataDeserializer::Deserialize<EnumValueType>(EnumValueType& data)
@@ -2934,6 +2923,7 @@ namespace OpcUa
         *this >> data.AnnotationTime;
     }
 
+*/ //END HACK
 
    }
 

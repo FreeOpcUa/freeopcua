@@ -370,7 +370,7 @@ TEST_F(EndpointsSerialization, FindServersRequest)
 
   ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
   request.Parameters.EndpointURL = "url";
@@ -414,7 +414,7 @@ TEST_F(EndpointsDeserialization, FindServersRequest)
 
   ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -437,7 +437,7 @@ TEST_F(EndpointsSerialization, FindServersResponse)
 
   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -481,7 +481,7 @@ TEST_F(EndpointsDeserialization, FindServersResponse)
 
   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 

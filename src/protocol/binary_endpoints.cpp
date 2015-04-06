@@ -21,7 +21,7 @@
 namespace OpcUa
 {
   ApplicationDescription::ApplicationDescription()
-    : Type(ApplicationType::CLIENT)
+    : Type(ApplicationType::Client)
   {
   }
 
@@ -36,13 +36,13 @@ namespace OpcUa
   }
 
   FindServersRequest::FindServersRequest()
-    : TypeId(FIND_SERVERS_REQUEST)
+    : TypeId(FIND_ServerS_REQUEST)
   {
 
   }
 
   FindServersResponse::FindServersResponse()
-    : TypeId(FIND_SERVERS_RESPONSE)
+    : TypeId(FIND_ServerS_RESPONSE)
   {
 
   }
@@ -118,30 +118,6 @@ namespace OpcUa
       *this >> request.Header;
       *this >> request.Filter;
     }
-
-    //-----------------------------------------------------
-    // ApplicationType
-    //-----------------------------------------------------
-
-    template<>
-    std::size_t RawSize<ApplicationType>(const ApplicationType& type)
-    {
-      return 4;
-    };
-
-    template<>
-    void DataSerializer::Serialize<ApplicationType>(const ApplicationType& type)
-    {
-      *this << static_cast<uint32_t>(type);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<ApplicationType>(ApplicationType& type)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      type = static_cast<ApplicationType>(tmp);
-    };
 
     //-----------------------------------------------------
     // UserIdentifyTokenType

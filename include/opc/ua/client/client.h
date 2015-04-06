@@ -112,7 +112,7 @@ namespace OpcUa
     void SetProductURI(std::string uri) { ProductUri = uri; }
 
     /// @brief  set security policy
-    // anyway freeopcua currently only support None 
+    // anyway freeopcua currently only support MessageSecurityMode::None 
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
     std::string GetSecurityPolicy() const { return SecurityPolicy; }
 

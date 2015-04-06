@@ -5,7 +5,7 @@ import sys
 import os
 import platform
 
-opcua_server_path = os.environ.get('OPCUA_SERVER_PATH','..')
+opcua_server_path = os.environ.get('OPCUA_Server_PATH','..')
 
 extra_compile_args = [
 	'-std=c++11', 

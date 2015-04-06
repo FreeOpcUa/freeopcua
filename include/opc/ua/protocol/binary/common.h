@@ -39,7 +39,7 @@ namespace OpcUa
 
     enum MessageType
     {
-      MT_INVALId = 0,
+      MT_INVALID = 0,
       MT_HELLO = 1,
       MT_ACKNOWLEDGE,
       MT_ERROR,
@@ -50,7 +50,7 @@ namespace OpcUa
 
     enum ChunkType
     {
-      CHT_INVALId = 0,
+      CHT_INVALID = 0,
       CHT_SINGLE = 1,
       CHT_INTERMEDIATE,
       CHT_FINAL,

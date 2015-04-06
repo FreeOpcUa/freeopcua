@@ -594,7 +594,7 @@ TEST_F(OpcUaBinaryDeserialization, AdditionalHeader)
   using namespace OpcUa;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',
@@ -609,7 +609,7 @@ TEST_F(OpcUaBinaryDeserialization, AdditionalHeader)
   AdditionalHeader header;
   GetStream() >> header;
 
-  ASSERT_EQ(header.TypeId.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG));
+  ASSERT_EQ(header.TypeId.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG));
   ASSERT_EQ(header.TypeId.StringData.NamespaceIndex, 0x1);
   ASSERT_EQ(header.TypeId.StringData.Identifier, "id");
   ASSERT_EQ(header.TypeId.NamespaceURI, "uri");
@@ -828,8 +828,8 @@ TEST_F(OpcUaBinaryDeserialization, OpenSequreChannelRequest)
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   1, 0, 0, 0,
-  STR_RENEW,  0, 0, 0,
-  MSM_SIGN, 0, 0, 0,
+  (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
+  (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
   1, 0, 0, 0,
   1,
   5, 0, 0, 0,
@@ -841,8 +841,8 @@ TEST_F(OpcUaBinaryDeserialization, OpenSequreChannelRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.Parameters.ClientProtocolVersion, 1);
-  ASSERT_EQ(request.Parameters.RequestType, STR_RENEW);
-  ASSERT_EQ(request.Parameters.SecurityMode, MSM_SIGN);
+  ASSERT_EQ(request.Parameters.RequestType, SecurityTokenRequestType::Renew);
+  ASSERT_EQ(request.Parameters.SecurityMode, MessageSecurityMode::Sign);
   ASSERT_EQ(request.Parameters.ClientNonce, std::vector<uint8_t>(1, 1));
   ASSERT_EQ(request.Parameters.RequestLifeTime, 5);
 

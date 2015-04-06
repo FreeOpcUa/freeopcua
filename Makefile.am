@@ -227,6 +227,9 @@ binaryinclude_HEADERS = \
 
 protocolinclude_HEADERS = \
   include/opc/ua/protocol/attribute.h \
+  include/opc/ua/protocol/enums.h \
+  include/opc/ua/protocol/protocol.h \
+  include/opc/ua/protocol/protocol_auto.h \
   include/opc/ua/protocol/attribute_ids.h \
   include/opc/ua/protocol/channel.h \
   include/opc/ua/protocol/data_value.h \
@@ -242,7 +245,6 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/monitored_items.h \
   include/opc/ua/protocol/node_management.h \
   include/opc/ua/protocol/nodeid.h \
-  include/opc/ua/protocol/node_classes.h \
   include/opc/ua/protocol/object_ids.h \
   include/opc/ua/protocol/reference_ids.h \
   include/opc/ua/protocol/secure_channel.h \
@@ -259,6 +261,9 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/view.h
 
 libopcuaprotocol_la_SOURCES = \
+  src/protocol/deserialize_auto.cpp \
+  src/protocol/serialize_auto.cpp \
+  src/protocol/rawsize_auto.cpp \
   src/protocol/binary_variant.cpp \
   src/protocol/binary_stream.cpp \
   src/protocol/binary_serialization.h \
@@ -279,6 +284,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/status_codes.cpp \
   src/protocol/string_utils.cpp \
   src/protocol/string_utils_statuscode_tostring.cpp
+  #src/protocol/constructors_auto.cpp 
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

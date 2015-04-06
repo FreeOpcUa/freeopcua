@@ -12,11 +12,10 @@
 
 #pragma once
 
-#include <opc/ua/protocol/enum_auto.h>
+#include <opc/ua/protocol/enums.h>
 #include <opc/ua/protocol/variable_access_level.h>
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
-//#include <opc/ua/protocol/extension_object.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
@@ -35,19 +34,7 @@ namespace OpcUa
     struct XmlElement 
     {
          int32_t Length;
-         std::vector<char> Value;
-    };
-
-    // A recursive structure containing diagnostic information associated with a status code.
-    struct DiagnosticInfo 
-    {
-         uint8_t Encoding;
-         int32_t SymbolicId;
-         int32_t NamespaceURI;
-         int32_t LocalizedText;
-         std::string AdditionalInfo;
-         OpcUa::StatusCode InnerStatusCode;
-         std::shared_ptr<OpcUa::DiagnosticInfo> InnerDiagnosticInfo;
+         std::vector<uint8_t> Value;
     };
 
     // An argument for a method.
@@ -59,6 +46,8 @@ namespace OpcUa
          std::vector<uint32_t> ArrayDimensions;
          OpcUa::LocalizedText Description;
     };
+
+/* START HACK
 
     // A mapping between a value of an enumerated type and a name and description.
     struct EnumValueType 
@@ -2085,7 +2074,7 @@ namespace OpcUa
     struct ScalarTestType 
     {
          bool Boolean;
-         char SByte;
+         uint8_t SByte;
          uint8_t Byte;
          int16_t Int16;
          uint16_t UInt16;
@@ -2115,7 +2104,7 @@ namespace OpcUa
     struct ArrayTestType 
     {
          std::vector<bool> Booleans;
-         std::vector<char> SBytes;
+         std::vector<uint8_t> SBytes;
          std::vector<int16_t> Int16s;
          std::vector<uint16_t> UInt16s;
          std::vector<int32_t> Int32s;
@@ -2450,6 +2439,7 @@ namespace OpcUa
          std::string UserName;
          OpcUa::DateTime AnnotationTime;
     };
+*/ //END HACK
 
 } // namespace
     

@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_CLIENT_ENDPOINTS_H
-#define OPC_UA_CLIENT_ENDPOINTS_H
+#ifndef OPC_UA_Client_ENDPOINTS_H
+#define OPC_UA_Client_ENDPOINTS_H
 
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
@@ -40,5 +40,5 @@ namespace OpcUa
 
 } // namespace OpcUa
 
-#endif // OPC_UA_CLIENT_ENDPOINTS_H
+#endif // OPC_UA_Client_ENDPOINTS_H
 

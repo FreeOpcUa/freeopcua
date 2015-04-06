@@ -92,7 +92,7 @@ namespace OpcUa
       std::string Name = "FreeOpcUa Server";
       bool Debug = false;
       bool LoadCppAddressSpace = true;
-      OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::MSM_NONE;
+      OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::None;
       void CheckStarted() const;
 
       Common::AddonsManager::SharedPtr Addons;

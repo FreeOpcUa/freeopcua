@@ -283,7 +283,7 @@ protected:
   desc.Name.Encoding = HAS_LOCALE | HAS_TEXT; \
   desc.Name.Locale = "RU"; \
   desc.Name.Text = "text"; \
-  desc.Type = ApplicationType::CLIENT; \
+  desc.Type = ApplicationType::Client; \
   desc.GatewayServerURI = "gw"; \
   desc.DiscoveryProfileURI = "dpu"; \
   desc.DiscoveryURLs.push_back("du");
@@ -305,7 +305,7 @@ protected:
   ASSERT_EQ(desc.Name.Encoding, HAS_LOCALE | HAS_TEXT); \
   ASSERT_EQ(desc.Name.Locale, "RU"); \
   ASSERT_EQ(desc.Name.Text, "text"); \
-  ASSERT_EQ(desc.Type, ApplicationType::CLIENT); \
+  ASSERT_EQ(desc.Type, ApplicationType::Client); \
   ASSERT_EQ(desc.GatewayServerURI, "gw"); \
   ASSERT_EQ(desc.DiscoveryProfileURI, "dpu"); \
   ASSERT_EQ(desc.DiscoveryURLs, std::vector<std::string>(1,"du"));
@@ -314,7 +314,7 @@ protected:
   endpoint.EndpointURL = "eu"; \
   FILL_APPLICATION_DESCRIPTION(endpoint.ServerDescription); \
   endpoint.ServerCertificate = {1,2,3,4}; \
-  endpoint.SecurityMode = MSM_NONE; \
+  endpoint.SecurityMode = MessageSecurityMode::None; \
   endpoint.SecurityPolicyURI = "spu"; \
   UserTokenPolicy token; \
   token.PolicyId = "pi"; \
@@ -346,7 +346,7 @@ protected:
   ASSERT_APPLICATION_DESCRIPTION_EQ(e.ServerDescription); \
   const std::vector<uint8_t> certificate = {1,2,3,4}; \
   ASSERT_EQ(e.ServerCertificate, certificate); \
-  ASSERT_EQ(e.SecurityMode, MSM_NONE); \
+  ASSERT_EQ(e.SecurityMode, MessageSecurityMode::None); \
   ASSERT_EQ(e.SecurityPolicyURI, "spu"); \
   ASSERT_EQ(e.UserIdentifyTokens.size(), 1); \
   ASSERT_EQ(e.UserIdentifyTokens[0].PolicyId, "pi"); \

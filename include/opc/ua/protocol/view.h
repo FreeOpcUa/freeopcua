@@ -11,7 +11,6 @@
 #ifndef __OPC_UA_BINARY_VIEW_H__
 #define __OPC_UA_BINARY_VIEW_H__
 
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/types.h>
 
 namespace OpcUa
@@ -21,32 +20,7 @@ namespace OpcUa
   // Browse
   //---------------------------------------------------
 
-  enum class BrowseDirection : uint32_t
-  {
-    Forward = 0,
-    Inverse = 1,
-    Both    = 2,
-  };
 
-  const uint32_t NODE_CLASS_ALL            = 0;
-  const uint32_t NODE_CLASS_OBJECT         = 1;
-  const uint32_t NODE_CLASS_VARIABLE       = 2;
-  const uint32_t NODE_CLASS_METHOD         = 4;
-  const uint32_t NODE_CLASS_OBJECT_TYPE    = 8;
-  const uint32_t NODE_CLASS_VARIABLE_TYPE  = 16;
-  const uint32_t NODE_CLASS_REFERENCE_TYPE = 32;
-  const uint32_t NODE_CLASS_DATA_TYPE      = 64;
-  const uint32_t NODE_CLASS_VIEW           = 128;
-
-
-  const uint32_t REFERENCE_NONE            = 0;
-  const uint32_t REFERENCE_TYPE            = 1;
-  const uint32_t REFERENCE_IS_FORWARD      = 2;
-  const uint32_t REFERENCE_NODE_CLASS      = 4;
-  const uint32_t REFERENCE_BROWSE_NAME     = 8;
-  const uint32_t REFERENCE_DISPLAY_NAME    = 16;
-  const uint32_t REFERENCE_TYPE_DEFINITION = 32;
-  const uint32_t REFERENCE_ALL             = 63;
 
   struct ViewDescription
   {
@@ -63,8 +37,8 @@ namespace OpcUa
     BrowseDirection Direction;
     NodeId ReferenceTypeId;
     bool IncludeSubtypes; // If false will follow strctly ReferenceTypeId. if true will follow subtypes of ReferenceTypeId.
-    uint32_t NodeClasses;
-    uint32_t ResultMask;
+    NodeClass NodeClasses;
+    BrowseResultMask ResultMask;
 
     BrowseDescription();
   };

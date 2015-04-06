@@ -74,7 +74,7 @@ namespace OpcUa
 
     std::vector<Variable> Variable::Variables() const
     {
-      return Browse<Variable>(GetId(), NODE_CLASS_VARIABLE, GetServices());
+      return Browse<Variable>(GetId(), NodeClass::Variable, GetServices());
     }
   }
 }

@@ -135,8 +135,8 @@ TEST_F(ViewSerialization, BrowseDescription)
   desc.ReferenceTypeId.Encoding = EV_TWO_BYTE;
   desc.ReferenceTypeId.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;
-  desc.NodeClasses = NODE_CLASS_VARIABLE;
-  desc.ResultMask = REFERENCE_NODE_CLASS;
+  desc.NodeClasses = NodeClass::Variable;
+  desc.ResultMask = BrowseResultMask::NodeClass;
 
   GetStream() << desc << flush;
 
@@ -179,8 +179,8 @@ TEST_F(ViewDeserialization, BrowseDescription)
   ASSERT_EQ(desc.ReferenceTypeId.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.ReferenceTypeId.TwoByteData.Identifier, 2);
   ASSERT_EQ(desc.IncludeSubtypes, true);
-  ASSERT_EQ(desc.NodeClasses, NODE_CLASS_VARIABLE);
-  ASSERT_EQ(desc.ResultMask, REFERENCE_NODE_CLASS);
+  ASSERT_EQ(desc.NodeClasses, NodeClass::Variable);
+  ASSERT_EQ(desc.ResultMask, BrowseResultMask::NodeClass);
 }
 
 //-------------------------------------------------------
@@ -198,8 +198,8 @@ OpcUa::BrowseDescription CreateBrowseDescription()
   desc.ReferenceTypeId.Encoding = EV_TWO_BYTE;
   desc.ReferenceTypeId.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;
-  desc.NodeClasses = NODE_CLASS_VARIABLE;
-  desc.ResultMask = REFERENCE_NODE_CLASS;
+  desc.NodeClasses = NodeClass::Variable;
+  desc.ResultMask = BrowseResultMask::NodeClass;
   return desc;
 }
 

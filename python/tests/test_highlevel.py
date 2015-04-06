@@ -113,7 +113,7 @@ class Unit(unittest.TestCase):
 
     def test_application_description(self):
         ad=opcua.ApplicationDescription()
-        self.assertEqual(ad.type,opcua.ApplicationType.CLIENT)
+        self.assertEqual(ad.type,opcua.ApplicationType.Client)
         ad.discovery_urls=['a','b','c']
         self.assertEqual(ad.discovery_urls,['a','b','c'])
     
@@ -123,7 +123,7 @@ class Unit(unittest.TestCase):
 
     def test_endpoint_description(self):
         ed=opcua.EndpointDescription()
-        self.assertEqual(ed.security_mode,opcua.MessageSecurityMode.MSM_NONE)
+        self.assertEqual(ed.security_mode, opcua.MessageSecurityMode.None_)
         self.assertEqual(ed.security_level,0)
         ed.server_description=opcua.ApplicationDescription()
         self.assertEqual(ed.user_identify_tokens,[])
@@ -135,7 +135,7 @@ class Unit(unittest.TestCase):
         self.assertEqual(rd.browse_name,opcua.QualifiedName())
         self.assertEqual(rd.is_forward,False)
         self.assertEqual(rd.reference_type_id,opcua.NodeId())
-        self.assertEqual(rd.target_node_class,opcua.NodeClass.All)
+        self.assertEqual(rd.target_node_class,opcua.NodeClass.Unspecified)
         self.assertEqual(rd.target_node_id,opcua.NodeId())
         self.assertEqual(rd.target_node_type_definition,opcua.NodeId())
 
@@ -151,7 +151,7 @@ class Unit(unittest.TestCase):
         self.assertEqual(wv.node,opcua.NodeId())
         self.assertEqual(wv.attribute,opcua.AttributeId())
         self.assertEqual(wv.numeric_range,'')
-        self.assertEqual(wv.data.value,None)
+        self.assertEqual(wv.data.value, None)
 
     def test_datetime(self):
         tnow1 = int(time.time())

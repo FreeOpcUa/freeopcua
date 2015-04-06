@@ -18,9 +18,9 @@ namespace OpcUa
    const uint8_t DATA_VALUE = 1;
    const uint8_t DATA_VALUE_STATUS_CODE = 2;
    const uint8_t DATA_VALUE_SOURCE_TIMESTAMP = 4;
-   const uint8_t DATA_VALUE_SERVER_TIMESTAMP = 8;
+   const uint8_t DATA_VALUE_Server_TIMESTAMP = 8;
    const uint8_t DATA_VALUE_SOURCE_PICOSECONDS = 16;
-   const uint8_t DATA_VALUE_SERVER_PICOSECONDS = 32;
+   const uint8_t DATA_VALUE_Server_PICOSECONDS = 32;
    const uint8_t DATA_VALUE_ALL = ~uint8_t();
 
   struct DataValue
@@ -93,9 +93,9 @@ namespace OpcUa
         return false;
       if ((Encoding & DATA_VALUE_SOURCE_PICOSECONDS) && SourcePicoseconds != data.SourcePicoseconds)
         return false;
-      if ((Encoding & DATA_VALUE_SERVER_TIMESTAMP) && ServerTimestamp != data.ServerTimestamp)
+      if ((Encoding & DATA_VALUE_Server_TIMESTAMP) && ServerTimestamp != data.ServerTimestamp)
         return false;
-      if ((Encoding & DATA_VALUE_SERVER_PICOSECONDS) && ServerPicoseconds != data.ServerPicoseconds)
+      if ((Encoding & DATA_VALUE_Server_PICOSECONDS) && ServerPicoseconds != data.ServerPicoseconds)
         return false;
 
       return true;
@@ -110,7 +110,7 @@ namespace OpcUa
     void SetServerTimestamp(const DateTime& t)
     {
       ServerTimestamp = t;
-      Encoding |= DATA_VALUE_SERVER_TIMESTAMP;
+      Encoding |= DATA_VALUE_Server_TIMESTAMP;
     }
   };
 

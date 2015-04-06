@@ -43,8 +43,8 @@ namespace OpcUa
   BrowseDescription::BrowseDescription()
     : Direction(BrowseDirection::Both)
     , IncludeSubtypes(false)
-    , NodeClasses(NODE_CLASS_ALL)
-    , ResultMask(REFERENCE_ALL)
+    , NodeClasses(NodeClass::Unspecified)
+    , ResultMask(BrowseResultMask::All)
   {
   }
 
@@ -60,7 +60,7 @@ namespace OpcUa
 
   ReferenceDescription::ReferenceDescription()
     : IsForward(false)
-    , TargetNodeClass(NodeClass::All)
+    , TargetNodeClass(NodeClass::Unspecified)
   {
   }
 
@@ -102,55 +102,6 @@ namespace OpcUa
 
   namespace Binary
   {
-    ////////////////////////////////////////////////////////////////
-    // NodeClass
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<NodeClass>(const NodeClass&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<NodeClass>(const NodeClass& cls)
-    {
-      *this << static_cast<uint32_t>(cls);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<NodeClass>(NodeClass& direction)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      direction = static_cast<NodeClass>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // BrowseDirection
-    ////////////////////////////////////////////////////////////////
-
-
-    template<>
-    std::size_t RawSize<BrowseDirection>(const BrowseDirection&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<BrowseDirection>(const BrowseDirection& direction)
-    {
-      *this << static_cast<uint32_t>(direction);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<BrowseDirection>(BrowseDirection& direction)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      direction = static_cast<BrowseDirection>(tmp);
-    }
 
     //---------------------------------------------------
     // ViewDescription

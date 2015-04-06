@@ -25,168 +25,168 @@ namespace OpcUa
     template<>
     std::size_t RawSize<OpenFileMode>(const OpenFileMode& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<NodeClass>(const NodeClass& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<ApplicationType>(const ApplicationType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<MessageSecurityMode>(const MessageSecurityMode& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<UserTokenType>(const UserTokenType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<SecurityTokenRequestType>(const SecurityTokenRequestType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<NodeAttributesMask>(const NodeAttributesMask& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<AttributeWriteMask>(const AttributeWriteMask& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<BrowseDirection>(const BrowseDirection& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<BrowseResultMask>(const BrowseResultMask& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<ComplianceLevel>(const ComplianceLevel& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<FilterOperator>(const FilterOperator& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<TimestampsToReturn>(const TimestampsToReturn& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<HistoryUpdateType>(const HistoryUpdateType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<PerformUpdateType>(const PerformUpdateType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<MonitoringMode>(const MonitoringMode& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<DeadbandType>(const DeadbandType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<EnumeratedTestType>(const EnumeratedTestType& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<RedundancySupport>(const RedundancySupport& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<ServerState>(const ServerState& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<AxisScaleEnumeration>(const AxisScaleEnumeration& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
     template<>
     std::size_t RawSize<ExceptionDeviationFormat>(const ExceptionDeviationFormat& data)
     {
-        return sizeof(uintUInt32_t);
+        return sizeof(uint32_t);
     }
 
 
@@ -212,21 +212,6 @@ namespace OpcUa
 
 
     template<>
-    std::size_t RawSize<DiagnosticInfo>(const DiagnosticInfo& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Encoding);
-        if ((data.Encoding) & (1<<(0))) size += RawSize(data.SymbolicId);
-        if ((data.Encoding) & (1<<(1))) size += RawSize(data.NamespaceURI);
-        if ((data.Encoding) & (1<<(2))) size += RawSize(data.LocalizedText);
-        if ((data.Encoding) & (1<<(4))) size += RawSize(data.AdditionalInfo);
-        if ((data.Encoding) & (1<<(5))) size += RawSize(data.InnerStatusCode);
-        if ((data.Encoding) & (1<<(6))) size += RawSize(data.InnerDiagnosticInfo);
-        return size;
-    }
-
-
-    template<>
     std::size_t RawSize<Argument>(const Argument& data)
     {
         size_t size = 0;
@@ -238,6 +223,8 @@ namespace OpcUa
         return size;
     }
 
+
+/* START HACK
 
     template<>
     std::size_t RawSize<EnumValueType>(const EnumValueType& data)
@@ -3420,6 +3407,7 @@ namespace OpcUa
         return size;
     }
 
+*/ //END HACK
 
    }
 

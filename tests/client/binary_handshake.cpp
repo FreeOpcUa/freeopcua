@@ -168,7 +168,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   request.ClientDescription.ProductURI = "http://treww.org/libopcua";
   request.ClientDescription.Name.Encoding = HAS_TEXT;
   request.ClientDescription.Name.Text = "libopcuamappings";
-  request.ClientDescription.Type = ApplicationType::CLIENT;
+  request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
   request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
@@ -201,7 +201,7 @@ OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream& stre
   request.ClientDescription.ProductURI = "http://treww.org/libopcua";
   request.ClientDescription.Name.Encoding = HAS_TEXT;
   request.ClientDescription.Name.Text = "libopcuamappings";
-  request.ClientDescription.Type = ApplicationType::CLIENT;
+  request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
   request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
@@ -327,8 +327,8 @@ TEST_F(OpcBinaryHandshake, Browse)
   desc.ReferenceTypeId.Encoding = EV_TWO_BYTE;
   desc.ReferenceTypeId.TwoByteData.Identifier = 33;
   desc.IncludeSubtypes = true;
-  desc.NodeClasses = NODE_CLASS_ALL;
-  desc.ResultMask = REFERENCE_ALL;
+  desc.NodeClasses = NodeClass::Unspecified;
+  desc.ResultMask = BrowseResultMask::All;
   browse.NodesToBrowse.push_back(desc);
   
   stream << browse << flush;
@@ -385,7 +385,7 @@ TEST_F(OpcBinaryHandshake, Read)
   OpcUa::Binary::ReadRequest request;
   request.Header.SessionAuthenticationToken = session.AuthenticationToken;
   request.MaxAge = 0;
-  request.TimestampsType = TimestampsToReturn::NEITHER;
+  request.TimestampsType = TimestampsToReturn::Neither;
   request.AttributesToRead.push_back(value);
  
   stream << request << flush;

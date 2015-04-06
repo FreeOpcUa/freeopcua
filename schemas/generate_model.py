@@ -89,9 +89,9 @@ class Field(object):
         elif self.uatype == "CharArray":
             ty = "std::string"
         elif self.uatype == "Char":
-            ty = "char"
+            ty = "uint8_t"
         elif self.uatype == "SByte":
-            ty = "char"
+            ty = "uint8_t"
         elif self.uatype == "Int8":
             ty = "int8_t"
         elif self.uatype == "Int16":
@@ -134,7 +134,7 @@ class Enum(object):
         self.doc = ""
 
     def get_ctype(self):
-        return "uint{}_t".format(self.uatype)
+        return "{}_t".format(self.uatype.lower())
 
 class EnumValue(object):
     def __init__(self):

@@ -194,12 +194,12 @@ namespace OpcUa
       OpenSecureChannelRequest request;
       istream >> request;
 
-      if (request.Parameters.SecurityMode != MSM_NONE)
+      if (request.Parameters.SecurityMode != MessageSecurityMode::None)
       {
         throw std::logic_error("Unsupported security mode.");
       }
 
-      if (request.Parameters.RequestType == STR_RENEW)
+      if (request.Parameters.RequestType == SecurityTokenRequestType::Renew)
       {
         //FIXME:Should check that channel has been issued first
         ++TokenId;
@@ -283,7 +283,7 @@ namespace OpcUa
           return;
         }
 
-        case OpcUa::FIND_SERVERS_REQUEST:
+        case OpcUa::FIND_ServerS_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Find Servers' request." << std::endl;
           FindServersParameters params;

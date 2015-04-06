@@ -21,7 +21,7 @@ namespace OpcUa
 {
 
   MonitoredItemsParameters::MonitoredItemsParameters()
-    : Timestamps(TimestampsToReturn::NEITHER)
+    : Timestamps(TimestampsToReturn::Neither)
   {
   }
 
@@ -194,102 +194,6 @@ namespace OpcUa
       *this >> data.Diagnostics;
     }
 
-    ////////////////////////////////////////////////////////////////
-    // FilterOperator
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<FilterOperator>(const FilterOperator&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<FilterOperator>(const FilterOperator& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<FilterOperator>(FilterOperator& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<FilterOperator>(tmp);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // DeadbandType
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DeadbandType>(const DeadbandType&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeadbandType>(const DeadbandType& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeadbandType>(DeadbandType& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DeadbandType>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // DataChangeTrigger
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DataChangeTrigger>(tmp);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // MonitoringMode
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoringMode>(const MonitoringMode&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<MonitoringMode>(tmp);
-    }
     ////////////////////////////////////////////////////////
     // AttributeOperand
     ////////////////////////////////////////////////////////

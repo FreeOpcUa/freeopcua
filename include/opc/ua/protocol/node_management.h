@@ -16,7 +16,6 @@
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/strings.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/variable_access_level.h>
 #include <map>
 #include <bitset>

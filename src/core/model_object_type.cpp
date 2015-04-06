@@ -47,17 +47,17 @@ namespace OpcUa
 
     std::vector<Variable> ObjectType::Variables() const
     {
-      return Browse<Variable>(GetId(), NODE_CLASS_VARIABLE, GetServices());
+      return Browse<Variable>(GetId(), NodeClass::Variable, GetServices());
     }
 
     std::vector<Object> ObjectType::Objects() const
     {
-      return Browse<Object>(GetId(), NODE_CLASS_OBJECT, GetServices());
+      return Browse<Object>(GetId(), NodeClass::Object, GetServices());
     }
 
     std::vector<ObjectType> ObjectType::SubTypes() const
     {
-      return Browse<ObjectType>(GetId(), NODE_CLASS_OBJECT_TYPE, GetServices());
+      return Browse<ObjectType>(GetId(), NodeClass::ObjectType, GetServices());
     }
 
     ObjectType ObjectType::Parent() const

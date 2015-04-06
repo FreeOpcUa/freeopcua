@@ -221,13 +221,13 @@ static DateTime DataValue_get_server_timestamp(const DataValue & self)
 { return self.ServerTimestamp; }
 
 static void DataValue_set_server_timestamp(DataValue & self, const DateTime & dt)
-{ self.ServerTimestamp = dt; self.Encoding |= DATA_VALUE_SERVER_TIMESTAMP; }
+{ self.ServerTimestamp = dt; self.Encoding |= DATA_VALUE_Server_TIMESTAMP; }
 
 static uint16_t DataValue_get_server_picoseconds(const DataValue & self)
 { return self.ServerPicoseconds; }
 
 static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
-{ self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_SERVER_PICOSECONDS; }
+{ self.ServerPicoseconds = ps; self.Encoding |= DATA_VALUE_Server_PICOSECONDS; }
 
 //--------------------------------------------------------------------------
 // Node helpers

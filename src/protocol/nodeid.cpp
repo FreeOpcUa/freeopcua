@@ -345,7 +345,7 @@ namespace OpcUa
 
   bool NodeId::HasServerIndex() const
   {
-    return (Encoding & EV_SERVER_INDEX_FLAG) != 0;
+    return (Encoding & EV_Server_INDEX_FLAG) != 0;
   }
 
   void NodeId::SetNamespaceURI(const std::string& uri)
@@ -356,7 +356,7 @@ namespace OpcUa
 
   void NodeId::SetServerIndex(uint32_t index)
   {
-    Encoding = static_cast<NodeIdEncoding>(Encoding | EV_SERVER_INDEX_FLAG);
+    Encoding = static_cast<NodeIdEncoding>(Encoding | EV_Server_INDEX_FLAG);
     ServerIndex = index;
   }
 
@@ -553,7 +553,7 @@ namespace OpcUa
     {
       //unset server and namespace flags in encoding, they should only be used in ExpandedNode Id
       uint8_t nodeid_encoding = id.Encoding;
-      nodeid_encoding &= ~EV_SERVER_INDEX_FLAG;
+      nodeid_encoding &= ~EV_Server_INDEX_FLAG;
       nodeid_encoding &= ~EV_NAMESPACE_URI_FLAG;
 
       *this << nodeid_encoding;

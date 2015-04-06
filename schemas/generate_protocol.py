@@ -10,11 +10,13 @@ from IPython import embed
 
 import generate_model as gm
 
+CUTOFF_HACK = 4
+
 NeedOverride = []
 NeedConstructor = ["RelativePathElement", "ReadValueId", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #we want to implement som struct by hand, to make better interface or simply because they are too complicated 
-IgnoredStructs = ["NodeId", "ExpandedNodeId", "Variant", "QualifiedName", "DataValue", "LocalizedText"]#, "ExtensionObject"]
+IgnoredStructs = ["NodeId", "ExpandedNodeId", "Variant", "QualifiedName", "DataValue", "LocalizedText", "DiagnosticInfo"]#, "ExtensionObject"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest"]
 OverrideTypes = {"AttributeId": "AttributeID",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
@@ -80,11 +82,17 @@ class CodeGenerator(object):
 
     def run(self):
         #sys.stderr.write("Generating header file {} and C++ files for XML file {}".format(self.h_path, self.input_path) + "\n")
+        print("Generating: ", self.h_path)
         self.h_file = open(self.h_path, "w")
+        print("Generating: ", self.enum_path)
         self.enum_file = open(self.enum_path, "w")
+        print("Generating: ", self.rawsize_path)
         self.rawsize_file = open(self.rawsize_path, "w")
+        print("Generating: ", self.serialize_path)
         self.serialize_file = open(self.serialize_path, "w")
+        print("Generating: ", self.deserialize_path)
         self.deserialize_file = open(self.deserialize_path, "w")
+        print("Generating: ", self.constructors_path)
         self.constructors_file = open(self.constructors_path, "w")
 
         self.make_header_h()
@@ -98,6 +106,7 @@ class CodeGenerator(object):
             if not enum.name in IgnoredEnums:
                 self.make_enum_h(enum)
                 self.make_struct_ser(enum)
+        hack_count = 0
         for struct in self.model.structs:
             self.rename_fields(struct)
             if struct.name in NeedConstructor:
@@ -105,10 +114,20 @@ class CodeGenerator(object):
             if struct.name in NeedOverride:
                 struct.needoverride = True
             if not struct.name.endswith("Node") and not struct.name.endswith("NodeId") and not struct.name in IgnoredStructs:
+                hack_count += 1
+                if hack_count == CUTOFF_HACK:
+                    self.write_h("\n/* START HACK")
+                    self.write_size("\n/* START HACK")
+                    self.write_ser("\n/* START HACK")
+                    self.write_deser("\n/* START HACK")
                 self.make_struct_h(struct)
                 self.make_struct_ser(struct)
                 self.make_constructors(struct)
 
+        self.write_h("*/ //END HACK")
+        self.write_size("*/ //END HACK")
+        self.write_ser("*/ //END HACK")
+        self.write_deser("*/ //END HACK")
         self.make_footer_h()
         self.make_footer_enum()
         self.make_footer_rawsize()
@@ -263,13 +282,14 @@ class CodeGenerator(object):
             self.write_enum("        ", val.name, "=", val.value + ",")
         self.write_enum("    };")
         #if enum.name.endswith("Mask"):
-        self.write_enum("    inline {name} operator|({name} a, {name} b) {{return static_cast<{name}>(static_cast<{type}>(a) | static_cast<{type}>(b));}}".format(name=enum.name, type=self.to_enum_type(enum.uatype)))
+        self.write_enum("""    inline {name} operator|({name} a, {name} b) {{ return static_cast<{name}>(static_cast<{type}>(a) | static_cast<{type}>(b)); }}""".format(name=enum.name, type=self.to_enum_type(enum.uatype)))
+        self.write_enum("""    inline {name} operator&({name} a, {name} b) {{ return static_cast<{name}>(static_cast<{type}>(a) & static_cast<{type}>(b)); }}""".format(name=enum.name, type=self.to_enum_type(enum.uatype)))
 
 
     def to_enum_type(self, val):
-        if val == "6":
-            val = "8"
-        return "uint{}_t".format(val)
+        #if val == "6":
+            #val = "8"
+        return "{}_t".format(val.lower())
 
     def write_h(self, *args):
         self.h_file.write(" ".join(args) + "\n")
@@ -304,11 +324,10 @@ class CodeGenerator(object):
 
 #pragma once
 
-#include <opc/ua/protocol/enum_auto.h>
+#include <opc/ua/protocol/enums.h>
 #include <opc/ua/protocol/variable_access_level.h>
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
-//#include <opc/ua/protocol/extension_object.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
@@ -480,7 +499,7 @@ namespace OpcUa
 if __name__ == "__main__":
     xmlpath = "Opc.Ua.Types.bsd"
     hpath = "../include/opc/ua/protocol/protocol_auto.h"
-    enumpath = "../include/opc/ua/protocol/enum_auto.h"
+    enumpath = "../include/opc/ua/protocol/enums.h"
     serializerpath = "../src/protocol/serialize_auto.cpp"
     rawsizepath = "../src/protocol/rawsize_auto.cpp"
     deserializerpath = "../src/protocol/deserialize_auto.cpp"

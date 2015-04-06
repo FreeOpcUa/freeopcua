@@ -55,8 +55,8 @@ namespace OpcUa
       if (Debug)  { std::cout << "KeepAliveThread | renewing secure channel " << std::endl; }
       OpenSecureChannelParameters params;
       params.ClientProtocolVersion = 0;
-      params.RequestType = STR_RENEW;
-      params.SecurityMode = MSM_NONE;
+      params.RequestType = SecurityTokenRequestType::Renew;
+      params.SecurityMode = MessageSecurityMode::None;
       params.ClientNonce = std::vector<uint8_t>(1, 0);
       params.RequestLifeTime = Period;
       OpenSecureChannelResponse response = Server->OpenSecureChannel(params);
@@ -186,7 +186,7 @@ namespace OpcUa
     session.ClientDescription.URI = ApplicationUri;
     session.ClientDescription.ProductURI = ProductUri;
     session.ClientDescription.Name = LocalizedText(SessionName);
-    session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
+    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
     session.SessionName = SessionName;
     session.EndpointURL = endpoint.EndpointURL;
     session.Timeout = DefaultTimeout;
@@ -205,7 +205,7 @@ namespace OpcUa
       std::string password = uri.Password();
       bool user_identify_token_found = false;
       for(auto ep : response.Session.ServerEndpoints) {
-        if(ep.SecurityMode == MSM_NONE) {
+        if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentifyTokens) {
             if(user.empty()) {
               if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
@@ -244,8 +244,8 @@ namespace OpcUa
   {
     OpenSecureChannelParameters channelparams;
     channelparams.ClientProtocolVersion = 0;
-    channelparams.RequestType = STR_ISSUE;
-    channelparams.SecurityMode = MSM_NONE;
+    channelparams.RequestType = SecurityTokenRequestType::Issue;
+    channelparams.SecurityMode = MessageSecurityMode::None;
     channelparams.ClientNonce = std::vector<uint8_t>(1, 0);
     channelparams.RequestLifeTime = DefaultTimeout;
     const OpenSecureChannelResponse& response = Server->OpenSecureChannel(channelparams);

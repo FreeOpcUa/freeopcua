@@ -15,7 +15,6 @@
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
-#include <opc/ua/protocol/node_classes.h>
 
 namespace OpcUa
 {

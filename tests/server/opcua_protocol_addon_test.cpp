@@ -106,8 +106,8 @@ TEST_F(OpcUaProtocolAddonTest, CanBrowseRootFolder)
   description.Direction = OpcUa::BrowseDirection::Forward;
   description.ReferenceTypeId = OpcUa::ReferenceId::Organizes;
   description.IncludeSubtypes = true;
-  description.NodeClasses = OpcUa::NODE_CLASS_OBJECT;
-  description.ResultMask = OpcUa::REFERENCE_ALL;
+  description.NodeClasses = OpcUa::NodeClass::Object;
+  description.ResultMask = OpcUa::BrowseResultMask::All;
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
 

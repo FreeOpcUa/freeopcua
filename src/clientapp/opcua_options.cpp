@@ -32,7 +32,7 @@ namespace
   const char* OPTION_READ = "read";
   const char* OPTION_WRITE = "write";
   const char* OPTION_CREATE_SUBSCRIPTION = "create-subscription";
-  const char* OPTION_FIND_SERVERS = "find-servers";
+  const char* OPTION_FIND_ServerS = "find-servers";
   const char* OPTION_REGISTER_MODULE = "register-module";
   const char* OPTION_UNREGISTER_MODULE = "unregister-module";
 
@@ -40,7 +40,7 @@ namespace
   const char* OPTION_MODULE_PATH = "path";
   const char* OPTION_CONFIG_DIR = "config-dir";
 
-  const char* OPTION_SERVER_URI = "uri";
+  const char* OPTION_Server_URI = "uri";
   const char* OPTION_ATTRIBUTE = "attribute";
   const char* OPTION_NODE_Id = "node-id";
 
@@ -143,11 +143,11 @@ namespace OpcUa
       (OPTION_READ, "read command.")
       (OPTION_WRITE, "write command.")
       (OPTION_CREATE_SUBSCRIPTION, "create subscription command.")
-      (OPTION_FIND_SERVERS, "find servers command.")
+      (OPTION_FIND_ServerS, "find servers command.")
       (OPTION_REGISTER_MODULE, "Register new module.")
       (OPTION_UNREGISTER_MODULE, "Unregister module.")
 
-      (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
+      (OPTION_Server_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
       (OPTION_NODE_Id, po::value<std::string>(), "NodeId in the form 'nsu=uri;srv=1;ns=0;i=84.")
       (OPTION_VALUE_BYTE, po::value<uint8_t>(), "Byte value.")
@@ -177,9 +177,9 @@ namespace OpcUa
       return;
     }
 
-    if (vm.count(OPTION_SERVER_URI))
+    if (vm.count(OPTION_Server_URI))
     {
-      ServerURI = vm[OPTION_SERVER_URI].as<std::string>();
+      ServerURI = vm[OPTION_Server_URI].as<std::string>();
     }
 
 
@@ -198,7 +198,7 @@ namespace OpcUa
     IsRead = vm.count(OPTION_READ) != 0;
     IsWrite = vm.count(OPTION_WRITE) != 0;
     IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION) != 0;
-    IsFindServers = vm.count(OPTION_FIND_SERVERS) != 0;
+    IsFindServers = vm.count(OPTION_FIND_ServerS) != 0;
     if (vm.count(OPTION_REGISTER_MODULE))
     {
       IsAddModule = true;

@@ -23,8 +23,8 @@ namespace OpcUa
   namespace Binary
   {
     Header::Header()
-      : Type(MT_INVALId)
-      , Chunk(CHT_INVALId)
+      : Type(MT_INVALID)
+      , Chunk(CHT_INVALID)
       , Size(0)
     {
       ResetSize();
@@ -56,8 +56,8 @@ namespace OpcUa
     }
 
     SecureHeader::SecureHeader()
-      : Type(MT_INVALId)
-      , Chunk(CHT_INVALId)
+      : Type(MT_INVALID)
+      , Chunk(CHT_INVALID)
       , Size(0)
       , ChannelId(0)
     {
@@ -178,8 +178,8 @@ namespace OpcUa
 
   OpenSecureChannelParameters::OpenSecureChannelParameters()
     : ClientProtocolVersion(0)
-    , RequestType(STR_ISSUE)
-    , SecurityMode(MSM_NONE)
+    , RequestType(SecurityTokenRequestType::Issue)
+    , SecurityMode(MessageSecurityMode::None)
     , RequestLifeTime(300000)
   {
   }

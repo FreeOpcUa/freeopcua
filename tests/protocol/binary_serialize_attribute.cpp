@@ -71,13 +71,13 @@ TEST_F(OpcUaBinarySerialization, TimestampsToReturn)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  GetStream() << TimestampsToReturn::NEITHER << flush;
+  GetStream() << TimestampsToReturn::Neither << flush;
 
   const std::vector<char> expectedData = {
   3,0,0,0
   };
 
-  ASSERT_EQ(expectedData.size(), RawSize(TimestampsToReturn::NEITHER));
+  ASSERT_EQ(expectedData.size(), RawSize(TimestampsToReturn::Neither));
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
 }
 
@@ -95,7 +95,7 @@ TEST_F(OpcUaBinaryDeserialization, TimetampsToReturn)
   TimestampsToReturn stamps;
   GetStream() >> stamps;
 
-  ASSERT_EQ(stamps, TimestampsToReturn::NEITHER);
+  ASSERT_EQ(stamps, TimestampsToReturn::Neither);
 }
 
 //-------------------------------------------------------
@@ -191,7 +191,7 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   request.Parameters.MaxAge = 1200000;
-  request.Parameters.TimestampsType = TimestampsToReturn::NEITHER;
+  request.Parameters.TimestampsType = TimestampsToReturn::Neither;
 
   request.Parameters.AttributesToRead.push_back(CreateAttributeValueId());
 
@@ -252,7 +252,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.MaxAge, 1200000);
-  ASSERT_EQ(request.Parameters.TimestampsType, TimestampsToReturn::NEITHER);
+  ASSERT_EQ(request.Parameters.TimestampsType, TimestampsToReturn::Neither);
   
   ASSERT_EQ(request.Parameters.AttributesToRead.size(), 1);
 
@@ -351,9 +351,9 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse)
      DATA_VALUE |
      DATA_VALUE_STATUS_CODE |
      DATA_VALUE_SOURCE_TIMESTAMP |
-     DATA_VALUE_SERVER_TIMESTAMP |
+     DATA_VALUE_Server_TIMESTAMP |
      DATA_VALUE_SOURCE_PICOSECONDS |
-     DATA_VALUE_SERVER_PICOSECONDS;
+     DATA_VALUE_Server_PICOSECONDS;
 
   const std::vector<char> expectedData = {
   1, 0, (char)0x7A, 0x2, // TypeId

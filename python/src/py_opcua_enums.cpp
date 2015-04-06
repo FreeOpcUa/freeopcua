@@ -34,18 +34,19 @@ void py_opcua_enums()
 
   enum_<ApplicationType>("ApplicationType")
 #define _value(X) value(#X, ApplicationType:: X)
-  ._value(CLIENT)
-  ._value(CLIENT_AND_SERVER)
-  ._value(DISCOVERY_SERVER)
-  ._value(SERVER)
+  ._value(Client)
+  ._value(ClientAndServer)
+  ._value(DiscoveryServer)
+  ._value(Server)
 #undef _value
   ;
 
   enum_<MessageSecurityMode>("MessageSecurityMode")
+  .value("None_", MessageSecurityMode::None)
+  //._value(None)
 #define _value(X) value(#X, MessageSecurityMode:: X)
-  ._value(MSM_NONE)
-  ._value(MSM_SIGN)
-  ._value(MSM_SIGN_AND_ENCRYPT)
+  ._value(Sign)
+  ._value(SignAndEncrypt)
 #undef _value
   ;
 
@@ -68,7 +69,7 @@ void py_opcua_enums()
 
   enum_<NodeClass>("NodeClass")
 #define _value(X) value(#X, NodeClass:: X)
-  ._value(All)
+  ._value(Unspecified)
   ._value(Object)
   ._value(Variable)
   ._value(Method)
@@ -82,10 +83,10 @@ void py_opcua_enums()
 
   enum_<TimestampsToReturn>("TimestampsToReturn")
 #define _value(X) value(#X, TimestampsToReturn:: X)
-  ._value(SOURCE)
-  ._value(SERVER)
-  ._value(BOTH)
-  ._value(NEITHER)
+  ._value(Source)
+  ._value(Server)
+  ._value(Both)
+  ._value(Neither)
 #undef _value
   ;
 

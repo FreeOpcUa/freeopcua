@@ -104,12 +104,12 @@ std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
   data.Application.ProductURI = "ProductURI";
   data.Application.GatewayServerURI = "GatewayServerURI";
   data.Application.Name = OpcUa::LocalizedText("Name");
-  data.Application.Type = OpcUa::ApplicationType::CLIENT;
+  data.Application.Type = OpcUa::ApplicationType::Client;
 
   OpcUa::EndpointDescription ed;
   ed.EndpointURL = "EndpointURL";
   ed.SecurityLevel = 1;
-  ed.SecurityMode = OpcUa::MessageSecurityMode::MSM_SIGN_AND_ENCRYPT;
+  ed.SecurityMode = OpcUa::MessageSecurityMode::SignAndEncrypt;
   ed.SecurityPolicyURI = "SecurityPolicyURI";
   ed.TransportProfileURI = "TransportProfileURI";
 
@@ -151,14 +151,14 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   EXPECT_EQ(app.Application.ProductURI, "ProductURI");
   EXPECT_TRUE(app.Application.Name.Encoding & OpcUa::HAS_TEXT);
   EXPECT_EQ(app.Application.Name.Text, "Name");
-  EXPECT_EQ(app.Application.Type, OpcUa::ApplicationType::CLIENT);
+  EXPECT_EQ(app.Application.Type, OpcUa::ApplicationType::Client);
   EXPECT_EQ(app.Application.GatewayServerURI, "GatewayServerURI");
 
   ASSERT_EQ(app.Endpoints.size(), 1);
   OpcUa::EndpointDescription ed = app.Endpoints[0];
   EXPECT_EQ(ed.EndpointURL, "EndpointURL");
   EXPECT_EQ(ed.SecurityLevel, 1);
-  EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::MSM_SIGN_AND_ENCRYPT);
+  EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
   EXPECT_EQ(ed.SecurityPolicyURI, "SecurityPolicyURI");
   //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
   //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyURI");

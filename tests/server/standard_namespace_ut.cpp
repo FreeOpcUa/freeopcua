@@ -156,8 +156,8 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_Organizes_RefType)
   description.Direction = BrowseDirection::Forward;
   description.ReferenceTypeId = ReferenceId::Organizes;
   description.IncludeSubtypes = true;
-  description.NodeClasses = NODE_CLASS_OBJECT;
-  description.ResultMask = REFERENCE_ALL;
+  description.NodeClasses = NodeClass::Object;
+  description.ResultMask = BrowseResultMask::All;
 
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
@@ -173,8 +173,8 @@ TEST_F(StandardNamespaceStructure, CanBrowseRootFolder_By_HierarchicalReferencie
   description.Direction = BrowseDirection::Forward;
   description.ReferenceTypeId = ReferenceId::HierarchicalReferences;
   description.IncludeSubtypes = true;
-  description.NodeClasses = NODE_CLASS_OBJECT;
-  description.ResultMask = REFERENCE_ALL;
+  description.NodeClasses = NodeClass::Object;
+  description.ResultMask = BrowseResultMask::All;
   OpcUa::NodesQuery query;
   query.NodesToBrowse.push_back(description);
   std::vector<BrowseResult> results = NameSpace->Browse(query);

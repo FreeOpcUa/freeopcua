@@ -101,7 +101,7 @@ namespace OpcUa
     ApplicationDescription appDesc;
     appDesc.Name = LocalizedText(Name);
     appDesc.URI = ServerUri;
-    appDesc.Type = ApplicationType::SERVER;
+    appDesc.Type = ApplicationType::Server;
     appDesc.ProductURI = ProductUri;
 
     OpcUa::Server::Parameters params;

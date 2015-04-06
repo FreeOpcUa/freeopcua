@@ -33,8 +33,8 @@ set(PYTHONDIR ${CMAKE_SOURCE_DIR}/python)
 add_definitions(-DMODULE_NAME=opcua)
 ADD_LIBRARY(opcua SHARED 
     ${PYTHONDIR}/src/py_opcua_enums.cpp
-    ${PYTHONDIR}/src/py_opcua_enums_AttributeID.cpp
-    ${PYTHONDIR}/src/py_opcua_enums_ObjectID.cpp
+    ${PYTHONDIR}/src/py_opcua_enums_AttributeId.cpp
+    ${PYTHONDIR}/src/py_opcua_enums_ObjectId.cpp
     ${PYTHONDIR}/src/py_opcua_enums_StatusCode.cpp
     ${PYTHONDIR}/src/py_opcua_subscriptionclient.cpp
     ${PYTHONDIR}/src/py_opcua_module.cpp

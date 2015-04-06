@@ -933,20 +933,6 @@ namespace OpcUa
 
 
     template<>
-    void DataSerializer::Serialize<MessageSecurityMode>(const MessageSecurityMode& value)
-    {
-      *this << static_cast<uint32_t>(value);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode& value)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      value = static_cast<MessageSecurityMode>(tmp);
-    }
-
-    template<>
     void DataSerializer::Serialize<OpcUa::AdditionalHeader>(const OpcUa::AdditionalHeader& header)
     {
       *this << header.TypeId;

@@ -16,7 +16,6 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/variant_visitor.h>
 #include <opc/ua/services/services.h>
@@ -52,11 +51,11 @@ namespace
   {
     switch (mode)
     {
-      case OpcUa::MSM_NONE:
+      case MessageSecurityMode::None:
         return "none";
-      case OpcUa::MSM_SIGN:
+      case MessageSecurityMode::Sign:
         return "sign";
-      case OpcUa::MSM_SIGN_AND_ENCRYPT:
+      case MessageSecurityMode::SignAndEncrypt:
         return "sign and encrypt";
 
       default:
@@ -68,13 +67,13 @@ namespace
   {
     switch (type)
     {
-      case OpcUa::ApplicationType::SERVER:
+      case OpcUa::ApplicationType::Server:
         return "server";
-      case OpcUa::ApplicationType::CLIENT:
+      case OpcUa::ApplicationType::Client:
         return "client";
-      case OpcUa::ApplicationType::CLIENT_AND_SERVER:
+      case OpcUa::ApplicationType::ClientAndServer:
         return "client and server";
-      case OpcUa::ApplicationType::DISCOVERY_SERVER:
+      case OpcUa::ApplicationType::DiscoveryServer:
         return "discovery server";
       default:
         return "unknown";
@@ -245,7 +244,7 @@ namespace
       std::cout << tabs << "Namespace URI: " << nodeId.NamespaceURI << std::endl;
     }
 
-    if (nodeId.Encoding & OpcUa::NodeIdEncoding::EV_SERVER_INDEX_FLAG)
+    if (nodeId.Encoding & OpcUa::NodeIdEncoding::EV_Server_INDEX_FLAG)
     {
       std::cout << tabs << "Server index: " << nodeId.ServerIndex << std::endl;
     }
@@ -352,8 +351,8 @@ namespace
     description.NodeToBrowse = nodeId;
     description.Direction = OpcUa::BrowseDirection::Forward;
     description.IncludeSubtypes = true;
-    description.NodeClasses = OpcUa::NODE_CLASS_ALL;
-    description.ResultMask = OpcUa::REFERENCE_ALL;
+    description.NodeClasses = OpcUa::NodeClass::Unspecified;
+    description.ResultMask = OpcUa::BrowseResultMask::All;
 
     OpcUa::NodesQuery query;
     query.View.Timestamp = OpcUa::DateTime::Current();
@@ -633,7 +632,7 @@ namespace
     session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.Name.Text = "opcua client";
-    session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
+    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
     session.SessionName = "opua command line";
     session.EndpointURL = serverURI;
     session.Timeout = 1200000;

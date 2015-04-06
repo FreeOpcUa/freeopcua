@@ -66,7 +66,7 @@ namespace OpcUa
 
     std::vector<Variable> Object::GetVariables() const
     {
-      return Browse<Variable>(GetId(), NODE_CLASS_VARIABLE, GetServices());
+      return Browse<Variable>(GetId(), NodeClass::Variable, GetServices());
     }
 
     Variable Object::GetVariable(const QualifiedName& name) const
@@ -103,7 +103,7 @@ namespace OpcUa
 
     std::vector<Object> Object::GetObjects() const
     {
-      return Browse<Object>(GetId(), NODE_CLASS_OBJECT, GetServices());
+      return Browse<Object>(GetId(), NodeClass::Object, GetServices());
     }
 
     Object Object::GetObject(const QualifiedName& name) const
@@ -186,10 +186,10 @@ namespace OpcUa
       BrowseDescription desc;
       desc.Direction = BrowseDirection::Forward;
       desc.IncludeSubtypes = true;
-      desc.NodeClasses =   NODE_CLASS_OBJECT | NODE_CLASS_VARIABLE | NODE_CLASS_METHOD;
+      desc.NodeClasses =   NodeClass::Object | NodeClass::Variable | NodeClass::Method;
       desc.ReferenceTypeId = ObjectId::HierarchicalReferences;
       desc.NodeToBrowse = id;
-      desc.ResultMask = REFERENCE_NODE_CLASS | REFERENCE_TYPE_DEFINITION | REFERENCE_BROWSE_NAME | REFERENCE_DISPLAY_NAME;
+      desc.ResultMask = BrowseResultMask::NodeClass | BrowseResultMask::TypeDefinition | BrowseResultMask::BrowseName | BrowseResultMask::DisplayName;
 
       // browse sub objects and variables.
       NodesQuery query;

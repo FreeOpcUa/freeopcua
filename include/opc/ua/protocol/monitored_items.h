@@ -17,26 +17,6 @@
 
 namespace OpcUa
 {
-  enum class MonitoringMode : uint32_t
-  {
-    Disabled = 0,
-    Sampling = 1,
-    Reporting = 2,
-  };
-
-  enum class DataChangeTrigger : uint32_t
-  {
-    Status = 0,
-    StatusAndValue = 1,
-    StatusAndValueAndTimestamp = 2,
-  };
-
-  enum class DeadbandType : uint32_t
-  {
-    None = 0,
-    Absolute = 1,
-    Percent = 2,
-  };
 
   struct DataChangeFilter
   {
@@ -51,25 +31,6 @@ namespace OpcUa
     std::vector<QualifiedName> BrowsePath;
     AttributeId Attribute;
     std::vector<std::string> IndexRange; 
-  };
-
-  enum class FilterOperator : uint32_t
-  {
-    Equals = 0,
-    IsNull = 1,
-    GreaterThan = 2,
-    LessThan = 3,
-    GreaterThanOrEqual = 4,
-    LessThanOrEqual = 5,
-    Like = 6,
-    Not = 7,
-    Between = 8,
-    InList = 9,
-    And = 10,
-    Or = 11,
-    Cast = 12,
-    BitwiseAnd = 16,
-    BitwiseOr = 17,
   };
 
   struct ElementOperand

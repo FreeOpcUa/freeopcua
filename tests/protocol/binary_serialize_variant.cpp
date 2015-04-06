@@ -12,7 +12,6 @@
 
 #include <opc/ua/protocol/extension_identifiers.h>
 #include <opc/ua/protocol/message_identifiers.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/types.h>
