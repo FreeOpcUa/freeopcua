@@ -6,7 +6,6 @@
 #include "standard_address_space_parts.h"
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/common/addons_core/addon.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/variable_access_level.h>
 #include <opc/ua/services/node_management.h>
@@ -22,10 +21,10 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3062");
+        node.RequestedNewNodeId = ToNodeId("i=3062");
         node.BrowseName = ToQualifiedName("Default Binary");
         node.Class = NodeClass::Object;
-        node.TypeDefinition = ToNodeID("i=58");
+        node.TypeDefinition = ToNodeId("i=58");
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("The default binary encoding for a data type.");
         attrs.DisplayName = LocalizedText("Default Binary");
@@ -36,10 +35,10 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3063");
+        node.RequestedNewNodeId = ToNodeId("i=3063");
         node.BrowseName = ToQualifiedName("Default XML");
         node.Class = NodeClass::Object;
-        node.TypeDefinition = ToNodeID("i=58");
+        node.TypeDefinition = ToNodeId("i=58");
         ObjectAttributes attrs;
         attrs.Description = LocalizedText("The default XML encoding for a data type.");
         attrs.DisplayName = LocalizedText("Default XML");
@@ -50,7 +49,7 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=24");
+        node.RequestedNewNodeId = ToNodeId("i=24");
         node.BrowseName = ToQualifiedName("BaseDataType");
         node.Class = NodeClass::DataType;
         DataTypeAttributes attrs;
@@ -63,11 +62,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=26");
+        node.RequestedNewNodeId = ToNodeId("i=26");
         node.BrowseName = ToQualifiedName("Number");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that can have any numeric DataType.'");
         attrs.DisplayName = LocalizedText("Number");
@@ -78,11 +77,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=27");
+        node.RequestedNewNodeId = ToNodeId("i=27");
         node.BrowseName = ToQualifiedName("Integer");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=26");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=26");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that can have any integer DataType.'");
         attrs.DisplayName = LocalizedText("Integer");
@@ -93,11 +92,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=28");
+        node.RequestedNewNodeId = ToNodeId("i=28");
         node.BrowseName = ToQualifiedName("UInteger");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=27");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=27");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that can have any unsigned integer DataType.'");
         attrs.DisplayName = LocalizedText("UInteger");
@@ -108,11 +107,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=29");
+        node.RequestedNewNodeId = ToNodeId("i=29");
         node.BrowseName = ToQualifiedName("Enumeration");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an enumerated DataType.'");
         attrs.DisplayName = LocalizedText("Enumeration");
@@ -123,11 +122,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=1");
+        node.RequestedNewNodeId = ToNodeId("i=1");
         node.BrowseName = ToQualifiedName("Boolean");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is either TRUE or FALSE.'");
         attrs.DisplayName = LocalizedText("Boolean");
@@ -138,11 +137,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=2");
+        node.RequestedNewNodeId = ToNodeId("i=2");
         node.BrowseName = ToQualifiedName("SByte");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=27");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=27");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between -128 and 127.'");
         attrs.DisplayName = LocalizedText("SByte");
@@ -153,11 +152,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3");
+        node.RequestedNewNodeId = ToNodeId("i=3");
         node.BrowseName = ToQualifiedName("Byte");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=28");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=28");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 255.'");
         attrs.DisplayName = LocalizedText("Byte");
@@ -168,11 +167,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=4");
+        node.RequestedNewNodeId = ToNodeId("i=4");
         node.BrowseName = ToQualifiedName("Int16");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=27");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=27");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between ?32,768 and 32,767.'");
         attrs.DisplayName = LocalizedText("Int16");
@@ -183,11 +182,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=5");
+        node.RequestedNewNodeId = ToNodeId("i=5");
         node.BrowseName = ToQualifiedName("UInt16");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=28");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=28");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 65535.'");
         attrs.DisplayName = LocalizedText("UInt16");
@@ -198,11 +197,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=6");
+        node.RequestedNewNodeId = ToNodeId("i=6");
         node.BrowseName = ToQualifiedName("Int32");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=27");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=27");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between ?2,147,483,648  and 2,147,483,647.'");
         attrs.DisplayName = LocalizedText("Int32");
@@ -213,11 +212,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=7");
+        node.RequestedNewNodeId = ToNodeId("i=7");
         node.BrowseName = ToQualifiedName("UInt32");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=28");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=28");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 4,294,967,295.'");
         attrs.DisplayName = LocalizedText("UInt32");
@@ -228,11 +227,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=8");
+        node.RequestedNewNodeId = ToNodeId("i=8");
         node.BrowseName = ToQualifiedName("Int64");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=27");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=27");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between ?9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.'");
         attrs.DisplayName = LocalizedText("Int64");
@@ -243,11 +242,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=9");
+        node.RequestedNewNodeId = ToNodeId("i=9");
         node.BrowseName = ToQualifiedName("UInt64");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=28");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=28");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an integer between 0 and 18,446,744,073,709,551,615.'");
         attrs.DisplayName = LocalizedText("UInt64");
@@ -258,11 +257,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=10");
+        node.RequestedNewNodeId = ToNodeId("i=10");
         node.BrowseName = ToQualifiedName("Float");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=26");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=26");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an IEEE 754-1985 single precision floating point number.'");
         attrs.DisplayName = LocalizedText("Float");
@@ -273,11 +272,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11");
+        node.RequestedNewNodeId = ToNodeId("i=11");
         node.BrowseName = ToQualifiedName("Double");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=26");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=26");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an IEEE 754-1985 double precision floating point number.'");
         attrs.DisplayName = LocalizedText("Double");
@@ -288,11 +287,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=12");
+        node.RequestedNewNodeId = ToNodeId("i=12");
         node.BrowseName = ToQualifiedName("String");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is a sequence of printable Unicode characters.'");
         attrs.DisplayName = LocalizedText("String");
@@ -303,11 +302,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=13");
+        node.RequestedNewNodeId = ToNodeId("i=13");
         node.BrowseName = ToQualifiedName("DateTime");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is a Gregorian calender date and time.'");
         attrs.DisplayName = LocalizedText("DateTime");
@@ -318,11 +317,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=14");
+        node.RequestedNewNodeId = ToNodeId("i=14");
         node.BrowseName = ToQualifiedName("Guid");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is a 128-bit globally unique identifier.'");
         attrs.DisplayName = LocalizedText("Guid");
@@ -333,11 +332,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=15");
+        node.RequestedNewNodeId = ToNodeId("i=15");
         node.BrowseName = ToQualifiedName("ByteString");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is a sequence of bytes.'");
         attrs.DisplayName = LocalizedText("ByteString");
@@ -348,11 +347,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=16");
+        node.RequestedNewNodeId = ToNodeId("i=16");
         node.BrowseName = ToQualifiedName("XmlElement");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an XML element.'");
         attrs.DisplayName = LocalizedText("XmlElement");
@@ -363,11 +362,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=17");
+        node.RequestedNewNodeId = ToNodeId("i=17");
         node.BrowseName = ToQualifiedName("NodeId");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an identifier for a node within a Server address space.'");
         attrs.DisplayName = LocalizedText("NodeId");
@@ -378,11 +377,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=20");
+        node.RequestedNewNodeId = ToNodeId("i=20");
         node.BrowseName = ToQualifiedName("QualifiedName");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is a name qualified by a namespace.'");
         attrs.DisplayName = LocalizedText("QualifiedName");
@@ -393,11 +392,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=21");
+        node.RequestedNewNodeId = ToNodeId("i=21");
         node.BrowseName = ToQualifiedName("LocalizedText");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is human readable Unicode text with a locale identifier.'");
         attrs.DisplayName = LocalizedText("LocalizedText");
@@ -408,11 +407,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=22");
+        node.RequestedNewNodeId = ToNodeId("i=22");
         node.BrowseName = ToQualifiedName("Structure");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=24");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=24");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is any type of structure that can be described with a data encoding.'");
         attrs.DisplayName = LocalizedText("Structure");
@@ -423,11 +422,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=30");
+        node.RequestedNewNodeId = ToNodeId("i=30");
         node.BrowseName = ToQualifiedName("Image");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=15");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=15");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that is an image encoded as a string of bytes.'");
         attrs.DisplayName = LocalizedText("Image");
@@ -438,7 +437,7 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=31");
+        node.RequestedNewNodeId = ToNodeId("i=31");
         node.BrowseName = ToQualifiedName("References");
         node.Class = NodeClass::ReferenceType;
         ReferenceTypeAttributes attrs;
@@ -453,11 +452,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=32");
+        node.RequestedNewNodeId = ToNodeId("i=32");
         node.BrowseName = ToQualifiedName("NonHierarchicalReferences");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=31");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=31");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The abstract base type for all non-hierarchical references.");
         attrs.DisplayName = LocalizedText("NonHierarchicalReferences");
@@ -470,11 +469,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=33");
+        node.RequestedNewNodeId = ToNodeId("i=33");
         node.BrowseName = ToQualifiedName("HierarchicalReferences");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=31");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=31");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The abstract base type for all hierarchical references.");
         attrs.DisplayName = LocalizedText("HierarchicalReferences");
@@ -487,11 +486,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=34");
+        node.RequestedNewNodeId = ToNodeId("i=34");
         node.BrowseName = ToQualifiedName("HasChild");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=33");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=33");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The abstract base type for all non-looping hierarchical references.");
         attrs.DisplayName = LocalizedText("HasChild");
@@ -504,11 +503,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=35");
+        node.RequestedNewNodeId = ToNodeId("i=35");
         node.BrowseName = ToQualifiedName("Organizes");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=33");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=33");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for hierarchical references that are used to organize nodes.");
         attrs.DisplayName = LocalizedText("Organizes");
@@ -521,11 +520,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=36");
+        node.RequestedNewNodeId = ToNodeId("i=36");
         node.BrowseName = ToQualifiedName("HasEventSource");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=33");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=33");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to organize event sources.");
         attrs.DisplayName = LocalizedText("HasEventSource");
@@ -538,11 +537,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=37");
+        node.RequestedNewNodeId = ToNodeId("i=37");
         node.BrowseName = ToQualifiedName("HasModellingRule");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from instance declarations to modelling rule nodes.");
         attrs.DisplayName = LocalizedText("HasModellingRule");
@@ -555,11 +554,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=38");
+        node.RequestedNewNodeId = ToNodeId("i=38");
         node.BrowseName = ToQualifiedName("HasEncoding");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from data type nodes to to data type encoding nodes.");
         attrs.DisplayName = LocalizedText("HasEncoding");
@@ -572,11 +571,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=39");
+        node.RequestedNewNodeId = ToNodeId("i=39");
         node.BrowseName = ToQualifiedName("HasDescription");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from data type encoding nodes to data type description nodes.");
         attrs.DisplayName = LocalizedText("HasDescription");
@@ -589,11 +588,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=40");
+        node.RequestedNewNodeId = ToNodeId("i=40");
         node.BrowseName = ToQualifiedName("HasTypeDefinition");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from a instance node its type defintion node.");
         attrs.DisplayName = LocalizedText("HasTypeDefinition");
@@ -606,11 +605,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=41");
+        node.RequestedNewNodeId = ToNodeId("i=41");
         node.BrowseName = ToQualifiedName("GeneratesEvent");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from a node to an event type that is raised by node.");
         attrs.DisplayName = LocalizedText("GeneratesEvent");
@@ -623,11 +622,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3065");
+        node.RequestedNewNodeId = ToNodeId("i=3065");
         node.BrowseName = ToQualifiedName("AlwaysGeneratesEvent");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=32");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=32");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for references from a node to an event type that is always raised by node.");
         attrs.DisplayName = LocalizedText("AlwaysGeneratesEvent");
@@ -640,11 +639,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=44");
+        node.RequestedNewNodeId = ToNodeId("i=44");
         node.BrowseName = ToQualifiedName("Aggregates");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=34");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=34");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to aggregate nodes into complex types.");
         attrs.DisplayName = LocalizedText("Aggregates");
@@ -657,11 +656,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=45");
+        node.RequestedNewNodeId = ToNodeId("i=45");
         node.BrowseName = ToQualifiedName("HasSubtype");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=34");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=34");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to define sub types.");
         attrs.DisplayName = LocalizedText("HasSubtype");
@@ -674,11 +673,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=46");
+        node.RequestedNewNodeId = ToNodeId("i=46");
         node.BrowseName = ToQualifiedName("HasProperty");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=44");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=44");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its property.");
         attrs.DisplayName = LocalizedText("HasProperty");
@@ -691,11 +690,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=47");
+        node.RequestedNewNodeId = ToNodeId("i=47");
         node.BrowseName = ToQualifiedName("HasComponent");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=44");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=44");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component.");
         attrs.DisplayName = LocalizedText("HasComponent");
@@ -708,11 +707,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=48");
+        node.RequestedNewNodeId = ToNodeId("i=48");
         node.BrowseName = ToQualifiedName("HasNotifier");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=36");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=36");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to indicate how events propagate from node to node.");
         attrs.DisplayName = LocalizedText("HasNotifier");
@@ -725,11 +724,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=49");
+        node.RequestedNewNodeId = ToNodeId("i=49");
         node.BrowseName = ToQualifiedName("HasOrderedComponent");
         node.Class = NodeClass::ReferenceType;
-        node.ParentNodeId = ToNodeID("i=47");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=47");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         ReferenceTypeAttributes attrs;
         attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component when the order of references matters.");
         attrs.DisplayName = LocalizedText("HasOrderedComponent");
@@ -742,11 +741,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=120");
+        node.RequestedNewNodeId = ToNodeId("i=120");
         node.BrowseName = ToQualifiedName("NamingRuleType");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=29");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=29");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'Describes a value that specifies the significance of the BrowseName for an instance declaration.'");
         attrs.DisplayName = LocalizedText("NamingRuleType");
@@ -757,10 +756,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasProperty;
-        ref.SourceNodeID = ToNodeID("i=120");
+        ref.ReferenceTypeId = ReferenceId::HasProperty;
+        ref.SourceNodeId = ToNodeId("i=120");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=12169");
+        ref.TargetNodeId = ToNodeId("i=12169");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -768,15 +767,15 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=12169");
+        node.RequestedNewNodeId = ToNodeId("i=12169");
         node.BrowseName = ToQualifiedName("EnumValues");
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ToNodeID("i=120");
-        node.ReferenceTypeId = ReferenceID::HasProperty;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.ParentNodeId = ToNodeId("i=120");
+        node.ReferenceTypeId = ReferenceId::HasProperty;
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
-        attrs.Type = ToNodeID("i=7594");
+        attrs.Type = ToNodeId("i=7594");
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -784,10 +783,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasModellingRule;
-        ref.SourceNodeID = ToNodeID("i=12169");
+        ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+        ref.SourceNodeId = ToNodeId("i=12169");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=78");
+        ref.TargetNodeId = ToNodeId("i=78");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -795,14 +794,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3068");
+        node.RequestedNewNodeId = ToNodeId("i=3068");
         node.BrowseName = ToQualifiedName("NodeVersion");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The version number of the node (used to indicate changes to references of the owning node).");
         attrs.DisplayName = LocalizedText("NodeVersion");
-        attrs.Type = ObjectID::String;
+        attrs.Type = ObjectId::String;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -810,14 +809,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=12170");
+        node.RequestedNewNodeId = ToNodeId("i=12170");
         node.BrowseName = ToQualifiedName("ViewVersion");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The version number of the view.");
         attrs.DisplayName = LocalizedText("ViewVersion");
-        attrs.Type = ObjectID::UInt32;
+        attrs.Type = ObjectId::UInt32;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -825,14 +824,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3067");
+        node.RequestedNewNodeId = ToNodeId("i=3067");
         node.BrowseName = ToQualifiedName("Icon");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("A small image representing the object.");
         attrs.DisplayName = LocalizedText("Icon");
-        attrs.Type = ToNodeID("i=30");
+        attrs.Type = ToNodeId("i=30");
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -840,14 +839,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3069");
+        node.RequestedNewNodeId = ToNodeId("i=3069");
         node.BrowseName = ToQualifiedName("LocalTime");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The local time where the owning variable value was collected.");
         attrs.DisplayName = LocalizedText("LocalTime");
-        attrs.Type = ToNodeID("i=8912");
+        attrs.Type = ToNodeId("i=8912");
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -855,14 +854,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3070");
+        node.RequestedNewNodeId = ToNodeId("i=3070");
         node.BrowseName = ToQualifiedName("AllowNulls");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("Whether the value of the owning variable is allowed to be null.");
         attrs.DisplayName = LocalizedText("AllowNulls");
-        attrs.Type = ObjectID::Boolean;
+        attrs.Type = ObjectId::Boolean;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -870,14 +869,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11433");
+        node.RequestedNewNodeId = ToNodeId("i=11433");
         node.BrowseName = ToQualifiedName("ValueAsText");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The string representation of the current value for a variable with an enumerated data type.");
         attrs.DisplayName = LocalizedText("ValueAsText");
-        attrs.Type = ObjectID::LocalizedText;
+        attrs.Type = ObjectId::LocalizedText;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -885,14 +884,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11498");
+        node.RequestedNewNodeId = ToNodeId("i=11498");
         node.BrowseName = ToQualifiedName("MaxStringLength");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The maximum length for a string that can be stored in the owning variable.");
         attrs.DisplayName = LocalizedText("MaxStringLength");
-        attrs.Type = ObjectID::UInt32;
+        attrs.Type = ObjectId::UInt32;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -900,14 +899,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11512");
+        node.RequestedNewNodeId = ToNodeId("i=11512");
         node.BrowseName = ToQualifiedName("MaxArrayLength");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The maximum length for an array that can be stored in the owning variable.");
         attrs.DisplayName = LocalizedText("MaxArrayLength");
-        attrs.Type = ObjectID::UInt32;
+        attrs.Type = ObjectId::UInt32;
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -915,14 +914,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11513");
+        node.RequestedNewNodeId = ToNodeId("i=11513");
         node.BrowseName = ToQualifiedName("EngineeringUnits");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The engineering units for the value of the owning variable.");
         attrs.DisplayName = LocalizedText("EngineeringUnits");
-        attrs.Type = ToNodeID("i=887");
+        attrs.Type = ToNodeId("i=887");
         attrs.Rank = -2;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -930,14 +929,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11432");
+        node.RequestedNewNodeId = ToNodeId("i=11432");
         node.BrowseName = ToQualifiedName("EnumStrings");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values are sequential).");
         attrs.DisplayName = LocalizedText("EnumStrings");
-        attrs.Type = ObjectID::LocalizedText;
+        attrs.Type = ObjectId::LocalizedText;
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -945,14 +944,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3071");
+        node.RequestedNewNodeId = ToNodeId("i=3071");
         node.BrowseName = ToQualifiedName("EnumValues");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values have no sequence).");
         attrs.DisplayName = LocalizedText("EnumValues");
-        attrs.Type = ToNodeID("i=7594");
+        attrs.Type = ToNodeId("i=7594");
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -960,14 +959,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3072");
+        node.RequestedNewNodeId = ToNodeId("i=3072");
         node.BrowseName = ToQualifiedName("InputArguments");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The input arguments for a method.");
         attrs.DisplayName = LocalizedText("InputArguments");
-        attrs.Type = ToNodeID("i=296");
+        attrs.Type = ToNodeId("i=296");
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -975,14 +974,14 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=3073");
+        node.RequestedNewNodeId = ToNodeId("i=3073");
         node.BrowseName = ToQualifiedName("OutputArguments");
         node.Class = NodeClass::Variable;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.Description = LocalizedText("The output arguments for a method.");
         attrs.DisplayName = LocalizedText("OutputArguments");
-        attrs.Type = ToNodeID("i=296");
+        attrs.Type = ToNodeId("i=296");
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -990,11 +989,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=2000");
+        node.RequestedNewNodeId = ToNodeId("i=2000");
         node.BrowseName = ToQualifiedName("ImageBMP");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=30");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=30");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An image encoded in BMP format.'");
         attrs.DisplayName = LocalizedText("ImageBMP");
@@ -1005,11 +1004,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=2001");
+        node.RequestedNewNodeId = ToNodeId("i=2001");
         node.BrowseName = ToQualifiedName("ImageGIF");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=30");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=30");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An image encoded in GIF format.'");
         attrs.DisplayName = LocalizedText("ImageGIF");
@@ -1020,11 +1019,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=2002");
+        node.RequestedNewNodeId = ToNodeId("i=2002");
         node.BrowseName = ToQualifiedName("ImageJPG");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=30");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=30");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An image encoded in JPEG format.'");
         attrs.DisplayName = LocalizedText("ImageJPG");
@@ -1035,11 +1034,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=2003");
+        node.RequestedNewNodeId = ToNodeId("i=2003");
         node.BrowseName = ToQualifiedName("ImagePNG");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=30");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=30");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An image encoded in PNG format.'");
         attrs.DisplayName = LocalizedText("ImagePNG");
@@ -1050,11 +1049,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=256");
+        node.RequestedNewNodeId = ToNodeId("i=256");
         node.BrowseName = ToQualifiedName("IdType");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=29");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=29");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'The type of identifier used in a node id.'");
         attrs.DisplayName = LocalizedText("IdType");
@@ -1065,10 +1064,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasProperty;
-        ref.SourceNodeID = ToNodeID("i=256");
+        ref.ReferenceTypeId = ReferenceId::HasProperty;
+        ref.SourceNodeId = ToNodeId("i=256");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=7591");
+        ref.TargetNodeId = ToNodeId("i=7591");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1076,15 +1075,15 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=7591");
+        node.RequestedNewNodeId = ToNodeId("i=7591");
         node.BrowseName = ToQualifiedName("EnumStrings");
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ToNodeID("i=256");
-        node.ReferenceTypeId = ReferenceID::HasProperty;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.ParentNodeId = ToNodeId("i=256");
+        node.ReferenceTypeId = ReferenceId::HasProperty;
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumStrings");
-        attrs.Type = ObjectID::LocalizedText;
+        attrs.Type = ObjectId::LocalizedText;
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -1092,10 +1091,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasModellingRule;
-        ref.SourceNodeID = ToNodeID("i=7591");
+        ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+        ref.SourceNodeId = ToNodeId("i=7591");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=78");
+        ref.TargetNodeId = ToNodeId("i=78");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1103,11 +1102,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=257");
+        node.RequestedNewNodeId = ToNodeId("i=257");
         node.BrowseName = ToQualifiedName("NodeClass");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=29");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=29");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'A mask specifying the class of the node.'");
         attrs.DisplayName = LocalizedText("NodeClass");
@@ -1118,10 +1117,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasProperty;
-        ref.SourceNodeID = ToNodeID("i=257");
+        ref.ReferenceTypeId = ReferenceId::HasProperty;
+        ref.SourceNodeId = ToNodeId("i=257");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=11878");
+        ref.TargetNodeId = ToNodeId("i=11878");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1129,15 +1128,15 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=11878");
+        node.RequestedNewNodeId = ToNodeId("i=11878");
         node.BrowseName = ToQualifiedName("EnumValues");
         node.Class = NodeClass::Variable;
-        node.ParentNodeId = ToNodeID("i=257");
-        node.ReferenceTypeId = ReferenceID::HasProperty;
-        node.TypeDefinition = ToNodeID("i=68");
+        node.ParentNodeId = ToNodeId("i=257");
+        node.ReferenceTypeId = ReferenceId::HasProperty;
+        node.TypeDefinition = ToNodeId("i=68");
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValues");
-        attrs.Type = ToNodeID("i=7594");
+        attrs.Type = ToNodeId("i=7594");
         attrs.Rank = 1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -1145,10 +1144,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasModellingRule;
-        ref.SourceNodeID = ToNodeID("i=11878");
+        ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+        ref.SourceNodeId = ToNodeId("i=11878");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=78");
+        ref.TargetNodeId = ToNodeId("i=78");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1156,11 +1155,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=296");
+        node.RequestedNewNodeId = ToNodeId("i=296");
         node.BrowseName = ToQualifiedName("Argument");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=22");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=22");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An argument for a method.'");
         attrs.DisplayName = LocalizedText("Argument");
@@ -1171,11 +1170,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=7594");
+        node.RequestedNewNodeId = ToNodeId("i=7594");
         node.BrowseName = ToQualifiedName("EnumValueType");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=22");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=22");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'A mapping between a value of an enumerated type and a name and description.'");
         attrs.DisplayName = LocalizedText("EnumValueType");
@@ -1186,11 +1185,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=290");
+        node.RequestedNewNodeId = ToNodeId("i=290");
         node.BrowseName = ToQualifiedName("Duration");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=11");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=11");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'A period of time measured in seconds.'");
         attrs.DisplayName = LocalizedText("Duration");
@@ -1201,11 +1200,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=294");
+        node.RequestedNewNodeId = ToNodeId("i=294");
         node.BrowseName = ToQualifiedName("UtcTime");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=13");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=13");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'A date/time value specified in Universal Coordinated Time (UTC).'");
         attrs.DisplayName = LocalizedText("UtcTime");
@@ -1216,11 +1215,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=295");
+        node.RequestedNewNodeId = ToNodeId("i=295");
         node.BrowseName = ToQualifiedName("LocaleId");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=12");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=12");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.Description = LocalizedText("b'An identifier for a user locale.'");
         attrs.DisplayName = LocalizedText("LocaleId");
@@ -1231,11 +1230,11 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=8912");
+        node.RequestedNewNodeId = ToNodeId("i=8912");
         node.BrowseName = ToQualifiedName("TimeZoneDataType");
         node.Class = NodeClass::DataType;
-        node.ParentNodeId = ToNodeID("i=22");
-        node.ReferenceTypeId = ReferenceID::HasSubtype;
+        node.ParentNodeId = ToNodeId("i=22");
+        node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
         attrs.DisplayName = LocalizedText("TimeZoneDataType");
         attrs.IsAbstract = false;
@@ -1245,12 +1244,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=297");
+        node.RequestedNewNodeId = ToNodeId("i=297");
         node.BrowseName = ToQualifiedName("Default XML");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=296");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=296");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
         attrs.EventNotifier = 0;
@@ -1260,10 +1259,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=297");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=297");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=8285");
+        ref.TargetNodeId = ToNodeId("i=8285");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1271,12 +1270,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=7616");
+        node.RequestedNewNodeId = ToNodeId("i=7616");
         node.BrowseName = ToQualifiedName("Default XML");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=7594");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=7594");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
         attrs.EventNotifier = 0;
@@ -1286,10 +1285,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=7616");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=7616");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=8291");
+        ref.TargetNodeId = ToNodeId("i=8291");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1297,12 +1296,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=8913");
+        node.RequestedNewNodeId = ToNodeId("i=8913");
         node.BrowseName = ToQualifiedName("Default XML");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=8912");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=8912");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default XML");
         attrs.EventNotifier = 0;
@@ -1312,10 +1311,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=8913");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=8913");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=8918");
+        ref.TargetNodeId = ToNodeId("i=8918");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1323,12 +1322,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=298");
+        node.RequestedNewNodeId = ToNodeId("i=298");
         node.BrowseName = ToQualifiedName("Default Binary");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=296");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=296");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
         attrs.EventNotifier = 0;
@@ -1338,10 +1337,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=298");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=298");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=7650");
+        ref.TargetNodeId = ToNodeId("i=7650");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1349,12 +1348,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=8251");
+        node.RequestedNewNodeId = ToNodeId("i=8251");
         node.BrowseName = ToQualifiedName("Default Binary");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=7594");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=7594");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
         attrs.EventNotifier = 0;
@@ -1364,10 +1363,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=8251");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=8251");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=7656");
+        ref.TargetNodeId = ToNodeId("i=7656");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);
@@ -1375,12 +1374,12 @@ namespace OpcUa
        
         {
         AddNodesItem node;
-        node.RequestedNewNodeID = ToNodeID("i=8917");
+        node.RequestedNewNodeId = ToNodeId("i=8917");
         node.BrowseName = ToQualifiedName("Default Binary");
         node.Class = NodeClass::Object;
-        node.ParentNodeId = ToNodeID("i=8912");
-        node.ReferenceTypeId = ReferenceID::HasEncoding;
-        node.TypeDefinition = ToNodeID("i=76");
+        node.ParentNodeId = ToNodeId("i=8912");
+        node.ReferenceTypeId = ReferenceId::HasEncoding;
+        node.TypeDefinition = ToNodeId("i=76");
         ObjectAttributes attrs;
         attrs.DisplayName = LocalizedText("Default Binary");
         attrs.EventNotifier = 0;
@@ -1390,10 +1389,10 @@ namespace OpcUa
         {
         AddReferencesItem ref;
         ref.IsForward = true;
-        ref.ReferenceTypeId = ReferenceID::HasDescription;
-        ref.SourceNodeID = ToNodeID("i=8917");
+        ref.ReferenceTypeId = ReferenceId::HasDescription;
+        ref.SourceNodeId = ToNodeId("i=8917");
         ref.TargetNodeClass = NodeClass::DataType;
-        ref.TargetNodeID = ToNodeID("i=8914");
+        ref.TargetNodeId = ToNodeId("i=8914");
         refs.push_back(ref);
         }
         registry.AddReferences(refs);

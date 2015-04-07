@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+sys.path.insert(0, "../../build/bin/")
 import datetime
 import unittest
 from threading import Thread, Event
@@ -57,35 +58,35 @@ class Unit(unittest.TestCase):
     '''
 
     def test_equal_nodeid(self):
-        nid1 = opcua.NodeID(999, 2)
-        nid2 = opcua.NodeID(999, 2)
+        nid1 = opcua.NodeId(999, 2)
+        nid2 = opcua.NodeId(999, 2)
         self.assertTrue(nid1==nid2)
         self.assertTrue(id(nid1)!=id(nid2))
     
     def test_zero_nodeid(self):
-        self.assertEqual(opcua.NodeID(), opcua.NodeID(0,0))
-        self.assertEqual(opcua.NodeID(), opcua.NodeID('ns=0;i=0;'))
+        self.assertEqual(opcua.NodeId(), opcua.NodeId(0,0))
+        self.assertEqual(opcua.NodeId(), opcua.NodeId('ns=0;i=0;'))
 
     def test_string_nodeid(self):
-        nid = opcua.NodeID('titi', 1)
+        nid = opcua.NodeId('titi', 1)
         self.assertEqual(nid.namespace_index, 1)
         self.assertEqual(nid.identifier, 'titi')
         self.assertTrue(nid.is_string)
 
     def test_numeric_nodeid(self):
-        nid = opcua.NodeID(999, 2)
+        nid = opcua.NodeId(999, 2)
         self.assertEqual(nid.namespace_index, 2)
         self.assertEqual(nid.identifier, 999)
         self.assertTrue(nid.is_integer)
 
     def test_qualifiedstring_nodeid(self):
-        nid = opcua.NodeID('ns=2;s=PLC1.Manufacturer;')
+        nid = opcua.NodeId('ns=2;s=PLC1.Manufacturer;')
         self.assertEqual(nid.namespace_index, 2)
         self.assertEqual(nid.identifier, 'PLC1.Manufacturer')
 
     
     def test_strrepr_nodeid(self):
-        nid = opcua.NodeID('ns=2;s=PLC1.Manufacturer;')
+        nid = opcua.NodeId('ns=2;s=PLC1.Manufacturer;')
         self.assertEqual(str(nid), 'ns=2;s=PLC1.Manufacturer;')
         self.assertEqual(repr(nid), 'ns=2;s=PLC1.Manufacturer;')
     
@@ -112,7 +113,7 @@ class Unit(unittest.TestCase):
 
     def test_application_description(self):
         ad=opcua.ApplicationDescription()
-        self.assertEqual(ad.type,opcua.ApplicationType.CLIENT)
+        self.assertEqual(ad.type,opcua.ApplicationType.Client)
         ad.discovery_urls=['a','b','c']
         self.assertEqual(ad.discovery_urls,['a','b','c'])
     
@@ -122,7 +123,7 @@ class Unit(unittest.TestCase):
 
     def test_endpoint_description(self):
         ed=opcua.EndpointDescription()
-        self.assertEqual(ed.security_mode,opcua.MessageSecurityMode.MSM_NONE)
+        self.assertEqual(ed.security_mode, opcua.MessageSecurityMode.None_)
         self.assertEqual(ed.security_level,0)
         ed.server_description=opcua.ApplicationDescription()
         self.assertEqual(ed.user_identify_tokens,[])
@@ -133,24 +134,24 @@ class Unit(unittest.TestCase):
         rd=opcua.ReferenceDescription()
         self.assertEqual(rd.browse_name,opcua.QualifiedName())
         self.assertEqual(rd.is_forward,False)
-        self.assertEqual(rd.reference_type_id,opcua.NodeID())
-        self.assertEqual(rd.target_node_class,opcua.NodeClass.All)
-        self.assertEqual(rd.target_node_id,opcua.NodeID())
-        self.assertEqual(rd.target_node_type_definition,opcua.NodeID())
+        self.assertEqual(rd.reference_type_id,opcua.NodeId())
+        self.assertEqual(rd.target_node_class,opcua.NodeClass.Unspecified)
+        self.assertEqual(rd.target_node_id,opcua.NodeId())
+        self.assertEqual(rd.target_node_type_definition,opcua.NodeId())
 
     def test_attribute_valueid(self):
-        avid=opcua.AttributeValueID()
-        self.assertEqual(avid.node,opcua.NodeID())
-        self.assertEqual(avid.attribute,opcua.AttributeID.Value)
-        self.assertEqual(avid.index_range,'')
-        self.assertEqual(avid.data_encoding,opcua.QualifiedName())
+        avid=opcua.ReadValueId()
+        self.assertEqual(avid.node_id, opcua.NodeId())
+        self.assertEqual(avid.attribute_id, opcua.AttributeId())
+        self.assertEqual(avid.index_range, '')
+        self.assertEqual(avid.data_encoding, opcua.QualifiedName())
 
     def test_write_value(self):
         wv=opcua.WriteValue()
-        self.assertEqual(wv.node,opcua.NodeID())
-        self.assertEqual(wv.attribute,opcua.AttributeID())
-        self.assertEqual(wv.numeric_range,'')
-        self.assertEqual(wv.data.value,None)
+        self.assertEqual(wv.node_id, opcua.NodeId())
+        self.assertEqual(wv.attribute_id, opcua.AttributeId())
+        self.assertEqual(wv.index_range,'')
+        self.assertEqual(wv.value.value, None)
 
     def test_datetime(self):
         tnow1 = int(time.time())
@@ -185,14 +186,14 @@ class CommonTests(object):
 
     def test_root(self):
         root = self.opc.get_root_node()
-        self.assertEqual(opcua.QualifiedName('Root', 0), root.get_name())
-        nid = opcua.NodeID(84, 0) 
+        self.assertEqual(opcua.QualifiedName('Root', 0), root.get_browse_name())
+        nid = opcua.NodeId(84, 0) 
         self.assertEqual(nid, root.get_id())
 
     def test_objects(self):
         objects = self.opc.get_objects_node()
-        self.assertEqual(opcua.QualifiedName('Objects', 0), objects.get_name())
-        nid = opcua.NodeID(85, 0) 
+        self.assertEqual(opcua.QualifiedName('Objects', 0), objects.get_browse_name())
+        nid = opcua.NodeId(85, 0) 
         self.assertEqual(nid, objects.get_id())
 
     def test_add_nodes(self):
@@ -207,44 +208,44 @@ class CommonTests(object):
     def test_add_numeric_variable(self):
         objects = self.opc.get_objects_node()
         v = objects.add_variable('ns=3;i=888;', '3:numericnodefromstring', 99)
-        nid = opcua.NodeID(888, 3)
+        nid = opcua.NodeId(888, 3)
         qn = opcua.QualifiedName('numericnodefromstring', 3) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
 
     def test_add_string_variable(self):
         objects = self.opc.get_objects_node()
         v = objects.add_variable('ns=3;s=stringid;', '3:stringnodefromstring', [68])
-        nid = opcua.NodeID('stringid', 3) 
+        nid = opcua.NodeId('stringid', 3) 
         qn = opcua.QualifiedName('stringnodefromstring', 3) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
 
     def test_add_string_array_variable(self):
         objects = self.opc.get_objects_node()
         v = objects.add_variable('ns=3;s=stringarrayid;', '9:stringarray', ['l', 'b'])
-        nid = opcua.NodeID('stringarrayid', 3) 
+        nid = opcua.NodeId('stringarrayid', 3) 
         qn = opcua.QualifiedName('stringarray', 9) 
         self.assertEqual(nid, v.get_id())
-        self.assertEqual(qn, v.get_name())
+        self.assertEqual(qn, v.get_browse_name())
         val = v.get_value()
         self.assertEqual(['l', 'b'], val)
 
     def test_add_numeric_node(self):
         objects = self.opc.get_objects_node()
-        nid = opcua.NodeID(9999, 3)
+        nid = opcua.NodeId(9999, 3)
         qn = opcua.QualifiedName('AddNodeVar1', 3)
         v1 = objects.add_variable(nid, qn, 0)
         self.assertEqual(nid, v1.get_id())
-        self.assertEqual(qn, v1.get_name())
+        self.assertEqual(qn, v1.get_browse_name())
 
     def test_add_string_node(self):
         objects = self.opc.get_objects_node()
         qn = opcua.QualifiedName('AddNodeVar2', 3)
-        nid = opcua.NodeID('AddNodeVar2Id', 3)
+        nid = opcua.NodeId('AddNodeVar2Id', 3)
         v2 = objects.add_variable(nid, qn, 0)
         self.assertEqual(nid, v2.get_id())
-        self.assertEqual(qn, v2.get_name())
+        self.assertEqual(qn, v2.get_browse_name())
 
     def test_add_find_node_(self):
         objects = self.opc.get_objects_node()
@@ -262,10 +263,10 @@ class CommonTests(object):
     def test_add_read_node(self):
         objects = self.opc.get_objects_node()
         o = objects.add_object('ns=2;i=102;', '2:AddReadObject')
-        nid = opcua.NodeID(102, 2)
+        nid = opcua.NodeId(102, 2)
         self.assertEqual(o.get_id(), nid)
         qn = opcua.QualifiedName('AddReadObject', 2)
-        self.assertEqual(o.get_name(), qn)
+        self.assertEqual(o.get_browse_name(), qn)
 
     def test_simple_value(self):
         o = self.opc.get_objects_node()
@@ -287,7 +288,7 @@ class CommonTests(object):
         self.assertEqual(-4.54, val)
 
     def test_read_server_state(self):
-        statenode = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_State)
+        statenode = self.opc.get_node(opcua.ObjectId.Server_ServerStatus_State)
         state = statenode.get_value()
         self.assertEqual(state, 0)
 
@@ -406,14 +407,14 @@ class CommonTests(object):
     def test_get_node_by_nodeid(self):
         root = self.opc.get_root_node()
         server_time_node = root.get_child(['0:Objects', '0:Server', '0:ServerStatus', '0:CurrentTime'])
-        correct = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        correct = self.opc.get_node(opcua.ObjectId.Server_ServerStatus_CurrentTime)
         self.assertEqual(server_time_node, correct)
 
     def test_subscribe_server_time(self):
         msclt = MySubHandler()
         cond = msclt.setup()
 
-        server_time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        server_time_node = self.opc.get_node(opcua.ObjectId.Server_ServerStatus_CurrentTime)
 
         sub = self.opc.create_subscription(200, msclt)
         handle = sub.subscribe_data_change(server_time_node)
@@ -429,7 +430,7 @@ class CommonTests(object):
         sub.delete()
 
     def test_datetime_read(self):
-        time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        time_node = self.opc.get_node(opcua.ObjectId.Server_ServerStatus_CurrentTime)
         dt = time_node.get_value()
         pydt = dt.to_datetime()
         utcnow = datetime.datetime.utcnow()
@@ -437,7 +438,7 @@ class CommonTests(object):
         self.assertTrue(delta < datetime.timedelta(seconds=1))
 
     def test_datetime_write(self):
-        time_node = self.opc.get_node(opcua.ObjectID.Server_ServerStatus_CurrentTime)
+        time_node = self.opc.get_node(opcua.ObjectId.Server_ServerStatus_CurrentTime)
         now = datetime.datetime.now()
         objects = self.opc.get_objects_node()
         v1 = objects.add_variable(4, "test_datetime", now)

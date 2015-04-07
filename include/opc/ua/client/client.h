@@ -112,7 +112,7 @@ namespace OpcUa
     void SetProductURI(std::string uri) { ProductUri = uri; }
 
     /// @brief  set security policy
-    // anyway freeopcua currently only support None 
+    // anyway freeopcua currently only support MessageSecurityMode::None 
     void SetSecurityPolicy(std::string sec) {SecurityPolicy = sec;}
     std::string GetSecurityPolicy() const { return SecurityPolicy; }
 
@@ -123,11 +123,11 @@ namespace OpcUa
 
     /// @brief Get a specific node by nodeid
     // you can also access a standard node from addressspace using
-    // ObjectID, for example:
-    // Node mynode = GetNode(ObjectID::Server); 
+    // ObjectId, for example:
+    // Node mynode = GetNode(ObjectId::Server); 
     // using a string is also possible:
     // Node mynode = GetNode("ns=3;i=55"); 
-    Node GetNode(const NodeID& nodeid) const;
+    Node GetNode(const NodeId& nodeid) const;
     Node GetNode(const std::string& nodeid) const;
 
     /// @brief helper methods for node you will probably want to access

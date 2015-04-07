@@ -32,17 +32,17 @@ namespace
   const char* OPTION_READ = "read";
   const char* OPTION_WRITE = "write";
   const char* OPTION_CREATE_SUBSCRIPTION = "create-subscription";
-  const char* OPTION_FIND_SERVERS = "find-servers";
+  const char* OPTION_FIND_ServerS = "find-servers";
   const char* OPTION_REGISTER_MODULE = "register-module";
   const char* OPTION_UNREGISTER_MODULE = "unregister-module";
 
-  const char* OPTION_MODULE_ID = "id";
+  const char* OPTION_MODULE_Id = "id";
   const char* OPTION_MODULE_PATH = "path";
   const char* OPTION_CONFIG_DIR = "config-dir";
 
-  const char* OPTION_SERVER_URI = "uri";
+  const char* OPTION_Server_URI = "uri";
   const char* OPTION_ATTRIBUTE = "attribute";
-  const char* OPTION_NODE_ID = "node-id";
+  const char* OPTION_NODE_Id = "node-id";
 
 
   const char* OPTION_VALUE_BYTE  = "value-byte";
@@ -60,10 +60,10 @@ namespace
   // codegen
   #include "opcua_options_attribute_ids.h"
 
-  NodeID GetNodeIDOptionValue(const po::variables_map& vm)
+  NodeId GetNodeIdOptionValue(const po::variables_map& vm)
   {
-    const std::string& value = vm[OPTION_NODE_ID].as<std::string>();
-    return OpcUa::ToNodeID(value);
+    const std::string& value = vm[OPTION_NODE_Id].as<std::string>();
+    return OpcUa::ToNodeId(value);
   }
 
   Variant GetOptionValue(const po::variables_map& vm)
@@ -123,7 +123,7 @@ namespace OpcUa
 
   CommandLine::CommandLine(int argc, char** argv)
     : NamespaceIndex(0)
-    , Attribute(AttributeID::Unknown)
+    , Attribute(AttributeId::Unknown)
     , IsHelp(false)
     , IsGetEndpoints(false)
     , IsBrowse(false)
@@ -143,13 +143,13 @@ namespace OpcUa
       (OPTION_READ, "read command.")
       (OPTION_WRITE, "write command.")
       (OPTION_CREATE_SUBSCRIPTION, "create subscription command.")
-      (OPTION_FIND_SERVERS, "find servers command.")
+      (OPTION_FIND_ServerS, "find servers command.")
       (OPTION_REGISTER_MODULE, "Register new module.")
       (OPTION_UNREGISTER_MODULE, "Unregister module.")
 
-      (OPTION_SERVER_URI, po::value<std::string>(), "Uri of the server.")
+      (OPTION_Server_URI, po::value<std::string>(), "Uri of the server.")
       (OPTION_ATTRIBUTE, po::value<std::string>(), "Name of attribute.")
-      (OPTION_NODE_ID, po::value<std::string>(), "NodeId in the form 'nsu=uri;srv=1;ns=0;i=84.")
+      (OPTION_NODE_Id, po::value<std::string>(), "NodeId in the form 'nsu=uri;srv=1;ns=0;i=84.")
       (OPTION_VALUE_BYTE, po::value<uint8_t>(), "Byte value.")
       (OPTION_VALUE_SBYTE, po::value<int8_t>(), "Signed byte value.")
       (OPTION_VALUE_UINT16, po::value<uint16_t>(), "UInt16 value.")
@@ -161,7 +161,7 @@ namespace OpcUa
       (OPTION_VALUE_FLOAT, po::value<float>(), "Float value.")
       (OPTION_VALUE_DOUBLE, po::value<double>(), "Double value.")
       (OPTION_VALUE_STRING, po::value<std::string>(), "String value.")
-      (OPTION_MODULE_ID, po::value<std::string>(), "ID of the new module.")
+      (OPTION_MODULE_Id, po::value<std::string>(), "Id of the new module.")
       (OPTION_MODULE_PATH, po::value<std::string>(), "Path to the new module shared library.")
       (OPTION_CONFIG_DIR, po::value<std::string>(), "Path to the directory with modules configuration files. By default '" CONFIG_PATH "'.");
 
@@ -177,20 +177,20 @@ namespace OpcUa
       return;
     }
 
-    if (vm.count(OPTION_SERVER_URI))
+    if (vm.count(OPTION_Server_URI))
     {
-      ServerURI = vm[OPTION_SERVER_URI].as<std::string>();
+      ServerURI = vm[OPTION_Server_URI].as<std::string>();
     }
 
 
-    if (vm.count(OPTION_NODE_ID))
+    if (vm.count(OPTION_NODE_Id))
     {
-      Node = GetNodeIDOptionValue(vm);
+      Node = GetNodeIdOptionValue(vm);
     }
 
     if (vm.count(OPTION_ATTRIBUTE))
     {
-      Attribute = GetAttributeIDOptionValue(vm);
+      Attribute = GetAttributeIdOptionValue(vm);
     }
     Value = GetOptionValue(vm);
     IsGetEndpoints = vm.count(OPTION_GET_ENDPOINTS) != 0;
@@ -198,18 +198,18 @@ namespace OpcUa
     IsRead = vm.count(OPTION_READ) != 0;
     IsWrite = vm.count(OPTION_WRITE) != 0;
     IsCreateSubscription = vm.count(OPTION_CREATE_SUBSCRIPTION) != 0;
-    IsFindServers = vm.count(OPTION_FIND_SERVERS) != 0;
+    IsFindServers = vm.count(OPTION_FIND_ServerS) != 0;
     if (vm.count(OPTION_REGISTER_MODULE))
     {
       IsAddModule = true;
       ModulePath = vm[OPTION_MODULE_PATH].as<std::string>();
-      ModuleID = vm[OPTION_MODULE_ID].as<std::string>();
+      ModuleId = vm[OPTION_MODULE_Id].as<std::string>();
     }
 
     if (vm.count(OPTION_UNREGISTER_MODULE))
     {
       IsRemoveModule = true;
-      ModuleID = vm[OPTION_MODULE_ID].as<std::string>();
+      ModuleId = vm[OPTION_MODULE_Id].as<std::string>();
     }
 
     if (vm.count(OPTION_CONFIG_DIR))

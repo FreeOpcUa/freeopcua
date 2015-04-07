@@ -59,16 +59,16 @@ namespace OpcUa
       : Type(MT_INVALID)
       , Chunk(CHT_INVALID)
       , Size(0)
-      , ChannelID(0)
+      , ChannelId(0)
     {
       ResetSize();
     }
 
-    SecureHeader::SecureHeader(MessageType type, ChunkType chunk, uint32_t channelID)
+    SecureHeader::SecureHeader(MessageType type, ChunkType chunk, uint32_t channelId)
       : Type(type)
       , Chunk(chunk)
       , Size(0)
-      , ChannelID(channelID)
+      , ChannelId(channelId)
     {
       ResetSize();
     }
@@ -117,12 +117,12 @@ namespace OpcUa
 
     SequenceHeader::SequenceHeader()
       : SequenceNumber(0)
-      , RequestID(0)
+      , RequestId(0)
     {
     }
 
     SymmetricAlgorithmHeader::SymmetricAlgorithmHeader()
-      : TokenID(0)
+      : TokenId(0)
     {
     }
 
@@ -170,22 +170,22 @@ namespace OpcUa
     UtcTime = DateTime::Current();
     RequestHandle = 0;
     ReturnDiagnostics = 0;
-    AuditEntryID = "";
+    AuditEntryId = "";
     Timeout = 0; // in miliseconds
-    Additional.TypeID.Encoding = EV_TWO_BYTE;
-    Additional.TypeID.TwoByteData.Identifier = 0;
+    Additional.TypeId.Encoding = EV_TWO_BYTE;
+    Additional.TypeId.TwoByteData.Identifier = 0;
   }
 
   OpenSecureChannelParameters::OpenSecureChannelParameters()
     : ClientProtocolVersion(0)
-    , RequestType(STR_ISSUE)
-    , SecurityMode(MSM_NONE)
+    , RequestType(SecurityTokenRequestType::Issue)
+    , SecurityMode(MessageSecurityMode::None)
     , RequestLifeTime(300000)
   {
   }
 
   OpenSecureChannelRequest::OpenSecureChannelRequest()
-    : TypeID(OPEN_SECURE_CHANNEL_REQUEST)
+    : TypeId(OPEN_SECURE_CHANNEL_REQUEST)
   {
   }
 
@@ -197,13 +197,13 @@ namespace OpcUa
   }
 
   OpenSecureChannelResponse::OpenSecureChannelResponse()
-    : TypeID(OPEN_SECURE_CHANNEL_RESPONSE)
+    : TypeId(OPEN_SECURE_CHANNEL_RESPONSE)
     , ServerProtocolVersion(0)
   {
   }
 
   CloseSecureChannelRequest::CloseSecureChannelRequest()
-    : TypeID(OpcUa::CLOSE_SECURE_CHANNEL_REQUEST)
+    : TypeId(OpcUa::CLOSE_SECURE_CHANNEL_REQUEST)
   {
   }
 

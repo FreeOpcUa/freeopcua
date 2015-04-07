@@ -26,15 +26,15 @@ namespace OpcUa
   namespace Model
   {
     template <typename T>
-    std::vector<T> Browse(const NodeID& node, unsigned nodeClassMask, Services::SharedPtr services)
+    std::vector<T> Browse(const NodeId& node, NodeClass nodeClassMask, Services::SharedPtr services)
     {
       BrowseDescription desc;
       desc.Direction = BrowseDirection::Forward;
       desc.IncludeSubtypes = true;
       desc.NodeClasses =   nodeClassMask;
-      desc.ReferenceTypeID = ObjectID::HierarchicalReferences;
+      desc.ReferenceTypeId = ObjectId::HierarchicalReferences;
       desc.NodeToBrowse = node;
-      desc.ResultMask = 0;
+      desc.ResultMask = BrowseResultMask::None;
 
       NodesQuery query;
       query.NodesToBrowse.push_back(desc);
@@ -43,7 +43,7 @@ namespace OpcUa
 
       std::vector<T> objects;
       std::for_each(results[0].Referencies.begin(), results[0].Referencies.end(), [&node, &services, &objects](const ReferenceDescription& ref){
-        objects.push_back(T(ref.TargetNodeID, services));
+        objects.push_back(T(ref.TargetNodeId, services));
       });
 
       return objects;

@@ -358,7 +358,7 @@ TEST_F(OpcUaBinarySerialization, SecureMessageHeader)
   hdr.Type  = OpcUa::Binary::MT_HELLO;
   hdr.Chunk = OpcUa::Binary::CHT_SINGLE;
   hdr.Size = 0x01020304;
-  hdr.ChannelID = 0x1;
+  hdr.ChannelId = 0x1;
 
   const std::vector<char> expectedData = 
   {
@@ -481,7 +481,7 @@ TEST_F(OpcUaBinarySerialization, Asymmetric)
 TEST_F(OpcUaBinarySerialization, Symmetric)
 {
   OpcUa::Binary::SymmetricAlgorithmHeader header;
-  header.TokenID = 0x04050607;
+  header.TokenId = 0x04050607;
 
   const std::vector<char> expectedData = {
   7, 6, 5, 4
@@ -500,7 +500,7 @@ TEST_F(OpcUaBinarySerialization, Sequence)
 {
   OpcUa::Binary::SequenceHeader header;
   header.SequenceNumber = 0x04050607;
-  header.RequestID = 0x1;
+  header.RequestId = 0x1;
 
   const std::vector<char> expectedData = {
   7, 6, 5, 4,
@@ -521,15 +521,15 @@ TEST_F(OpcUaBinarySerialization, AdditionalHeader)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
   AdditionalHeader header;
-  header.TypeID.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
-  header.TypeID.StringData.NamespaceIndex = 0x1;
-  header.TypeID.StringData.Identifier = "id";
-  header.TypeID.NamespaceURI = "uri";
-  header.TypeID.ServerIndex = 1;
+  header.TypeId.Encoding = static_cast<NodeIdEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG);
+  header.TypeId.StringData.NamespaceIndex = 0x1;
+  header.TypeId.StringData.Identifier = "id";
+  header.TypeId.NamespaceURI = "uri";
+  header.TypeId.ServerIndex = 1;
   header.Encoding = 1;
 
   const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG),
+  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
   1, 0,
   2, 0, 0, 0,
   'i', 'd',
@@ -590,19 +590,19 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_Empty)
   ASSERT_EQ(expectedData.size(), RawSize(info));
 }
 
-TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID)
+TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
-  info.EncodingMask = DIM_SYMBOLIC_ID;
-  info.SymbolicID = 2;
+  info.EncodingMask = DIM_SYMBOLIC_Id;
+  info.SymbolicId = 2;
 
   GetStream() << info << flush;
 
   const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_ID,
+  DIM_SYMBOLIC_Id,
   2, 0, 0, 0,
   };
 
@@ -610,20 +610,20 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID)
   ASSERT_EQ(expectedData.size(), RawSize(info));
 }
 
-TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_Namespace)
+TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId_Namespace)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
-  info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_SYMBOLIC_ID | DIM_NAMESPACE);
-  info.SymbolicID = 2;
+  info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_SYMBOLIC_Id | DIM_NAMESPACE);
+  info.SymbolicId = 2;
   info.NamespaceURI = 3;
 
   GetStream() << info << flush;
 
   const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_ID | DIM_NAMESPACE,
+  DIM_SYMBOLIC_Id | DIM_NAMESPACE,
   2, 0, 0, 0,
   3, 0, 0, 0,
   };
@@ -632,20 +632,20 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_Namespace)
   ASSERT_EQ(expectedData.size(), RawSize(info));
 }
 
-TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicID_LocalizedText)
+TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId_LocalizedText)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
   DiagnosticInfo info;
-  info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_SYMBOLIC_ID | DIM_LOCALIZED_TEXT);
-  info.SymbolicID = 2;
+  info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT);
+  info.SymbolicId = 2;
   info.LocalizedText = 4;
 
   GetStream() << info << flush;
 
   const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_ID | DIM_LOCALIZED_TEXT,
+  DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT,
   2, 0, 0, 0,
   4, 0, 0, 0,
   };
@@ -754,22 +754,22 @@ TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
   FILL_TEST_REQUEST_HEADER(request.Header);
   
   request.Parameters.ClientProtocolVersion = 1;
-  request.Parameters.RequestType = STR_RENEW;
-  request.Parameters.SecurityMode = MSM_SIGN;
+  request.Parameters.RequestType = SecurityTokenRequestType::Renew;
+  request.Parameters.SecurityMode = MessageSecurityMode::Sign;
   request.Parameters.ClientNonce = std::vector<uint8_t>(1, 1);
   request.Parameters.RequestLifeTime = 5;
 
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xbe, 0x1, // TypeID
+  1, 0, (char)0xbe, 0x1, // TypeId
 
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
 
   1, 0, 0, 0,
-  STR_RENEW,  0, 0, 0,
-  MSM_SIGN, 0, 0, 0,
+  (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
+  (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
   1, 0, 0, 0,
   1,
   5, 0, 0, 0,
@@ -790,8 +790,8 @@ TEST_F(OpcUaBinarySerialization, SecurityToken)
 
   SecurityToken token;
 
-  token.SecureChannelID = 1;
-  token.TokenID = 2;
+  token.SecureChannelId = 1;
+  token.TokenId = 2;
   token.CreatedAt.Value = 3;
   token.RevisedLifetime = 4;
 
@@ -819,15 +819,15 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
 
   OpenSecureChannelResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   response.ServerProtocolVersion = 1;
-  response.ChannelSecurityToken.SecureChannelID = 2;
-  response.ChannelSecurityToken.TokenID = 3;
+  response.ChannelSecurityToken.SecureChannelId = 2;
+  response.ChannelSecurityToken.TokenId = 3;
   response.ChannelSecurityToken.CreatedAt.Value = 4;
   response.ChannelSecurityToken.RevisedLifetime = 5;
   response.ServerNonce = std::vector<uint8_t>(1, 6);
@@ -835,7 +835,7 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xC1, 0x1, // TypeID
+  1, 0, (char)0xC1, 0x1, // TypeId
 
   // ResponseHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
@@ -864,16 +864,16 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 
   CloseSecureChannelRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SECURE_CHANNEL_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SECURE_CHANNEL_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
   
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xc4, 0x1, // TypeID
+  1, 0, (char)0xc4, 0x1, // TypeId
 
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
@@ -913,12 +913,12 @@ TEST_F(OpcUaBinarySerialization, ExtensionObjectHeader)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  ExtensionObjectHeader header(OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY);
+  ExtensionObjectHeader header(OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY);
 
   GetStream() << header << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeID
+  1, 0, (char)0x41, 0x1, // TypeId
   HAS_BINARY_BODY
   };
 
@@ -952,15 +952,15 @@ TEST_F(OpcUaBinarySerialization, QualifiedName)
 }
 
 //-------------------------------------------------------------------
-// IntegerID
+// IntegerId
 //-------------------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, IntegerID)
+TEST_F(OpcUaBinarySerialization, IntegerId)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  IntegerID id(5);
+  IntegerId id(5);
 
   GetStream() << id << flush;
 

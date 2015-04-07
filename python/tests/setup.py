@@ -4,7 +4,7 @@ from distutils.core import setup
 from distutils.extension import Extension
 import os
 
-opcua_server_path = os.environ['OPCUA_SERVER_PATH']
+opcua_server_path = os.environ['OPCUA_Server_PATH']
 
 sources = [
   '../src/py_opcua_module.cpp',

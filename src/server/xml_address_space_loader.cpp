@@ -28,109 +28,109 @@ namespace
 {
   using namespace OpcUa;
 
-  ReferenceID GetReferenceID(const std::string& referenceName)
+  ReferenceId GetReferenceId(const std::string& referenceName)
   {
     if (referenceName == "organizes")
-      return ReferenceID::Organizes;
+      return ReferenceId::Organizes;
     if (referenceName == "references_to")
-      return ReferenceID::References;
+      return ReferenceId::References;
     if (referenceName == "has_child")
-      return ReferenceID::HasChild;
+      return ReferenceId::HasChild;
     if (referenceName == "has_event_source")
-      return ReferenceID::HasEventSource;
+      return ReferenceId::HasEventSource;
     if (referenceName == "has_modelling_rule")
-      return ReferenceID::HasModellingRule;
+      return ReferenceId::HasModellingRule;
     if (referenceName == "has_encoding")
-      return ReferenceID::HasEncoding;
+      return ReferenceId::HasEncoding;
     if (referenceName == "has_description")
-      return ReferenceID::HasDescription;
+      return ReferenceId::HasDescription;
     if (referenceName == "has_type_definition")
-      return ReferenceID::HasTypeDefinition;
+      return ReferenceId::HasTypeDefinition;
     if (referenceName == "generates_event")
-      return ReferenceID::GeneratesEvent;
+      return ReferenceId::GeneratesEvent;
     if (referenceName == "aggregates")
-      return ReferenceID::Aggregates;
+      return ReferenceId::Aggregates;
     if (referenceName == "has_subtype")
-      return ReferenceID::HasSubtype;
+      return ReferenceId::HasSubtype;
     if (referenceName == "has_property")
-      return ReferenceID::HasProperty;
+      return ReferenceId::HasProperty;
     if (referenceName == "has_component")
-      return ReferenceID::HasComponent;
+      return ReferenceId::HasComponent;
     if (referenceName == "has_notifier")
-      return ReferenceID::HasNotifier;
+      return ReferenceId::HasNotifier;
     if (referenceName == "has_ordered_component")
-      return ReferenceID::HasOrderedComponent;
+      return ReferenceId::HasOrderedComponent;
     if (referenceName == "has_model_parent")
-      return ReferenceID::HasModelParent;
+      return ReferenceId::HasModelParent;
     if (referenceName == "from_state")
-      return ReferenceID::FromState;
+      return ReferenceId::FromState;
     if (referenceName == "to_state")
-      return ReferenceID::ToState;
+      return ReferenceId::ToState;
     if (referenceName == "has_clause")
-      return ReferenceID::HasCause;
+      return ReferenceId::HasCause;
     if (referenceName == "has_effect")
-      return ReferenceID::HasEffect;
+      return ReferenceId::HasEffect;
     if (referenceName == "has_historical_configuration")
-      return ReferenceID::HasHistoricalConfiguration;
+      return ReferenceId::HasHistoricalConfiguration;
     if (referenceName == "has_historical_event_configuration")
-      return ReferenceID::HasHistoricalEventConfiguration;
+      return ReferenceId::HasHistoricalEventConfiguration;
     if (referenceName == "has_substate_machine")
-      return ReferenceID::HasSubStateMachine;
+      return ReferenceId::HasSubStateMachine;
     if (referenceName == "has_event_history")
-      return ReferenceID::HasEventHistory;
+      return ReferenceId::HasEventHistory;
     if (referenceName == "always_generates_event")
-      return ReferenceID::AlwaysGeneratesEvent;
+      return ReferenceId::AlwaysGeneratesEvent;
     if (referenceName == "has_true_substate")
-      return ReferenceID::HasTrueSubState;
+      return ReferenceId::HasTrueSubState;
     if (referenceName == "has_false_substate")
-      return ReferenceID::HasFalseSubState;
+      return ReferenceId::HasFalseSubState;
     if (referenceName == "has_condition")
-      return ReferenceID::HasCondition;
+      return ReferenceId::HasCondition;
     if (referenceName == "non_hierarchical_references")
-      return ReferenceID::NonHierarchicalReferences;
+      return ReferenceId::NonHierarchicalReferences;
     if (referenceName == "hierarchical_references")
-      return ReferenceID::HierarchicalReferences;
+      return ReferenceId::HierarchicalReferences;
     if (referenceName == "has_cause")
-      return ReferenceID::HasCause;
+      return ReferenceId::HasCause;
     if (referenceName == "has_sub_state_machine")
-      return ReferenceID::HasSubStateMachine;
+      return ReferenceId::HasSubStateMachine;
     if (referenceName == "has_true_sub_state")
-      return ReferenceID::HasTrueSubState;
+      return ReferenceId::HasTrueSubState;
     if (referenceName == "has_false_sub_state")
-      return ReferenceID::HasFalseSubState;
+      return ReferenceId::HasFalseSubState;
 
     throw std::logic_error(std::string("Unknown reference name '") + referenceName + std::string(referenceName));
   }
 
   struct Reference
   {
-    ReferenceID ID;
-    NodeID TargetNode;
+    ReferenceId Id;
+    NodeId TargetNode;
     bool IsForward;
     NodeClass TargetClass;
     QualifiedName TargetBrowseName;
     LocalizedText TargetDisplayName;
-    NodeID TargetType;
+    NodeId TargetType;
 
     Reference()
-      : ID(ReferenceID::Unknown)
+      : Id(ReferenceId::Unknown)
       , IsForward(true)
-      , TargetClass(NodeClass::All)
+      , TargetClass(NodeClass::Unspecified)
     {
     }
   };
 
   struct Attribute
   {
-    AttributeID ID;
+    AttributeId Id;
     Variant Value;
     Attribute()
-      : ID(AttributeID::Unknown)
+      : Id(AttributeId::Unknown)
     {
     }
 
-    Attribute(AttributeID id, Variant value)
-      : ID(id)
+    Attribute(AttributeId id, Variant value)
+      : Id(id)
       , Value(value)
     {
     }
@@ -138,8 +138,8 @@ namespace
 
   struct INode
   {
-    NodeID ID;
-    std::map<AttributeID, Variant> Attributes;
+    NodeId Id;
+    std::map<AttributeId, Variant> Attributes;
     std::vector<Reference> References;
     bool IsExternal;
 
@@ -225,59 +225,59 @@ namespace
     return (const char*)content.get();
   }
 
-  ObjectID GetObjectIdOfType(const std::string& nodeValue)
+  ObjectId GetObjectIdOfType(const std::string& nodeValue)
   {
     if (nodeValue == "bool")
     {
-      return ObjectID::Boolean;
+      return ObjectId::Boolean;
     }
     if (nodeValue == "sbyte")
     {
-      return ObjectID::SByte;
+      return ObjectId::SByte;
     }
     if (nodeValue == "byte")
     {
-      return ObjectID::Byte;
+      return ObjectId::Byte;
     }
     if (nodeValue == "int16")
     {
-      return ObjectID::Int16;
+      return ObjectId::Int16;
     }
     if (nodeValue == "uint16")
     {
-      return ObjectID::UInt16;
+      return ObjectId::UInt16;
     }
     if (nodeValue == "int32")
     {
-      return ObjectID::Int32;
+      return ObjectId::Int32;
     }
     if (nodeValue == "uint32")
     {
-      return ObjectID::UInt32;
+      return ObjectId::UInt32;
     }
     if (nodeValue == "string")
     {
-      return ObjectID::String;
+      return ObjectId::String;
     }
     if (nodeValue == "enum")
     {
-      return ObjectID::Enumeration;
+      return ObjectId::Enumeration;
     }
     if (nodeValue == "int")
     {
-      return ObjectID::Integer;
+      return ObjectId::Integer;
     }
     if (nodeValue == "byte_string")
     {
-      return ObjectID::ByteString;
+      return ObjectId::ByteString;
     }
     if (nodeValue == "guid")
     {
-      return ObjectID::Guid;
+      return ObjectId::Guid;
     }
     if (nodeValue == "date_time")
     {
-      return ObjectID::DateTime;
+      return ObjectId::DateTime;
     }
 
     std::stringstream stream;
@@ -285,74 +285,74 @@ namespace
     throw std::logic_error(stream.str());
   }
 
-  inline ObjectID GetObjectIdOfType(xmlNode& node)
+  inline ObjectId GetObjectIdOfType(xmlNode& node)
   {
     return GetObjectIdOfType(GetNodeValue(node));
   }
 
-  inline VariantType ConvertToVariantType(ObjectID id)
+  inline VariantType ConvertToVariantType(ObjectId id)
   {
     switch (id)
     {
-      case ObjectID::Null:        return VariantType::NUL;
-      case ObjectID::Boolean:     return VariantType::BOOLEAN;
-      case ObjectID::SByte:       return VariantType::SBYTE;
-      case ObjectID::Byte:        return VariantType::BYTE;
-      case ObjectID::Int16:       return VariantType::INT16;
-      case ObjectID::UInt16:      return VariantType::UINT16;
+      case ObjectId::Null:        return VariantType::NUL;
+      case ObjectId::Boolean:     return VariantType::BOOLEAN;
+      case ObjectId::SByte:       return VariantType::SBYTE;
+      case ObjectId::Byte:        return VariantType::BYTE;
+      case ObjectId::Int16:       return VariantType::INT16;
+      case ObjectId::UInt16:      return VariantType::UINT16;
 
-      case ObjectID::Integer:
-      case ObjectID::Enumeration:
-      case ObjectID::Int32:       return VariantType::INT32;
+      case ObjectId::Integer:
+      case ObjectId::Enumeration:
+      case ObjectId::Int32:       return VariantType::INT32;
 
-      case ObjectID::UInt32:      return VariantType::UINT32;
-      case ObjectID::Int64:       return VariantType::INT64;
-      case ObjectID::UInt64:      return VariantType::UINT64;
-      case ObjectID::Float:       return VariantType::FLOAT;
-      case ObjectID::Double:      return VariantType::DOUBLE;
-      case ObjectID::String:      return VariantType::STRING;
-      case ObjectID::ByteString:  return VariantType::BYTE_STRING;
-      case ObjectID::DateTime:    return VariantType::DATE_TIME;
-      case ObjectID::Guid:        return VariantType::GUID;
+      case ObjectId::UInt32:      return VariantType::UINT32;
+      case ObjectId::Int64:       return VariantType::INT64;
+      case ObjectId::UInt64:      return VariantType::UINT64;
+      case ObjectId::Float:       return VariantType::FLOAT;
+      case ObjectId::Double:      return VariantType::DOUBLE;
+      case ObjectId::String:      return VariantType::STRING;
+      case ObjectId::ByteString:  return VariantType::BYTE_STRING;
+      case ObjectId::DateTime:    return VariantType::DATE_TIME;
+      case ObjectId::Guid:        return VariantType::GUId;
 
       default:
         std::stringstream stream;
-        stream << "Cannot convert ObjectID '" << (unsigned)id << "' to VariantType.";
+        stream << "Cannot convert ObjectId '" << (unsigned)id << "' to VariantType.";
         throw std::logic_error(stream.str());
     }
   }
 
-  inline ObjectID ConvertToObjectID(VariantType type)
+  inline ObjectId ConvertToObjectId(VariantType type)
   {
     switch (type)
     {
-      case VariantType::NUL:         return ObjectID::Null;
-      case VariantType::BOOLEAN:     return ObjectID::Boolean;
-      case VariantType::SBYTE:       return ObjectID::SByte;
-      case VariantType::BYTE:        return ObjectID::Byte;
-      case VariantType::INT16:       return ObjectID::Int16;
-      case VariantType::UINT16:      return ObjectID::UInt16;
-      case VariantType::INT32:       return ObjectID::Int32;
-      case VariantType::UINT32:      return ObjectID::UInt32;
-      case VariantType::INT64:       return ObjectID::Int64;
-      case VariantType::UINT64:      return ObjectID::UInt64;
-      case VariantType::FLOAT:       return ObjectID::Float;
-      case VariantType::DOUBLE:      return ObjectID::Double;
-      case VariantType::STRING:      return ObjectID::String;
-      case VariantType::BYTE_STRING: return ObjectID::ByteString;
-      case VariantType::DATE_TIME:   return ObjectID::DateTime;
-      case VariantType::GUID:        return ObjectID::Guid;
+      case VariantType::NUL:         return ObjectId::Null;
+      case VariantType::BOOLEAN:     return ObjectId::Boolean;
+      case VariantType::SBYTE:       return ObjectId::SByte;
+      case VariantType::BYTE:        return ObjectId::Byte;
+      case VariantType::INT16:       return ObjectId::Int16;
+      case VariantType::UINT16:      return ObjectId::UInt16;
+      case VariantType::INT32:       return ObjectId::Int32;
+      case VariantType::UINT32:      return ObjectId::UInt32;
+      case VariantType::INT64:       return ObjectId::Int64;
+      case VariantType::UINT64:      return ObjectId::UInt64;
+      case VariantType::FLOAT:       return ObjectId::Float;
+      case VariantType::DOUBLE:      return ObjectId::Double;
+      case VariantType::STRING:      return ObjectId::String;
+      case VariantType::BYTE_STRING: return ObjectId::ByteString;
+      case VariantType::DATE_TIME:   return ObjectId::DateTime;
+      case VariantType::GUId:        return ObjectId::Guid;
 
       default:
         std::stringstream stream;
-        stream << "Cannot convert VariantType '"<< (unsigned)type << "' to ObjectID.";
+        stream << "Cannot convert VariantType '"<< (unsigned)type << "' to ObjectId.";
         throw std::logic_error(stream.str());
     }
   }
 
   inline VariantType GetVariantType(xmlNode& node)
   {
-    const ObjectID typeId = GetObjectIdOfType(GetProperty(node, "type"));
+    const ObjectId typeId = GetObjectIdOfType(GetProperty(node, "type"));
     return ConvertToVariantType(typeId);
   }
 
@@ -408,7 +408,7 @@ namespace
     return atoi(propValue.c_str());
   }
 
-  NodeID GetNodeID(xmlNode& node)
+  NodeId GetNodeId(xmlNode& node)
   {
     std::string nodeValue = GetNodeValue(node);
     if (nodeValue.empty())
@@ -420,9 +420,9 @@ namespace
     uint32_t nsIndex = GetNamespaceIndex(node);
     if (IsNumericNodeType(node))
     {
-      return NumericNodeID(atoi(nodeValue.c_str()), nsIndex);
+      return NumericNodeId(atoi(nodeValue.c_str()), nsIndex);
     }
-    return StringNodeID(nodeValue, nsIndex);
+    return StringNodeId(nodeValue, nsIndex);
   }
 
   bool GetBool(std::string str)
@@ -531,102 +531,102 @@ namespace
     return Variant(nodeValue);
   }
 
-  OpcUa::AttributeID GetAttributeID(xmlNode& node)
+  OpcUa::AttributeId GetAttributeId(xmlNode& node)
   {
     if (IsXmlNode(node, "id"))
-      return AttributeID::NodeId;
+      return AttributeId::NodeId;
     else if (IsXmlNode(node, "class"))
-      return AttributeID::NodeClass;
+      return AttributeId::NodeClass;
     else if (IsXmlNode(node, "browse_name"))
-      return AttributeID::BrowseName;
+      return AttributeId::BrowseName;
     else if (IsXmlNode(node, "display_name"))
-      return AttributeID::DisplayName;
+      return AttributeId::DisplayName;
     else if (IsXmlNode(node, "description"))
-      return AttributeID::Description;
+      return AttributeId::Description;
     else if (IsXmlNode(node, "write_mask"))
-      return AttributeID::WriteMask;
+      return AttributeId::WriteMask;
     else if (IsXmlNode(node, "user_write_mask"))
-      return AttributeID::UserWriteMask;
+      return AttributeId::UserWriteMask;
     else if (IsXmlNode(node, "is_abstract"))
-      return AttributeID::IsAbstract;
+      return AttributeId::IsAbstract;
     else if (IsXmlNode(node, "symmetric"))
-      return AttributeID::Symmetric;
+      return AttributeId::Symmetric;
     else if (IsXmlNode(node, "inverse_name"))
-      return AttributeID::InverseName;
+      return AttributeId::InverseName;
     else if (IsXmlNode(node, "contains_no_loops"))
-      return AttributeID::ContainsNoLoops;
+      return AttributeId::ContainsNoLoops;
     else if (IsXmlNode(node, "event_notifier"))
-      return AttributeID::EventNotifier;
+      return AttributeId::EventNotifier;
     else if (IsXmlNode(node, "value"))
-      return AttributeID::Value;
+      return AttributeId::Value;
     else if (IsXmlNode(node, "value_rank"))
-      return AttributeID::ValueRank;
+      return AttributeId::ValueRank;
     else if (IsXmlNode(node, "data_type"))
-      return AttributeID::DataType;
+      return AttributeId::DataType;
     else if (IsXmlNode(node, "array_dimensions"))
-      return AttributeID::ArrayDimensions;
+      return AttributeId::ArrayDimensions;
     else if (IsXmlNode(node, "access_level"))
-      return AttributeID::AccessLevel;
+      return AttributeId::AccessLevel;
     else if (IsXmlNode(node, "user_access_level"))
-      return AttributeID::UserAccessLevel;
+      return AttributeId::UserAccessLevel;
     else if (IsXmlNode(node, "minimum_sampling_interval"))
-      return AttributeID::MinimumSamplingInterval;
+      return AttributeId::MinimumSamplingInterval;
     else if (IsXmlNode(node, "historizing"))
-      return AttributeID::Historizing;
+      return AttributeId::Historizing;
     else if (IsXmlNode(node, "executable"))
-      return AttributeID::Executable;
+      return AttributeId::Executable;
     else if (IsXmlNode(node, "user_executable"))
-      return AttributeID::UserExecutable;
+      return AttributeId::UserExecutable;
 
-    return AttributeID::Unknown;
+    return AttributeId::Unknown;
   }
 
-  Variant GetAttributeValue(OpcUa::AttributeID id, xmlNode& node)
+  Variant GetAttributeValue(OpcUa::AttributeId id, xmlNode& node)
   {
     switch (id)
     {
-      case AttributeID::NodeId:
-        return Variant(GetNodeID(node));
+      case AttributeId::NodeId:
+        return Variant(GetNodeId(node));
 
-      case AttributeID::NodeClass:
+      case AttributeId::NodeClass:
         return Variant((int32_t)GetNodeClass(node));
 
-      case AttributeID::DisplayName:
+      case AttributeId::DisplayName:
         return Variant(GetLocalizedText(node));
 
-      case AttributeID::BrowseName:
+      case AttributeId::BrowseName:
         return Variant(GetQualifiedName(node));
 
-      case AttributeID::Description:
-      case AttributeID::InverseName:
+      case AttributeId::Description:
+      case AttributeId::InverseName:
         return Variant(GetText(node));
 
-      case AttributeID::EventNotifier:
+      case AttributeId::EventNotifier:
         return Variant(std::vector<uint8_t>{0});
 
-      case AttributeID::ValueRank:
+      case AttributeId::ValueRank:
         return Variant(GetInt32(node));
 
-      case AttributeID::WriteMask:
-      case AttributeID::UserWriteMask:
-      case AttributeID::ArrayDimensions:
-      case AttributeID::AccessLevel:
-      case AttributeID::UserAccessLevel:
-      case AttributeID::MinimumSamplingInterval:
+      case AttributeId::WriteMask:
+      case AttributeId::UserWriteMask:
+      case AttributeId::ArrayDimensions:
+      case AttributeId::AccessLevel:
+      case AttributeId::UserAccessLevel:
+      case AttributeId::MinimumSamplingInterval:
         return Variant(GetUInt32(node));
 
-      case AttributeID::IsAbstract:
-      case AttributeID::Symmetric:
-      case AttributeID::ContainsNoLoops:
-      case AttributeID::Historizing:
-      case AttributeID::Executable:
-      case AttributeID::UserExecutable:
+      case AttributeId::IsAbstract:
+      case AttributeId::Symmetric:
+      case AttributeId::ContainsNoLoops:
+      case AttributeId::Historizing:
+      case AttributeId::Executable:
+      case AttributeId::UserExecutable:
         return Variant(GetBool(node));
 
-      case AttributeID::Value:
+      case AttributeId::Value:
         break;
 
-      case AttributeID::DataType:
+      case AttributeId::DataType:
         return Variant(GetObjectIdOfType(node));
 
       default:
@@ -653,10 +653,10 @@ namespace
         {
           continue;
         }
-        const AttributeID attribute = GetAttributeID(*subNode);
-        if (attribute == AttributeID::NodeId)
+        const AttributeId attribute = GetAttributeId(*subNode);
+        if (attribute == AttributeId::NodeId)
         {
-          OpcUaNode.ID = GetNodeID(*subNode);
+          OpcUaNode.Id = GetNodeId(*subNode);
           continue;
         }
 
@@ -665,9 +665,9 @@ namespace
       }
 
       // If tag 'data_type' is absent in the xml then need to add data type which will be based on type of value.
-      if (!HasAttribute(AttributeID::DataType) && HasAttribute(AttributeID::Value))
+      if (!HasAttribute(AttributeId::DataType) && HasAttribute(AttributeId::Value))
       {
-        AddAttribute(AttributeID::DataType, GetDataType(AttributeID::Value));
+        AddAttribute(AttributeId::DataType, GetDataType(AttributeId::Value));
       }
     }
 
@@ -678,24 +678,24 @@ namespace
     }
 
     template <typename T>
-    void AddAttribute(AttributeID attr, const T& value)
+    void AddAttribute(AttributeId attr, const T& value)
     {
       OpcUaNode.Attributes.insert(std::make_pair(attr, Variant(value)));
     }
 
-    bool HasAttribute(AttributeID attr) const
+    bool HasAttribute(AttributeId attr) const
     {
-      return OpcUaNode.Attributes.find(AttributeID::DataType) != OpcUaNode.Attributes.end();
+      return OpcUaNode.Attributes.find(AttributeId::DataType) != OpcUaNode.Attributes.end();
     }
 
-    ObjectID GetDataType(AttributeID attr) const
+    ObjectId GetDataType(AttributeId attr) const
     {
       auto attrPos = OpcUaNode.Attributes.find(attr);
       if (attrPos == OpcUaNode.Attributes.end())
       {
-        return ObjectID::Null;
+        return ObjectId::Null;
       }
-      return ConvertToObjectID(attrPos->second.Type());
+      return ConvertToObjectId(attrPos->second.Type());
     }
 
   private:
@@ -736,9 +736,9 @@ namespace
     void AddReferenceToNode(xmlNode& refNode)
     {
       const std::string refName = GetNodeName(refNode);
-      const NodeID targetNode = GetNodeID(refNode);
+      const NodeId targetNode = GetNodeId(refNode);
       Reference reference;
-      reference.ID = GetReferenceID(refName);
+      reference.Id = GetReferenceId(refName);
 
       for (xmlNodePtr subNode = refNode.children; subNode; subNode = subNode->next)
       {
@@ -750,7 +750,7 @@ namespace
         const std::string& nodeName = GetNodeName(*subNode);
         if (nodeName == "id")
         {
-          reference.TargetNode = GetNodeID(*subNode);
+          reference.TargetNode = GetNodeId(*subNode);
         }
         else if (nodeName == "class")
         {
@@ -770,7 +770,7 @@ namespace
         }
         else if (nodeName == "type_definition")
         {
-          reference.TargetType = GetNodeID(*subNode);
+          reference.TargetType = GetNodeId(*subNode);
         }
       }
 
@@ -782,14 +782,14 @@ namespace
     void EnsureValid(const Reference& ref, int lineNum) const
     {
       std::stringstream stream;
-      if (ref.ID == ReferenceID::Unknown)
+      if (ref.Id == ReferenceId::Unknown)
       {
         stream << "Unknown reference type. line" << lineNum << ".";
         throw std::logic_error(stream.str());
       }
-      if (ref.TargetNode == NodeID())
+      if (ref.TargetNode == NodeId())
       {
-        stream << "Empty target node ID. line" << lineNum << ".";
+        stream << "Empty target node Id. line" << lineNum << ".";
         throw std::logic_error(stream.str());
       }
     }
@@ -802,7 +802,7 @@ namespace
   class NodesCollector : private Internal::XmlProcessor
   {
   public:
-    NodesCollector(std::map<NodeID, INode>& nodes, bool debug)
+    NodesCollector(std::map<NodeId, INode>& nodes, bool debug)
       : Nodes(nodes)
       , Debug(debug)
     {
@@ -835,16 +835,16 @@ namespace
 
       FillNode(node, opcuaNode);
       EnsureNodeIsValid(opcuaNode, node);
-      Nodes.insert(std::make_pair(opcuaNode.ID, opcuaNode));
+      Nodes.insert(std::make_pair(opcuaNode.Id, opcuaNode));
     }
 
   private:
     void EnsureNodeIsValid(const INode& opcuaNode, const xmlNode& node) const
     {
-      if (opcuaNode.ID == NodeID())
+      if (opcuaNode.Id == NodeId())
       {
         std::stringstream stream;
-        stream << "INode at line '" << node.line << "' has no ID.";
+        stream << "INode at line '" << node.line << "' has no Id.";
         throw std::logic_error(stream.str());
       }
     }
@@ -873,7 +873,7 @@ namespace
     }
 
   private:
-    std::map<NodeID, INode>& Nodes;
+    std::map<NodeId, INode>& Nodes;
     const bool Debug;
   };
 
@@ -887,12 +887,12 @@ namespace
 
     }
 
-    std::map<NodeID, INode> Process(xmlDoc& doc)
+    std::map<NodeId, INode> Process(xmlDoc& doc)
     {
       xmlNodePtr rootNode = xmlDocGetRootElement(&doc);
       EnsureRootNodeValid(*rootNode);
 
-      std::map<NodeID, INode> nodes;
+      std::map<NodeId, INode> nodes;
       NodesCollector nodesBuilder(nodes, Debug);
       for (xmlNodePtr cur = rootNode->children; cur; cur = cur->next)
       {
@@ -929,7 +929,7 @@ namespace
     const bool Debug;
   };
 
-  std::map<NodeID, INode> ParseConfig(const char* configPath, bool debug)
+  std::map<NodeId, INode> ParseConfig(const char* configPath, bool debug)
   {
     std::unique_ptr<xmlDoc, XmlDocDeleter> doc(xmlParseFile(configPath), XmlDocDeleter());
     if (!doc)
@@ -950,7 +950,7 @@ namespace
     {
     }
 
-    void RegisterNodes(const std::map<NodeID, INode>& nodes)
+    void RegisterNodes(const std::map<NodeId, INode>& nodes)
     {
       for (const auto& node : nodes)
       {
@@ -965,10 +965,10 @@ namespace
   private:
     void RegisterNode(const INode& node)
     {
-      //Registry.AddAttribute(node.ID, AttributeID::NodeId, Variant(node.ID));
-      for (const std::pair<AttributeID, Variant>& attr : node.Attributes)
+      //Registry.AddAttribute(node.Id, AttributeId::NodeId, Variant(node.Id));
+      for (const std::pair<AttributeId, Variant>& attr : node.Attributes)
       {
-        //Registry.AddAttribute(node.ID, attr.first, attr.second);
+        //Registry.AddAttribute(node.Id, attr.first, attr.second);
       }
     }
 
@@ -980,11 +980,11 @@ namespace
         desc.BrowseName = ref.TargetBrowseName;
         desc.DisplayName = ref.TargetDisplayName;
         desc.IsForward = ref.IsForward;
-        desc.ReferenceTypeID = ref.ID;
+        desc.ReferenceTypeId = ref.Id;
         desc.TargetNodeClass = ref.TargetClass;
-        desc.TargetNodeID = ref.TargetNode;
+        desc.TargetNodeId = ref.TargetNode;
         desc.TargetNodeTypeDefinition = ref.TargetType;
-        //Registry.AddReference(node.ID, desc);
+        //Registry.AddReference(node.Id, desc);
       }
     }
 
@@ -1007,7 +1007,7 @@ namespace OpcUa
 
     void XmlAddressSpaceLoader::Load(const char* fileName)
     {
-      std::map<NodeID, INode> nodes = ParseConfig(fileName, Debug);
+      std::map<NodeId, INode> nodes = ParseConfig(fileName, Debug);
       NodesRegistrator reg(Registry, Debug);
       reg.RegisterNodes(nodes);
     }

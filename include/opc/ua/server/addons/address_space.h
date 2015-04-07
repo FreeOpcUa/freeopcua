@@ -18,7 +18,7 @@ namespace OpcUa
   namespace Server
   {
 
-    const char AddressSpaceRegistryAddonID[] = "address_space_registry";
+    const char AddressSpaceRegistryAddonId[] = "address_space_registry";
 
     class AddressSpaceAddonFactory : public Common::AddonFactory
     {

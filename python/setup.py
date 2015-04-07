@@ -5,7 +5,7 @@ import sys
 import os
 import platform
 
-opcua_server_path = os.environ.get('OPCUA_SERVER_PATH','..')
+opcua_server_path = os.environ.get('OPCUA_Server_PATH','..')
 
 extra_compile_args = [
 	'-std=c++11', 
@@ -48,9 +48,9 @@ setup(name='python-freeopcua',
       sources=[
         'src/py_opcua_module.cpp',
         'src/py_opcua_enums.cpp',
-        'src/py_opcua_enums_ObjectID.cpp',
+        'src/py_opcua_enums_ObjectId.cpp',
         'src/py_opcua_enums_StatusCode.cpp',
-        'src/py_opcua_enums_AttributeID.cpp',
+        'src/py_opcua_enums_AttributeId.cpp',
         'src/py_opcua_subscriptionclient.cpp',
       ],
       include_dirs = include_dirs,

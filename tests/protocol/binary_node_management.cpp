@@ -40,18 +40,18 @@ TEST_F(AddNodesSerialization, AddNodesItem)
 
   AddNodesItem item;
   item.BrowseName = OpcUa::QualifiedName("titi", 2);
-  item.ParentNodeId = OpcUa::NodeID(85, 0);
-  item.RequestedNewNodeID = OpcUa::NodeID(99, 3);
+  item.ParentNodeId = OpcUa::NodeId(85, 0);
+  item.RequestedNewNodeId = OpcUa::NodeId(99, 3);
   item.Class = NodeClass::Variable;
-  item.ReferenceTypeId = ReferenceID::HasComponent; 
-  item.TypeDefinition = ObjectID::BaseVariableType; 
+  item.ReferenceTypeId = ReferenceId::HasComponent; 
+  item.TypeDefinition = ObjectId::BaseVariableType; 
   VariableAttributes attr;
   attr.DisplayName = LocalizedText(item.BrowseName.Name);
   attr.Description = LocalizedText(item.BrowseName.Name);
   attr.WriteMask = 0;
   attr.UserWriteMask = 0;
   attr.Value = 7;
-  attr.Type = ObjectID::UInt32;
+  attr.Type = ObjectId::UInt32;
   attr.Rank  = 0;
   //attr.Dimensions = 0;
   attr.AccessLevel = VariableAccessLevel::CurrentRead;

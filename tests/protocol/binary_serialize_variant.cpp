@@ -12,7 +12,6 @@
 
 #include <opc/ua/protocol/extension_identifiers.h>
 #include <opc/ua/protocol/message_identifiers.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/types.h>
@@ -1056,12 +1055,12 @@ OpcUa::Guid CreateTestGuid()
 }
 
 ///-----------------------------------------------------------------------------
-TEST_F(OpcUaBinaryDeserialization, Variant_GUID)
+TEST_F(OpcUaBinaryDeserialization, Variant_GUId)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<char>(VariantType::GUID);
+  char encodingMask = static_cast<char>(VariantType::GUId);
 
   const std::vector<char> expectedData = {
     encodingMask,
@@ -1075,19 +1074,19 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUID)
 
   OpcUa::Guid guid = CreateTestGuid();
 
-  ASSERT_EQ(var.Type(), VariantType::GUID);
+  ASSERT_EQ(var.Type(), VariantType::GUId);
   ASSERT_EQ(var.As<Guid>(), guid);
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
   ASSERT_TRUE(var.Dimensions.empty());
 }
 
-TEST_F(OpcUaBinaryDeserialization, Variant_GUID_Array)
+TEST_F(OpcUaBinaryDeserialization, Variant_GUId_Array)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<uint8_t>(VariantType::GUID) | HAS_ARRAY_MASK;
+  char encodingMask = static_cast<uint8_t>(VariantType::GUId) | HAS_ARRAY_MASK;
 
   const std::vector<char> expectedData = {
   encodingMask,
@@ -1103,7 +1102,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUID_Array)
 
   OpcUa::Guid guid = CreateTestGuid();
 
-  ASSERT_EQ(var.Type(), VariantType::GUID);
+  ASSERT_EQ(var.Type(), VariantType::GUId);
   std::vector<Guid> vals;
   ASSERT_NO_THROW(vals = var.As<std::vector<Guid>>());
   ASSERT_EQ(vals.size(), 2);
@@ -1115,12 +1114,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUID_Array)
 }
 
 
-TEST_F(OpcUaBinaryDeserialization, Variant_GUID_DIMENSIONS)
+TEST_F(OpcUaBinaryDeserialization, Variant_GUId_DIMENSIONS)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<uint8_t>(VariantType::GUID) | HAS_DIMENSIONS_MASK;
+  char encodingMask = static_cast<uint8_t>(VariantType::GUId) | HAS_DIMENSIONS_MASK;
 
   const std::vector<char> expectedData = {
   encodingMask,
@@ -1136,7 +1135,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUID_DIMENSIONS)
 
   OpcUa::Guid guid = CreateTestGuid();
 
-  ASSERT_EQ(var.Type(), VariantType::GUID);
+  ASSERT_EQ(var.Type(), VariantType::GUId);
   ASSERT_EQ(var.As<Guid>(), guid);
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
@@ -1566,12 +1565,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_QUALIFIED_NAME_DIMENSIONS)
 }
 
 ///-----------------------------------------------------------------------------
-TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID)
+TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<char>(VariantType::NODE_ID);
+  char encodingMask = static_cast<char>(VariantType::NODE_Id);
 
   const std::vector<char> expectedData = {
     encodingMask,
@@ -1583,19 +1582,19 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type(), VariantType::NODE_ID);
-  ASSERT_EQ(var.As<NodeID>(), OpcUa::FourByteNodeID(449));
+  ASSERT_EQ(var.Type(), VariantType::NODE_Id);
+  ASSERT_EQ(var.As<NodeId>(), OpcUa::FourByteNodeId(449));
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
   ASSERT_TRUE(var.Dimensions.empty());
 }
 
-TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID_Array)
+TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id_Array)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<uint8_t>(VariantType::NODE_ID) | HAS_ARRAY_MASK;
+  char encodingMask = static_cast<uint8_t>(VariantType::NODE_Id) | HAS_ARRAY_MASK;
 
   const std::vector<char> expectedData = {
   encodingMask,
@@ -1609,23 +1608,23 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID_Array)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type(), VariantType::NODE_ID);
-  std::vector<NodeID> vals;
-  ASSERT_NO_THROW(vals = var.As<std::vector<NodeID>>());
+  ASSERT_EQ(var.Type(), VariantType::NODE_Id);
+  std::vector<NodeId> vals;
+  ASSERT_NO_THROW(vals = var.As<std::vector<NodeId>>());
   ASSERT_EQ(vals.size(), 2);
-  ASSERT_EQ(vals[0], OpcUa::FourByteNodeID(449));
-  ASSERT_EQ(vals[1], OpcUa::FourByteNodeID(449));
+  ASSERT_EQ(vals[0], OpcUa::FourByteNodeId(449));
+  ASSERT_EQ(vals[1], OpcUa::FourByteNodeId(449));
   ASSERT_FALSE(var.IsNul());
   ASSERT_TRUE(var.IsArray());
   ASSERT_TRUE(var.Dimensions.empty());
 }
 
-TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID_DIMENSIONS)
+TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id_DIMENSIONS)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  char encodingMask = static_cast<uint8_t>(VariantType::NODE_ID) | HAS_DIMENSIONS_MASK;
+  char encodingMask = static_cast<uint8_t>(VariantType::NODE_Id) | HAS_DIMENSIONS_MASK;
 
   const std::vector<char> expectedData = {
   encodingMask,
@@ -1639,8 +1638,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_ID_DIMENSIONS)
   Variant var;
   GetStream() >> var;
 
-  ASSERT_EQ(var.Type(), VariantType::NODE_ID);
-  ASSERT_EQ(var.As<NodeID>(), OpcUa::FourByteNodeID(449));
+  ASSERT_EQ(var.Type(), VariantType::NODE_Id);
+  ASSERT_EQ(var.As<NodeId>(), OpcUa::FourByteNodeId(449));
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
   ASSERT_EQ(var.Dimensions.size(), 1);
@@ -1701,20 +1700,20 @@ TEST(Variant, InitializeWithVariant)
   ASSERT_FALSE(var.IsNul());
 }
 
-TEST(Variant, InitializeObjectID)
+TEST(Variant, InitializeObjectId)
 {
-  const OpcUa::Variant var = OpcUa::ObjectID::RootFolder;
-  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_ID);
-  ASSERT_EQ(var, OpcUa::ObjectID::RootFolder);
+  const OpcUa::Variant var = OpcUa::ObjectId::RootFolder;
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_Id);
+  ASSERT_EQ(var, OpcUa::ObjectId::RootFolder);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
 
-TEST(Variant, InitializeMessageID)
+TEST(Variant, InitializeMessageId)
 {
-  const OpcUa::Variant var = OpcUa::MessageID::READ_RESPONSE;
-  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_ID);
-  ASSERT_EQ(var, OpcUa::MessageID::READ_RESPONSE);
+  const OpcUa::Variant var = OpcUa::MessageId::READ_RESPONSE;
+  ASSERT_EQ(var.Type(), OpcUa::VariantType::NODE_Id);
+  ASSERT_EQ(var, OpcUa::MessageId::READ_RESPONSE);
   ASSERT_FALSE(var.IsArray());
   ASSERT_FALSE(var.IsNul());
 }
@@ -1744,11 +1743,11 @@ TEST(Variant, InitializeWithBoolInitializerList)
       case VariantType::DOUBLE:           var.Double = value.Double; break;
       case VariantType::STRING:           var.String = value.String; break;
       case VariantType::DATE_TIME:        var.Time = value.Time; break;
-      case VariantType::GUID:             var.Guids = value.Guids; break;
+      case VariantType::GUId:             var.Guids = value.Guids; break;
       case VariantType::BYTE_STRING:      var.ByteString = value.ByteString; break;
       case VariantType::XML_ELEMENT:      var.String = value.String; break;
-      case VariantType::NODE_ID:          var.Node = value.Node; break;
-      case VariantType::EXPANDED_NODE_ID: var.Node = value.Node; break;
+      case VariantType::NODE_Id:          var.Node = value.Node; break;
+      case VariantType::EXPANDED_NODE_Id: var.Node = value.Node; break;
       case VariantType::STATUS_CODE:      var.StatusCode = value.StatusCode; break;
       case VariantType::QUALIFIED_NAME:   var.Name = value.Name; break;
       case VariantType::LOCALIZED_TEXT:   var.Text = value.Text; break;

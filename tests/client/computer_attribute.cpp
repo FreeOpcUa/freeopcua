@@ -68,10 +68,10 @@ TEST_F(Attribute, Read)
   ASSERT_TRUE(static_cast<bool>(Service));
 
 
-  AttributeValueID id;
+  ReadValueId id;
   id.Node.Encoding = EV_TWO_BYTE;
-  id.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
-  id.Attribute = AttributeID::BrowseName;
+  id.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectId::ObjectsFolder);
+  id.Attribute = AttributeId::BrowseName;
 
   OpcUa::ReadParameters params;
   params.AttributesToRead.push_back(id);
@@ -88,8 +88,8 @@ TEST_F(Attribute, Write)
 
   WriteValue value;
   value.Node.Encoding = EV_TWO_BYTE;
-  value.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::ObjectsFolder);
-  value.Attribute = AttributeID::BrowseName;
+  value.Node.TwoByteData.Identifier = static_cast<uint8_t>(ObjectId::ObjectsFolder);
+  value.Attribute = AttributeId::BrowseName;
 
   const std::vector<StatusCode> codes = Service->Write(std::vector<WriteValue>(1, value));
   ASSERT_EQ(codes.size(), 1);

@@ -7,11 +7,11 @@
 namespace OpcUa
 {
 
-  Event::Event() : EventType(ObjectID::BaseEventType) 
+  Event::Event() : EventType(ObjectId::BaseEventType) 
   {
   }
 
-  Event::Event(const NodeID& type) : EventType(type) {}
+  Event::Event(const NodeId& type) : EventType(type) {}
 
   Event::Event(const Node& type) : EventType(type.GetId()) {}
 
@@ -35,7 +35,7 @@ namespace OpcUa
     PathValues[path] = value;
   }
 
-  void Event::SetValue(AttributeID attribute, Variant value)
+  void Event::SetValue(AttributeId attribute, Variant value)
   {
     AttributeValues[attribute] = value;
   }
@@ -79,7 +79,7 @@ namespace OpcUa
     return GetValue(path);
   }
 
-  Variant Event::GetValue(AttributeID attribute) const
+  Variant Event::GetValue(AttributeId attribute) const
   {
     AttributeMap::const_iterator it = AttributeValues.find(attribute);
     if ( it == AttributeValues.end() )

@@ -72,7 +72,7 @@ namespace OpcUa
   uint32_t UaServer::RegisterNamespace(std::string uri)
   {
     CheckStarted();
-    Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
+    Node namespacearray(Registry->GetServer(), ObjectId::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();
     uint32_t index = uris.size();
     uris.push_back(uri);
@@ -83,7 +83,7 @@ namespace OpcUa
   uint32_t UaServer::GetNamespaceIndex(std::string uri)
   {
     CheckStarted();
-    Node namespacearray(Registry->GetServer(), ObjectID::Server_NamespaceArray);
+    Node namespacearray(Registry->GetServer(), ObjectId::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
     for ( uint32_t i=0; i<uris.size(); ++i)
     {
@@ -101,7 +101,7 @@ namespace OpcUa
     ApplicationDescription appDesc;
     appDesc.Name = LocalizedText(Name);
     appDesc.URI = ServerUri;
-    appDesc.Type = ApplicationType::SERVER;
+    appDesc.Type = ApplicationType::Server;
     appDesc.ProductURI = ProductUri;
 
     OpcUa::Server::Parameters params;
@@ -120,18 +120,21 @@ namespace OpcUa
     Server::RegisterCommonAddons(params, *Addons);
     Addons->Start();
 
-    Registry = Addons->GetAddon<Server::ServicesRegistry>(Server::ServicesRegistryAddonID);
-    SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonID);
+    Registry = Addons->GetAddon<Server::ServicesRegistry>(Server::ServicesRegistryAddonId);
+    SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonId);
+
+    Node ServerArray = GetNode(OpcUa::ObjectId::Server_ServerArray);
+    ServerArray.SetValue(std::vector<std::string>({Endpoint}));
 
     EnableEventNotification(); //Enabling event notification, it probably does hurt anyway and users will forgot to set it up
   }
 
   Node UaServer::GetNode(const std::string& nodeid) const
   {
-    return GetNode(ToNodeID(nodeid));
+    return GetNode(ToNodeId(nodeid));
   }
 
-  Node UaServer::GetNode(const NodeID& nodeid) const
+  Node UaServer::GetNode(const NodeId& nodeid) const
   {
     CheckStarted();
     return Node(Registry->GetServer(), nodeid);
@@ -156,17 +159,17 @@ namespace OpcUa
 
   Node UaServer::GetRootNode() const
   {
-    return GetNode(OpcUa::ObjectID::RootFolder);
+    return GetNode(OpcUa::ObjectId::RootFolder);
   }
 
   Node UaServer::GetObjectsNode() const
   {
-    return GetNode(ObjectID::ObjectsFolder);
+    return GetNode(ObjectId::ObjectsFolder);
   }
 
   Node UaServer::GetServerNode() const
   {
-    return GetNode(ObjectID::Server);
+    return GetNode(ObjectId::Server);
   }
 
   void UaServer::EnableEventNotification()
@@ -179,7 +182,7 @@ namespace OpcUa
     DataValue dval(notifierval);
     dval.SetSourceTimestamp(DateTime::Current());
 
-    server.SetAttribute(AttributeID::EventNotifier, dval);
+    server.SetAttribute(AttributeId::EventNotifier, dval);
   }
 
   std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
@@ -193,7 +196,7 @@ namespace OpcUa
 
   void UaServer::TriggerEvent(Event event)
   {
-    SubscriptionService->TriggerEvent(ObjectID::Server, event);
+    SubscriptionService->TriggerEvent(ObjectId::Server, event);
   }
 
 }

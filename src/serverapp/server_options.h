@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/gpl.html)
 ///
 
-#ifndef _OPC_UA_SERVER_OPTIONS_H_
-#define _OPC_UA_SERVER_OPTIONS_H_
+#ifndef _OPC_UA_Server_OPTIONS_H_
+#define _OPC_UA_Server_OPTIONS_H_
 
 
 #include <opc/common/addons_core/addon.h>
@@ -59,5 +59,5 @@ namespace OpcUa
   }
 }
 
-#endif // _OPC_UA_SERVER_OPTIONS_H_
+#endif // _OPC_UA_Server_OPTIONS_H_
 

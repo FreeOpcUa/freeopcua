@@ -11,7 +11,7 @@
 #include "binary_serialization.h"
 
 #include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/message_identifiers.h>
+#include <opc/ua/protocol/protocol.h>
 #include <opc/ua/protocol/binary/stream.h>
 
 #include <iostream> //for debug
@@ -21,23 +21,23 @@ namespace OpcUa
 {
 
   MonitoredItemsParameters::MonitoredItemsParameters()
-    : Timestamps(TimestampsToReturn::NEITHER)
+    : Timestamps(TimestampsToReturn::Neither)
   {
   }
 
   CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
-    : TypeID(MessageID::CREATE_MONITORED_ITEMS_REQUEST)
+    : TypeId(MessageId::CREATE_MONITORED_ITEMS_REQUEST)
   {
   }
 
   CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
-    : TypeID(MessageID::CREATE_MONITORED_ITEMS_RESPONSE)
+    : TypeId(MessageId::CREATE_MONITORED_ITEMS_RESPONSE)
   {
   }
 
   CreateMonitoredItemsResult::CreateMonitoredItemsResult()
     : Status(StatusCode::BadNotImplemented)
-    , MonitoredItemID(1) // 0 is not allowed for integerID
+    , MonitoredItemId(1) // 0 is not allowed for integerId
     , RevisedSamplingInterval(0)
     , RevizedQueueSize(0)
     , Filter()
@@ -45,12 +45,12 @@ namespace OpcUa
   }
 
   DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
-    : TypeID(MessageID::DELETE_MONITORED_ITEMS_REQUEST)
+    : TypeId(MessageId::DELETE_MONITORED_ITEMS_REQUEST)
   {
   }
 
   DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
-    : TypeID(MessageID::DELETE_MONITORED_ITEMS_RESPONSE)
+    : TypeId(MessageId::DELETE_MONITORED_ITEMS_RESPONSE)
   {
   }
 
@@ -60,19 +60,19 @@ namespace OpcUa
 
   MonitoringFilter::MonitoringFilter(DataChangeFilter filter) : DataChange(filter)
   {
-    Header.TypeID  = ExpandedObjectID::DataChangeFilter;
+    Header.TypeId  = ExpandedObjectId::DataChangeFilter;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
   }
 
   MonitoringFilter::MonitoringFilter(EventFilter filter) : Event(filter)
   {
-    Header.TypeID  = ExpandedObjectID::EventFilter;
+    Header.TypeId  = ExpandedObjectId::EventFilter;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
   }
 
   MonitoringFilter:: MonitoringFilter(AggregateFilter filter) : Aggregate(filter)
   {
-    Header.TypeID  = ExpandedObjectID::DataChangeFilter;
+    Header.TypeId  = ExpandedObjectId::DataChangeFilter;
     Header.Encoding  = static_cast<ExtensionObjectEncoding>(Header.Encoding | ExtensionObjectEncoding::HAS_BINARY_BODY);
   }
 
@@ -106,13 +106,13 @@ namespace OpcUa
     template <>
     std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Data);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Data);
     }
 
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Data;
     }
@@ -120,7 +120,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateMonitoredItemsResponse>(CreateMonitoredItemsResponse& params)
     {
-      *this >> params.TypeID;
+      *this >> params.TypeId;
       *this >> params.Header;
       *this >> params.Data;
     }
@@ -148,13 +148,13 @@ namespace OpcUa
     template <>
     std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
     {
-      return RawSize(data.TypeID) + RawSize(data.Header) + RawSize(data.Parameters);
+      return RawSize(data.TypeId) + RawSize(data.Header) + RawSize(data.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
     {
-      *this << data.TypeID;
+      *this << data.TypeId;
       *this << data.Header;
       *this << data.Parameters;
     }
@@ -162,7 +162,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest& data)
     {
-      *this >> data.TypeID;
+      *this >> data.TypeId;
       *this >> data.Header;
       *this >> data.Parameters;
     }
@@ -171,13 +171,13 @@ namespace OpcUa
     template <>
     std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
     {
-      return RawSize(data.TypeID) + RawSize(data.Header) + RawSizeContainer(data.Results) + RawSize(data.Diagnostics);
+      return RawSize(data.TypeId) + RawSize(data.Header) + RawSizeContainer(data.Results) + RawSize(data.Diagnostics);
     }
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
     {
-      *this << data.TypeID;
+      *this << data.TypeId;
       *this << data.Header;
       *this << data.Results;
       *this << data.Diagnostics;
@@ -188,108 +188,12 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse& data)
     {
-      *this >> data.TypeID;
+      *this >> data.TypeId;
       *this >> data.Header;
       *this >> data.Results;
       *this >> data.Diagnostics;
     }
 
-    ////////////////////////////////////////////////////////////////
-    // FilterOperator
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<FilterOperator>(const FilterOperator&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<FilterOperator>(const FilterOperator& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<FilterOperator>(FilterOperator& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<FilterOperator>(tmp);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // DeadbandType
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DeadbandType>(const DeadbandType&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeadbandType>(const DeadbandType& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeadbandType>(DeadbandType& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DeadbandType>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // DataChangeTrigger
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<DataChangeTrigger>(tmp);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // MonitoringMode
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoringMode>(const MonitoringMode&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode& mode)
-    {
-      *this << static_cast<uint32_t>(mode);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode& mode)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      mode = static_cast<MonitoringMode>(tmp);
-    }
     ////////////////////////////////////////////////////////
     // AttributeOperand
     ////////////////////////////////////////////////////////
@@ -300,7 +204,7 @@ namespace OpcUa
       return RawSize(params.Node) +
           RawSize(params.Alias) +
           RawSize(params.Path) +
-          RawSize(params.AttributeID) +
+          RawSize(params.AttributeId) +
           RawSizeContainer(params.IndexRange); 
     }
 
@@ -310,7 +214,7 @@ namespace OpcUa
       *this >> params.Node;
       *this >> params.Alias;
       *this >> params.Path;
-      *this >> params.AttributeID;
+      *this >> params.AttributeId;
       *this >> params.IndexRange;
     }
 
@@ -320,7 +224,7 @@ namespace OpcUa
       *this << params.Node;
       *this << params.Alias;
       *this << params.Path;
-      *this << params.AttributeID;
+      *this << params.AttributeId;
       *this << params.IndexRange;
     }
 
@@ -331,7 +235,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<SimpleAttributeOperand>(const OpcUa::SimpleAttributeOperand& params)
     {
-      return RawSize(params.TypeID) +
+      return RawSize(params.TypeId) +
           RawSizeContainer(params.BrowsePath) +
           RawSize(params.Attribute) +
           RawSizeContainer(params.IndexRange); 
@@ -340,7 +244,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<SimpleAttributeOperand>(SimpleAttributeOperand& params)
     {
-      *this >> params.TypeID;
+      *this >> params.TypeId;
       *this >> params.BrowsePath;
       *this >> params.Attribute;
       *this >> params.IndexRange;
@@ -349,7 +253,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<SimpleAttributeOperand>(const SimpleAttributeOperand& params)
     {
-      *this << params.TypeID;
+      *this << params.TypeId;
       *this << params.BrowsePath;
       *this << params.Attribute;
       *this << params.IndexRange;
@@ -423,22 +327,22 @@ namespace OpcUa
     std::size_t RawSize<FilterOperand>(const OpcUa::FilterOperand& params)
     {
       size_t total = RawSize(params.Header);
-      if (params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      if (params.Header.TypeId == ExpandedObjectId::ElementOperand )
       {
         total += 4;
         total += RawSize(params.Element);
       }
-      else if (params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      else if (params.Header.TypeId == ExpandedObjectId::LiteralOperand )
       {
         total += 4;
         total += RawSize(params.Literal);
       }
-      else if (params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      else if (params.Header.TypeId == ExpandedObjectId::AttributeOperand )
       {
         total += 4;
         total += RawSize(params.Attribute);
       }
-      else if (params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      else if (params.Header.TypeId == ExpandedObjectId::SimpleAttributeOperand )
       {
         total += 4;
         total += RawSize(params.SimpleAttribute);
@@ -453,19 +357,19 @@ namespace OpcUa
       *this >> params.Header;
       uint32_t size;
       *this >> size;
-      if ( params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      if ( params.Header.TypeId == ExpandedObjectId::ElementOperand )
       {
         *this >> params.Element;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::LiteralOperand )
       {
         *this >> params.Literal;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::AttributeOperand )
       {
         *this >> params.Attribute;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::SimpleAttributeOperand )
       {
         *this >> params.SimpleAttribute;
       }
@@ -475,25 +379,25 @@ namespace OpcUa
     void DataSerializer::Serialize<FilterOperand>(const FilterOperand& params)
     {
       *this << params.Header;
-      if ( params.Header.TypeID == ExpandedObjectID::ElementOperand )
+      if ( params.Header.TypeId == ExpandedObjectId::ElementOperand )
       {
         uint32_t size = RawSize(params.Element);
         *this << size;
         *this << params.Element;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::LiteralOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::LiteralOperand )
       {
         uint32_t size = RawSize(params.Literal);
         *this << size;
         *this << params.Literal;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::AttributeOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::AttributeOperand )
       {
         uint32_t size = RawSize(params.Attribute);
         *this << size;
         *this << params.Attribute;
       }
-      else if ( params.Header.TypeID == ExpandedObjectID::SimpleAttributeOperand )
+      else if ( params.Header.TypeId == ExpandedObjectId::SimpleAttributeOperand )
       {
         uint32_t size = RawSize(params.SimpleAttribute);
         *this << size;
@@ -654,22 +558,22 @@ namespace OpcUa
     {
       size_t total = 0;
       total += RawSize(data.Header);
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeFilter) 
       {
         total += 4;
         total += RawSize(data.DataChange);
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventFilter) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventFilter) 
       {
         total += 4;
         total += RawSize(data.Event);
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter) 
+      else if ( data.Header.TypeId == ExpandedObjectId::AggregateFilter) 
       {
         total += 4;
         total += RawSize(data.Aggregate);
       }
-      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      else if ( data.Header.TypeId == NodeId(0, 0) ) 
       {
         //No filter is used
       }
@@ -687,22 +591,22 @@ namespace OpcUa
     {
       *this >> data.Header;
       int32_t size;
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter ) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeFilter ) 
       {
         *this >> size; //not used yet
         *this >> data.DataChange;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventFilter ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventFilter ) 
       {
         *this >> size; //not used yet
         *this >> data.Event;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::AggregateFilter ) 
       {
         *this >> size; //not used yet
         *this >> data.Aggregate;
       }
-      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      else if ( data.Header.TypeId == NodeId(0, 0) ) 
       {
         //No filter is used
       }
@@ -716,22 +620,22 @@ namespace OpcUa
     void DataSerializer::Serialize<MonitoringFilter>(const MonitoringFilter& data)
     {
       *this << data.Header;
-      if ( data.Header.TypeID == ExpandedObjectID::DataChangeFilter ) 
+      if ( data.Header.TypeId == ExpandedObjectId::DataChangeFilter ) 
       {
         *this << (uint32_t) RawSize(data.DataChange);
         *this << data.DataChange;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::EventFilter ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::EventFilter ) 
       {
         *this << (uint32_t) RawSize(data.Event);
         *this << data.Event;
       }
-      else if ( data.Header.TypeID == ExpandedObjectID::AggregateFilter ) 
+      else if ( data.Header.TypeId == ExpandedObjectId::AggregateFilter ) 
       {
         *this << (uint32_t) RawSize(data.Aggregate);
         *this << data.Aggregate;
       }
-      else if ( data.Header.TypeID == NodeID(0, 0) ) 
+      else if ( data.Header.TypeId == NodeId(0, 0) ) 
       {
         //No filter is used
       }
@@ -823,7 +727,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<MonitoredItemsParameters>(const OpcUa::MonitoredItemsParameters& params)
     {
-      return RawSize(params.SubscriptionID) +
+      return RawSize(params.SubscriptionId) +
           RawSize(params.Timestamps) +
           RawSizeContainer(params.ItemsToCreate); 
     }
@@ -831,7 +735,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters& params)
     {
-      *this >> params.SubscriptionID;
+      *this >> params.SubscriptionId;
       *this >> params.Timestamps;
       *this >> params.ItemsToCreate;
     }
@@ -839,7 +743,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& params)
     {
-      *this << params.SubscriptionID;
+      *this << params.SubscriptionId;
       *this << params.Timestamps;
       *this << params.ItemsToCreate;
     }
@@ -851,7 +755,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<CreateMonitoredItemsRequest>(const OpcUa::CreateMonitoredItemsRequest& params)
     {
-      return RawSize(params.TypeID) +
+      return RawSize(params.TypeId) +
           RawSize(params.Header) +
           RawSize(params.Parameters); 
     }
@@ -859,7 +763,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<CreateMonitoredItemsRequest>(CreateMonitoredItemsRequest& params)
     {
-      *this >> params.TypeID;
+      *this >> params.TypeId;
       *this >> params.Header;
       *this >> params.Parameters;
     }
@@ -867,7 +771,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& params)
     {
-      *this << params.TypeID;
+      *this << params.TypeId;
       *this << params.Header;
       *this << params.Parameters;
     }
@@ -878,7 +782,7 @@ namespace OpcUa
     std::size_t RawSize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
     {
       return RawSize(result.Status) +
-        RawSize(result.MonitoredItemID) +
+        RawSize(result.MonitoredItemId) +
         RawSize(result.RevisedSamplingInterval) +
         RawSize(result.RevizedQueueSize) +
         RawSize(result.Filter);
@@ -888,7 +792,7 @@ namespace OpcUa
     void DataSerializer::Serialize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
     {
       *this << result.Status;
-      *this << result.MonitoredItemID;
+      *this << result.MonitoredItemId;
       *this << result.RevisedSamplingInterval;
       *this << result.RevizedQueueSize;
       *this << result.Filter;
@@ -898,7 +802,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<CreateMonitoredItemsResult>(CreateMonitoredItemsResult& params)
     {
       *this >> params.Status;
-      *this >> params.MonitoredItemID;
+      *this >> params.MonitoredItemId;
       *this >> params.RevisedSamplingInterval;
       *this >> params.RevizedQueueSize;
       *this >> params.Filter;

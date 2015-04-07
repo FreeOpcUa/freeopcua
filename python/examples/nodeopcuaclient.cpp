@@ -8,7 +8,7 @@ import opcua
 
 class SubClient(opcua.SubscriptionHandler):
     def __init_(self, *args):
-        self.val = None
+        self.val = MessageSecurityMode::None
         #self.c = Condition()
     def data_change(self, handle, node, val, attr):
         print("Python: New data change event", handle, node, val, attr)
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         print("Childs are: ", root.get_children())
 
         #getting node by id since nodejs seems not to support  browsepath
-        myvar = client.get_node(opcua.NodeID("ns=1;i=1001"))
+        myvar = client.get_node(opcua.NodeId("ns=1;i=1001"))
         #myvar = root.get_child(["0:MyDevice"])
         #print("yvar is: ", myvar,get_children())
         #myvar = root.get_child(["0:MyDevice", "0:MyVariable1"])

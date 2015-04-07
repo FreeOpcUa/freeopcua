@@ -23,13 +23,13 @@ namespace OpcUa
 {
   namespace Model
   {
-    Node::Node(NodeID id, Services::SharedPtr services)
+    Node::Node(NodeId id, Services::SharedPtr services)
       : Id(id)
       , OpcUaServices(services)
     {
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueID(id, AttributeID::DisplayName));
-      attrs.AttributesToRead.push_back(AttributeValueID(id, AttributeID::BrowseName));
+      attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::DisplayName));
+      attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::BrowseName));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
@@ -40,7 +40,7 @@ namespace OpcUa
     {
     }
 
-    NodeID Node::GetID() const
+    NodeId Node::GetId() const
     {
       return Id;
     }

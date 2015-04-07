@@ -91,13 +91,13 @@ namespace
     ApplicationType GetApplicationType(const std::string& typeName) const
     {
       if (typeName == "client" || typeName.empty())
-        return ApplicationType::CLIENT;
+        return ApplicationType::Client;
       else if (typeName == "server")
-        return ApplicationType::SERVER;
+        return ApplicationType::Server;
       else if (typeName == "client_and_server")
-        return ApplicationType::CLIENT_AND_SERVER;
+        return ApplicationType::ClientAndServer;
       else if (typeName == "discovery_server")
-        return ApplicationType::DISCOVERY_SERVER;
+        return ApplicationType::DiscoveryServer;
 
       throw std::logic_error("Invalid name of type application type: " + typeName);
     }
@@ -106,13 +106,13 @@ namespace
     {
       switch (type)
       {
-      case ApplicationType::SERVER:
+      case ApplicationType::Server:
         return "server";
-      case ApplicationType::CLIENT:
+      case ApplicationType::Client:
         return "client";
-      case ApplicationType::CLIENT_AND_SERVER:
+      case ApplicationType::ClientAndServer:
         return "client_and_server";
-      case ApplicationType::DISCOVERY_SERVER:
+      case ApplicationType::DiscoveryServer:
         return "discovery_server";
       default:
         throw std::logic_error("Unknown application type: " + std::to_string((unsigned)type));
@@ -122,11 +122,11 @@ namespace
     MessageSecurityMode GetSecurityMode(const std::string& modeName) const
     {
       if (modeName == "none" || modeName.empty())
-        return MessageSecurityMode::MSM_NONE;
+        return MessageSecurityMode::None;
       else if (modeName == "sign")
-        return MessageSecurityMode::MSM_SIGN;
+        return MessageSecurityMode::Sign;
       else if (modeName == "sign_encrypt")
-        return MessageSecurityMode::MSM_SIGN_AND_ENCRYPT;
+        return MessageSecurityMode::SignAndEncrypt;
 
       throw std::logic_error("Unknown security mode name: " + modeName);
     }
@@ -135,11 +135,11 @@ namespace
     {
       switch (mode)
       {
-      case MessageSecurityMode::MSM_NONE:
+      case MessageSecurityMode::None:
         return "none";
-      case MessageSecurityMode::MSM_SIGN:
+      case MessageSecurityMode::Sign:
         return "sign";
-      case MessageSecurityMode::MSM_SIGN_AND_ENCRYPT:
+      case MessageSecurityMode::SignAndEncrypt:
         return "sign_encrypt";
       default:
         throw std::logic_error("Unknown security mode: " + std::to_string((unsigned)mode));
@@ -153,7 +153,7 @@ namespace
       for (const Common::Parameter& param : params)
       {
         if (param.Name == "id")
-          tokenPolicy.PolicyID = param.Value;//"Anonymous";
+          tokenPolicy.PolicyId = param.Value;//"Anonymous";
         else if (param.Name == "type")
           tokenPolicy.TokenType = GetTokenType(param.Value);
         else if (param.Name == "uri")
@@ -172,7 +172,7 @@ namespace
     {
       Log("Parsing user token policy.");
       Common::ParametersGroup policyGroup("user_token_policy");
-      policyGroup.Parameters.push_back(Common::Parameter("id", policy.PolicyID));
+      policyGroup.Parameters.push_back(Common::Parameter("id", policy.PolicyId));
       policyGroup.Parameters.push_back(Common::Parameter("type", GetTokenType(policy.TokenType)));
       policyGroup.Parameters.push_back(Common::Parameter("uri", policy.SecurityPolicyURI));
       policyGroup.Parameters.push_back(Common::Parameter("issuer_endpoint_url", policy.IssuerEndpointURL));

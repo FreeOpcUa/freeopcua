@@ -41,7 +41,7 @@ TEST(ServerOptions, ParsesConfigurationFiles)
 
   ASSERT_EQ(addons.size(), 1);
   const Common::AddonInformation& module = addons.front();
-  ASSERT_EQ(module.ID, "child_module");
+  ASSERT_EQ(module.Id, "child_module");
   //ASSERT_EQ(module.Path, "child_module.so");
   ASSERT_EQ(module.Dependencies.size(), 2);
   ASSERT_EQ(module.Dependencies[0], "parent_module1");

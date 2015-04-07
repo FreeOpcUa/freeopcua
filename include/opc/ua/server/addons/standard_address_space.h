@@ -24,7 +24,7 @@ namespace OpcUa
       virtual Common::Addon::UniquePtr CreateAddon();
     };
 
-    const char StandardNamespaceAddonID[] = "standard_namespace";
+    const char StandardNamespaceAddonId[] = "standard_namespace";
 
   } // namespace UaServer
 } // namespace OpcUa

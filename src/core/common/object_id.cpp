@@ -12,9 +12,9 @@
 
 #include <atomic>
 
-Common::ObjectID Common::GenerateNewID()
+Common::ObjectId Common::GenerateNewId()
 {
-  static std::atomic<Common::ObjectID> objectID;
-  return ++objectID + 1000;
+  static std::atomic<Common::ObjectId> objectId;
+  return ++objectId + 1000;
 }
 

@@ -8,8 +8,8 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_CLIENT_SOCKET_CHANNEL_H
-#define OPC_UA_CLIENT_SOCKET_CHANNEL_H
+#ifndef OPC_UA_Client_SOCKET_CHANNEL_H
+#define OPC_UA_Client_SOCKET_CHANNEL_H
 
 #include <opc/ua/protocol/channel.h>
 
@@ -33,5 +33,5 @@ namespace OpcUa
 
 }
 
-#endif // OPC_UA_CLIENT_SOCKET_CHANNEL_H
+#endif // OPC_UA_Client_SOCKET_CHANNEL_H
 

@@ -25,10 +25,10 @@ namespace OpcUa
       std::string SecurePolicy;
       std::vector<uint8_t> SenderCertificate;
       std::vector<uint8_t> ReceiverCertificateThumbPrint;
-      uint32_t SecureChannelID;
+      uint32_t SecureChannelId;
 
       SecureConnectionParams()
-        : SecureChannelID(0)
+        : SecureChannelId(0)
       {
       }
     };

@@ -16,7 +16,6 @@
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/strings.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/variable_access_level.h>
 #include <map>
 #include <bitset>
@@ -78,7 +77,7 @@ namespace OpcUa
     LocalizedText DisplayName;
     LocalizedText Description;
     Variant Value;
-    NodeID Type;
+    NodeId Type;
     int32_t Rank = 0;
     std::vector<uint32_t> Dimensions;
     VariableAccessLevel AccessLevel = VariableAccessLevel::CurrentRead;
@@ -116,7 +115,7 @@ namespace OpcUa
     LocalizedText DisplayName;
     LocalizedText Description;
     Variant Value;
-    NodeID Type;
+    NodeId Type;
     int32_t Rank = 0;
     std::vector<uint32_t> Dimensions;
     bool IsAbstract = false;
@@ -160,7 +159,7 @@ namespace OpcUa
   {
     ExtensionObjectHeader Header;
     uint32_t SpecifiedAttributes;
-    std::map<AttributeID, Variant> Attributes;
+    std::map<AttributeId, Variant> Attributes;
 
     NodeAttributes(){}
     NodeAttributes(const ObjectAttributes&);
@@ -176,13 +175,13 @@ namespace OpcUa
   // TODO Rename to NodeParameters
   struct AddNodesItem
   {
-    NodeID ParentNodeId;
-    NodeID ReferenceTypeId;
-    NodeID RequestedNewNodeID;
+    NodeId ParentNodeId;
+    NodeId ReferenceTypeId;
+    NodeId RequestedNewNodeId;
     QualifiedName BrowseName;
     NodeClass Class;
     NodeAttributes Attributes;
-    NodeID TypeDefinition;
+    NodeId TypeDefinition;
   };
 
 
@@ -193,7 +192,7 @@ namespace OpcUa
 
   struct AddNodesRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     AddNodesParameters Parameters;
     AddNodesRequest();
@@ -202,12 +201,12 @@ namespace OpcUa
   struct AddNodesResult
   {
     StatusCode Status;
-    NodeID AddedNodeID;
+    NodeId AddedNodeId;
   };
   
   struct AddNodesResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     std::vector<AddNodesResult> results;
     DiagnosticInfoList Diagnostics;
@@ -221,11 +220,11 @@ namespace OpcUa
 
   struct AddReferencesItem
   {
-    NodeID SourceNodeID;
-    NodeID ReferenceTypeId;
+    NodeId SourceNodeId;
+    NodeId ReferenceTypeId;
     bool IsForward;
     std::string TargetServerUri;
-    NodeID TargetNodeID;
+    NodeId TargetNodeId;
     NodeClass TargetNodeClass;
   };
 
@@ -236,7 +235,7 @@ namespace OpcUa
 
   struct AddReferencesRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     AddReferencesParameters Parameters;
 
@@ -245,7 +244,7 @@ namespace OpcUa
 
   struct AddReferencesResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
     DiagnosticInfoList Diagnostics;
@@ -254,7 +253,7 @@ namespace OpcUa
   };
 
   //FIXME: move somewhere else!!
-  const char* GetObjectIdName(const NodeID& id) ;
+  const char* GetObjectIdName(const NodeId& id) ;
 
 
 }

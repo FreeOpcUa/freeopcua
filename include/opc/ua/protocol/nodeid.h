@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2013
 /// @email rykovanov.as@gmail.com
-/// @brief Node ID.
+/// @brief Node Id.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -24,26 +24,26 @@
 namespace OpcUa
 {
 
-  enum NodeIDEncoding : uint8_t
+  enum NodeIdEncoding : uint8_t
   {
     EV_TWO_BYTE = 0,
     EV_FOUR_BYTE = 1,
     EV_NUMERIC = 2,
     EV_STRING = 3,
-    EV_GUID = 4,
+    EV_GUId = 4,
     EV_BYTE_STRING = 5,
 
-    EV_SERVER_INDEX_FLAG = 0x40,
+    EV_Server_INDEX_FLAG = 0x40,
     EV_NAMESPACE_URI_FLAG = 0x80,
 
     EV_VALUE_MASK = 0x3f,
   };
 
-  struct ExpandedNodeID;
+  struct ExpandedNodeId;
 
-  struct NodeID
+  struct NodeId
   {
-    NodeIDEncoding Encoding;
+    NodeIdEncoding Encoding;
     std::string NamespaceURI;
     uint32_t ServerIndex;
 
@@ -119,60 +119,60 @@ namespace OpcUa
 
     }GuidData;
 
-    NodeID();
-    NodeID(const NodeID& node);
-    NodeID(const ExpandedNodeID& node);
-    NodeID(MessageID messageID);
-    NodeID(ReferenceID referenceID);
-    NodeID(ObjectID objectID);
-    NodeID(ExpandedObjectID objectID);
-    NodeID(uint32_t integerId, uint16_t index);
-    NodeID(std::string stringId, uint16_t index);
+    NodeId();
+    NodeId(const NodeId& node);
+    NodeId(const ExpandedNodeId& node);
+    NodeId(MessageId messageId);
+    NodeId(ReferenceId referenceId);
+    NodeId(ObjectId objectId);
+    NodeId(ExpandedObjectId objectId);
+    NodeId(uint32_t integerId, uint16_t index);
+    NodeId(std::string stringId, uint16_t index);
 
-    NodeID& operator= (const NodeID& node);
-    NodeID& operator= (const ExpandedNodeID& node);
+    NodeId& operator= (const NodeId& node);
+    NodeId& operator= (const ExpandedNodeId& node);
     
-    explicit operator ExpandedNodeID(); 
+    explicit operator ExpandedNodeId(); 
 
-    NodeID& operator= (MessageID messageID)
+    NodeId& operator= (MessageId messageId)
     {
-      *this = NodeID(messageID);
+      *this = NodeId(messageId);
       return *this;
     }
 
-    NodeID& operator= (ReferenceID referenceID)
+    NodeId& operator= (ReferenceId referenceId)
     {
-      *this = NodeID(referenceID);
+      *this = NodeId(referenceId);
       return *this;
     }
 
-    NodeID& operator= (ObjectID objectID)
+    NodeId& operator= (ObjectId objectId)
     {
-      *this = NodeID(objectID);
+      *this = NodeId(objectId);
       return *this;
     }
 
-    NodeID& operator= (ExpandedObjectID objectID)
+    NodeId& operator= (ExpandedObjectId objectId)
     {
-      *this = NodeID(objectID);
+      *this = NodeId(objectId);
       return *this;
     }
 
-    bool operator== (const NodeID& node) const;
-    bool operator== (MessageID messageID) const;
-    bool operator== (ReferenceID referenceID) const;
-    bool operator== (ObjectID objectID) const;
-    bool operator== (ExpandedObjectID objectID) const;
+    bool operator== (const NodeId& node) const;
+    bool operator== (MessageId messageId) const;
+    bool operator== (ReferenceId referenceId) const;
+    bool operator== (ObjectId objectId) const;
+    bool operator== (ExpandedObjectId objectId) const;
 
-    bool operator!= (const NodeID& node) const;
-    bool operator!= (MessageID messageID) const;
-    bool operator!= (ReferenceID referenceID) const;
-    bool operator!= (ObjectID objectID) const;
-    bool operator!= (ExpandedObjectID objectID) const;
+    bool operator!= (const NodeId& node) const;
+    bool operator!= (MessageId messageId) const;
+    bool operator!= (ReferenceId referenceId) const;
+    bool operator!= (ObjectId objectId) const;
+    bool operator!= (ExpandedObjectId objectId) const;
 
-    bool operator< (const NodeID& node) const;
+    bool operator< (const NodeId& node) const;
 
-    NodeIDEncoding GetEncodingValue() const;
+    NodeIdEncoding GetEncodingValue() const;
     bool HasNamespaceURI() const;
     bool HasServerIndex() const;
 
@@ -193,75 +193,75 @@ namespace OpcUa
     Guid GetGuidIdentifier() const;
 
     protected:
-    void CopyNodeID(const NodeID& node);
+    void CopyNodeId(const NodeId& node);
   };
 
-  inline NodeID TwoByteNodeID(uint8_t value)
+  inline NodeId TwoByteNodeId(uint8_t value)
   {
-    NodeID id;
+    NodeId id;
     id.Encoding = EV_TWO_BYTE;
     id.TwoByteData.Identifier = value;
     return id;
   }
 
-  inline NodeID FourByteNodeID(uint16_t value, uint8_t namespaceIndex = 0)
+  inline NodeId FourByteNodeId(uint16_t value, uint8_t namespaceIndex = 0)
   {
-    NodeID id;
+    NodeId id;
     id.Encoding = EV_FOUR_BYTE;
     id.FourByteData.Identifier = value;
     id.FourByteData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
-  inline NodeID NumericNodeID(uint32_t value, uint16_t namespaceIndex = 0)
+  inline NodeId NumericNodeId(uint32_t value, uint16_t namespaceIndex = 0)
   {
-    NodeID id;
+    NodeId id;
     id.Encoding = EV_NUMERIC;
     id.NumericData.Identifier = value;
     id.NumericData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
-  inline NodeID StringNodeID(std::string value, uint16_t namespaceIndex = 0)
+  inline NodeId StringNodeId(std::string value, uint16_t namespaceIndex = 0)
   {
-    NodeID id;
+    NodeId id;
     id.Encoding = EV_STRING;
     id.StringData.Identifier = value;
     id.StringData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
-  inline NodeID BinaryNodeID(std::vector<uint8_t> value, uint16_t namespaceIndex = 0)
+  inline NodeId BinaryNodeId(std::vector<uint8_t> value, uint16_t namespaceIndex = 0)
   {
-    NodeID id;
+    NodeId id;
     id.Encoding = EV_BYTE_STRING;
     id.BinaryData.Identifier = value;
     id.BinaryData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
-  inline NodeID GuidNodeID(Guid value, uint16_t namespaceIndex = 0)
+  inline NodeId GuidNodeId(Guid value, uint16_t namespaceIndex = 0)
   {
-    NodeID id;
-    id.Encoding = EV_GUID;
+    NodeId id;
+    id.Encoding = EV_GUId;
     id.GuidData.Identifier = value;
     id.GuidData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
-  struct ExpandedNodeID : public NodeID
+  struct ExpandedNodeId : public NodeId
   {
-    ExpandedNodeID();
-    ExpandedNodeID(const NodeID& node);
-    ExpandedNodeID(const ExpandedNodeID& node);
-    ExpandedNodeID(MessageID messageID);
-    ExpandedNodeID(ReferenceID referenceID);
-    ExpandedNodeID(ObjectID objectID);
-    ExpandedNodeID(ExpandedObjectID objectID);
-    ExpandedNodeID(uint32_t integerId, uint16_t index);
-    ExpandedNodeID(std::string stringId, uint16_t index);
+    ExpandedNodeId();
+    ExpandedNodeId(const NodeId& node);
+    ExpandedNodeId(const ExpandedNodeId& node);
+    ExpandedNodeId(MessageId messageId);
+    ExpandedNodeId(ReferenceId referenceId);
+    ExpandedNodeId(ObjectId objectId);
+    ExpandedNodeId(ExpandedObjectId objectId);
+    ExpandedNodeId(uint32_t integerId, uint16_t index);
+    ExpandedNodeId(std::string stringId, uint16_t index);
 
-   //using NodeID::NodeID;
+   //using NodeId::NodeId;
    //using base::base;
   };
 

@@ -9,7 +9,7 @@
 
 namespace OpcUa
 {
-  enum class ObjectID : uint32_t
+  enum class ObjectId : uint32_t
   {
     Null = 0,
     Boolean = 1,

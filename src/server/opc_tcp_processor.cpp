@@ -47,13 +47,13 @@ namespace OpcUa
       : Server(computer)
       , OutputStream(outputChannel)
       , Debug(debug)
-      , ChannelID(1)
-      , TokenID(2)
-      , SessionID(GenerateSessionId())
+      , ChannelId(1)
+      , TokenId(2)
+      , SessionId(GenerateSessionId())
       , SequenceNb(0)
     {
       std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
-      std::cout << "opc_tcp_processor| SessionID is " << Debug << std::endl;
+      std::cout << "opc_tcp_processor| SessionId is " << Debug << std::endl;
     }
 
 
@@ -146,7 +146,7 @@ namespace OpcUa
      
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
-      SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+      SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
       secureHeader.AddSize(RawSize(requestData.algorithmHeader));
       secureHeader.AddSize(RawSize(requestData.sequence));
       secureHeader.AddSize(RawSize(response));
@@ -178,8 +178,8 @@ namespace OpcUa
 
     void OpcTcpMessages::OpenChannel(IStreamBinary& istream, OStreamBinary& ostream)
     {
-      uint32_t channelID = 0;
-      istream >> channelID;
+      uint32_t channelId = 0;
+      istream >> channelId;
       AsymmetricAlgorithmHeader algorithmHeader;
       istream >> algorithmHeader;
 
@@ -194,27 +194,27 @@ namespace OpcUa
       OpenSecureChannelRequest request;
       istream >> request;
 
-      if (request.Parameters.SecurityMode != MSM_NONE)
+      if (request.Parameters.SecurityMode != MessageSecurityMode::None)
       {
         throw std::logic_error("Unsupported security mode.");
       }
 
-      if (request.Parameters.RequestType == STR_RENEW)
+      if (request.Parameters.RequestType == SecurityTokenRequestType::Renew)
       {
         //FIXME:Should check that channel has been issued first
-        ++TokenID;
+        ++TokenId;
       }
 
       sequence.SequenceNumber = ++SequenceNb;
 
       OpenSecureChannelResponse response;
       FillResponseHeader(request.Header, response.Header);
-      response.ChannelSecurityToken.SecureChannelID = ChannelID;
-      response.ChannelSecurityToken.TokenID = TokenID;
+      response.ChannelSecurityToken.SecureChannelId = ChannelId;
+      response.ChannelSecurityToken.TokenId = TokenId;
       response.ChannelSecurityToken.CreatedAt = OpcUa::DateTime::Current();
       response.ChannelSecurityToken.RevisedLifetime = request.Parameters.RequestLifeTime;
 
-      SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelID);
+      SecureHeader responseHeader(MT_SECURE_OPEN, CHT_SINGLE, ChannelId);
       responseHeader.AddSize(RawSize(algorithmHeader));
       responseHeader.AddSize(RawSize(sequence));
       responseHeader.AddSize(RawSize(response));
@@ -223,8 +223,8 @@ namespace OpcUa
 
     void OpcTcpMessages::CloseChannel(IStreamBinary& istream)
     {
-      uint32_t channelID = 0;
-      istream >> channelID;
+      uint32_t channelId = 0;
+      istream >> channelId;
 
       SymmetricAlgorithmHeader algorithmHeader;
       istream >> algorithmHeader;
@@ -238,8 +238,8 @@ namespace OpcUa
 
     void OpcTcpMessages::ProcessRequest(IStreamBinary& istream, OStreamBinary& ostream)
     {
-      uint32_t channelID = 0;
-      istream >> channelID;
+      uint32_t channelId = 0;
+      istream >> channelId;
 
       SymmetricAlgorithmHeader algorithmHeader;
       istream >> algorithmHeader;
@@ -247,8 +247,8 @@ namespace OpcUa
       SequenceHeader sequence;
       istream >> sequence;
 
-      NodeID typeID;
-      istream >> typeID;
+      NodeId typeId;
+      istream >> typeId;
 
       RequestHeader requestHeader;
       istream >> requestHeader;
@@ -256,13 +256,13 @@ namespace OpcUa
       sequence.SequenceNumber = ++SequenceNb;
 /*
       const std::size_t receivedSize =
-        RawSize(channelID) +
+        RawSize(channelId) +
         RawSize(algorithmHeader) +
         RawSize(sequence) +
-        RawSize(typeID) +
+        RawSize(typeId) +
         RawSize(requestHeader);
 */
-      const OpcUa::MessageID message = GetMessageID(typeID);
+      const OpcUa::MessageId message = GetMessageId(typeId);
       switch (message)
       {
         case OpcUa::GET_ENDPOINTS_REQUEST:
@@ -275,7 +275,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.Endpoints = Server->Endpoints()->GetEndpoints(filter);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -283,7 +283,7 @@ namespace OpcUa
           return;
         }
 
-        case OpcUa::FIND_SERVERS_REQUEST:
+        case OpcUa::FIND_ServerS_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Find Servers' request." << std::endl;
           FindServersParameters params;
@@ -293,7 +293,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.Data.Descriptions = Server->Endpoints()->FindServers(params);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -312,7 +312,7 @@ namespace OpcUa
 
           FillResponseHeader(requestHeader, response.Header);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -328,9 +328,9 @@ namespace OpcUa
           if (Debug)
           {
             std::clog << "opc_tcp_processor| Processing read request for Node:";
-            for (AttributeValueID id : params.AttributesToRead)
+            for (ReadValueId id : params.AttributesToRead)
             {
-              std::clog << "opc_tcp_processor|  " << id.Node;
+              std::clog << "opc_tcp_processor|  " << id.NodeId;
             }
             std::cout << std::endl;
           }
@@ -344,7 +344,7 @@ namespace OpcUa
           }
           else
           {
-            for (auto attribID : params.AttributesToRead)
+            for (auto attribId : params.AttributesToRead)
             {
               DataValue value;
               value.Encoding = DATA_VALUE_STATUS_CODE;
@@ -352,9 +352,9 @@ namespace OpcUa
               values.push_back(value);
             }
           }
-          response.Result.Results = values;
+          response.Results = values;
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -374,14 +374,14 @@ namespace OpcUa
           std::vector<DataValue> values;
           if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
-            response.Result.StatusCodes = service->Write(params.NodesToWrite);
+            response.Results = service->Write(params.NodesToWrite);
           }
           else
           {
-            response.Result.StatusCodes = std::vector<StatusCode>(params.NodesToWrite.size(), OpcUa::StatusCode::BadNotImplemented);
+            response.Results = std::vector<StatusCode>(params.NodesToWrite.size(), OpcUa::StatusCode::BadNotImplemented);
           }
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -390,9 +390,9 @@ namespace OpcUa
           return;
         }
 
-        case TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST:
+        case TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_REQUEST:
         {
-          if (Debug) std::clog << "opc_tcp_processor| Processing 'Translate Browse Paths To Node IDs' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Processing 'Translate Browse Paths To Node Ids' request." << std::endl;
           TranslateBrowsePathsParameters params;
           istream >> params;
 
@@ -424,15 +424,15 @@ namespace OpcUa
             }
           }
 
-          TranslateBrowsePathsToNodeIDsResponse response;
+          TranslateBrowsePathsToNodeIdsResponse response;
           FillResponseHeader(requestHeader, response.Header);
           response.Result.Paths = result;
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
 
-          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Translate Browse Paths To Node IDs' request." << std::endl;
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to 'Translate Browse Paths To Node Ids' request." << std::endl;
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
@@ -447,15 +447,15 @@ namespace OpcUa
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Session.SessionID = SessionID;
-          response.Session.AuthenticationToken = SessionID;
+          response.Session.SessionId = SessionId;
+          response.Session.AuthenticationToken = SessionId;
           response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
           response.Session.MaxRequestMessageSize = 65536;
           EndpointsFilter epf;
           response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -472,7 +472,7 @@ namespace OpcUa
           ActivateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -494,7 +494,7 @@ namespace OpcUa
           CloseSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -525,9 +525,9 @@ namespace OpcUa
                 }
               });
 
-          Subscriptions.push_back(response.Data.ID); //Keep a link to eventually delete subcriptions when exiting
+          Subscriptions.push_back(response.Data.Id); //Keep a link to eventually delete subcriptions when exiting
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -538,7 +538,7 @@ namespace OpcUa
         case DELETE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl;
-          std::vector<IntegerID> ids;
+          std::vector<IntegerId> ids;
           istream >> ids;
 
           DeleteSubscriptions(ids); //remove from locale subscription lis
@@ -548,7 +548,7 @@ namespace OpcUa
 
           response.Results = Server->Subscriptions()->DeleteSubscriptions(ids);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -569,7 +569,7 @@ namespace OpcUa
           response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
 
           FillResponseHeader(requestHeader, response.Header);
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -590,7 +590,7 @@ namespace OpcUa
           response.Results = Server->Subscriptions()->DeleteMonitoredItems(params);
 
           FillResponseHeader(requestHeader, response.Header);
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -628,9 +628,9 @@ namespace OpcUa
           //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Result.Statuses.resize(params.SubscriptionIDs.size(), StatusCode::Good);
+          response.Result.Statuses.resize(params.SubscriptionIds.size(), StatusCode::Good);
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -652,7 +652,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.results = results;
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -674,7 +674,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.Results = results;
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -695,7 +695,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.Header.ServiceResult = StatusCode::BadMessageNotAvailable;
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -711,7 +711,7 @@ namespace OpcUa
           FillResponseHeader(requestHeader, response.Header);
           response.Header.ServiceResult = StatusCode::BadNotImplemented;
 
-          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelID);
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
           secureHeader.AddSize(RawSize(sequence));
           secureHeader.AddSize(RawSize(response));
@@ -732,8 +732,8 @@ namespace OpcUa
 
     void OpcTcpMessages::DeleteAllSubscriptions()
     {
-      std::vector<IntegerID> subs;
-      for (const IntegerID& subid: Subscriptions)
+      std::vector<IntegerId> subs;
+      for (const IntegerId& subid: Subscriptions)
       {
         subs.push_back(subid);
       }
@@ -741,12 +741,12 @@ namespace OpcUa
       Subscriptions.clear();
     }
 
-    void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerID>& ids)
+    void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerId>& ids)
     {
       for ( auto id : ids )
       {
         Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(),
-                      [&](const IntegerID d) { return ( d == id) ; }), Subscriptions.end());
+                      [&](const IntegerId d) { return ( d == id) ; }), Subscriptions.end());
       }
     }
 

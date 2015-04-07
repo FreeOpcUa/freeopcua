@@ -26,7 +26,7 @@ class EndpointsTests(unittest.TestCase):
 
         self.assertEqual(len(endpoint.user_identify_tokens), 1, 'Endpoint has number of identify tokens: ' + str(len(endpoint.user_identify_tokens)))
         token = endpoint.user_identify_tokens[0]
-        self.assertEqual(token.policy_id, "PolicyID", "UserTokenPolicy has unexpected PolicyID: " + token.policy_id)
+        self.assertEqual(token.policy_id, "PolicyId", "UserTokenPolicy has unexpected PolicyId: " + token.policy_id)
         self.assertEqual(token.issued_token_type, "IssuedTokenType", "UserTokenPolicy has unexpected IssuedTokenType: " + token.issued_token_type)
         self.assertEqual(token.issuer_endpoint_url, "IssuerEndpointURL", "UserTokenPolicy has unexpected IssuedEndpointURL: " + token.issuer_endpoint_url)
         self.assertEqual(token.security_policy_uri, "SecurityPolicyURI", "UserTokenPolicy has unexpected SecurityPolicyURI: " + token.security_policy_uri)
@@ -37,10 +37,10 @@ class EndpointsTests(unittest.TestCase):
     def test_browse(self):
         params = opcua.BrowseParameters();
         params.node_to_browse.namespace = 1;
-        params.node_to_browse.identifier = opcua.ObjectID.ROOT_FOLDER
+        params.node_to_browse.identifier = opcua.ObjectId.ROOT_FOLDER
         params.direction = opcua.BrowseDirection.BOTH
         params.reference_type_id.namespace = 2;
-        params.reference_type_id.identifier = opcua.ObjectID.ORGANIZES
+        params.reference_type_id.identifier = opcua.ObjectId.ORGANIZES
         params.include_subtypes = True
         params.node_classes = opcua.NodeClass.OBJECT | opcua.NodeClass.VARIABLE
         params.result_mask = 2;
@@ -61,10 +61,10 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(ref.target_node_type_definition.identifier, 6, "Unexpected target_node_type_definition.identifier: " + str(ref.target_node_type_definition.identifier))
 
     def test_read(self):
-        attributeParams = opcua.AttributeValueID()
+        attributeParams = opcua.ReadValueId()
         attributeParams.node.namespace_index = 1
         attributeParams.node.identifier = 2
-        attributeParams.attribute = opcua.AttributeID.Value
+        attributeParams.attribute = opcua.AttributeId.Value
         attributeParams.index_range = "1:2"
         attributeParams.data_encoding.namespace_index = 3
         attributeParams.data_encoding.name = "binary"
@@ -87,7 +87,7 @@ class EndpointsTests(unittest.TestCase):
 
     def test_write(self):
         value = opcua.WriteValue()
-        value.attribute = opcua.AttributeID.Value
+        value.attribute = opcua.AttributeId.Value
         value.node.namespace_index = 1
         value.node.identifier = "node"
         value.numeric_range = "1:2"
@@ -106,7 +106,7 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(app.name, "Name", "Application has invalid name.")
         self.assertEqual(app.uri, "URI", "Application has invalid uri.")
         self.assertEqual(app.product_uri, "ProductURI", "Application has invalid ProductURI.")
-        self.assertEqual(app.type, opcua.ApplicationType.CLIENT, "Application has unexpected Type of application.")
+        self.assertEqual(app.type, opcua.ApplicationType.Client, "Application has unexpected Type of application.")
         self.assertEqual(app.gateway_server_uri, "GatewayServerURI", "Application has invalid GatewayServerURI.")
         self.assertEqual(app.discovery_profile_uri, "DiscoveryProfileURI", "Application has invalid DiscoveryProfileURI.")
         self.assertEqual(len(app.discovery_urls), 1, "Application has invalid number of DiscoveryURLs.")

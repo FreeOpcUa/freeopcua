@@ -13,10 +13,10 @@
 using namespace testing;
 using namespace OpcUa;
 
-TEST(MessageIDFromNodeID, CanBeConvertedFromValidNodeID)
+TEST(MessageIdFromNodeId, CanBeConvertedFromValidNodeId)
 {
-  NodeID id(OPEN_SECURE_CHANNEL_REQUEST);
-  ASSERT_EQ(GetMessageID(id), OPEN_SECURE_CHANNEL_REQUEST);
+  NodeId id(OPEN_SECURE_CHANNEL_REQUEST);
+  ASSERT_EQ(GetMessageId(id), OPEN_SECURE_CHANNEL_REQUEST);
 }
 
 

@@ -146,27 +146,27 @@ namespace OpcUa
   }
 
   /// TODO move to apropriate file
-  ExtensionObjectHeader::ExtensionObjectHeader(ExtensionObjectID objectID, ExtensionObjectEncoding encoding)
+  ExtensionObjectHeader::ExtensionObjectHeader(ExtensionObjectId objectId, ExtensionObjectEncoding encoding)
     : Encoding(encoding)
   {
-    TypeID.Encoding = EV_FOUR_BYTE;
-    TypeID.FourByteData.Identifier = objectID;
+    TypeId.Encoding = EV_FOUR_BYTE;
+    TypeId.FourByteData.Identifier = objectId;
   }
   ///////////////////////////////////////////////////////
-  // IntegerID
+  // IntegerId
   ///////////////////////////////////////////////////////
 
-  IntegerID::IntegerID()
+  IntegerId::IntegerId()
     : Value(1)
   {
   }
 
-  IntegerID::IntegerID(const IntegerID& id)
+  IntegerId::IntegerId(const IntegerId& id)
     : Value(id.Value)
   {
   }
 
-  IntegerID::IntegerID(uint32_t num)
+  IntegerId::IntegerId(uint32_t num)
     : Value(num)
   {
     if (!Value)
@@ -175,13 +175,13 @@ namespace OpcUa
     }
   }
 
-  IntegerID& IntegerID::operator= (const IntegerID& id)
+  IntegerId& IntegerId::operator= (const IntegerId& id)
   {
     Value = id.Value;
     return *this;
   }
 
-  IntegerID& IntegerID::operator= (uint32_t value)
+  IntegerId& IntegerId::operator= (uint32_t value)
   {
     if (!Value)
     {
@@ -192,7 +192,7 @@ namespace OpcUa
     return *this;
   }
 
-  IntegerID::operator uint32_t() const
+  IntegerId::operator uint32_t() const
   {
     return Value;
   }
@@ -652,13 +652,13 @@ namespace OpcUa
     }
 
     template<>
-    void DataSerializer::Serialize<std::vector<NodeID>>(const std::vector<NodeID>& value)
+    void DataSerializer::Serialize<std::vector<NodeId>>(const std::vector<NodeId>& value)
     {
       SerializeContainer(*this, value);
     }
 
     template<>
-    void DataDeserializer::Deserialize<std::vector<NodeID>>(std::vector<NodeID>& value)
+    void DataDeserializer::Deserialize<std::vector<NodeId>>(std::vector<NodeId>& value)
     {
       DeserializeContainer(*this, value);
     }
@@ -876,7 +876,7 @@ namespace OpcUa
       *this << header.Type;
       *this << header.Chunk;
       *this << header.Size;
-      *this << header.ChannelID;
+      *this << header.ChannelId;
     }
 
     template<>
@@ -885,7 +885,7 @@ namespace OpcUa
       *this >> header.Type;
       *this >> header.Chunk;
       *this >> header.Size;
-      *this >> header.ChannelID;
+      *this >> header.ChannelId;
     }
 
     template<>
@@ -907,13 +907,13 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::SymmetricAlgorithmHeader>(const OpcUa::Binary::SymmetricAlgorithmHeader& header)
     {
-      *this << header.TokenID;
+      *this << header.TokenId;
     }
 
     template<>
     void DataDeserializer::Deserialize<OpcUa::Binary::SymmetricAlgorithmHeader>(OpcUa::Binary::SymmetricAlgorithmHeader& header)
     {
-      *this >> header.TokenID;
+      *this >> header.TokenId;
     };
 
 
@@ -921,42 +921,28 @@ namespace OpcUa
     void DataSerializer::Serialize<OpcUa::Binary::SequenceHeader>(const OpcUa::Binary::SequenceHeader& header)
     {
       *this << header.SequenceNumber;
-      *this << header.RequestID;
+      *this << header.RequestId;
     }
 
     template<>
     void DataDeserializer::Deserialize<OpcUa::Binary::SequenceHeader>(OpcUa::Binary::SequenceHeader& header)
     {
       *this >> header.SequenceNumber;
-      *this >> header.RequestID;
+      *this >> header.RequestId;
     };
 
 
     template<>
-    void DataSerializer::Serialize<MessageSecurityMode>(const MessageSecurityMode& value)
-    {
-      *this << static_cast<uint32_t>(value);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode& value)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      value = static_cast<MessageSecurityMode>(tmp);
-    }
-
-    template<>
     void DataSerializer::Serialize<OpcUa::AdditionalHeader>(const OpcUa::AdditionalHeader& header)
     {
-      *this << header.TypeID;
+      *this << header.TypeId;
       *this << header.Encoding;
     }
 
     template<>
     void DataDeserializer::Deserialize<OpcUa::AdditionalHeader>(OpcUa::AdditionalHeader& header)
     {
-      *this >> header.TypeID;
+      *this >> header.TypeId;
       *this >> header.Encoding;
     };
 
@@ -968,7 +954,7 @@ namespace OpcUa
       *this << header.UtcTime;
       *this << header.RequestHandle;
       *this << header.ReturnDiagnostics;
-      *this << header.AuditEntryID;
+      *this << header.AuditEntryId;
       *this << header.Timeout; // in miliseconds
       *this << header.Additional;
     }
@@ -980,7 +966,7 @@ namespace OpcUa
       *this >> header.UtcTime;
       *this >> header.RequestHandle;
       *this >> header.ReturnDiagnostics;
-      *this >> header.AuditEntryID;
+      *this >> header.AuditEntryId;
       *this >> header.Timeout; // in miliseconds
       *this >> header.Additional;
     };
@@ -1004,9 +990,9 @@ namespace OpcUa
     {
       *this << info.EncodingMask;
 
-      if (info.EncodingMask & DIM_SYMBOLIC_ID)
+      if (info.EncodingMask & DIM_SYMBOLIC_Id)
       {
-        *this << info.SymbolicID;
+        *this << info.SymbolicId;
       }
       if (info.EncodingMask & DIM_NAMESPACE)
       {
@@ -1040,9 +1026,9 @@ namespace OpcUa
     {
       *this >> info.EncodingMask;
 
-      if (info.EncodingMask & DIM_SYMBOLIC_ID)
+      if (info.EncodingMask & DIM_SYMBOLIC_Id)
       {
-        *this >> info.SymbolicID;
+        *this >> info.SymbolicId;
       }
       if (info.EncodingMask & DIM_NAMESPACE)
       {
@@ -1110,7 +1096,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::OpenSecureChannelRequest>(const OpcUa::OpenSecureChannelRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters.ClientProtocolVersion;
       *this << (uint32_t)request.Parameters.RequestType;
@@ -1122,7 +1108,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<OpcUa::OpenSecureChannelRequest>(OpcUa::OpenSecureChannelRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
 
       *this >> request.Parameters.ClientProtocolVersion;
@@ -1143,8 +1129,8 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::SecurityToken>(const OpcUa::SecurityToken& token)
     {
-      *this << token.SecureChannelID;
-      *this << token.TokenID;
+      *this << token.SecureChannelId;
+      *this << token.TokenId;
       *this << token.CreatedAt;
       *this << token.RevisedLifetime;
     }
@@ -1152,8 +1138,8 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<OpcUa::SecurityToken>(OpcUa::SecurityToken& token)
     {
-      *this >> token.SecureChannelID;
-      *this >> token.TokenID;
+      *this >> token.SecureChannelId;
+      *this >> token.TokenId;
       *this >> token.CreatedAt;
       *this >> token.RevisedLifetime;
     };
@@ -1162,7 +1148,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::OpenSecureChannelResponse>(const OpcUa::OpenSecureChannelResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.ServerProtocolVersion;
       *this << response.ChannelSecurityToken;
@@ -1172,7 +1158,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<OpcUa::OpenSecureChannelResponse>(OpcUa::OpenSecureChannelResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.ServerProtocolVersion;
       *this >> response.ChannelSecurityToken;
@@ -1194,14 +1180,14 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::CloseSecureChannelRequest>(const OpcUa::CloseSecureChannelRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
     }
 
     template<>
     void DataDeserializer::Deserialize<OpcUa::CloseSecureChannelRequest>(OpcUa::CloseSecureChannelRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
     };
 
@@ -1264,14 +1250,14 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<ExtensionObjectHeader>(const ExtensionObjectHeader& value)
     {
-      *this << value.TypeID;
+      *this << value.TypeId;
       *this << static_cast<uint8_t>(value.Encoding);
     }
 
     template<>
     void DataDeserializer::Deserialize<ExtensionObjectHeader>(ExtensionObjectHeader& value)
     {
-      *this >> value.TypeID;
+      *this >> value.TypeId;
       uint8_t tmp = 0;
       *this >> tmp;
       value.Encoding = static_cast<ExtensionObjectEncoding>(tmp);
@@ -1292,17 +1278,17 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////////////////
-    // IntegerID
+    // IntegerId
     ////////////////////////////////////////////////////////////////////
 
     template<>
-    void DataSerializer::Serialize<IntegerID>(const IntegerID& id)
+    void DataSerializer::Serialize<IntegerId>(const IntegerId& id)
     {
       *this << static_cast<uint32_t>(id);
     }
 
     template<>
-    void DataDeserializer::Deserialize<IntegerID>(IntegerID&  id)
+    void DataDeserializer::Deserialize<IntegerId>(IntegerId&  id)
     {
       uint32_t value = 0;
       *this >> value;
@@ -1310,13 +1296,13 @@ namespace OpcUa
     }
 
     template<>
-    void DataSerializer::Serialize<std::vector<IntegerID>>(const std::vector<IntegerID>& targets)
+    void DataSerializer::Serialize<std::vector<IntegerId>>(const std::vector<IntegerId>& targets)
     {
       SerializeContainer(*this, targets);
     }
 
     template<>
-    void DataDeserializer::Deserialize<std::vector<IntegerID>>(std::vector<IntegerID>& targets)
+    void DataDeserializer::Deserialize<std::vector<IntegerId>>(std::vector<IntegerId>& targets)
     {
       DeserializeContainer(*this, targets);
     }

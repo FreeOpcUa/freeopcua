@@ -110,10 +110,10 @@ namespace OpcUa
       MessageType Type;
       ChunkType Chunk;
       uint32_t Size;
-      uint32_t ChannelID;
+      uint32_t ChannelId;
 
       SecureHeader();
-      explicit SecureHeader(MessageType type, ChunkType chunk, uint32_t channelID);
+      explicit SecureHeader(MessageType type, ChunkType chunk, uint32_t channelId);
 
       std::size_t AddSize(std::size_t size);
       std::size_t MessageSize() const;
@@ -129,7 +129,7 @@ namespace OpcUa
 
     struct SymmetricAlgorithmHeader
     {
-      uint32_t TokenID;
+      uint32_t TokenId;
 
       SymmetricAlgorithmHeader();
     };
@@ -137,7 +137,7 @@ namespace OpcUa
     struct SequenceHeader
     {
       uint32_t SequenceNumber;
-      uint32_t RequestID;
+      uint32_t RequestId;
 
       SequenceHeader();
     };

@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2011
 /// @email rykovanov.as@gmail.com
-/// @brief Object ID definitions. 
+/// @brief Object Id definitions. 
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -13,9 +13,9 @@
 
 namespace Common
 {
-  typedef unsigned ObjectID; 
+  typedef unsigned ObjectId; 
 
-  ObjectID GenerateNewID();
+  ObjectId GenerateNewId();
 }
 
 

@@ -55,8 +55,8 @@ namespace OpcUa
       if (Debug)  { std::cout << "KeepAliveThread | renewing secure channel " << std::endl; }
       OpenSecureChannelParameters params;
       params.ClientProtocolVersion = 0;
-      params.RequestType = STR_RENEW;
-      params.SecurityMode = MSM_NONE;
+      params.RequestType = SecurityTokenRequestType::Renew;
+      params.SecurityMode = MessageSecurityMode::None;
       params.ClientNonce = std::vector<uint8_t>(1, 0);
       params.RequestLifeTime = Period;
       OpenSecureChannelResponse response = Server->OpenSecureChannel(params);
@@ -115,7 +115,7 @@ namespace OpcUa
     EndpointsFilter filter;
     filter.EndpointURL = Endpoint.EndpointURL;
     filter.ProfileUries.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
-    filter.LocaleIDs.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
+    filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
     
     return endpoints;
@@ -186,7 +186,7 @@ namespace OpcUa
     session.ClientDescription.URI = ApplicationUri;
     session.ClientDescription.ProductURI = ProductUri;
     session.ClientDescription.Name = LocalizedText(SessionName);
-    session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
+    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
     session.SessionName = SessionName;
     session.EndpointURL = endpoint.EndpointURL;
     session.Timeout = DefaultTimeout;
@@ -205,18 +205,18 @@ namespace OpcUa
       std::string password = uri.Password();
       bool user_identify_token_found = false;
       for(auto ep : response.Session.ServerEndpoints) {
-        if(ep.SecurityMode == MSM_NONE) {
+        if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentifyTokens) {
             if(user.empty()) {
               if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
-                session_parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
                 user_identify_token_found = true;
                 break;
               }
             }
             else {
               if(token.TokenType == UserIdentifyTokenType::USERNAME) {
-                session_parameters.IdentifyToken.setPolicyID(token.PolicyID);
+                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
                 session_parameters.IdentifyToken.setUser(user, password);
                 user_identify_token_found = true;
                 break;
@@ -237,22 +237,22 @@ namespace OpcUa
     {
       DefaultTimeout = response.Session.RevisedSessionTimeout;
     }
-    KeepAlive.Start(Server, Node(Server, ObjectID::Server_ServerStatus_State), DefaultTimeout);
+    KeepAlive.Start(Server, Node(Server, ObjectId::Server_ServerStatus_State), DefaultTimeout);
   }
 
   void UaClient::OpenSecureChannel()
   {
     OpenSecureChannelParameters channelparams;
     channelparams.ClientProtocolVersion = 0;
-    channelparams.RequestType = STR_ISSUE;
-    channelparams.SecurityMode = MSM_NONE;
+    channelparams.RequestType = SecurityTokenRequestType::Issue;
+    channelparams.SecurityMode = MessageSecurityMode::None;
     channelparams.ClientNonce = std::vector<uint8_t>(1, 0);
     channelparams.RequestLifeTime = DefaultTimeout;
     const OpenSecureChannelResponse& response = Server->OpenSecureChannel(channelparams);
 
     CheckStatusCode(response.Header.ServiceResult);
     
-    SecureChannelId = response.ChannelSecurityToken.SecureChannelID;
+    SecureChannelId = response.ChannelSecurityToken.SecureChannelId;
     if ( response.ChannelSecurityToken.RevisedLifetime > 0 )
     {
       DefaultTimeout = response.ChannelSecurityToken.RevisedLifetime;
@@ -286,14 +286,14 @@ namespace OpcUa
   std::vector<std::string>  UaClient::GetServerNamespaces()
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
-    Node namespacearray(Server, ObjectID::Server_NamespaceArray);
+    Node namespacearray(Server, ObjectId::Server_NamespaceArray);
     return namespacearray.GetValue().As<std::vector<std::string>>();;
   }
 
   uint32_t UaClient::GetNamespaceIndex(std::string uri)
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
-    Node namespacearray(Server, ObjectID::Server_NamespaceArray);
+    Node namespacearray(Server, ObjectId::Server_NamespaceArray);
     std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
     for ( uint32_t i=0; i<uris.size(); ++i)
     {
@@ -309,10 +309,10 @@ namespace OpcUa
 
   Node UaClient::GetNode(const std::string& nodeId) const
   {
-    return Node(Server, ToNodeID(nodeId));
+    return Node(Server, ToNodeId(nodeId));
   }
 
-  Node UaClient::GetNode(const NodeID& nodeId) const
+  Node UaClient::GetNode(const NodeId& nodeId) const
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, nodeId);
@@ -321,19 +321,19 @@ namespace OpcUa
   Node UaClient::GetRootNode() const
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
-    return Node(Server, OpcUa::ObjectID::RootFolder);
+    return Node(Server, OpcUa::ObjectId::RootFolder);
   }
 
   Node UaClient::GetObjectsNode() const
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
-    return Node(Server, OpcUa::ObjectID::ObjectsFolder);
+    return Node(Server, OpcUa::ObjectId::ObjectsFolder);
   }
 
   Node UaClient::GetServerNode() const
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
-    return Node(Server, OpcUa::ObjectID::Server);
+    return Node(Server, OpcUa::ObjectId::Server);
   }
 
   std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler& callback)

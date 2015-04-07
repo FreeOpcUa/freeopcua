@@ -8,18 +8,18 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_BINARY_EXTENSION_IDENTIFIERS
-#define __OPC_UA_BINARY_EXTENSION_IDENTIFIERS
+#ifndef __OPC_UA_BINARY_EXTENSION_IdENTIFIERS
+#define __OPC_UA_BINARY_EXTENSION_IdENTIFIERS
 
 #include <stdint.h>
 
 namespace OpcUa
 {
-  enum ExtensionObjectID : uint16_t
+  enum ExtensionObjectId : uint16_t
   {
-    USER_IDENTIFY_TOKEN_ANONYMOUS = 0x141, // 321
-    USER_IDENTIFY_TOKEN_USERNAME = 0x144, // 324
+    USER_IdENTIFY_TOKEN_ANONYMOUS = 0x141, // 321
+    USER_IdENTIFY_TOKEN_USERNAME = 0x144, // 324
   };
 }
 
-#endif // __OPC_UA_BINARY_EXTENSION_IDENTIFIERS
+#endif // __OPC_UA_BINARY_EXTENSION_IdENTIFIERS

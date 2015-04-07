@@ -43,24 +43,24 @@ namespace OpcUa
   BrowseDescription::BrowseDescription()
     : Direction(BrowseDirection::Both)
     , IncludeSubtypes(false)
-    , NodeClasses(NODE_CLASS_ALL)
-    , ResultMask(REFERENCE_ALL)
+    , NodeClasses(NodeClass::Unspecified)
+    , ResultMask(BrowseResultMask::All)
   {
   }
 
   BrowseRequest::BrowseRequest()
-    : TypeID(BROWSE_REQUEST)
+    : TypeId(BROWSE_REQUEST)
   {
   }
 
-  TranslateBrowsePathsToNodeIDsRequest::TranslateBrowsePathsToNodeIDsRequest()
-    : TypeID(TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST)
+  TranslateBrowsePathsToNodeIdsRequest::TranslateBrowsePathsToNodeIdsRequest()
+    : TypeId(TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_REQUEST)
   {
   }
 
   ReferenceDescription::ReferenceDescription()
     : IsForward(false)
-    , TargetNodeClass(NodeClass::All)
+    , TargetNodeClass(NodeClass::Unspecified)
   {
   }
 
@@ -70,18 +70,18 @@ namespace OpcUa
   }
 
   BrowseResponse::BrowseResponse()
-    : TypeID(BROWSE_RESPONSE)
+    : TypeId(BROWSE_RESPONSE)
   {
   }
 
   BrowseNextRequest::BrowseNextRequest()
-    : TypeID(BROWSE_NEXT_REQUEST)
+    : TypeId(BROWSE_NEXT_REQUEST)
     , ReleaseContinuationPoints(false)
   {
   }
 
   BrowseNextResponse::BrowseNextResponse()
-    : TypeID(BROWSE_NEXT_RESPONSE)
+    : TypeId(BROWSE_NEXT_RESPONSE)
   {
   }
 
@@ -95,62 +95,13 @@ namespace OpcUa
   {
   }
 
-  TranslateBrowsePathsToNodeIDsResponse::TranslateBrowsePathsToNodeIDsResponse()
-    : TypeID(TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE)
+  TranslateBrowsePathsToNodeIdsResponse::TranslateBrowsePathsToNodeIdsResponse()
+    : TypeId(TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_RESPONSE)
   {
   }
 
   namespace Binary
   {
-    ////////////////////////////////////////////////////////////////
-    // NodeClass
-    ////////////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<NodeClass>(const NodeClass&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<NodeClass>(const NodeClass& cls)
-    {
-      *this << static_cast<uint32_t>(cls);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<NodeClass>(NodeClass& direction)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      direction = static_cast<NodeClass>(tmp);
-    }
-
-
-    ////////////////////////////////////////////////////////////////
-    // BrowseDirection
-    ////////////////////////////////////////////////////////////////
-
-
-    template<>
-    std::size_t RawSize<BrowseDirection>(const BrowseDirection&)
-    {
-      return 4;
-    }
-
-    template<>
-    void DataSerializer::Serialize<BrowseDirection>(const BrowseDirection& direction)
-    {
-      *this << static_cast<uint32_t>(direction);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<BrowseDirection>(BrowseDirection& direction)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      direction = static_cast<BrowseDirection>(tmp);
-    }
 
     //---------------------------------------------------
     // ViewDescription
@@ -159,13 +110,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ViewDescription>(const ViewDescription& desc)
     {
-      return RawSize(desc.ID) + RawSize(desc.Timestamp) + RawSize(desc.Version);
+      return RawSize(desc.Id) + RawSize(desc.Timestamp) + RawSize(desc.Version);
     }
 
     template<>
     void DataSerializer::Serialize<ViewDescription>(const ViewDescription& desc)
     {
-      *this << desc.ID;
+      *this << desc.Id;
       *this << desc.Timestamp;
       *this << desc.Version;
     }
@@ -173,7 +124,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ViewDescription>(ViewDescription& desc)
     {
-      *this >> desc.ID;
+      *this >> desc.Id;
       *this >> desc.Timestamp;
       *this >> desc.Version;
     }
@@ -188,7 +139,7 @@ namespace OpcUa
     {
       return RawSize(desc.NodeToBrowse) +
              RawSize(desc.Direction) +
-             RawSize(desc.ReferenceTypeID) +
+             RawSize(desc.ReferenceTypeId) +
              RawSize(desc.IncludeSubtypes) +
              RawSize(desc.NodeClasses) +
              RawSize(desc.ResultMask);
@@ -199,7 +150,7 @@ namespace OpcUa
     {
       *this << desc.NodeToBrowse;
       *this << desc.Direction;
-      *this << desc.ReferenceTypeID;
+      *this << desc.ReferenceTypeId;
       *this << desc.IncludeSubtypes;
       *this << desc.NodeClasses;
       *this << desc.ResultMask;
@@ -210,7 +161,7 @@ namespace OpcUa
     {
       *this >> desc.NodeToBrowse;
       *this >> desc.Direction;
-      *this >> desc.ReferenceTypeID;
+      *this >> desc.ReferenceTypeId;
       *this >> desc.IncludeSubtypes;
       *this >> desc.NodeClasses;
       *this >> desc.ResultMask;
@@ -249,13 +200,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseRequest>(const BrowseRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Query);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Query);
     }
 
     template<>
     void DataSerializer::Serialize<BrowseRequest>(const BrowseRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Query;
     }
@@ -263,7 +214,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseRequest>(BrowseRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Query;
     }
@@ -275,9 +226,9 @@ namespace OpcUa
     template<>
     std::size_t RawSize<ReferenceDescription>(const ReferenceDescription& desc)
     {
-      return RawSize(desc.ReferenceTypeID) +
+      return RawSize(desc.ReferenceTypeId) +
              RawSize(desc.IsForward) +
-             RawSize(desc.TargetNodeID) +
+             RawSize(desc.TargetNodeId) +
              RawSize(desc.BrowseName) +
              RawSize(desc.DisplayName) +
              RawSize(desc.TargetNodeClass) +
@@ -287,9 +238,9 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<ReferenceDescription>(const ReferenceDescription& desc)
     {
-      *this << desc.ReferenceTypeID;
+      *this << desc.ReferenceTypeId;
       *this << desc.IsForward;
-      *this << desc.TargetNodeID;
+      *this << desc.TargetNodeId;
       *this << desc.BrowseName;
       *this << desc.DisplayName;
       *this << desc.TargetNodeClass;
@@ -299,9 +250,9 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<ReferenceDescription>(ReferenceDescription& desc)
     {
-      *this >> desc.ReferenceTypeID;
+      *this >> desc.ReferenceTypeId;
       *this >> desc.IsForward;
-      *this >> desc.TargetNodeID;
+      *this >> desc.TargetNodeId;
       *this >> desc.BrowseName;
       *this >> desc.DisplayName;
       *this >> desc.TargetNodeClass;
@@ -343,7 +294,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseResponse>(const BrowseResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) +
+      return RawSize(response.TypeId) + RawSize(response.Header) +
              RawSizeContainer(response.Results) +
              RawSizeContainer(response.Diagnostics);
     }
@@ -351,7 +302,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<BrowseResponse>(const BrowseResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
 
       SerializeContainer(*this, response.Results, 0);
@@ -361,7 +312,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseResponse>(BrowseResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
 
       DeserializeContainer(*this, response.Results);
@@ -375,7 +326,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseNextRequest>(const BrowseNextRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) +
+      return RawSize(request.TypeId) + RawSize(request.Header) +
         RawSize(request.ReleaseContinuationPoints) +
         RawSize(request.ContinuationPoints);
     }
@@ -383,7 +334,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<BrowseNextRequest>(const BrowseNextRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
 
       *this << request.ReleaseContinuationPoints;
@@ -393,7 +344,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseNextRequest>(BrowseNextRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
 
       *this >> request.ReleaseContinuationPoints;
@@ -407,7 +358,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<BrowseNextResponse>(const BrowseNextResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) +
+      return RawSize(response.TypeId) + RawSize(response.Header) +
              RawSizeContainer(response.Results) +
              RawSizeContainer(response.Diagnostics);
     }
@@ -415,7 +366,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<BrowseNextResponse>(const BrowseNextResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
 
       SerializeContainer(*this, response.Results, 0);
@@ -425,7 +376,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<BrowseNextResponse>(BrowseNextResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
 
       DeserializeContainer(*this, response.Results);
@@ -529,27 +480,27 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////////////////
-    // TranslateBrowsePathsToNodeIDsResponse
+    // TranslateBrowsePathsToNodeIdsResponse
     ////////////////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<TranslateBrowsePathsToNodeIDsResponse>(const TranslateBrowsePathsToNodeIDsResponse& response)
+    std::size_t RawSize<TranslateBrowsePathsToNodeIdsResponse>(const TranslateBrowsePathsToNodeIdsResponse& response)
     {
-      return RawSize(response.TypeID) + RawSize(response.Header) + RawSize(response.Result);
+      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
     }
 
     template<>
-    void DataSerializer::Serialize<TranslateBrowsePathsToNodeIDsResponse>(const TranslateBrowsePathsToNodeIDsResponse& response)
+    void DataSerializer::Serialize<TranslateBrowsePathsToNodeIdsResponse>(const TranslateBrowsePathsToNodeIdsResponse& response)
     {
-      *this << response.TypeID;
+      *this << response.TypeId;
       *this << response.Header;
       *this << response.Result;
     }
 
     template<>
-    void DataDeserializer::Deserialize<TranslateBrowsePathsToNodeIDsResponse>(TranslateBrowsePathsToNodeIDsResponse& response)
+    void DataDeserializer::Deserialize<TranslateBrowsePathsToNodeIdsResponse>(TranslateBrowsePathsToNodeIdsResponse& response)
     {
-      *this >> response.TypeID;
+      *this >> response.TypeId;
       *this >> response.Header;
       *this >> response.Result;
     }
@@ -562,13 +513,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<RelativePathElement>(const RelativePathElement& element)
     {
-      return RawSize(element.IncludeSubtypes) + RawSize(element.IsInverse) + RawSize(element.ReferenceTypeID) + RawSize(element.TargetName);
+      return RawSize(element.IncludeSubtypes) + RawSize(element.IsInverse) + RawSize(element.ReferenceTypeId) + RawSize(element.TargetName);
     }
 
     template<>
     void DataSerializer::Serialize<RelativePathElement>(const RelativePathElement& path)
     {
-      *this << path.ReferenceTypeID;
+      *this << path.ReferenceTypeId;
       *this << path.IsInverse;
       *this << path.IncludeSubtypes;
       *this << path.TargetName;
@@ -577,7 +528,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<RelativePathElement>(RelativePathElement& path)
     {
-      *this >> path.ReferenceTypeID;
+      *this >> path.ReferenceTypeId;
       *this >> path.IsInverse;
       *this >> path.IncludeSubtypes;
       *this >> path.TargetName;
@@ -676,27 +627,27 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////////////////
-    // TranslateBrowsePathsToNodeIDsRequest
+    // TranslateBrowsePathsToNodeIdsRequest
     ////////////////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<TranslateBrowsePathsToNodeIDsRequest>(const TranslateBrowsePathsToNodeIDsRequest& request)
+    std::size_t RawSize<TranslateBrowsePathsToNodeIdsRequest>(const TranslateBrowsePathsToNodeIdsRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters)  ;
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters)  ;
     }
 
     template<>
-    void DataSerializer::Serialize<TranslateBrowsePathsToNodeIDsRequest>(const TranslateBrowsePathsToNodeIDsRequest& request)
+    void DataSerializer::Serialize<TranslateBrowsePathsToNodeIdsRequest>(const TranslateBrowsePathsToNodeIdsRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
 
     template<>
-    void DataDeserializer::Deserialize<TranslateBrowsePathsToNodeIDsRequest>(TranslateBrowsePathsToNodeIDsRequest& request)
+    void DataDeserializer::Deserialize<TranslateBrowsePathsToNodeIdsRequest>(TranslateBrowsePathsToNodeIdsRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }

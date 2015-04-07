@@ -88,7 +88,7 @@ Common::Configuration Common::ParseConfiguration(const std::string& configPath)
         }
 
         Common::ModuleConfiguration moduleConfig;
-        moduleConfig.ID = module.second.get<std::string>("id");
+        moduleConfig.Id = module.second.get<std::string>("id");
         moduleConfig.Path = module.second.get<std::string>("path");
         if (boost::optional<const ptree&> dependsOn = module.second.get_child_optional("depends_on"))
         {
@@ -142,7 +142,7 @@ Common::Configuration Common::ParseConfigurationFiles(const std::string& directo
 
 namespace
 {
-  void AddDependencies(ptree& moduleTree, const std::vector<Common::AddonID>& ids)
+  void AddDependencies(ptree& moduleTree, const std::vector<Common::AddonId>& ids)
   {
     if (ids.empty())
     {
@@ -197,7 +197,7 @@ void Common::SaveConfiguration(const Common::ModulesConfiguration& modules, cons
   {
     ptree& moduleTree = modulesPt.add("module", "");
     const Common::ModuleConfiguration& config = *configIt;
-    moduleTree.add("id", config.ID);
+    moduleTree.add("id", config.Id);
     moduleTree.add("path", config.Path);
     AddDependencies(moduleTree, config.Dependencies);
     AddParameters(moduleTree, config.Parameters, "parameters");
@@ -209,7 +209,7 @@ void Common::SaveConfiguration(const Common::ModulesConfiguration& modules, cons
 Common::AddonInformation Common::GetAddonInfomation(const Common::ModuleConfiguration& config)
 {
   Common::AddonInformation info;
-  info.ID = config.ID;
+  info.Id = config.Id;
   info.Dependencies = config.Dependencies;
   info.Parameters = config.Parameters;
   info.Factory = Common::CreateDynamicAddonFactory(config.Path);

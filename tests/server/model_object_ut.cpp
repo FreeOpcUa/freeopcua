@@ -50,7 +50,7 @@ protected:
     OpcUa::Test::RegisterStandardNamespace(*Addons);
     Addons->Start();
 
-    OpcUa::Server::ServicesRegistry::SharedPtr addon = Addons->GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonID);
+    OpcUa::Server::ServicesRegistry::SharedPtr addon = Addons->GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
     Services = addon->GetServer();
   }
 
@@ -61,14 +61,14 @@ protected:
     Addons.reset();
   }
 
-  OpcUa::NodeID CreateEmptyObjectType()
+  OpcUa::NodeId CreateEmptyObjectType()
   {
     OpcUa::NodeManagementServices::SharedPtr nodes = Services->NodeManagement();
     OpcUa::AddNodesItem item;
     item.BrowseName = OpcUa::QualifiedName("object_type");
     item.Class = OpcUa::NodeClass::ObjectType;
-    item.ParentNodeId = OpcUa::ObjectID::BaseObjectType;
-    item.ReferenceTypeId = OpcUa::ObjectID::HasSubtype;
+    item.ParentNodeId = OpcUa::ObjectId::BaseObjectType;
+    item.ReferenceTypeId = OpcUa::ObjectId::HasSubtype;
 
     OpcUa::ObjectTypeAttributes attrs;
     attrs.Description = OpcUa::LocalizedText("object_type");
@@ -76,54 +76,54 @@ protected:
     attrs.IsAbstract = false;
     item.Attributes = attrs;
     std::vector<OpcUa::AddNodesResult> result = nodes->AddNodes({item});
-    return result[0].AddedNodeID;
+    return result[0].AddedNodeId;
   }
 
-  OpcUa::NodeID CreateObjectTypeWithOneVariable()
+  OpcUa::NodeId CreateObjectTypeWithOneVariable()
   {
-    const OpcUa::NodeID& objectID = CreateEmptyObjectType();
+    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem variable;
     variable.BrowseName = OpcUa::QualifiedName("variable");
     variable.Class = OpcUa::NodeClass::Variable;
-    variable.ParentNodeId = objectID;
-    variable.ReferenceTypeId = OpcUa::ObjectID::HasProperty;
+    variable.ParentNodeId = objectId;
+    variable.ReferenceTypeId = OpcUa::ObjectId::HasProperty;
     OpcUa::VariableAttributes attrs;
     attrs.DisplayName = OpcUa::LocalizedText("variable");
     variable.Attributes = attrs;
     Services->NodeManagement()->AddNodes({variable});
-    return objectID;
+    return objectId;
   }
 
-  OpcUa::NodeID CreateObjectTypeWithOneUntypedObject()
+  OpcUa::NodeId CreateObjectTypeWithOneUntypedObject()
   {
-    const OpcUa::NodeID& objectID = CreateEmptyObjectType();
+    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
-    object.ParentNodeId = objectID;
-    object.ReferenceTypeId = OpcUa::ObjectID::HasComponent;
+    object.ParentNodeId = objectId;
+    object.ReferenceTypeId = OpcUa::ObjectId::HasComponent;
     OpcUa::ObjectAttributes attrs;
     attrs.DisplayName = OpcUa::LocalizedText("sub_object");
     object.Attributes = attrs;
     Services->NodeManagement()->AddNodes({object});
-    return objectID;
+    return objectId;
   }
 
-  OpcUa::NodeID CreateObjectTypeWithOneTypedObject()
+  OpcUa::NodeId CreateObjectTypeWithOneTypedObject()
   {
-    const OpcUa::NodeID& resultTypeID = CreateEmptyObjectType();
-    const OpcUa::NodeID& objectTypeWithVar = CreateObjectTypeWithOneVariable();
+    const OpcUa::NodeId& resultTypeId = CreateEmptyObjectType();
+    const OpcUa::NodeId& objectTypeWithVar = CreateObjectTypeWithOneVariable();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
-    object.ParentNodeId = resultTypeID;
-    object.ReferenceTypeId = OpcUa::ObjectID::HasComponent;
+    object.ParentNodeId = resultTypeId;
+    object.ReferenceTypeId = OpcUa::ObjectId::HasComponent;
     object.TypeDefinition = objectTypeWithVar;
     OpcUa::ObjectAttributes attrs;
     attrs.DisplayName = OpcUa::LocalizedText("sub_object");
     object.Attributes = attrs;
     Services->NodeManagement()->AddNodes({object});
-    return resultTypeID;
+    return resultTypeId;
   }
 
 protected:
@@ -137,7 +137,7 @@ TEST_F(ModelObject, ServerCanAccessToRootObject)
   OpcUa::Model::Server server(Services);
   OpcUa::Model::Object rootObject = server.RootObject();
 
-  ASSERT_EQ(rootObject.GetID(), OpcUa::ObjectID::RootFolder);
+  ASSERT_EQ(rootObject.GetId(), OpcUa::ObjectId::RootFolder);
 }
 
 TEST_F(ModelObject, ObjectCanCreateVariable)
@@ -148,7 +148,7 @@ TEST_F(ModelObject, ObjectCanCreateVariable)
   OpcUa::Variant value = 8;
   OpcUa::Model::Variable variable = rootObject.CreateVariable(name, value);
 
-  ASSERT_NE(variable.GetID(), OpcUa::ObjectID::Null);
+  ASSERT_NE(variable.GetId(), OpcUa::ObjectId::Null);
   ASSERT_EQ(variable.GetBrowseName(), name);
   ASSERT_EQ(variable.GetDisplayName(), OpcUa::LocalizedText(name.Name));
   ASSERT_EQ(variable.GetValue(), value);
@@ -156,15 +156,15 @@ TEST_F(ModelObject, ObjectCanCreateVariable)
 
 TEST_F(ModelObject, CanInstantiateEmptyObjectType)
 {
-  const OpcUa::NodeID& typeID = CreateEmptyObjectType();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
+  const OpcUa::NodeId& typeId = CreateEmptyObjectType();
+  OpcUa::Model::ObjectType objectType(typeId, Services);
+  OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
   const char* objectDesc = "Empty object.";
   const OpcUa::QualifiedName browseName("empty_object");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
+  const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
+  OpcUa::Model::Object object(objectId, Services);
 
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
+  ASSERT_NE(object.GetId(), OpcUa::ObjectId::Null);
   ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
 
   std::vector<OpcUa::Model::Variable> variables = object.GetVariables();
@@ -173,15 +173,15 @@ TEST_F(ModelObject, CanInstantiateEmptyObjectType)
 
 TEST_F(ModelObject, CanInstantiateObjectTypeWithOneVariable)
 {
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneVariable();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
+  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneVariable();
+  OpcUa::Model::ObjectType objectType(typeId, Services);
+  OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
   const char* objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
+  const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
+  OpcUa::Model::Object object(objectId, Services);
 
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
+  ASSERT_NE(object.GetId(), OpcUa::ObjectId::Null);
   ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
 
   std::vector<OpcUa::Model::Variable> variables = object.GetVariables();
@@ -190,15 +190,15 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneVariable)
 
 TEST_F(ModelObject, CanInstantiateObjectTypeWithOneUntypedObject)
 {
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneUntypedObject();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
+  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneUntypedObject();
+  OpcUa::Model::ObjectType objectType(typeId, Services);
+  OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
   const char* objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
-  OpcUa::Model::Object object(objectID, Services);
+  const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
+  OpcUa::Model::Object object(objectId, Services);
 
-  ASSERT_NE(object.GetID(), OpcUa::ObjectID::Null);
+  ASSERT_NE(object.GetId(), OpcUa::ObjectId::Null);
   ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
 
   std::vector<OpcUa::Model::Object> objects = object.GetObjects();
@@ -214,23 +214,23 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
   // ObjectType2
   //   +-variable
 
-  const OpcUa::NodeID& typeID = CreateObjectTypeWithOneTypedObject();
-  OpcUa::Model::ObjectType objectType(typeID, Services);
+  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneTypedObject();
+  OpcUa::Model::ObjectType objectType(typeId, Services);
   // we will create objects under root folder.
-  OpcUa::Model::Object rootObject(OpcUa::ObjectID::RootFolder, Services);
+  OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
   const char* objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
   // Instantiate object type we have created first.
   // Get only id of that object.
-  const OpcUa::NodeID objectID = rootObject.CreateObject(objectType, browseName, objectDesc).GetID();
+  const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
   // This constructor will read all parameters of created object.
   // Restored object structure should be next:
   // Object1 - ObjectType1
   //   +-Object2 - ObjectType2
   //       +-variable
-  OpcUa::Model::Object object(objectID, Services);
+  OpcUa::Model::Object object(objectId, Services);
 
-  ASSERT_EQ(object.GetID(), objectID);
+  ASSERT_EQ(object.GetId(), objectId);
   ASSERT_EQ(object.GetBrowseName(), browseName) << "Real name: " << object.GetBrowseName().Name;
 
   // Created object will have one sub object.
@@ -248,7 +248,7 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
 OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
 {
   OpcUa::RelativePathElement element;
-  element.ReferenceTypeID = OpcUa::ObjectID::HierarchicalReferences;
+  element.ReferenceTypeId = OpcUa::ObjectId::HierarchicalReferences;
   element.IncludeSubtypes = true;
   element.TargetName.Name = browseName;
   return element;
@@ -257,7 +257,7 @@ OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
 TEST_F(ModelObject, CanAccessVariableByBrowsePath)
 {
   OpcUa::Model::Server server(Services);
-  OpcUa::Model::Object serverObject = server.GetObject(OpcUa::ObjectID::Server);
+  OpcUa::Model::Object serverObject = server.GetObject(OpcUa::ObjectId::Server);
   OpcUa::RelativePath path;
   path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::ServerStatus));
   path.Elements.push_back(GetHierarchicalElement(OpcUa::Names::BuildInfo));
@@ -274,7 +274,7 @@ TEST_F(ModelObject, CanAccessVariableByQualifiedName)
   std::cout << "2" << std::endl;
   OpcUa::Model::Object rootObject = server.RootObject();
   std::cout << "3" << std::endl;
-  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectID::ServerType);
+  OpcUa::Model::ObjectType serverType = server.GetObjectType(OpcUa::ObjectId::ServerType);
   std::cout << "4" << std::endl;
   OpcUa::Model::Object serverObject = rootObject.CreateObject(serverType, OpcUa::QualifiedName("Server"));
   std::cout << "5" << std::endl;

@@ -10,7 +10,6 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/string_utils.h>
@@ -279,10 +278,10 @@ namespace OpcUa
     else if (t == typeid(std::vector<ByteString>))
       return Compare<std::vector<ByteString>>(*this, var);
 
-    else if (t == typeid(NodeID))
-      return Compare<NodeID>(*this, var);
-    else if (t == typeid(std::vector<NodeID>))
-      return Compare<std::vector<NodeID>>(*this, var);
+    else if (t == typeid(NodeId))
+      return Compare<NodeId>(*this, var);
+    else if (t == typeid(std::vector<NodeId>))
+      return Compare<std::vector<NodeId>>(*this, var);
 
     else if (t == typeid(StatusCode))
       return Compare<StatusCode>(*this, var);
@@ -346,7 +345,7 @@ namespace OpcUa
     (t == typeid(std::vector<DateTime>))   ||
     (t == typeid(std::vector<Guid>))       ||
     (t == typeid(std::vector<ByteString>)) ||
-    (t == typeid(std::vector<NodeID>))     ||
+    (t == typeid(std::vector<NodeId>))     ||
     (t == typeid(std::vector<StatusCode>)) ||
     (t == typeid(std::vector<LocalizedText>)) ||
     (t == typeid(std::vector<QualifiedName>)) ||
@@ -388,11 +387,11 @@ namespace OpcUa
     else if (t == typeid(DateTime) || t == typeid(std::vector<DateTime>))
       return VariantType::DATE_TIME;
     else if (t == typeid(Guid) || t == typeid(std::vector<Guid>))
-      return VariantType::GUID;
+      return VariantType::GUId;
     else if (t == typeid(ByteString) || t == typeid(std::vector<ByteString>))
       return VariantType::BYTE_STRING;
-    else if (t == typeid(NodeID) || t == typeid(std::vector<NodeID>))
-      return VariantType::NODE_ID;
+    else if (t == typeid(NodeId) || t == typeid(std::vector<NodeId>))
+      return VariantType::NODE_Id;
     else if (t == typeid(StatusCode) || t == typeid(std::vector<StatusCode>))
       return VariantType::STATUS_CODE;
     else if (t == typeid(LocalizedText) || t == typeid(std::vector<LocalizedText>))
@@ -484,10 +483,10 @@ namespace OpcUa
     else if (t == typeid(std::vector<ByteString>))
       visitor.Visit(any_cast<std::vector<ByteString>>(Value));
 
-    else if (t == typeid(NodeID))
-      visitor.Visit(any_cast<NodeID>(Value));
-    else if (t == typeid(std::vector<NodeID>))
-      visitor.Visit(any_cast<std::vector<NodeID>>(Value));
+    else if (t == typeid(NodeId))
+      visitor.Visit(any_cast<NodeId>(Value));
+    else if (t == typeid(std::vector<NodeId>))
+      visitor.Visit(any_cast<std::vector<NodeId>>(Value));
 
     else if (t == typeid(StatusCode))
       visitor.Visit(any_cast<StatusCode>(Value));
@@ -522,34 +521,34 @@ namespace OpcUa
       throw std::runtime_error(std::string("Unknown variant type '") + t.name() + "'.");
   }
 
-  ObjectID VariantTypeToDataType(VariantType vt)
+  ObjectId VariantTypeToDataType(VariantType vt)
   {
     switch (vt)
     {
-      case VariantType::BOOLEAN:          return ObjectID::Boolean;
-      case VariantType::SBYTE:            return ObjectID::SByte;
-      case VariantType::BYTE:             return ObjectID::Byte;
-      case VariantType::INT16:            return ObjectID::Int16;
-      case VariantType::UINT16:           return ObjectID::UInt16;
-      case VariantType::INT32:            return ObjectID::Int32;
-      case VariantType::UINT32:           return ObjectID::UInt32;
-      case VariantType::INT64:            return ObjectID::Int64;
-      case VariantType::UINT64:           return ObjectID::UInt64;
-      case VariantType::FLOAT:            return ObjectID::Float;
-      case VariantType::DOUBLE:           return ObjectID::Double;
-      case VariantType::STRING:           return ObjectID::String;
-      case VariantType::DATE_TIME:        return ObjectID::DateTime;
-      case VariantType::GUID:             return ObjectID::Guid;
-      case VariantType::BYTE_STRING:      return ObjectID::ByteString;
-      case VariantType::XML_ELEMENT:      return ObjectID::XmlElement;
-      case VariantType::NODE_ID:          return ObjectID::NodeId;
-      case VariantType::EXPANDED_NODE_ID: return ObjectID::ExpandedNodeId;
-      case VariantType::STATUS_CODE:      return ObjectID::StatusCode;
-      case VariantType::QUALIFIED_NAME:   return ObjectID::QualifiedName;
-      case VariantType::LOCALIZED_TEXT:   return ObjectID::LocalizedText;
-      case VariantType::DIAGNOSTIC_INFO:  return ObjectID::DiagnosticInfo;
-      case VariantType::DATA_VALUE:       return ObjectID::DataValue;
-      case VariantType::NUL:              return ObjectID::Null;
+      case VariantType::BOOLEAN:          return ObjectId::Boolean;
+      case VariantType::SBYTE:            return ObjectId::SByte;
+      case VariantType::BYTE:             return ObjectId::Byte;
+      case VariantType::INT16:            return ObjectId::Int16;
+      case VariantType::UINT16:           return ObjectId::UInt16;
+      case VariantType::INT32:            return ObjectId::Int32;
+      case VariantType::UINT32:           return ObjectId::UInt32;
+      case VariantType::INT64:            return ObjectId::Int64;
+      case VariantType::UINT64:           return ObjectId::UInt64;
+      case VariantType::FLOAT:            return ObjectId::Float;
+      case VariantType::DOUBLE:           return ObjectId::Double;
+      case VariantType::STRING:           return ObjectId::String;
+      case VariantType::DATE_TIME:        return ObjectId::DateTime;
+      case VariantType::GUId:             return ObjectId::Guid;
+      case VariantType::BYTE_STRING:      return ObjectId::ByteString;
+      case VariantType::XML_ELEMENT:      return ObjectId::XmlElement;
+      case VariantType::NODE_Id:          return ObjectId::NodeId;
+      case VariantType::EXPANDED_NODE_Id: return ObjectId::ExpandedNodeId;
+      case VariantType::STATUS_CODE:      return ObjectId::StatusCode;
+      case VariantType::QUALIFIED_NAME:   return ObjectId::QualifiedName;
+      case VariantType::LOCALIZED_TEXT:   return ObjectId::LocalizedText;
+      case VariantType::DIAGNOSTIC_INFO:  return ObjectId::DiagnosticInfo;
+      case VariantType::DATA_VALUE:       return ObjectId::DataValue;
+      case VariantType::NUL:              return ObjectId::Null;
       case VariantType::EXTENSION_OBJECT:
       case VariantType::VARIANT:
       default:
@@ -559,7 +558,7 @@ namespace OpcUa
     }
   }
 
-  VariantType DataTypeToVariantType(const NodeID& dataType)
+  VariantType DataTypeToVariantType(const NodeId& dataType)
   {
     if (dataType.GetNamespaceIndex())
     {
@@ -567,34 +566,34 @@ namespace OpcUa
       throw std::runtime_error(msg + ToString(dataType));
     }
 
-    switch (static_cast<OpcUa::ObjectID>(dataType.GetIntegerIdentifier()))
+    switch (static_cast<OpcUa::ObjectId>(dataType.GetIntegerIdentifier()))
     {
-      case ObjectID::Boolean:        return VariantType::BOOLEAN;
-      case ObjectID::SByte:          return VariantType::SBYTE;
-      case ObjectID::Byte:           return VariantType::BYTE;
-      case ObjectID::Int16:          return VariantType::INT16;
-      case ObjectID::UInt16:         return VariantType::UINT16;
-      case ObjectID::Int32:          return VariantType::INT32;
-      case ObjectID::UInt32:         return VariantType::UINT32;
-      case ObjectID::Int64:          return VariantType::INT64;
-      case ObjectID::UInt64:         return VariantType::UINT64;
-      case ObjectID::Float:          return VariantType::FLOAT;
-      case ObjectID::Double:         return VariantType::DOUBLE;
-      case ObjectID::String:         return VariantType::STRING;
-      case ObjectID::DateTime:       return VariantType::DATE_TIME;
-      case ObjectID::Guid:           return VariantType::GUID;
-      case ObjectID::ByteString:     return VariantType::BYTE_STRING;
-      case ObjectID::XmlElement:     return VariantType::XML_ELEMENT;
-      case ObjectID::NodeId:         return VariantType::NODE_ID;
-      case ObjectID::ExpandedNodeId: return VariantType::EXPANDED_NODE_ID;
-      case ObjectID::StatusCode:     return VariantType::STATUS_CODE;
-      case ObjectID::QualifiedName:  return VariantType::QUALIFIED_NAME;
-      case ObjectID::LocalizedText:  return VariantType::LOCALIZED_TEXT;
-      case ObjectID::DiagnosticInfo: return VariantType::DIAGNOSTIC_INFO;
-      case ObjectID::DataValue:      return VariantType::DATA_VALUE;
-      case ObjectID::Null:           return VariantType::NUL;
+      case ObjectId::Boolean:        return VariantType::BOOLEAN;
+      case ObjectId::SByte:          return VariantType::SBYTE;
+      case ObjectId::Byte:           return VariantType::BYTE;
+      case ObjectId::Int16:          return VariantType::INT16;
+      case ObjectId::UInt16:         return VariantType::UINT16;
+      case ObjectId::Int32:          return VariantType::INT32;
+      case ObjectId::UInt32:         return VariantType::UINT32;
+      case ObjectId::Int64:          return VariantType::INT64;
+      case ObjectId::UInt64:         return VariantType::UINT64;
+      case ObjectId::Float:          return VariantType::FLOAT;
+      case ObjectId::Double:         return VariantType::DOUBLE;
+      case ObjectId::String:         return VariantType::STRING;
+      case ObjectId::DateTime:       return VariantType::DATE_TIME;
+      case ObjectId::Guid:           return VariantType::GUId;
+      case ObjectId::ByteString:     return VariantType::BYTE_STRING;
+      case ObjectId::XmlElement:     return VariantType::XML_ELEMENT;
+      case ObjectId::NodeId:         return VariantType::NODE_Id;
+      case ObjectId::ExpandedNodeId: return VariantType::EXPANDED_NODE_Id;
+      case ObjectId::StatusCode:     return VariantType::STATUS_CODE;
+      case ObjectId::QualifiedName:  return VariantType::QUALIFIED_NAME;
+      case ObjectId::LocalizedText:  return VariantType::LOCALIZED_TEXT;
+      case ObjectId::DiagnosticInfo: return VariantType::DIAGNOSTIC_INFO;
+      case ObjectId::DataValue:      return VariantType::DATA_VALUE;
+      case ObjectId::Null:           return VariantType::NUL;
       default:
-        return VariantType::NODE_ID;
+        return VariantType::NODE_Id;
 /*
       {
         std::string msg("Unknown type id ");
@@ -721,18 +720,18 @@ namespace OpcUa
         var = deserializer.get<DateTime>();
       else if(encodingMask == ((uint8_t)VariantType::DATE_TIME | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DateTime>>();
-      else if(encodingMask == ((uint8_t)VariantType::GUID))
+      else if(encodingMask == ((uint8_t)VariantType::GUId))
         var = deserializer.get<Guid>();
-      else if(encodingMask == ((uint8_t)VariantType::GUID | HAS_ARRAY_MASK))
+      else if(encodingMask == ((uint8_t)VariantType::GUId | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<Guid>>();
       else if(encodingMask == ((uint8_t)VariantType::BYTE_STRING))
         var = deserializer.get<ByteString>();
       else if(encodingMask == ((uint8_t)VariantType::BYTE_STRING | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<ByteString>>();
-      else if(encodingMask == ((uint8_t)VariantType::NODE_ID))
-        var = deserializer.get<NodeID>();
-      else if(encodingMask == ((uint8_t)VariantType::NODE_ID | HAS_ARRAY_MASK))
-        var = deserializer.get<std::vector<NodeID>>();
+      else if(encodingMask == ((uint8_t)VariantType::NODE_Id))
+        var = deserializer.get<NodeId>();
+      else if(encodingMask == ((uint8_t)VariantType::NODE_Id | HAS_ARRAY_MASK))
+        var = deserializer.get<std::vector<NodeId>>();
       else if(encodingMask == ((uint8_t)VariantType::STATUS_CODE))
         var = deserializer.get<StatusCode>();
       else if(encodingMask == ((uint8_t)VariantType::STATUS_CODE | HAS_ARRAY_MASK))

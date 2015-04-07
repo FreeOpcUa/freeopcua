@@ -38,7 +38,7 @@ TEST_F(MonitoredItemsSerialization, DISABLED_MonitoredItemsData)
 
   CreateMonitoredItemsResult monitoringResult;
   monitoringResult.Status = StatusCode::BadNotImplemented;
-  monitoringResult.MonitoredItemID = 1;
+  monitoringResult.MonitoredItemId = 1;
   monitoringResult.RevisedSamplingInterval = 1200000;
   monitoringResult.RevizedQueueSize = 3;
   //monitoringResult.ExtensionObjectHeader FilterResult;
@@ -51,7 +51,7 @@ TEST_F(MonitoredItemsSerialization, DISABLED_MonitoredItemsData)
   const std::vector<char> expectedData = {
     1,0,0,0,         // Results count
     0,0,(char)0x40,(char)0x80,   // StatusCode
-    1,0,0,0,         // MonitoredItemID
+    1,0,0,0,         // MonitoredItemId
     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
     3,0,0,0,         // RevizedQueueSize
     0,0,0,           // FilterResult (empty Extension object)
@@ -78,7 +78,7 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
 
   CreateMonitoredItemsResult monitoringResult;
   monitoringResult.Status = StatusCode::BadNotImplemented;
-  monitoringResult.MonitoredItemID = 1;
+  monitoringResult.MonitoredItemId = 1;
   monitoringResult.RevisedSamplingInterval = 1200000;
   monitoringResult.RevizedQueueSize = 3;
   //monitoringResult.ExtensionObjectHeader FilterResult;
@@ -86,22 +86,22 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
   response.Data.Results.push_back(monitoringResult);
 
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_MONITORED_ITEMS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::CREATE_MONITORED_ITEMS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-    1, 0, (char)0xF2, 0x2, // TypeID
+    1, 0, (char)0xF2, 0x2, // TypeId
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
     1,0,0,0,         // Results count
     0,0,(char)0x40,(char)0x80,   // StatusCode
-    1,0,0,0,         // MonitoredItemID
+    1,0,0,0,         // MonitoredItemId
     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
     3,0,0,0,         // RevizedQueueSize
     0,0,0,           // FilterResult (empty Extension object)

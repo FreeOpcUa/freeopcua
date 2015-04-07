@@ -20,7 +20,7 @@ namespace Common
     MODULE_COMMON,
     MODULE_ADDONS_MANAGER,
     MODULE_OPCUA_CORE,
-    MODULE_OPCUA_CLIENT,
+    MODULE_OPCUA_Client,
   };
 }
 

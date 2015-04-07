@@ -9,7 +9,7 @@
 
 namespace OpcUa
 {
-  enum class AttributeID : uint32_t
+  enum class AttributeId : uint32_t
   {
     NodeId = 1,
     NodeClass = 2,

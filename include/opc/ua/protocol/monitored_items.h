@@ -11,32 +11,11 @@
 #ifndef OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 #define OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/subscriptions.h>
-#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 namespace OpcUa
 {
-  enum class MonitoringMode : uint32_t
-  {
-    Disabled = 0,
-    Sampling = 1,
-    Reporting = 2,
-  };
-
-  enum class DataChangeTrigger : uint32_t
-  {
-    Status = 0,
-    StatusAndValue = 1,
-    StatusAndValueAndTimestamp = 2,
-  };
-
-  enum class DeadbandType : uint32_t
-  {
-    None = 0,
-    Absolute = 1,
-    Percent = 2,
-  };
 
   struct DataChangeFilter
   {
@@ -47,29 +26,10 @@ namespace OpcUa
 
   struct SimpleAttributeOperand
   {
-    NodeID TypeID;
+    NodeId TypeId;
     std::vector<QualifiedName> BrowsePath;
-    AttributeID Attribute;
+    AttributeId Attribute;
     std::vector<std::string> IndexRange; 
-  };
-
-  enum class FilterOperator : uint32_t
-  {
-    Equals = 0,
-    IsNull = 1,
-    GreaterThan = 2,
-    LessThan = 3,
-    GreaterThanOrEqual = 4,
-    LessThanOrEqual = 5,
-    Like = 6,
-    Not = 7,
-    Between = 8,
-    InList = 9,
-    And = 10,
-    Or = 11,
-    Cast = 12,
-    BitwiseAnd = 16,
-    BitwiseOr = 17,
   };
 
   struct ElementOperand
@@ -85,10 +45,10 @@ namespace OpcUa
 
   struct AttributeOperand
   {
-    NodeID Node;
+    NodeId Node;
     std::string Alias;
     RelativePath Path;
-    IntegerID AttributeID;
+    IntegerId AttributeId;
     std::vector<std::string> IndexRange;
   };
 
@@ -116,7 +76,7 @@ namespace OpcUa
   struct AggregateFilter
   {
     DateTime StartTime;
-    NodeID AggregateType;
+    NodeId AggregateType;
     Duration ProcessingInterval;
     //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
     bool UseServerCapabilitiesDefaults;
@@ -140,7 +100,7 @@ namespace OpcUa
 
   struct MonitoringParameters
   {
-    IntegerID ClientHandle;
+    IntegerId ClientHandle;
     Duration SamplingInterval;
     MonitoringFilter Filter;
     uint32_t QueueSize;
@@ -149,14 +109,14 @@ namespace OpcUa
 
   struct MonitoredItemRequest
   {
-    AttributeValueID ItemToMonitor;
+    ReadValueId ItemToMonitor;
     MonitoringMode Mode;
     MonitoringParameters Parameters;
   };
 
   struct MonitoredItemsParameters
   {
-    IntegerID SubscriptionID;
+    IntegerId SubscriptionId;
     TimestampsToReturn Timestamps;
     std::vector<MonitoredItemRequest> ItemsToCreate;
 
@@ -165,7 +125,7 @@ namespace OpcUa
 
   struct CreateMonitoredItemsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     MonitoredItemsParameters Parameters;
 
@@ -175,13 +135,13 @@ namespace OpcUa
 
   struct DeleteMonitoredItemsParameters
   {
-    IntegerID SubscriptionId;
-    std::vector<IntegerID> MonitoredItemsIds;
+    IntegerId SubscriptionId;
+    std::vector<IntegerId> MonitoredItemsIds;
   };
 
   struct DeleteMonitoredItemsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     DeleteMonitoredItemsParameters Parameters;
 
@@ -190,7 +150,7 @@ namespace OpcUa
 
   struct DeleteMonitoredItemsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     std::vector<StatusCode> Results;
     DiagnosticInfoList Diagnostics;
@@ -203,7 +163,7 @@ namespace OpcUa
   struct CreateMonitoredItemsResult
   {
     StatusCode Status;
-    IntegerID MonitoredItemID;
+    IntegerId MonitoredItemId;
     Duration RevisedSamplingInterval;
     uint32_t RevizedQueueSize;
     MonitoringFilter Filter;
@@ -221,7 +181,7 @@ namespace OpcUa
 
   struct CreateMonitoredItemsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     MonitoredItemsData Data;
 

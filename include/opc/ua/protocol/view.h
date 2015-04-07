@@ -11,7 +11,6 @@
 #ifndef __OPC_UA_BINARY_VIEW_H__
 #define __OPC_UA_BINARY_VIEW_H__
 
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/types.h>
 
 namespace OpcUa
@@ -21,36 +20,11 @@ namespace OpcUa
   // Browse
   //---------------------------------------------------
 
-  enum class BrowseDirection : uint32_t
-  {
-    Forward = 0,
-    Inverse = 1,
-    Both    = 2,
-  };
 
-  const uint32_t NODE_CLASS_ALL            = 0;
-  const uint32_t NODE_CLASS_OBJECT         = 1;
-  const uint32_t NODE_CLASS_VARIABLE       = 2;
-  const uint32_t NODE_CLASS_METHOD         = 4;
-  const uint32_t NODE_CLASS_OBJECT_TYPE    = 8;
-  const uint32_t NODE_CLASS_VARIABLE_TYPE  = 16;
-  const uint32_t NODE_CLASS_REFERENCE_TYPE = 32;
-  const uint32_t NODE_CLASS_DATA_TYPE      = 64;
-  const uint32_t NODE_CLASS_VIEW           = 128;
-
-
-  const uint32_t REFERENCE_NONE            = 0;
-  const uint32_t REFERENCE_TYPE            = 1;
-  const uint32_t REFERENCE_IS_FORWARD      = 2;
-  const uint32_t REFERENCE_NODE_CLASS      = 4;
-  const uint32_t REFERENCE_BROWSE_NAME     = 8;
-  const uint32_t REFERENCE_DISPLAY_NAME    = 16;
-  const uint32_t REFERENCE_TYPE_DEFINITION = 32;
-  const uint32_t REFERENCE_ALL             = 63;
 
   struct ViewDescription
   {
-    NodeID ID;
+    NodeId Id;
     DateTime Timestamp;
     uint32_t Version;
 
@@ -59,12 +33,12 @@ namespace OpcUa
 
   struct BrowseDescription
   {
-    NodeID NodeToBrowse;
+    NodeId NodeToBrowse;
     BrowseDirection Direction;
-    NodeID ReferenceTypeID;
-    bool IncludeSubtypes; // If false will follow strctly ReferenceTypeID. if true will follow subtypes of ReferenceTypeID.
-    uint32_t NodeClasses;
-    uint32_t ResultMask;
+    NodeId ReferenceTypeId;
+    bool IncludeSubtypes; // If false will follow strctly ReferenceTypeId. if true will follow subtypes of ReferenceTypeId.
+    NodeClass NodeClasses;
+    BrowseResultMask ResultMask;
 
     BrowseDescription();
   };
@@ -80,7 +54,7 @@ namespace OpcUa
 
   struct BrowseRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     NodesQuery Query;
 
@@ -90,13 +64,13 @@ namespace OpcUa
 
   struct ReferenceDescription
   {
-    NodeID ReferenceTypeID;
+    NodeId ReferenceTypeId;
     bool IsForward = true;
-    NodeID TargetNodeID;
+    NodeId TargetNodeId;
     QualifiedName BrowseName;
     LocalizedText DisplayName;
     NodeClass TargetNodeClass;
-    NodeID TargetNodeTypeDefinition;
+    NodeId TargetNodeTypeDefinition;
 
     ReferenceDescription();
   };
@@ -112,7 +86,7 @@ namespace OpcUa
 
   struct BrowseResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
@@ -127,7 +101,7 @@ namespace OpcUa
 
   struct BrowseNextRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
 
     bool ReleaseContinuationPoints;
@@ -138,7 +112,7 @@ namespace OpcUa
 
   struct BrowseNextResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
 
     std::vector<BrowseResult> Results;
@@ -148,12 +122,12 @@ namespace OpcUa
   };
 
   //---------------------------------------------------
-  // TranslateBrowsePathsToNodeIDs
+  // TranslateBrowsePathsToNodeIds
   //---------------------------------------------------
 
   struct BrowsePath
   {
-    NodeID StartingNode;
+    NodeId StartingNode;
     RelativePath Path;
   };
 
@@ -162,22 +136,22 @@ namespace OpcUa
     std::vector<BrowsePath> BrowsePaths;
   };
 
-  struct TranslateBrowsePathsToNodeIDsRequest
+  struct TranslateBrowsePathsToNodeIdsRequest
   {
-    NodeID TypeID;
+    NodeId TypeId;
     RequestHeader Header;
     TranslateBrowsePathsParameters Parameters;
 
-    TranslateBrowsePathsToNodeIDsRequest();
+    TranslateBrowsePathsToNodeIdsRequest();
   };
 
   //---------------------------------------------------
-  // TranslateBrowsePathsToNodeIDs
+  // TranslateBrowsePathsToNodeIds
   //---------------------------------------------------
 
   struct BrowsePathTarget
   {
-    NodeID Node;
+    NodeId Node;
     uint32_t RemainingPathIndex;
 
     BrowsePathTarget();
@@ -197,13 +171,13 @@ namespace OpcUa
     DiagnosticInfoList Diagnostics;
   };
 
-  struct TranslateBrowsePathsToNodeIDsResponse
+  struct TranslateBrowsePathsToNodeIdsResponse
   {
-    NodeID TypeID;
+    NodeId TypeId;
     ResponseHeader Header;
     TranslateBrowsePathsResult Result;
 
-    TranslateBrowsePathsToNodeIDsResponse();
+    TranslateBrowsePathsToNodeIdsResponse();
   };
 
 } // namespace OpcUa

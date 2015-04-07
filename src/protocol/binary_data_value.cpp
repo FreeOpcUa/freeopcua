@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/data_value.h>
 
 #include <algorithm>
 #include <functional>
@@ -42,7 +42,7 @@ namespace OpcUa
       {
         size += RawSize(val.SourceTimestamp);
       }
-      if (val.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
+      if (val.Encoding & DATA_VALUE_Server_TIMESTAMP)
       {
         size += RawSize(val.ServerTimestamp);
       }
@@ -50,7 +50,7 @@ namespace OpcUa
       {
         size += RawSize(val.SourcePicoseconds);
       }
-      if (val.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
+      if (val.Encoding & DATA_VALUE_Server_PICOSECONDS)
       {
         size += RawSize(val.ServerPicoseconds);
       }
@@ -77,11 +77,11 @@ namespace OpcUa
       {
         *this << val.SourcePicoseconds;
       }
-      if (val.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
+      if (val.Encoding & DATA_VALUE_Server_TIMESTAMP)
       {
         *this << val.ServerTimestamp;
       }
-      if (val.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
+      if (val.Encoding & DATA_VALUE_Server_PICOSECONDS)
       {
         *this << val.ServerPicoseconds;
       }
@@ -107,11 +107,11 @@ namespace OpcUa
       {
         *this >> val.SourcePicoseconds;
       }
-      if (val.Encoding & DATA_VALUE_SERVER_TIMESTAMP)
+      if (val.Encoding & DATA_VALUE_Server_TIMESTAMP)
       {
         *this >> val.ServerTimestamp;
       }
-      if (val.Encoding & DATA_VALUE_SERVER_PICOSECONDS)
+      if (val.Encoding & DATA_VALUE_Server_PICOSECONDS)
       {
         *this >> val.ServerPicoseconds;
       }

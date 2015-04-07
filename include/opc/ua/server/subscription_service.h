@@ -33,7 +33,7 @@ namespace OpcUa
     public:
       DEFINE_CLASS_POINTERS(SubscriptionService);
 
-      virtual void TriggerEvent(NodeID node, Event event) = 0;
+      virtual void TriggerEvent(NodeId node, Event event) = 0;
     };
 
     SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service& io, bool debug);

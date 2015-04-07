@@ -8,14 +8,14 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef OPC_UA_CLIENT_ATTRIBUTES_H
-#define OPC_UA_CLIENT_ATTRIBUTES_H
+#ifndef OPC_UA_Client_ATTRIBUTES_H
+#define OPC_UA_Client_ATTRIBUTES_H
 
 #include <opc/common/class_pointers.h>
 #include <opc/common/interface.h>
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/data_value.h>
-#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/protocol.h>
 
 #include <vector>
 
@@ -34,4 +34,4 @@ namespace OpcUa
 
 } // namespace OpcUa
 
-#endif // OPC_UA_CLIENT_ATTRIBUTES_H
+#endif // OPC_UA_Client_ATTRIBUTES_H

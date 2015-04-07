@@ -8,12 +8,12 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#ifndef __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
-#define __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
+#ifndef __OPC_UA_BINARY_MESSAGE_IdENTIFIERS
+#define __OPC_UA_BINARY_MESSAGE_IdENTIFIERS
 
 namespace OpcUa
 {
-  enum MessageID
+  enum MessageId
   {
     INVALID = 0,
 
@@ -36,8 +36,8 @@ namespace OpcUa
     CREATE_SESSION_RESPONSE = 0x1d0, // 464;
 
     // Endpoints services
-    FIND_SERVERS_REQUEST = 0x1A6, // 422
-    FIND_SERVERS_RESPONSE = 0x1A9, // 425
+    FIND_ServerS_REQUEST = 0x1A6, // 422
+    FIND_ServerS_RESPONSE = 0x1A9, // 425
 
     GET_ENDPOINTS_REQUEST  = 0x1ac, // 428
     GET_ENDPOINTS_RESPONSE = 0x1af, // 431
@@ -46,8 +46,8 @@ namespace OpcUa
     OPEN_SECURE_CHANNEL_REQUEST  = 0x1be, // 446
     OPEN_SECURE_CHANNEL_RESPONSE = 0x1c1, // 449
 
-    TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST  = 0x22A, // 554
-    TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE = 0x22D, // 557
+    TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_REQUEST  = 0x22A, // 554
+    TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_RESPONSE = 0x22D, // 557
 
     READ_REQUEST  = 0x277, // 631
     READ_RESPONSE = 0x27A, // 634
@@ -95,10 +95,10 @@ namespace OpcUa
     SERVICE_FAULT = 0x18d, //397;
   };
 
-  struct NodeID;
+  struct NodeId;
 
-  MessageID GetMessageID(const NodeID& id);
+  MessageId GetMessageId(const NodeId& id);
 
 }
 
-#endif // __OPC_UA_BINARY_MESSAGE_IDENTIFIERS
+#endif // __OPC_UA_BINARY_MESSAGE_IdENTIFIERS

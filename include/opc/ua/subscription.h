@@ -35,21 +35,21 @@ namespace OpcUa
 {
   struct MonitoredItemData
   {
-    IntegerID MonitoredItemID;
+    IntegerId MonitoredItemId;
     Node TargetNode;
-    AttributeID Attribute;
+    AttributeId Attribute;
     MonitoringFilter Filter;
   };
 
-  typedef std::map<IntegerID, MonitoredItemData> AttValMap;
-  typedef std::map<IntegerID, EventFilter> SimpleAttOpMap;
+  typedef std::map<IntegerId, MonitoredItemData> AttValMap;
+  typedef std::map<IntegerId, EventFilter> SimpleAttOpMap;
 
   class SubscriptionHandler
   {
     public:
     virtual ~SubscriptionHandler() {}
     //Called for each datachange events
-    virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeID attribute) const
+    virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute) const
     {
       OPCUA_UNUSED(handle);
       OPCUA_UNUSED(node);
@@ -79,7 +79,7 @@ namespace OpcUa
       //methods of callback object will be called everytime an event is received from the server
       //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
       //Alternative could be
-      //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeID> callback);
+      //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeId> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
       Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
       virtual ~Subscription() {}
@@ -88,13 +88,13 @@ namespace OpcUa
       void Delete();
 
       //Get information about the subscription
-      uint32_t GetId() const { return Data.ID; } 
+      uint32_t GetId() const { return Data.Id; } 
       double GetPeriode() const { return Data.RevisedPublishingInterval; } 
 
       //Subscribe to a Node attribute for its value to change
       // Subscribe to nodes for specified attribute change
-      uint32_t SubscribeDataChange(const Node& node, AttributeID attr=AttributeID::Value);
-      std::vector<uint32_t> SubscribeDataChange(const std::vector<AttributeValueID>& attributes);
+      uint32_t SubscribeDataChange(const Node& node, AttributeId attr=AttributeId::Value);
+      std::vector<uint32_t> SubscribeDataChange(const std::vector<ReadValueId>& attributes);
       
       //Unsubscribe to datachange or events
       void UnSubscribe(uint32_t handle); 

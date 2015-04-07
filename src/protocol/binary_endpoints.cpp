@@ -21,28 +21,28 @@
 namespace OpcUa
 {
   ApplicationDescription::ApplicationDescription()
-    : Type(ApplicationType::CLIENT)
+    : Type(ApplicationType::Client)
   {
   }
 
   GetEndpointsRequest::GetEndpointsRequest()
-    : TypeID(GET_ENDPOINTS_REQUEST)
+    : TypeId(GET_ENDPOINTS_REQUEST)
   {
   }
 
   GetEndpointsResponse::GetEndpointsResponse()
-    : TypeID(GET_ENDPOINTS_RESPONSE)
+    : TypeId(GET_ENDPOINTS_RESPONSE)
   {
   }
 
   FindServersRequest::FindServersRequest()
-    : TypeID(FIND_SERVERS_REQUEST)
+    : TypeId(FIND_ServerS_REQUEST)
   {
 
   }
 
   FindServersResponse::FindServersResponse()
-    : TypeID(FIND_SERVERS_RESPONSE)
+    : TypeId(FIND_ServerS_RESPONSE)
   {
 
   }
@@ -57,7 +57,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<EndpointsFilter>(const EndpointsFilter& filter)
     {
-      return RawSize(filter.EndpointURL) + RawSize(filter.LocaleIDs) + RawSize(filter.ProfileUries);
+      return RawSize(filter.EndpointURL) + RawSize(filter.LocaleIds) + RawSize(filter.ProfileUries);
     }
 
     template<>
@@ -65,13 +65,13 @@ namespace OpcUa
     {
       *this << filter.EndpointURL;
 
-      if (filter.LocaleIDs.empty())
+      if (filter.LocaleIds.empty())
       {
         *this << uint32_t(0);
       }
       else
       {
-        *this << filter.LocaleIDs;
+        *this << filter.LocaleIds;
       }
 
       if (filter.ProfileUries.empty())
@@ -88,7 +88,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<EndpointsFilter>(EndpointsFilter& filter)
     {
       *this >> filter.EndpointURL;
-      *this >> filter.LocaleIDs;
+      *this >> filter.LocaleIds;
       *this >> filter.ProfileUries;
     };
 
@@ -99,14 +99,14 @@ namespace OpcUa
     template<>
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Filter);
-      //return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIDs) + RawSize(request.ProfileUries);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Filter);
+      //return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIds) + RawSize(request.ProfileUries);
     }
 
     template<>
     void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Filter;
     }
@@ -114,34 +114,10 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Filter;
     }
-
-    //-----------------------------------------------------
-    // ApplicationType
-    //-----------------------------------------------------
-
-    template<>
-    std::size_t RawSize<ApplicationType>(const ApplicationType& type)
-    {
-      return 4;
-    };
-
-    template<>
-    void DataSerializer::Serialize<ApplicationType>(const ApplicationType& type)
-    {
-      *this << static_cast<uint32_t>(type);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<ApplicationType>(ApplicationType& type)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      type = static_cast<ApplicationType>(tmp);
-    };
 
     //-----------------------------------------------------
     // UserIdentifyTokenType
@@ -175,7 +151,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& policy)
     {
-      return RawSize(policy.PolicyID) +
+      return RawSize(policy.PolicyId) +
              RawSize(policy.TokenType) +
              RawSize(policy.IssuedTokenType) +
              RawSize(policy.IssuerEndpointURL) +
@@ -194,7 +170,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy& policy)
     {
-      *this << policy.PolicyID;
+      *this << policy.PolicyId;
       *this << policy.TokenType;
       *this << policy.IssuedTokenType;
       *this << policy.IssuerEndpointURL;
@@ -204,7 +180,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<UserTokenPolicy>(UserTokenPolicy& policy)
     {
-      *this >> policy.PolicyID;
+      *this >> policy.PolicyId;
       *this >> policy.TokenType;
       *this >> policy.IssuedTokenType;
       *this >> policy.IssuerEndpointURL;
@@ -350,13 +326,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Endpoints);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Endpoints);
     }
 
     template<>
     void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Endpoints;
     }
@@ -364,7 +340,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Endpoints;
     }
@@ -404,13 +380,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<FindServersRequest>(const FindServersRequest& request)
     {
-      return RawSize(request.TypeID) + RawSize(request.Header) + RawSize(request.Parameters);
+      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
     }
 
     template<>
     void DataSerializer::Serialize<FindServersRequest>(const FindServersRequest& request)
     {
-      *this << request.TypeID;
+      *this << request.TypeId;
       *this << request.Header;
       *this << request.Parameters;
     }
@@ -418,7 +394,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<FindServersRequest>(FindServersRequest& request)
     {
-      *this >> request.TypeID;
+      *this >> request.TypeId;
       *this >> request.Header;
       *this >> request.Parameters;
     }
@@ -452,13 +428,13 @@ namespace OpcUa
     template<>
     std::size_t RawSize<FindServersResponse>(const FindServersResponse& resp)
     {
-      return RawSize(resp.TypeID) + RawSize(resp.Header) + RawSize(resp.Data);
+      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Data);
     }
 
     template<>
     void DataSerializer::Serialize<FindServersResponse>(const FindServersResponse& resp)
     {
-      *this << resp.TypeID;
+      *this << resp.TypeId;
       *this << resp.Header;
       *this << resp.Data;
     }
@@ -466,7 +442,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<FindServersResponse>(FindServersResponse& resp)
     {
-      *this >> resp.TypeID;
+      *this >> resp.TypeId;
       *this >> resp.Header;
       *this >> resp.Data;
     }

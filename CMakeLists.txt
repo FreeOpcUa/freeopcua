@@ -112,7 +112,11 @@ ADD_CUSTOM_COMMAND(
 
 
 add_library(opcuaprotocol STATIC
-    include/opc/ua/protocol/object_ids.h
+    src/protocol/rawsize_auto.cpp
+    src/protocol/serialize_auto.cpp
+    src/protocol/deserialize_auto.cpp
+    src/protocol/constructors_auto.cpp
+    src/protocol/protocol.cpp
     src/protocol/binary_attribute.cpp
     src/protocol/binary_data_value.cpp
     src/protocol/binary_endpoints.cpp

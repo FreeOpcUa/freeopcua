@@ -33,42 +33,33 @@ namespace OpcUa
 {
 
   Node::Node(Services::SharedPtr srv)
-    : Node(srv, NumericNodeID(0, 0), QualifiedName("Null", 0))
+    : Node(srv, NumericNodeId(0, 0))
   {
   }
 
-  Node::Node(Services::SharedPtr srv, const NodeID& id)
+  Node::Node(Services::SharedPtr srv, const NodeId& id)
     : Server(srv)
     , Id(id)
-  {
-    GetName();
-  }
-
-  Node::Node(Services::SharedPtr srv, const NodeID& id, const QualifiedName& name)
-    : Server(srv)
-    , Id(id)
-    , BrowseName(name)
   {
   }
 
   Node::Node(const Node& other)
     : Server(other.Server)
     , Id(other.Id)
-    , BrowseName(other.BrowseName)
   {
   }
 
-  NodeID Node::GetId() const
+  NodeId Node::GetId() const
   {
     return Id;
   }
 
-  Variant Node::GetAttribute(const AttributeID attr) const
+  Variant Node::GetAttribute(const AttributeId attr) const
   {
     ReadParameters params;
-    AttributeValueID attribute;
-    attribute.Node = Id;
-    attribute.Attribute = attr;
+    ReadValueId attribute;
+    attribute.NodeId = Id;
+    attribute.AttributeId = attr;
     params.AttributesToRead.push_back(attribute);
     std::vector<DataValue> vec =  Server->Attributes()-> Read(params); 
     if ( vec.size() > 0 )
@@ -82,7 +73,7 @@ namespace OpcUa
     }
   }
 
-  std::vector<Variant> Node::CallMethod(const NodeID methodId, const std::vector<Variant> inputArguments) const
+  std::vector<Variant> Node::CallMethod(const NodeId methodId, const std::vector<Variant> inputArguments) const
   {
     std::vector<CallMethodRequest> methodsToCall;
     CallMethodRequest callMethod;
@@ -99,12 +90,12 @@ namespace OpcUa
     return results.front().OutputArguments;
   }
 
-  void Node::SetAttribute(AttributeID attr, const DataValue &dval) const
+  void Node::SetAttribute(AttributeId attr, const DataValue &dval) const
   {
     WriteValue attribute;
-    attribute.Node = Id;
-    attribute.Attribute = attr;
-    attribute.Data = dval;
+    attribute.NodeId = Id;
+    attribute.AttributeId = attr;
+    attribute.Value = dval;
     std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<WriteValue>(1, attribute));
     CheckStatusCode(codes.front());
   }
@@ -112,24 +103,24 @@ namespace OpcUa
   void Node::SetValue(const Variant& val) const
   {
     DataValue dval(val);
-    SetAttribute(AttributeID::Value, dval);
+    SetAttribute(AttributeId::Value, dval);
   }
 
   void Node::SetValue(const DataValue &dval) const
   {
-    SetAttribute(AttributeID::Value, dval);
+    SetAttribute(AttributeId::Value, dval);
   }
 
 
-  std::vector<Node> Node::GetChildren(const ReferenceID& refid) const
+  std::vector<Node> Node::GetChildren(const ReferenceId& refid) const
   {
     BrowseDescription description;
     description.NodeToBrowse = Id;
     description.Direction = BrowseDirection::Forward;
     description.IncludeSubtypes = true;
-    description.NodeClasses = NODE_CLASS_ALL;
-    description.ResultMask = REFERENCE_ALL;
-    description.ReferenceTypeID =  refid;
+    description.NodeClasses = NodeClass::Unspecified;
+    description.ResultMask = BrowseResultMask::All;
+    description.ReferenceTypeId =  refid;
 
     NodesQuery query;
     query.NodesToBrowse.push_back(description);
@@ -144,7 +135,7 @@ namespace OpcUa
     {
       for (auto refIt : results[0].Referencies)
       {
-        Node node(Server, refIt.TargetNodeID);
+        Node node(Server, refIt.TargetNodeId);
         nodes.push_back(node);
       }
       results = Server->Views()->BrowseNext();
@@ -158,29 +149,18 @@ namespace OpcUa
 
   std::vector<Node> Node::GetChildren() const
   {
-    return GetChildren(ReferenceID::HierarchicalReferences);
+    return GetChildren(ReferenceId::HierarchicalReferences);
   }
 
-  QualifiedName Node::GetName(bool force) const
+  QualifiedName Node::GetBrowseName() const
   {
-    if ( force || BrowseName == QualifiedName() ){
-      Variant var = GetAttribute(AttributeID::BrowseName);
-      if (var.Type() != VariantType::QUALIFIED_NAME)
-      {
-        throw std::runtime_error("Could not retrieve browse name.");
-      }
-      BrowseName = var.As<QualifiedName>();
+    Variant var = GetAttribute(AttributeId::BrowseName);
+    if (var.Type() != VariantType::QUALIFIED_NAME)
+    {
+      throw std::runtime_error("Could not retrieve browse name.");
     }
-    return BrowseName;
+    return var.As<QualifiedName>();
   }
-
-  //QualifiedName Node::GetName() const
-  //{
-    //if (BrowseName == QualifiedName()){
-      //GetName();
-    //}
-    //return BrowseName;
-  //} 
 
   std::vector<AddNodesResult> Node::AddNodes(std::vector<AddNodesItem> items) const
   {
@@ -200,7 +180,7 @@ namespace OpcUa
   Node Node::GetChild(const std::vector<std::string>& path) const
   {
     std::vector<QualifiedName> vec;
-    uint16_t ns = GetName().NamespaceIndex;
+    uint16_t ns = Id.GetNamespaceIndex();
     for (std::string str: path)
     {
       QualifiedName qname = ToQualifiedName(str, ns);
@@ -231,41 +211,41 @@ namespace OpcUa
     std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params);
     CheckStatusCode(result.front().Status);
 
-    NodeID node =result.front().Targets.front().Node ;
+    NodeId node =result.front().Targets.front().Node ;
     return Node(Server, node);
   }
 
   std::string Node::ToString() const
   {
     std::ostringstream os;
-    os << "Node(" << GetName() << ", " << Id << ")";
+    os << "Node(" << Id << ")";
     return os.str();
   }
 
   Node Node::AddFolder(const std::string& nodeid, const std::string& browsename) const
    {
-     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+     NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
+     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
      return AddFolder(node, qn);
    }
 
   Node Node::AddFolder(uint32_t namespaceIdx, const std::string& name) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), namespaceIdx);
+    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), namespaceIdx);
     QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddFolder(nodeid, qn);
   }
 
-  Node Node::AddFolder(const NodeID& nodeid, const QualifiedName& browsename) const
+  Node Node::AddFolder(const NodeId& nodeid, const QualifiedName& browsename) const
   {
 
     AddNodesItem item;
     item.BrowseName = browsename;
     item.ParentNodeId = this->Id;
-    item.RequestedNewNodeID = nodeid;
+    item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceID::Organizes; 
-    item.TypeDefinition = ObjectID::FolderType; 
+    item.ReferenceTypeId = ReferenceId::Organizes; 
+    item.TypeDefinition = ObjectId::FolderType; 
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -278,33 +258,33 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeId);
   }
 
   Node Node::AddObject(const std::string& nodeid, const std::string& browsename) const
    {
-     NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-     QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+     NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
+     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
      return AddObject(node, qn);
    }
 
   Node Node::AddObject(uint32_t ns, const std::string& name) const
   {
     //FIXME: should default namespace be the onde from the parent of the browsename?
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
     QualifiedName qn = ToQualifiedName(name, ns);
     return AddObject(nodeid, qn);
   }
 
-  Node Node::AddObject(const NodeID& nodeid, const QualifiedName& browsename) const
+  Node Node::AddObject(const NodeId& nodeid, const QualifiedName& browsename) const
   {
     AddNodesItem item;
     item.BrowseName = browsename;
     item.ParentNodeId = this->Id;
-    item.RequestedNewNodeID = nodeid;
+    item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceID::HasComponent; 
-    item.TypeDefinition = ObjectID::BaseObjectType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent; 
+    item.TypeDefinition = ObjectId::BaseObjectType; 
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -318,34 +298,34 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeId);
   }
 
   Node Node::AddVariable(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
     QualifiedName qn = ToQualifiedName(name, ns);
     return AddVariable(nodeid, qn, val);
   }
 
   Node Node::AddVariable(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
-    NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+    NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
+    QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
     return AddVariable(node, qn, val);
   }
 
-  Node Node::AddVariable(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
+  Node Node::AddVariable(const NodeId& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
-    ObjectID datatype = VariantTypeToDataType(val.Type());
+    ObjectId datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;
     item.ParentNodeId = this->Id;
-    item.RequestedNewNodeID = nodeid;
+    item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceID::HasComponent; 
-    item.TypeDefinition = ObjectID::BaseDataVariableType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent; 
+    item.TypeDefinition = ObjectId::BaseDataVariableType; 
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -366,36 +346,36 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeId);
   }
 
 
   Node Node::AddProperty(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeID nodeid = NumericNodeID(Common::GenerateNewID(), ns);
+    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
     const QualifiedName& qname = ToQualifiedName(name, ns);
     return AddProperty(nodeid, qname, val);
   }
 
   Node Node::AddProperty(const std::string& nodeid, const std::string& browsename, const Variant& val) const
   {
-    NodeID node = ToNodeID(nodeid, this->Id.GetNamespaceIndex());
-    QualifiedName qn = ToQualifiedName(browsename, GetName().NamespaceIndex);
+    NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
+    QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
     return AddProperty(node, qn, val);
   }
 
-  Node Node::AddProperty(const NodeID& nodeid, const QualifiedName& browsename, const Variant& val) const
+  Node Node::AddProperty(const NodeId& nodeid, const QualifiedName& browsename, const Variant& val) const
   {
 
-    ObjectID datatype = VariantTypeToDataType(val.Type());
+    ObjectId datatype = VariantTypeToDataType(val.Type());
 
     AddNodesItem item;
     item.BrowseName = browsename;
     item.ParentNodeId = this->Id;
-    item.RequestedNewNodeID = nodeid;
+    item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceID::HasProperty; 
-    item.TypeDefinition = ObjectID::PropertyType; 
+    item.ReferenceTypeId = ReferenceId::HasProperty; 
+    item.TypeDefinition = ObjectId::PropertyType; 
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -416,18 +396,18 @@ namespace OpcUa
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
 
-    return Node(Server, res.AddedNodeID, browsename);
+    return Node(Server, res.AddedNodeId);
 
   }
 
   Variant Node::GetValue() const
   {
-    return GetAttribute(AttributeID::Value);
+    return GetAttribute(AttributeId::Value);
   }
 
   Variant Node::GetDataType() const
   {
-    return GetAttribute(AttributeID::DataType);
+    return GetAttribute(AttributeId::DataType);
   }
 
 } // namespace OpcUa

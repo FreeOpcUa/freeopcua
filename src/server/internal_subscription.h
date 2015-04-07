@@ -30,29 +30,29 @@ namespace OpcUa
     //Structure to store description of a MonitoredItems
     struct MonitoredDataChange
     {
-      IntegerID MonitoredItemId;
+      IntegerId MonitoredItemId;
       MonitoringMode Mode;
       time_t LastTrigger;
       CreateMonitoredItemsResult Parameters;
-      IntegerID ClientHandle;
+      IntegerId ClientHandle;
       uint32_t CallbackHandle;
     };
 
     struct TriggeredDataChange
     {
-      IntegerID MonitoredItemId;
+      IntegerId MonitoredItemId;
       MonitoredItems Data;
     };
 
     struct TriggeredEvent
     {
-      IntegerID MonitoredItemId;
+      IntegerId MonitoredItemId;
       EventFieldList Data;
     };
 
-    //typedef std::pair<NodeID, AttributeID> MonitoredItemsIndex;
-    typedef std::map<IntegerID, MonitoredDataChange> MonitoredDataChangeMap;
-    typedef std::map<NodeID, IntegerID> MonitoredEventsMap;
+    //typedef std::pair<NodeId, AttributeId> MonitoredItemsIndex;
+    typedef std::map<IntegerId, MonitoredDataChange> MonitoredDataChangeMap;
+    typedef std::map<NodeId, IntegerId> MonitoredEventsMap;
 
     class AddressSpaceInMemory; //pre-declaration
 
@@ -60,44 +60,44 @@ namespace OpcUa
     class InternalSubscription : public std::enable_shared_from_this<InternalSubscription>
     {
       public:
-        InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeID& SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug=false);
+        InternalSubscription(SubscriptionServiceInternal& service, const SubscriptionData& data, const NodeId& SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug=false);
         ~InternalSubscription();
         void Start();
         void Stop();
 
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
-        std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerID>& ids);
-        bool EnqueueEvent(IntegerID monitoreditemid, const Event& event);
-        bool EnqueueDataChange(IntegerID monitoreditemid, const DataValue& value);
+        std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerId>& ids);
+        bool EnqueueEvent(IntegerId monitoreditemid, const Event& event);
+        bool EnqueueDataChange(IntegerId monitoreditemid, const DataValue& value);
         CreateMonitoredItemsResult CreateMonitoredItem(const MonitoredItemRequest& request);
-        void DataChangeCallback(const IntegerID&, const DataValue& value);
+        void DataChangeCallback(const IntegerId&, const DataValue& value);
         bool HasExpired();
-        void TriggerEvent(NodeID node, Event event);
+        void TriggerEvent(NodeId node, Event event);
         RepublishResponse Republish(const RepublishParameters& params);
 
       private:
         void DeleteAllMonitoredItems(); 
-        bool DeleteMonitoredEvent(IntegerID handle);
-        bool DeleteMonitoredDataChange(IntegerID handle);
+        bool DeleteMonitoredEvent(IntegerId handle);
+        bool DeleteMonitoredDataChange(IntegerId handle);
         std::vector<PublishResult> PopPublishResult(); 
         bool HasPublishResult(); 
         NotificationData GetNotificationData();
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
-        void TriggerDataChangeEvent(MonitoredDataChange monitoreditems, AttributeValueID attrval);
+        void TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval);
 
       private:
         SubscriptionServiceInternal& Service;
         Server::AddressSpace& AddressSpace;
         mutable boost::shared_mutex DbMutex;
         SubscriptionData Data;
-        const NodeID CurrentSession;
+        const NodeId CurrentSession;
         std::function<void (PublishResult)> Callback;
 
         uint32_t NotificationSequence = 1; //NotificationSequence start at 1! not 0
         uint32_t KeepAliveCount = 0; 
         bool Startup = true; //To force specific behaviour at startup
-        uint32_t LastMonitoredItemID = 100;
+        uint32_t LastMonitoredItemId = 100;
         MonitoredDataChangeMap MonitoredDataChanges; 
         MonitoredEventsMap MonitoredEvents;
         std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent

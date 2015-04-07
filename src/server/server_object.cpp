@@ -34,7 +34,7 @@ namespace
   OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
   {
     OpcUa::RelativePathElement element;
-    element.ReferenceTypeID = OpcUa::ObjectID::HierarchicalReferences;
+    element.ReferenceTypeId = OpcUa::ObjectId::HierarchicalReferences;
     element.IncludeSubtypes = true;
     element.TargetName.Name = browseName;
     return element;
@@ -70,21 +70,21 @@ namespace OpcUa
       std::vector<std::string> uris; 
       uris.push_back("http://opcfoundation.org/UA/");
       uris.push_back("http://freeopcua.github.io");
-      Node node = Node(Server, ObjectID::Server_NamespaceArray);
+      Node node = Node(Server, ObjectId::Server_NamespaceArray);
       node.SetValue(uris);
-      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ManufacturerName);
+      node = Node(Server, ObjectId::Server_ServerStatus_BuildInfo_ManufacturerName);
       node.SetValue(std::string("FreeOpcUa"));
-      node = Node(Server, ObjectID::Server_ServerCapabilities_LocaleIdArray);
+      node = Node(Server, ObjectId::Server_ServerCapabilities_LocaleIdArray);
       node.SetValue(std::vector<std::string>({ "en" }));
-      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_BuildNumber);
+      node = Node(Server, ObjectId::Server_ServerStatus_BuildInfo_BuildNumber);
       node.SetValue(std::string("0.8"));
-      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ProductName);
+      node = Node(Server, ObjectId::Server_ServerStatus_BuildInfo_ProductName);
       node.SetValue(std::string("FreeOpcUa"));
-      node = Node(Server, ObjectID::Server_ServerStatus_BuildInfo_ProductUri);
+      node = Node(Server, ObjectId::Server_ServerStatus_BuildInfo_ProductUri);
       node.SetValue(std::string("https://freeopcua.github.io"));
-      node = Node(Server, ObjectID::Server_ServerStatus_State);
+      node = Node(Server, ObjectId::Server_ServerStatus_State);
       node.SetValue((int32_t) 0);
-      node = Node(Server, ObjectID::Server_ServerStatus_CurrentTime);
+      node = Node(Server, ObjectId::Server_ServerStatus_CurrentTime);
       node.SetValue(DateTime::Current());//Set time before the thread does it
 
     }
@@ -99,7 +99,7 @@ namespace OpcUa
     Model::Object ServerObject::CreateServerObject(const Services::SharedPtr& services) const
     {
       Model::Server server(services);
-      Model::Object serverObject = server.GetObject(ObjectID::Server);
+      Model::Object serverObject = server.GetObject(ObjectId::Server);
       return serverObject;
     }
 

@@ -160,8 +160,8 @@ namespace OpcUa
       const std::size_t sizeofType = 3;  // 'H', 'E', 'L'
       const std::size_t sizeofChunk = 1; // 'F'
       const std::size_t sizeofSize = 4;
-      const std::size_t sizeofChannelID = 4;
-      return sizeofType + sizeofChunk + sizeofSize + sizeofChannelID;
+      const std::size_t sizeofChannelId = 4;
+      return sizeofType + sizeofChunk + sizeofSize + sizeofChannelId;
     }
 
     template<>
@@ -213,17 +213,17 @@ namespace OpcUa
     std::size_t RawSize<SequenceHeader>(const SequenceHeader&)
     {
       const std::size_t sizeofSequenceNumber = 4;
-      const std::size_t sizeofRequestID = 4;
+      const std::size_t sizeofRequestId = 4;
 
-      return sizeofSequenceNumber + sizeofRequestID;
+      return sizeofSequenceNumber + sizeofRequestId;
     }
 
     template<>
     std::size_t RawSize<AdditionalHeader>(const AdditionalHeader& header)
     {
-      const std::size_t sizeofTypeID = RawSize(header.TypeID);
+      const std::size_t sizeofTypeId = RawSize(header.TypeId);
       const std::size_t sizeofEncoding = 1;
-      return sizeofTypeID + sizeofEncoding;
+      return sizeofTypeId + sizeofEncoding;
     }
 
     template<>
@@ -233,17 +233,17 @@ namespace OpcUa
       const std::size_t sizeofUtcTime = 8;
       const std::size_t sizeofRequestHandle = 4;
       const std::size_t sizeofReturnDiagnostics = 4;
-      const std::size_t sizeofAuditEntryID = 4 + header.AuditEntryID.size();
+      const std::size_t sizeofAuditEntryId = 4 + header.AuditEntryId.size();
       const std::size_t sizeofTimeout = 4;
       const std::size_t sizeofAdditional = RawSize(header.Additional);
 
-      return sizeofSessionAuthenticationToken + sizeofUtcTime + sizeofRequestHandle + sizeofReturnDiagnostics + sizeofAuditEntryID + sizeofTimeout + sizeofAdditional;
+      return sizeofSessionAuthenticationToken + sizeofUtcTime + sizeofRequestHandle + sizeofReturnDiagnostics + sizeofAuditEntryId + sizeofTimeout + sizeofAdditional;
     }
 
     template<>
     std::size_t RawSize<OpenSecureChannelRequest>(const OpenSecureChannelRequest& request)
     {
-      const std::size_t sizeofTypeID = RawSize(request.TypeID);
+      const std::size_t sizeofTypeId = RawSize(request.TypeId);
       const std::size_t sizeofHeader = RawSize(request.Header);
       const std::size_t sizeofClientProtocolVersion = 4;
       const std::size_t sizeofRequestType = 4;
@@ -251,14 +251,14 @@ namespace OpcUa
       const std::size_t sizeofClientNonce = 4 + request.Parameters.ClientNonce.size();
       const std::size_t sizeofRequestLifeTime = 4;
 
-      return sizeofTypeID + sizeofHeader + sizeofClientProtocolVersion + sizeofRequestType + sizeofSecurityMode + sizeofClientNonce + sizeofRequestLifeTime;
+      return sizeofTypeId + sizeofHeader + sizeofClientProtocolVersion + sizeofRequestType + sizeofSecurityMode + sizeofClientNonce + sizeofRequestLifeTime;
     };
 
     template<>
     std::size_t RawSize<SymmetricAlgorithmHeader>(const SymmetricAlgorithmHeader& header)
     {
-      const std::size_t sizeofTokenID = 4;
-      return sizeofTokenID;
+      const std::size_t sizeofTokenId = 4;
+      return sizeofTokenId;
     }
 
     template<>
@@ -267,10 +267,10 @@ namespace OpcUa
       const std::size_t sizeofEncodingMask = 1;
       size_t size = sizeofEncodingMask;
 
-      if (info.EncodingMask & DIM_SYMBOLIC_ID)
+      if (info.EncodingMask & DIM_SYMBOLIC_Id)
       {
-        const std::size_t sizeofSymbolicID = 4;
-        size += sizeofSymbolicID;
+        const std::size_t sizeofSymbolicId = 4;
+        size += sizeofSymbolicId;
       }
       if (info.EncodingMask & DIM_NAMESPACE)
       {
@@ -329,32 +329,32 @@ namespace OpcUa
     template<>
     std::size_t RawSize<SecurityToken>(const SecurityToken&)
     {
-      const std::size_t sizeofSecureChannelID = 4;
-      const std::size_t sizeofTokenID = 4;
+      const std::size_t sizeofSecureChannelId = 4;
+      const std::size_t sizeofTokenId = 4;
       const std::size_t sizeofCreatedAt = 8;
       const std::size_t sizeofRevisedLifetime = 4;
 
-      return sizeofSecureChannelID + sizeofTokenID + sizeofCreatedAt + sizeofRevisedLifetime;
+      return sizeofSecureChannelId + sizeofTokenId + sizeofCreatedAt + sizeofRevisedLifetime;
     };
 
     template<>
     std::size_t RawSize<OpenSecureChannelResponse>(const OpenSecureChannelResponse& response)
     {
-      const std::size_t sizeofTypeID = RawSize(response.TypeID);
+      const std::size_t sizeofTypeId = RawSize(response.TypeId);
       const std::size_t sizeofHeader = RawSize(response.Header);
       const std::size_t sizeofServerProtocolVersion = 4;
       const std::size_t sizeofChannelSecurityToken = RawSize(response.ChannelSecurityToken);
       const std::size_t sizeofServerNonce = 4 + response.ServerNonce.size();
 
-      return sizeofTypeID + sizeofHeader + sizeofServerProtocolVersion + sizeofChannelSecurityToken + sizeofServerNonce;
+      return sizeofTypeId + sizeofHeader + sizeofServerProtocolVersion + sizeofChannelSecurityToken + sizeofServerNonce;
     };
 
     template<>
     std::size_t RawSize<CloseSecureChannelRequest>(const CloseSecureChannelRequest& request)
     {
-      const std::size_t sizeofTypeID = RawSize(request.TypeID);
+      const std::size_t sizeofTypeId = RawSize(request.TypeId);
       const std::size_t sizeofHeader = RawSize(request.Header);
-      return sizeofTypeID + sizeofHeader;
+      return sizeofTypeId + sizeofHeader;
     }
 
 
@@ -374,12 +374,6 @@ namespace OpcUa
     };
 
     template<>
-    std::size_t RawSize<MessageSecurityMode>(const MessageSecurityMode&)
-    {
-      return 4;
-    };
-
-    template<>
     std::size_t RawSize<SignatureData>(const SignatureData& s)
     {
       return RawSize(s.Signature) + RawSize(s.Algorithm);
@@ -389,7 +383,7 @@ namespace OpcUa
     std::size_t RawSize<ExtensionObjectHeader>(const ExtensionObjectHeader& header)
     {
       const std::size_t sizeofEncoding = 1;
-      return RawSize(header.TypeID) + sizeofEncoding;
+      return RawSize(header.TypeId) + sizeofEncoding;
     };
 
     template<>
@@ -399,7 +393,7 @@ namespace OpcUa
     };
     template<>
 
-    std::size_t RawSize<IntegerID>(const IntegerID&)
+    std::size_t RawSize<IntegerId>(const IntegerId&)
     {
       return 4;
     };

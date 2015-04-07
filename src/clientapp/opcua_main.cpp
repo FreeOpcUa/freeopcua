@@ -16,7 +16,6 @@
 #include <opc/common/addons_core/config_file.h>
 #include <opc/common/uri_facade.h>
 #include <opc/ua/node.h>
-#include <opc/ua/protocol/node_classes.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/variant_visitor.h>
 #include <opc/ua/services/services.h>
@@ -52,11 +51,11 @@ namespace
   {
     switch (mode)
     {
-      case OpcUa::MSM_NONE:
+      case MessageSecurityMode::None:
         return "none";
-      case OpcUa::MSM_SIGN:
+      case MessageSecurityMode::Sign:
         return "sign";
-      case OpcUa::MSM_SIGN_AND_ENCRYPT:
+      case MessageSecurityMode::SignAndEncrypt:
         return "sign and encrypt";
 
       default:
@@ -68,13 +67,13 @@ namespace
   {
     switch (type)
     {
-      case OpcUa::ApplicationType::SERVER:
+      case OpcUa::ApplicationType::Server:
         return "server";
-      case OpcUa::ApplicationType::CLIENT:
+      case OpcUa::ApplicationType::Client:
         return "client";
-      case OpcUa::ApplicationType::CLIENT_AND_SERVER:
+      case OpcUa::ApplicationType::ClientAndServer:
         return "client and server";
-      case OpcUa::ApplicationType::DISCOVERY_SERVER:
+      case OpcUa::ApplicationType::DiscoveryServer:
         return "discovery server";
       default:
         return "unknown";
@@ -176,59 +175,59 @@ namespace
 
 
 
-  void Print(const OpcUa::NodeID& nodeID, const Tabs& tabs)
+  void Print(const OpcUa::NodeId& nodeId, const Tabs& tabs)
   {
-    OpcUa::NodeIDEncoding encoding = static_cast<OpcUa::NodeIDEncoding>(nodeID.Encoding & OpcUa::NodeIDEncoding::EV_VALUE_MASK);
+    OpcUa::NodeIdEncoding encoding = static_cast<OpcUa::NodeIdEncoding>(nodeId.Encoding & OpcUa::NodeIdEncoding::EV_VALUE_MASK);
 
     const Tabs dataTabs(tabs.Num + 2);
     switch (encoding)
     {
-      case OpcUa::NodeIDEncoding::EV_TWO_BYTE:
+      case OpcUa::NodeIdEncoding::EV_TWO_BYTE:
       {
         std::cout << tabs << "Two byte:" << std::endl;
-        std::cout << dataTabs << "Identifier:" << (unsigned)nodeID.TwoByteData.Identifier << std::endl;
+        std::cout << dataTabs << "Identifier:" << (unsigned)nodeId.TwoByteData.Identifier << std::endl;
         break;
       }
 
-      case OpcUa::NodeIDEncoding::EV_FOUR_BYTE:
+      case OpcUa::NodeIdEncoding::EV_FOUR_BYTE:
       {
         std::cout << tabs << "Four byte:" << std::endl;
-        std::cout << dataTabs << "NamespaceIndex:" << (unsigned)nodeID.FourByteData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.FourByteData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex:" << (unsigned)nodeId.FourByteData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier" << (unsigned)nodeId.FourByteData.Identifier << std::endl;
         break;
       }
 
-      case OpcUa::NodeIDEncoding::EV_NUMERIC:
+      case OpcUa::NodeIdEncoding::EV_NUMERIC:
       {
         std::cout << tabs << "Numeric:" << std::endl;
-        std::cout << dataTabs << "NamespaceIndex" << (unsigned)nodeID.NumericData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.NumericData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex" << (unsigned)nodeId.NumericData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier" << (unsigned)nodeId.NumericData.Identifier << std::endl;
         break;
       }
 
-      case OpcUa::NodeIDEncoding::EV_STRING:
+      case OpcUa::NodeIdEncoding::EV_STRING:
       {
         std::cout << tabs << "String: " << std::endl;
-        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.StringData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier: " <<  nodeID.StringData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeId.StringData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier: " <<  nodeId.StringData.Identifier << std::endl;
         break;
       }
 
-      case OpcUa::NodeIDEncoding::EV_BYTE_STRING:
+      case OpcUa::NodeIdEncoding::EV_BYTE_STRING:
       {
         std::cout << tabs << "Binary: " << std::endl;
-        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.BinaryData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeId.BinaryData.NamespaceIndex << std::endl;
         std::cout << dataTabs << "Identifier: ";
-        for (auto val : nodeID.BinaryData.Identifier) {std::cout << (unsigned)val; }
+        for (auto val : nodeId.BinaryData.Identifier) {std::cout << (unsigned)val; }
         std::cout << std::endl;
         break;
       }
 
-      case OpcUa::NodeIDEncoding::EV_GUID:
+      case OpcUa::NodeIdEncoding::EV_GUId:
       {
         std::cout << tabs << "Guid: " << std::endl;
-        std::cout << dataTabs << "Namespace Index: " << (unsigned)nodeID.GuidData.NamespaceIndex << std::endl;
-        const OpcUa::Guid& guid = nodeID.GuidData.Identifier;
+        std::cout << dataTabs << "Namespace Index: " << (unsigned)nodeId.GuidData.NamespaceIndex << std::endl;
+        const OpcUa::Guid& guid = nodeId.GuidData.Identifier;
         std::cout << dataTabs << "Identifier: " << std::hex << guid.Data1 << "-" << guid.Data2 << "-" << guid.Data3;
         for (auto val : guid.Data4) {std::cout << (unsigned)val; }
         break;
@@ -240,20 +239,20 @@ namespace
       }
     }
 
-    if (nodeID.Encoding & OpcUa::NodeIDEncoding::EV_NAMESPACE_URI_FLAG)
+    if (nodeId.Encoding & OpcUa::NodeIdEncoding::EV_NAMESPACE_URI_FLAG)
     {
-      std::cout << tabs << "Namespace URI: " << nodeID.NamespaceURI << std::endl;
+      std::cout << tabs << "Namespace URI: " << nodeId.NamespaceURI << std::endl;
     }
 
-    if (nodeID.Encoding & OpcUa::NodeIDEncoding::EV_SERVER_INDEX_FLAG)
+    if (nodeId.Encoding & OpcUa::NodeIdEncoding::EV_Server_INDEX_FLAG)
     {
-      std::cout << tabs << "Server index: " << nodeID.ServerIndex << std::endl;
+      std::cout << tabs << "Server index: " << nodeId.ServerIndex << std::endl;
     }
   }
 
   void Print(const OpcUa::UserTokenPolicy& policy, const Tabs& tabs)
   {
-    std::cout << tabs << "ID: " << policy.PolicyID << std::endl;
+    std::cout << tabs << "Id: " << policy.PolicyId << std::endl;
     std::cout << tabs << "TokenType: " << GetName(policy.TokenType) << std::endl;
     std::cout << tabs << "IssuedTokenType: " << policy.IssuedTokenType  << std::endl;
     std::cout << tabs << "IssuerEndpointURL: " << policy.IssuerEndpointURL << std::endl;
@@ -336,24 +335,24 @@ namespace
     std::cout << tabs << "Is Forward: " << desc.IsForward << std::endl;
 
     std::cout << tabs << "Target Node class: " << GetNodeClassName(static_cast<unsigned>(desc.TargetNodeClass))  << std::endl;
-    std::cout << tabs << "Target NodeID:" << std::endl;
-    Print(desc.TargetNodeID, tabs1);
+    std::cout << tabs << "Target NodeId:" << std::endl;
+    Print(desc.TargetNodeId, tabs1);
 
-    std::cout << tabs << "TypeID:" << std::endl;
-    Print(desc.ReferenceTypeID, tabs1);
+    std::cout << tabs << "TypeId:" << std::endl;
+    Print(desc.ReferenceTypeId, tabs1);
 
-    std::cout << tabs << "Type definition ID:" << std::endl;
+    std::cout << tabs << "Type definition Id:" << std::endl;
     Print(desc.TargetNodeTypeDefinition, tabs1);
   }
 
-  void Browse(OpcUa::ViewServices& view, OpcUa::NodeID nodeID)
+  void Browse(OpcUa::ViewServices& view, OpcUa::NodeId nodeId)
   {
     OpcUa::BrowseDescription description;
-    description.NodeToBrowse = nodeID;
+    description.NodeToBrowse = nodeId;
     description.Direction = OpcUa::BrowseDirection::Forward;
     description.IncludeSubtypes = true;
-    description.NodeClasses = OpcUa::NODE_CLASS_ALL;
-    description.ResultMask = OpcUa::REFERENCE_ALL;
+    description.NodeClasses = OpcUa::NodeClass::Unspecified;
+    description.ResultMask = OpcUa::BrowseResultMask::All;
 
     OpcUa::NodesQuery query;
     query.View.Timestamp = OpcUa::DateTime::Current();
@@ -508,10 +507,10 @@ namespace
       }
 
 
-      case VariantType::EXPANDED_NODE_ID:
-      case VariantType::NODE_ID:
+      case VariantType::EXPANDED_NODE_Id:
+      case VariantType::NODE_Id:
       {
-        std::cout << tabs << "NodeID: " << std::endl;
+        std::cout << tabs << "NodeId: " << std::endl;
         break;
       }
 
@@ -533,7 +532,7 @@ namespace
         std::cout << "DateTime: " << OpcUa::ToString(var.As<DateTime>()) << std::endl;
         break;
       }
-      case VariantType::GUID:
+      case VariantType::GUId:
       case VariantType::BYTE_STRING:
       case VariantType::XML_ELEMENT:
       case VariantType::STATUS_CODE:
@@ -566,12 +565,12 @@ namespace
   }
 
 
-  void Read(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID)
+  void Read(OpcUa::AttributeServices& attributes, OpcUa::NodeId nodeId, OpcUa::AttributeId attributeId)
   {
     ReadParameters params;
-    AttributeValueID attribute;
-    attribute.Node = nodeID;
-    attribute.Attribute = attributeID;
+    ReadValueId attribute;
+    attribute.NodeId = nodeId;
+    attribute.AttributeId = attributeId;
     params.AttributesToRead.push_back(attribute);
     const std::vector<DataValue> values = attributes.Read(params);
     if (values.size() != 1)
@@ -583,12 +582,12 @@ namespace
     Print(values.front(), Tabs(2));
   }
 
-  void Write(OpcUa::AttributeServices& attributes, OpcUa::NodeID nodeID, OpcUa::AttributeID attributeID, const OpcUa::Variant& value)
+  void Write(OpcUa::AttributeServices& attributes, OpcUa::NodeId nodeId, OpcUa::AttributeId attributeId, const OpcUa::Variant& value)
   {
     OpcUa::WriteValue attribute;
-    attribute.Node = nodeID;
-    attribute.Attribute = attributeID;
-    attribute.Data = value;
+    attribute.NodeId = nodeId;
+    attribute.AttributeId = attributeId;
+    attribute.Value = value;
     std::vector<StatusCode> statuses = attributes.Write(std::vector<OpcUa::WriteValue>(1, attribute));
     for (OpcUa::StatusCode status : statuses)
     {
@@ -606,7 +605,7 @@ namespace
     request.Parameters.RequestedMaxKeepAliveCount = 1;
     request.Parameters.RequestedPublishingInterval = 1000;
     const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request, [](PublishResult){});
-    std::cout << "ID: " << data.ID << std::endl;
+    std::cout << "Id: " << data.Id << std::endl;
     std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
     std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;
     std::cout << "RevizedMaxKeepAliveCount: " << data.RevizedMaxKeepAliveCount << std::endl;
@@ -633,7 +632,7 @@ namespace
     session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
     session.ClientDescription.Name.Text = "opcua client";
-    session.ClientDescription.Type = OpcUa::ApplicationType::CLIENT;
+    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
     session.SessionName = "opua command line";
     session.EndpointURL = serverURI;
     session.Timeout = 1200000;
@@ -644,22 +643,22 @@ namespace
 
     if (cmd.IsBrowseOperation())
     {
-      const OpcUa::NodeID nodeID = cmd.GetNodeID();
-      Print(nodeID, Tabs(0));
-      Browse(*computer->Views(), nodeID);
+      const OpcUa::NodeId nodeId = cmd.GetNodeId();
+      Print(nodeId, Tabs(0));
+      Browse(*computer->Views(), nodeId);
     }
     else if (cmd.IsReadOperation())
     {
-      const OpcUa::NodeID nodeID = cmd.GetNodeID();
-      const OpcUa::AttributeID attributeID = cmd.GetAttribute();
-      Read(*computer->Attributes(), nodeID, attributeID);
+      const OpcUa::NodeId nodeId = cmd.GetNodeId();
+      const OpcUa::AttributeId attributeId = cmd.GetAttribute();
+      Read(*computer->Attributes(), nodeId, attributeId);
     }
     else if (cmd.IsWriteOperation())
     {
-      const OpcUa::NodeID nodeID = cmd.GetNodeID();
-      const OpcUa::AttributeID attributeID = cmd.GetAttribute();
+      const OpcUa::NodeId nodeId = cmd.GetNodeId();
+      const OpcUa::AttributeId attributeId = cmd.GetAttribute();
       const OpcUa::Variant value = cmd.GetValue();
-      Write(*computer->Attributes(), nodeID, attributeID, value);
+      Write(*computer->Attributes(), nodeId, attributeId, value);
     }
     else if (cmd.IsCreateSubscriptionOperation())
     {
@@ -678,15 +677,15 @@ namespace
   {
     std::cout << "Registering new module." << std::endl;
     const std::string& configDir = cmd.GetConfigDir();
-    const std::string& addonID = cmd.GetModuleID();
+    const std::string& addonId = cmd.GetModuleId();
     const std::string& modulePath = cmd.GetModulePath();
 
-    std::cout << "ID: " << addonID << std::endl;
+    std::cout << "Id: " << addonId << std::endl;
     std::cout << "Path: " << modulePath << std::endl;
     std::cout << "Configuration file: " << configDir << std::endl;
 
     Common::Configuration config = Common::ParseConfigurationFiles(configDir);
-    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
+    const Common::ModulesConfiguration::const_iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonId](const Common::ModuleConfiguration& config){return config.Id == addonId;});
     if (moduleIt != config.Modules.end())
     {
       std::cerr << "Module already registered." << std::endl;
@@ -694,7 +693,7 @@ namespace
     }
 
     Common::ModuleConfiguration module;
-    module.ID = addonID;
+    module.Id = addonId;
     module.Path = modulePath;
 
     config.Modules.push_back(module);
@@ -705,14 +704,14 @@ namespace
 
   int UnregisterModule(const OpcUa::CommandLine& cmd)
   {
-    const Common::AddonID addonID = cmd.GetModuleID();
+    const Common::AddonId addonId = cmd.GetModuleId();
     const std::string& configDir = cmd.GetConfigDir();
     std::cout << "Unregistering module." << std::endl;
-    std::cout << "ID: " << addonID << std::endl;
+    std::cout << "Id: " << addonId << std::endl;
     std::cout << "Configuration file: " << configDir << std::endl;
 
     Common::Configuration config = Common::ParseConfigurationFiles(configDir);
-    Common::ModulesConfiguration::iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonID](const Common::ModuleConfiguration& config){return config.ID == addonID;});
+    Common::ModulesConfiguration::iterator moduleIt = std::find_if(config.Modules.begin(), config.Modules.end(), [&addonId](const Common::ModuleConfiguration& config){return config.Id == addonId;});
     if (moduleIt == config.Modules.end())
     {
       std::cerr << "Module not found" << std::endl;

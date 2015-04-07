@@ -117,9 +117,9 @@ Variant ToVariant(const object & obj)
               var = extract<std::vector<std::string>>(obj)();
             }
 
-          else if (extract<std::vector<NodeID>>(obj).check())
+          else if (extract<std::vector<NodeId>>(obj).check())
             {
-              var = extract<std::vector<NodeID>>(obj)();
+              var = extract<std::vector<NodeId>>(obj)();
             }
 
           else if (extract<std::vector<DateTime>>(obj).check())
@@ -143,9 +143,9 @@ Variant ToVariant(const object & obj)
       var = extract<double>(obj)();
     }
 
-  else if (extract<NodeID>(obj).check())
+  else if (extract<NodeId>(obj).check())
     {
-      var = extract<NodeID>(obj)();
+      var = extract<NodeId>(obj)();
     }
   else if (extract<DateTime>(obj).check())
     {

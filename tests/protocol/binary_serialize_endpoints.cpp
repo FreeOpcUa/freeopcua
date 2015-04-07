@@ -40,20 +40,20 @@ TEST_F(EndpointsSerialization, GetEndpointsRequest)
 
   GetEndpointsRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
   request.Filter.EndpointURL = "test";
-  request.Filter.LocaleIDs.push_back("RU");
+  request.Filter.LocaleIds.push_back("RU");
   request.Filter.ProfileUries.push_back("pro");
 
 
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xac, 0x1, // TypeID
+  1, 0, (char)0xac, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   4,0,0,0, 't','e','s','t',
@@ -71,7 +71,7 @@ TEST_F(EndpointsDeserialization, GetEndpointsRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xac, 0x1, // TypeID
+  1, 0, (char)0xac, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   4,0,0,0, 't','e','s','t',
@@ -84,14 +84,14 @@ TEST_F(EndpointsDeserialization, GetEndpointsRequest)
   GetEndpointsRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Filter.EndpointURL, "test");
-  ASSERT_EQ(request.Filter.LocaleIDs, std::vector<std::string>(1, "RU"));
+  ASSERT_EQ(request.Filter.LocaleIds, std::vector<std::string>(1, "RU"));
   ASSERT_EQ(request.Filter.ProfileUries, std::vector<std::string>(1, "pro"));
 }
 
@@ -107,9 +107,9 @@ TEST_F(EndpointsSerialization, GetEndpointsResponse)
 
   GetEndpointsResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -120,7 +120,7 @@ TEST_F(EndpointsSerialization, GetEndpointsResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xaf, 0x1, // TypeID
+  1, 0, (char)0xaf, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
 
@@ -138,7 +138,7 @@ TEST_F(EndpointsDeserialization, GetEndpointsResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xaf, 0x1, // TypeID
+  1, 0, (char)0xaf, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
 
@@ -151,9 +151,9 @@ TEST_F(EndpointsDeserialization, GetEndpointsResponse)
   GetEndpointsResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -294,9 +294,9 @@ TEST_F(EndpointsDeserialization, GetEndpointsResponseReal)
   GetEndpointsResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_RESPONSE);
 
   ASSERT_EQ(response.Endpoints.size(), 5);
 
@@ -368,9 +368,9 @@ TEST_F(EndpointsSerialization, FindServersRequest)
 
   FindServersRequest request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
   request.Parameters.EndpointURL = "url";
@@ -381,7 +381,7 @@ TEST_F(EndpointsSerialization, FindServersRequest)
   GetStream() << request << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xa6, 0x1, // TypeID
+  1, 0, (char)0xa6, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   3,0,0,0, 'u','r','l',
@@ -399,7 +399,7 @@ TEST_F(EndpointsDeserialization, FindServersRequest)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xa6, 0x1, // TypeID
+  1, 0, (char)0xa6, 0x1, // TypeId
   // RequestHeader
   TEST_REQUEST_HEADER_BINARY_DATA,
   3,0,0,0, 'u','r','l',
@@ -412,9 +412,9 @@ TEST_F(EndpointsDeserialization, FindServersRequest)
   FindServersRequest request;
   GetStream() >> request;
 
-  ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_REQUEST);
+  ASSERT_EQ(request.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -435,9 +435,9 @@ TEST_F(EndpointsSerialization, FindServersResponse)
 
   FindServersResponse response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -448,7 +448,7 @@ TEST_F(EndpointsSerialization, FindServersResponse)
   GetStream() << response << flush;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xa9, 0x1, // TypeID
+  1, 0, (char)0xa9, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
 
@@ -466,7 +466,7 @@ TEST_F(EndpointsDeserialization, FindServersResponse)
   using namespace OpcUa::Binary;
 
   const std::vector<char> expectedData = {
-  1, 0, (char)0xa9, 0x1, // TypeID
+  1, 0, (char)0xa9, 0x1, // TypeId
   // RequestHeader
   TEST_RESPONSE_HEADER_BINARY_DATA,
 
@@ -479,9 +479,9 @@ TEST_F(EndpointsDeserialization, FindServersResponse)
   FindServersResponse response;
   GetStream() >> response;
 
-  ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::FIND_SERVERS_RESPONSE);
+  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 

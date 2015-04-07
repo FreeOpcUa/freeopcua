@@ -24,13 +24,13 @@ protected:
   View()
   {
     Query.Description.NodeToBrowse.Encoding = EV_TWO_BYTE;
-    Query.Description.NodeToBrowse.TwoByteData.Identifier = static_cast<uint8_t>(ObjectID::RootFolder); // TODO automatic cast
+    Query.Description.NodeToBrowse.TwoByteData.Identifier = static_cast<uint8_t>(ObjectId::RootFolder); // TODO automatic cast
     Query.Description.Direction = BrowseDirection::Forward;
-    Query.Description.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-//    Params.Description.ReferenceTypeID.TwoByteData.Identifier = 33;
+    Query.Description.ReferenceTypeId.Encoding = EV_TWO_BYTE;
+//    Params.Description.ReferenceTypeId.TwoByteData.Identifier = 33;
     Query.Description.IncludeSubtypes = true;
-    Query.Description.NodeClasses = NODE_CLASS_ALL;
-    Query.Description.ResultMask = REFERENCE_ALL;
+    Query.Description.NodeClasses = NodeClass::Unspecified;
+    Query.Description.ResultMask = BrowseResultMask::All;
     Query.MaxReferenciesCount = 1;
   }
 
