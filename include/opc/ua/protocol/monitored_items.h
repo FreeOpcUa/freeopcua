@@ -11,9 +11,8 @@
 #ifndef OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 #define OPC_UA_MAPPINGS_MONITORED_ITEMS_H_
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/subscriptions.h>
-#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 namespace OpcUa
 {
@@ -110,7 +109,7 @@ namespace OpcUa
 
   struct MonitoredItemRequest
   {
-    AttributeValueId ItemToMonitor;
+    ReadValueId ItemToMonitor;
     MonitoringMode Mode;
     MonitoringParameters Parameters;
   };

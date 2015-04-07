@@ -213,18 +213,18 @@ namespace OpcUa
       CreateMonitoredItemsResult result;
       uint32_t callbackHandle = 0;
       result.MonitoredItemId = ++LastMonitoredItemId;
-      if (request.ItemToMonitor.Attribute == AttributeId::EventNotifier )
+      if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier )
       {
         if (Debug) std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl;
         //client want to subscribe to events
         //FIXME: check attribute EVENT notifier is set for the node
-        MonitoredEvents[request.ItemToMonitor.Node] = result.MonitoredItemId;
+        MonitoredEvents[request.ItemToMonitor.NodeId] = result.MonitoredItemId;
       }
       else
       {
         if (Debug) std::cout << "SubscriptionService| Subscribing to data chanes in the address space." << std::endl;
         IntegerId id = result.MonitoredItemId;
-        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.Node, request.ItemToMonitor.Attribute, [this, id] (const OpcUa::NodeId& nodeId, OpcUa::AttributeId attr, const DataValue& value)
+        callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.NodeId, request.ItemToMonitor.AttributeId, [this, id] (const OpcUa::NodeId& nodeId, OpcUa::AttributeId attr, const DataValue& value)
           {
             this->DataChangeCallback(id, value);
           });
@@ -250,7 +250,7 @@ namespace OpcUa
       MonitoredDataChanges[result.MonitoredItemId] = mdata;
       if (Debug) std::cout << "Created MonitoredItem with id: " << result.MonitoredItemId << " and client handle " << mdata.ClientHandle << std::endl;
       //Forcing event, 
-      if (request.ItemToMonitor.Attribute != AttributeId::EventNotifier )
+      if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier )
       {
         TriggerDataChangeEvent(mdata, request.ItemToMonitor);
       }
@@ -258,7 +258,7 @@ namespace OpcUa
       return result;
     }
 
-    void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoreditems, AttributeValueId attrval)
+    void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval)
     {
       if (Debug) { std::cout << "InternalSubcsription | Manual Trigger of DataChangeEvent for sub: " << Data.Id << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
       ReadParameters params;

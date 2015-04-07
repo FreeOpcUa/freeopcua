@@ -15,7 +15,7 @@
 #include <opc/common/interface.h>
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/data_value.h>
-#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/protocol.h>
 
 #include <vector>
 

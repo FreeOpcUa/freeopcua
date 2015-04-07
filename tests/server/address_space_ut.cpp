@@ -87,7 +87,7 @@ TEST_F(AddressSpace, GeneratesIfNodeIdDuplicated)
 TEST_F(AddressSpace, ReadAttributes)
 {
   OpcUa::ReadParameters readParams;
-  OpcUa::AttributeValueId value(OpcUa::ObjectId::RootFolder, OpcUa::AttributeId::BrowseName);
+  OpcUa::ReadValueId value = ToReadValueId(OpcUa::ObjectId::RootFolder, OpcUa::AttributeId::BrowseName);
   readParams.AttributesToRead.push_back(value);
   std::vector<OpcUa::DataValue> results = NameSpace->Read(readParams);
   ASSERT_EQ(results.size(), 1);
@@ -113,9 +113,9 @@ TEST_F(AddressSpace, CallsDataChangeCallbackOnWrite)
   EXPECT_NE(callbackHandle, 0);
 
   OpcUa::WriteValue value;
-  value.Attribute = OpcUa::AttributeId::Value;
-  value.Node = valueId;
-  value.Data = 10;
+  value.AttributeId = OpcUa::AttributeId::Value;
+  value.NodeId = valueId;
+  value.Value = 10;
   std::vector<OpcUa::StatusCode> result = NameSpace->Write({value});
   ASSERT_EQ(result.size(), 1);
   EXPECT_EQ(result[0], OpcUa::StatusCode::Good);
@@ -141,7 +141,7 @@ TEST_F(AddressSpace, ValueCallbackIsCalled)
   ASSERT_EQ(code, OpcUa::StatusCode::Good);
 
   OpcUa::ReadParameters readParams;
-  readParams.AttributesToRead.push_back(OpcUa::AttributeValueId(valueId, OpcUa::AttributeId::Value));
+  readParams.AttributesToRead.push_back(OpcUa::ToReadValueId(valueId, OpcUa::AttributeId::Value));
   std::vector<OpcUa::DataValue> result = NameSpace->Read(readParams);
   ASSERT_EQ(result.size(), 1);
   EXPECT_TRUE(result[0].Encoding & OpcUa::DATA_VALUE);

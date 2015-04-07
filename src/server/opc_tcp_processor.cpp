@@ -328,9 +328,9 @@ namespace OpcUa
           if (Debug)
           {
             std::clog << "opc_tcp_processor| Processing read request for Node:";
-            for (AttributeValueId id : params.AttributesToRead)
+            for (ReadValueId id : params.AttributesToRead)
             {
-              std::clog << "opc_tcp_processor|  " << id.Node;
+              std::clog << "opc_tcp_processor|  " << id.NodeId;
             }
             std::cout << std::endl;
           }
@@ -352,7 +352,7 @@ namespace OpcUa
               values.push_back(value);
             }
           }
-          response.Result.Results = values;
+          response.Results = values;
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -374,11 +374,11 @@ namespace OpcUa
           std::vector<DataValue> values;
           if (std::shared_ptr<OpcUa::AttributeServices> service = Server->Attributes())
           {
-            response.Result.StatusCodes = service->Write(params.NodesToWrite);
+            response.Results = service->Write(params.NodesToWrite);
           }
           else
           {
-            response.Result.StatusCodes = std::vector<StatusCode>(params.NodesToWrite.size(), OpcUa::StatusCode::BadNotImplemented);
+            response.Results = std::vector<StatusCode>(params.NodesToWrite.size(), OpcUa::StatusCode::BadNotImplemented);
           }
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);

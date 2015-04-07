@@ -115,7 +115,8 @@ add_library(opcuaprotocol STATIC
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
     src/protocol/deserialize_auto.cpp
-    #src/protocol/constructors_auto.cpp
+    src/protocol/constructors_auto.cpp
+    src/protocol/protocol.cpp
     src/protocol/binary_attribute.cpp
     src/protocol/binary_data_value.cpp
     src/protocol/binary_endpoints.cpp

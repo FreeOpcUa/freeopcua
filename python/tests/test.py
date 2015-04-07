@@ -61,7 +61,7 @@ class EndpointsTests(unittest.TestCase):
         self.assertEqual(ref.target_node_type_definition.identifier, 6, "Unexpected target_node_type_definition.identifier: " + str(ref.target_node_type_definition.identifier))
 
     def test_read(self):
-        attributeParams = opcua.AttributeValueId()
+        attributeParams = opcua.ReadValueId()
         attributeParams.node.namespace_index = 1
         attributeParams.node.identifier = 2
         attributeParams.attribute = opcua.AttributeId.Value

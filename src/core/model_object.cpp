@@ -31,8 +31,8 @@ namespace OpcUa
     {
       Id = objectId;
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueId(objectId, AttributeId::DisplayName));
-      attrs.AttributesToRead.push_back(AttributeValueId(objectId, AttributeId::BrowseName));
+      attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::DisplayName));
+      attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::BrowseName));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
@@ -294,19 +294,19 @@ namespace OpcUa
       const NodeId& nodeId = ref.TargetNodeId;
 
       ReadParameters readParams;
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::DisplayName});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::Description});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::Value});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::DataType});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::ValueRank});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::ArrayDimensions});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::AccessLevel});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::UserAccessLevel});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::MinimumSamplingInterval});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::Historizing});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::WriteMask});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::UserWriteMask});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::BrowseName});
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::DisplayName));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::Description));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::Value));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::DataType));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::ValueRank));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::ArrayDimensions));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::AccessLevel));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::UserAccessLevel));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::MinimumSamplingInterval));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::Historizing));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::WriteMask));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::UserWriteMask));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::BrowseName));
       std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
 
       VariableAttributes attrs;
@@ -338,11 +338,11 @@ namespace OpcUa
       const NodeId& nodeId = ref.TargetNodeId;
 
       ReadParameters readParams;
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::DisplayName});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::Description});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::WriteMask});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::UserWriteMask});
-      readParams.AttributesToRead.push_back({nodeId, AttributeId::BrowseName});
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::DisplayName));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::Description));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::WriteMask));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::UserWriteMask));
+      readParams.AttributesToRead.push_back(ToReadValueId(nodeId, AttributeId::BrowseName));
       std::vector<DataValue> values = GetServices()->Attributes()->Read(readParams);
 
       ObjectAttributes attrs;

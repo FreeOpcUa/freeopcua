@@ -84,7 +84,7 @@ namespace OpcUa
         NotificationData GetNotificationData();
         void PublishResults(const boost::system::error_code& error);
         std::vector<Variant> GetEventFields(const EventFilter& filter, const Event& event);
-        void TriggerDataChangeEvent(MonitoredDataChange monitoreditems, AttributeValueId attrval);
+        void TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval);
 
       private:
         SubscriptionServiceInternal& Service;

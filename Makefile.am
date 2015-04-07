@@ -91,7 +91,7 @@ addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/opcua_protocol.h \
 	include/opc/ua/server/addons/services_registry.h \
 	include/opc/ua/server/addons/standard_address_space.h \
-    include/opc/ua/server/addons/subscription_service.h \
+	include/opc/ua/server/addons/subscription_service.h \
 	include/opc/ua/server/addons/common_addons.h \
 	include/opc/ua/server/addons/xml_ns.h
 
@@ -226,7 +226,6 @@ binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/stream.h
 
 protocolinclude_HEADERS = \
-  include/opc/ua/protocol/attribute.h \
   include/opc/ua/protocol/enums.h \
   include/opc/ua/protocol/protocol.h \
   include/opc/ua/protocol/protocol_auto.h \
@@ -264,6 +263,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/deserialize_auto.cpp \
   src/protocol/serialize_auto.cpp \
   src/protocol/rawsize_auto.cpp \
+  src/protocol/protocol.cpp \
   src/protocol/binary_variant.cpp \
   src/protocol/binary_stream.cpp \
   src/protocol/binary_serialization.h \
@@ -283,8 +283,8 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/subscriptions.cpp \
   src/protocol/status_codes.cpp \
   src/protocol/string_utils.cpp \
-  src/protocol/string_utils_statuscode_tostring.cpp
-  #src/protocol/constructors_auto.cpp 
+  src/protocol/string_utils_statuscode_tostring.cpp \
+  src/protocol/constructors_auto.cpp 
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)

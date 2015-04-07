@@ -12,10 +12,9 @@
 
 #include <opc/ua/protocol/extension_identifiers.h>
 #include <opc/ua/protocol/message_identifiers.h>
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/strings.h>
-#include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 #include <algorithm>
 #include <stdexcept>
@@ -99,21 +98,21 @@ TEST_F(OpcUaBinaryDeserialization, TimetampsToReturn)
 }
 
 //-------------------------------------------------------
-// AttributeValueId
+// ReadValueId
 //-------------------------------------------------------
 
-TEST_F(OpcUaBinarySerialization, AttributeValueId)
+TEST_F(OpcUaBinarySerialization, ReadValueId)
 {
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
   using OpcUa::AttributeId;
 
-  AttributeValueId attr;
+  ReadValueId attr;
 
-  attr.Node.Encoding = EV_TWO_BYTE;
-  attr.Node.TwoByteData.Identifier = 1;
-  attr.Attribute = AttributeId::Value;
+  attr.NodeId.Encoding = EV_TWO_BYTE;
+  attr.NodeId.TwoByteData.Identifier = 1;
+  attr.AttributeId = AttributeId::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
   attr.DataEncoding.Name = "test";
@@ -132,7 +131,7 @@ TEST_F(OpcUaBinarySerialization, AttributeValueId)
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
 }
 
-TEST_F(OpcUaBinaryDeserialization, AttributeValueId)
+TEST_F(OpcUaBinaryDeserialization, ReadValueId)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -148,12 +147,12 @@ TEST_F(OpcUaBinaryDeserialization, AttributeValueId)
 
   GetChannel().SetData(expectedData);
 
-  AttributeValueId attr;
+  ReadValueId attr;
   GetStream() >> attr;
   
-  ASSERT_EQ(attr.Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(attr.Node.TwoByteData.Identifier, 1);
-  ASSERT_EQ(attr.Attribute, AttributeId::Value);
+  ASSERT_EQ(attr.NodeId.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(attr.NodeId.TwoByteData.Identifier, 1);
+  ASSERT_EQ(attr.AttributeId, AttributeId::Value);
   ASSERT_EQ(attr.DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(attr.DataEncoding.Name, "test");
 }
@@ -162,14 +161,14 @@ TEST_F(OpcUaBinaryDeserialization, AttributeValueId)
 // ReadRequest
 //-------------------------------------------------------
 
-OpcUa::AttributeValueId CreateAttributeValueId()
+OpcUa::ReadValueId CreateReadValueId()
 {
   using namespace OpcUa;
-  OpcUa::AttributeValueId attr;
+  OpcUa::ReadValueId attr;
 
-  attr.Node.Encoding = OpcUa::EV_TWO_BYTE;
-  attr.Node.TwoByteData.Identifier = 1;
-  attr.Attribute = OpcUa::AttributeId::Value;
+  attr.NodeId.Encoding = OpcUa::EV_TWO_BYTE;
+  attr.NodeId.TwoByteData.Identifier = 1;
+  attr.AttributeId = OpcUa::AttributeId::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
   attr.DataEncoding.Name = "test";
@@ -191,9 +190,9 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   request.Parameters.MaxAge = 1200000;
-  request.Parameters.TimestampsType = TimestampsToReturn::Neither;
+  request.Parameters.TimestampsToReturn = TimestampsToReturn::Neither;
 
-  request.Parameters.AttributesToRead.push_back(CreateAttributeValueId());
+  request.Parameters.AttributesToRead.push_back(CreateReadValueId());
 
   GetStream() << request << flush;
 
@@ -252,15 +251,15 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.MaxAge, 1200000);
-  ASSERT_EQ(request.Parameters.TimestampsType, TimestampsToReturn::Neither);
+  ASSERT_EQ(request.Parameters.TimestampsToReturn, TimestampsToReturn::Neither);
   
   ASSERT_EQ(request.Parameters.AttributesToRead.size(), 1);
 
-  AttributeValueId attr = CreateAttributeValueId();
+  ReadValueId attr = CreateReadValueId();
 
-  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.TwoByteData.Identifier, 1);
-  ASSERT_EQ(request.Parameters.AttributesToRead[0].Attribute, OpcUa::AttributeId::Value);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].NodeId.Encoding, EV_TWO_BYTE);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].NodeId.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].AttributeId, OpcUa::AttributeId::Value);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.Name, "test");
 
@@ -284,7 +283,7 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
-  resp.Result.Results.push_back(OpcUa::DataValue(QualifiedName(1, OpcUa::Names::Root)));
+  resp.Results.push_back(OpcUa::DataValue(QualifiedName(1, OpcUa::Names::Root)));
 
   ASSERT_NO_THROW(GetStream() << resp << flush);
 
@@ -299,7 +298,7 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
   variantMask,
   1, 0,
   4, 0, 0, 0, 'R','o','o','t',
-  0,0,0,0
+  (char)0xFF,(char)0xFF,(char)0xFF,(char)0xFF
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -336,7 +335,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse_with_QualifiedName_as_value)
   ASSERT_EQ(resp.TypeId.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
-  ASSERT_EQ(resp.Result.Results.size(), 1);
+  ASSERT_EQ(resp.Results.size(), 1);
 }
 
 
@@ -383,7 +382,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse)
   ASSERT_EQ(resp.TypeId.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
-  ASSERT_EQ(resp.Result.Results.size(), 1);
+  ASSERT_EQ(resp.Results.size(), 1);
 }
 
 //-------------------------------------------------------
@@ -396,11 +395,11 @@ TEST_F(OpcUaBinarySerialization, WriteValue)
   using namespace OpcUa::Binary;
 
   WriteValue value;
-  value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = 1;
-  value.Attribute = AttributeId::DisplayName;
-  value.Data.Encoding = DATA_VALUE;
-  value.Data.Value = true;
+  value.NodeId.Encoding = EV_FOUR_BYTE;
+  value.NodeId.FourByteData.Identifier = 1;
+  value.AttributeId = AttributeId::DisplayName;
+  value.Value.Encoding = DATA_VALUE;
+  value.Value.Value = true;
  
   GetStream() << value << flush;
 
@@ -433,12 +432,12 @@ TEST_F(OpcUaBinaryDeserialization, WriteValue)
   WriteValue value;
   GetStream() >> value;
 
-  ASSERT_EQ(value.Node.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(value.Node.FourByteData.Identifier, 1);
-  ASSERT_EQ(value.Attribute, AttributeId::DisplayName);
-  ASSERT_EQ(value.Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(value.Data.Value.Type(), VariantType::BOOLEAN);
-  ASSERT_EQ(value.Data.Value.As<bool>(), true);
+  ASSERT_EQ(value.NodeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(value.NodeId.FourByteData.Identifier, 1);
+  ASSERT_EQ(value.AttributeId, AttributeId::DisplayName);
+  ASSERT_EQ(value.Value.Encoding, DATA_VALUE);
+  ASSERT_EQ(value.Value.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(value.Value.Value.As<bool>(), true);
 }
 
 
@@ -461,11 +460,11 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   WriteValue value;
-  value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = 1;
-  value.Attribute = AttributeId::DisplayName;
-  value.Data.Encoding = DATA_VALUE;
-  value.Data.Value = true;
+  value.NodeId.Encoding = EV_FOUR_BYTE;
+  value.NodeId.FourByteData.Identifier = 1;
+  value.AttributeId = AttributeId::DisplayName;
+  value.Value.Encoding = DATA_VALUE;
+  value.Value.Value = true;
 
   request.Parameters.NodesToWrite.push_back(value);
 
@@ -521,12 +520,12 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
 
 
   ASSERT_EQ(request.Parameters.NodesToWrite.size(), 1);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeId::DisplayName);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type(), VariantType::BOOLEAN);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.As<bool>(), true);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].NodeId.Encoding, EV_FOUR_BYTE);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].NodeId.FourByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].AttributeId, AttributeId::DisplayName);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Value.Encoding, DATA_VALUE);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Value.Value.Type(), VariantType::BOOLEAN);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Value.Value.As<bool>(), true);
 }
 
 //-------------------------------------------------------
@@ -546,12 +545,12 @@ TEST_F(OpcUaBinarySerialization, WriteResponse)
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
-  resp.Result.StatusCodes.push_back(static_cast<StatusCode>(1));
+  resp.Results.push_back(static_cast<StatusCode>(1));
  
   DiagnosticInfo info;
   info.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT);
   info.LocalizedText = 4;
-  resp.Result.Diagnostics.push_back(info);
+  resp.DiagnosticInfos.push_back(info);
  
   GetStream() << resp << flush;
 
@@ -593,11 +592,11 @@ TEST_F(OpcUaBinaryDeserialization, WriteResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
 
-  ASSERT_EQ(resp.Result.StatusCodes.size(), 1);
-  ASSERT_EQ(resp.Result.StatusCodes[0], static_cast<OpcUa::StatusCode>(1));
+  ASSERT_EQ(resp.Results.size(), 1);
+  ASSERT_EQ(resp.Results[0], static_cast<OpcUa::StatusCode>(1));
 
-  ASSERT_EQ(resp.Result.Diagnostics.size(), 1);
-  ASSERT_EQ(resp.Result.Diagnostics[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT));
-  ASSERT_EQ(resp.Result.Diagnostics[0].LocalizedText, 4);
+  ASSERT_EQ(resp.DiagnosticInfos.size(), 1);
+  ASSERT_EQ(resp.DiagnosticInfos[0].EncodingMask, static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT));
+  ASSERT_EQ(resp.DiagnosticInfos[0].LocalizedText, 4);
 }
 

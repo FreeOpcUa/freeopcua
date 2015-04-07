@@ -57,9 +57,9 @@ namespace OpcUa
   Variant Node::GetAttribute(const AttributeId attr) const
   {
     ReadParameters params;
-    AttributeValueId attribute;
-    attribute.Node = Id;
-    attribute.Attribute = attr;
+    ReadValueId attribute;
+    attribute.NodeId = Id;
+    attribute.AttributeId = attr;
     params.AttributesToRead.push_back(attribute);
     std::vector<DataValue> vec =  Server->Attributes()-> Read(params); 
     if ( vec.size() > 0 )
@@ -93,9 +93,9 @@ namespace OpcUa
   void Node::SetAttribute(AttributeId attr, const DataValue &dval) const
   {
     WriteValue attribute;
-    attribute.Node = Id;
-    attribute.Attribute = attr;
-    attribute.Data = dval;
+    attribute.NodeId = Id;
+    attribute.AttributeId = attr;
+    attribute.Value = dval;
     std::vector<StatusCode> codes = Server->Attributes()->Write(std::vector<WriteValue>(1, attribute));
     CheckStatusCode(codes.front());
   }

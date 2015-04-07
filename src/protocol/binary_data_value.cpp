@@ -10,9 +10,9 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/data_value.h>
 
 #include <algorithm>
 #include <functional>

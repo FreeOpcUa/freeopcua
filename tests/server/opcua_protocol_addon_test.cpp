@@ -172,7 +172,7 @@ TEST_F(OpcUaProtocolAddonTest, CanReadAttributes)
   std::shared_ptr<OpcUa::AttributeServices> attributes = computer->Attributes();
 
   OpcUa::ReadParameters params;
-  params.AttributesToRead.push_back(OpcUa::AttributeValueId(OpcUa::ObjectId::RootFolder, OpcUa::AttributeId::BrowseName));
+  params.AttributesToRead.push_back(OpcUa::ToReadValueId(OpcUa::ObjectId::RootFolder, OpcUa::AttributeId::BrowseName));
 
   std::vector<OpcUa::DataValue> values = attributes->Read(params);
   ASSERT_EQ(values.size(), 1);

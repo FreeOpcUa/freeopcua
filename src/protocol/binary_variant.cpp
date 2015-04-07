@@ -10,7 +10,6 @@
 
 #include "binary_serialization.h"
 
-#include <opc/ua/protocol/attribute.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/string_utils.h>

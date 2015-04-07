@@ -10,21 +10,266 @@ from IPython import embed
 
 import generate_model as gm
 
-CUTOFF_HACK = 4
 
-NeedOverride = []
-NeedConstructor = ["RelativePathElement", "ReadValueId", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
+#declare default constructor in header, then constructor must be implemented
+NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
-#we want to implement som struct by hand, to make better interface or simply because they are too complicated 
-IgnoredStructs = ["NodeId", "ExpandedNodeId", "Variant", "QualifiedName", "DataValue", "LocalizedText", "DiagnosticInfo"]#, "ExtensionObject"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest"]
-OverrideTypes = {"AttributeId": "AttributeID",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
+OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
+
+#list of UA structure we want to enable, some structures may
+#need to be added by hand (those generated from splitted request and response structs)
+EnabledStructs = [\
+    #we want to implement som struct by hand, to make better interface or simply because they are too complicated 
+    #'NodeId',
+    #'TwoByteNodeId',
+    #'FourByteNodeId',
+    #'NumericNodeId',
+    #'StringNodeId',
+    #'GuidNodeId',
+    #'ByteStringNodeId',
+    #'ExpandedNodeId',
+    #'QualifiedName',
+    #'LocalizedText',
+    #'DataValue',
+    #'Variant',
+    #'DiagnosticInfo',
+    # 
+    #
+    #structs we should enable or that we haven't checked yet
+    #
+    #'ExtensionObject',
+    'XmlElement',
+    #'Node',
+    #'InstanceNode',
+    #'TypeNode',
+    #'ObjectNode',
+    #'ObjectTypeNode',
+    #'VariableNode',
+    #'VariableTypeNode',
+    #'ReferenceTypeNode',
+    #'MethodNode',
+    #'ViewNode',
+    #'DataTypeNode',
+    #'ReferenceNode',
+    #'Argument',
+    #'EnumValueType',
+    #'TimeZoneDataType',
+    #'ApplicationDescription',
+    #'RequestHeader',
+    #'ResponseHeader',
+    #'ServiceFault',
+    #'FindServersRequest',
+    #'FindServersResponse',
+    #'UserTokenPolicy',
+    #'EndpointDescription',
+    #'GetEndpointsRequest',
+    #'GetEndpointsResponse',
+    #'RegisteredServer',
+    #'RegisterServerRequest',
+    #'RegisterServerResponse',
+    #'ChannelSecurityToken',
+    #'OpenSecureChannelRequest',
+    #'OpenSecureChannelResponse',
+    #'CloseSecureChannelRequest',
+    #'CloseSecureChannelResponse',
+    #'SignedSoftwareCertificate',
+    #'SignatureData',
+    #'CreateSessionRequest',
+    #'CreateSessionResponse',
+    #'UserIdentityToken',
+    #'AnonymousIdentityToken',
+    #'UserNameIdentityToken',
+    #'X509IdentityToken',
+    #'IssuedIdentityToken',
+    #'ActivateSessionRequest',
+    #'ActivateSessionResponse',
+    #'CloseSessionRequest',
+    #'CloseSessionResponse',
+    #'CancelRequest',
+    #'CancelResponse',
+    #'NodeAttributes',
+    #'ObjectAttributes',
+    #'VariableAttributes',
+    #'MethodAttributes',
+    #'ObjectTypeAttributes',
+    #'VariableTypeAttributes',
+    #'ReferenceTypeAttributes',
+    #'DataTypeAttributes',
+    #'ViewAttributes',
+    #'AddNodesItem',
+    #'AddNodesResult',
+    #'AddNodesRequest',
+    #'AddNodesResponse',
+    #'AddReferencesItem',
+    #'AddReferencesRequest',
+    #'AddReferencesResponse',
+    #'DeleteNodesItem',
+    #'DeleteNodesRequest',
+    #'DeleteNodesResponse',
+    #'DeleteReferencesItem',
+    #'DeleteReferencesRequest',
+    #'DeleteReferencesResponse',
+    #'ViewDescription',
+    #'BrowseDescription',
+    #'ReferenceDescription',
+    #'BrowseResult',
+    #'BrowseRequest',
+    #'BrowseResponse',
+    #'BrowseNextRequest',
+    #'BrowseNextResponse',
+    #'RelativePathElement',
+    #'RelativePath',
+    #'BrowsePath',
+    #'BrowsePathTarget',
+    #'BrowsePathResult',
+    #'TranslateBrowsePathsToNodeIdsRequest',
+    #'TranslateBrowsePathsToNodeIdsResponse',
+    #'RegisterNodesRequest',
+    #'RegisterNodesResponse',
+    #'UnregisterNodesRequest',
+    #'UnregisterNodesResponse',
+    #'EndpointConfiguration',
+    #'SupportedProfile',
+    #'SoftwareCertificate',
+    #'QueryDataDescription',
+    #'NodeTypeDescription',
+    #'QueryDataSet',
+    #'NodeReference',
+    #'ContentFilterElement',
+    #'ContentFilter',
+    #'FilterOperand',
+    #'ElementOperand',
+    #'LiteralOperand',
+    #'AttributeOperand',
+    #'SimpleAttributeOperand',
+    #'ContentFilterElementResult',
+    #'ContentFilterResult',
+    #'ParsingResult',
+    #'QueryFirstRequest',
+    #'QueryFirstResponse',
+    #'QueryNextRequest',
+    #'QueryNextResponse',
+    'ReadValueId',
+    'ReadRequest',
+    'ReadParameters',
+    'ReadResult',
+    'ReadResponse',
+    #'HistoryReadValueId',
+    #'HistoryReadResult',
+    #'HistoryReadDetails',
+    #'ReadEventDetails',
+    #'ReadRawModifiedDetails',
+    #'ReadProcessedDetails',
+    #'ReadAtTimeDetails',
+    #'HistoryData',
+    #'ModificationInfo',
+    #'HistoryModifiedData',
+    #'HistoryEvent',
+    #'HistoryReadRequest',
+    #'HistoryReadResponse',
+    'WriteValue',
+    'WriteParameters',
+    'WriteRequest',
+    'WriteResponse',
+    'WriteResult',
+    #'HistoryUpdateDetails',
+    #'UpdateDataDetails',
+    #'UpdateStructureDataDetails',
+    #'UpdateEventDetails',
+    #'DeleteRawModifiedDetails',
+    #'DeleteAtTimeDetails',
+    #'DeleteEventDetails',
+    #'HistoryUpdateResult',
+    #'HistoryUpdateEventResult',
+    #'HistoryUpdateRequest',
+    #'HistoryUpdateResponse',
+    #'CallMethodRequest',
+    #'CallMethodResult',
+    #'CallRequest',
+    #'CallResponse',
+    #'MonitoringFilter',
+    #'DataChangeFilter',
+    #'EventFilter',
+    #'AggregateConfiguration',
+    #'AggregateFilter',
+    #'MonitoringFilterResult',
+    #'EventFilterResult',
+    #'AggregateFilterResult',
+    #'MonitoringParameters',
+    #'MonitoredItemCreateRequest',
+    #'MonitoredItemCreateResult',
+    #'CreateMonitoredItemsRequest',
+    #'CreateMonitoredItemsResponse',
+    #'MonitoredItemModifyRequest',
+    #'MonitoredItemModifyResult',
+    #'ModifyMonitoredItemsRequest',
+    #'ModifyMonitoredItemsResponse',
+    #'SetMonitoringModeRequest',
+    #'SetMonitoringModeResponse',
+    #'SetTriggeringRequest',
+    #'SetTriggeringResponse',
+    #'DeleteMonitoredItemsRequest',
+    #'DeleteMonitoredItemsResponse',
+    #'CreateSubscriptionRequest',
+    #'CreateSubscriptionResponse',
+    #'ModifySubscriptionRequest',
+    #'ModifySubscriptionResponse',
+    #'SetPublishingModeRequest',
+    #'SetPublishingModeResponse',
+    #'NotificationMessage',
+    #'NotificationData',
+    #'DataChangeNotification',
+    #'MonitoredItemNotification',
+    #'EventNotificationList',
+    #'EventFieldList',
+    #'HistoryEventFieldList',
+    #'StatusChangeNotification',
+    #'SubscriptionAcknowledgement',
+    #'PublishRequest',
+    #'PublishResponse',
+    #'RepublishRequest',
+    #'RepublishResponse',
+    #'TransferResult',
+    #'TransferSubscriptionsRequest',
+    #'TransferSubscriptionsResponse',
+    #'DeleteSubscriptionsRequest',
+    #'DeleteSubscriptionsResponse',
+    #'ScalarTestType',
+    #'ArrayTestType',
+    #'CompositeTestType',
+    #'TestStackRequest',
+    #'TestStackResponse',
+    #'TestStackExRequest',
+    #'TestStackExResponse',
+    #'BuildInfo',
+    #'RedundantServerDataType',
+    #'EndpointUrlListDataType',
+    #'NetworkGroupDataType',
+    #'SamplingIntervalDiagnosticsDataType',
+    #'ServerDiagnosticsSummaryDataType',
+    #'ServerStatusDataType',
+    #'SessionDiagnosticsDataType',
+    #'SessionSecurityDiagnosticsDataType',
+    #'ServiceCounterDataType',
+    #'StatusResult',
+    #'SubscriptionDiagnosticsDataType',
+    #'ModelChangeStructureDataType',
+    #'SemanticChangeStructureDataType',
+    #'Range',
+    #'EUInformation',
+    #'ComplexNumberType',
+    #'DoubleComplexNumberType',
+    #'AxisInformation',
+    #'XVType',
+    #'ProgramDiagnosticDataType',
+    'Annotation']
 
 
 def reorder_structs(model):
-    types = IgnoredStructs + IgnoredEnums + ["Bit", "Char", "CharArray", "Guid", "SByte", "Int8", "Int16", "Int32", "Int64", "UInt8", "UInt16", "UInt32", "UInt64", "DateTime", "Boolean", "Double", "Float", "ByteString", "Byte", "StatusCode", "DiagnosticInfo", "String", "AttributeID"] + [enum.name for enum in model.enums] + ["VariableAccessLevel"]
+    types = IgnoredEnums + ["Bit", "Char", "CharArray", "Guid", "SByte", "Int8", "Int16", "Int32", "Int64", "UInt8", "UInt16", "UInt32", "UInt64", "DateTime", "Boolean", "Double", "Float", "ByteString", "Byte", "StatusCode", "DiagnosticInfo", "String", "AttributeId"] + [enum.name for enum in model.enums] + ["VariableAccessLevel"]
     waiting = {}
     newstructs = []
     for s in model.structs:
@@ -106,28 +351,30 @@ class CodeGenerator(object):
             if not enum.name in IgnoredEnums:
                 self.make_enum_h(enum)
                 self.make_struct_ser(enum)
-        hack_count = 0
         for struct in self.model.structs:
             self.rename_fields(struct)
             if struct.name in NeedConstructor:
                 struct.needconstructor = True
-            if struct.name in NeedOverride:
-                struct.needoverride = True
-            if not struct.name.endswith("Node") and not struct.name.endswith("NodeId") and not struct.name in IgnoredStructs:
-                hack_count += 1
-                if hack_count == CUTOFF_HACK:
-                    self.write_h("\n/* START HACK")
-                    self.write_size("\n/* START HACK")
-                    self.write_ser("\n/* START HACK")
-                    self.write_deser("\n/* START HACK")
-                self.make_struct_h(struct)
-                self.make_struct_ser(struct)
-                self.make_constructors(struct)
+            #if not struct.name.endswith("Node") and not struct.name.endswith("NodeId"):
+            if not struct.name in EnabledStructs:
+                self.write_h("\n/* DISABLED")
+                self.write_size("\n/* DISABLED")
+                self.write_ser("\n/*  DISABLED")
+                self.write_deser("\n/*  DISABLED")
+                if struct.needconstructor:
+                    self.write_const("\n/*  DISABLED")
+            self.make_struct_h(struct)
+            self.make_struct_ser(struct)
+            if struct.isrequest:
+                self.make_request_constructors(struct)
+            if not struct.name in EnabledStructs:
+                self.write_h("*/")
+                self.write_size("*/")
+                self.write_ser("*/")
+                self.write_deser("*/")
+                if struct.needconstructor:
+                    self.write_const("*/")
 
-        self.write_h("*/ //END HACK")
-        self.write_size("*/ //END HACK")
-        self.write_ser("*/ //END HACK")
-        self.write_deser("*/ //END HACK")
         self.make_footer_h()
         self.make_footer_enum()
         self.make_footer_rawsize()
@@ -148,8 +395,6 @@ class CodeGenerator(object):
         if struct.doc: self.write_h("    //", struct.doc)
         name = struct.name
         base = ""
-        if struct.needoverride:
-            name = "_" + struct.name
         #if struct.basetype:
             #base = " : public " + struct.basetype
         self.write_h("    struct %s %s\n    {""" % (name, base))
@@ -164,6 +409,7 @@ class CodeGenerator(object):
                 self.write_h("        " , field.get_ctype(), field.name + ";")
         if struct.needconstructor:
             self.write_h("\n        ", struct.name + "();")
+
         self.write_h("    };")
 
     def make_raw_size(self, struct):
@@ -260,12 +506,13 @@ class CodeGenerator(object):
         self.write_deser("    }")
         self.write_deser("")
     
-    def make_constructors(self, struct):
+    def make_request_constructors(self, struct):
         if not struct.needconstructor:
             return
         self.write_const("")
         self.write_const("    ", struct.name + "::" + struct.name + "()")
-        self.write_const("        : TypeId(ObjectId::" + struct.name +"_Encoding_DefaultBinary)")
+        #self.write_const("        : TypeId(ObjectId::" + struct.name +"_Encoding_DefaultBinary)")
+        self.write_const("        : TypeId(FourByteNodeId((uint16_t)ObjectId::" + struct.name +"_Encoding_DefaultBinary))")
         self.write_const("    {")
         self.write_const("    }")
 
@@ -503,7 +750,7 @@ if __name__ == "__main__":
     serializerpath = "../src/protocol/serialize_auto.cpp"
     rawsizepath = "../src/protocol/rawsize_auto.cpp"
     deserializerpath = "../src/protocol/deserialize_auto.cpp"
-    constructorspath = "../src/protocol/construtors_auto.cpp"
+    constructorspath = "../src/protocol/constructors_auto.cpp"
 
     p = gm.Parser(xmlpath)
     model = p.parse()
@@ -525,6 +772,13 @@ if __name__ == "__main__":
     override_types(model)
     #split_requests(model)
     reorder_structs(model)
+
+    f = open("struct_list.txt", "w")
+    f.write("enabled_structs = [\\")
+    for name in model.struct_list:
+        f.write("\n    #'" + name + "',")
+    f.write("]")
+
 
     c = CodeGenerator(model, hpath, enumpath, rawsizepath, serializerpath, deserializerpath, constructorspath)
     c.run()

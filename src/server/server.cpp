@@ -123,6 +123,9 @@ namespace OpcUa
     Registry = Addons->GetAddon<Server::ServicesRegistry>(Server::ServicesRegistryAddonId);
     SubscriptionService = Addons->GetAddon<Server::SubscriptionService>(Server::SubscriptionServiceAddonId);
 
+    Node ServerArray = GetNode(OpcUa::ObjectId::Server_ServerArray);
+    ServerArray.SetValue(std::vector<std::string>({Endpoint}));
+
     EnableEventNotification(); //Enabling event notification, it probably does hurt anyway and users will forgot to set it up
   }
 

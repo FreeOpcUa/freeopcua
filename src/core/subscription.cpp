@@ -192,23 +192,23 @@ namespace OpcUa
 
   uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeId attr)
   {
-    AttributeValueId avid;
-    avid.Node = node.GetId();
-    avid.Attribute = attr;
+    ReadValueId avid;
+    avid.NodeId = node.GetId();
+    avid.AttributeId = attr;
     //avid.IndexRange //We leave it null, then the entire array is returned
-    std::vector<uint32_t> results = SubscribeDataChange(std::vector<AttributeValueId>({avid}));
+    std::vector<uint32_t> results = SubscribeDataChange(std::vector<ReadValueId>({avid}));
     if (results.size() != 1) { throw std::runtime_error("Subscription | Server error, SubscribeDataChange should have returned exactly one result"); }
     return results.front();
   }
 
-  std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<AttributeValueId>& attributes)
+  std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadValueId>& attributes)
   {
     std::unique_lock<std::mutex> lock(Mutex); 
 
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionId = Data.Id;
 
-    for (AttributeValueId attr : attributes)
+    for (ReadValueId attr : attributes)
     {
       MonitoredItemRequest req;
       req.ItemToMonitor = attr;
@@ -237,8 +237,8 @@ namespace OpcUa
       if (Debug ) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemId << std::endl;  }
       MonitoredItemData mdata; 
       mdata.MonitoredItemId = res.MonitoredItemId;
-      mdata.Attribute =  attributes[i].Attribute;
-      mdata.TargetNode =  Node(Server, attributes[i].Node);
+      mdata.Attribute =  attributes[i].AttributeId;
+      mdata.TargetNode =  Node(Server, attributes[i].NodeId);
       AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
       monitoredItemsIds.push_back(res.MonitoredItemId);
       ++i;
@@ -308,9 +308,9 @@ namespace OpcUa
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionId = Data.Id;
 
-    AttributeValueId avid;
-    avid.Node = node.GetId();
-    avid.Attribute = AttributeId::EventNotifier;
+    ReadValueId avid;
+    avid.NodeId = node.GetId();
+    avid.AttributeId = AttributeId::EventNotifier;
 
     MonitoredItemRequest req;
     req.ItemToMonitor = avid;
@@ -333,8 +333,8 @@ namespace OpcUa
     }
 
     MonitoredItemData mdata;
-    mdata.TargetNode = Node(Server, avid.Node);
-    mdata.Attribute = avid.Attribute;
+    mdata.TargetNode = Node(Server, avid.NodeId);
+    mdata.Attribute = avid.AttributeId;
     mdata.MonitoredItemId = results[0].MonitoredItemId;
     mdata.Filter = results[0].Filter;
     AttributeValueMap[params.ClientHandle] = mdata;

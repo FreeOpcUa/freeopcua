@@ -5,7 +5,7 @@
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
-#include <opc/ua/protocol/attribute.h>
+#include <opc/ua/protocol/protocol.h>
 
 #include <map>
 

@@ -94,7 +94,7 @@ namespace OpcUa
       //Subscribe to a Node attribute for its value to change
       // Subscribe to nodes for specified attribute change
       uint32_t SubscribeDataChange(const Node& node, AttributeId attr=AttributeId::Value);
-      std::vector<uint32_t> SubscribeDataChange(const std::vector<AttributeValueId>& attributes);
+      std::vector<uint32_t> SubscribeDataChange(const std::vector<ReadValueId>& attributes);
       
       //Unsubscribe to datachange or events
       void UnSubscribe(uint32_t handle); 

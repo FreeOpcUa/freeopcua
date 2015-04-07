@@ -568,9 +568,9 @@ namespace
   void Read(OpcUa::AttributeServices& attributes, OpcUa::NodeId nodeId, OpcUa::AttributeId attributeId)
   {
     ReadParameters params;
-    AttributeValueId attribute;
-    attribute.Node = nodeId;
-    attribute.Attribute = attributeId;
+    ReadValueId attribute;
+    attribute.NodeId = nodeId;
+    attribute.AttributeId = attributeId;
     params.AttributesToRead.push_back(attribute);
     const std::vector<DataValue> values = attributes.Read(params);
     if (values.size() != 1)
@@ -585,9 +585,9 @@ namespace
   void Write(OpcUa::AttributeServices& attributes, OpcUa::NodeId nodeId, OpcUa::AttributeId attributeId, const OpcUa::Variant& value)
   {
     OpcUa::WriteValue attribute;
-    attribute.Node = nodeId;
-    attribute.Attribute = attributeId;
-    attribute.Data = value;
+    attribute.NodeId = nodeId;
+    attribute.AttributeId = attributeId;
+    attribute.Value = value;
     std::vector<StatusCode> statuses = attributes.Write(std::vector<OpcUa::WriteValue>(1, attribute));
     for (OpcUa::StatusCode status : statuses)
     {

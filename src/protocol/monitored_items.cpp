@@ -11,7 +11,7 @@
 #include "binary_serialization.h"
 
 #include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/message_identifiers.h>
+#include <opc/ua/protocol/protocol.h>
 #include <opc/ua/protocol/binary/stream.h>
 
 #include <iostream> //for debug

@@ -20,7 +20,7 @@
 #include "opc/ua/node.h"
 #include "opc/ua/event.h"
 #include "opc/ua/server/server.h"
-#include "opc/ua/protocol/types.h"
+#include "opc/ua/protocol/protocol.h"
 #include "opc/ua/services/services.h"
 #include "opc/ua/subscription.h"
 #include "opc/ua/protocol/string_utils.h"
@@ -406,20 +406,20 @@ BOOST_PYTHON_MODULE(opcua)
 
   to_python_converter<std::vector<ReferenceDescription>, vector_to_python_converter<ReferenceDescription>>();
 
-  class_<AttributeValueId>("AttributeValueId")
-  .def_readwrite("node", &AttributeValueId::Node)
-  .def_readwrite("attribute", &AttributeValueId::Attribute)
-  .def_readwrite("index_range", &AttributeValueId::IndexRange)
-  .def_readwrite("data_encoding", &AttributeValueId::DataEncoding)
+  class_<ReadValueId>("ReadValueId")
+  .def_readwrite("node_id", &ReadValueId::NodeId)
+  .def_readwrite("attribute_id", &ReadValueId::AttributeId)
+  .def_readwrite("index_range", &ReadValueId::IndexRange)
+  .def_readwrite("data_encoding", &ReadValueId::DataEncoding)
   ;
 
-  to_python_converter<std::vector<AttributeValueId>, vector_to_python_converter<AttributeValueId>>();
+  to_python_converter<std::vector<ReadValueId>, vector_to_python_converter<ReadValueId>>();
 
   class_<WriteValue>("WriteValue")
-  .def_readwrite("node", &WriteValue::Node)
-  .def_readwrite("attribute", &WriteValue::Attribute)
-  .def_readwrite("numeric_range", &WriteValue::NumericRange)
-  .def_readwrite("data", &WriteValue::Data)
+  .def_readwrite("node_id", &WriteValue::NodeId)
+  .def_readwrite("attribute_id", &WriteValue::AttributeId)
+  .def_readwrite("index_range", &WriteValue::IndexRange)
+  .def_readwrite("value", &WriteValue::Value)
   ;
 
   to_python_converter<std::vector<WriteValue>, vector_to_python_converter<WriteValue>>();

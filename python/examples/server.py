@@ -24,7 +24,7 @@ if __name__ == "__main__":
     server.start()
 
     try:
-        # setup our own namespace, this is expected
+        # setup our own namespace
         uri = "http://examples.freeopcua.github.io"
         idx = server.register_namespace(uri)
 

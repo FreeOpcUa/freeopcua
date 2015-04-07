@@ -140,18 +140,18 @@ class Unit(unittest.TestCase):
         self.assertEqual(rd.target_node_type_definition,opcua.NodeId())
 
     def test_attribute_valueid(self):
-        avid=opcua.AttributeValueId()
-        self.assertEqual(avid.node,opcua.NodeId())
-        self.assertEqual(avid.attribute,opcua.AttributeId.Value)
-        self.assertEqual(avid.index_range,'')
-        self.assertEqual(avid.data_encoding,opcua.QualifiedName())
+        avid=opcua.ReadValueId()
+        self.assertEqual(avid.node_id, opcua.NodeId())
+        self.assertEqual(avid.attribute_id, opcua.AttributeId())
+        self.assertEqual(avid.index_range, '')
+        self.assertEqual(avid.data_encoding, opcua.QualifiedName())
 
     def test_write_value(self):
         wv=opcua.WriteValue()
-        self.assertEqual(wv.node,opcua.NodeId())
-        self.assertEqual(wv.attribute,opcua.AttributeId())
-        self.assertEqual(wv.numeric_range,'')
-        self.assertEqual(wv.data.value, None)
+        self.assertEqual(wv.node_id, opcua.NodeId())
+        self.assertEqual(wv.attribute_id, opcua.AttributeId())
+        self.assertEqual(wv.index_range,'')
+        self.assertEqual(wv.value.value, None)
 
     def test_datetime(self):
         tnow1 = int(time.time())

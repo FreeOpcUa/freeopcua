@@ -296,9 +296,9 @@ namespace
     {
       if (Debug)  {
         std::cout << "binary_client| Read -->" << std::endl;
-        for ( AttributeValueId attr : params.AttributesToRead )
+        for ( ReadValueId attr : params.AttributesToRead )
         {
-          std::cout << attr.Node << "  " << (uint32_t)attr.Attribute;
+          std::cout << attr.NodeId << "  " << (uint32_t)attr.AttributeId;
         }
         std::cout << std::endl;
       }
@@ -306,7 +306,7 @@ namespace
       request.Parameters = params;
       const ReadResponse response = Send<ReadResponse>(request);
       if (Debug)  { std::cout << "binary_client| Read <--" << std::endl; }
-      return response.Result.Results;
+      return response.Results;
     }
 
     virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
@@ -316,7 +316,7 @@ namespace
       request.Parameters.NodesToWrite = values;
       const WriteResponse response = Send<WriteResponse>(request);
       if (Debug)  { std::cout << "binary_client| Write <--" << std::endl; }
-      return response.Result.StatusCodes;
+      return response.Results;
     }
 
     ////////////////////////////////////////////////////////////////

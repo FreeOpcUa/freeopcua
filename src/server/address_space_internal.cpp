@@ -131,9 +131,9 @@ namespace OpcUa
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<DataValue> values;
-      for (const AttributeValueId& attribute : params.AttributesToRead)
+      for (const ReadValueId& attribute : params.AttributesToRead)
       {
-        values.push_back(GetValue(attribute.Node, attribute.Attribute));
+        values.push_back(GetValue(attribute.NodeId, attribute.AttributeId));
       }
       return values;
     }
@@ -145,9 +145,9 @@ namespace OpcUa
       std::vector<StatusCode> statuses;
       for (WriteValue value : values)
       {
-        if (value.Data.Encoding & DATA_VALUE)
+        if (value.Value.Encoding & DATA_VALUE)
         {
-          statuses.push_back(SetValue(value.Node, value.Attribute, value.Data));
+          statuses.push_back(SetValue(value.NodeId, value.AttributeId, value.Value));
           continue;
         }
         statuses.push_back(StatusCode::BadNotWritable);

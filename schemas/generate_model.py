@@ -8,17 +8,12 @@ import xml.etree.ElementTree as ET
 
 from IPython import embed
 
-NeedOverride = []
-NeedConstructor = []#["RelativePathElement", "ReadValueId", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
-IgnoredEnums = []#["IdType", "NodeIdType"]
 #we want to implement som struct by hand, to make better interface or simply because they are too complicated 
-IgnoredStructs = []#["NodeId", "ExpandedNodeId", "Variant", "QualifiedName", "DataValue", "LocalizedText"]#, "ExtensionObject"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest"]
+
 #structs that end with Request or Response but are not
 NotRequest = ["MonitoredItemCreateRequest", "MonitoredItemModifyRequest", "CallMethodRequest"]
-OverrideTypes = {}#AttributeId": "AttributeID",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
-OverrideNames = {}#{"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
 #some object are defined in extensionobjects in spec but seems not to be in reality
 #in addition to this list all request and response and descriptions will not inherit
@@ -46,6 +41,7 @@ class Struct(object):
         self.fields = []
         self.bits = {}
         self.needconstructor = None
+        self.isrequest = False
         self.needoverride = False
         self.children = []
         self.parents = []
@@ -163,49 +159,6 @@ class Model(object):
 
 
 
-def reorder_structs(model):
-    types = IgnoredStructs + IgnoredEnums + ["Bit", "Char", "CharArray", "Guid", "SByte", "Int8", "Int16", "Int32", "Int64", "UInt8", "UInt16", "UInt32", "UInt64", "DateTime", "Boolean", "Double", "Float", "ByteString", "Byte", "StatusCode", "DiagnosticInfo", "String", "AttributeID"] + [enum.name for enum in model.enums] + ["VariableAccessLevel"]
-    waiting = {}
-    newstructs = []
-    for s in model.structs:
-        types.append(s.name)
-        s.waitingfor = []
-        ok = True
-        for f in s.fields:
-            if f.uatype not in types:
-                if f.uatype in waiting.keys():
-                    waiting[f.uatype].append(s)
-                    s.waitingfor.append(f.uatype)
-                else:
-                    waiting[f.uatype] = [s]
-                    s.waitingfor.append(f.uatype)
-                ok = False
-        if ok:
-            newstructs.append(s)
-            waitings = waiting.pop(s.name, None)
-            if waitings:
-                for s2 in waitings:
-                    s2.waitingfor.remove(s.name)
-                    if not s2.waitingfor:
-                        newstructs.append(s2)
-    if len(model.structs) != len(newstructs):
-        print("Error while reordering structs, some structs could not be reinserted, had {} structs, we now have {} structs".format(len(model.structs), len(newstructs)))
-        s1 = set(model.structs)
-        s2 = set(newstructs)
-        rest = s1 -s2
-        print("Variant" in types)
-        for s in s1-s2:
-            print("{} is waiting for: {}".format(s, s.waitingfor))
-        #print(s1 -s2)
-        #print(waiting)
-    model.structs = newstructs
-
-def override_types(model):
-    for struct in model.structs:
-        for field in struct.fields:
-            if field.name in OverrideTypes.keys():
-                field.uatype = OverrideTypes[field.name]
-
 def remove_duplicates(model):
     for struct in model.structs:
         fields = []
@@ -291,6 +244,7 @@ def split_requests(model):
                 #if field.name == "BodyLength":
                     #struct.fields.remove(field)
                     #break
+            struct.isrequest = True
             struct.needconstructor = True
             field = Field()
             field.name = "TypeId"
@@ -318,6 +272,7 @@ def split_requests(model):
             struct.fields.append(typeid)
         structs.append(struct)
     model.structs = structs
+    model.struct_list = [s.name for s in model.structs]
 
 
 class Parser(object):

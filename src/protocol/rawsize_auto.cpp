@@ -191,6 +191,113 @@ namespace OpcUa
 
 
     template<>
+    std::size_t RawSize<XmlElement>(const XmlElement& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Length);
+        size += RawSizeContainer(data.Value);
+        return size;
+    }
+
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<TwoByteNodeId>(const TwoByteNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<FourByteNodeId>(const FourByteNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<NumericNodeId>(const NumericNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<StringNodeId>(const StringNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<GuidNodeId>(const GuidNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ByteStringNodeId>(const ByteStringNodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Identifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<NodeId>(const NodeId& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeIdType);
+        if ((data.NodeIdType) & (1<<(0))) size += RawSize(data.TwoByte);
+        if ((data.NodeIdType) & (1<<(1))) size += RawSize(data.FourByte);
+        if ((data.NodeIdType) & (1<<(2))) size += RawSize(data.Numeric);
+        if ((data.NodeIdType) & (1<<(3))) size += RawSize(data.String);
+        if ((data.NodeIdType) & (1<<(4))) size += RawSize(data.Guid);
+        if ((data.NodeIdType) & (1<<(5))) size += RawSize(data.ByteString);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
     std::size_t RawSize<ExtensionObject>(const ExtensionObject& data)
     {
         size_t size = 0;
@@ -200,16 +307,376 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
-    std::size_t RawSize<XmlElement>(const XmlElement& data)
+    std::size_t RawSize<ExpandedNodeId>(const ExpandedNodeId& data)
     {
         size_t size = 0;
-        size += RawSize(data.Length);
-        size += RawSizeContainer(data.Value);
+        size += RawSize(data.NodeIdType);
+        if ((data.NodeIdType) & (1<<(0))) size += RawSize(data.TwoByte);
+        if ((data.NodeIdType) & (1<<(1))) size += RawSize(data.FourByte);
+        if ((data.NodeIdType) & (1<<(2))) size += RawSize(data.Numeric);
+        if ((data.NodeIdType) & (1<<(3))) size += RawSize(data.String);
+        if ((data.NodeIdType) & (1<<(4))) size += RawSize(data.Guid);
+        if ((data.NodeIdType) & (1<<(5))) size += RawSize(data.ByteString);
+        if ((data.NodeIdType) & (1<<(7))) size += RawSize(data.NamespaceURI);
+        if ((data.NodeIdType) & (1<<(6))) size += RawSize(data.ServerIndex);
         return size;
     }
 
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<DiagnosticInfo>(const DiagnosticInfo& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Encoding);
+        if ((data.Encoding) & (1<<(0))) size += RawSize(data.SymbolicId);
+        if ((data.Encoding) & (1<<(1))) size += RawSize(data.NamespaceURI);
+        if ((data.Encoding) & (1<<(2))) size += RawSize(data.LocalizedText);
+        if ((data.Encoding) & (1<<(4))) size += RawSize(data.AdditionalInfo);
+        if ((data.Encoding) & (1<<(5))) size += RawSize(data.InnerStatusCode);
+        if ((data.Encoding) & (1<<(6))) size += RawSize(data.InnerDiagnosticInfo);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<QualifiedName>(const QualifiedName& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NamespaceIndex);
+        size += RawSize(data.Name);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<LocalizedText>(const LocalizedText& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Encoding);
+        if ((data.Encoding) & (1<<(0))) size += RawSize(data.Locale);
+        if ((data.Encoding) & (1<<(1))) size += RawSize(data.Text);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<Variant>(const Variant& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Encoding);
+        if ((data.Encoding) & (1<<(7))) size += RawSize(data.ArrayLength);
+        if ((data.VariantType) & (1<<(1))) size += RawSizeContainer(data.Boolean);
+        if ((data.VariantType) & (1<<(2))) size += RawSizeContainer(data.SByte);
+        if ((data.VariantType) & (1<<(3))) size += RawSizeContainer(data.Byte);
+        if ((data.VariantType) & (1<<(4))) size += RawSizeContainer(data.Int16);
+        if ((data.VariantType) & (1<<(5))) size += RawSizeContainer(data.UInt16);
+        if ((data.VariantType) & (1<<(6))) size += RawSizeContainer(data.Int32);
+        if ((data.VariantType) & (1<<(7))) size += RawSizeContainer(data.UInt32);
+        if ((data.VariantType) & (1<<(8))) size += RawSizeContainer(data.Int64);
+        if ((data.VariantType) & (1<<(9))) size += RawSizeContainer(data.UInt64);
+        if ((data.VariantType) & (1<<(10))) size += RawSizeContainer(data.Float);
+        if ((data.VariantType) & (1<<(11))) size += RawSizeContainer(data.Double);
+        if ((data.VariantType) & (1<<(12))) size += RawSizeContainer(data.String);
+        if ((data.VariantType) & (1<<(13))) size += RawSizeContainer(data.DateTime);
+        if ((data.VariantType) & (1<<(14))) size += RawSizeContainer(data.Guid);
+        if ((data.VariantType) & (1<<(15))) size += RawSizeContainer(data.ByteString);
+        if ((data.VariantType) & (1<<(16))) size += RawSizeContainer(data.XmlElement);
+        if ((data.VariantType) & (1<<(17))) size += RawSizeContainer(data.NodeId);
+        if ((data.VariantType) & (1<<(18))) size += RawSizeContainer(data.ExpandedNodeId);
+        if ((data.VariantType) & (1<<(19))) size += RawSizeContainer(data.Status);
+        if ((data.VariantType) & (1<<(20))) size += RawSizeContainer(data.DiagnosticInfo);
+        if ((data.VariantType) & (1<<(21))) size += RawSizeContainer(data.QualifiedName);
+        if ((data.VariantType) & (1<<(22))) size += RawSizeContainer(data.LocalizedText);
+        if ((data.VariantType) & (1<<(23))) size += RawSizeContainer(data.ExtensionObject);
+        if ((data.VariantType) & (1<<(24))) size += RawSizeContainer(data.DataValue);
+        if ((data.VariantType) & (1<<(25))) size += RawSizeContainer(data.Variant);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<DataValue>(const DataValue& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.Encoding);
+        if ((data.Encoding) & (1<<(0))) size += RawSize(data.Value);
+        if ((data.Encoding) & (1<<(1))) size += RawSize(data.Status);
+        if ((data.Encoding) & (1<<(2))) size += RawSize(data.SourceTimestamp);
+        if ((data.Encoding) & (1<<(3))) size += RawSize(data.SourcePicoseconds);
+        if ((data.Encoding) & (1<<(4))) size += RawSize(data.ServerTimestamp);
+        if ((data.Encoding) & (1<<(5))) size += RawSize(data.ServerPicoseconds);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ReferenceNode>(const ReferenceNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.ReferenceTypeId);
+        size += RawSize(data.IsInverse);
+        size += RawSize(data.TargetId);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<Node>(const Node& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<InstanceNode>(const InstanceNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<TypeNode>(const TypeNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ObjectNode>(const ObjectNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.EventNotifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ObjectTypeNode>(const ObjectTypeNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.IsAbstract);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<VariableNode>(const VariableNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.Value);
+        size += RawSize(data.DataType);
+        size += RawSize(data.ValueRank);
+        size += RawSizeContainer(data.ArrayDimensions);
+        size += RawSize(data.AccessLevel);
+        size += RawSize(data.UserAccessLevel);
+        size += RawSize(data.MinimumSamplingInterval);
+        size += RawSize(data.Historizing);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<VariableTypeNode>(const VariableTypeNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.Value);
+        size += RawSize(data.DataType);
+        size += RawSize(data.ValueRank);
+        size += RawSizeContainer(data.ArrayDimensions);
+        size += RawSize(data.IsAbstract);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ReferenceTypeNode>(const ReferenceTypeNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.IsAbstract);
+        size += RawSize(data.Symmetric);
+        size += RawSize(data.InverseName);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<MethodNode>(const MethodNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.Executable);
+        size += RawSize(data.UserExecutable);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<ViewNode>(const ViewNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.ContainsNoLoops);
+        size += RawSize(data.EventNotifier);
+        return size;
+    }
+
+*/
+
+/* DISABLED
+
+    template<>
+    std::size_t RawSize<DataTypeNode>(const DataTypeNode& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.NodeId);
+        size += RawSize(data.NodeClass);
+        size += RawSize(data.BrowseName);
+        size += RawSize(data.DisplayName);
+        size += RawSize(data.Description);
+        size += RawSize(data.WriteMask);
+        size += RawSize(data.UserWriteMask);
+        size += RawSizeContainer(data.References);
+        size += RawSize(data.IsAbstract);
+        return size;
+    }
+
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<Argument>(const Argument& data)
@@ -223,8 +690,9 @@ namespace OpcUa
         return size;
     }
 
+*/
 
-/* START HACK
+/* DISABLED
 
     template<>
     std::size_t RawSize<EnumValueType>(const EnumValueType& data)
@@ -236,6 +704,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TimeZoneDataType>(const TimeZoneDataType& data)
@@ -246,6 +717,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ApplicationDescription>(const ApplicationDescription& data)
@@ -261,6 +735,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RequestHeader>(const RequestHeader& data)
@@ -276,6 +753,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ResponseHeader>(const ResponseHeader& data)
@@ -290,6 +770,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ServiceFault>(const ServiceFault& data)
@@ -300,6 +783,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<FindServersParameters>(const FindServersParameters& data)
@@ -311,6 +797,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<FindServersRequest>(const FindServersRequest& data)
@@ -322,6 +811,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<FindServersResult>(const FindServersResult& data)
@@ -331,6 +823,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<FindServersResponse>(const FindServersResponse& data)
@@ -342,6 +837,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& data)
@@ -355,6 +853,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EndpointDescription>(const EndpointDescription& data)
@@ -371,6 +872,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsParameters>(const GetEndpointsParameters& data)
@@ -382,6 +886,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& data)
@@ -393,6 +900,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& data)
@@ -404,6 +914,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisteredServer>(const RegisteredServer& data)
@@ -420,6 +933,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterServerParameters>(const RegisterServerParameters& data)
@@ -429,6 +945,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterServerRequest>(const RegisterServerRequest& data)
@@ -440,6 +959,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterServerResponse>(const RegisterServerResponse& data)
@@ -450,6 +972,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ChannelSecurityToken>(const ChannelSecurityToken& data)
@@ -462,6 +987,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<OpenSecureChannelParameters>(const OpenSecureChannelParameters& data)
@@ -475,6 +1003,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<OpenSecureChannelRequest>(const OpenSecureChannelRequest& data)
@@ -486,6 +1017,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<OpenSecureChannelResult>(const OpenSecureChannelResult& data)
@@ -497,6 +1031,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<OpenSecureChannelResponse>(const OpenSecureChannelResponse& data)
@@ -508,6 +1045,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CloseSecureChannelRequest>(const CloseSecureChannelRequest& data)
@@ -518,6 +1058,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CloseSecureChannelResponse>(const CloseSecureChannelResponse& data)
@@ -528,6 +1071,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
@@ -538,6 +1084,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SignatureData>(const SignatureData& data)
@@ -548,6 +1097,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters& data)
@@ -564,6 +1116,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& data)
@@ -575,6 +1130,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionResult>(const CreateSessionResult& data)
@@ -592,6 +1150,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& data)
@@ -603,6 +1164,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UserIdentityToken>(const UserIdentityToken& data)
@@ -615,6 +1179,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AnonymousIdentityToken>(const AnonymousIdentityToken& data)
@@ -627,6 +1194,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UserNameIdentityToken>(const UserNameIdentityToken& data)
@@ -642,6 +1212,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<X509IdentityToken>(const X509IdentityToken& data)
@@ -655,6 +1228,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<IssuedIdentityToken>(const IssuedIdentityToken& data)
@@ -669,6 +1245,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionParameters>(const ActivateSessionParameters& data)
@@ -682,6 +1261,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& data)
@@ -693,6 +1275,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResult>(const ActivateSessionResult& data)
@@ -704,6 +1289,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& data)
@@ -715,6 +1303,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CloseSessionRequest>(const CloseSessionRequest& data)
@@ -726,6 +1317,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CloseSessionResponse>(const CloseSessionResponse& data)
@@ -736,6 +1330,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CancelParameters>(const CancelParameters& data)
@@ -745,6 +1342,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CancelRequest>(const CancelRequest& data)
@@ -756,6 +1356,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CancelResult>(const CancelResult& data)
@@ -765,6 +1368,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CancelResponse>(const CancelResponse& data)
@@ -776,6 +1382,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NodeAttributes>(const NodeAttributes& data)
@@ -792,6 +1401,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ObjectAttributes>(const ObjectAttributes& data)
@@ -809,6 +1421,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<VariableAttributes>(const VariableAttributes& data)
@@ -833,6 +1448,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MethodAttributes>(const MethodAttributes& data)
@@ -851,6 +1469,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ObjectTypeAttributes>(const ObjectTypeAttributes& data)
@@ -868,6 +1489,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<VariableTypeAttributes>(const VariableTypeAttributes& data)
@@ -889,6 +1513,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReferenceTypeAttributes>(const ReferenceTypeAttributes& data)
@@ -908,6 +1535,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DataTypeAttributes>(const DataTypeAttributes& data)
@@ -925,6 +1555,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ViewAttributes>(const ViewAttributes& data)
@@ -943,6 +1576,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddNodesItem>(const AddNodesItem& data)
@@ -958,6 +1594,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddNodesResult>(const AddNodesResult& data)
@@ -968,6 +1607,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddNodesParameters>(const AddNodesParameters& data)
@@ -977,6 +1619,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddNodesRequest>(const AddNodesRequest& data)
@@ -988,6 +1633,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddNodesResponse>(const AddNodesResponse& data)
@@ -1000,6 +1648,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddReferencesItem>(const AddReferencesItem& data)
@@ -1014,6 +1665,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddReferencesRequest>(const AddReferencesRequest& data)
@@ -1025,6 +1679,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AddReferencesResponse>(const AddReferencesResponse& data)
@@ -1037,6 +1694,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesItem>(const DeleteNodesItem& data)
@@ -1047,6 +1707,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesParameters>(const DeleteNodesParameters& data)
@@ -1056,6 +1719,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesRequest>(const DeleteNodesRequest& data)
@@ -1067,6 +1733,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesResult>(const DeleteNodesResult& data)
@@ -1077,6 +1746,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesResponse>(const DeleteNodesResponse& data)
@@ -1088,6 +1760,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteReferencesItem>(const DeleteReferencesItem& data)
@@ -1101,6 +1776,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteReferencesParameters>(const DeleteReferencesParameters& data)
@@ -1110,6 +1788,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteReferencesRequest>(const DeleteReferencesRequest& data)
@@ -1121,6 +1802,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteReferencesResult>(const DeleteReferencesResult& data)
@@ -1131,6 +1815,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteReferencesResponse>(const DeleteReferencesResponse& data)
@@ -1142,6 +1829,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ViewDescription>(const ViewDescription& data)
@@ -1153,6 +1843,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseDescription>(const BrowseDescription& data)
@@ -1167,6 +1860,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReferenceDescription>(const ReferenceDescription& data)
@@ -1182,6 +1878,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseResult>(const BrowseResult& data)
@@ -1193,6 +1892,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseParameters>(const BrowseParameters& data)
@@ -1204,6 +1906,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseRequest>(const BrowseRequest& data)
@@ -1215,6 +1920,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseResponse>(const BrowseResponse& data)
@@ -1227,6 +1935,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseNextParameters>(const BrowseNextParameters& data)
@@ -1237,6 +1948,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseNextRequest>(const BrowseNextRequest& data)
@@ -1248,6 +1962,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseNextResult>(const BrowseNextResult& data)
@@ -1258,6 +1975,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowseNextResponse>(const BrowseNextResponse& data)
@@ -1269,6 +1989,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RelativePathElement>(const RelativePathElement& data)
@@ -1281,6 +2004,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RelativePath>(const RelativePath& data)
@@ -1290,6 +2016,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowsePath>(const BrowsePath& data)
@@ -1300,6 +2029,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowsePathTarget>(const BrowsePathTarget& data)
@@ -1310,6 +2042,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BrowsePathResult>(const BrowsePathResult& data)
@@ -1320,6 +2055,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TranslateBrowsePathsToNodeIdsParameters>(const TranslateBrowsePathsToNodeIdsParameters& data)
@@ -1329,6 +2067,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TranslateBrowsePathsToNodeIdsRequest>(const TranslateBrowsePathsToNodeIdsRequest& data)
@@ -1340,6 +2081,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TranslateBrowsePathsToNodeIdsResponse>(const TranslateBrowsePathsToNodeIdsResponse& data)
@@ -1352,6 +2096,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterNodesParameters>(const RegisterNodesParameters& data)
@@ -1361,6 +2108,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterNodesRequest>(const RegisterNodesRequest& data)
@@ -1372,6 +2122,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterNodesResult>(const RegisterNodesResult& data)
@@ -1381,6 +2134,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RegisterNodesResponse>(const RegisterNodesResponse& data)
@@ -1392,6 +2148,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UnregisterNodesParameters>(const UnregisterNodesParameters& data)
@@ -1401,6 +2160,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UnregisterNodesRequest>(const UnregisterNodesRequest& data)
@@ -1412,6 +2174,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UnregisterNodesResponse>(const UnregisterNodesResponse& data)
@@ -1422,6 +2187,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EndpointConfiguration>(const EndpointConfiguration& data)
@@ -1439,6 +2207,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SupportedProfile>(const SupportedProfile& data)
@@ -1453,6 +2224,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SoftwareCertificate>(const SoftwareCertificate& data)
@@ -1471,6 +2245,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryDataDescription>(const QueryDataDescription& data)
@@ -1482,6 +2259,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NodeTypeDescription>(const NodeTypeDescription& data)
@@ -1493,6 +2273,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryDataSet>(const QueryDataSet& data)
@@ -1504,6 +2287,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NodeReference>(const NodeReference& data)
@@ -1516,6 +2302,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ContentFilterElement>(const ContentFilterElement& data)
@@ -1526,6 +2315,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ContentFilter>(const ContentFilter& data)
@@ -1535,6 +2327,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<FilterOperand>(const FilterOperand& data)
@@ -1546,6 +2341,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ElementOperand>(const ElementOperand& data)
@@ -1558,6 +2356,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<LiteralOperand>(const LiteralOperand& data)
@@ -1570,6 +2371,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AttributeOperand>(const AttributeOperand& data)
@@ -1586,6 +2390,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SimpleAttributeOperand>(const SimpleAttributeOperand& data)
@@ -1601,6 +2408,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ContentFilterElementResult>(const ContentFilterElementResult& data)
@@ -1612,6 +2422,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ContentFilterResult>(const ContentFilterResult& data)
@@ -1622,6 +2435,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ParsingResult>(const ParsingResult& data)
@@ -1633,6 +2449,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryFirstParameters>(const QueryFirstParameters& data)
@@ -1646,6 +2465,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryFirstRequest>(const QueryFirstRequest& data)
@@ -1657,6 +2479,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryFirstResult>(const QueryFirstResult& data)
@@ -1670,6 +2495,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryFirstResponse>(const QueryFirstResponse& data)
@@ -1681,6 +2509,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryNextParameters>(const QueryNextParameters& data)
@@ -1691,6 +2522,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryNextRequest>(const QueryNextRequest& data)
@@ -1702,6 +2536,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryNextResult>(const QueryNextResult& data)
@@ -1712,6 +2549,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<QueryNextResponse>(const QueryNextResponse& data)
@@ -1723,6 +2563,7 @@ namespace OpcUa
         return size;
     }
 
+*/
 
     template<>
     std::size_t RawSize<ReadValueId>(const ReadValueId& data)
@@ -1770,6 +2611,8 @@ namespace OpcUa
     }
 
 
+/* DISABLED
+
     template<>
     std::size_t RawSize<HistoryReadValueId>(const HistoryReadValueId& data)
     {
@@ -1781,6 +2624,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryReadResult>(const HistoryReadResult& data)
@@ -1792,6 +2638,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryReadDetails>(const HistoryReadDetails& data)
@@ -1803,6 +2652,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReadRawModifiedDetails>(const ReadRawModifiedDetails& data)
@@ -1819,6 +2671,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReadAtTimeDetails>(const ReadAtTimeDetails& data)
@@ -1832,6 +2687,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryData>(const HistoryData& data)
@@ -1841,6 +2699,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModificationInfo>(const ModificationInfo& data)
@@ -1852,6 +2713,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryModifiedData>(const HistoryModifiedData& data)
@@ -1862,6 +2726,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryReadParameters>(const HistoryReadParameters& data)
@@ -1874,6 +2741,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryReadRequest>(const HistoryReadRequest& data)
@@ -1885,6 +2755,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryReadResponse>(const HistoryReadResponse& data)
@@ -1897,6 +2770,7 @@ namespace OpcUa
         return size;
     }
 
+*/
 
     template<>
     std::size_t RawSize<WriteValue>(const WriteValue& data)
@@ -1942,6 +2816,8 @@ namespace OpcUa
     }
 
 
+/* DISABLED
+
     template<>
     std::size_t RawSize<HistoryUpdateDetails>(const HistoryUpdateDetails& data)
     {
@@ -1950,6 +2826,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UpdateDataDetails>(const UpdateDataDetails& data)
@@ -1961,6 +2840,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UpdateStructureDataDetails>(const UpdateStructureDataDetails& data)
@@ -1972,6 +2854,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteRawModifiedDetails>(const DeleteRawModifiedDetails& data)
@@ -1984,6 +2869,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteAtTimeDetails>(const DeleteAtTimeDetails& data)
@@ -1994,6 +2882,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteEventDetails>(const DeleteEventDetails& data)
@@ -2004,6 +2895,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryUpdateResult>(const HistoryUpdateResult& data)
@@ -2015,6 +2909,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryUpdateParameters>(const HistoryUpdateParameters& data)
@@ -2024,6 +2921,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryUpdateRequest>(const HistoryUpdateRequest& data)
@@ -2035,6 +2935,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryUpdateResponse>(const HistoryUpdateResponse& data)
@@ -2047,6 +2950,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CallMethodRequest>(const CallMethodRequest& data)
@@ -2058,6 +2964,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CallMethodResult>(const CallMethodResult& data)
@@ -2070,6 +2979,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CallRequest>(const CallRequest& data)
@@ -2081,6 +2993,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CallResult>(const CallResult& data)
@@ -2091,6 +3006,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CallResponse>(const CallResponse& data)
@@ -2102,6 +3020,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoringFilter>(const MonitoringFilter& data)
@@ -2113,6 +3034,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DataChangeFilter>(const DataChangeFilter& data)
@@ -2127,6 +3051,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EventFilter>(const EventFilter& data)
@@ -2140,6 +3067,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReadEventDetails>(const ReadEventDetails& data)
@@ -2155,6 +3085,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AggregateConfiguration>(const AggregateConfiguration& data)
@@ -2168,6 +3101,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ReadProcessedDetails>(const ReadProcessedDetails& data)
@@ -2184,6 +3120,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AggregateFilter>(const AggregateFilter& data)
@@ -2199,6 +3138,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoringFilterResult>(const MonitoringFilterResult& data)
@@ -2210,6 +3152,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EventFilterResult>(const EventFilterResult& data)
@@ -2224,6 +3169,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryUpdateEventResult>(const HistoryUpdateEventResult& data)
@@ -2234,6 +3182,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AggregateFilterResult>(const AggregateFilterResult& data)
@@ -2248,6 +3199,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoringParameters>(const MonitoringParameters& data)
@@ -2261,6 +3215,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
@@ -2272,6 +3229,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
@@ -2285,6 +3245,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsParameters>(const CreateMonitoredItemsParameters& data)
@@ -2296,6 +3259,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
@@ -2307,6 +3273,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
@@ -2319,6 +3288,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemModifyRequest>(const MonitoredItemModifyRequest& data)
@@ -2329,6 +3301,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemModifyResult>(const MonitoredItemModifyResult& data)
@@ -2341,6 +3316,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifyMonitoredItemsParameters>(const ModifyMonitoredItemsParameters& data)
@@ -2352,6 +3330,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifyMonitoredItemsRequest>(const ModifyMonitoredItemsRequest& data)
@@ -2363,6 +3344,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifyMonitoredItemsResponse>(const ModifyMonitoredItemsResponse& data)
@@ -2375,6 +3359,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetMonitoringModeParameters>(const SetMonitoringModeParameters& data)
@@ -2386,6 +3373,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetMonitoringModeRequest>(const SetMonitoringModeRequest& data)
@@ -2397,6 +3387,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetMonitoringModeResult>(const SetMonitoringModeResult& data)
@@ -2407,6 +3400,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetMonitoringModeResponse>(const SetMonitoringModeResponse& data)
@@ -2418,6 +3414,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetTriggeringParameters>(const SetTriggeringParameters& data)
@@ -2430,6 +3429,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetTriggeringRequest>(const SetTriggeringRequest& data)
@@ -2441,6 +3443,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetTriggeringResult>(const SetTriggeringResult& data)
@@ -2453,6 +3458,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetTriggeringResponse>(const SetTriggeringResponse& data)
@@ -2464,6 +3472,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
@@ -2474,6 +3485,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
@@ -2485,6 +3499,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
@@ -2497,6 +3514,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
@@ -2511,6 +3531,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
@@ -2522,6 +3545,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionResult>(const CreateSubscriptionResult& data)
@@ -2534,6 +3560,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
@@ -2545,6 +3574,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionParameters>(const ModifySubscriptionParameters& data)
@@ -2559,6 +3591,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionRequest>(const ModifySubscriptionRequest& data)
@@ -2570,6 +3605,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionResult>(const ModifySubscriptionResult& data)
@@ -2581,6 +3619,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionResponse>(const ModifySubscriptionResponse& data)
@@ -2592,6 +3633,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeParameters>(const SetPublishingModeParameters& data)
@@ -2602,6 +3646,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
@@ -2613,6 +3660,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeResult>(const SetPublishingModeResult& data)
@@ -2623,6 +3673,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
@@ -2634,6 +3687,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NotificationData>(const NotificationData& data)
@@ -2645,6 +3701,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
@@ -2656,6 +3715,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemNotification>(const MonitoredItemNotification& data)
@@ -2666,6 +3728,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DataChangeNotification>(const DataChangeNotification& data)
@@ -2679,6 +3744,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EventFieldList>(const EventFieldList& data)
@@ -2689,6 +3757,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EventNotificationList>(const EventNotificationList& data)
@@ -2701,6 +3772,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryEventFieldList>(const HistoryEventFieldList& data)
@@ -2710,6 +3784,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<HistoryEvent>(const HistoryEvent& data)
@@ -2719,6 +3796,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<UpdateEventDetails>(const UpdateEventDetails& data)
@@ -2731,6 +3811,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<StatusChangeNotification>(const StatusChangeNotification& data)
@@ -2744,6 +3827,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
@@ -2754,6 +3840,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<PublishRequest>(const PublishRequest& data)
@@ -2765,6 +3854,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<PublishResult>(const PublishResult& data)
@@ -2779,6 +3871,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<PublishResponse>(const PublishResponse& data)
@@ -2790,6 +3885,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishParameters>(const RepublishParameters& data)
@@ -2800,6 +3898,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishRequest>(const RepublishRequest& data)
@@ -2811,6 +3912,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishResult>(const RepublishResult& data)
@@ -2820,6 +3924,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishResponse>(const RepublishResponse& data)
@@ -2831,6 +3938,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TransferResult>(const TransferResult& data)
@@ -2841,6 +3951,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TransferSubscriptionsParameters>(const TransferSubscriptionsParameters& data)
@@ -2851,6 +3964,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TransferSubscriptionsRequest>(const TransferSubscriptionsRequest& data)
@@ -2862,6 +3978,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TransferSubscriptionsResult>(const TransferSubscriptionsResult& data)
@@ -2872,6 +3991,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TransferSubscriptionsResponse>(const TransferSubscriptionsResponse& data)
@@ -2883,6 +4005,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteSubscriptionsParameters>(const DeleteSubscriptionsParameters& data)
@@ -2892,6 +4017,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
@@ -2903,6 +4031,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
@@ -2915,6 +4046,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ScalarTestType>(const ScalarTestType& data)
@@ -2948,6 +4082,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ArrayTestType>(const ArrayTestType& data)
@@ -2981,6 +4118,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<CompositeTestType>(const CompositeTestType& data)
@@ -2991,6 +4131,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackParameters>(const TestStackParameters& data)
@@ -3002,6 +4145,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackRequest>(const TestStackRequest& data)
@@ -3013,6 +4159,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackResult>(const TestStackResult& data)
@@ -3022,6 +4171,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackResponse>(const TestStackResponse& data)
@@ -3033,6 +4185,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackExParameters>(const TestStackExParameters& data)
@@ -3044,6 +4199,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackExRequest>(const TestStackExRequest& data)
@@ -3055,6 +4213,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackExResult>(const TestStackExResult& data)
@@ -3064,6 +4225,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<TestStackExResponse>(const TestStackExResponse& data)
@@ -3075,6 +4239,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<BuildInfo>(const BuildInfo& data)
@@ -3089,6 +4256,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<RedundantServerDataType>(const RedundantServerDataType& data)
@@ -3100,6 +4270,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EndpointUrlListDataType>(const EndpointUrlListDataType& data)
@@ -3109,6 +4282,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<NetworkGroupDataType>(const NetworkGroupDataType& data)
@@ -3119,6 +4295,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SamplingIntervalDiagnosticsDataType>(const SamplingIntervalDiagnosticsDataType& data)
@@ -3131,6 +4310,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ServerDiagnosticsSummaryDataType>(const ServerDiagnosticsSummaryDataType& data)
@@ -3151,6 +4333,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ServerStatusDataType>(const ServerStatusDataType& data)
@@ -3165,6 +4350,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SessionSecurityDiagnosticsDataType>(const SessionSecurityDiagnosticsDataType& data)
@@ -3182,6 +4370,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ServiceCounterDataType>(const ServiceCounterDataType& data)
@@ -3192,6 +4383,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SessionDiagnosticsDataType>(const SessionDiagnosticsDataType& data)
@@ -3243,6 +4437,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<StatusResult>(const StatusResult& data)
@@ -3253,6 +4450,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SubscriptionDiagnosticsDataType>(const SubscriptionDiagnosticsDataType& data)
@@ -3292,6 +4492,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ModelChangeStructureDataType>(const ModelChangeStructureDataType& data)
@@ -3303,6 +4506,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<SemanticChangeStructureDataType>(const SemanticChangeStructureDataType& data)
@@ -3313,6 +4519,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<Range>(const Range& data)
@@ -3323,6 +4532,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<EUInformation>(const EUInformation& data)
@@ -3335,6 +4547,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ComplexNumberType>(const ComplexNumberType& data)
@@ -3345,6 +4560,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<DoubleComplexNumberType>(const DoubleComplexNumberType& data)
@@ -3355,6 +4573,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<AxisInformation>(const AxisInformation& data)
@@ -3368,6 +4589,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<XVType>(const XVType& data)
@@ -3378,6 +4602,9 @@ namespace OpcUa
         return size;
     }
 
+*/
+
+/* DISABLED
 
     template<>
     std::size_t RawSize<ProgramDiagnosticDataType>(const ProgramDiagnosticDataType& data)
@@ -3396,6 +4623,7 @@ namespace OpcUa
         return size;
     }
 
+*/
 
     template<>
     std::size_t RawSize<Annotation>(const Annotation& data)
@@ -3407,7 +4635,6 @@ namespace OpcUa
         return size;
     }
 
-*/ //END HACK
 
    }
 

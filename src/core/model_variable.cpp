@@ -30,9 +30,9 @@ namespace OpcUa
     {
       Id = variableId;
       ReadParameters attrs;
-      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::DisplayName));
-      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::BrowseName));
-      attrs.AttributesToRead.push_back(AttributeValueId(variableId, AttributeId::DataType));
+      attrs.AttributesToRead.push_back(ToReadValueId(variableId, AttributeId::DisplayName));
+      attrs.AttributesToRead.push_back(ToReadValueId(variableId, AttributeId::BrowseName));
+      attrs.AttributesToRead.push_back(ToReadValueId(variableId, AttributeId::DataType));
       std::vector<DataValue> values = services->Attributes()->Read(attrs);
       DisplayName = values[0].Value.As<LocalizedText>();
       BrowseName = values[1].Value.As<QualifiedName>();
@@ -42,7 +42,7 @@ namespace OpcUa
     DataValue Variable::GetValue() const
     {
       ReadParameters params;
-      params.AttributesToRead.push_back(AttributeValueId(GetId(), AttributeId::Value));
+      params.AttributesToRead.push_back(ToReadValueId(GetId(), AttributeId::Value));
       const std::vector<DataValue> result = GetServices()->Attributes()->Read(params);
       if (result.size() != 1)
       {
@@ -61,9 +61,9 @@ namespace OpcUa
     void Variable::SetValue(const DataValue& value)
     {
       WriteValue writeValue;
-      writeValue.Attribute = AttributeId::Value;
-      writeValue.Data = value;
-      writeValue.Node = Id;
+      writeValue.AttributeId = AttributeId::Value;
+      writeValue.Value = value;
+      writeValue.NodeId = Id;
       std::vector<StatusCode> result = GetServices()->Attributes()->Write({writeValue});
       if (result.size() != 1)
       {
