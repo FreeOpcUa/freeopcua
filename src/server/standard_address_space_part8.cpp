@@ -699,7 +699,7 @@ namespace OpcUa
         attrs.Type = ObjectID::String;
         attrs.Rank = 1;
         attrs.IsAbstract = false;
-        attrs.Dimensions = std::vector<uint32_t>({0});
+		attrs.Dimensions = { 0 };
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
@@ -754,7 +754,7 @@ namespace OpcUa
         attrs.Type = ToNodeID("i=12080");
         attrs.Rank = 1;
         attrs.IsAbstract = false;
-        attrs.Dimensions = std::vector<uint32_t>({0});
+		attrs.Dimensions = { 0 };
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
