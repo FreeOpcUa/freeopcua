@@ -2,7 +2,8 @@ Open Source C++ OPC-UA Server and Client Library
 ========
 [![Build Status](https://travis-ci.org/FreeOpcUa/freeopcua.svg?branch=master)](https://travis-ci.org/FreeOpcUa/freeopcua)
 
-LGPL OPC-UA server and client library written in C++.  
+LGPL OPC-UA server and client library written in C++ and with a lot of code auto-generated from xml specification using python.  
+
 Python bindings can be found in the python directory.
 
 code: https://github.com/FreeOpcUa/freeopcua  
@@ -108,5 +109,16 @@ ctest -C Debug
 cd bin\Debug
 example_server.exe
 ```
+## Developement
 
+C++ style
+* 2 spaces not tab
+* CamelCase
+* local variables start with small letter
+* gobal/member variables starts with capital letters. 
+
+python code and API should follows PEP8 (many places should be fixed)
+
+Address space and most protocol code are auto-generated and should not be modified directly. Every auto-generated file starts with a mention that it should not be edited.
+There's a lot of old hand written protocol code left that should use the auto-generated code. This is done by uncommenting struct names in schemas/generate_protocol.py and removing old code and files in src/protocol and include/opc/ua/protocol/
 
