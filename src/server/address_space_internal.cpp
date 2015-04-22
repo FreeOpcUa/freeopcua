@@ -295,6 +295,66 @@ namespace OpcUa
       return StatusCode::BadAttributeIdInvalid;
     }
 
+    void AddressSpaceInMemory::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    {
+      NodesMap::iterator it = Nodes.find(node);
+      if ( it != Nodes.end() )
+      {
+        it->second.Method = callback;
+      }
+      throw std::runtime_error("While setting node callback: node does not exist.");
+    }
+
+    std::vector<OpcUa::CallMethodResult> AddressSpaceInMemory::Call(std::vector<OpcUa::CallMethodRequest> methodsToCall)
+    {
+      std::vector<OpcUa::CallMethodResult>  results;
+      for (auto method : methodsToCall)
+      {
+        results.push_back(CallMethod(method));
+      }
+      return results;
+    }
+
+    CallMethodResult AddressSpaceInMemory::CallMethod(CallMethodRequest request)
+    {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
+      CallMethodResult result;
+      NodesMap::iterator node_it = Nodes.find(request.ObjectId);
+      if ( node_it == Nodes.end() )
+      {
+        result.Status = StatusCode::BadNodeIdUnknown;
+        return result;
+      }
+      NodesMap::iterator method_it = Nodes.find(request.MethodId);
+      if ( method_it == Nodes.end() )
+      {
+        result.Status = StatusCode::BadNodeIdUnknown;
+        return result;
+      }
+      if ( ! method_it->second.Method )
+      {
+        result.Status = StatusCode::BadNothingToDo;
+        return result;
+      }
+      //FIXME: find a way to return more information about failure to client
+      try
+      {
+        result.OutputArguments = method_it->second.Method(request.InputArguments);
+      }
+      catch (std::exception& ex)
+      {
+        std::cout << "Exception whil calling method" << request.MethodId << ":  " << ex.what() << std::endl;
+        result.Status = StatusCode::BadUnexpectedError;
+        return result;
+      }
+      for (auto var : request.InputArguments)
+      {
+        result.InputArgumentResults.push_back(StatusCode::Good);
+      }
+      return result;
+    }
+
     StatusCode AddressSpaceInMemory::SetValue(const NodeId& node, AttributeId attribute, const DataValue& data)
     {
       NodesMap::iterator it = Nodes.find(node);

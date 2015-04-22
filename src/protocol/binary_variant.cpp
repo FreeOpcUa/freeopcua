@@ -507,9 +507,10 @@ namespace OpcUa
       visitor.Visit(any_cast<DataValue>(Value));
     else if (t == typeid(std::vector<DataValue>))
       visitor.Visit(any_cast<std::vector<DataValue>>(Value));
-*/
+      //Variant of variant is not allowed but variant of an array of variant is OK
     else if (t == typeid(Variant))
       visitor.Visit(any_cast<Variant>(Value));
+*/
     else if (t == typeid(std::vector<Variant>))
       visitor.Visit(any_cast<std::vector<Variant>>(Value));
 
