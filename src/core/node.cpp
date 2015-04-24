@@ -400,6 +400,49 @@ namespace OpcUa
 
   }
 
+  Node Node::AddMethod(uint32_t ns, const std::string& name,  std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  {
+    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
+    QualifiedName qn = ToQualifiedName(name, ns);
+    return AddVariable(nodeid, qn, method);
+  }
+
+  Node Node::AddMethod(const std::string& nodeid, const std::string& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  {
+    NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
+    QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
+    return AddVariable(node, qn, method);
+  }
+
+  Node Node::AddMethod(const NodeId& nodeid, const QualifiedName& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  {
+    AddNodesItem item;
+    item.BrowseName = browsename;
+    item.ParentNodeId = this->Id;
+    item.RequestedNewNodeId = nodeid;
+    item.Class = NodeClass::Method;
+    item.ReferenceTypeId = ReferenceId::HasComponent; 
+    //item.TypeDefinition = ObjectId::BaseDataVariableType; 
+    MethodAttributes attr;
+    attr.DisplayName = LocalizedText(browsename.Name);
+    attr.Description = LocalizedText(browsename.Name);
+    attr.WriteMask = 0;
+    attr.UserWriteMask = 0;
+    attr.Executable = true;
+    attr.UserExecutable = true;
+    item.Attributes = attr;
+
+    std::vector<AddNodesResult> addnodesresults = Server->NodeManagement()->AddNodes(std::vector<AddNodesItem>({item}));
+
+    AddNodesResult res = addnodesresults.front(); //This should always work
+    CheckStatusCode(res.Status);
+    //addressspace.SetMethod(res.AddedNodeId, method);
+
+    return Node(Server, res.AddedNodeId);
+  }
+
+
+
   Variant Node::GetValue() const
   {
     return GetAttribute(AttributeId::Value);
