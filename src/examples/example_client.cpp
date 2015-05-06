@@ -32,18 +32,16 @@ int main(int argc, char** argv)
 {
   try
   {
-    //std::string endpoint = "opc.tcp://192.168.56.101:48030";
-    //std::string endpoint = "opc.tcp://user:password@192.168.56.101:48030";
-    std::string endpoint = "opc.tcp://127.0.0.1:4841/freeopcua/server/";
-    //std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
+	std::string endpoint = "opc.tcp://localhost:48010";
 
-    if(argc > 1)
+	if(argc > 1)
       endpoint = argv[1];
 
     std::cout << "Connecting to: " << endpoint << std::endl;
     bool debug = false;
     OpcUa::UaClient client(debug);
     client.Connect(endpoint);
+
 
     //get Root node on server
     OpcUa::Node root = client.GetRootNode();
@@ -63,23 +61,25 @@ int main(int argc, char** argv)
     for (std::string d : ns.As<std::vector<std::string>>())
       std::cout << "    "  << d << std::endl;
     
-    //Get namespace index we are interrested in
-    uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
+    //Get namespace index we are interested in
+    // uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
     
-    //Get Node using path (BrowsePathToNodeId call)
-    std::vector<std::string> varpath({std::to_string(idx) + ":NewObject", "MyVariable"});
-    //std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); //Example data from prosys server
-    OpcUa::Node myvar = objects.GetChild(varpath);
-    std::cout << "got node: " << myvar << std::endl;
+	OpcUa::Node dynamicNode = client.GetNode(OpcUa::NodeId("Demo.Dynamic.Scalar.Float", 2));
+
+    ////Get Node using path (BrowsePathToNodeId call)
+    //std::vector<std::string> varpath({std::to_string(idx) + ":NewObject", "MyVariable"});
+    ////std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); //Example data from prosys server
+    //OpcUa::Node myvar = objects.GetChild(varpath);
+    //std::cout << "got node: " << myvar << std::endl;
 
     //Subscription
     SubClient sclt; 
     std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
-    uint32_t handle = sub->SubscribeDataChange(myvar);
-    std::cout << "Got sub handle: " << handle << ", sleeping 5 sconds" << std::endl;
+    uint32_t handle = sub->SubscribeDataChange(dynamicNode);
+    std::cout << "Got sub handle: " << handle << ", sleeping 5 seconds" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    std::cout << "Disconnecting" << std::endl;
+    std::cout << "Disconnecting ****************************** " << std::endl;
     client.Disconnect();
     return 0;
   }

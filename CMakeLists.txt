@@ -12,6 +12,25 @@ option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
+
+IF(WIN32)
+    #FIXME: boost should be find by find_package and setting correct env variables in windows!!!!
+    SET(BOOST_ROOT ENV{BOOST_ROOT} 
+		CACHE PATH
+		"")	
+	SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${BOOST_ROOT})
+	SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${BOOST_ROOT}51stage/lib)
+	
+	SET(Boost_INCLUDE_DIR ${BOOST_ROOT})
+	SET(Boost_LIBRARY_DIR ${BOOST_ROOT}/stage/lib)
+	
+	FIND_PACKAGE(Boost)
+	IF (Boost_FOUND)
+		INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+		ADD_DEFINITIONS( "-DHAS_BOOST" )
+	ENDIF()
+ENDIF()
+
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
@@ -32,9 +51,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 
 
 if(WIN32)
-    #FIXME: boost should be find by find_package and setting correct env variables in windows!!!!
-    option(BOOST_ROOT "boost root directory." "")
-
     SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
     SET(STATIC_LIBRARY_CXX_FLAGS  /MDd)
     SET(EXECUTABLE_CXX_FLAGS /MDd)
@@ -45,13 +61,13 @@ if(WIN32)
     STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
     STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
 
-    SET(ADDITIONAL_INCLUDES ${BOOST_ROOT})
+    SET(ADDITIONAL_INCLUDES ${Boost_INCLUDE_DIR})
 
 
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
 
-    link_directories(${BOOST_ROOT}/lib32-msvc-12.0)
+    link_directories(${Boost_LIBRARY_DIR})
 
 else(WIN32)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -ggdb -o0")
@@ -84,15 +100,16 @@ else(WIN32)
 
 endif(WIN32)
 
+SET(TEST_INCLUDES, "")
+IF(BUILD_TESTING)
+	SET(TEST_INCLUDES ${CMAKE_SOURCE_DIR}/tests/gtest/include ${CMAKE_SOURCE_DIR}/tests/gmock/include)
+ENDIF(BUILD_TESTING)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/include 
-    if(BUILD_TESTING)
-        ${CMAKE_SOURCE_DIR}/tests/gtest/include
-        ${CMAKE_SOURCE_DIR}/tests/gmock/include
-    endif(BUILD_TESTING)
+	${TEST_INCLUDES}
     ${ADDITIONAL_INCLUDES}
     )
-
 
 if(BUILD_TESTING)
     set(TESTING_LIB "gtest gtest_main")
@@ -283,6 +300,7 @@ if (BUILD_CLIENT)
     ${ADDITIONAL_LINK_LIBRARIES}
     opcuaprotocol
     opcuacore
+	Ws2_32.lib
     )
 
     target_compile_options(opcuaclient PUBLIC ${EXECUTABLE_CXX_FLAGS})

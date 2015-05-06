@@ -1,6 +1,6 @@
 /// @author Alexander Rykovanov 2012
 /// @email rykovanov.as@gmail.com
-/// @brief Opc binary cnnection channel.
+/// @brief OPC binary connection channel.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -17,7 +17,11 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
+#ifdef WIN32
+#include "Winsock2.h"
+#else
 #include <netinet/in.h>
+#endif
 
 
 namespace
