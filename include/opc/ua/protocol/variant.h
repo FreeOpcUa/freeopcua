@@ -267,6 +267,7 @@ namespace OpcUa
 
     VariantType Type() const;
     void Visit(VariantVisitor& visitor) const;
+	std::string ToString() const;
   };
 
   ObjectId VariantTypeToDataType(VariantType vt);

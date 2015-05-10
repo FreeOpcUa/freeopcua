@@ -753,7 +753,7 @@ namespace OpcUa
         attrs.Type = ToNodeId("i=12080");
         attrs.Rank = 1;
         attrs.IsAbstract = false;
-		attrs.Dimensions = std::vector < uint32_t > {0}; fghgh
+		attrs.Dimensions = std::vector < uint32_t > {0};
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
         std::vector<AddReferencesItem> refs;
