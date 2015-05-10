@@ -7,7 +7,6 @@ endif()
 
 project(freeopcua)
 
-
 option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
@@ -62,7 +61,6 @@ if(WIN32)
     STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
 
     SET(ADDITIONAL_INCLUDES ${Boost_INCLUDE_DIR})
-
 
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)

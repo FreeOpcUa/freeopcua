@@ -208,9 +208,9 @@ namespace OpcUa
         if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeId("{}");'.format(obj.typedef))
 
     def to_vector(self, dims):
-        s = "std::vector<uint32_t>({"
+        s = "std::vector<uint32_t>{"
         s += dims
-        s+= "})"
+        s+= "}"
         return s
 
     def to_data_type(self, nodeid):
