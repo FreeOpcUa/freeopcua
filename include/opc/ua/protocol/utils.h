@@ -19,13 +19,9 @@
 
 #pragma once
 
-#ifdef WIN32
 #include <algorithm>
-#endif
-
 #include <iostream>
 #include <vector>
-
 
 namespace OpcUa
 {
