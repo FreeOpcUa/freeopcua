@@ -466,7 +466,6 @@ namespace
 		PublishResponse response;
 		if (h.ServiceResult != OpcUa::StatusCode::Good)
 		{
-			// TODO
 			response.Header = std::move(h);
 		}
 		else
