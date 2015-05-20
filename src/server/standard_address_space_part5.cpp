@@ -21497,7 +21497,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Opc.Ua");
         attrs.Type = ObjectId::ByteString;
-        attrs.Value = +""PHhzOnNjaGVtYQ0KICB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEi"
+        attrs.Value = +"PHhzOnNjaGVtYQ0KICB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEi"
 "DQogIHhtbG5zOnVhPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvMjAwOC8wMi9UeXBlcy54"
 "c2QiDQogIHhtbG5zOnRucz0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VBLzIwMDgvMDIvVHlw"
 "ZXMueHNkIg0KICB0YXJnZXROYW1lc3BhY2U9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9yZy9VQS8y"
@@ -24934,7 +24934,7 @@ namespace OpcUa
 "dmFsdWU9IlBlcmNlbnRPZkVVUmFuZ2VfMyIgLz4NCiAgICAgIDx4czplbnVtZXJhdGlvbiB2YWx1"
 "ZT0iVW5rbm93bl80IiAvPg0KICAgIDwveHM6cmVzdHJpY3Rpb24+DQogIDwveHM6c2ltcGxlVHlw"
 "ZT4NCiAgPHhzOmVsZW1lbnQgbmFtZT0iRXhjZXB0aW9uRGV2aWF0aW9uRm9ybWF0IiB0eXBlPSJ0"
-"bnM6RXhjZXB0aW9uRGV2aWF0aW9uRm9ybWF0IiAvPg0KDQo8L3hzOnNjaGVtYT4="";
+"bnM6RXhjZXB0aW9uRGV2aWF0aW9uRm9ybWF0IiAvPg0KDQo8L3hzOnNjaGVtYT4=";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25476,7 +25476,7 @@ namespace OpcUa
         attrs.Description = LocalizedText("A URI that uniquely identifies the dictionary.");
         attrs.DisplayName = LocalizedText("NamespaceUri");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""http://opcfoundation.org/UA/2008/02/Types.xsd"";
+        attrs.Value = +"http://opcfoundation.org/UA/2008/02/Types.xsd";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25493,7 +25493,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Argument");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='Argument']"";
+        attrs.Value = +"//xs:element[@name='Argument']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25510,7 +25510,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValueType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EnumValueType']"";
+        attrs.Value = +"//xs:element[@name='EnumValueType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25527,7 +25527,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("TimeZoneDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='TimeZoneDataType']"";
+        attrs.Value = +"//xs:element[@name='TimeZoneDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25544,7 +25544,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ApplicationDescription");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ApplicationDescription']"";
+        attrs.Value = +"//xs:element[@name='ApplicationDescription']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25561,7 +25561,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserTokenPolicy");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='UserTokenPolicy']"";
+        attrs.Value = +"//xs:element[@name='UserTokenPolicy']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25578,7 +25578,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointDescription");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EndpointDescription']"";
+        attrs.Value = +"//xs:element[@name='EndpointDescription']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25595,7 +25595,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("RegisteredServer");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='RegisteredServer']"";
+        attrs.Value = +"//xs:element[@name='RegisteredServer']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25612,7 +25612,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SignedSoftwareCertificate");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SignedSoftwareCertificate']"";
+        attrs.Value = +"//xs:element[@name='SignedSoftwareCertificate']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25629,7 +25629,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='UserIdentityToken']"";
+        attrs.Value = +"//xs:element[@name='UserIdentityToken']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25646,7 +25646,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AnonymousIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AnonymousIdentityToken']"";
+        attrs.Value = +"//xs:element[@name='AnonymousIdentityToken']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25663,7 +25663,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserNameIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='UserNameIdentityToken']"";
+        attrs.Value = +"//xs:element[@name='UserNameIdentityToken']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25680,7 +25680,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("X509IdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='X509IdentityToken']"";
+        attrs.Value = +"//xs:element[@name='X509IdentityToken']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25697,7 +25697,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("IssuedIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='IssuedIdentityToken']"";
+        attrs.Value = +"//xs:element[@name='IssuedIdentityToken']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25714,7 +25714,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AddNodesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AddNodesItem']"";
+        attrs.Value = +"//xs:element[@name='AddNodesItem']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25731,7 +25731,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AddReferencesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AddReferencesItem']"";
+        attrs.Value = +"//xs:element[@name='AddReferencesItem']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25748,7 +25748,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DeleteNodesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='DeleteNodesItem']"";
+        attrs.Value = +"//xs:element[@name='DeleteNodesItem']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25765,7 +25765,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DeleteReferencesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='DeleteReferencesItem']"";
+        attrs.Value = +"//xs:element[@name='DeleteReferencesItem']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25782,7 +25782,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointConfiguration");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EndpointConfiguration']"";
+        attrs.Value = +"//xs:element[@name='EndpointConfiguration']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25799,7 +25799,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SupportedProfile");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SupportedProfile']"";
+        attrs.Value = +"//xs:element[@name='SupportedProfile']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25816,7 +25816,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SoftwareCertificate");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SoftwareCertificate']"";
+        attrs.Value = +"//xs:element[@name='SoftwareCertificate']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25833,7 +25833,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ContentFilterElement");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ContentFilterElement']"";
+        attrs.Value = +"//xs:element[@name='ContentFilterElement']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25850,7 +25850,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ContentFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ContentFilter']"";
+        attrs.Value = +"//xs:element[@name='ContentFilter']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25867,7 +25867,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("FilterOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='FilterOperand']"";
+        attrs.Value = +"//xs:element[@name='FilterOperand']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25884,7 +25884,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ElementOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ElementOperand']"";
+        attrs.Value = +"//xs:element[@name='ElementOperand']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25901,7 +25901,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("LiteralOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='LiteralOperand']"";
+        attrs.Value = +"//xs:element[@name='LiteralOperand']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25918,7 +25918,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AttributeOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AttributeOperand']"";
+        attrs.Value = +"//xs:element[@name='AttributeOperand']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25935,7 +25935,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SimpleAttributeOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SimpleAttributeOperand']"";
+        attrs.Value = +"//xs:element[@name='SimpleAttributeOperand']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25952,7 +25952,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryEvent");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='HistoryEvent']"";
+        attrs.Value = +"//xs:element[@name='HistoryEvent']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25969,7 +25969,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("MonitoringFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='MonitoringFilter']"";
+        attrs.Value = +"//xs:element[@name='MonitoringFilter']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -25986,7 +25986,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EventFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EventFilter']"";
+        attrs.Value = +"//xs:element[@name='EventFilter']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26003,7 +26003,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateConfiguration");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AggregateConfiguration']"";
+        attrs.Value = +"//xs:element[@name='AggregateConfiguration']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26020,7 +26020,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryEventFieldList");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='HistoryEventFieldList']"";
+        attrs.Value = +"//xs:element[@name='HistoryEventFieldList']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26037,7 +26037,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ScalarTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ScalarTestType']"";
+        attrs.Value = +"//xs:element[@name='ScalarTestType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26054,7 +26054,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ArrayTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ArrayTestType']"";
+        attrs.Value = +"//xs:element[@name='ArrayTestType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26071,7 +26071,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("CompositeTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='CompositeTestType']"";
+        attrs.Value = +"//xs:element[@name='CompositeTestType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26088,7 +26088,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("BuildInfo");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='BuildInfo']"";
+        attrs.Value = +"//xs:element[@name='BuildInfo']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26105,7 +26105,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("RedundantServerDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='RedundantServerDataType']"";
+        attrs.Value = +"//xs:element[@name='RedundantServerDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26122,7 +26122,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointUrlListDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EndpointUrlListDataType']"";
+        attrs.Value = +"//xs:element[@name='EndpointUrlListDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26139,7 +26139,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("NetworkGroupDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='NetworkGroupDataType']"";
+        attrs.Value = +"//xs:element[@name='NetworkGroupDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26156,7 +26156,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SamplingIntervalDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SamplingIntervalDiagnosticsDataType']"";
+        attrs.Value = +"//xs:element[@name='SamplingIntervalDiagnosticsDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26173,7 +26173,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServerDiagnosticsSummaryDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ServerDiagnosticsSummaryDataType']"";
+        attrs.Value = +"//xs:element[@name='ServerDiagnosticsSummaryDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26190,7 +26190,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServerStatusDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ServerStatusDataType']"";
+        attrs.Value = +"//xs:element[@name='ServerStatusDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26207,7 +26207,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SessionDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SessionDiagnosticsDataType']"";
+        attrs.Value = +"//xs:element[@name='SessionDiagnosticsDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26224,7 +26224,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SessionSecurityDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SessionSecurityDiagnosticsDataType']"";
+        attrs.Value = +"//xs:element[@name='SessionSecurityDiagnosticsDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26241,7 +26241,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServiceCounterDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ServiceCounterDataType']"";
+        attrs.Value = +"//xs:element[@name='ServiceCounterDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26258,7 +26258,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("StatusResult");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='StatusResult']"";
+        attrs.Value = +"//xs:element[@name='StatusResult']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26275,7 +26275,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SubscriptionDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SubscriptionDiagnosticsDataType']"";
+        attrs.Value = +"//xs:element[@name='SubscriptionDiagnosticsDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26292,7 +26292,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ModelChangeStructureDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ModelChangeStructureDataType']"";
+        attrs.Value = +"//xs:element[@name='ModelChangeStructureDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26309,7 +26309,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SemanticChangeStructureDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='SemanticChangeStructureDataType']"";
+        attrs.Value = +"//xs:element[@name='SemanticChangeStructureDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26326,7 +26326,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Range");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='Range']"";
+        attrs.Value = +"//xs:element[@name='Range']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26343,7 +26343,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EUInformation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='EUInformation']"";
+        attrs.Value = +"//xs:element[@name='EUInformation']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26360,7 +26360,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ComplexNumberType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ComplexNumberType']"";
+        attrs.Value = +"//xs:element[@name='ComplexNumberType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26377,7 +26377,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DoubleComplexNumberType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='DoubleComplexNumberType']"";
+        attrs.Value = +"//xs:element[@name='DoubleComplexNumberType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26394,7 +26394,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AxisInformation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='AxisInformation']"";
+        attrs.Value = +"//xs:element[@name='AxisInformation']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26411,7 +26411,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("XVType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='XVType']"";
+        attrs.Value = +"//xs:element[@name='XVType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26428,7 +26428,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ProgramDiagnosticDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='ProgramDiagnosticDataType']"";
+        attrs.Value = +"//xs:element[@name='ProgramDiagnosticDataType']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26445,7 +26445,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Annotation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""//xs:element[@name='Annotation']"";
+        attrs.Value = +"//xs:element[@name='Annotation']";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -26826,7 +26826,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Opc.Ua");
         attrs.Type = ObjectId::ByteString;
-        attrs.Value = +""PG9wYzpUeXBlRGljdGlvbmFyeQ0KICB4bWxuczpvcGM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9y"
+        attrs.Value = +"PG9wYzpUeXBlRGljdGlvbmFyeQ0KICB4bWxuczpvcGM9Imh0dHA6Ly9vcGNmb3VuZGF0aW9uLm9y"
 "Zy9CaW5hcnlTY2hlbWEvIg0KICB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1M"
 "U2NoZW1hLWluc3RhbmNlIg0KICB4bWxuczp1YT0iaHR0cDovL29wY2ZvdW5kYXRpb24ub3JnL1VB"
 "LyINCiAgeG1sbnM6dG5zPSJodHRwOi8vb3BjZm91bmRhdGlvbi5vcmcvVUEvIg0KICBEZWZhdWx0"
@@ -29340,7 +29340,7 @@ namespace OpcUa
 "b3BjOkVudW1lcmF0ZWRWYWx1ZSBOYW1lPSJQZXJjZW50T2ZWYWx1ZSIgVmFsdWU9IjIiIC8+DQog"
 "ICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iUGVyY2VudE9mRVVSYW5nZSIgVmFsdWU9IjMi"
 "IC8+DQogICAgPG9wYzpFbnVtZXJhdGVkVmFsdWUgTmFtZT0iVW5rbm93biIgVmFsdWU9IjQiIC8+"
-"DQogIDwvb3BjOkVudW1lcmF0ZWRUeXBlPg0KDQo8L29wYzpUeXBlRGljdGlvbmFyeT4="";
+"DQogIDwvb3BjOkVudW1lcmF0ZWRUeXBlPg0KDQo8L29wYzpUeXBlRGljdGlvbmFyeT4=";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29882,7 +29882,7 @@ namespace OpcUa
         attrs.Description = LocalizedText("A URI that uniquely identifies the dictionary.");
         attrs.DisplayName = LocalizedText("NamespaceUri");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""http://opcfoundation.org/UA/"";
+        attrs.Value = +"http://opcfoundation.org/UA/";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29899,7 +29899,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Argument");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""Argument"";
+        attrs.Value = +"Argument";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29916,7 +29916,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EnumValueType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EnumValueType"";
+        attrs.Value = +"EnumValueType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29933,7 +29933,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("TimeZoneDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""TimeZoneDataType"";
+        attrs.Value = +"TimeZoneDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29950,7 +29950,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ApplicationDescription");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ApplicationDescription"";
+        attrs.Value = +"ApplicationDescription";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29967,7 +29967,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserTokenPolicy");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""UserTokenPolicy"";
+        attrs.Value = +"UserTokenPolicy";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -29984,7 +29984,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointDescription");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EndpointDescription"";
+        attrs.Value = +"EndpointDescription";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30001,7 +30001,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("RegisteredServer");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""RegisteredServer"";
+        attrs.Value = +"RegisteredServer";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30018,7 +30018,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SignedSoftwareCertificate");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SignedSoftwareCertificate"";
+        attrs.Value = +"SignedSoftwareCertificate";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30035,7 +30035,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""UserIdentityToken"";
+        attrs.Value = +"UserIdentityToken";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30052,7 +30052,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AnonymousIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AnonymousIdentityToken"";
+        attrs.Value = +"AnonymousIdentityToken";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30069,7 +30069,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("UserNameIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""UserNameIdentityToken"";
+        attrs.Value = +"UserNameIdentityToken";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30086,7 +30086,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("X509IdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""X509IdentityToken"";
+        attrs.Value = +"X509IdentityToken";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30103,7 +30103,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("IssuedIdentityToken");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""IssuedIdentityToken"";
+        attrs.Value = +"IssuedIdentityToken";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30120,7 +30120,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AddNodesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AddNodesItem"";
+        attrs.Value = +"AddNodesItem";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30137,7 +30137,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AddReferencesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AddReferencesItem"";
+        attrs.Value = +"AddReferencesItem";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30154,7 +30154,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DeleteNodesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""DeleteNodesItem"";
+        attrs.Value = +"DeleteNodesItem";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30171,7 +30171,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DeleteReferencesItem");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""DeleteReferencesItem"";
+        attrs.Value = +"DeleteReferencesItem";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30188,7 +30188,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointConfiguration");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EndpointConfiguration"";
+        attrs.Value = +"EndpointConfiguration";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30205,7 +30205,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SupportedProfile");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SupportedProfile"";
+        attrs.Value = +"SupportedProfile";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30222,7 +30222,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SoftwareCertificate");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SoftwareCertificate"";
+        attrs.Value = +"SoftwareCertificate";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30239,7 +30239,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ContentFilterElement");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ContentFilterElement"";
+        attrs.Value = +"ContentFilterElement";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30256,7 +30256,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ContentFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ContentFilter"";
+        attrs.Value = +"ContentFilter";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30273,7 +30273,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("FilterOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""FilterOperand"";
+        attrs.Value = +"FilterOperand";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30290,7 +30290,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ElementOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ElementOperand"";
+        attrs.Value = +"ElementOperand";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30307,7 +30307,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("LiteralOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""LiteralOperand"";
+        attrs.Value = +"LiteralOperand";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30324,7 +30324,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AttributeOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AttributeOperand"";
+        attrs.Value = +"AttributeOperand";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30341,7 +30341,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SimpleAttributeOperand");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SimpleAttributeOperand"";
+        attrs.Value = +"SimpleAttributeOperand";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30358,7 +30358,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryEvent");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""HistoryEvent"";
+        attrs.Value = +"HistoryEvent";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30375,7 +30375,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("MonitoringFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""MonitoringFilter"";
+        attrs.Value = +"MonitoringFilter";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30392,7 +30392,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EventFilter");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EventFilter"";
+        attrs.Value = +"EventFilter";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30409,7 +30409,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AggregateConfiguration");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AggregateConfiguration"";
+        attrs.Value = +"AggregateConfiguration";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30426,7 +30426,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("HistoryEventFieldList");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""HistoryEventFieldList"";
+        attrs.Value = +"HistoryEventFieldList";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30443,7 +30443,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ScalarTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ScalarTestType"";
+        attrs.Value = +"ScalarTestType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30460,7 +30460,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ArrayTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ArrayTestType"";
+        attrs.Value = +"ArrayTestType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30477,7 +30477,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("CompositeTestType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""CompositeTestType"";
+        attrs.Value = +"CompositeTestType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30494,7 +30494,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("BuildInfo");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""BuildInfo"";
+        attrs.Value = +"BuildInfo";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30511,7 +30511,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("RedundantServerDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""RedundantServerDataType"";
+        attrs.Value = +"RedundantServerDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30528,7 +30528,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EndpointUrlListDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EndpointUrlListDataType"";
+        attrs.Value = +"EndpointUrlListDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30545,7 +30545,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("NetworkGroupDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""NetworkGroupDataType"";
+        attrs.Value = +"NetworkGroupDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30562,7 +30562,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SamplingIntervalDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SamplingIntervalDiagnosticsDataType"";
+        attrs.Value = +"SamplingIntervalDiagnosticsDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30579,7 +30579,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServerDiagnosticsSummaryDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ServerDiagnosticsSummaryDataType"";
+        attrs.Value = +"ServerDiagnosticsSummaryDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30596,7 +30596,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServerStatusDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ServerStatusDataType"";
+        attrs.Value = +"ServerStatusDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30613,7 +30613,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SessionDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SessionDiagnosticsDataType"";
+        attrs.Value = +"SessionDiagnosticsDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30630,7 +30630,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SessionSecurityDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SessionSecurityDiagnosticsDataType"";
+        attrs.Value = +"SessionSecurityDiagnosticsDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30647,7 +30647,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ServiceCounterDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ServiceCounterDataType"";
+        attrs.Value = +"ServiceCounterDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30664,7 +30664,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("StatusResult");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""StatusResult"";
+        attrs.Value = +"StatusResult";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30681,7 +30681,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SubscriptionDiagnosticsDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SubscriptionDiagnosticsDataType"";
+        attrs.Value = +"SubscriptionDiagnosticsDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30698,7 +30698,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ModelChangeStructureDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ModelChangeStructureDataType"";
+        attrs.Value = +"ModelChangeStructureDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30715,7 +30715,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("SemanticChangeStructureDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""SemanticChangeStructureDataType"";
+        attrs.Value = +"SemanticChangeStructureDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30732,7 +30732,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Range");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""Range"";
+        attrs.Value = +"Range";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30749,7 +30749,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("EUInformation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""EUInformation"";
+        attrs.Value = +"EUInformation";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30766,7 +30766,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ComplexNumberType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ComplexNumberType"";
+        attrs.Value = +"ComplexNumberType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30783,7 +30783,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("DoubleComplexNumberType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""DoubleComplexNumberType"";
+        attrs.Value = +"DoubleComplexNumberType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30800,7 +30800,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("AxisInformation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""AxisInformation"";
+        attrs.Value = +"AxisInformation";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30817,7 +30817,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("XVType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""XVType"";
+        attrs.Value = +"XVType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30834,7 +30834,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("ProgramDiagnosticDataType");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""ProgramDiagnosticDataType"";
+        attrs.Value = +"ProgramDiagnosticDataType";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});
@@ -30851,7 +30851,7 @@ namespace OpcUa
         VariableAttributes attrs;
         attrs.DisplayName = LocalizedText("Annotation");
         attrs.Type = ObjectId::String;
-        attrs.Value = +""Annotation"";
+        attrs.Value = +"Annotation";
         attrs.Rank = -1;
         node.Attributes = attrs;
         registry.AddNodes(std::vector<AddNodesItem>{node});

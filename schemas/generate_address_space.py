@@ -183,7 +183,7 @@ namespace OpcUa
                     elif ntag in ('ByteString', 'String'):
                         mytext = ['"{}"'.format(x) for x in val.text.replace('\r', '').splitlines()]
                         mytext = '\n'.join(mytext)
-                        obj.value.append('+"{}"'.format(mytext))
+                        obj.value.append('+{}'.format(mytext))
                     elif ntag == "ListOfExtensionObject":
                         pass
                     elif ntag == "ListOfLocalizedText":
