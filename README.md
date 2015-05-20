@@ -19,16 +19,16 @@ Currently supported:
 * Subscriptions
 * complete opc-ua address space generated from xml specification
 * Method call from client
+* Linux and Windows(VS13) support
 
 Work in progress
 * StatusChange Events
 * Filtering
 * Documentation
-* Windows port 
 * Automatic generation of binary protocol from OPC schema files 
+* * Methods on server side
 
 Not implemented yet (patches are welcome)
-* Methods on server side
 * History
 * Security: Authentication, Certificates handling, ..
 
