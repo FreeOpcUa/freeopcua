@@ -181,8 +181,25 @@ namespace OpcUa
                     elif ntag == "UInt32":
                         obj.value.append("(uint32_t) " + val.text)
                     elif ntag in ('ByteString', 'String'):
-                        mytext = val.text.replace('\n', '').replace('\r', '')
-                        obj.value.append('+"{}"'.format(mytext))
+                        mytext = val.text.replace('\r', '')
+                        if len(mytext) < 65535:
+                            mytext = ['"{}"'.format(x) for x in val.text.replace('\r', '').splitlines()]
+                            mytext = '\n'.join(mytext)
+                            obj.value.append('+{}'.format(mytext))
+                        else:
+                            def batch_gen(data, batch_size):
+                                for i in xrange(0, len(data), batch_size):
+                                    yield data[i:i+batch_size]
+                            mytext = '({}).c_str()'.format(
+                                ' +\n'.join(
+                                    ['std::string({})'.format(
+                                        '\n'.join(
+                                            ['"{}"'.format(x) for x in segment.splitlines()]
+                                        )
+                                     ) for segment in batch_gen(mytext, 65000)
+                                    ]
+                                )
+                            )
                     elif ntag == "ListOfExtensionObject":
                         pass
                     elif ntag == "ListOfLocalizedText":
@@ -208,9 +225,9 @@ namespace OpcUa
         if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeId("{}");'.format(obj.typedef))
 
     def to_vector(self, dims):
-        s = "std::vector<uint32_t>({"
+        s = "std::vector<uint32_t>{"
         s += dims
-        s+= "})"
+        s+= "}"
         return s
 
     def to_data_type(self, nodeid):

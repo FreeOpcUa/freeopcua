@@ -22,7 +22,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
 
 namespace OpcUa
 {
