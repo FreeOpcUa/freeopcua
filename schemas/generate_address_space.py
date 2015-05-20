@@ -181,7 +181,8 @@ namespace OpcUa
                     elif ntag == "UInt32":
                         obj.value.append("(uint32_t) " + val.text)
                     elif ntag in ('ByteString', 'String'):
-                        mytext = val.text.replace('\n', '').replace('\r', '')
+                        mytext = ['"{}"'.format(x) for x in val.text.replace('\r', '').splitlines()]
+                        mytext = '\n'.join(mytext)
                         obj.value.append('+"{}"'.format(mytext))
                     elif ntag == "ListOfExtensionObject":
                         pass
@@ -208,9 +209,9 @@ namespace OpcUa
         if obj.typedef: self.writecode(indent, 'node.TypeDefinition = ToNodeId("{}");'.format(obj.typedef))
 
     def to_vector(self, dims):
-        s = "std::vector<uint32_t>({"
+        s = "std::vector<uint32_t>{"
         s += dims
-        s+= "})"
+        s+= "}"
         return s
 
     def to_data_type(self, nodeid):
