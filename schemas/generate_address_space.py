@@ -181,8 +181,9 @@ namespace OpcUa
                     elif ntag == "UInt32":
                         obj.value.append("(uint32_t) " + val.text)
                     elif ntag in ('ByteString', 'String'):
-                        mytext = val.text.replace('\n', '').replace('\r', '')
-                        obj.value.append('+"{}"'.format(mytext))
+                        mytext = ['"{}"'.format(x) for x in val.text.replace('\r', '').splitlines()]
+                        mytext = '\n'.join(mytext)
+                        obj.value.append('+{}'.format(mytext))
                     elif ntag == "ListOfExtensionObject":
                         pass
                     elif ntag == "ListOfLocalizedText":
