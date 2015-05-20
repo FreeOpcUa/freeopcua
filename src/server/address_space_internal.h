@@ -71,6 +71,7 @@ namespace OpcUa
     {
       AttributesMap Attributes;
       std::vector<ReferenceDescription> References;
+      std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant>)> Method;
     };
 
     typedef std::map<NodeId, NodeStruct> NodesMap;
@@ -91,6 +92,7 @@ namespace OpcUa
         virtual std::vector<BrowseResult> BrowseNext() const;
         virtual std::vector<DataValue> Read(const ReadParameters& params) const;
         virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values);
+        virtual std::vector<OpcUa::CallMethodResult> Call(std::vector<OpcUa::CallMethodRequest> methodsToCall);
 
         //Server side methods
 
@@ -104,6 +106,9 @@ namespace OpcUa
         /// @brief Set callback which will be called to read new value of the attribue.
         StatusCode SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback);
 
+        /// @brief Set method function for a method node.
+        void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback);
+
       private:
         std::tuple<bool, NodeId> FindElementInNode(const NodeId& nodeid, const RelativePathElement& element) const;
         BrowsePathResult TranslateBrowsePath(const BrowsePath& browsepath) const;
@@ -115,6 +120,7 @@ namespace OpcUa
         AddNodesResult AddNode( const AddNodesItem& item );
         StatusCode AddReference(const AddReferencesItem& item);
         NodeId GetNewNodeId(const NodeId& id);
+        CallMethodResult CallMethod(CallMethodRequest method);
 
       private:
         bool Debug = false;

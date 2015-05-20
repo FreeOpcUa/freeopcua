@@ -114,6 +114,10 @@ namespace OpcUa
     Node AddProperty(const std::string& nodeid, const std::string& browseName, const Variant& val) const;
     Node AddProperty(uint32_t namespaceidx, const std::string& browseName, const Variant& val) const;
 
+    Node AddMethod(const NodeId& variableId, const QualifiedName& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const;
+    Node AddMethod(uint32_t namespaceidx, const std::string& BrowseName, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const;
+    Node AddMethod(const std::string& nodeId, const std::string& browseName, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const; 
+
     std::string ToString() const;
 
     bool operator==(Node const& x) const { return Id == x.Id; }
