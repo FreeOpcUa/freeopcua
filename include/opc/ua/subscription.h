@@ -57,6 +57,15 @@ namespace OpcUa
       OPCUA_UNUSED(attribute);
       std::cout << "default dc" << std::endl;
     }
+    //Called for each datachange events
+    // Same as DataChange(), but it provides whole DataValue type with aditional fields like time stamps
+    virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute) const
+    {
+      OPCUA_UNUSED(handle);
+      OPCUA_UNUSED(node);
+      OPCUA_UNUSED(val);
+      OPCUA_UNUSED(attribute);
+    }
     //Called for every events receive from server
     virtual void Event(uint32_t handle, const Event& event) const
     {
