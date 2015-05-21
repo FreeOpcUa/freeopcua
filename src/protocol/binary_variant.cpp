@@ -603,7 +603,58 @@ namespace OpcUa
 */
     }
   }
-
+  
+  std::string Variant::ToString() const
+  {
+	  if (IsScalar())
+	  {
+		  std::stringstream str;
+		  switch (Type())
+		  {
+		  case VariantType::DATE_TIME:
+			  str << OpcUa::ToString(boost::any_cast<DateTime> (Value)); //As<DateTime>());
+			  break;
+		  case VariantType::BYTE:
+			  str << boost::any_cast<unsigned char> (Value);
+			  break;
+		  case VariantType::SBYTE:
+			  str << boost::any_cast<char> (Value);
+			  break;
+		  case VariantType::DOUBLE:
+			  str << boost::any_cast<double> (Value);
+			  break;
+		  case VariantType::FLOAT:
+			  str << boost::any_cast<float> (Value);
+			  break;
+		  case VariantType::INT16:
+			  str << boost::any_cast<int16_t> (Value);
+			  break;
+		  case VariantType::INT32:
+			  str << boost::any_cast<int32_t> (Value);
+			  break;
+		  case VariantType::INT64:
+			  str << boost::any_cast<int64_t> (Value);
+			  break;
+		  case VariantType::UINT16:
+			  str << boost::any_cast<uint16_t> (Value);
+			  break;
+		  case VariantType::UINT32:
+			  str << boost::any_cast<uint32_t> (Value);
+			  break;
+		  case VariantType::UINT64:
+			  str << boost::any_cast<uint64_t> (Value);
+			  break;
+		  default:
+			  str << "conversion to string is not supported";
+			  break;
+		  }
+		  return str.str();
+	  }
+	  else
+	  {
+		  return "conversion to string is not supported"; //TODO - add implementation for conversion
+	  }
+  }
   namespace Binary
   {
     template<>

@@ -86,10 +86,11 @@ namespace
     {
     }
 
-    void OnData(std::vector<char> data)
+    void OnData(std::vector<char> data, ResponseHeader h)
     {
       //PrintBlob(data);
       Data = std::move(data);
+	  this->header = std::move(h);
       doneEvent.notify_all();
     }
 
@@ -97,18 +98,23 @@ namespace
     {
       doneEvent.wait_for(lock, msec);
       T result;
+	  result.Header = std::move(this->header);
       if ( Data.empty() )
       {
-        std::cout << "Error received empty packet form server" << std::endl;
+        std::cout << "Error: received empty packet from server" << std::endl;
       }
-      BufferInputChannel bufferInput(Data);
-      IStreamBinary in(bufferInput);
-      in >> result;
+	  else
+	  {
+		  BufferInputChannel bufferInput(Data);
+		  IStreamBinary in(bufferInput);
+		  in >> result;
+	  }
       return result;
     }
 
   private:
     std::vector<char> Data;
+	ResponseHeader	  header;
     std::mutex m;
     std::unique_lock<std::mutex> lock;
     std::condition_variable doneEvent;
@@ -183,7 +189,7 @@ namespace
     , public std::enable_shared_from_this<BinaryClient>
   {
   private:
-    typedef std::function<void(std::vector<char>)> ResponseCallback;
+    typedef std::function<void(std::vector<char>, ResponseHeader)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
 
   public:
@@ -211,7 +217,7 @@ namespace
         }
         catch (const std::exception& exc)
         {
-          if (Debug)  { std::cerr << "binary_client| CallbackThread : Error receivind data: "; }
+          if (Debug)  { std::cerr << "binary_client| CallbackThread : Error receiving data: "; }
           std::cerr << exc.what() << std::endl;
         }
       }));
@@ -455,30 +461,52 @@ namespace
       request.Header = CreateRequestHeader();
       request.Header.Timeout = 0; //We do not want the request to timeout!
 
-      ResponseCallback responseCallback = [this](std::vector<char> buffer){
+      ResponseCallback responseCallback = [this](std::vector<char> buffer, ResponseHeader h){
         if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server " << std::endl;}
-        BufferInputChannel bufferInput(buffer);
-        IStreamBinary in(bufferInput);
-        PublishResponse response;
-        in >> response;
+		PublishResponse response;
+		if (h.ServiceResult != OpcUa::StatusCode::Good)
+		{
+			response.Header = std::move(h);
+		}
+		else
+		{
+			BufferInputChannel bufferInput(buffer);
+			IStreamBinary in(bufferInput);
+			in >> response;
+		}
+        
         CallbackService.post([this, response]() 
             { 
-              if (Debug) {std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionId << std::endl;}
-              SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionId);
-              if (callbackIt == this->PublishCallbacks.end())
-              {
-                std::cout << "BinaryClient | Error Uknown SubscriptionId " << response.Result.SubscriptionId << std::endl;
-              }
-              else
-              {
-                try { //calling client code, better put it under try/catch otherwise we crash entire client
-                  callbackIt->second(response.Result);
-                }
-                catch (const std::exception& ex)
-                {
-                  std::cout << "Error calling application callback " << ex.what() << std::endl;
-                }
-              }
+			if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
+			{
+				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionId << std::endl; }
+				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionId);
+				if (callbackIt == this->PublishCallbacks.end())
+				{
+					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Result.SubscriptionId << std::endl;
+				}
+				else
+				{
+					try { //calling client code, better put it under try/catch otherwise we crash entire client
+						callbackIt->second(response.Result);
+					}
+					catch (const std::exception& ex)
+					{
+						std::cout << "Error calling application callback " << ex.what() << std::endl;
+					}
+				}
+			}
+			else if (response.Header.ServiceResult == OpcUa::StatusCode::BadSessionClosed)
+			{
+				if (Debug) 
+				{
+					std::cout << "BinaryClient | Session is closed";
+				}
+			}
+			else
+			{
+				// TODO
+			}
             });
       };
       std::unique_lock<std::mutex> lock(Mutex);
@@ -624,8 +652,8 @@ private:
       request.Header = CreateRequestHeader();
 
       RequestCallback<Response> requestCallback;
-      ResponseCallback responseCallback = [&requestCallback](std::vector<char> buffer){
-        requestCallback.OnData(std::move(buffer));
+      ResponseCallback responseCallback = [&requestCallback](std::vector<char> buffer, ResponseHeader h){
+        requestCallback.OnData(std::move(buffer), std::move(h));
       };
       std::unique_lock<std::mutex> lock(Mutex);
       Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
@@ -672,7 +700,7 @@ private:
         Stream >> error;
         Stream >> msg;
         std::stringstream stream;
-        stream << "Received error messge from server: " << ToString(error) << ", " << msg ;
+        stream << "Received error message from server: " << ToString(error) << ", " << msg ;
         throw std::runtime_error(stream.str());
       }
       else //(responseHeader.Type == MessageType::MT_SECURE_MESSAGE )
@@ -723,7 +751,8 @@ private:
         std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
         return;
       }
-      callbackIt->second(std::move(buffer));
+	  callbackIt->second(std::move(buffer), std::move(header));
+
       Callbacks.erase(callbackIt);
     }
 
