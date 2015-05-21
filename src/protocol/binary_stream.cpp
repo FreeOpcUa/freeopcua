@@ -17,12 +17,12 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
-#ifdef WIN32
-#include "Winsock2.h"
+
+#ifdef _WIN32
+#include <WinSock2.h>
 #else
 #include <netinet/in.h>
 #endif
-
 
 namespace
 {

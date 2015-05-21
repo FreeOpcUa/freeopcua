@@ -98,6 +98,7 @@ namespace OpcUa
         Node node = mapit->second.TargetNode;
         lock.unlock(); //unlock before calling client cades, you never know what they may do
         if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
+        Client.DataValueChange(mapit->second.MonitoredItemId, node, item.Value, attr);
         Client.DataChange(mapit->second.MonitoredItemId, node, item.Value.Value, attr);
       }
     }

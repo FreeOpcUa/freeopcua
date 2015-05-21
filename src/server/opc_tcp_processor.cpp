@@ -18,6 +18,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/input_from_buffer.h>
 #include <opc/ua/protocol/monitored_items.h>
+#include <opc/ua/protocol/object_ids.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/protocol/status_codes.h>
@@ -704,6 +705,33 @@ namespace OpcUa
           ostream << secureHeader << algorithmHeader << sequence << response << flush;
           return;
         }
+
+        case CALL_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
+          SessionParameters params;
+          istream >> params;
+
+          CreateSessionResponse response;
+          FillResponseHeader(requestHeader, response.Header);
+
+          response.Session.SessionId = SessionId;
+          response.Session.AuthenticationToken = SessionId;
+          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Session.MaxRequestMessageSize = 65536;
+          EndpointsFilter epf;
+          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+
+          return;
+        }
+ 
 
         default:
         {
