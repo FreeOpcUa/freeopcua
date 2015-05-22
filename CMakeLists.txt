@@ -450,7 +450,7 @@ if(BUILD_SERVER)
 
     target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
     if(MSVC)
-        set(CMAKE_CXX_STACK_SIZE 3000000)
+        set_target_properties(example_server PROPERTIES LINK_FLAGS /STACK:3000000)
     endif(MSVC)
 
 endif(BUILD_SERVER)
