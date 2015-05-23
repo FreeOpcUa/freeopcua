@@ -12,24 +12,6 @@ option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
 
-IF(WIN32)
-    #FIXME: boost should be find by find_package and setting correct env variables in windows!!!!
-    SET(BOOST_ROOT ENV{BOOST_ROOT} 
-		CACHE PATH
-		"")	
-	SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${BOOST_ROOT})
-	SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${BOOST_ROOT}51stage/lib)
-	
-	SET(Boost_INCLUDE_DIR ${BOOST_ROOT})
-	SET(Boost_LIBRARY_DIR ${BOOST_ROOT}/stage/lib)
-	
-	FIND_PACKAGE(Boost)
-	IF (Boost_FOUND)
-		INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-		ADD_DEFINITIONS( "-DHAS_BOOST" )
-	ENDIF()
-ENDIF()
-
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
         CACHE PATH
@@ -60,12 +42,12 @@ if(WIN32)
     STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
     STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
 
-    SET(ADDITIONAL_INCLUDES ${Boost_INCLUDE_DIR})
-
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
 
-    link_directories(${Boost_LIBRARY_DIR})
+#    if(MSVC)
+#        set(CMAKE_CXX_STACK_SIZE "2000000")
+#    endif()
 
 else(WIN32)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -ggdb -o0")
@@ -82,21 +64,20 @@ else(WIN32)
     SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
     #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
-    #FIIXME find_package stuff should also be used for winwdows!
-
-    find_package( Boost  COMPONENTS system program_options filesystem thread REQUIRED )
-    include_directories( ${Boost_INCLUDE_DIR} )
-    message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIR})
-
-
     find_package(LibXml2 REQUIRED) 
     message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
     include_directories( ${LIBXML2_INCLUDE_DIR} )
     
     #FIXME: remove that variable and link directly when necessary!!!! 
-    SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES})
+    SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${LIBXML2_LIBRARIES})
 
 endif(WIN32)
+
+find_package( Boost COMPONENTS system program_options filesystem thread REQUIRED )
+include_directories( ${Boost_INCLUDE_DIR} )
+link_directories( ${Boost_LIBRARY_DIR} )
+message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIR})
+message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIR})
 
 SET(TEST_INCLUDES, "")
 IF(BUILD_TESTING)
@@ -468,6 +449,10 @@ if(BUILD_SERVER)
     )
 
     target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if(MSVC)
+        set_target_properties(example_server PROPERTIES LINK_FLAGS /STACK:3000000)
+    endif(MSVC)
+
 endif(BUILD_SERVER)
 
 ############################################################################
