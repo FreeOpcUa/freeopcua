@@ -202,6 +202,20 @@ namespace OpcUa
     return results.front();
   }
 
+  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(std::vector<MonitoredItemRequest> request)
+  {
+    std::unique_lock<std::mutex> lock(Mutex); 
+
+    MonitoredItemsParameters itemsParams;
+    itemsParams.SubscriptionId = Data.Id;
+    for (auto req : request)
+    {
+      itemsParams.ItemsToCreate.push_back(req);
+    }
+
+    return  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+  }
+ 
   std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadValueId>& attributes)
   {
     std::unique_lock<std::mutex> lock(Mutex); 

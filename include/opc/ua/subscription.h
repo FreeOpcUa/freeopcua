@@ -47,37 +47,37 @@ namespace OpcUa
   class SubscriptionHandler
   {
     public:
-    virtual ~SubscriptionHandler() {}
-    //Called for each datachange events
-    virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute) const
-    {
-      OPCUA_UNUSED(handle);
-      OPCUA_UNUSED(node);
-      OPCUA_UNUSED(val);
-      OPCUA_UNUSED(attribute);
-      std::cout << "default dc" << std::endl;
-    }
-    //Called for each datachange events
-    // Same as DataChange(), but it provides whole DataValue type with aditional fields like time stamps
-    virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute) const
-    {
-      OPCUA_UNUSED(handle);
-      OPCUA_UNUSED(node);
-      OPCUA_UNUSED(val);
-      OPCUA_UNUSED(attribute);
-    }
-    //Called for every events receive from server
-    virtual void Event(uint32_t handle, const Event& event) const
-    {
-      OPCUA_UNUSED(handle);
-      OPCUA_UNUSED(event);
-      std::cout << "default c++ event callback has been called" << std::endl;
-    }
-    //Called at server state changed
-    virtual void StatusChange(StatusCode status) const
-    {
-      OPCUA_UNUSED(status);
-    }
+      virtual ~SubscriptionHandler() {}
+      //Called for each datachange events
+      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute) const
+      {
+        OPCUA_UNUSED(handle);
+        OPCUA_UNUSED(node);
+        OPCUA_UNUSED(val);
+        OPCUA_UNUSED(attribute);
+        std::cout << "default dc" << std::endl;
+      }
+      //Called for each datachange events
+      // Same as DataChange(), but it provides whole DataValue type with aditional fields like time stamps
+      virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute) const
+      {
+        OPCUA_UNUSED(handle);
+        OPCUA_UNUSED(node);
+        OPCUA_UNUSED(val);
+        OPCUA_UNUSED(attribute);
+      }
+      //Called for every events receive from server
+      virtual void Event(uint32_t handle, const Event& event) const
+      {
+        OPCUA_UNUSED(handle);
+        OPCUA_UNUSED(event);
+        std::cout << "default c++ event callback has been called" << std::endl;
+      }
+      //Called at server state changed
+      virtual void StatusChange(StatusCode status) const
+      {
+        OPCUA_UNUSED(status);
+      }
   };
 
 
@@ -97,6 +97,7 @@ namespace OpcUa
       void Delete();
 
       //Get information about the subscription
+      SubscriptionData GetData() {return Data; }
       uint32_t GetId() const { return Data.Id; } 
       double GetPeriode() const { return Data.RevisedPublishingInterval; } 
 
@@ -115,9 +116,9 @@ namespace OpcUa
       uint32_t SubscribeEvents(const Node& node, const Node& eventType); //subscribe to all variables og given event type 
       uint32_t SubscribeEvents(); //subscribe to variables of baseEventTypes and ServerNode 
 
-      //Subscribe to server status change
-      // FIXME: Not sure we need to subscribe, maybe it is automatic .... so disabled for now
-      //uint32_t SubscribeStatusChange(); 
+      // Subscribe using a MonitoredItemRequest 
+      // This method allow to fully customize the subscription
+      std::vector<CreateMonitoredItemsResult> Subscribe(std::vector<MonitoredItemRequest> request);
       
       // Override this method if you want raw publish results from server
       // for example if you want to make sure you do not miss any packets, etc, ...
