@@ -62,7 +62,7 @@ else(WIN32)
 
     set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
     SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
-    set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
+    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
     find_package(LibXml2 REQUIRED) 
     message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
@@ -203,7 +203,8 @@ SET(opcuacore_SOURCES
 add_library(opcuacore STATIC ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
+target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol
+${Boost_LIBRARIES})
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
