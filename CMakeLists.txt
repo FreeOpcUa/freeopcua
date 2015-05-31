@@ -40,7 +40,7 @@ if(WIN32)
     SET(ADDITIONAL_LINK_LIBRARIES Wininet.lib wsock32.lib)
     SET(OS_SUFFIX _win)
     STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
-    STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${CMAKE_SOURCE_DIR}/tests/core/configs/")
+    STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${PROJECT_SOURCE_DIR}/tests/core/configs/")
 
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
@@ -57,7 +57,7 @@ else(WIN32)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS)
     SET(D -D)
     SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libtest_dynamic_addon.so")
-    SET(TEST_CORE_CONFIG_PATH " ${CMAKE_SOURCE_DIR}/tests/core/configs/")
+    SET(TEST_CORE_CONFIG_PATH " ${PROJECT_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
 
     set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
@@ -81,11 +81,11 @@ message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIR})
 
 SET(TEST_INCLUDES, "")
 IF(BUILD_TESTING)
-	SET(TEST_INCLUDES ${CMAKE_SOURCE_DIR}/tests/gtest/include ${CMAKE_SOURCE_DIR}/tests/gmock/include)
+	SET(TEST_INCLUDES ${PROJECT_SOURCE_DIR}/tests/gtest/include ${PROJECT_SOURCE_DIR}/tests/gmock/include)
 ENDIF(BUILD_TESTING)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include 
+    ${PROJECT_SOURCE_DIR}/include
 	${TEST_INCLUDES}
     ${ADDITIONAL_INCLUDES}
     )
@@ -101,9 +101,9 @@ endif(BUILD_TESTING)
 ############################################################################
 
 ADD_CUSTOM_COMMAND(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-    COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/codegen.py cxx object_ids > ${CMAKE_CURRENT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
-    #DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/NodeIds.csv
+    OUTPUT ${PROJECT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+    COMMAND python ${PROJECT_SOURCE_DIR}/schemas/codegen.py cxx object_ids > ${PROJECT_SOURCE_DIR}/include/opc/ua/protocol/object_ids.h
+    #DEPENDS ${PROJECT_SOURCE_DIR}/NodeIds.csv
   )
 
 
@@ -299,8 +299,8 @@ if(BUILD_SERVER)
     
     #FOREACH(PART 3 4 5 8 9 10 11 13)
     #ADD_CUSTOM_COMMAND(
-    #OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp 
-    #COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/schemas/generate_address_space.py ${CMAKE_CURRENT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.Part${PART}.xml ${CMAKE_CURRENT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
+    #OUTPUT ${PROJECT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
+    #COMMAND python ${PROJECT_SOURCE_DIR}/schemas/generate_address_space.py ${PROJECT_SOURCE_DIR}/schemas/Opc.Ua.NodeSet2.Part${PART}.xml ${PROJECT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
     #)
     #ENDFOREACH(PART)
 
