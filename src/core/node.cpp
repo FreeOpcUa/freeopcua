@@ -24,7 +24,6 @@
 
 #include <opc/common/object_id.h>
 #include <opc/ua/protocol/node_management.h>
-#include <opc/ua/protocol/method.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/variable_access_level.h>

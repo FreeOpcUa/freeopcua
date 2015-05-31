@@ -416,21 +416,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      CallRequest::CallRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CallRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      CallResponse::CallResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CallResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

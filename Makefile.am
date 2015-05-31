@@ -240,7 +240,6 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/guid.h \
   include/opc/ua/protocol/input_from_buffer.h \
   include/opc/ua/protocol/message_identifiers.h \
-  include/opc/ua/protocol/method.h \
   include/opc/ua/protocol/monitored_items.h \
   include/opc/ua/protocol/node_management.h \
   include/opc/ua/protocol/nodeid.h \

@@ -375,7 +375,7 @@ namespace
       request.MethodsToCall = methodsToCall;
       const CallResponse response = Send<CallResponse>(request);
       if (Debug) {std::cout << "binary_clinent | Call <--" << std::endl;}
-      return response.Results;
+      return response.Parameters.Results;
     }
 
     ////////////////////////////////////////////////////////////////

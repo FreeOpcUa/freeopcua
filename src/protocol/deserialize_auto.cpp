@@ -2636,8 +2636,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<CallMethodRequest>(CallMethodRequest& data)
     {
@@ -2646,9 +2644,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.InputArguments);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CallMethodResult>(CallMethodResult& data)
@@ -2659,9 +2654,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.OutputArguments);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CallRequest>(CallRequest& data)
@@ -2671,9 +2663,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.MethodsToCall);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CallResult>(CallResult& data)
@@ -2682,9 +2671,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CallResponse>(CallResponse& data)
@@ -2694,7 +2680,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 
