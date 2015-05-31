@@ -15,14 +15,14 @@ import generate_model as gm
 NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest"]
+NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
 #list of UA structure we want to enable, some structures may
 #need to be added by hand (those generated from splitted request and response structs)
 EnabledStructs = [\
-    #we want to implement som struct by hand, to make better interface or simply because they are too complicated 
+    #we want to implement som struct by hand, to make better interface or simply because they are too complicated
     #'NodeId',
     #'TwoByteNodeId',
     #'FourByteNodeId',
@@ -36,7 +36,7 @@ EnabledStructs = [\
     #'DataValue',
     #'Variant',
     #'DiagnosticInfo',
-    # 
+    #
     #
     #structs we should enable or that we haven't checked yet
     #
@@ -190,7 +190,6 @@ EnabledStructs = [\
     'CallMethodResult',
     'CallRequest',
     'CallResponse',
-    'CallResult',
     #'MonitoringFilter',
     #'DataChangeFilter',
     #'EventFilter',
@@ -762,7 +761,7 @@ if __name__ == "__main__":
     gm.add_encoding_field(model)
     gm.remove_duplicates(model)
     gm.remove_vector_length(model)
-    gm.split_requests(model)
+    gm.split_requests(model, NoSplitStruct)
 
     #p = Parser(xmlpath)
     #model = p.parse()
