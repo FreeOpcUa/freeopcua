@@ -8,9 +8,7 @@ import xml.etree.ElementTree as ET
 
 from IPython import embed
 
-#we want to implement som struct by hand, to make better interface or simply because they are too complicated 
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest"]
 
 #structs that end with Request or Response but are not
 NotRequest = ["MonitoredItemCreateRequest", "MonitoredItemModifyRequest", "CallMethodRequest"]
@@ -227,7 +225,7 @@ def remove_body_length(model):
         #if obj.name.endswith("Request") or obj.name.endswith("Response"):
             #obj.fields = [el for el in obj.fields if el.name not in ("TypeId", "Body", "Encoding")]
 
-def split_requests(model):
+def split_requests(model, NoSplitStruct):
     structs = []
     for struct in model.structs:
         structtype = None

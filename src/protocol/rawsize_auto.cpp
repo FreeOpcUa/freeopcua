@@ -2952,8 +2952,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<CallMethodRequest>(const CallMethodRequest& data)
     {
@@ -2964,9 +2962,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CallMethodResult>(const CallMethodResult& data)
@@ -2979,9 +2974,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CallRequest>(const CallRequest& data)
@@ -2993,22 +2985,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<CallResult>(const CallResult& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
-
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CallResponse>(const CallResponse& data)
@@ -3016,11 +2992,11 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.Results);
+        size += RawSizeContainer(data.DiagnosticInfos);
         return size;
     }
 
-*/
 
 /* DISABLED
 

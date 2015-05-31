@@ -2588,8 +2588,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<CallMethodRequest>(const CallMethodRequest& data)
     {
@@ -2598,9 +2596,6 @@ namespace OpcUa
         SerializeContainer(*this, data.InputArguments);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CallMethodResult>(const CallMethodResult& data)
@@ -2611,9 +2606,6 @@ namespace OpcUa
         SerializeContainer(*this, data.OutputArguments);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CallRequest>(const CallRequest& data)
@@ -2623,30 +2615,16 @@ namespace OpcUa
         SerializeContainer(*this, data.MethodsToCall);
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<CallResult>(const CallResult& data)
-    {
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CallResponse>(const CallResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.Results);
+        SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 

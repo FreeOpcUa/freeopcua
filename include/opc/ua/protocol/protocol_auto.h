@@ -2263,17 +2263,12 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct CallMethodRequest 
     {
          OpcUa::NodeId ObjectId;
          OpcUa::NodeId MethodId;
          std::vector<OpcUa::Variant> InputArguments;
     };
-*/
-
-/* DISABLED
 
     struct CallMethodResult 
     {
@@ -2282,9 +2277,6 @@ namespace OpcUa
          std::vector<OpcUa::DiagnosticInfo> InputArgumentDiagnosticInfos;
          std::vector<OpcUa::Variant> OutputArguments;
     };
-*/
-
-/* DISABLED
 
     struct CallRequest 
     {
@@ -2294,28 +2286,16 @@ namespace OpcUa
 
          CallRequest();
     };
-*/
-
-/* DISABLED
-
-    struct CallResult 
-    {
-         std::vector<OpcUa::CallMethodResult> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
-    };
-*/
-
-/* DISABLED
 
     struct CallResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::CallResult Parameters;
+         std::vector<OpcUa::CallMethodResult> Results;
+         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
          CallResponse();
     };
-*/
 
 /* DISABLED
 
