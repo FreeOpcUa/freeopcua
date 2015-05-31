@@ -2287,17 +2287,12 @@ namespace OpcUa
          CallRequest();
     };
 
-    struct CallResult 
-    {
-         std::vector<OpcUa::CallMethodResult> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
-    };
-
     struct CallResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::CallResult Parameters;
+         std::vector<OpcUa::CallMethodResult> Results;
+         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
          CallResponse();
     };

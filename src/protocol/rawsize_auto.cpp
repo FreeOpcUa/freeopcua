@@ -2987,22 +2987,13 @@ namespace OpcUa
 
 
     template<>
-    std::size_t RawSize<CallResult>(const CallResult& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
-
-
-    template<>
     std::size_t RawSize<CallResponse>(const CallResponse& data)
     {
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.Results);
+        size += RawSizeContainer(data.DiagnosticInfos);
         return size;
     }
 

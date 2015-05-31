@@ -2665,19 +2665,12 @@ namespace OpcUa
 
 
     template<>
-    void DataDeserializer::Deserialize<CallResult>(CallResult& data)
-    {
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
-
-
-    template<>
     void DataDeserializer::Deserialize<CallResponse>(CallResponse& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        DeserializeContainer(*this, data.Results);
+        DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
 

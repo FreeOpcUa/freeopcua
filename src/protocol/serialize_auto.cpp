@@ -2617,19 +2617,12 @@ namespace OpcUa
 
 
     template<>
-    void DataSerializer::Serialize<CallResult>(const CallResult& data)
-    {
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
-
-
-    template<>
     void DataSerializer::Serialize<CallResponse>(const CallResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.Results);
+        SerializeContainer(*this, data.DiagnosticInfos);
     }
 
 
