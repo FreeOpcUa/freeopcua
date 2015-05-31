@@ -271,7 +271,6 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/binary_data_value.cpp \
   src/protocol/binary_endpoints.cpp \
   src/protocol/binary_messages.cpp \
-  src/protocol/binary_method.cpp \
   src/protocol/binary_raw_size.cpp \
   src/protocol/binary_session.cpp \
   src/protocol/binary_view.cpp \
