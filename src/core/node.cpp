@@ -83,20 +83,6 @@ namespace OpcUa
     std::vector<std::vector<Variant>> results = CallMethods(vec_methodId, vec_inputArguments);
 
     return results.front();
-
-//     std::vector<CallMethodRequest> methodsToCall;
-//     CallMethodRequest callMethod;
-//     callMethod.ObjectId = Id;
-//     callMethod.MethodId = methodId;
-//     callMethod.InputArguments = inputArguments;
-//
-//     methodsToCall.push_back(callMethod);
-//
-//     std::vector<CallMethodResult> results = Server->Method()->Call(methodsToCall);
-//     // TODO: add checking of StatusCode
-//
-//     // TODO: add to call multiple methods --> Rename to CallMethods and check how to return them as list of Variants
-//     return results.front().OutputArguments;
   }
 
   std::vector<std::vector<Variant>> Node::CallMethods(const std::vector<NodeId> methodIds, const std::vector<std::vector<Variant>> inputArguments) const
