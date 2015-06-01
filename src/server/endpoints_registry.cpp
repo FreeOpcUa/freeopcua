@@ -30,7 +30,7 @@ namespace
   public:
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
     {
-      // TODO appky filter
+      // TODO apply filter
       return Applications;
     }
 

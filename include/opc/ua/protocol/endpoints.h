@@ -17,37 +17,6 @@
 namespace OpcUa
 {
 
-  //------------------------------------------------------
-  // Endpoints
-  //------------------------------------------------------
-
-//   struct EndpointsFilter
-//   {
-//     std::string EndpointURL;
-//     std::vector<std::string> LocaleIds;
-//     std::vector<std::string> ProfileUries;
-//   };
-//
-//   struct GetEndpointsRequest
-//   {
-//     NodeId TypeId;
-//     RequestHeader Header;
-//     EndpointsFilter Filter;
-//
-//     GetEndpointsRequest();
-//   };
-//
-//
-//   struct GetEndpointsResponse
-//   {
-//     NodeId TypeId;
-//     ResponseHeader Header;
-//
-//     std::vector<EndpointDescription> Endpoints;
-//
-//     GetEndpointsResponse();
-//   };
-
   ////////////////////////////////////////////////////////
   // FindServersRequest
   ////////////////////////////////////////////////////////
