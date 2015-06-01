@@ -11,6 +11,7 @@
 #include "binary_serialization.h"
 
 #include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/protocol.h>
 #include <opc/ua/protocol/binary/stream.h>
 
 #include <algorithm>
@@ -24,15 +25,15 @@ namespace OpcUa
 //   {
 //   }
 
-  GetEndpointsRequest::GetEndpointsRequest()
-    : TypeId(GET_ENDPOINTS_REQUEST)
-  {
-  }
-
-  GetEndpointsResponse::GetEndpointsResponse()
-    : TypeId(GET_ENDPOINTS_RESPONSE)
-  {
-  }
+//   GetEndpointsRequest::GetEndpointsRequest()
+//     : TypeId(GET_ENDPOINTS_REQUEST)
+//   {
+//   }
+//
+//   GetEndpointsResponse::GetEndpointsResponse()
+//     : TypeId(GET_ENDPOINTS_RESPONSE)
+//   {
+//   }
 
   FindServersRequest::FindServersRequest()
     : TypeId(FIND_ServerS_REQUEST)
@@ -53,70 +54,70 @@ namespace OpcUa
     // EndpointsFilter
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<EndpointsFilter>(const EndpointsFilter& filter)
-    {
-      return RawSize(filter.EndpointURL) + RawSize(filter.LocaleIds) + RawSize(filter.ProfileUries);
-    }
-
-    template<>
-    void DataSerializer::Serialize<EndpointsFilter>(const EndpointsFilter& filter)
-    {
-      *this << filter.EndpointURL;
-
-      if (filter.LocaleIds.empty())
-      {
-        *this << uint32_t(0);
-      }
-      else
-      {
-        *this << filter.LocaleIds;
-      }
-
-      if (filter.ProfileUries.empty())
-      {
-        *this << uint32_t(0);
-      }
-      else
-      {
-        *this << filter.ProfileUries;
-      }
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<EndpointsFilter>(EndpointsFilter& filter)
-    {
-      *this >> filter.EndpointURL;
-      *this >> filter.LocaleIds;
-      *this >> filter.ProfileUries;
-    };
+//     template<>
+//     std::size_t RawSize<EndpointsFilter>(const EndpointsFilter& filter)
+//     {
+//       return RawSize(filter.EndpointURL) + RawSize(filter.LocaleIds) + RawSize(filter.ProfileUries);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<EndpointsFilter>(const EndpointsFilter& filter)
+//     {
+//       *this << filter.EndpointURL;
+//
+//       if (filter.LocaleIds.empty())
+//       {
+//         *this << uint32_t(0);
+//       }
+//       else
+//       {
+//         *this << filter.LocaleIds;
+//       }
+//
+//       if (filter.ProfileUries.empty())
+//       {
+//         *this << uint32_t(0);
+//       }
+//       else
+//       {
+//         *this << filter.ProfileUries;
+//       }
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<EndpointsFilter>(EndpointsFilter& filter)
+//     {
+//       *this >> filter.EndpointURL;
+//       *this >> filter.LocaleIds;
+//       *this >> filter.ProfileUries;
+//     };
 
     //---------------------------------------------------
     // GetEndpointsRequest
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& request)
-    {
-      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Filter);
-      //return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIds) + RawSize(request.ProfileUries);
-    }
-
-    template<>
-    void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Filter;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Filter;
-    }
+//     template<>
+//     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& request)
+//     {
+//       return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Filter);
+//       //return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.EndpointURL) + RawSize(request.LocaleIds) + RawSize(request.ProfileUries);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& request)
+//     {
+//       *this << request.TypeId;
+//       *this << request.Header;
+//       *this << request.Filter;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest& request)
+//     {
+//       *this >> request.TypeId;
+//       *this >> request.Header;
+//       *this >> request.Filter;
+//     }
 
     //-----------------------------------------------------
     // UserIdentifyTokenType
@@ -228,27 +229,27 @@ namespace OpcUa
     // GetEndpointsResponse
     //-----------------------------------------------------
 
-    template<>
-    std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
-    {
-      return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Endpoints);
-    }
-
-    template<>
-    void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
-    {
-      *this << resp.TypeId;
-      *this << resp.Header;
-      *this << resp.Endpoints;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse& resp)
-    {
-      *this >> resp.TypeId;
-      *this >> resp.Header;
-      *this >> resp.Endpoints;
-    }
+//     template<>
+//     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
+//     {
+//       return RawSize(resp.TypeId) + RawSize(resp.Header) + RawSize(resp.Endpoints);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& resp)
+//     {
+//       *this << resp.TypeId;
+//       *this << resp.Header;
+//       *this << resp.Endpoints;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse& resp)
+//     {
+//       *this >> resp.TypeId;
+//       *this >> resp.Header;
+//       *this >> resp.Endpoints;
+//     }
 
     //-----------------------------------------------------
     // FindServersParameters

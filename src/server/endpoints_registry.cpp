@@ -34,7 +34,7 @@ namespace
       return Applications;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       // TODO apply filter.
       return Endpoints;

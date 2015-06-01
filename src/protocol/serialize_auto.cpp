@@ -788,8 +788,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<GetEndpointsParameters>(const GetEndpointsParameters& data)
     {
@@ -798,9 +796,6 @@ namespace OpcUa
         SerializeContainer(*this, data.ProfileUris);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& data)
@@ -810,9 +805,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& data)
@@ -822,7 +814,6 @@ namespace OpcUa
         SerializeContainer(*this, data.Endpoints);
     }
 
-*/
 
 /*  DISABLED
 

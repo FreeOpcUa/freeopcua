@@ -306,7 +306,7 @@ namespace
   void PrintEndpoints(OpcUa::Services& computer)
   {
     std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
-    OpcUa::EndpointsFilter filter;
+    OpcUa::GetEndpointsParameters filter;
     std::vector<OpcUa::EndpointDescription> endpoints = service->GetEndpoints(filter);
     for(auto it = endpoints.begin(); it != endpoints.end(); ++it)
     {

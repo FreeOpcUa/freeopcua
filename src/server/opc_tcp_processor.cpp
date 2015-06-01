@@ -269,7 +269,7 @@ namespace OpcUa
         case OpcUa::GET_ENDPOINTS_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing get endpoints request." << std::endl;
-          EndpointsFilter filter;
+          GetEndpointsParameters filter;
           istream >> filter;
 
           GetEndpointsResponse response;
@@ -452,7 +452,7 @@ namespace OpcUa
           response.Session.AuthenticationToken = SessionId;
           response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
           response.Session.MaxRequestMessageSize = 65536;
-          EndpointsFilter epf;
+          GetEndpointsParameters epf;
           response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
@@ -719,7 +719,7 @@ namespace OpcUa
           response.Session.AuthenticationToken = SessionId;
           response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
           response.Session.MaxRequestMessageSize = 65536;
-          EndpointsFilter epf;
+          GetEndpointsParameters epf;
           response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 

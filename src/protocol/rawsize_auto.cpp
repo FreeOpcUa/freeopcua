@@ -868,8 +868,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<GetEndpointsParameters>(const GetEndpointsParameters& data)
     {
@@ -880,9 +878,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& data)
@@ -894,9 +889,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& data)
@@ -908,7 +900,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

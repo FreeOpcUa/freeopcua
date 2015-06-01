@@ -112,9 +112,9 @@ namespace OpcUa
 
   std::vector<EndpointDescription> UaClient::GetServerEndpoints()
   {
-    EndpointsFilter filter;
-    filter.EndpointURL = Endpoint.EndpointUrl;
-    filter.ProfileUries.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
+    GetEndpointsParameters filter;
+    filter.EndpointUrl = Endpoint.EndpointUrl;
+    filter.ProfileUris.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
     

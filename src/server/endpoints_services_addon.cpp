@@ -65,7 +65,7 @@ namespace
       return Endpoints->FindServers(params);
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       return Endpoints->GetEndpoints(filter);
     }

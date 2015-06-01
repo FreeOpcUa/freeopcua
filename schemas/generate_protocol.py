@@ -65,8 +65,9 @@ EnabledStructs = [\
     #'FindServersResponse',
     #'UserTokenPolicy',
     'EndpointDescription',
-    #'GetEndpointsRequest',
-    #'GetEndpointsResponse',
+    'GetEndpointsParameters',
+    'GetEndpointsRequest',
+    'GetEndpointsResponse',
     #'RegisteredServer',
     #'RegisterServerRequest',
     #'RegisterServerResponse',
@@ -304,6 +305,7 @@ def reorder_structs(model):
         #print(s1 -s2)
         #print(waiting)
     model.structs = newstructs
+
 
 def override_types(model):
     for struct in model.structs:

@@ -577,17 +577,12 @@ namespace OpcUa
          uint8_t SecurityLevel;
     };
 
-/* DISABLED
-
     struct GetEndpointsParameters 
     {
          std::string EndpointUrl;
          std::vector<std::string> LocaleIds;
          std::vector<std::string> ProfileUris;
     };
-*/
-
-/* DISABLED
 
     // Gets the endpoints used by the server.
     struct GetEndpointsRequest 
@@ -598,9 +593,6 @@ namespace OpcUa
 
          GetEndpointsRequest();
     };
-*/
-
-/* DISABLED
 
     // Gets the endpoints used by the server.
     struct GetEndpointsResponse 
@@ -611,7 +603,6 @@ namespace OpcUa
 
          GetEndpointsResponse();
     };
-*/
 
 /* DISABLED
 

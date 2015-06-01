@@ -343,14 +343,14 @@ namespace
       return response.Data.Descriptions;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       if (Debug)  { std::cout << "binary_client| GetEndpoints -->" << std::endl; }
       OpcUa::GetEndpointsRequest request;
       request.Header = CreateRequestHeader();
-      request.Filter.EndpointURL = filter.EndpointURL;
-      request.Filter.LocaleIds = filter.LocaleIds;
-      request.Filter.ProfileUries = filter.ProfileUries;
+      request.Parameters.EndpointUrl = filter.EndpointUrl;
+      request.Parameters.LocaleIds = filter.LocaleIds;
+      request.Parameters.ProfileUris = filter.ProfileUris;
       const GetEndpointsResponse response = Send<GetEndpointsResponse>(request);
       if (Debug)  { std::cout << "binary_client| GetEndpoints <--" << std::endl; }
       return response.Endpoints;

@@ -48,21 +48,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      GetEndpointsRequest::GetEndpointsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      GetEndpointsResponse::GetEndpointsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

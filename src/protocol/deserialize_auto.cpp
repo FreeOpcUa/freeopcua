@@ -836,8 +836,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<GetEndpointsParameters>(GetEndpointsParameters& data)
     {
@@ -846,9 +844,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.ProfileUris);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest& data)
@@ -858,9 +853,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse& data)
@@ -870,7 +862,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.Endpoints);
     }
 
-*/
 
 /*  DISABLED
 

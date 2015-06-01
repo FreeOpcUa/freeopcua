@@ -56,7 +56,7 @@ namespace
       return std::vector<OpcUa::ApplicationDescription>();
     }
 
-    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       return std::vector<OpcUa::EndpointDescription>();
     }
