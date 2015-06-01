@@ -760,8 +760,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy& data)
     {
@@ -772,7 +770,6 @@ namespace OpcUa
         *this << data.SecurityPolicyUri;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription& data)

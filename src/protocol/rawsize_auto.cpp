@@ -836,8 +836,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& data)
     {
@@ -850,7 +848,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<EndpointDescription>(const EndpointDescription& data)

@@ -113,7 +113,7 @@ namespace OpcUa
     params.Endpoint.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
     //setting up policy is required for some client, this should be in a constructor
     UserTokenPolicy policy;
-    policy.TokenType = UserIdentifyTokenType::ANONYMOUS;
+    policy.TokenType = UserTokenType::Anonymous;
     params.Endpoint.UserIdentityTokens.push_back(policy);
 
     Addons = Common::CreateAddonsManager();

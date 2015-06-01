@@ -171,7 +171,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
-  request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
+  request.EndpointURL = endpoint.EndpointUrl; // TODO make just endpoint.URL;
   request.SessionName = "libiocuamappings session test";
   request.ClientNonce = std::vector<uint8_t>(32,0);
 //  request.ClientCertificate = GetCertificate();
@@ -204,7 +204,7 @@ OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream& stre
   request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
-  request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
+  request.EndpointURL = endpoint.EndpointUrl; // TODO make just endpoint.URL;
   request.SessionName = "libiocuamappings session test";
   request.ClientNonce = std::vector<uint8_t>(32,0);
 //  request.ClientCertificate = GetCertificate();

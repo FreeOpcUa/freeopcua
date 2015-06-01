@@ -77,7 +77,7 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
   data.Parameters.push_back(Common::Parameter("type", "client"));
 
   Common::ParametersGroup endpoint("endpoint");
-  endpoint.Parameters.push_back(Common::Parameter("url", "EndpointURL"));
+  endpoint.Parameters.push_back(Common::Parameter("url", "EndpointUrl"));
   endpoint.Parameters.push_back(Common::Parameter("security_level", "1"));
   endpoint.Parameters.push_back(Common::Parameter("security_mode", "sign_encrypt"));
   endpoint.Parameters.push_back(Common::Parameter("security_policy_uri", "SecurityPolicyURI"));
@@ -99,27 +99,27 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
 std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
 {
   OpcUa::Server::ApplicationData data;
-  data.Application.DiscoveryProfileURI = "DiscoveryProfileURI";
-  data.Application.URI = "URI";
-  data.Application.ProductURI = "ProductURI";
-  data.Application.GatewayServerURI = "GatewayServerURI";
-  data.Application.Name = OpcUa::LocalizedText("Name");
-  data.Application.Type = OpcUa::ApplicationType::Client;
+  data.Application.DiscoveryProfileUri = "DiscoveryProfileURI";
+  data.Application.ApplicationUri = "URI";
+  data.Application.ProductUri = "ProductURI";
+  data.Application.GatewayServerUri = "GatewayServerURI";
+  data.Application.ApplicationName = OpcUa::LocalizedText("Name");
+  data.Application.ApplicationType = OpcUa::ApplicationType::Client;
 
   OpcUa::EndpointDescription ed;
-  ed.EndpointURL = "EndpointURL";
+  ed.EndpointUrl = "EndpointURL";
   ed.SecurityLevel = 1;
   ed.SecurityMode = OpcUa::MessageSecurityMode::SignAndEncrypt;
-  ed.SecurityPolicyURI = "SecurityPolicyURI";
-  ed.TransportProfileURI = "TransportProfileURI";
+  ed.SecurityPolicyUri = "SecurityPolicyURI";
+  ed.TransportProfileUri = "TransportProfileURI";
 
   OpcUa::UserTokenPolicy tokenPolicy; // By default ot os an anonimous token;
   tokenPolicy.IssuedTokenType = "IssuedTokenType";
-  tokenPolicy.IssuerEndpointURL = "IssuerEndpointURL";
+  tokenPolicy.IssuerEndpointUrl = "IssuerEndpointURL";
   tokenPolicy.PolicyId = "PolicyId";
-  tokenPolicy.SecurityPolicyURI = "SecurityPolicyURI";
+  tokenPolicy.SecurityPolicyUri = "SecurityPolicyURI";
   tokenPolicy.TokenType = OpcUa::UserIdentifyTokenType::USERNAME;
-  ed.UserIdentifyTokens.push_back(tokenPolicy);
+  ed.UserIdentityTokens.push_back(tokenPolicy);
 
   data.Endpoints = {ed};
 
@@ -156,20 +156,20 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
 
   ASSERT_EQ(app.Endpoints.size(), 1);
   OpcUa::EndpointDescription ed = app.Endpoints[0];
-  EXPECT_EQ(ed.EndpointURL, "EndpointURL");
+  EXPECT_EQ(ed.EndpointUrl, "EndpointURL");
   EXPECT_EQ(ed.SecurityLevel, 1);
   EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
-  EXPECT_EQ(ed.SecurityPolicyURI, "SecurityPolicyURI");
+  EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyURI");
   //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
   //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyURI");
-  EXPECT_EQ(ed.TransportProfileURI, "TransportProfileURI");
+  EXPECT_EQ(ed.TransportProfileUri, "TransportProfileURI");
 
   ASSERT_EQ(ed.UserIdentifyTokens.size(), 1);
   OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentifyTokens[0];
   EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
-  EXPECT_EQ(tokenPolicy.IssuerEndpointURL, "IssuerEndpointURL");
+  EXPECT_EQ(tokenPolicy.IssuerEndpointUri, "IssuerEndpointURL");
   EXPECT_EQ(tokenPolicy.PolicyId, "PolicyId");
-  EXPECT_EQ(tokenPolicy.SecurityPolicyURI, "SecurityPolicyURI");
+  EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyURI");
   EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserIdentifyTokenType::USERNAME);
 }
 

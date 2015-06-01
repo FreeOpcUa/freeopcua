@@ -57,31 +57,31 @@ namespace
     }
 
   private:
-    UserIdentifyTokenType GetTokenType(const std::string& typeName) const
+    UserTokenType GetTokenType(const std::string& typeName) const
     {
       if (typeName == "anonymous" || typeName.empty())
-        return UserIdentifyTokenType::ANONYMOUS;
+        return UserTokenType::Anonymous;
       else if (typeName == "user_name")
-        return UserIdentifyTokenType::USERNAME;
+        return UserTokenType::UserName;
       else if (typeName == "certificate")
-        return UserIdentifyTokenType::CERTIFICATE;
+        return UserTokenType::Certificate;
       else if (typeName == "issued_token")
-        return UserIdentifyTokenType::ISSUED_TOKEN;
+        return UserTokenType::IssuedToken;
 
       throw std::logic_error("Unknown token type '" + typeName + "'");
     }
 
-    std::string GetTokenType(OpcUa::UserIdentifyTokenType type) const
+    std::string GetTokenType(OpcUa::UserTokenType type) const
     {
       switch (type)
       {
-      case UserIdentifyTokenType::ANONYMOUS:
+      case UserTokenType::Anonymous:
         return "anonymous";
-      case UserIdentifyTokenType::USERNAME:
+      case UserTokenType::UserName:
         return "user_name";
-      case UserIdentifyTokenType::CERTIFICATE:
+      case UserTokenType::Certificate:
         return "certificate";
-      case UserIdentifyTokenType::ISSUED_TOKEN:
+      case UserTokenType::IssuedToken:
         return "issued_token";
       default:
         throw std::logic_error("Unknown token type '" + std::to_string((unsigned)type) + "'");
@@ -157,11 +157,11 @@ namespace
         else if (param.Name == "type")
           tokenPolicy.TokenType = GetTokenType(param.Value);
         else if (param.Name == "uri")
-          tokenPolicy.SecurityPolicyURI = param.Value; //"http://opcfoundation.org/UA/SecurityPolicy#None";
+          tokenPolicy.SecurityPolicyUri = param.Value; //"http://opcfoundation.org/UA/SecurityPolicy#None";
         else if (param.Name == "issued_token_type")
           tokenPolicy.IssuedTokenType = param.Value;
         else if (param.Name == "issuer_endpoint_url")
-          tokenPolicy.IssuerEndpointURL = param.Value;
+          tokenPolicy.IssuerEndpointUrl = param.Value;
         else
           Log("Unknown policy token field", param.Name, param.Value);
       }
@@ -174,8 +174,8 @@ namespace
       Common::ParametersGroup policyGroup("user_token_policy");
       policyGroup.Parameters.push_back(Common::Parameter("id", policy.PolicyId));
       policyGroup.Parameters.push_back(Common::Parameter("type", GetTokenType(policy.TokenType)));
-      policyGroup.Parameters.push_back(Common::Parameter("uri", policy.SecurityPolicyURI));
-      policyGroup.Parameters.push_back(Common::Parameter("issuer_endpoint_url", policy.IssuerEndpointURL));
+      policyGroup.Parameters.push_back(Common::Parameter("uri", policy.SecurityPolicyUri));
+      policyGroup.Parameters.push_back(Common::Parameter("issuer_endpoint_url", policy.IssuerEndpointUrl));
       policyGroup.Parameters.push_back(Common::Parameter("issued_token_type", policy.IssuedTokenType));
       return policyGroup;
     }

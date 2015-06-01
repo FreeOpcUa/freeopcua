@@ -276,14 +276,14 @@ namespace OpcUa
     ISSUED_TOKEN = 3, // WS_Security token
   };
 
-  struct UserTokenPolicy
-  {
-    std::string PolicyId;
-    UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
-    std::string IssuedTokenType;
-    std::string IssuerEndpointURL;
-    std::string SecurityPolicyURI;
-  };
+//   struct UserTokenPolicy
+//   {
+//     std::string PolicyId;
+//     UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
+//     std::string IssuedTokenType;
+//     std::string IssuerEndpointURL;
+//     std::string SecurityPolicyURI;
+//   };
 
 
   enum ExtensionObjectEncoding : uint8_t

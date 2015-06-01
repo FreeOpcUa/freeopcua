@@ -808,8 +808,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<UserTokenPolicy>(UserTokenPolicy& data)
     {
@@ -820,7 +818,6 @@ namespace OpcUa
         *this >> data.SecurityPolicyUri;
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<EndpointDescription>(EndpointDescription& data)

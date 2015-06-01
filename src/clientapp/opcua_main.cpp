@@ -80,17 +80,17 @@ namespace
     }
   }
 
-  std::string GetName(OpcUa::UserIdentifyTokenType type)
+  std::string GetName(OpcUa::UserTokenType type)
   {
     switch (type)
     {
-      case OpcUa::UserIdentifyTokenType::ANONYMOUS:
+      case OpcUa::UserTokenType::Anonymous:
         return "anonymous";
-      case OpcUa::UserIdentifyTokenType::USERNAME:
+      case OpcUa::UserTokenType::UserName:
         return "username";
-      case OpcUa::UserIdentifyTokenType::CERTIFICATE:
+      case OpcUa::UserTokenType::Certificate:
         return "x509v3 certificate";
-      case OpcUa::UserIdentifyTokenType::ISSUED_TOKEN:
+      case OpcUa::UserTokenType::IssuedToken:
         return "WS_Security token";
       default:
         return "unknown";
@@ -255,8 +255,8 @@ namespace
     std::cout << tabs << "Id: " << policy.PolicyId << std::endl;
     std::cout << tabs << "TokenType: " << GetName(policy.TokenType) << std::endl;
     std::cout << tabs << "IssuedTokenType: " << policy.IssuedTokenType  << std::endl;
-    std::cout << tabs << "IssuerEndpointURL: " << policy.IssuerEndpointURL << std::endl;
-    std::cout << tabs << "SecurityPolicyURI: " << policy.SecurityPolicyURI << std::endl;
+    std::cout << tabs << "IssuerEndpointUrl: " << policy.IssuerEndpointUrl << std::endl;
+    std::cout << tabs << "SecurityPolicyUri: " << policy.SecurityPolicyUri << std::endl;
   };
 
 

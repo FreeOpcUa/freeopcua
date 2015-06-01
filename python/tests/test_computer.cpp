@@ -57,14 +57,14 @@ namespace
     std::vector<EndpointDescription> GetEndpoints(const std::string& url) const
     {
       EndpointDescription endpoint;
-      endpoint.EndpointURL = url;
+      endpoint.EndpointUrl = url;
       endpoint.SecurityLevel = 1;
       endpoint.SecurityMode = OpcUa::MessageSecurityMode::None;
-      endpoint.SecurityPolicyURI = "SecurityPolicyURI";
+      endpoint.SecurityPolicyUri = "SecurityPolicyURI";
       endpoint.ServerCertificate.push_back(1);
-      endpoint.ServerDescription = GetApplications(url).front();
-      endpoint.TransportProfileURI = "TransportProfileURI";
-      endpoint.UserIdentifyTokens = GetUserTokens();
+      endpoint.Server = GetApplications(url).front();
+      endpoint.TransportProfileUri = "TransportProfileURI";
+      endpoint.UserIdentityTokens = GetUserTokens();
       return std::vector<EndpointDescription>(1, endpoint);
     }
 
@@ -72,9 +72,9 @@ namespace
     {
       OpcUa::UserTokenPolicy policy;
       policy.IssuedTokenType = "IssuedTokenType";
-      policy.IssuerEndpointURL = "IssuerEndpointURL";
+      policy.IssuerEndpointUrl = "IssuerEndpointUrl";
       policy.PolicyId = "PolicyId";
-      policy.SecurityPolicyURI = "SecurityPolicyURI";
+      policy.SecurityPolicyUri = "SecurityPolicyUri";
       policy.TokenType = UserIdentifyTokenType::USERNAME;
       return std::vector<OpcUa::UserTokenPolicy>(1, policy);
     }

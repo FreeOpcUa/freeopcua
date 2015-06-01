@@ -142,13 +142,13 @@ namespace OpcUa
         {
           if (has_login)
           {
-            if (token.TokenType == UserIdentifyTokenType::USERNAME)
+            if (token.TokenType == UserTokenType::UserName)
             {
               if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
               return ed;
             }
           }
-          else if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
+          else if (token.TokenType == UserTokenType::Anonymous)
           {
             if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
@@ -208,14 +208,14 @@ namespace OpcUa
         if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentityTokens) {
             if(user.empty()) {
-              if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
+              if(token.TokenType == UserTokenType::Anonymous) {
                 session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
                 user_identify_token_found = true;
                 break;
               }
             }
             else {
-              if(token.TokenType == UserIdentifyTokenType::USERNAME) {
+              if(token.TokenType == UserTokenType::UserName) {
                 session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
                 session_parameters.IdentifyToken.setUser(user, password);
                 user_identify_token_found = true;

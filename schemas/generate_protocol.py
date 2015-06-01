@@ -63,7 +63,7 @@ EnabledStructs = [\
     #'ServiceFault',
     #'FindServersRequest',
     #'FindServersResponse',
-    #'UserTokenPolicy',
+    'UserTokenPolicy',
     'EndpointDescription',
     'GetEndpointsParameters',
     'GetEndpointsRequest',

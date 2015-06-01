@@ -375,8 +375,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def_readwrite("policy_id", &UserTokenPolicy::PolicyId)
   .def_readwrite("token_type", &UserTokenPolicy::TokenType)
   .def_readwrite("issued_token_type", &UserTokenPolicy::IssuedTokenType)
-  .def_readwrite("issuer_endpoint_url", &UserTokenPolicy::IssuerEndpointURL)
-  .def_readwrite("security_policy_uri", &UserTokenPolicy::SecurityPolicyURI)
+  .def_readwrite("issuer_endpoint_url", &UserTokenPolicy::IssuerEndpointUrl)
+  .def_readwrite("security_policy_uri", &UserTokenPolicy::SecurityPolicyUri)
   ;
 
   to_python_converter<std::vector<UserTokenPolicy>, vector_to_python_converter<UserTokenPolicy>>();

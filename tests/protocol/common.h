@@ -311,7 +311,7 @@ protected:
   ASSERT_EQ(desc.DiscoveryURLs, std::vector<std::string>(1,"du"));
 
 #define FILL_TEST_ENDPOINT(endpoint) \
-  endpoint.EndpointURL = "eu"; \
+  endpoint.EndpointUrl = "eu"; \
   FILL_APPLICATION_DESCRIPTION(endpoint.ServerDescription); \
   endpoint.ServerCertificate = {1,2,3,4}; \
   endpoint.SecurityMode = MessageSecurityMode::None; \

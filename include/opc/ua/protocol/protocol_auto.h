@@ -551,8 +551,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // Describes a user token that can be used with a server.
     struct UserTokenPolicy 
     {
@@ -562,7 +560,6 @@ namespace OpcUa
          std::string IssuerEndpointUrl;
          std::string SecurityPolicyUri;
     };
-*/
 
     // The description of a endpoint that can be used to access a server.
     struct EndpointDescription 

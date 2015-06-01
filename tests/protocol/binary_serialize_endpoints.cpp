@@ -45,9 +45,9 @@ TEST_F(EndpointsSerialization, GetEndpointsRequest)
   ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
-  request.Filter.EndpointURL = "test";
-  request.Filter.LocaleIds.push_back("RU");
-  request.Filter.ProfileUries.push_back("pro");
+  request.Parameters.EndpointUrl = "test";
+  request.Parameters.LocaleIds.push_back("RU");
+  request.Parameters.ProfileUris.push_back("pro");
 
 
   GetStream() << request << flush;
@@ -90,9 +90,9 @@ TEST_F(EndpointsDeserialization, GetEndpointsRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.Filter.EndpointURL, "test");
-  ASSERT_EQ(request.Filter.LocaleIds, std::vector<std::string>(1, "RU"));
-  ASSERT_EQ(request.Filter.ProfileUries, std::vector<std::string>(1, "pro"));
+  ASSERT_EQ(request.Parameters.EndpointUrl, "test");
+  ASSERT_EQ(request.Parameters.LocaleIds, std::vector<std::string>(1, "RU"));
+  ASSERT_EQ(request.Parameters.ProfileUris, std::vector<std::string>(1, "pro"));
 }
 
 //----------------------------------------------------
