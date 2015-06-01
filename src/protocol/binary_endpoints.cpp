@@ -198,78 +198,10 @@ namespace OpcUa
       DeserializeContainer(*this, vec);
     }
 
-
-
-    //-----------------------------------------------------
-    // ApplicationDescription
-    //-----------------------------------------------------
-
-//     template<>
-//     std::size_t RawSize<ApplicationDescription>(const ApplicationDescription& desc)
-//     {
-//       return RawSize(desc.URI) +
-//              RawSize(desc.ProductURI) +
-//              RawSize(desc.Name) +
-//              RawSize(desc.Type) +
-//              RawSize(desc.GatewayServerURI) +
-//              RawSize(desc.DiscoveryProfileURI) +
-//              RawSize(desc.DiscoveryURLs);
-//     };
-//
-//     template<>
-//     void DataSerializer::Serialize<ApplicationDescription>(const ApplicationDescription& desc)
-//     {
-//       *this << desc.URI;
-//       *this << desc.ProductURI;
-//       *this << desc.Name;
-//       *this << desc.Type;
-//       *this << desc.GatewayServerURI;
-//       *this << desc.DiscoveryProfileURI;
-//       *this << desc.DiscoveryURLs;
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<ApplicationDescription>(ApplicationDescription& desc)
-//     {
-//       *this >> desc.URI;
-//       *this >> desc.ProductURI;
-//       *this >> desc.Name;
-//       *this >> desc.Type;
-//       *this >> desc.GatewayServerURI;
-//       *this >> desc.DiscoveryProfileURI;
-//       *this >> desc.DiscoveryURLs;
-//     }
-//
-//     template<>
-//     void DataSerializer::Serialize<std::vector<ApplicationDescription>>(const std::vector<ApplicationDescription>& vec)
-//     {
-//       SerializeContainer(*this, vec);
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<std::vector<ApplicationDescription>>(std::vector<ApplicationDescription>& vec)
-//     {
-//       DeserializeContainer(*this, vec);
-//     }
-
     //-----------------------------------------------------
     // EndpointDescription
     //-----------------------------------------------------
 
-
-//     template<>
-//     std::size_t RawSize<EndpointDescription>(const EndpointDescription& desc)
-//     {
-//       return RawSize(desc.EndpointURL) +
-//              RawSize(desc.ServerDescription) +
-//              RawSize(desc.ServerCertificate) +
-//              RawSize(desc.SecurityMode) +
-//              RawSize(desc.SecurityPolicyURI) +
-//              RawSize(desc.UserIdentifyTokens) +
-//              RawSize(desc.TransportProfileURI) +
-//              sizeof(desc.SecurityLevel);
-//     }
-//
     template<>
     std::size_t RawSize<std::vector<EndpointDescription>>(const std::vector<EndpointDescription>& vec)
     {
@@ -278,33 +210,7 @@ namespace OpcUa
       std::for_each(vec.begin(), vec.end(), [&] (const EndpointDescription& desc) {totalSize += RawSize(desc);});
       return totalSize;
     }
-//
-//     template<>
-//     void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription& desc)
-//     {
-//       *this << desc.EndpointURL;
-//       *this << desc.ServerDescription;
-//       *this << desc.ServerCertificate;
-//       *this << desc.SecurityMode;
-//       *this << desc.SecurityPolicyURI;
-//       *this << desc.UserIdentifyTokens;
-//       *this << desc.TransportProfileURI;
-//       *this << desc.SecurityLevel;
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<EndpointDescription>(EndpointDescription& desc)
-//     {
-//       *this >> desc.EndpointURL;
-//       *this >> desc.ServerDescription;
-//       *this >> desc.ServerCertificate;
-//       *this >> desc.SecurityMode;
-//       *this >> desc.SecurityPolicyURI;
-//       *this >> desc.UserIdentifyTokens;
-//       *this >> desc.TransportProfileURI;
-//       *this >> desc.SecurityLevel;
-//     }
-//
+
     template<>
     void DataSerializer::Serialize<std::vector<EndpointDescription>>(const std::vector<EndpointDescription>& vec)
     {
