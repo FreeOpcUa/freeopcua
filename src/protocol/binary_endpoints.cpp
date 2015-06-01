@@ -35,44 +35,8 @@ namespace OpcUa
   namespace Binary
   {
     //-----------------------------------------------------
-    // UserIdentifyTokenType
-    //-----------------------------------------------------
-
-    template<>
-    std::size_t RawSize<UserIdentifyTokenType>(const UserIdentifyTokenType& type)
-    {
-      return 4;
-    };
-
-    template<>
-    void DataSerializer::Serialize<UserIdentifyTokenType>(const UserIdentifyTokenType& type)
-    {
-      *this << static_cast<uint32_t>(type);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<UserIdentifyTokenType>(UserIdentifyTokenType& type)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      type = static_cast<UserIdentifyTokenType>(tmp);
-    };
-
-
-    //-----------------------------------------------------
     // UserTokenPolicy
     //-----------------------------------------------------
-
-//     template<>
-//     std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& policy)
-//     {
-//       return RawSize(policy.PolicyId) +
-//              RawSize(policy.TokenType) +
-//              RawSize(policy.IssuedTokenType) +
-//              RawSize(policy.IssuerEndpointUrl) +
-//              RawSize(policy.SecurityPolicyUri);
-//     };
-
     template<>
     std::size_t RawSize<std::vector<UserTokenPolicy>>(const std::vector<UserTokenPolicy>& vec)
     {
@@ -81,26 +45,6 @@ namespace OpcUa
       std::for_each(vec.begin(), vec.end(), [&] (const UserTokenPolicy& policy) {totalSize += RawSize(policy);});
       return totalSize;
     }
-
-//     template<>
-//     void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy& policy)
-//     {
-//       *this << policy.PolicyId;
-//       *this << policy.TokenType;
-//       *this << policy.IssuedTokenType;
-//       *this << policy.IssuerEndpointUrl;
-//       *this << policy.SecurityPolicyUri;
-//     }
-
-//     template<>
-//     void DataDeserializer::Deserialize<UserTokenPolicy>(UserTokenPolicy& policy)
-//     {
-//       *this >> policy.PolicyId;
-//       *this >> policy.TokenType;
-//       *this >> policy.IssuedTokenType;
-//       *this >> policy.IssuerEndpointUrl;
-//       *this >> policy.SecurityPolicyUri;
-//     };
 
     template<>
     void DataSerializer::Serialize<std::vector<UserTokenPolicy>>(const std::vector<UserTokenPolicy>& vec)

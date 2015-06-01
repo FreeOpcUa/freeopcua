@@ -87,7 +87,7 @@ namespace OpcUa
 
     UserIdentifyToken();
 
-    UserIdentifyTokenType type() const;
+    UserTokenType type() const;
     void setUser(const std::string &user, const std::string &password);
     void setPolicyId(const std::string &id);
   };

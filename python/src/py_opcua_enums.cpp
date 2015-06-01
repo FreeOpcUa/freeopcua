@@ -50,12 +50,12 @@ void py_opcua_enums()
 #undef _value
   ;
 
-  enum_<UserIdentifyTokenType>("UserIdentifyTokenType")
-#define _value(X) value(#X, UserIdentifyTokenType:: X)
-  ._value(ANONYMOUS)
-  ._value(USERNAME)
-  ._value(CERTIFICATE)
-  ._value(ISSUED_TOKEN)
+  enum_<UserTokenType>("UserTokenType")
+#define _value(X) value(#X, UserTokenType:: X)
+  ._value(Anonymous)
+  ._value(UserName)
+  ._value(Certificate)
+  ._value(IssuedToken)
 #undef _value
   ;
 

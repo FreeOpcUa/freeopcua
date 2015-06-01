@@ -268,24 +268,6 @@ namespace OpcUa
     std::string Algorithm;
   };
 
-  enum class UserIdentifyTokenType : uint32_t
-  {
-    ANONYMOUS    = 0, // no token required
-    USERNAME     = 1, // username/password
-    CERTIFICATE  = 2, // x509v3 certificate
-    ISSUED_TOKEN = 3, // WS_Security token
-  };
-
-//   struct UserTokenPolicy
-//   {
-//     std::string PolicyId;
-//     UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
-//     std::string IssuedTokenType;
-//     std::string IssuerEndpointURL;
-//     std::string SecurityPolicyURI;
-//   };
-
-
   enum ExtensionObjectEncoding : uint8_t
   {
     NONE = 0,

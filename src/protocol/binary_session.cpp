@@ -54,11 +54,11 @@ namespace OpcUa
   {
   }
 
-  UserIdentifyTokenType UserIdentifyToken::type() const
+  UserTokenType UserIdentifyToken::type() const
   {
-    UserIdentifyTokenType type = UserIdentifyTokenType::ANONYMOUS;
+    UserTokenType type = UserTokenType::Anonymous;
     if(Header.TypeId.FourByteData.Identifier == USER_IdENTIFY_TOKEN_USERNAME)
-      type = UserIdentifyTokenType::USERNAME;
+      type = UserTokenType::UserName;
     return type;
   }
 
@@ -278,7 +278,7 @@ namespace OpcUa
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
       std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId);
-      if(token.type() == UserIdentifyTokenType::USERNAME)
+      if(token.type() == UserTokenType::UserName)
         ret += RawSize(token.UserName);
       return ret;
     }
@@ -288,7 +288,7 @@ namespace OpcUa
     {
       *this << token.Header;
       *this << token.PolicyId;
-      if(token.type() == UserIdentifyTokenType::USERNAME)
+      if(token.type() == UserTokenType::UserName)
         *this << token.UserName;
     }
 
@@ -297,7 +297,7 @@ namespace OpcUa
     {
       *this >> token.Header;
       *this >> token.PolicyId;
-      if(token.type() == UserIdentifyTokenType::USERNAME)
+      if(token.type() == UserTokenType::UserName)
         *this >> token.UserName;
     }
 
