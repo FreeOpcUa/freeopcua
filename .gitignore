@@ -55,3 +55,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Autogeneration
+schemas/ET
+schemas/gm
+schemas/struct_list.txt
+schemas/sys
