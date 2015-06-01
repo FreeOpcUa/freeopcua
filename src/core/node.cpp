@@ -74,19 +74,45 @@ namespace OpcUa
 
   std::vector<Variant> Node::CallMethod(const NodeId methodId, const std::vector<Variant> inputArguments) const
   {
-    std::vector<CallMethodRequest> methodsToCall;
-    CallMethodRequest callMethod;
-    callMethod.ObjectId = Id;
-    callMethod.MethodId = methodId;
-    callMethod.InputArguments = inputArguments;
+    std::vector<NodeId> vec_methodId;
+    vec_methodId.push_back(methodId);
 
-    methodsToCall.push_back(callMethod);
+    std::vector<std::vector<Variant>> vec_inputArguments;
+    vec_inputArguments.push_back(inputArguments);
+
+    std::vector<std::vector<Variant>> results = CallMethods(vec_methodId, vec_inputArguments);
+
+    return results.front();
+  }
+
+  std::vector<std::vector<Variant>> Node::CallMethods(const std::vector<NodeId> methodIds, const std::vector<std::vector<Variant>> inputArguments) const
+  {
+    std::vector<CallMethodRequest> methodsToCall;
+
+    std::vector<NodeId>::const_iterator it1;
+    std::vector<std::vector<Variant>>::const_iterator it2;
+    for (it1 = methodIds.begin(), it2 = inputArguments.begin();
+         it1 != methodIds.end() && it2 != inputArguments.end();
+         ++it1, ++it2)
+    {
+      CallMethodRequest callMethod;
+      callMethod.ObjectId = Id;
+      callMethod.MethodId = *it1;
+      callMethod.InputArguments = *it2;
+
+      methodsToCall.push_back(callMethod);
+    }
 
     std::vector<CallMethodResult> results = Server->Method()->Call(methodsToCall);
-    // TODO: add checking of StatusCode
 
-    // TODO: add to call multiple methods --> Rename to CallMethods and check how to return them as list of Variants
-    return results.front().OutputArguments;
+    std::vector<std::vector<Variant>> ret;
+    for (std::vector<CallMethodResult>::iterator it = results.begin(); it != results.end(); ++it)
+    {
+      CheckStatusCode(it->Status);
+      ret.push_back(it->OutputArguments);
+    }
+
+    return ret;
   }
 
   void Node::SetAttribute(AttributeId attr, const DataValue &dval) const

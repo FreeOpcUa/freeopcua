@@ -91,6 +91,7 @@ namespace OpcUa
 
     // CallMethod
     std::vector<Variant> CallMethod(NodeId methodId, std::vector<Variant> inputArguments) const;
+    std::vector<std::vector<Variant>> CallMethods(std::vector<NodeId> methodIds, std::vector<std::vector<Variant>> inputArguments) const;
 
     //OpcUa low level methods to to modify address space model
     std::vector<AddNodesResult> AddNodes(std::vector<AddNodesItem> items) const;

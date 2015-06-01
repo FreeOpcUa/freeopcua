@@ -375,7 +375,11 @@ namespace
       request.MethodsToCall = methodsToCall;
       const CallResponse response = Send<CallResponse>(request);
       if (Debug) {std::cout << "binary_clinent | Call <--" << std::endl;}
-      //TODO: Manage errors
+      // Manage errors
+//       if (!response.DiagnosticInfos.empty())
+//       {
+// For now commented out, handling of diagnostic should be probably added for all communication
+//       }
       return response.Results;
     }
 
