@@ -450,8 +450,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // Describes an application and how to find it.
     struct ApplicationDescription 
     {
@@ -463,7 +461,6 @@ namespace OpcUa
          std::string DiscoveryProfileUri;
          std::vector<std::string> DiscoveryUrls;
     };
-*/
 
 /* DISABLED
 
@@ -567,8 +564,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // The description of a endpoint that can be used to access a server.
     struct EndpointDescription 
     {
@@ -581,7 +576,6 @@ namespace OpcUa
          std::string TransportProfileUri;
          uint8_t SecurityLevel;
     };
-*/
 
 /* DISABLED
 

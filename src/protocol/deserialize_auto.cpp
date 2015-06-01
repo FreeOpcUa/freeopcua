@@ -707,8 +707,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<ApplicationDescription>(ApplicationDescription& data)
     {
@@ -721,7 +719,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiscoveryUrls);
     }
 
-*/
 
 /*  DISABLED
 
@@ -825,8 +822,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<EndpointDescription>(EndpointDescription& data)
     {
@@ -840,7 +835,6 @@ namespace OpcUa
         *this >> data.SecurityLevel;
     }
 
-*/
 
 /*  DISABLED
 

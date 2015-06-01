@@ -268,18 +268,18 @@ namespace OpcUa
     std::string Algorithm;
   };
 
-  struct ApplicationDescription
-  {
-    std::string URI;
-    std::string ProductURI;
-    LocalizedText Name;
-    ApplicationType Type = ApplicationType::Client;
-    std::string GatewayServerURI;
-    std::string DiscoveryProfileURI;
-    std::vector<std::string> DiscoveryURLs;
-
-    ApplicationDescription();
-  };
+//   struct ApplicationDescription
+//   {
+//     std::string URI;
+//     std::string ProductURI;
+//     LocalizedText Name;
+//     ApplicationType Type = ApplicationType::Client;
+//     std::string GatewayServerURI;
+//     std::string DiscoveryProfileURI;
+//     std::vector<std::string> DiscoveryURLs;
+//
+//     ApplicationDescription();
+//   };
 
   enum class UserIdentifyTokenType : uint32_t
   {
@@ -298,17 +298,17 @@ namespace OpcUa
     std::string SecurityPolicyURI;
   };
 
-  struct EndpointDescription
-  {
-    std::string EndpointURL;
-    ApplicationDescription ServerDescription;
-    CertificateData ServerCertificate;
-    MessageSecurityMode SecurityMode = MessageSecurityMode::None;
-    std::string SecurityPolicyURI;
-    std::vector<UserTokenPolicy> UserIdentifyTokens;
-    std::string TransportProfileURI;
-    uint8_t SecurityLevel = 0;
-  };
+//   struct EndpointDescription
+//   {
+//     std::string EndpointURL;
+//     ApplicationDescription ServerDescription;
+//     CertificateData ServerCertificate;
+//     MessageSecurityMode SecurityMode = MessageSecurityMode::None;
+//     std::string SecurityPolicyURI;
+//     std::vector<UserTokenPolicy> UserIdentifyTokens;
+//     std::string TransportProfileURI;
+//     uint8_t SecurityLevel = 0;
+//   };
 
 
   enum ExtensionObjectEncoding : uint8_t

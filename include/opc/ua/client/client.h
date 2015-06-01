@@ -103,7 +103,7 @@ namespace OpcUa
 
     /// @brief  get endpoints from server, assume we are already connected
     std::vector<EndpointDescription> GetServerEndpoints();
-    std::string GetEndpoint() const { return Endpoint.EndpointURL; }
+    std::string GetEndpoint() const { return Endpoint.EndpointUrl; }
 
     /// @brief  set application description 
     std::string GetApplicationURI() const { return ApplicationUri; }

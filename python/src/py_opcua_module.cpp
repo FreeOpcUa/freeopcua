@@ -360,13 +360,13 @@ BOOST_PYTHON_MODULE(opcua)
   to_python_converter<std::vector<DataValue>, vector_to_python_converter<DataValue>>();
 
   class_<ApplicationDescription>("ApplicationDescription")
-  .def_readwrite("uri", &ApplicationDescription::URI)
-  .def_readwrite("product_uri", &ApplicationDescription::ProductURI)
-  .def_readwrite("name", &ApplicationDescription::Name)
-  .def_readwrite("type", &ApplicationDescription::Type)
-  .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerURI)
-  .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileURI)
-  .def_readwrite_vector("discovery_urls", &ApplicationDescription::DiscoveryURLs)
+  .def_readwrite("uri", &ApplicationDescription::ApplicationUri)
+  .def_readwrite("product_uri", &ApplicationDescription::ProductUri)
+  .def_readwrite("name", &ApplicationDescription::ApplicationName)
+  .def_readwrite("type", &ApplicationDescription::ApplicationType)
+  .def_readwrite("gateway_server_uri", &ApplicationDescription::GatewayServerUri)
+  .def_readwrite("discovery_profile_uri", &ApplicationDescription::DiscoveryProfileUri)
+  .def_readwrite_vector("discovery_urls", &ApplicationDescription::DiscoveryUrls)
   ;
 
   to_python_converter<std::vector<ApplicationDescription>, vector_to_python_converter<ApplicationDescription>>();
@@ -383,12 +383,12 @@ BOOST_PYTHON_MODULE(opcua)
   vector_from_python_converter<UserTokenPolicy>();
 
   class_<EndpointDescription>("EndpointDescription")
-  .def_readwrite("url", &EndpointDescription::EndpointURL)
-  .def_readwrite("server_description", &EndpointDescription::ServerDescription)
+  .def_readwrite("url", &EndpointDescription::EndpointUrl)
+  .def_readwrite("server_description", &EndpointDescription::Server)
   .def_readwrite("security_mode", &EndpointDescription::SecurityMode)
-  .def_readwrite("security_policy_uri", &EndpointDescription::SecurityPolicyURI)
-  .def_readwrite_vector("user_identify_tokens", &EndpointDescription::UserIdentifyTokens)
-  .def_readwrite("transport_profile_uri", &EndpointDescription::TransportProfileURI)
+  .def_readwrite("security_policy_uri", &EndpointDescription::SecurityPolicyUri)
+  .def_readwrite_vector("user_identify_tokens", &EndpointDescription::UserIdentityTokens)
+  .def_readwrite("transport_profile_uri", &EndpointDescription::TransportProfileUri)
   .def_readwrite("security_level", &EndpointDescription::SecurityLevel)
   ;
 

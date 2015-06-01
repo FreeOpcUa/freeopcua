@@ -659,8 +659,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ApplicationDescription>(const ApplicationDescription& data)
     {
@@ -673,7 +671,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiscoveryUrls);
     }
 
-*/
 
 /*  DISABLED
 
@@ -777,8 +774,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription& data)
     {
@@ -792,7 +787,6 @@ namespace OpcUa
         *this << data.SecurityLevel;
     }
 
-*/
 
 /*  DISABLED
 

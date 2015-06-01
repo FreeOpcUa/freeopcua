@@ -719,8 +719,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ApplicationDescription>(const ApplicationDescription& data)
     {
@@ -735,7 +733,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -855,8 +852,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<EndpointDescription>(const EndpointDescription& data)
     {
@@ -872,7 +867,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

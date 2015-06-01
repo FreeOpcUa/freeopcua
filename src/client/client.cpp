@@ -113,7 +113,7 @@ namespace OpcUa
   std::vector<EndpointDescription> UaClient::GetServerEndpoints()
   {
     EndpointsFilter filter;
-    filter.EndpointURL = Endpoint.EndpointURL;
+    filter.EndpointURL = Endpoint.EndpointUrl;
     filter.ProfileUries.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
@@ -129,16 +129,16 @@ namespace OpcUa
     bool has_login = !uri.User().empty();
     for ( EndpointDescription ed : endpoints)
     {
-      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
-      if ( ed.SecurityPolicyURI == "http://opcfoundation.org/UA/SecurityPolicy#None")
+      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointUrl << " with security: " << ed.SecurityPolicyUri <<  std::endl; }
+      if ( ed.SecurityPolicyUri == "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
         if (Debug)  { std::cout << "UaClient | Security policy is OK, now looking at user token" <<  std::endl; }
-        if (ed.UserIdentifyTokens.empty() )
+        if (ed.UserIdentityTokens.empty() )
         {
           if (Debug)  { std::cout << "UaClient | Server does not use user token, OK" <<  std::endl; }
           return ed;
         }
-        for (  UserTokenPolicy token : ed.UserIdentifyTokens)
+        for (  UserTokenPolicy token : ed.UserIdentityTokens)
         {
           if (has_login)
           {
@@ -162,18 +162,18 @@ namespace OpcUa
   void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
-    endpointdesc.EndpointURL = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
+    endpointdesc.EndpointUrl = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
    
   void UaClient::Connect(const EndpointDescription& endpoint)
   {
     Endpoint = endpoint;
-    const Common::Uri serverUri(Endpoint.EndpointURL);
+    const Common::Uri serverUri(Endpoint.EndpointUrl);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
 
     OpcUa::SecureConnectionParams params;
-    params.EndpointUrl = Endpoint.EndpointURL;
+    params.EndpointUrl = Endpoint.EndpointUrl;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
     Server = OpcUa::CreateBinaryClient(channel, params, Debug);
@@ -183,14 +183,14 @@ namespace OpcUa
 
     if (Debug)  { std::cout << "UaClient | Creating session ..." <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
-    session.ClientDescription.URI = ApplicationUri;
-    session.ClientDescription.ProductURI = ProductUri;
-    session.ClientDescription.Name = LocalizedText(SessionName);
-    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
+    session.ClientDescription.ApplicationUri = ApplicationUri;
+    session.ClientDescription.ProductUri = ProductUri;
+    session.ClientDescription.ApplicationName = LocalizedText(SessionName);
+    session.ClientDescription.ApplicationType = OpcUa::ApplicationType::Client;
     session.SessionName = SessionName;
-    session.EndpointURL = endpoint.EndpointURL;
+    session.EndpointURL = endpoint.EndpointUrl;
     session.Timeout = DefaultTimeout;
-    session.ServerURI = endpoint.ServerDescription.URI;
+    session.ServerURI = endpoint.Server.ApplicationUri;
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);
@@ -206,7 +206,7 @@ namespace OpcUa
       bool user_identify_token_found = false;
       for(auto ep : response.Session.ServerEndpoints) {
         if(ep.SecurityMode == MessageSecurityMode::None) {
-          for(auto token : ep.UserIdentifyTokens) {
+          for(auto token : ep.UserIdentityTokens) {
             if(user.empty()) {
               if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
                 session_parameters.IdentifyToken.setPolicyId(token.PolicyId);

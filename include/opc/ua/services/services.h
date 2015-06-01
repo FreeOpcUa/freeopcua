@@ -20,6 +20,8 @@
 #include <opc/ua/services/subscriptions.h>
 #include <opc/ua/services/view.h>
 
+#include <opc/ua/protocol/protocol.h>
+
 #include <memory>
 #include <vector>
 

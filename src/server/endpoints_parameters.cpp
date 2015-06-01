@@ -192,11 +192,11 @@ namespace
         if (param.Name == "security_level")
           endpoint.SecurityLevel = std::stoi(param.Value);
         else if (param.Name == "security_policy_uri")
-          endpoint.SecurityPolicyURI = param.Value;
+          endpoint.SecurityPolicyUri = param.Value;
         else if (param.Name == "transport_profile_uri")
-          endpoint.TransportProfileURI = param.Value;//"http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
+          endpoint.TransportProfileUri = param.Value;//"http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
         else if (param.Name == "url")
-          endpoint.EndpointURL = param.Value;
+          endpoint.EndpointUrl = param.Value;
         else
           Log("Unknown endpoint parameter: ", param.Name, "=", param.Value);
       }
@@ -206,7 +206,7 @@ namespace
         if (subGroup.Name == "user_token_policy")
         {
           const UserTokenPolicy tokenPolicy = GetUserTokenPolicy(subGroup.Parameters);
-          endpoint.UserIdentifyTokens.push_back(tokenPolicy);
+          endpoint.UserIdentityTokens.push_back(tokenPolicy);
         }
         else
         {
@@ -221,11 +221,11 @@ namespace
       Common::ParametersGroup ed("endpoint");
       ed.Parameters.push_back(Common::Parameter("security_level", std::to_string(endpoint.SecurityLevel)));
       ed.Parameters.push_back(Common::Parameter("security_mode", GetSecurityMode(endpoint.SecurityMode)));
-      ed.Parameters.push_back(Common::Parameter("security_policy_uri", endpoint.SecurityPolicyURI));
-      ed.Parameters.push_back(Common::Parameter("transport_profile_uri", endpoint.TransportProfileURI)); //"http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary"
-      ed.Parameters.push_back(Common::Parameter("url", endpoint.EndpointURL));
+      ed.Parameters.push_back(Common::Parameter("security_policy_uri", endpoint.SecurityPolicyUri));
+      ed.Parameters.push_back(Common::Parameter("transport_profile_uri", endpoint.TransportProfileUri)); //"http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary"
+      ed.Parameters.push_back(Common::Parameter("url", endpoint.EndpointUrl));
 
-      for (const UserTokenPolicy& policy : endpoint.UserIdentifyTokens)
+      for (const UserTokenPolicy& policy : endpoint.UserIdentityTokens)
       {
         ed.Groups.push_back(GetUserTokenPolicy(policy));
       }
@@ -241,27 +241,27 @@ namespace
         Log("Parsing app paramter ", param.Name, " = ", param.Value);
         if (param.Name == "uri")
         {
-          data.Application.URI = param.Value;
+          data.Application.ApplicationUri = param.Value;
         }
         else if (param.Name == "product_uri")
         {
-          data.Application.ProductURI = param.Value;
+          data.Application.ProductUri = param.Value;
         }
         else if (param.Name == "gateway_server_uri")
         {
-          data.Application.GatewayServerURI = param.Value;
+          data.Application.GatewayServerUri = param.Value;
         }
         else if (param.Name == "discovery_profile")
         {
-          data.Application.DiscoveryProfileURI = param.Value;
+          data.Application.DiscoveryProfileUri = param.Value;
         }
         else if (param.Name == "name")
         {
-          data.Application.Name = LocalizedText(param.Value);
+          data.Application.ApplicationName = LocalizedText(param.Value);
         }
         else if (param.Name == "type")
         {
-          data.Application.Type = GetApplicationType(param.Value);
+          data.Application.ApplicationType = GetApplicationType(param.Value);
         }
         else
         {
@@ -275,7 +275,7 @@ namespace
         if (group.Name == "endpoint")
         {
           EndpointDescription endpoint = GetEndpointDescription(group);
-          data.Application.DiscoveryURLs.push_back(endpoint.EndpointURL);
+          data.Application.DiscoveryUrls.push_back(endpoint.EndpointUrl);
           data.Endpoints.push_back(endpoint);
         }
         else
@@ -286,7 +286,7 @@ namespace
 
       for (EndpointDescription& endpoint : data.Endpoints)
       {
-        endpoint.ServerDescription = data.Application;
+        endpoint.Server = data.Application;
       }
 
       return data;
@@ -295,12 +295,12 @@ namespace
     Common::ParametersGroup ApplicationToParametersGroup(const ApplicationData& app) const
     {
       Common::ParametersGroup result("application");
-      result.Parameters.push_back(Common::Parameter("discovery_profile", app.Application.DiscoveryProfileURI));
-      result.Parameters.push_back(Common::Parameter("uri", app.Application.URI));
-      result.Parameters.push_back(Common::Parameter("gateway_server_uri", app.Application.GatewayServerURI));
-      result.Parameters.push_back(Common::Parameter("product_uri", app.Application.ProductURI));
-      result.Parameters.push_back(Common::Parameter("name", app.Application.Name.Text));
-      result.Parameters.push_back(Common::Parameter("type", GetApplicationType(app.Application.Type)));
+      result.Parameters.push_back(Common::Parameter("discovery_profile", app.Application.DiscoveryProfileUri));
+      result.Parameters.push_back(Common::Parameter("uri", app.Application.ApplicationUri));
+      result.Parameters.push_back(Common::Parameter("gateway_server_uri", app.Application.GatewayServerUri));
+      result.Parameters.push_back(Common::Parameter("product_uri", app.Application.ProductUri));
+      result.Parameters.push_back(Common::Parameter("name", app.Application.ApplicationName.Text));
+      result.Parameters.push_back(Common::Parameter("type", GetApplicationType(app.Application.ApplicationType)));
 
       for (const EndpointDescription& endpoint : app.Endpoints)
       {

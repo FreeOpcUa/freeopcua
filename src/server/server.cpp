@@ -99,22 +99,22 @@ namespace OpcUa
   void UaServer::Start()
   {
     ApplicationDescription appDesc;
-    appDesc.Name = LocalizedText(Name);
-    appDesc.URI = ServerUri;
-    appDesc.Type = ApplicationType::Server;
-    appDesc.ProductURI = ProductUri;
+    appDesc.ApplicationName = LocalizedText(Name);
+    appDesc.ApplicationUri = ServerUri;
+    appDesc.ApplicationType = ApplicationType::Server;
+    appDesc.ProductUri = ProductUri;
 
     OpcUa::Server::Parameters params;
     params.Debug = Debug;
-    params.Endpoint.ServerDescription = appDesc;
-    params.Endpoint.EndpointURL = Endpoint;
+    params.Endpoint.Server = appDesc;
+    params.Endpoint.EndpointUrl = Endpoint;
     params.Endpoint.SecurityMode = SecurityMode;
-    params.Endpoint.SecurityPolicyURI = "http://opcfoundation.org/UA/SecurityPolicy#None";
-    params.Endpoint.TransportProfileURI = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
+    params.Endpoint.SecurityPolicyUri = "http://opcfoundation.org/UA/SecurityPolicy#None";
+    params.Endpoint.TransportProfileUri = "http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary";
     //setting up policy is required for some client, this should be in a constructor
     UserTokenPolicy policy;
     policy.TokenType = UserIdentifyTokenType::ANONYMOUS;
-    params.Endpoint.UserIdentifyTokens.push_back(policy);
+    params.Endpoint.UserIdentityTokens.push_back(policy);
 
     Addons = Common::CreateAddonsManager();
     Server::RegisterCommonAddons(params, *Addons);

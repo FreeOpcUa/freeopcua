@@ -248,13 +248,13 @@ namespace
       CreateSessionRequest request;
       request.Header = CreateRequestHeader();
 
-      request.Parameters.ClientDescription.URI = parameters.ClientDescription.URI;
-      request.Parameters.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
-      request.Parameters.ClientDescription.Name = parameters.ClientDescription.Name;
-      request.Parameters.ClientDescription.Type = parameters.ClientDescription.Type;
-      request.Parameters.ClientDescription.GatewayServerURI = parameters.ClientDescription.GatewayServerURI;
-      request.Parameters.ClientDescription.DiscoveryProfileURI = parameters.ClientDescription.DiscoveryProfileURI;
-      request.Parameters.ClientDescription.DiscoveryURLs = parameters.ClientDescription.DiscoveryURLs;
+      request.Parameters.ClientDescription.ApplicationUri = parameters.ClientDescription.ApplicationUri;
+      request.Parameters.ClientDescription.ProductUri = parameters.ClientDescription.ProductUri;
+      request.Parameters.ClientDescription.ApplicationName = parameters.ClientDescription.ApplicationName;
+      request.Parameters.ClientDescription.ApplicationType = parameters.ClientDescription.ApplicationType;
+      request.Parameters.ClientDescription.GatewayServerUri = parameters.ClientDescription.GatewayServerUri;
+      request.Parameters.ClientDescription.DiscoveryProfileUri = parameters.ClientDescription.DiscoveryProfileUri;
+      request.Parameters.ClientDescription.DiscoveryUrls = parameters.ClientDescription.DiscoveryUrls;
 
       request.Parameters.ServerURI = parameters.ServerURI;
       request.Parameters.EndpointURL = parameters.EndpointURL; // TODO make just endpoint.URL;
