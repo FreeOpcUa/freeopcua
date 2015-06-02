@@ -256,11 +256,11 @@ namespace
       request.Parameters.ClientDescription.DiscoveryProfileUri = parameters.ClientDescription.DiscoveryProfileUri;
       request.Parameters.ClientDescription.DiscoveryUrls = parameters.ClientDescription.DiscoveryUrls;
 
-      request.Parameters.ServerURI = parameters.ServerURI;
-      request.Parameters.EndpointURL = parameters.EndpointURL; // TODO make just endpoint.URL;
+      request.Parameters.ServerUri = parameters.ServerURI;
+      request.Parameters.EndpointUrl = parameters.EndpointURL; // TODO make just endpoint.URL;
       request.Parameters.SessionName = parameters.SessionName;
-      request.Parameters.ClientNonce = std::vector<uint8_t>(32,0);
-      request.Parameters.ClientCertificate = parameters.ClientCertificate;
+      request.Parameters.ClientNonce = ByteString(std::vector<uint8_t>(32,0));
+      request.Parameters.ClientCertificate = ByteString(parameters.ClientCertificate);
       request.Parameters.RequestedSessionTimeout = parameters.Timeout;
       request.Parameters.MaxResponseMessageSize = 65536;
       CreateSessionResponse response = Send<CreateSessionResponse>(request);

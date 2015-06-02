@@ -21,17 +21,16 @@
 
 namespace OpcUa
 {
-  SessionParameters::SessionParameters()
-    : RequestedSessionTimeout(0)
-    , MaxResponseMessageSize(0)
-  {
-  }
-
-
-  CreateSessionRequest::CreateSessionRequest()
-    : TypeId(CREATE_SESSION_REQUEST)
-  {
-  }
+//   SessionParameters::SessionParameters()//     : RequestedSessionTimeout(0)
+//     , MaxResponseMessageSize(0)
+//   {
+//   }
+//
+//
+//   CreateSessionRequest::CreateSessionRequest()
+//     : TypeId(CREATE_SESSION_REQUEST)
+//   {
+//   }
 
   SessionData::SessionData()
     : RevisedSessionTimeout(0)
@@ -111,70 +110,70 @@ namespace OpcUa
     // SessionParameters
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<SessionParameters>(const SessionParameters& params)
-    {
-      return RawSize(params.ClientDescription) +
-        RawSize(params.ServerURI) +
-        RawSize(params.EndpointURL) +
-        RawSize(params.SessionName) +
-        RawSize(params.ClientNonce) +
-        RawSize(params.ClientCertificate) +
-        sizeof(params.RequestedSessionTimeout) +
-        sizeof(params.MaxResponseMessageSize);
-    }
-
-    template<>
-    void DataSerializer::Serialize<SessionParameters>(const SessionParameters& params)
-    {
-      *this << params.ClientDescription;
-      *this << params.ServerURI;
-      *this << params.EndpointURL;
-      *this << params.SessionName;
-      *this << params.ClientNonce;
-      *this << params.ClientCertificate;
-      *this << params.RequestedSessionTimeout;
-      *this << params.MaxResponseMessageSize;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SessionParameters>(SessionParameters& params)
-    {
-      *this >> params.ClientDescription;
-      *this >> params.ServerURI;
-      *this >> params.EndpointURL;
-      *this >> params.SessionName;
-      *this >> params.ClientNonce;
-      *this >> params.ClientCertificate;
-      *this >> params.RequestedSessionTimeout;
-      *this >> params.MaxResponseMessageSize;
-    }
+//     template<>
+//     std::size_t RawSize<SessionParameters>(const SessionParameters& params)
+//     {
+//       return RawSize(params.ClientDescription) +
+//         RawSize(params.ServerURI) +
+//         RawSize(params.EndpointURL) +
+//         RawSize(params.SessionName) +
+//         RawSize(params.ClientNonce) +
+//         RawSize(params.ClientCertificate) +
+//         sizeof(params.RequestedSessionTimeout) +
+//         sizeof(params.MaxResponseMessageSize);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<SessionParameters>(const SessionParameters& params)
+//     {
+//       *this << params.ClientDescription;
+//       *this << params.ServerURI;
+//       *this << params.EndpointURL;
+//       *this << params.SessionName;
+//       *this << params.ClientNonce;
+//       *this << params.ClientCertificate;
+//       *this << params.RequestedSessionTimeout;
+//       *this << params.MaxResponseMessageSize;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<SessionParameters>(SessionParameters& params)
+//     {
+//       *this >> params.ClientDescription;
+//       *this >> params.ServerURI;
+//       *this >> params.EndpointURL;
+//       *this >> params.SessionName;
+//       *this >> params.ClientNonce;
+//       *this >> params.ClientCertificate;
+//       *this >> params.RequestedSessionTimeout;
+//       *this >> params.MaxResponseMessageSize;
+//     }
 
     //---------------------------------------------------
     // CreateSessionRequest
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& request)
-    {
-      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Parameters;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionRequest>(CreateSessionRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Parameters;
-    }
+//     template<>
+//     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& request)
+//     {
+//       return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& request)
+//     {
+//       *this << request.TypeId;
+//       *this << request.Header;
+//       *this << request.Parameters;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<CreateSessionRequest>(CreateSessionRequest& request)
+//     {
+//       *this >> request.TypeId;
+//       *this >> request.Header;
+//       *this >> request.Parameters;
+//     }
 
     //---------------------------------------------------
     // SessionData

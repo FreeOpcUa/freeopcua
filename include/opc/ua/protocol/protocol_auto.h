@@ -756,8 +756,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct CreateSessionParameters 
     {
          OpcUa::ApplicationDescription ClientDescription;
@@ -769,9 +767,6 @@ namespace OpcUa
          double RequestedSessionTimeout;
          uint32_t MaxResponseMessageSize;
     };
-*/
-
-/* DISABLED
 
     // Creates a new session with the server.
     struct CreateSessionRequest 
@@ -782,7 +777,6 @@ namespace OpcUa
 
          CreateSessionRequest();
     };
-*/
 
 /* DISABLED
 

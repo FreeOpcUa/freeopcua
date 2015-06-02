@@ -109,13 +109,10 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      CreateSessionRequest::CreateSessionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionRequest_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

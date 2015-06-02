@@ -1081,8 +1081,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters& data)
     {
@@ -1098,9 +1096,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& data)
@@ -1112,7 +1107,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

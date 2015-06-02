@@ -969,8 +969,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<CreateSessionParameters>(const CreateSessionParameters& data)
     {
@@ -984,9 +982,6 @@ namespace OpcUa
         *this << data.MaxResponseMessageSize;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& data)
@@ -996,7 +991,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 

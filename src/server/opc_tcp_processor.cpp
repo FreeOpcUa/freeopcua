@@ -442,7 +442,7 @@ namespace OpcUa
         case CREATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing create session request." << std::endl;
-          SessionParameters params;
+          CreateSessionParameters params;
           istream >> params;
 
           CreateSessionResponse response;
@@ -709,7 +709,7 @@ namespace OpcUa
         case CALL_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
-          SessionParameters params;
+          CreateSessionParameters params;
           istream >> params;
 
           CreateSessionResponse response;

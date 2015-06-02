@@ -41,8 +41,8 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
 
   FILL_APPLICATION_DESCRIPTION(request.Parameters.ClientDescription);
 
-  request.Parameters.ServerURI = "su";
-  request.Parameters.EndpointURL = "eu";
+  request.Parameters.ServerUri = "su";
+  request.Parameters.EndpointUrl = "eu";
   request.Parameters.SessionName = "sn";
   request.Parameters.ClientNonce =  {1,2,3,4};
   request.Parameters.ClientCertificate = {5,6,7,8};
@@ -100,8 +100,8 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
   ASSERT_APPLICATION_DESCRIPTION_EQ(request.Parameters.ClientDescription);
 
-  ASSERT_EQ(request.Parameters.ServerURI, "su");
-  ASSERT_EQ(request.Parameters.EndpointURL, "eu");
+  ASSERT_EQ(request.Parameters.ServerUri, "su");
+  ASSERT_EQ(request.Parameters.EndpointUrl, "eu");
   ASSERT_EQ(request.Parameters.SessionName, "sn");
   std::vector<uint8_t> clientNonce = {1,2,3,4};
   ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
