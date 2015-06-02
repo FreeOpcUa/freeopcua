@@ -318,7 +318,7 @@ protected:
   endpoint.SecurityPolicyURI = "spu"; \
   UserTokenPolicy token; \
   token.PolicyId = "pi"; \
-  token.TokenType = UserIdentifyTokenType::USERNAME; \
+  token.TokenType = UserTokenType::UserName; \
   token.IssuedTokenType = "itt"; \
   token.IssuerEndpointURL = "ieu"; \
   token.SecurityPolicyURI = "spu"; \
@@ -350,7 +350,7 @@ protected:
   ASSERT_EQ(e.SecurityPolicyURI, "spu"); \
   ASSERT_EQ(e.UserIdentifyTokens.size(), 1); \
   ASSERT_EQ(e.UserIdentifyTokens[0].PolicyId, "pi"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].TokenType, UserIdentifyTokenType::USERNAME); \
+  ASSERT_EQ(e.UserIdentifyTokens[0].TokenType, UserTokenType::UserName); \
   ASSERT_EQ(e.UserIdentifyTokens[0].IssuedTokenType, "itt"); \
   ASSERT_EQ(e.UserIdentifyTokens[0].IssuerEndpointURL, "ieu"); \
   ASSERT_EQ(e.UserIdentifyTokens[0].SecurityPolicyURI, "spu"); \

@@ -75,7 +75,7 @@ namespace
       policy.IssuerEndpointUrl = "IssuerEndpointUrl";
       policy.PolicyId = "PolicyId";
       policy.SecurityPolicyUri = "SecurityPolicyUri";
-      policy.TokenType = UserIdentifyTokenType::USERNAME;
+      policy.TokenType = UserTokenType::UserName;
       return std::vector<OpcUa::UserTokenPolicy>(1, policy);
     }
 

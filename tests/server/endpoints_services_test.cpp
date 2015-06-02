@@ -52,7 +52,7 @@ TEST_F(EndpointsRegistry, CanBeCreated)
 TEST_F(EndpointsRegistry, RegisterEndpoints)
 {
   OpcUa::EndpointDescription desc;
-  desc.EndpointURL = "url";
+  desc.EndpointUrl = "url";
 
   OpcUa::Server::EndpointsRegistry::SharedPtr endpoints = Addons->GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
   endpoints->AddEndpoints(std::vector<OpcUa::EndpointDescription>(1, desc));
@@ -118,7 +118,7 @@ std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
   tokenPolicy.IssuerEndpointUrl = "IssuerEndpointURL";
   tokenPolicy.PolicyId = "PolicyId";
   tokenPolicy.SecurityPolicyUri = "SecurityPolicyURI";
-  tokenPolicy.TokenType = OpcUa::UserIdentifyTokenType::USERNAME;
+  tokenPolicy.TokenType = OpcUa::UserTokenType::UserName;
   ed.UserIdentityTokens.push_back(tokenPolicy);
 
   data.Endpoints = {ed};
@@ -165,12 +165,12 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   EXPECT_EQ(ed.TransportProfileUri, "TransportProfileURI");
 
   ASSERT_EQ(ed.UserIdentifyTokens.size(), 1);
-  OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentifyTokens[0];
+  OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentityTokens[0];
   EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
   EXPECT_EQ(tokenPolicy.IssuerEndpointUri, "IssuerEndpointURL");
   EXPECT_EQ(tokenPolicy.PolicyId, "PolicyId");
   EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyURI");
-  EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserIdentifyTokenType::USERNAME);
+  EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserTokenType::UserName);
 }
 
 TEST(EndpointParameters, ConvertingToAddonParameters)
