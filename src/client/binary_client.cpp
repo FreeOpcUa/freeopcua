@@ -264,7 +264,7 @@ namespace
       request.Parameters.RequestedSessionTimeout = parameters.Timeout;
       request.Parameters.MaxResponseMessageSize = 65536;
       CreateSessionResponse response = Send<CreateSessionResponse>(request);
-      AuthenticationToken = response.Session.AuthenticationToken;
+      AuthenticationToken = response.Parameters.AuthenticationToken;
       if (Debug)  { std::cout << "binary_client| CreateSession <--" << std::endl; }
       return response;
     }

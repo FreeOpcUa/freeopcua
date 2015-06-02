@@ -45,29 +45,29 @@ namespace OpcUa
 //   };
 
 
-  struct SessionData
-  {
-    ExpandedNodeId SessionId;
-    ExpandedNodeId AuthenticationToken;
-    Duration RevisedSessionTimeout;
-    std::vector<uint8_t> ServerNonce;
-    CertificateData ServerCertificate;
-    std::vector<EndpointDescription> ServerEndpoints;
-    std::vector<CertificateData> SignedServerCertificates;
-    SignatureData ServerSignature;
-    uint32_t MaxRequestMessageSize;
-
-    SessionData();
-  };
-
-  struct CreateSessionResponse
-  {
-    ExpandedNodeId TypeId;
-    ResponseHeader Header;
-    SessionData Session;
-
-    CreateSessionResponse();
-  };
+//   struct SessionData
+//   {
+//     ExpandedNodeId SessionId;
+//     ExpandedNodeId AuthenticationToken;
+//     Duration RevisedSessionTimeout;
+//     std::vector<uint8_t> ServerNonce;
+//     CertificateData ServerCertificate;
+//     std::vector<EndpointDescription> ServerEndpoints;
+//     std::vector<CertificateData> SignedServerCertificates;
+//     SignatureData ServerSignature;
+//     uint32_t MaxRequestMessageSize;
+//
+//     SessionData();
+//   };
+//
+//   struct CreateSessionResponse
+//   {
+//     ExpandedNodeId TypeId;
+//     ResponseHeader Header;
+//     SessionData Session;
+//
+//     CreateSessionResponse();
+//   };
 
   //-------------------------------------------------
   // ActivateSessionRequest

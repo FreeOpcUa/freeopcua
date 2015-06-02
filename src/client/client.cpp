@@ -204,7 +204,7 @@ namespace OpcUa
       std::string user = uri.User();
       std::string password = uri.Password();
       bool user_identify_token_found = false;
-      for(auto ep : response.Session.ServerEndpoints) {
+      for(auto ep : response.Parameters.ServerEndpoints) {
         if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentityTokens) {
             if(user.empty()) {
@@ -233,9 +233,9 @@ namespace OpcUa
     CheckStatusCode(aresponse.Header.ServiceResult);
     if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 
-    if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
+    if (response.Parameters.RevisedSessionTimeout > 0 && response.Parameters.RevisedSessionTimeout < DefaultTimeout  )
     {
-      DefaultTimeout = response.Session.RevisedSessionTimeout;
+      DefaultTimeout = response.Parameters.RevisedSessionTimeout;
     }
     KeepAlive.Start(Server, Node(Server, ObjectId::Server_ServerStatus_State), DefaultTimeout);
   }

@@ -448,12 +448,12 @@ namespace OpcUa
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Session.SessionId = SessionId;
-          response.Session.AuthenticationToken = SessionId;
-          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Session.MaxRequestMessageSize = 65536;
+          response.Parameters.SessionId = SessionId;
+          response.Parameters.AuthenticationToken = SessionId;
+          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Parameters.MaxRequestMessageSize = 65536;
           GetEndpointsParameters epf;
-          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
@@ -715,12 +715,12 @@ namespace OpcUa
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Session.SessionId = SessionId;
-          response.Session.AuthenticationToken = SessionId;
-          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Session.MaxRequestMessageSize = 65536;
+          response.Parameters.SessionId = SessionId;
+          response.Parameters.AuthenticationToken = SessionId;
+          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Parameters.MaxRequestMessageSize = 65536;
           GetEndpointsParameters epf;
-          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);

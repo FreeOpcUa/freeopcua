@@ -32,16 +32,16 @@ namespace OpcUa
 //   {
 //   }
 
-  SessionData::SessionData()
-    : RevisedSessionTimeout(0)
-    , MaxRequestMessageSize(0)
-  {
-  }
-
-  CreateSessionResponse::CreateSessionResponse()
-    : TypeId(CREATE_SESSION_RESPONSE)
-  {
-  }
+//   SessionData::SessionData()
+//     : RevisedSessionTimeout(0)
+//     , MaxRequestMessageSize(0)
+//   {
+//   }
+//
+//   CreateSessionResponse::CreateSessionResponse()
+//     : TypeId(CREATE_SESSION_RESPONSE)
+//   {
+//   }
 
   CloseSessionResponse::CloseSessionResponse()
     : TypeId(CLOSE_SESSION_RESPONSE)
@@ -179,73 +179,73 @@ namespace OpcUa
     // SessionData
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<SessionData>(const SessionData& data)
-    {
-      return RawSize(data.SessionId) +
-      RawSize(data.AuthenticationToken) +
-      sizeof(data.RevisedSessionTimeout) +
-      RawSize(data.ServerNonce) +
-      RawSize(data.ServerCertificate) +
-      RawSize(data.ServerEndpoints) +
-      RawSize(data.SignedServerCertificates) +
-      RawSize(data.ServerSignature) +
-      sizeof(data.MaxRequestMessageSize);
-    }
-
-    template<>
-    void DataSerializer::Serialize<SessionData>(const SessionData& data)
-    {
-      *this << data.SessionId;
-      *this << data.AuthenticationToken;
-      *this << data.RevisedSessionTimeout;
-      *this << data.ServerNonce;
-      *this << data.ServerCertificate;
-      *this << data.ServerEndpoints;
-      *this << data.SignedServerCertificates;
-      *this << data.ServerSignature;
-      *this << data.MaxRequestMessageSize;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SessionData>(SessionData& data)
-    {
-      *this >> data.SessionId;
-      *this >> data.AuthenticationToken;
-      *this >> data.RevisedSessionTimeout;
-      *this >> data.ServerNonce;
-      *this >> data.ServerCertificate;
-      *this >> data.ServerEndpoints;
-      *this >> data.SignedServerCertificates;
-      *this >> data.ServerSignature;
-      *this >> data.MaxRequestMessageSize;
-    }
+//     template<>
+//     std::size_t RawSize<SessionData>(const SessionData& data)
+//     {
+//       return RawSize(data.SessionId) +
+//       RawSize(data.AuthenticationToken) +
+//       sizeof(data.RevisedSessionTimeout) +
+//       RawSize(data.ServerNonce) +
+//       RawSize(data.ServerCertificate) +
+//       RawSize(data.ServerEndpoints) +
+//       RawSize(data.SignedServerCertificates) +
+//       RawSize(data.ServerSignature) +
+//       sizeof(data.MaxRequestMessageSize);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<SessionData>(const SessionData& data)
+//     {
+//       *this << data.SessionId;
+//       *this << data.AuthenticationToken;
+//       *this << data.RevisedSessionTimeout;
+//       *this << data.ServerNonce;
+//       *this << data.ServerCertificate;
+//       *this << data.ServerEndpoints;
+//       *this << data.SignedServerCertificates;
+//       *this << data.ServerSignature;
+//       *this << data.MaxRequestMessageSize;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<SessionData>(SessionData& data)
+//     {
+//       *this >> data.SessionId;
+//       *this >> data.AuthenticationToken;
+//       *this >> data.RevisedSessionTimeout;
+//       *this >> data.ServerNonce;
+//       *this >> data.ServerCertificate;
+//       *this >> data.ServerEndpoints;
+//       *this >> data.SignedServerCertificates;
+//       *this >> data.ServerSignature;
+//       *this >> data.MaxRequestMessageSize;
+//     }
 
     //---------------------------------------------------
     // CreateSessionResponse
     //---------------------------------------------------
 
-    template<>
-    std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& response)
-    {
-      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Session);
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse& response)
-    {
-      *this << response.TypeId;
-      *this << response.Header;
-      *this << response.Session;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse& response)
-    {
-      *this >> response.TypeId;
-      *this >> response.Header;
-      *this >> response.Session;
-    }
+//     template<>
+//     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& response)
+//     {
+//       return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Session);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse& response)
+//     {
+//       *this << response.TypeId;
+//       *this << response.Header;
+//       *this << response.Session;
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse& response)
+//     {
+//       *this >> response.TypeId;
+//       *this >> response.Header;
+//       *this >> response.Session;
+//     }
 
     //---------------------------------------------------
     // UserIdentifyToken

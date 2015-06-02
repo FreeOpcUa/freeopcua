@@ -736,15 +736,12 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // A software certificate with a digital signature.
     struct SignedSoftwareCertificate 
     {
          OpcUa::ByteString CertificateData;
          OpcUa::ByteString Signature;
     };
-*/
 
 /* DISABLED
 
@@ -778,8 +775,6 @@ namespace OpcUa
          CreateSessionRequest();
     };
 
-/* DISABLED
-
     struct CreateSessionResult 
     {
          OpcUa::NodeId SessionId;
@@ -792,9 +787,6 @@ namespace OpcUa
          OpcUa::SignatureData ServerSignature;
          uint32_t MaxRequestMessageSize;
     };
-*/
-
-/* DISABLED
 
     // Creates a new session with the server.
     struct CreateSessionResponse 
@@ -805,7 +797,6 @@ namespace OpcUa
 
          CreateSessionResponse();
     };
-*/
 
 /* DISABLED
 

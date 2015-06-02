@@ -995,8 +995,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<SignedSoftwareCertificate>(SignedSoftwareCertificate& data)
     {
@@ -1004,7 +1002,6 @@ namespace OpcUa
         *this >> data.Signature;
     }
 
-*/
 
 /*  DISABLED
 
@@ -1040,8 +1037,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<CreateSessionResult>(CreateSessionResult& data)
     {
@@ -1056,9 +1051,6 @@ namespace OpcUa
         *this >> data.MaxRequestMessageSize;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse& data)
@@ -1068,7 +1060,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 

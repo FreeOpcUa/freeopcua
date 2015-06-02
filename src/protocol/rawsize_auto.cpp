@@ -1055,8 +1055,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
     {
@@ -1066,7 +1064,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -1108,8 +1105,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<CreateSessionResult>(const CreateSessionResult& data)
     {
@@ -1126,9 +1121,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& data)
@@ -1140,7 +1132,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
