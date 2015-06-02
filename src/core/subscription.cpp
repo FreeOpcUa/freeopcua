@@ -26,7 +26,7 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug)
+  Subscription::Subscription(Services::SharedPtr server, const CreateSubscriptionParameters& params, SubscriptionHandler& callback, bool debug)
     : Server(server), Client(callback), Debug(debug)
   {
     CreateSubscriptionRequest request;
@@ -40,7 +40,7 @@ namespace OpcUa
 
   void Subscription::Delete()
   {
-    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<IntegerId>({Data.Id}));
+    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<uint32_t>({Data.SubscriptionId}));
     for (auto res: results)
     {
       CheckStatusCode(res);
@@ -185,7 +185,7 @@ namespace OpcUa
   RepublishResponse Subscription::Republish(uint32_t sequenceNumber)
   {
     RepublishParameters params;
-    params.SubscriptionId = Data.Id;
+    params.SubscriptionId = Data.SubscriptionId;
     params.RetransmitSequenceNumber = sequenceNumber;
     RepublishResponse response = Server->Subscriptions()->Republish(params);
     return response;
@@ -207,7 +207,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); 
 
     MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.Id;
+    itemsParams.SubscriptionId = Data.SubscriptionId;
     for (auto req : request)
     {
       itemsParams.ItemsToCreate.push_back(req);
@@ -221,7 +221,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); 
 
     MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.Id;
+    itemsParams.SubscriptionId = Data.SubscriptionId;
 
     for (ReadValueId attr : attributes)
     {
@@ -271,7 +271,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); 
 
     DeleteMonitoredItemsParameters params;
-    params.SubscriptionId = Data.Id;
+    params.SubscriptionId = Data.SubscriptionId;
     std::vector<IntegerId> mids;
     for (auto id : handles)
     {
@@ -321,7 +321,7 @@ namespace OpcUa
     std::unique_lock<std::mutex> lock(Mutex); 
 
     MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.Id;
+    itemsParams.SubscriptionId = Data.SubscriptionId;
 
     ReadValueId avid;
     avid.NodeId = node.GetId();

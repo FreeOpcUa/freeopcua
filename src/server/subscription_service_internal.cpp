@@ -42,7 +42,7 @@ namespace OpcUa
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
 
-      std::vector<IntegerId> ids(SubscriptionsMap.size());
+      std::vector<uint32_t> ids(SubscriptionsMap.size());
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
         std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIdMap::value_type& i){return i.first;});
@@ -51,12 +51,12 @@ namespace OpcUa
       DeleteSubscriptions(ids);
     }
 
-    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<StatusCode> result;
-      for (const IntegerId& subid: subscriptions)
+      for (const uint32_t& subid: subscriptions)
       {
         SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(subid);
         if ( itsub == SubscriptionsMap.end())
@@ -80,15 +80,15 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       SubscriptionData data;
-      data.Id = ++LastSubscriptionId;
+      data.SubscriptionId = ++LastSubscriptionId;
       data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
       data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
-      data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-      if (Debug) std::cout << "SubscriptionService | Creating Subscription with Id: " << data.Id << std::endl;
+      data.RevisedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
+      if (Debug) std::cout << "SubscriptionService | Creating Subscription with Id: " << data.SubscriptionId << std::endl;
 
       std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
       sub->Start();
-      SubscriptionsMap[data.Id] = sub;
+      SubscriptionsMap[data.SubscriptionId] = sub;
       return data;
     }
 

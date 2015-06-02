@@ -32,13 +32,13 @@ class SubscriptionDeserialization : public OpcUaBinaryDeserialization
 // SubScriptionParameters
 //-------------------------------------------------------
 
-TEST_F(SubscriptionSerialization, SubscriptionParameters)
+TEST_F(SubscriptionSerialization, CreateSubscriptionParameters)
 {
 
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  SubscriptionParameters params;
+  CreateSubscriptionParameters params;
   params.RequestedPublishingInterval = 1200000;
   params.RequestedLifetimeCount = 2;
   params.RequestedMaxKeepAliveCount = 3;
@@ -61,7 +61,7 @@ TEST_F(SubscriptionSerialization, SubscriptionParameters)
   ASSERT_EQ(expectedData.size(), RawSize(params));
 }
 
-TEST_F(SubscriptionDeserialization, SubscriptionParameters)
+TEST_F(SubscriptionDeserialization, CreateSubscriptionParameters)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
@@ -77,7 +77,7 @@ TEST_F(SubscriptionDeserialization, SubscriptionParameters)
 
   GetChannel().SetData(expectedData);
 
-  SubscriptionParameters params;
+  CreateSubscriptionParameters params;
   GetStream() >> params;
 
   ASSERT_EQ(params.RequestedPublishingInterval, 1200000);

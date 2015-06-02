@@ -3051,8 +3051,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionParameters>(CreateSubscriptionParameters& data)
     {
@@ -3064,9 +3062,6 @@ namespace OpcUa
         *this >> data.Priority;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionRequest>(CreateSubscriptionRequest& data)
@@ -3076,12 +3071,9 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionResult>(CreateSubscriptionResult& data)
+    void DataDeserializer::Deserialize<SubscriptionData>(SubscriptionData& data)
     {
         *this >> data.SubscriptionId;
         *this >> data.RevisedPublishingInterval;
@@ -3089,19 +3081,15 @@ namespace OpcUa
         *this >> data.RevisedMaxKeepAliveCount;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionResponse>(CreateSubscriptionResponse& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        *this >> data.Data;
     }
 
-*/
 
 /*  DISABLED
 

@@ -188,7 +188,7 @@ namespace OpcUa
   std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
     CheckStarted();
-    SubscriptionParameters params;
+    CreateSubscriptionParameters params;
     params.RequestedPublishingInterval = period;
     return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback, Debug));
   }

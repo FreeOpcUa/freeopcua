@@ -3003,8 +3003,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
     {
@@ -3016,9 +3014,6 @@ namespace OpcUa
         *this << data.Priority;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
@@ -3028,12 +3023,9 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<CreateSubscriptionResult>(const CreateSubscriptionResult& data)
+    void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData& data)
     {
         *this << data.SubscriptionId;
         *this << data.RevisedPublishingInterval;
@@ -3041,19 +3033,15 @@ namespace OpcUa
         *this << data.RevisedMaxKeepAliveCount;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.Data;
     }
 
-*/
 
 /*  DISABLED
 

@@ -3441,8 +3441,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
     {
@@ -3456,9 +3454,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
@@ -3470,12 +3465,9 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
-    std::size_t RawSize<CreateSubscriptionResult>(const CreateSubscriptionResult& data)
+    std::size_t RawSize<SubscriptionData>(const SubscriptionData& data)
     {
         size_t size = 0;
         size += RawSize(data.SubscriptionId);
@@ -3485,9 +3477,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
@@ -3495,11 +3484,10 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.Data);
         return size;
     }
 
-*/
 
 /* DISABLED
 

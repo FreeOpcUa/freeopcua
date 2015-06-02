@@ -20,22 +20,13 @@ namespace OpcUa
   // SubscriptionParameters
   ////////////////////////////////////////////////////////
 
-  SubscriptionParameters::SubscriptionParameters()
+  CreateSubscriptionParameters::CreateSubscriptionParameters()
     : RequestedPublishingInterval(500)
     , RequestedLifetimeCount(3000)
     , RequestedMaxKeepAliveCount(10000)
     , MaxNotificationsPerPublish(0)
     , PublishingEnabled(true)
     , Priority(0)
-  {
-  }
-
-  ////////////////////////////////////////////////////////
-  // CreateSubscriptionRequest
-  ////////////////////////////////////////////////////////
-
-  CreateSubscriptionRequest::CreateSubscriptionRequest()
-    : TypeId(CREATE_SUBSCRIPTION_REQUEST)
   {
   }
 
@@ -53,27 +44,6 @@ namespace OpcUa
   {
   }
 
-
-  ////////////////////////////////////////////////////////
-  // SubscriptionData
-  ////////////////////////////////////////////////////////
-
-  SubscriptionData::SubscriptionData()
-    : RevisedPublishingInterval(100)
-    , RevisedLifetimeCount(30) //Should be 3 times keepalive
-    , RevizedMaxKeepAliveCount(10)
-  {
-  }
-
-  ////////////////////////////////////////////////////////
-  // CreateSubscriptionResponse
-  ////////////////////////////////////////////////////////
-
-  CreateSubscriptionResponse::CreateSubscriptionResponse()
-    : TypeId(CREATE_SUBSCRIPTION_RESPONSE)
-  {
-  }
-
   ////////////////////////////////////////////////////////
   // PublishResult
   ////////////////////////////////////////////////////////
@@ -82,21 +52,6 @@ namespace OpcUa
     : MoreNotifications(false)
   {
   }
-
-  ////////////////////////////////////////////////////////
-  // PublishResponse
-  ////////////////////////////////////////////////////////
-
-//   PublishResponse::PublishResponse()
-//     : TypeId(PUBLISH_RESPONSE)
-//   {
-//   }
-//
-//   RepublishResponse::RepublishResponse()
-//     : TypeId(REPUBLISH_RESPONSE)
-//   {
-//   }
-
 
   ////////////////////////////////////////////////////////
   // NotificationData
@@ -164,43 +119,6 @@ namespace OpcUa
   namespace Binary
   {
     ////////////////////////////////////////////////////////
-    // SubscriptionParameters
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<SubscriptionParameters>(const SubscriptionParameters& params)
-    {
-      return RawSize(params.RequestedPublishingInterval) +
-          RawSize(params.RequestedLifetimeCount) +
-          RawSize(params.RequestedMaxKeepAliveCount) +
-          RawSize(params.MaxNotificationsPerPublish) +
-          RawSize(params.PublishingEnabled) +
-          RawSize(params.Priority);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SubscriptionParameters>(SubscriptionParameters& params)
-    {
-      *this >> params.RequestedPublishingInterval;
-      *this >> params.RequestedLifetimeCount;
-      *this >> params.RequestedMaxKeepAliveCount;
-      *this >> params.MaxNotificationsPerPublish;
-      *this >> params.PublishingEnabled;
-      *this >> params.Priority;
-    }
-
-    template<>
-    void DataSerializer::Serialize<SubscriptionParameters>(const SubscriptionParameters& params)
-    {
-      *this << params.RequestedPublishingInterval;
-      *this << params.RequestedLifetimeCount;
-      *this << params.RequestedMaxKeepAliveCount;
-      *this << params.MaxNotificationsPerPublish;
-      *this << params.PublishingEnabled;
-      *this << params.Priority;
-    }
-
-    ////////////////////////////////////////////////////////
     // DelteSubscriptionRequest
     ////////////////////////////////////////////////////////
 
@@ -259,94 +177,6 @@ namespace OpcUa
       *this << request.Header;
       *this << request.Results;
       *this << request.Diagnostic;
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // CreateSubscriptionRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const CreateSubscriptionRequest& request)
-    {
-      return RawSize(request.TypeId) +
-        RawSize(request.Header) +
-        RawSize(request.Parameters);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionRequest>(CreateSubscriptionRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Parameters;
-    }
-
-    ////////////////////////////////////////////////////////
-    // SubscriptionData
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const SubscriptionData& data)
-    {
-      return RawSize(data.Id) +
-        RawSize(data.RevisedPublishingInterval) +
-        RawSize(data.RevisedLifetimeCount) +
-        RawSize(data.RevizedMaxKeepAliveCount);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SubscriptionData>(SubscriptionData& data)
-    {
-      *this >> data.Id;
-      *this >> data.RevisedPublishingInterval;
-      *this >> data.RevisedLifetimeCount;
-      *this >> data.RevizedMaxKeepAliveCount;
-    }
-
-    template<>
-    void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData& data)
-    {
-      *this << data.Id;
-      *this << data.RevisedPublishingInterval;
-      *this << data.RevisedLifetimeCount;
-      *this << data.RevizedMaxKeepAliveCount;
-    }
-
-    ////////////////////////////////////////////////////////
-    // CreateSubscriptionResponse
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const CreateSubscriptionResponse& response)
-    {
-      return RawSize(response.TypeId) +
-        RawSize(response.Header) +
-        RawSize(response.Data);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionResponse>(CreateSubscriptionResponse& response)
-    {
-      *this >> response.TypeId;
-      *this >> response.Header;
-      *this >> response.Data;
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& response)
-    {
-      *this << response.TypeId;
-      *this << response.Header;
-      *this << response.Data;
     }
 
     ////////////////////////////////////////////////////////
@@ -598,119 +428,6 @@ namespace OpcUa
         //throw std::runtime_error("Uknown notification data type found in NotificationData");// + itos(data.Header.TypeId.FourByteData.Identifier) );
       }
     }
-
-    ////////////////////////////////////////////////////////
-    // NotificationMessage
-    ////////////////////////////////////////////////////////
-
-//     template<>
-//     std::size_t RawSize(const NotificationMessage& message)
-//     {
-//       return RawSize(message.SequenceId) +
-//         RawSize(message.PublishTime) +
-//         RawSizeContainer(message.Data);
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& message)
-//     {
-//       *this >> message.SequenceId;
-//       *this >> message.PublishTime;
-//       DeserializeContainer(*this, message.Data);
-//     }
-//
-//     template<>
-//     void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& message)
-//     {
-//       *this << message.SequenceId;
-//       *this << message.PublishTime;
-//       SerializeContainer(*this, message.Data, 0);
-//     }
-
-    ////////////////////////////////////////////////////////
-    // PublishResult
-    ////////////////////////////////////////////////////////
-
-//     template<>
-//     std::size_t RawSize(const PublishResult& result)
-//     {
-//       return RawSize(result.SubscriptionId) +
-//         RawSizeContainer(result.AvailableSequenceNumber) +
-//         RawSize(result.MoreNotifications) +
-//         RawSize(result.Message) +
-//         RawSizeContainer(result.Statuses) +
-//         RawSizeContainer(result.Diagnostics);
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<PublishResult>(PublishResult& result)
-//     {
-//       *this >> result.SubscriptionId;
-//       DeserializeContainer(*this, result.AvailableSequenceNumber);
-//       *this >> result.MoreNotifications;
-//       *this >> result.Message;
-//       DeserializeContainer(*this, result.Statuses);
-//       DeserializeContainer(*this, result.Diagnostics);
-//     }
-//
-//     template<>
-//     void DataSerializer::Serialize<PublishResult>(const PublishResult& result)
-//     {
-//       *this << result.SubscriptionId;
-//       SerializeContainer(*this, result.AvailableSequenceNumber, 0);
-//       *this << result.MoreNotifications;
-//       *this << result.Message;
-//       SerializeContainer(*this, result.Statuses, 0);
-//       SerializeContainer(*this, result.Diagnostics, 0);
-//     }
-
-    ////////////////////////////////////////////////////////
-    // PublishResponse
-    ////////////////////////////////////////////////////////
-
-//     template<>
-//     std::size_t RawSize(const PublishResponse& response)
-//     {
-//       return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& response)
-//     {
-//       *this >> response.TypeId;
-//       *this >> response.Header;
-//       *this >> response.Result;
-//     }
-//
-//     template<>
-//     void DataSerializer::Serialize<PublishResponse>(const PublishResponse& response)
-//     {
-//       *this << response.TypeId;
-//       *this << response.Header;
-//       *this << response.Result;
-//     }
-//
-//     template<>
-//     std::size_t RawSize(const RepublishResponse& response)
-//     {
-//       return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Message);
-//     }
-//
-//     template<>
-//     void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& response)
-//     {
-//       *this >> response.TypeId;
-//       *this >> response.Header;
-//       *this >> response.Message;
-//     }
-//
-//     template<>
-//     void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& response)
-//     {
-//       *this << response.TypeId;
-//       *this << response.Header;
-//       *this << response.Message;
-//     }
 
     ////////////////////////////////////////////////////////
     // PublishingModeParameters

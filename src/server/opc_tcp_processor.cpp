@@ -526,7 +526,7 @@ namespace OpcUa
                 }
               });
 
-          Subscriptions.push_back(response.Data.Id); //Keep a link to eventually delete subcriptions when exiting
+          Subscriptions.push_back(response.Data.SubscriptionId); //Keep a link to eventually delete subcriptions when exiting
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -539,7 +539,7 @@ namespace OpcUa
         case DELETE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl;
-          std::vector<IntegerId> ids;
+          std::vector<uint32_t> ids;
           istream >> ids;
 
           DeleteSubscriptions(ids); //remove from locale subscription lis
@@ -760,8 +760,8 @@ namespace OpcUa
 
     void OpcTcpMessages::DeleteAllSubscriptions()
     {
-      std::vector<IntegerId> subs;
-      for (const IntegerId& subid: Subscriptions)
+      std::vector<uint32_t> subs;
+      for (const uint32_t& subid: Subscriptions)
       {
         subs.push_back(subid);
       }
@@ -769,12 +769,12 @@ namespace OpcUa
       Subscriptions.clear();
     }
 
-    void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerId>& ids)
+    void OpcTcpMessages::DeleteSubscriptions(const std::vector<uint32_t>& ids)
     {
       for ( auto id : ids )
       {
         Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(),
-                      [&](const IntegerId d) { return ( d == id) ; }), Subscriptions.end());
+                      [&](const uint32_t d) { return ( d == id) ; }), Subscriptions.end());
       }
     }
 

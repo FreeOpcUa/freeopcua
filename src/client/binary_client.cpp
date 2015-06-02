@@ -424,12 +424,12 @@ namespace
       if (Debug)  { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
-      PublishCallbacks[response.Data.Id] = callback;// TODO Pass calback to the Publish method.
+      PublishCallbacks[response.Data.SubscriptionId] = callback;// TODO Pass calback to the Publish method.
       if (Debug)  { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
       DeleteSubscriptionRequest request;

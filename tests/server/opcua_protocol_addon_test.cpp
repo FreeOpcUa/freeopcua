@@ -145,7 +145,7 @@ TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::SubscriptionServices> subscriptions = computer->Subscriptions();
 
-  OpcUa::SubscriptionParameters params;
+  OpcUa::CreateSubscriptionParameters params;
   params.MaxNotificationsPerPublish = 3;
   params.Priority = 0;
   params.PublishingEnabled = true;

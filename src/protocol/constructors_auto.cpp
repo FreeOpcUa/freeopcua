@@ -491,24 +491,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-*/
-
-/*  DISABLED
-
      CreateSubscriptionRequest::CreateSubscriptionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      CreateSubscriptionResponse::CreateSubscriptionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

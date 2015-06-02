@@ -605,10 +605,10 @@ namespace
     request.Parameters.RequestedMaxKeepAliveCount = 1;
     request.Parameters.RequestedPublishingInterval = 1000;
     const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request, [](PublishResult){});
-    std::cout << "Id: " << data.Id << std::endl;
+    std::cout << "Id: " << data.SubscriptionId << std::endl;
     std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
     std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;
-    std::cout << "RevizedMaxKeepAliveCount: " << data.RevizedMaxKeepAliveCount << std::endl;
+    std::cout << "RevisedMaxKeepAliveCount: " << data.RevisedMaxKeepAliveCount << std::endl;
   }
 
   void Process(OpcUa::CommandLine& cmd, const Common::AddonsManager& addons)

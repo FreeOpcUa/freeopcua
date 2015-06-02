@@ -12,11 +12,12 @@ import generate_model as gm
 
 
 #declare default constructor in header, then constructor must be implemented
-NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
+NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "NotificationMessage", "PublishResult", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
+OverrideStructTypeName = {"CreateSubscriptionResult": ("SubscriptionData", "Data")}
 OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
@@ -219,8 +220,10 @@ EnabledStructs = [\
     #'SetTriggeringResponse',
     #'DeleteMonitoredItemsRequest',
     #'DeleteMonitoredItemsResponse',
-    #'CreateSubscriptionRequest',
-    #'CreateSubscriptionResponse',
+    'CreateSubscriptionRequest',
+    'CreateSubscriptionParameters',
+    'SubscriptionData',
+    'CreateSubscriptionResponse',
     #'ModifySubscriptionRequest',
     #'ModifySubscriptionResponse',
     #'SetPublishingModeRequest',
@@ -323,6 +326,13 @@ def override_types(model):
             if struct.name in OverrideTypeInStruct.keys():
                 if field.name in OverrideTypeInStruct[struct.name].keys():
                     field.uatype = OverrideTypeInStruct[struct.name][field.name]
+
+            if field.uatype in OverrideStructTypeName.keys():
+                field.name = OverrideStructTypeName[field.uatype][1]
+                field.uatype = OverrideStructTypeName[field.uatype][0]
+
+        if struct.name in OverrideStructTypeName.keys():
+            struct.name = OverrideStructTypeName[struct.name][0]
 
 
 class CodeGenerator(object):

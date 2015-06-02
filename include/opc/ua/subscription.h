@@ -90,7 +90,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeId> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
+      Subscription(Services::SharedPtr server, const CreateSubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false);
       virtual ~Subscription() {}
 
       //Delete the subscription from server
@@ -98,7 +98,7 @@ namespace OpcUa
 
       //Get information about the subscription
       SubscriptionData GetData() {return Data; }
-      uint32_t GetId() const { return Data.Id; } 
+      uint32_t GetId() const { return Data.SubscriptionId; }
       double GetPeriode() const { return Data.RevisedPublishingInterval; } 
 
       //Subscribe to a Node attribute for its value to change

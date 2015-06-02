@@ -106,9 +106,9 @@ namespace OpcUa
       {
         return true;
       }
-      if ( KeepAliveCount > Data.RevizedMaxKeepAliveCount ) //we need to send keepalive notification
+      if ( KeepAliveCount > Data.RevisedMaxKeepAliveCount ) //we need to send keepalive notification
       {
-        if (Debug) std::cout << "InternalSubscription | KeepAliveCount " << KeepAliveCount << " is > than MaxKeepAliveCount " <<  Data.RevizedMaxKeepAliveCount << " sending publish event" << std::endl; 
+        if (Debug) std::cout << "InternalSubscription | KeepAliveCount " << KeepAliveCount << " is > than MaxKeepAliveCount " <<  Data.RevisedMaxKeepAliveCount << " sending publish event" << std::endl;
         return true;
       }
       ++KeepAliveCount;
@@ -120,9 +120,9 @@ namespace OpcUa
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      //std::cout << "PopPublishresult for subscription: " << Data.Id << " with " << TriggeredDataChangeEvents.size() << " triggered items in queue" << std::endl;
+      //std::cout << "PopPublishresult for subscription: " << Data.SubscriptionId << " with " << TriggeredDataChangeEvents.size() << " triggered items in queue" << std::endl;
       PublishResult result;
-      result.SubscriptionId = Data.Id;
+      result.SubscriptionId = Data.SubscriptionId;
       result.NotificationMessage.PublishTime = DateTime::Current();
 
       if ( ! TriggeredDataChangeEvents.empty() )
@@ -134,7 +134,7 @@ namespace OpcUa
           
       if ( ! TriggeredEvents.empty() )
       {
-        if (Debug) { std::cout << "InternalSubcsription | Subscription " << Data.Id << " has " << TriggeredEvents.size() << " events to send to client" << std::endl; }
+        if (Debug) { std::cout << "InternalSubcsription | Subscription " << Data.SubscriptionId << " has " << TriggeredEvents.size() << " events to send to client" << std::endl; }
         EventNotificationList notif;
         for ( TriggeredEvent ev: TriggeredEvents )
         {
@@ -260,7 +260,7 @@ namespace OpcUa
 
     void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval)
     {
-      if (Debug) { std::cout << "InternalSubcsription | Manual Trigger of DataChangeEvent for sub: " << Data.Id << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Manual Trigger of DataChangeEvent for sub: " << Data.SubscriptionId << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
       ReadParameters params;
       params.AttributesToRead.push_back(attrval);
       std::vector<DataValue> vals = AddressSpace.Read(params);
@@ -371,7 +371,7 @@ namespace OpcUa
       event.MonitoredItemId = it_monitoreditem->first;
       event.Data.ClientHandle = it_monitoreditem->second.ClientHandle; 
       event.Data.Value = value;
-      if (Debug) { std::cout << "InternalSubcsription | Enqueued DataChange triggered item for sub: " << Data.Id << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Enqueued DataChange triggered item for sub: " << Data.SubscriptionId << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
       TriggeredDataChangeEvents.push_back(event);
     }
 
@@ -382,7 +382,7 @@ namespace OpcUa
       MonitoredEventsMap::iterator it = MonitoredEvents.find(node);
       if ( it == MonitoredEvents.end() )
       {
-        if (Debug) std::cout << "InternalSubcsription | Subscription: " << Data.Id << " has no subcsription for this event" << std::endl;
+        if (Debug) std::cout << "InternalSubcsription | Subscription: " << Data.SubscriptionId << " has no subcsription for this event" << std::endl;
         return;
       }
       lock.unlock();//Enqueue vill need to set a unique lock

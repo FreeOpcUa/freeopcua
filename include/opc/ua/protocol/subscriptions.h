@@ -17,22 +17,6 @@
 namespace OpcUa
 {
   ////////////////////////////////////////////////////////
-  // SubscriptionData
-  ////////////////////////////////////////////////////////
-
-  struct SubscriptionParameters
-  {
-    Duration RequestedPublishingInterval;
-    uint32_t RequestedLifetimeCount;
-    uint32_t RequestedMaxKeepAliveCount;
-    uint32_t MaxNotificationsPerPublish;
-    bool PublishingEnabled;
-    uint8_t Priority;
-
-    SubscriptionParameters();
-  };
-
-  ////////////////////////////////////////////////////////
   // DeleteSubscriptionRequest
   ////////////////////////////////////////////////////////
 
@@ -40,7 +24,7 @@ namespace OpcUa
   {
     NodeId TypeId;
     RequestHeader Header;
-    std::vector<IntegerId> SubscriptionsIds;
+    std::vector<uint32_t> SubscriptionsIds;
 
     DeleteSubscriptionRequest();
   };
@@ -55,97 +39,10 @@ namespace OpcUa
     DeleteSubscriptionResponse();
   };
 
-  ////////////////////////////////////////////////////////
-  // CreateSubscriptionRequest
-  ////////////////////////////////////////////////////////
-
-  struct CreateSubscriptionRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    SubscriptionParameters Parameters;
-
-    CreateSubscriptionRequest();
-  };
-
-  ////////////////////////////////////////////////////////
-  // SubscriptionData
-  ////////////////////////////////////////////////////////
-
-  struct SubscriptionData
-  {
-    IntegerId Id;
-    Duration RevisedPublishingInterval;
-    uint32_t RevisedLifetimeCount;
-    uint32_t RevizedMaxKeepAliveCount;
-
-    SubscriptionData();
-  };
-
-  ////////////////////////////////////////////////////////
-  // CreateSubscriptionResponse
-  ////////////////////////////////////////////////////////
-
-  struct CreateSubscriptionResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    SubscriptionData Data;
-
-    CreateSubscriptionResponse();
-  };
-
-  ////////////////////////////////////////////////////////
-  // NotificationMessage
-  ////////////////////////////////////////////////////////
-
-//   struct NotificationMessage
-//   {
-//     uint32_t SequenceId;
-//     DateTime PublishTime;
-//     std::vector<NotificationData> Data;
-//
-//     NotificationMessage();
-//   };
-
-  ////////////////////////////////////////////////////////
-  // PublishResult
-  ////////////////////////////////////////////////////////
-
-//   struct PublishResult
-//   {
-//     IntegerId SubscriptionId;
-//     std::vector<uint32_t> AvailableSequenceNumber;
-//     bool MoreNotifications;
-//     NotificationMessage Message;
-//     std::vector<StatusCode> Statuses;
-//     DiagnosticInfoList Diagnostics;
-//
-//     PublishResult();
-//   };
 
   ////////////////////////////////////////////////////////
   // SetPublishingMode
   ////////////////////////////////////////////////////////
-
-//   struct PublishResponse
-//   {
-//     NodeId TypeId;
-//     ResponseHeader Header;
-//     PublishResult Result;
-//
-//     PublishResponse();
-//   };
-
-//   struct RepublishResponse
-//   {
-//     NodeId TypeId;
-//     ResponseHeader Header;
-//     NotificationMessage Message;
-//
-//     RepublishResponse();
-//   };
-
 
   struct PublishingModeParameters
   {

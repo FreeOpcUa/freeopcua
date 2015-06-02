@@ -2629,8 +2629,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct CreateSubscriptionParameters 
     {
          double RequestedPublishingInterval;
@@ -2642,9 +2640,6 @@ namespace OpcUa
 
          CreateSubscriptionParameters();
     };
-*/
-
-/* DISABLED
 
     struct CreateSubscriptionRequest 
     {
@@ -2654,30 +2649,23 @@ namespace OpcUa
 
          CreateSubscriptionRequest();
     };
-*/
 
-/* DISABLED
-
-    struct CreateSubscriptionResult 
+    struct SubscriptionData 
     {
          uint32_t SubscriptionId;
          double RevisedPublishingInterval;
          uint32_t RevisedLifetimeCount;
          uint32_t RevisedMaxKeepAliveCount;
     };
-*/
-
-/* DISABLED
 
     struct CreateSubscriptionResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::CreateSubscriptionResult Parameters;
+         OpcUa::SubscriptionData Data;
 
          CreateSubscriptionResponse();
     };
-*/
 
 /* DISABLED
 

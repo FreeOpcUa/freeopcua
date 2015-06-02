@@ -121,7 +121,7 @@ namespace
       return SubscriptionData();
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       return std::vector<StatusCode>();
     }
