@@ -42,7 +42,6 @@ namespace OpcUa
       KeepAliveThread(bool debug=false) : StopRequest(false), Running(false), Debug(debug) {}
       void Start( Services::SharedPtr server, Node node, Duration period);
       void Stop();
-      void Join();
 
     private:
       void Run();
@@ -92,7 +91,7 @@ namespace OpcUa
     void Connect(const EndpointDescription&);
 
     /// @brief Disconnect from server
-    // close all threads and subcsriptions
+    // close all threads and subscriptions
     void Disconnect();
 
     /// @brief  Connect to server and get endpoints
