@@ -3200,8 +3200,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& data)
     {
@@ -3210,7 +3208,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.NotificationData);
     }
 
-*/
 
 /*  DISABLED
 
@@ -3337,8 +3334,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<PublishResult>(PublishResult& data)
     {
@@ -3350,9 +3345,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& data)
@@ -3362,7 +3354,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters& data)
@@ -3381,27 +3372,14 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
-    template<>
-    void DataDeserializer::Deserialize<RepublishResult>(RepublishResult& data)
-    {
-        *this >> data.NotificationMessage;
-    }
-
-*/
-
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        *this >> data.NotificationMessage;
     }
 
-*/
 
 /*  DISABLED
 

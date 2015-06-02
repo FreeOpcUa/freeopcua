@@ -50,8 +50,8 @@ namespace OpcUa
   void Subscription::PublishCallback(Services::SharedPtr server, const PublishResult result)
   {
 
-    if (Debug){ std::cout << "Subscription | Suscription::PublishCallback called with " <<result.Message.Data.size() << " notifications " << std::endl; }
-    for (const NotificationData& data: result.Message.Data )
+    if (Debug){ std::cout << "Subscription | Suscription::PublishCallback called with " <<result.NotificationMessage.NotificationData.size() << " notifications " << std::endl; }
+    for (const NotificationData& data: result.NotificationMessage.NotificationData )
     {
       if (data.Header.TypeId == ExpandedObjectId::DataChangeNotification)
       {
@@ -75,7 +75,7 @@ namespace OpcUa
     }
     OpcUa::SubscriptionAcknowledgement ack;
     ack.SubscriptionId = GetId();
-    ack.SequenceNumber = result.Message.SequenceId;
+    ack.SequenceNumber = result.NotificationMessage.SequenceNumber;
     PublishRequest request;
     request.SubscriptionAcknowledgements.push_back(ack);
     server->Subscriptions()->Publish(request);

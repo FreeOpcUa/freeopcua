@@ -17,6 +17,7 @@
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/types_manual.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
 
@@ -2769,8 +2770,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct NotificationMessage 
     {
          uint32_t SequenceNumber;
@@ -2779,7 +2778,6 @@ namespace OpcUa
 
          NotificationMessage();
     };
-*/
 
 /* DISABLED
 
@@ -2886,8 +2884,6 @@ namespace OpcUa
          PublishRequest();
     };
 
-/* DISABLED
-
     struct PublishResult 
     {
          uint32_t SubscriptionId;
@@ -2899,9 +2895,6 @@ namespace OpcUa
 
          PublishResult();
     };
-*/
-
-/* DISABLED
 
     struct PublishResponse 
     {
@@ -2911,7 +2904,6 @@ namespace OpcUa
 
          PublishResponse();
     };
-*/
 
     struct RepublishParameters 
     {
@@ -2928,25 +2920,14 @@ namespace OpcUa
          RepublishRequest();
     };
 
-/* DISABLED
-
-    struct RepublishResult 
-    {
-         OpcUa::NotificationMessage NotificationMessage;
-    };
-*/
-
-/* DISABLED
-
     struct RepublishResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::RepublishResult Parameters;
+         OpcUa::NotificationMessage NotificationMessage;
 
          RepublishResponse();
     };
-*/
 
 /* DISABLED
 

@@ -143,7 +143,7 @@ namespace OpcUa
       PublishResponse response;
 
       FillResponseHeader(requestData.requestHeader, response.Header);
-      response.Result = result;
+      response.Parameters = result;
      
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
@@ -152,7 +152,7 @@ namespace OpcUa
       secureHeader.AddSize(RawSize(requestData.sequence));
       secureHeader.AddSize(RawSize(response));
       if (Debug) {
-        std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+        std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Parameters.NotificationMessage.NotificationData.size() << " PublishResults" << std::endl;
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };

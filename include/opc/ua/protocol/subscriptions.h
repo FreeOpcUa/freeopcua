@@ -95,100 +95,56 @@ namespace OpcUa
     CreateSubscriptionResponse();
   };
 
-  struct StatusChangeNotification
-  {
-    StatusCode Status;
-    DiagnosticInfo Diagnostic;
-  };
-
-  struct EventFieldList
-  {
-    IntegerId ClientHandle;
-    std::vector<Variant> EventFields; 
-  };
-
-  struct EventNotificationList
-  {
-    std::vector<EventFieldList> Events;
-  };
-
-  struct MonitoredItems
-  {
-    IntegerId ClientHandle;
-    DataValue Value;
-  };
-
-  struct DataChangeNotification
-  {
-    std::vector<MonitoredItems> Notification;
-    DiagnosticInfoList Diagnostic;
-  };
-
-
-  struct NotificationData
-  {
-    ExtensionObjectHeader Header;
-    DataChangeNotification DataChange;
-    EventNotificationList Events;
-    StatusChangeNotification StatusChange;
-
-    NotificationData(){}
-    NotificationData(DataChangeNotification notification);
-    NotificationData(EventNotificationList notification);
-    NotificationData(StatusChangeNotification notification);
-  };
-
-
   ////////////////////////////////////////////////////////
   // NotificationMessage
   ////////////////////////////////////////////////////////
 
-  struct NotificationMessage
-  {
-    uint32_t SequenceId;
-    DateTime PublishTime;
-    std::vector<NotificationData> Data;
-
-    NotificationMessage();
-  };
+//   struct NotificationMessage
+//   {
+//     uint32_t SequenceId;
+//     DateTime PublishTime;
+//     std::vector<NotificationData> Data;
+//
+//     NotificationMessage();
+//   };
 
   ////////////////////////////////////////////////////////
   // PublishResult
   ////////////////////////////////////////////////////////
 
-  struct PublishResult
-  {
-    IntegerId SubscriptionId;
-    std::vector<uint32_t> AvailableSequenceNumber;
-    bool MoreNotifications;
-    NotificationMessage Message;
-    std::vector<StatusCode> Statuses;
-    DiagnosticInfoList Diagnostics;
-
-    PublishResult();
-  };
+//   struct PublishResult
+//   {
+//     IntegerId SubscriptionId;
+//     std::vector<uint32_t> AvailableSequenceNumber;
+//     bool MoreNotifications;
+//     NotificationMessage Message;
+//     std::vector<StatusCode> Statuses;
+//     DiagnosticInfoList Diagnostics;
+//
+//     PublishResult();
+//   };
 
   ////////////////////////////////////////////////////////
   // SetPublishingMode
   ////////////////////////////////////////////////////////
 
-  struct PublishResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    PublishResult Result;
+//   struct PublishResponse
+//   {
+//     NodeId TypeId;
+//     ResponseHeader Header;
+//     PublishResult Result;
+//
+//     PublishResponse();
+//   };
 
-    PublishResponse();
-  };
-
-  struct RepublishResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    NotificationMessage Message;
-
-    RepublishResponse();
-  };
+//   struct RepublishResponse
+//   {
+//     NodeId TypeId;
+//     ResponseHeader Header;
+//     NotificationMessage Message;
+//
+//     RepublishResponse();
+//   };
 
 
   struct PublishingModeParameters

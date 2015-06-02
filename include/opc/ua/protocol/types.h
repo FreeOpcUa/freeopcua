@@ -49,6 +49,9 @@ namespace OpcUa
     {
       return Data == str.Data;
     }
+
+    // For tests
+
   };
 
   class IntegerId
@@ -284,27 +287,6 @@ namespace OpcUa
     ExtensionObjectHeader();
     ExtensionObjectHeader(ExtensionObjectId objectId, ExtensionObjectEncoding encoding);
   };
-
-  /// Moved from session.h
-  struct UserIdentifyToken
-  {
-    ExtensionObjectHeader Header;
-    std::vector<uint8_t> PolicyId;
-
-    struct UserNameStruct
-    {
-      std::string UserName;
-      std::string Password;
-      std::string EncryptionAlgorithm;
-    } UserName;
-
-    UserIdentifyToken();
-
-    UserTokenType type() const;
-    void setUser(const std::string &user, const std::string &password);
-    void setPolicyId(const std::string &id);
-  };
-
 
 } // namespace OpcUa
 

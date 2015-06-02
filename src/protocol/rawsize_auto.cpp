@@ -3614,8 +3614,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
     {
@@ -3626,7 +3624,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3775,8 +3772,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<PublishResult>(const PublishResult& data)
     {
@@ -3790,9 +3785,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<PublishResponse>(const PublishResponse& data)
@@ -3804,7 +3796,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<RepublishParameters>(const RepublishParameters& data)
@@ -3827,31 +3818,16 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<RepublishResult>(const RepublishResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.NotificationMessage);
-        return size;
-    }
-
-*/
-
-/* DISABLED
-
     template<>
     std::size_t RawSize<RepublishResponse>(const RepublishResponse& data)
     {
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.NotificationMessage);
         return size;
     }
 
-*/
 
 /* DISABLED
 

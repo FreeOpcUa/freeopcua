@@ -123,13 +123,13 @@ namespace OpcUa
       //std::cout << "PopPublishresult for subscription: " << Data.Id << " with " << TriggeredDataChangeEvents.size() << " triggered items in queue" << std::endl;
       PublishResult result;
       result.SubscriptionId = Data.Id;
-      result.Message.PublishTime = DateTime::Current();
+      result.NotificationMessage.PublishTime = DateTime::Current();
 
       if ( ! TriggeredDataChangeEvents.empty() )
       {
         NotificationData data = GetNotificationData();
-        result.Message.Data.push_back(data);
-        result.Statuses.push_back(StatusCode::Good);
+        result.NotificationMessage.NotificationData.push_back(data);
+        result.Results.push_back(StatusCode::Good);
       }
           
       if ( ! TriggeredEvents.empty() )
@@ -142,8 +142,8 @@ namespace OpcUa
         }
         TriggeredEvents.clear();
         NotificationData data(notif);
-        result.Message.Data.push_back(data);
-        result.Statuses.push_back(StatusCode::Good);
+        result.NotificationMessage.NotificationData.push_back(data);
+        result.Results.push_back(StatusCode::Good);
       }
 
 
@@ -152,15 +152,15 @@ namespace OpcUa
       KeepAliveCount = 0;
       Startup = false;
 
-      result.Message.SequenceId = NotificationSequence;
+      result.NotificationMessage.SequenceNumber = NotificationSequence;
       ++NotificationSequence;
       result.MoreNotifications = false;
       for (const PublishResult& res: NotAcknowledgedResults)
       {
-        result.AvailableSequenceNumber.push_back(res.Message.SequenceId);
+        result.AvailableSequenceNumbers.push_back(res.NotificationMessage.SequenceNumber);
       }
       NotAcknowledgedResults.push_back(result);
-      if (Debug) { std::cout << "InternalSubcsription | Sending Notification with " << result.Message.Data.size() << " notifications"  << std::endl; }
+      if (Debug) { std::cout << "InternalSubcsription | Sending Notification with " << result.NotificationMessage.NotificationData.size() << " notifications"  << std::endl; }
       std::vector<PublishResult> resultlist;
       resultlist.push_back(result);
 
@@ -175,9 +175,9 @@ namespace OpcUa
       RepublishResponse response;
       for (const PublishResult& res: NotAcknowledgedResults)
       {
-        if (res.Message.SequenceId == params.RetransmitSequenceNumber)
+        if (res.NotificationMessage.SequenceNumber == params.RetransmitSequenceNumber)
         {
-          response.Message = res.Message;
+          response.NotificationMessage = res.NotificationMessage;
           return response;
         }
       }
@@ -201,7 +201,7 @@ namespace OpcUa
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.Message.SequenceId; });
+      NotAcknowledgedResults.remove_if([&](PublishResult res){ return ack.SequenceNumber == res.NotificationMessage.SequenceNumber; });
     }
     
 

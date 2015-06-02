@@ -35,7 +35,7 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  typedef std::map<IntegerId, std::function<void (PublishResult)>> SubscriptionCallbackMap;
+  typedef std::map<uint32_t, std::function<void (PublishResult)>> SubscriptionCallbackMap;
 
   class BufferInputChannel : public OpcUa::InputChannel
   {
@@ -484,16 +484,16 @@ namespace
             { 
 			if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
 			{
-				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionId << std::endl; }
-				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionId);
+				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Parameters.SubscriptionId << std::endl; }
+				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Parameters.SubscriptionId);
 				if (callbackIt == this->PublishCallbacks.end())
 				{
-					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Result.SubscriptionId << std::endl;
+					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Parameters.SubscriptionId << std::endl;
 				}
 				else
 				{
 					try { //calling client code, better put it under try/catch otherwise we crash entire client
-						callbackIt->second(response.Result);
+						callbackIt->second(response.Parameters);
 					}
 					catch (const std::exception& ex)
 					{

@@ -545,37 +545,25 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-*/
-
      PublishRequest::PublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))
     {
     }
 
-/*  DISABLED
-*/
-
-/*  DISABLED
-
      PublishResponse::PublishResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
      RepublishRequest::RepublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishRequest_Encoding_DefaultBinary))
     {
     }
 
-/*  DISABLED
-
      RepublishResponse::RepublishResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

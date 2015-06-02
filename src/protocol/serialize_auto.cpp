@@ -3152,8 +3152,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
     {
@@ -3162,7 +3160,6 @@ namespace OpcUa
         SerializeContainer(*this, data.NotificationData);
     }
 
-*/
 
 /*  DISABLED
 
@@ -3289,8 +3286,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<PublishResult>(const PublishResult& data)
     {
@@ -3302,9 +3297,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<PublishResponse>(const PublishResponse& data)
@@ -3314,7 +3306,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters& data)
@@ -3333,27 +3324,14 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<RepublishResult>(const RepublishResult& data)
-    {
-        *this << data.NotificationMessage;
-    }
-
-*/
-
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.NotificationMessage;
     }
 
-*/
 
 /*  DISABLED
 

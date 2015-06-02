@@ -75,29 +75,6 @@ namespace OpcUa
   }
 
   ////////////////////////////////////////////////////////
-  // SubscriptionAcknowledgement
-  ////////////////////////////////////////////////////////
-
-//   SubscriptionAcknowledgement::SubscriptionAcknowledgement()
-//     : SequenceNumber(0)
-//   {
-//   }
-
-  ////////////////////////////////////////////////////////
-  // PublishRequest
-  ////////////////////////////////////////////////////////
-
-//   PublishRequest::PublishRequest()
-//     : TypeId(PUBLISH_REQUEST)
-//   {
-//   }
-
-//   RepublishRequest::RepublishRequest()
-//     : TypeId(REPUBLISH_REQUEST)
-//   {
-//   }
-
-  ////////////////////////////////////////////////////////
   // PublishResult
   ////////////////////////////////////////////////////////
 
@@ -110,15 +87,15 @@ namespace OpcUa
   // PublishResponse
   ////////////////////////////////////////////////////////
 
-  PublishResponse::PublishResponse()
-    : TypeId(PUBLISH_RESPONSE)
-  {
-  }
-
-  RepublishResponse::RepublishResponse()
-    : TypeId(REPUBLISH_RESPONSE)
-  {
-  }
+//   PublishResponse::PublishResponse()
+//     : TypeId(PUBLISH_RESPONSE)
+//   {
+//   }
+//
+//   RepublishResponse::RepublishResponse()
+//     : TypeId(REPUBLISH_RESPONSE)
+//   {
+//   }
 
 
   ////////////////////////////////////////////////////////
@@ -150,7 +127,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
 
   NotificationMessage::NotificationMessage()
-    : SequenceId(0)
+    : SequenceNumber(0)
     , PublishTime(DateTime::Current())
   {
   }
@@ -626,114 +603,114 @@ namespace OpcUa
     // NotificationMessage
     ////////////////////////////////////////////////////////
 
-    template<>
-    std::size_t RawSize(const NotificationMessage& message)
-    {
-      return RawSize(message.SequenceId) +
-        RawSize(message.PublishTime) +
-        RawSizeContainer(message.Data);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& message)
-    {
-      *this >> message.SequenceId;
-      *this >> message.PublishTime;
-      DeserializeContainer(*this, message.Data);
-    }
-
-    template<>
-    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& message)
-    {
-      *this << message.SequenceId;
-      *this << message.PublishTime;
-      SerializeContainer(*this, message.Data, 0);
-    }
+//     template<>
+//     std::size_t RawSize(const NotificationMessage& message)
+//     {
+//       return RawSize(message.SequenceId) +
+//         RawSize(message.PublishTime) +
+//         RawSizeContainer(message.Data);
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& message)
+//     {
+//       *this >> message.SequenceId;
+//       *this >> message.PublishTime;
+//       DeserializeContainer(*this, message.Data);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& message)
+//     {
+//       *this << message.SequenceId;
+//       *this << message.PublishTime;
+//       SerializeContainer(*this, message.Data, 0);
+//     }
 
     ////////////////////////////////////////////////////////
     // PublishResult
     ////////////////////////////////////////////////////////
 
-    template<>
-    std::size_t RawSize(const PublishResult& result)
-    {
-      return RawSize(result.SubscriptionId) +
-        RawSizeContainer(result.AvailableSequenceNumber) +
-        RawSize(result.MoreNotifications) +
-        RawSize(result.Message) +
-        RawSizeContainer(result.Statuses) +
-        RawSizeContainer(result.Diagnostics);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<PublishResult>(PublishResult& result)
-    {
-      *this >> result.SubscriptionId;
-      DeserializeContainer(*this, result.AvailableSequenceNumber);
-      *this >> result.MoreNotifications;
-      *this >> result.Message;
-      DeserializeContainer(*this, result.Statuses);
-      DeserializeContainer(*this, result.Diagnostics);
-    }
-
-    template<>
-    void DataSerializer::Serialize<PublishResult>(const PublishResult& result)
-    {
-      *this << result.SubscriptionId;
-      SerializeContainer(*this, result.AvailableSequenceNumber, 0);
-      *this << result.MoreNotifications;
-      *this << result.Message;
-      SerializeContainer(*this, result.Statuses, 0);
-      SerializeContainer(*this, result.Diagnostics, 0);
-    }
+//     template<>
+//     std::size_t RawSize(const PublishResult& result)
+//     {
+//       return RawSize(result.SubscriptionId) +
+//         RawSizeContainer(result.AvailableSequenceNumber) +
+//         RawSize(result.MoreNotifications) +
+//         RawSize(result.Message) +
+//         RawSizeContainer(result.Statuses) +
+//         RawSizeContainer(result.Diagnostics);
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<PublishResult>(PublishResult& result)
+//     {
+//       *this >> result.SubscriptionId;
+//       DeserializeContainer(*this, result.AvailableSequenceNumber);
+//       *this >> result.MoreNotifications;
+//       *this >> result.Message;
+//       DeserializeContainer(*this, result.Statuses);
+//       DeserializeContainer(*this, result.Diagnostics);
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<PublishResult>(const PublishResult& result)
+//     {
+//       *this << result.SubscriptionId;
+//       SerializeContainer(*this, result.AvailableSequenceNumber, 0);
+//       *this << result.MoreNotifications;
+//       *this << result.Message;
+//       SerializeContainer(*this, result.Statuses, 0);
+//       SerializeContainer(*this, result.Diagnostics, 0);
+//     }
 
     ////////////////////////////////////////////////////////
     // PublishResponse
     ////////////////////////////////////////////////////////
 
-    template<>
-    std::size_t RawSize(const PublishResponse& response)
-    {
-      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& response)
-    {
-      *this >> response.TypeId;
-      *this >> response.Header;
-      *this >> response.Result;
-    }
-
-    template<>
-    void DataSerializer::Serialize<PublishResponse>(const PublishResponse& response)
-    {
-      *this << response.TypeId;
-      *this << response.Header;
-      *this << response.Result;
-    }
-
-    template<>
-    std::size_t RawSize(const RepublishResponse& response)
-    {
-      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Message);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& response)
-    {
-      *this >> response.TypeId;
-      *this >> response.Header;
-      *this >> response.Message;
-    }
-
-    template<>
-    void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& response)
-    {
-      *this << response.TypeId;
-      *this << response.Header;
-      *this << response.Message;
-    }
+//     template<>
+//     std::size_t RawSize(const PublishResponse& response)
+//     {
+//       return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Result);
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& response)
+//     {
+//       *this >> response.TypeId;
+//       *this >> response.Header;
+//       *this >> response.Result;
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<PublishResponse>(const PublishResponse& response)
+//     {
+//       *this << response.TypeId;
+//       *this << response.Header;
+//       *this << response.Result;
+//     }
+//
+//     template<>
+//     std::size_t RawSize(const RepublishResponse& response)
+//     {
+//       return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Message);
+//     }
+//
+//     template<>
+//     void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& response)
+//     {
+//       *this >> response.TypeId;
+//       *this >> response.Header;
+//       *this >> response.Message;
+//     }
+//
+//     template<>
+//     void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& response)
+//     {
+//       *this << response.TypeId;
+//       *this << response.Header;
+//       *this << response.Message;
+//     }
 
     ////////////////////////////////////////////////////////
     // PublishingModeParameters

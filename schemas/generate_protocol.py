@@ -15,7 +15,7 @@ import generate_model as gm
 NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse"]
+NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
 OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
@@ -225,7 +225,7 @@ EnabledStructs = [\
     #'ModifySubscriptionResponse',
     #'SetPublishingModeRequest',
     #'SetPublishingModeResponse',
-    #'NotificationMessage',
+    'NotificationMessage',
     #'NotificationData',
     #'DataChangeNotification',
     #'MonitoredItemNotification',
@@ -235,6 +235,7 @@ EnabledStructs = [\
     #'StatusChangeNotification',
     'SubscriptionAcknowledgement',
     'PublishRequest',
+    'PublishResult',
     'PublishResponse',
     'RepublishParameters',
     'RepublishRequest',
@@ -588,6 +589,7 @@ class CodeGenerator(object):
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/types_manual.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
 
