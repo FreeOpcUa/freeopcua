@@ -77,7 +77,7 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
-  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
+  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::GetEndpointsParameters()));
   ASSERT_EQ(desc.size(), 1);
   endpoints.reset();
   computer.reset();
@@ -125,7 +125,7 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
 
   OpcUa::RemoteSessionParameters session;
-  session.ClientDescription.Name.Text = "opcua client";
+  session.ClientDescription.ApplicationName.Text = "opcua client";
   session.SessionName = "opua command line";
   session.EndpointURL = "opc.tcp://localhost:4841";
   session.Timeout = 1000;
