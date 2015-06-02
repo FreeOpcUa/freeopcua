@@ -60,7 +60,7 @@ TEST_F(EndpointsRegistry, RegisterEndpoints)
   OpcUa::Server::ServicesRegistry::SharedPtr services = Addons->GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
   OpcUa::Services::SharedPtr computer = services->GetServer();
   std::vector<OpcUa::EndpointDescription> descriptions;
-  ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::EndpointsFilter()));
+  ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::GetEndpointsParameters()));
   ASSERT_EQ(descriptions.size(), 1);
   ASSERT_EQ(descriptions[0].EndpointURL, "url");
 }
@@ -69,10 +69,10 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
 {
   Common::ParametersGroup data;
   data.Name = "application";
-  data.Parameters.push_back(Common::Parameter("discovery_profile", "DiscoveryProfileURI"));
-  data.Parameters.push_back(Common::Parameter("uri", "URI"));
-  data.Parameters.push_back(Common::Parameter("product_uri", "ProductURI"));
-  data.Parameters.push_back(Common::Parameter("gateway_server_uri", "GatewayServerURI"));
+  data.Parameters.push_back(Common::Parameter("discovery_profile", "DiscoveryProfileUri"));
+  data.Parameters.push_back(Common::Parameter("uri", "Uri"));
+  data.Parameters.push_back(Common::Parameter("product_uri", "ProductUri"));
+  data.Parameters.push_back(Common::Parameter("gateway_server_uri", "GatewayServerUri"));
   data.Parameters.push_back(Common::Parameter("name", "Name"));
   data.Parameters.push_back(Common::Parameter("type", "client"));
 
@@ -80,14 +80,14 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
   endpoint.Parameters.push_back(Common::Parameter("url", "EndpointUrl"));
   endpoint.Parameters.push_back(Common::Parameter("security_level", "1"));
   endpoint.Parameters.push_back(Common::Parameter("security_mode", "sign_encrypt"));
-  endpoint.Parameters.push_back(Common::Parameter("security_policy_uri", "SecurityPolicyURI"));
-  endpoint.Parameters.push_back(Common::Parameter("transport_profile_uri", "TransportProfileURI"));
+  endpoint.Parameters.push_back(Common::Parameter("security_policy_uri", "SecurityPolicyUri"));
+  endpoint.Parameters.push_back(Common::Parameter("transport_profile_uri", "TransportProfileUri"));
 
   Common::ParametersGroup tokenPolicy("user_token_policy");
   tokenPolicy.Parameters.push_back(Common::Parameter("issued_token_type", "IssuedTokenType"));
-  tokenPolicy.Parameters.push_back(Common::Parameter("issuer_endpoint_url", "IssuerEndpointURL"));
+  tokenPolicy.Parameters.push_back(Common::Parameter("issuer_endpoint_url", "IssuerEndpointUrl"));
   tokenPolicy.Parameters.push_back(Common::Parameter("id", "PolicyId"));
-  tokenPolicy.Parameters.push_back(Common::Parameter("uri", "SecurityPolicyURI"));
+  tokenPolicy.Parameters.push_back(Common::Parameter("uri", "SecurityPolicyUri"));
   tokenPolicy.Parameters.push_back(Common::Parameter("type", "user_name"));
 
   endpoint.Groups.push_back(tokenPolicy);
@@ -115,9 +115,9 @@ std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
 
   OpcUa::UserTokenPolicy tokenPolicy; // By default ot os an anonimous token;
   tokenPolicy.IssuedTokenType = "IssuedTokenType";
-  tokenPolicy.IssuerEndpointUrl = "IssuerEndpointURL";
+  tokenPolicy.IssuerEndpointUrl = "IssuerEndpointUrl";
   tokenPolicy.PolicyId = "PolicyId";
-  tokenPolicy.SecurityPolicyUri = "SecurityPolicyURI";
+  tokenPolicy.SecurityPolicyUri = "SecurityPolicyUri";
   tokenPolicy.TokenType = OpcUa::UserTokenType::UserName;
   ed.UserIdentityTokens.push_back(tokenPolicy);
 
@@ -146,30 +146,30 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   std::vector<OpcUa::Server::ApplicationData> apps = OpcUa::ParseEndpointsParameters(params, debug);
   ASSERT_EQ(apps.size(), 2);
   OpcUa::Server::ApplicationData app = apps[0];
-  EXPECT_EQ(app.Application.DiscoveryProfileURI, "DiscoveryProfileURI");
-  EXPECT_EQ(app.Application.URI, "URI");
-  EXPECT_EQ(app.Application.ProductURI, "ProductURI");
-  EXPECT_TRUE(app.Application.Name.Encoding & OpcUa::HAS_TEXT);
-  EXPECT_EQ(app.Application.Name.Text, "Name");
-  EXPECT_EQ(app.Application.Type, OpcUa::ApplicationType::Client);
-  EXPECT_EQ(app.Application.GatewayServerURI, "GatewayServerURI");
+  EXPECT_EQ(app.Application.DiscoveryProfileUri, "DiscoveryProfileUri");
+  EXPECT_EQ(app.Application.ApplicationUri, "ApplicationUri");
+  EXPECT_EQ(app.Application.ProductUri, "ProductUri");
+  EXPECT_TRUE(app.Application.ApplicationName.Encoding & OpcUa::HAS_TEXT);
+  EXPECT_EQ(app.Application.ApplicationName.Text, "Name");
+  EXPECT_EQ(app.Application.ApplicationType, OpcUa::ApplicationType::Client);
+  EXPECT_EQ(app.Application.GatewayServerUri, "GatewayServerUri");
 
   ASSERT_EQ(app.Endpoints.size(), 1);
   OpcUa::EndpointDescription ed = app.Endpoints[0];
-  EXPECT_EQ(ed.EndpointUrl, "EndpointURL");
+  EXPECT_EQ(ed.EndpointUrl, "EndpointUrl");
   EXPECT_EQ(ed.SecurityLevel, 1);
   EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
-  EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyURI");
+  EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyUri");
   //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
   //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyURI");
-  EXPECT_EQ(ed.TransportProfileUri, "TransportProfileURI");
+  EXPECT_EQ(ed.TransportProfileUri, "TransportProfileUri");
 
   ASSERT_EQ(ed.UserIdentifyTokens.size(), 1);
   OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentityTokens[0];
   EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
-  EXPECT_EQ(tokenPolicy.IssuerEndpointUri, "IssuerEndpointURL");
+  EXPECT_EQ(tokenPolicy.IssuerEndpointUrl, "IssuerEndpointUrl");
   EXPECT_EQ(tokenPolicy.PolicyId, "PolicyId");
-  EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyURI");
+  EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyUri");
   EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserTokenType::UserName);
 }
 
@@ -181,30 +181,30 @@ TEST(EndpointParameters, ConvertingToAddonParameters)
   ASSERT_EQ(result.size(), 2);
   const Common::ParametersGroup applicationGroup = result[0];
   EXPECT_EQ(applicationGroup.Name, "application");
-  EXPECT_EQ(FindParameter(applicationGroup, "discovery_profile").Value, "DiscoveryProfileURI");
-  EXPECT_EQ(FindParameter(applicationGroup, "product_uri").Value, "ProductURI");
-  EXPECT_EQ(FindParameter(applicationGroup, "uri").Value, "URI");
-  EXPECT_EQ(FindParameter(applicationGroup, "name").Value, "Name");
-  EXPECT_EQ(FindParameter(applicationGroup, "type").Value, "client");
-  EXPECT_EQ(FindParameter(applicationGroup, "gateway_server_uri").Value, "GatewayServerURI");
+  EXPECT_EQ(FindParameter(applicationGroup, "discovery_profile").Value, "DiscoveryProfileUri");
+  EXPECT_EQ(FindParameter(applicationGroup, "product_uri").Value, "ProductUri");
+  EXPECT_EQ(FindParameter(applicationGroup, "application_uri").Value, "ApplicationUri");
+  EXPECT_EQ(FindParameter(applicationGroup, "application_name").Value, "ApplicationName");
+  EXPECT_EQ(FindParameter(applicationGroup, "Application_type").Value, "client");
+  EXPECT_EQ(FindParameter(applicationGroup, "gateway_server_uri").Value, "GatewayServerUri");
 
   ASSERT_EQ(applicationGroup.Groups.size(), 1) << "Application group has no subgroups with endpoints";
   Common::ParametersGroup endpoint = applicationGroup.Groups[0];
   EXPECT_EQ(endpoint.Name, "endpoint");
-  EXPECT_EQ(FindParameter(endpoint, "url").Value, "EndpointURL");
+  EXPECT_EQ(FindParameter(endpoint, "endpoint_url").Value, "EndpointUrl");
   EXPECT_EQ(FindParameter(endpoint, "security_level").Value, "1");
   EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "sign_encrypt");
-  EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyURI");
+  EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyUri");
   //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyURI");
-  EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileURI");
+  EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileUri");
 
   ASSERT_EQ(endpoint.Groups.size(), 1);
   Common::ParametersGroup tokenPolicy = endpoint.Groups[0];
   EXPECT_EQ(tokenPolicy.Name, "user_token_policy");
   EXPECT_EQ(FindParameter(tokenPolicy, "issued_token_type").Value, "IssuedTokenType");
-  EXPECT_EQ(FindParameter(tokenPolicy, "issuer_endpoint_url").Value, "IssuerEndpointURL");
+  EXPECT_EQ(FindParameter(tokenPolicy, "issuer_endpoint_url").Value, "IssuerEndpointUrl");
   EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
   EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
-  EXPECT_EQ(FindParameter(tokenPolicy, "uri").Value, "SecurityPolicyURI");
+  EXPECT_EQ(FindParameter(tokenPolicy, "uri").Value, "SecurityPolicyUri");
   EXPECT_EQ(FindParameter(tokenPolicy, "type").Value, "user_name");
 }
