@@ -961,8 +961,7 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
   OpcUa::SignatureData s;
   GetStream() >> s;
 
-  std::vector<uint8_t> signature = {1,2,3,4};
-  ASSERT_EQ(s.Signature, signature); 
+  ASSERT_EQ(s.Signature, ByteString(std::vector<uint8_t>{1,2,3,4}));
   ASSERT_EQ(s.Algorithm, "aes");
 }
 
