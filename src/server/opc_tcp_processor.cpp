@@ -467,7 +467,7 @@ namespace OpcUa
         case ACTIVATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing activate session request." << std::endl;
-          UpdatedSessionParameters params;
+          ActivateSessionParameters params;
           istream >> params;
 
           ActivateSessionResponse response;

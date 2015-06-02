@@ -1236,21 +1236,6 @@ namespace OpcUa
       DeserializeContainer(*this, value);
     }
 
-
-    template<>
-    void DataSerializer::Serialize<SignatureData>(const SignatureData& value)
-    {
-      *this << value.Signature;
-      *this << value.Algorithm;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SignatureData>(SignatureData& value)
-    {
-      *this >> value.Signature;
-      *this >> value.Algorithm;
-    }
-
     template<>
     void DataSerializer::Serialize<ExtensionObjectHeader>(const ExtensionObjectHeader& value)
     {

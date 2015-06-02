@@ -295,8 +295,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ExtensionObject>(const ExtensionObject& data)
     {
@@ -307,7 +305,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -1065,8 +1062,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<SignatureData>(const SignatureData& data)
     {
@@ -1076,7 +1071,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters& data)
@@ -1214,8 +1208,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ActivateSessionParameters>(const ActivateSessionParameters& data)
     {
@@ -1228,9 +1220,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& data)
@@ -1242,9 +1231,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResult>(const ActivateSessionResult& data)
@@ -1256,9 +1242,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& data)
@@ -1270,7 +1253,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3635,12 +3617,12 @@ namespace OpcUa
 /* DISABLED
 
     template<>
-    std::size_t RawSize<NotificationData>(const NotificationData& data)
+    std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
     {
         size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Encoding);
-        if ((data.Encoding) & (1<<(0))) size += RawSize(data.Body);
+        size += RawSize(data.SequenceNumber);
+        size += RawSize(data.PublishTime);
+        size += RawSizeContainer(data.NotificationData);
         return size;
     }
 
@@ -3649,12 +3631,12 @@ namespace OpcUa
 /* DISABLED
 
     template<>
-    std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
+    std::size_t RawSize<NotificationData>(const NotificationData& data)
     {
         size_t size = 0;
-        size += RawSize(data.SequenceNumber);
-        size += RawSize(data.PublishTime);
-        size += RawSizeContainer(data.NotificationData);
+        size += RawSize(data.TypeId);
+        size += RawSize(data.Encoding);
+        if ((data.Encoding) & (1<<(0))) size += RawSize(data.Body);
         return size;
     }
 

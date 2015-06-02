@@ -373,11 +373,11 @@ namespace OpcUa
       return size;
     };
 
-    template<>
-    std::size_t RawSize<SignatureData>(const SignatureData& s)
-    {
-      return RawSize(s.Signature) + RawSize(s.Algorithm);
-    };
+//     template<>
+//     std::size_t RawSize<SignatureData>(const SignatureData& s)
+//     {
+//       return RawSize(s.Signature) + RawSize(s.Algorithm);
+//     };
 
     template<>
     std::size_t RawSize<ExtensionObjectHeader>(const ExtensionObjectHeader& header)

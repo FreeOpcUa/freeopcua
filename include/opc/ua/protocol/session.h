@@ -17,63 +17,6 @@
 namespace OpcUa
 {
   //-------------------------------------------------
-  // ActivateSessionRequest
-  //-------------------------------------------------
-
-  struct UserIdentifyToken
-  {
-    ExtensionObjectHeader Header;
-    std::vector<uint8_t> PolicyId;
-
-    struct UserNameStruct
-    {
-      std::string UserName;
-      std::string Password;
-      std::string EncryptionAlgorithm;
-    } UserName;
-
-    UserIdentifyToken();
-
-    UserTokenType type() const;
-    void setUser(const std::string &user, const std::string &password);
-    void setPolicyId(const std::string &id);
-  };
-
-  struct UpdatedSessionParameters
-  {
-    SignatureData ClientSignature;
-    std::vector<CertificateData> ClientCertificates;
-    std::vector<std::string> LocaleIds;
-    UserIdentifyToken IdentifyToken;
-    SignatureData UserTokenSignature;
-  };
-
-  struct ActivateSessionRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    UpdatedSessionParameters Parameters;
-
-    ActivateSessionRequest();
-  };
-
-  struct UpdatedSessionData
-  {
-    std::vector<uint8_t> ServerNonce;
-    std::vector<uint32_t>StatusCodes;
-    DiagnosticInfoList Diagnostics;
-  };
-
-  struct ActivateSessionResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    UpdatedSessionData Session;
-
-    ActivateSessionResponse();
-  };
-
-  //-------------------------------------------------
   // CloseSessionRequest
   //-------------------------------------------------
 

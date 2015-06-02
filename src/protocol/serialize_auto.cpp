@@ -279,8 +279,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ExtensionObject>(const ExtensionObject& data)
     {
@@ -289,7 +287,6 @@ namespace OpcUa
         if ((data.Encoding) & (1<<(0))) *this << data.Body;
     }
 
-*/
 
 /*  DISABLED
 
@@ -955,8 +952,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<SignatureData>(const SignatureData& data)
     {
@@ -964,7 +959,6 @@ namespace OpcUa
         *this << data.Signature;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<CreateSessionParameters>(const CreateSessionParameters& data)
@@ -1084,8 +1078,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ActivateSessionParameters>(const ActivateSessionParameters& data)
     {
@@ -1096,9 +1088,6 @@ namespace OpcUa
         *this << data.UserTokenSignature;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionRequest>(const ActivateSessionRequest& data)
@@ -1108,9 +1097,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionResult>(const ActivateSessionResult& data)
@@ -1120,9 +1106,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionResponse>(const ActivateSessionResponse& data)
@@ -1132,7 +1115,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 
@@ -3173,11 +3155,11 @@ namespace OpcUa
 /*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<NotificationData>(const NotificationData& data)
+    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
     {
-        *this << data.TypeId;
-        *this << data.Encoding;
-        if ((data.Encoding) & (1<<(0))) *this << data.Body;
+        *this << data.SequenceNumber;
+        *this << data.PublishTime;
+        SerializeContainer(*this, data.NotificationData);
     }
 
 */
@@ -3185,11 +3167,11 @@ namespace OpcUa
 /*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
+    void DataSerializer::Serialize<NotificationData>(const NotificationData& data)
     {
-        *this << data.SequenceNumber;
-        *this << data.PublishTime;
-        SerializeContainer(*this, data.NotificationData);
+        *this << data.TypeId;
+        *this << data.Encoding;
+        if ((data.Encoding) & (1<<(0))) *this << data.Body;
     }
 
 */

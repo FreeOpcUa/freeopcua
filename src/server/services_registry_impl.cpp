@@ -166,7 +166,7 @@ namespace
       return CreateSessionResponse();
     }
 
-    virtual ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) override
+    virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) override
     {
       (void)session_parameters;
       return ActivateSessionResponse();

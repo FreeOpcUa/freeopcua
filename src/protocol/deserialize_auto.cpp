@@ -327,8 +327,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<ExtensionObject>(ExtensionObject& data)
     {
@@ -337,7 +335,6 @@ namespace OpcUa
         if ((data.Encoding) & (1>>(0))) *this >> data.Body;
     }
 
-*/
 
 /*  DISABLED
 
@@ -1003,8 +1000,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<SignatureData>(SignatureData& data)
     {
@@ -1012,7 +1007,6 @@ namespace OpcUa
         *this >> data.Signature;
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<CreateSessionParameters>(CreateSessionParameters& data)
@@ -1132,8 +1126,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<ActivateSessionParameters>(ActivateSessionParameters& data)
     {
@@ -1144,9 +1136,6 @@ namespace OpcUa
         *this >> data.UserTokenSignature;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<ActivateSessionRequest>(ActivateSessionRequest& data)
@@ -1156,9 +1145,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<ActivateSessionResult>(ActivateSessionResult& data)
@@ -1168,9 +1154,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<ActivateSessionResponse>(ActivateSessionResponse& data)
@@ -1180,7 +1163,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 
@@ -3221,11 +3203,11 @@ namespace OpcUa
 /*  DISABLED
 
     template<>
-    void DataDeserializer::Deserialize<NotificationData>(NotificationData& data)
+    void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& data)
     {
-        *this >> data.TypeId;
-        *this >> data.Encoding;
-        if ((data.Encoding) & (1>>(0))) *this >> data.Body;
+        *this >> data.SequenceNumber;
+        *this >> data.PublishTime;
+        DeserializeContainer(*this, data.NotificationData);
     }
 
 */
@@ -3233,11 +3215,11 @@ namespace OpcUa
 /*  DISABLED
 
     template<>
-    void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& data)
+    void DataDeserializer::Deserialize<NotificationData>(NotificationData& data)
     {
-        *this >> data.SequenceNumber;
-        *this >> data.PublishTime;
-        DeserializeContainer(*this, data.NotificationData);
+        *this >> data.TypeId;
+        *this >> data.Encoding;
+        if ((data.Encoding) & (1>>(0))) *this >> data.Body;
     }
 
 */

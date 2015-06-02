@@ -17,6 +17,7 @@ IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
+OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
 #list of UA structure we want to enable, some structures may
@@ -40,7 +41,7 @@ EnabledStructs = [\
     #
     #structs we should enable or that we haven't checked yet
     #
-    #'ExtensionObject',
+    'ExtensionObject',
     'XmlElement',
     #'Node',
     #'InstanceNode',
@@ -65,8 +66,8 @@ EnabledStructs = [\
     #'FindServersResponse',
     'UserTokenPolicy',
     'EndpointDescription',
-    'GetEndpointsParameters',
     'GetEndpointsRequest',
+    'GetEndpointsParameters',
     'GetEndpointsResponse',
     #'RegisteredServer',
     #'RegisterServerRequest',
@@ -77,7 +78,7 @@ EnabledStructs = [\
     #'CloseSecureChannelRequest',
     #'CloseSecureChannelResponse',
     'SignedSoftwareCertificate',
-    #'SignatureData',
+    'SignatureData',
     'CreateSessionRequest',
     'CreateSessionParameters',
     'CreateSessionResponse',
@@ -87,8 +88,10 @@ EnabledStructs = [\
     #'UserNameIdentityToken',
     #'X509IdentityToken',
     #'IssuedIdentityToken',
-    #'ActivateSessionRequest',
-    #'ActivateSessionResponse',
+    'ActivateSessionRequest',
+    'ActivateSessionParameters',
+    'ActivateSessionResponse',
+    'ActivateSessionResult',
     #'CloseSessionRequest',
     #'CloseSessionResponse',
     #'CancelRequest',
@@ -314,6 +317,10 @@ def override_types(model):
         for field in struct.fields:
             if field.name in OverrideTypes.keys():
                 field.uatype = OverrideTypes[field.name]
+
+            if struct.name in OverrideTypeInStruct.keys():
+                if field.name in OverrideTypeInStruct[struct.name].keys():
+                    field.uatype = OverrideTypeInStruct[struct.name][field.name]
 
 
 class CodeGenerator(object):
@@ -776,9 +783,9 @@ if __name__ == "__main__":
     #remove_vector_length(model)
     #remove_body_length(model)
     #remove_duplicates(model)
-    override_types(model)
     #split_requests(model)
     reorder_structs(model)
+    override_types(model)
 
     f = open("struct_list.txt", "w")
     f.write("enabled_structs = [\\")

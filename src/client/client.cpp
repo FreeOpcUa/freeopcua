@@ -197,7 +197,7 @@ namespace OpcUa
     if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
 
     if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
-    UpdatedSessionParameters session_parameters;
+    ActivateSessionParameters session_parameters;
     {
       //const SessionData &session_data = response.Session;
       Common::Uri uri(session.EndpointURL);
@@ -209,15 +209,15 @@ namespace OpcUa
           for(auto token : ep.UserIdentityTokens) {
             if(user.empty()) {
               if(token.TokenType == UserTokenType::Anonymous) {
-                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
+                session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
                 user_identify_token_found = true;
                 break;
               }
             }
             else {
               if(token.TokenType == UserTokenType::UserName) {
-                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
-                session_parameters.IdentifyToken.setUser(user, password);
+                session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
+                session_parameters.UserIdentityToken.setUser(user, password);
                 user_identify_token_found = true;
                 break;
               }

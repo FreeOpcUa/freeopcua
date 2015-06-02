@@ -269,7 +269,7 @@ namespace
       return response;
     }
 
-    ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) override
+    ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) override
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;

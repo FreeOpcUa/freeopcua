@@ -122,21 +122,15 @@ namespace OpcUa
 /*  DISABLED
 */
 
-/*  DISABLED
-
      ActivateSessionRequest::ActivateSessionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      ActivateSessionResponse::ActivateSessionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

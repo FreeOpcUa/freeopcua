@@ -98,15 +98,12 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct ExtensionObject 
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
          OpcUa::ByteString Body;
     };
-*/
 
 /* DISABLED
 
@@ -743,15 +740,12 @@ namespace OpcUa
          OpcUa::ByteString Signature;
     };
 
-/* DISABLED
-
     // A digital signature.
     struct SignatureData 
     {
          std::string Algorithm;
          OpcUa::ByteString Signature;
     };
-*/
 
     struct CreateSessionParameters 
     {
@@ -866,19 +860,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct ActivateSessionParameters 
     {
          OpcUa::SignatureData ClientSignature;
          std::vector<OpcUa::SignedSoftwareCertificate> ClientSoftwareCertificates;
          std::vector<std::string> LocaleIds;
-         OpcUa::ExtensionObject UserIdentityToken;
+         OpcUa::UserIdentifyToken UserIdentityToken;
          OpcUa::SignatureData UserTokenSignature;
     };
-*/
-
-/* DISABLED
 
     // Activates a session with the server.
     struct ActivateSessionRequest 
@@ -889,9 +878,6 @@ namespace OpcUa
 
          ActivateSessionRequest();
     };
-*/
-
-/* DISABLED
 
     struct ActivateSessionResult 
     {
@@ -899,9 +885,6 @@ namespace OpcUa
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
     };
-*/
-
-/* DISABLED
 
     // Activates a session with the server.
     struct ActivateSessionResponse 
@@ -912,7 +895,6 @@ namespace OpcUa
 
          ActivateSessionResponse();
     };
-*/
 
 /* DISABLED
 
@@ -2789,16 +2771,6 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct NotificationData 
-    {
-         OpcUa::NodeId TypeId;
-         uint8_t Encoding;
-         OpcUa::ByteString Body;
-    };
-*/
-
-/* DISABLED
-
     struct NotificationMessage 
     {
          uint32_t SequenceNumber;
@@ -2806,6 +2778,16 @@ namespace OpcUa
          std::vector<OpcUa::NotificationData> NotificationData;
 
          NotificationMessage();
+    };
+*/
+
+/* DISABLED
+
+    struct NotificationData 
+    {
+         OpcUa::NodeId TypeId;
+         uint8_t Encoding;
+         OpcUa::ByteString Body;
     };
 */
 

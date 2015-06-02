@@ -130,7 +130,7 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
   session.EndpointURL = "opc.tcp://localhost:4841";
   session.Timeout = 1000;
 
-  OpcUa::UpdatedSessionParameters session_parameters;
+  OpcUa::ActivateSessionParameters session_parameters;
 
   ASSERT_NO_THROW(computer->CreateSession(session));
   ASSERT_NO_THROW(computer->ActivateSession(session_parameters));
