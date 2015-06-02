@@ -62,7 +62,7 @@ TEST_F(EndpointsRegistry, RegisterEndpoints)
   std::vector<OpcUa::EndpointDescription> descriptions;
   ASSERT_NO_THROW(descriptions = computer->Endpoints()->GetEndpoints(OpcUa::GetEndpointsParameters()));
   ASSERT_EQ(descriptions.size(), 1);
-  ASSERT_EQ(descriptions[0].EndpointURL, "url");
+  ASSERT_EQ(descriptions[0].EndpointUrl, "url");
 }
 
 std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
@@ -107,11 +107,11 @@ std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
   data.Application.ApplicationType = OpcUa::ApplicationType::Client;
 
   OpcUa::EndpointDescription ed;
-  ed.EndpointUrl = "EndpointURL";
+  ed.EndpointUrl = "EndpointUrl";
   ed.SecurityLevel = 1;
   ed.SecurityMode = OpcUa::MessageSecurityMode::SignAndEncrypt;
-  ed.SecurityPolicyUri = "SecurityPolicyURI";
-  ed.TransportProfileUri = "TransportProfileURI";
+  ed.SecurityPolicyUri = "SecurityPolicyUri";
+  ed.TransportProfileUri = "TransportProfileUri";
 
   OpcUa::UserTokenPolicy tokenPolicy; // By default ot os an anonimous token;
   tokenPolicy.IssuedTokenType = "IssuedTokenType";
@@ -164,7 +164,7 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyURI");
   EXPECT_EQ(ed.TransportProfileUri, "TransportProfileUri");
 
-  ASSERT_EQ(ed.UserIdentifyTokens.size(), 1);
+  ASSERT_EQ(ed.UserIdentityTokens.size(), 1);
   OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentityTokens[0];
   EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
   EXPECT_EQ(tokenPolicy.IssuerEndpointUrl, "IssuerEndpointUrl");
