@@ -78,24 +78,24 @@ namespace OpcUa
   // SubscriptionAcknowledgement
   ////////////////////////////////////////////////////////
 
-  SubscriptionAcknowledgement::SubscriptionAcknowledgement()
-    : SequenceNumber(0)
-  {
-  }
+//   SubscriptionAcknowledgement::SubscriptionAcknowledgement()
+//     : SequenceNumber(0)
+//   {
+//   }
 
   ////////////////////////////////////////////////////////
   // PublishRequest
   ////////////////////////////////////////////////////////
 
-  PublishRequest::PublishRequest()
-    : TypeId(PUBLISH_REQUEST)
-  {
-  }
+//   PublishRequest::PublishRequest()
+//     : TypeId(PUBLISH_REQUEST)
+//   {
+//   }
 
-  RepublishRequest::RepublishRequest()
-    : TypeId(REPUBLISH_REQUEST)
-  {
-  }
+//   RepublishRequest::RepublishRequest()
+//     : TypeId(REPUBLISH_REQUEST)
+//   {
+//   }
 
   ////////////////////////////////////////////////////////
   // PublishResult
@@ -373,28 +373,8 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////
-    // SubscriptionAcknowledgement
+    // SubscriptionAcknowledgement -- to be removed
     ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const SubscriptionAcknowledgement& ack)
-    {
-      return RawSize(ack.SubscriptionId) + RawSize(ack.SequenceNumber);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement& ack)
-    {
-      *this >> ack.SubscriptionId;
-      *this >> ack.SequenceNumber;
-    }
-
-    template<>
-    void DataSerializer::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& ack)
-    {
-      *this << ack.SubscriptionId;
-      *this << ack.SequenceNumber;
-    }
 
     template<>
     std::size_t RawSize(const std::vector<SubscriptionAcknowledgement>& ack)
@@ -412,97 +392,6 @@ namespace OpcUa
     void DataSerializer::Serialize<std::vector<SubscriptionAcknowledgement>>(const std::vector<SubscriptionAcknowledgement>& ack)
     {
       SerializeContainer(*this, ack);
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // PublishParameters
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const PublishParameters& params)
-    {
-      return RawSizeContainer(params.Acknowledgements);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<PublishParameters>(PublishParameters& params)
-    {
-      *this >> params.Acknowledgements;
-    }
-
-    template<>
-    void DataSerializer::Serialize<PublishParameters>(const PublishParameters& params)
-    {
-      *this << params.Acknowledgements;
-    }
-
-    template<>
-    std::size_t RawSize(const RepublishParameters& params)
-    {
-      return RawSize(params.Subscription) + RawSize(params.Counter);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters& params)
-    {
-      *this >> params.Subscription;
-      *this >> params.Counter;
-    }
-
-    template<>
-    void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters& params)
-    {
-      *this << params.Subscription;
-      *this << params.Counter;
-    }
-
-    ////////////////////////////////////////////////////////
-    // PublishRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const PublishRequest& request)
-    {
-      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<PublishRequest>(PublishRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<PublishRequest>(const PublishRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Parameters;
-    }
-
-    template<>
-    std::size_t RawSize(const RepublishRequest& request)
-    {
-      return RawSize(request.TypeId) + RawSize(request.Header) + RawSize(request.Parameters);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Parameters;
     }
 
 

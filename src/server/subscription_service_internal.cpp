@@ -149,7 +149,7 @@ namespace OpcUa
       }
       //FIXME: else spec says we should return error to warn client
 
-      for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
+      for (SubscriptionAcknowledgement ack:  request.SubscriptionAcknowledgements)
       {
         SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionId);
         if ( sub_it != SubscriptionsMap.end())
@@ -163,7 +163,7 @@ namespace OpcUa
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       
-      SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(params.Subscription);
+      SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(params.SubscriptionId);
       if ( sub_it == SubscriptionsMap.end())
       {
         RepublishResponse response;

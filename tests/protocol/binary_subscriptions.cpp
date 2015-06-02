@@ -407,7 +407,7 @@ TEST_F(SubscriptionSerialization, PublishRequest)
   ack.SubscriptionId = 1;
   ack.SequenceNumber = 2;
 
-  request.Parameters.Acknowledgements.push_back(ack);
+  request.SubscriptionAcknowledgements.push_back(ack);
 
   GetStream() << request << flush;
 
@@ -455,7 +455,7 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.Parameters.Acknowledgements.size(), 1);
+  ASSERT_EQ(request.SubscriptionAcknowledgements.size(), 1);
 }
 
 //-------------------------------------------------------

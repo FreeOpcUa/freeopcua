@@ -461,7 +461,7 @@ namespace
 
     virtual void Publish(const PublishRequest& originalrequest)
     {
-      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
+      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.SubscriptionAcknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest);
       request.Header = CreateRequestHeader();
       request.Header.Timeout = 0; //We do not want the request to timeout!

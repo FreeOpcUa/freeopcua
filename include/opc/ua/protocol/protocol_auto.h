@@ -2871,16 +2871,11 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct SubscriptionAcknowledgement 
     {
          uint32_t SubscriptionId;
          uint32_t SequenceNumber;
     };
-*/
-
-/* DISABLED
 
     struct PublishRequest 
     {
@@ -2890,7 +2885,6 @@ namespace OpcUa
 
          PublishRequest();
     };
-*/
 
 /* DISABLED
 
@@ -2919,16 +2913,11 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct RepublishParameters 
     {
          uint32_t SubscriptionId;
          uint32_t RetransmitSequenceNumber;
     };
-*/
-
-/* DISABLED
 
     struct RepublishRequest 
     {
@@ -2938,7 +2927,6 @@ namespace OpcUa
 
          RepublishRequest();
     };
-*/
 
 /* DISABLED
 

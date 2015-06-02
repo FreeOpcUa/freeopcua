@@ -77,7 +77,7 @@ namespace OpcUa
     ack.SubscriptionId = GetId();
     ack.SequenceNumber = result.Message.SequenceId;
     PublishRequest request;
-    request.Parameters.Acknowledgements.push_back(ack);
+    request.SubscriptionAcknowledgements.push_back(ack);
     server->Subscriptions()->Publish(request);
   }
 
@@ -185,8 +185,8 @@ namespace OpcUa
   RepublishResponse Subscription::Republish(uint32_t sequenceNumber)
   {
     RepublishParameters params;
-    params.Subscription = Data.Id;
-    params.Counter = sequenceNumber;
+    params.SubscriptionId = Data.Id;
+    params.RetransmitSequenceNumber = sequenceNumber;
     RepublishResponse response = Server->Subscriptions()->Republish(params);
     return response;
   }

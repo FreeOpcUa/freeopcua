@@ -3320,8 +3320,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement& data)
     {
@@ -3329,9 +3327,6 @@ namespace OpcUa
         *this >> data.SequenceNumber;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<PublishRequest>(PublishRequest& data)
@@ -3341,7 +3336,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.SubscriptionAcknowledgements);
     }
 
-*/
 
 /*  DISABLED
 
@@ -3370,8 +3364,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters& data)
     {
@@ -3379,9 +3371,6 @@ namespace OpcUa
         *this >> data.RetransmitSequenceNumber;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest& data)
@@ -3391,7 +3380,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 

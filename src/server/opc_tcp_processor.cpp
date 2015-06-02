@@ -606,7 +606,7 @@ namespace OpcUa
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl;
           PublishRequest request;
           request.Header = requestHeader;
-          istream >> request.Parameters;
+          istream >> request.SubscriptionAcknowledgements;
 
           PublishRequestElement data;
           data.sequence = sequence;

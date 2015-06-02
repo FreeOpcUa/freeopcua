@@ -95,61 +95,6 @@ namespace OpcUa
     CreateSubscriptionResponse();
   };
 
-  ////////////////////////////////////////////////////////
-  // SubscriptionAcknowledgement
-  ////////////////////////////////////////////////////////
-
-  struct SubscriptionAcknowledgement
-  {
-    IntegerId SubscriptionId;
-    uint32_t SequenceNumber;
-
-    SubscriptionAcknowledgement();
-  };
-
-  ////////////////////////////////////////////////////////
-  // PublishParameters
-  ////////////////////////////////////////////////////////
-
-  struct PublishParameters
-  {
-    std::vector<SubscriptionAcknowledgement> Acknowledgements;
-  };
-
-  struct RepublishParameters
-  {
-    IntegerId Subscription;
-    uint32_t Counter = 0;
-  };
-
-
-  ////////////////////////////////////////////////////////
-  // PublishRequest
-  ////////////////////////////////////////////////////////
-
-  struct PublishRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    PublishParameters Parameters;
-
-    PublishRequest();
-  };
-
-  struct RepublishRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    RepublishParameters Parameters;
-
-    RepublishRequest();
-  };
-
-
-  ////////////////////////////////////////////////////////
-  // NotificationMessage
-  ////////////////////////////////////////////////////////
-
   struct StatusChangeNotification
   {
     StatusCode Status;

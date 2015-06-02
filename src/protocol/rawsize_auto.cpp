@@ -3754,8 +3754,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
     {
@@ -3765,9 +3763,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<PublishRequest>(const PublishRequest& data)
@@ -3779,7 +3774,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3812,8 +3806,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<RepublishParameters>(const RepublishParameters& data)
     {
@@ -3823,9 +3815,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishRequest>(const RepublishRequest& data)
@@ -3837,7 +3826,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

@@ -548,13 +548,10 @@ namespace OpcUa
 /*  DISABLED
 */
 
-/*  DISABLED
-
      PublishRequest::PublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 */
@@ -567,13 +564,10 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      RepublishRequest::RepublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishRequest_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

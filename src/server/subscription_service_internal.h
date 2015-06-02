@@ -39,7 +39,7 @@ namespace OpcUa
 
     class InternalSubscription;
 
-    typedef std::map <IntegerId, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
+    typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
 
 
     class SubscriptionServiceInternal : public Server::SubscriptionService

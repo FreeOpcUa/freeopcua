@@ -169,13 +169,13 @@ namespace OpcUa
 
     RepublishResponse InternalSubscription::Republish(const RepublishParameters& params)
     {
-      if (Debug) std::cout << "SubscriptionService| RepublishRequest for sequence: " << params.Counter << std::endl;
+      if (Debug) std::cout << "SubscriptionService| RepublishRequest for sequence: " << params.RetransmitSequenceNumber << std::endl;
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       RepublishResponse response;
       for (const PublishResult& res: NotAcknowledgedResults)
       {
-        if (res.Message.SequenceId == params.Counter)
+        if (res.Message.SequenceId == params.RetransmitSequenceNumber)
         {
           response.Message = res.Message;
           return response;
