@@ -3094,18 +3094,13 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
-    void DataSerializer::Serialize<SetPublishingModeParameters>(const SetPublishingModeParameters& data)
+    void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters& data)
     {
         *this << data.PublishingEnabled;
         SerializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
@@ -3115,30 +3110,23 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<SetPublishingModeResult>(const SetPublishingModeResult& data)
+    void DataSerializer::Serialize<PublishingModeResult>(const PublishingModeResult& data)
     {
         SerializeContainer(*this, data.Results);
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.Result;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)

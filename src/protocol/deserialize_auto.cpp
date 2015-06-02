@@ -3142,18 +3142,13 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
-    void DataDeserializer::Deserialize<SetPublishingModeParameters>(SetPublishingModeParameters& data)
+    void DataDeserializer::Deserialize<PublishingModeParameters>(PublishingModeParameters& data)
     {
         *this >> data.PublishingEnabled;
         DeserializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<SetPublishingModeRequest>(SetPublishingModeRequest& data)
@@ -3163,30 +3158,23 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataDeserializer::Deserialize<SetPublishingModeResult>(SetPublishingModeResult& data)
+    void DataDeserializer::Deserialize<PublishingModeResult>(PublishingModeResult& data)
     {
         DeserializeContainer(*this, data.Results);
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<SetPublishingModeResponse>(SetPublishingModeResponse& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        *this >> data.Result;
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& data)

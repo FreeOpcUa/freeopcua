@@ -17,7 +17,7 @@ IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
-OverrideStructTypeName = {"CreateSubscriptionResult": ("SubscriptionData", "Data")}
+OverrideStructTypeName = {"CreateSubscriptionResult": ("SubscriptionData", "Data"), "SetPublishingModeParameters": ("PublishingModeParameters", "Parameters"), "SetPublishingModeResult": ("PublishingModeResult", "Result")}
 OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
@@ -226,8 +226,10 @@ EnabledStructs = [\
     'CreateSubscriptionResponse',
     #'ModifySubscriptionRequest',
     #'ModifySubscriptionResponse',
-    #'SetPublishingModeRequest',
-    #'SetPublishingModeResponse',
+    'SetPublishingModeRequest',
+    'PublishingModeParameters',
+    'SetPublishingModeResponse',
+    'PublishingModeResult',
     'NotificationMessage',
     #'NotificationData',
     #'DataChangeNotification',

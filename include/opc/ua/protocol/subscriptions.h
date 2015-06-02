@@ -39,43 +39,6 @@ namespace OpcUa
     DeleteSubscriptionResponse();
   };
 
-
-  ////////////////////////////////////////////////////////
-  // SetPublishingMode
-  ////////////////////////////////////////////////////////
-
-  struct PublishingModeParameters
-  {
-    bool Enabled;
-    std::vector<IntegerId> SubscriptionIds;
-
-    PublishingModeParameters();
-  };
-
-  struct SetPublishingModeRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    PublishingModeParameters Parameters;
-
-    SetPublishingModeRequest();
-  };
-
-  struct PublishingModeResult
-  {
-    std::vector<StatusCode> Statuses;
-    DiagnosticInfoList Diagnostics;
-  };
-
-  struct SetPublishingModeResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    PublishingModeResult Result;
-
-    SetPublishingModeResponse();
-  };
-
 } // namespace OpcUa
 
 #endif /// OPC_UA_PROTOCOL_SUBSCRIPTIONS_H

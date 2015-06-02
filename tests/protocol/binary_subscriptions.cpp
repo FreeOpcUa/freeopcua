@@ -788,8 +788,8 @@ TEST_F(SubscriptionSerialization, PublishingModeParameters)
   using namespace OpcUa::Binary;
 
   PublishingModeParameters params;
-  params.Enabled = true;
-  params.SubscriptionIds.push_back(IntegerId());
+  params.PublishingEnabled = true;
+  params.SubscriptionIds.push_back(1);
 
   GetStream() << params << flush;
 
@@ -838,7 +838,7 @@ TEST_F(SubscriptionDeserialization, PublishingModeParameters)
   PublishingModeParameters params;
   GetStream() >> params;
 
-  ASSERT_EQ(params.Enabled, true);
+  ASSERT_EQ(params.PublishingEnabled, true);
   ASSERT_EQ(params.SubscriptionIds.size(), 1);
   ASSERT_EQ(params.SubscriptionIds[0], 1);
 }
@@ -924,7 +924,7 @@ TEST_F(SubscriptionSerialization, PublishingModeResult)
   using namespace OpcUa::Binary;
 
   PublishingModeResult result;
-  result.Statuses.push_back(StatusCode::Good);
+  result.Results.push_back(StatusCode::Good);
 
   GetStream() << result << flush;
 
@@ -973,9 +973,9 @@ TEST_F(SubscriptionDeserialization, PublishingModeResult)
   PublishingModeResult result;
   GetStream() >> result;
 
-  ASSERT_EQ(result.Statuses.size(), 1);
-  ASSERT_EQ(result.Statuses[0], StatusCode::Good);
-  ASSERT_EQ(result.Diagnostics.size(), 0);
+  ASSERT_EQ(result.Results.size(), 1);
+  ASSERT_EQ(result.Results[0], StatusCode::Good);
+  ASSERT_EQ(result.DiagnosticInfos.size(), 0);
 }
 
 //-------------------------------------------------------

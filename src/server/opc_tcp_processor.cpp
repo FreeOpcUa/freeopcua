@@ -629,7 +629,7 @@ namespace OpcUa
           //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Result.Statuses.resize(params.SubscriptionIds.size(), StatusCode::Good);
+          response.Result.Results.resize(params.SubscriptionIds.size(), StatusCode::Good);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));

@@ -3548,10 +3548,8 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
-    std::size_t RawSize<SetPublishingModeParameters>(const SetPublishingModeParameters& data)
+    std::size_t RawSize<PublishingModeParameters>(const PublishingModeParameters& data)
     {
         size_t size = 0;
         size += RawSize(data.PublishingEnabled);
@@ -3559,9 +3557,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
@@ -3573,12 +3568,9 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
-    std::size_t RawSize<SetPublishingModeResult>(const SetPublishingModeResult& data)
+    std::size_t RawSize<PublishingModeResult>(const PublishingModeResult& data)
     {
         size_t size = 0;
         size += RawSizeContainer(data.Results);
@@ -3586,9 +3578,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
@@ -3596,11 +3585,10 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.Result);
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)

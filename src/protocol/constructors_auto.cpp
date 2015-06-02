@@ -517,24 +517,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-*/
-
-/*  DISABLED
-
      SetPublishingModeRequest::SetPublishingModeRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      SetPublishingModeResponse::SetPublishingModeResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
      PublishRequest::PublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))

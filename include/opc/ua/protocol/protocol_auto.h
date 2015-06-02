@@ -2714,49 +2714,35 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
-    struct SetPublishingModeParameters 
+    struct PublishingModeParameters 
     {
          bool PublishingEnabled;
          std::vector<uint32_t> SubscriptionIds;
-
-         SetPublishingModeParameters();
     };
-*/
-
-/* DISABLED
 
     struct SetPublishingModeRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::SetPublishingModeParameters Parameters;
+         OpcUa::PublishingModeParameters Parameters;
 
          SetPublishingModeRequest();
     };
-*/
 
-/* DISABLED
-
-    struct SetPublishingModeResult 
+    struct PublishingModeResult 
     {
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
     };
-*/
-
-/* DISABLED
 
     struct SetPublishingModeResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::SetPublishingModeResult Parameters;
+         OpcUa::PublishingModeResult Result;
 
          SetPublishingModeResponse();
     };
-*/
 
     struct NotificationMessage 
     {
