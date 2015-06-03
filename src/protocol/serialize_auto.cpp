@@ -3366,29 +3366,14 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionsParameters>(const DeleteSubscriptionsParameters& data)
-    {
-        SerializeContainer(*this, data.SubscriptionIds);
-    }
-
-*/
-
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
@@ -3399,7 +3384,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 

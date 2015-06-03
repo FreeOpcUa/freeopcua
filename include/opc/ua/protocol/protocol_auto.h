@@ -2954,27 +2954,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
-    struct DeleteSubscriptionsParameters 
-    {
-         std::vector<uint32_t> SubscriptionIds;
-    };
-*/
-
-/* DISABLED
-
     struct DeleteSubscriptionsRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::DeleteSubscriptionsParameters Parameters;
+         std::vector<uint32_t> SubscriptionIds;
 
          DeleteSubscriptionsRequest();
     };
-*/
-
-/* DISABLED
 
     struct DeleteSubscriptionsResponse 
     {
@@ -2985,7 +2972,6 @@ namespace OpcUa
 
          DeleteSubscriptionsResponse();
     };
-*/
 
 /* DISABLED
 

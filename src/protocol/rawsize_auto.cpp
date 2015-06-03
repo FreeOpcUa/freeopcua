@@ -3872,33 +3872,16 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<DeleteSubscriptionsParameters>(const DeleteSubscriptionsParameters& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.SubscriptionIds);
-        return size;
-    }
-
-*/
-
-/* DISABLED
-
     template<>
     std::size_t RawSize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
     {
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.SubscriptionIds);
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
@@ -3911,7 +3894,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

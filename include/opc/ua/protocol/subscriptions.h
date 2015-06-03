@@ -16,28 +16,6 @@
 
 namespace OpcUa
 {
-  ////////////////////////////////////////////////////////
-  // DeleteSubscriptionRequest
-  ////////////////////////////////////////////////////////
-
-  struct DeleteSubscriptionRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    std::vector<uint32_t> SubscriptionsIds;
-
-    DeleteSubscriptionRequest();
-  };
-
-  struct DeleteSubscriptionResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    std::vector<StatusCode> Results;
-    DiagnosticInfoList Diagnostic;
-
-    DeleteSubscriptionResponse();
-  };
 
 } // namespace OpcUa
 

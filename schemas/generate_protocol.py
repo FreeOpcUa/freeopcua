@@ -15,7 +15,7 @@ import generate_model as gm
 NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "NotificationMessage", "PublishResult", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse"]
+NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse", "DeleteSubscriptionsRequest", "DeleteSubscriptionsResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
 OverrideStructTypeName = {"CreateSubscriptionResult": ("SubscriptionData", "Data"), "SetPublishingModeParameters": ("PublishingModeParameters", "Parameters"), "SetPublishingModeResult": ("PublishingModeResult", "Result")}
 OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
@@ -248,8 +248,8 @@ EnabledStructs = [\
     #'TransferResult',
     #'TransferSubscriptionsRequest',
     #'TransferSubscriptionsResponse',
-    #'DeleteSubscriptionsRequest',
-    #'DeleteSubscriptionsResponse',
+    'DeleteSubscriptionsRequest',
+    'DeleteSubscriptionsResponse',
     #'ScalarTestType',
     #'ArrayTestType',
     #'CompositeTestType',

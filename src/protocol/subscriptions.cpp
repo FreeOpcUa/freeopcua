@@ -31,20 +31,6 @@ namespace OpcUa
   }
 
   ////////////////////////////////////////////////////////
-  // DeleteSubscriptionRequest
-  ////////////////////////////////////////////////////////
-
-  DeleteSubscriptionRequest::DeleteSubscriptionRequest()
-    : TypeId(DELETE_SUBSCRIPTION_REQUEST)
-  {
-  }
-
-  DeleteSubscriptionResponse::DeleteSubscriptionResponse()
-    : TypeId(DELETE_SUBSCRIPTION_RESPONSE)
-  {
-  }
-
-  ////////////////////////////////////////////////////////
   // PublishResult
   ////////////////////////////////////////////////////////
 
@@ -91,67 +77,6 @@ namespace OpcUa
 
   namespace Binary
   {
-    ////////////////////////////////////////////////////////
-    // DelteSubscriptionRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const DeleteSubscriptionRequest& request)
-    {
-      return RawSize(request.TypeId) +
-        RawSize(request.Header) +
-        RawSizeContainer(request.SubscriptionsIds);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteSubscriptionRequest>(DeleteSubscriptionRequest& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.SubscriptionsIds;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionRequest>(const DeleteSubscriptionRequest& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.SubscriptionsIds;
-    }
-
-
-
-    ////////////////////////////////////////////////////////
-    // DeleteSubscriptionResponse
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize(const DeleteSubscriptionResponse& request)
-    {
-      return RawSize(request.TypeId) +
-        RawSize(request.Header) +
-        RawSizeContainer(request.Results) +
-        RawSizeContainer(request.Diagnostic);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteSubscriptionResponse>(DeleteSubscriptionResponse& request)
-    {
-      *this >> request.TypeId;
-      *this >> request.Header;
-      *this >> request.Results;
-      *this >> request.Diagnostic;
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionResponse>(const DeleteSubscriptionResponse& request)
-    {
-      *this << request.TypeId;
-      *this << request.Header;
-      *this << request.Results;
-      *this << request.Diagnostic;
-    }
-
     ////////////////////////////////////////////////////////
     // SubscriptionAcknowledgement -- to be removed
     ////////////////////////////////////////////////////////

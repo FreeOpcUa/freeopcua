@@ -432,9 +432,9 @@ namespace
     virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
-      DeleteSubscriptionRequest request;
-      request.SubscriptionsIds = subscriptions;
-      const DeleteSubscriptionResponse response = Send<DeleteSubscriptionResponse>(request);
+      DeleteSubscriptionsRequest request;
+      request.SubscriptionIds = subscriptions;
+      const DeleteSubscriptionsResponse response = Send<DeleteSubscriptionsResponse>(request);
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions <--" << std::endl; }
       return response.Results;
     }

@@ -544,7 +544,7 @@ namespace OpcUa
 
           DeleteSubscriptions(ids); //remove from locale subscription lis
 
-          DeleteSubscriptionResponse response;
+          DeleteSubscriptionsResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
           response.Results = Server->Subscriptions()->DeleteSubscriptions(ids);

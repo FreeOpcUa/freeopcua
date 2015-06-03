@@ -3414,29 +3414,14 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteSubscriptionsParameters>(DeleteSubscriptionsParameters& data)
-    {
-        DeserializeContainer(*this, data.SubscriptionIds);
-    }
-
-*/
-
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<DeleteSubscriptionsRequest>(DeleteSubscriptionsRequest& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        DeserializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<DeleteSubscriptionsResponse>(DeleteSubscriptionsResponse& data)
@@ -3447,7 +3432,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 

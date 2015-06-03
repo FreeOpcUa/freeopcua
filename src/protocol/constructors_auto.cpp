@@ -563,21 +563,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      DeleteSubscriptionsRequest::DeleteSubscriptionsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      DeleteSubscriptionsResponse::DeleteSubscriptionsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
