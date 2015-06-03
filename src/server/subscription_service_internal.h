@@ -17,7 +17,6 @@
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/event.h>
 #include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 

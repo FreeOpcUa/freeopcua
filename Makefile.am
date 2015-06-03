@@ -250,7 +250,6 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/status_codes.h \
   include/opc/ua/protocol/strings.h \
   include/opc/ua/protocol/string_utils.h \
-  include/opc/ua/protocol/subscriptions.h \
   include/opc/ua/protocol/types.h \
   include/opc/ua/protocol/variable_access_level.h \
   include/opc/ua/protocol/variant.h \

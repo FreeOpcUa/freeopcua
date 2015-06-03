@@ -19,6 +19,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/secure_channel.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 #include <algorithm>
 #include <stdexcept>

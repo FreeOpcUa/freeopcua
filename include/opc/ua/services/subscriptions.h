@@ -13,7 +13,6 @@
 
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 
 #include <functional>

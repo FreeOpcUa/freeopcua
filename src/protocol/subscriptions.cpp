@@ -11,7 +11,6 @@
 #include "binary_serialization.h"
 
 #include <opc/ua/protocol/binary/stream.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 
 namespace OpcUa
