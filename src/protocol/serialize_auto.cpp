@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -18,7 +18,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {
 
@@ -2732,8 +2732,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters& data)
     {
@@ -2744,9 +2742,6 @@ namespace OpcUa
         *this << data.DiscardOldest;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
@@ -2756,7 +2751,6 @@ namespace OpcUa
         *this << data.RequestedParameters;
     }
 
-*/
 
 /*  DISABLED
 
@@ -2772,19 +2766,14 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsParameters>(const CreateMonitoredItemsParameters& data)
+    void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
     {
         *this << data.SubscriptionId;
         *this << data.TimestampsToReturn;
         SerializeContainer(*this, data.ItemsToCreate);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
@@ -2794,7 +2783,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 

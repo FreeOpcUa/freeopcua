@@ -205,7 +205,7 @@ namespace OpcUa
     }
     
 
-    CreateMonitoredItemsResult InternalSubscription::CreateMonitoredItem(const MonitoredItemRequest& request)
+    CreateMonitoredItemsResult InternalSubscription::CreateMonitoredItem(const MonitoredItemCreateRequest& request)
     {
       if (Debug) std::cout << "SubscriptionService| Creating monitored item." << std::endl;
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
@@ -239,12 +239,12 @@ namespace OpcUa
       }
       result.Status = OpcUa::StatusCode::Good;
       result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
-      result.RevizedQueueSize = request.Parameters.QueueSize; // We should check that value, maybe set to a default...
-      result.Filter = request.Parameters.Filter; //We can omit that one if we do not change anything in filter
+      result.RevizedQueueSize = request.RequestedParameters.QueueSize; // We should check that value, maybe set to a default...
+      result.Filter = request.RequestedParameters.Filter; //We can omit that one if we do not change anything in filter
       MonitoredDataChange mdata;
       mdata.Parameters = result;
-      mdata.Mode = request.Mode;
-      mdata.ClientHandle = request.Parameters.ClientHandle;
+      mdata.Mode = request.MonitoringMode;
+      mdata.ClientHandle = request.RequestedParameters.ClientHandle;
       mdata.CallbackHandle = callbackHandle;
       mdata.MonitoredItemId = result.MonitoredItemId;
       MonitoredDataChanges[result.MonitoredItemId] = mdata;

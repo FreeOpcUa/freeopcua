@@ -17,8 +17,9 @@ IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
 NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse", "DeleteSubscriptionsRequest", "DeleteSubscriptionsResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
-OverrideStructTypeName = {"CreateSubscriptionResult": ("SubscriptionData", "Data"), "SetPublishingModeParameters": ("PublishingModeParameters", "Parameters"), "SetPublishingModeResult": ("PublishingModeResult", "Result")}
-OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}}
+OverrideStructTypeName = {"CreateSubscriptionResult": "SubscriptionData", "SetPublishingModeParameters": "PublishingModeParameters", "SetPublishingModeResult": "PublishingModeResult", "CreateMonitoredItemsParameters": "MonitoredItemsParameters"}
+OverrideNameInStruct = {"CreateSubscriptionResponse": {"Parameters": "Data"}, "SetPublishingModeResponse": {"Parameters": "Result"}}
+OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}, "MonitoringParameters": {"Filter": "MonitoringFilter"}, "MonitoredItemCreateResult": {"FilterResult": "MonitoringFilter"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
 #list of UA structure we want to enable, some structures may
@@ -205,10 +206,11 @@ EnabledStructs = [\
     #'MonitoringFilterResult',
     #'EventFilterResult',
     #'AggregateFilterResult',
-    #'MonitoringParameters',
-    #'MonitoredItemCreateRequest',
+    'MonitoringParameters',
+    'MonitoredItemCreateRequest',
     #'MonitoredItemCreateResult',
-    #'CreateMonitoredItemsRequest',
+    'MonitoredItemsParameters',
+    'CreateMonitoredItemsRequest',
     #'CreateMonitoredItemsResponse',
     #'MonitoredItemModifyRequest',
     #'MonitoredItemModifyResult',
@@ -325,21 +327,24 @@ def override_types(model):
             if field.name in OverrideTypes.keys():
                 field.uatype = OverrideTypes[field.name]
 
+            if struct.name in OverrideNameInStruct.keys():
+                if field.name in OverrideNameInStruct[struct.name].keys():
+                    field.name = OverrideNameInStruct[struct.name][field.name]
+
             if struct.name in OverrideTypeInStruct.keys():
                 if field.name in OverrideTypeInStruct[struct.name].keys():
                     field.uatype = OverrideTypeInStruct[struct.name][field.name]
 
             if field.uatype in OverrideStructTypeName.keys():
-                field.name = OverrideStructTypeName[field.uatype][1]
-                field.uatype = OverrideStructTypeName[field.uatype][0]
+                field.uatype = OverrideStructTypeName[field.uatype]
 
         if struct.name in OverrideStructTypeName.keys():
-            struct.name = OverrideStructTypeName[struct.name][0]
+            struct.name = OverrideStructTypeName[struct.name]
 
 
 class CodeGenerator(object):
     def __init__(self, model, h_path, enum_path, size_path, ser_path, deser_path, const_path):
-        self.model = model 
+        self.model = model
         self.h_path = h_path
         self.enum_path = enum_path
         self.rawsize_path = size_path
@@ -371,7 +376,7 @@ class CodeGenerator(object):
         self.make_header_serialize()
         self.make_header_deserialize()
         self.make_header_constructors()
-        
+
         for enum in self.model.enums:
             if not enum.name in IgnoredEnums:
                 self.make_enum_h(enum)
@@ -423,10 +428,10 @@ class CodeGenerator(object):
         #if struct.basetype:
             #base = " : public " + struct.basetype
         self.write_h("    struct %s %s\n    {""" % (name, base))
-        for field in struct.fields: 
+        for field in struct.fields:
             #if field.sourcetype:
                 #continue
-            
+
             if field.get_ctype() == "OpcUa::" + struct.name:
                 #we have a problem selv referensing struct
                 self.write_h("         std::shared_ptr<{}> {};".format(field.get_ctype(), field.name))
@@ -530,7 +535,7 @@ class CodeGenerator(object):
                     self.write_deser("        {}*this >> data.{};".format(switch, field.name))
         self.write_deser("    }")
         self.write_deser("")
-    
+
     def make_request_constructors(self, struct):
         if not struct.needconstructor:
             return
@@ -649,9 +654,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -665,7 +670,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -683,9 +688,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -699,7 +704,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -715,9 +720,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -731,7 +736,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -748,9 +753,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License

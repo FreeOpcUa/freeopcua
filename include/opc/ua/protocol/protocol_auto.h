@@ -2382,19 +2382,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct MonitoringParameters 
     {
          uint32_t ClientHandle;
          double SamplingInterval;
-         OpcUa::ExtensionObject Filter;
+         OpcUa::MonitoringFilter Filter;
          uint32_t QueueSize;
          bool DiscardOldest;
     };
-*/
-
-/* DISABLED
 
     struct MonitoredItemCreateRequest 
     {
@@ -2402,7 +2397,6 @@ namespace OpcUa
          OpcUa::MonitoringMode MonitoringMode;
          OpcUa::MonitoringParameters RequestedParameters;
     };
-*/
 
 /* DISABLED
 
@@ -2412,31 +2406,25 @@ namespace OpcUa
          uint32_t MonitoredItemId;
          double RevisedSamplingInterval;
          uint32_t RevisedQueueSize;
-         OpcUa::ExtensionObject FilterResult;
+         OpcUa::MonitoringFilter FilterResult;
     };
 */
 
-/* DISABLED
-
-    struct CreateMonitoredItemsParameters 
+    struct MonitoredItemsParameters 
     {
          uint32_t SubscriptionId;
          OpcUa::TimestampsToReturn TimestampsToReturn;
          std::vector<OpcUa::MonitoredItemCreateRequest> ItemsToCreate;
     };
-*/
-
-/* DISABLED
 
     struct CreateMonitoredItemsRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::CreateMonitoredItemsParameters Parameters;
+         OpcUa::MonitoredItemsParameters Parameters;
 
          CreateMonitoredItemsRequest();
     };
-*/
 
 /* DISABLED
 

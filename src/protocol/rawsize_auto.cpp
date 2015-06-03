@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -18,7 +18,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {
 
@@ -3126,8 +3126,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<MonitoringParameters>(const MonitoringParameters& data)
     {
@@ -3140,9 +3138,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
@@ -3154,7 +3149,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3172,10 +3166,8 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
-    std::size_t RawSize<CreateMonitoredItemsParameters>(const CreateMonitoredItemsParameters& data)
+    std::size_t RawSize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
     {
         size_t size = 0;
         size += RawSize(data.SubscriptionId);
@@ -3184,9 +3176,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
@@ -3198,7 +3187,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

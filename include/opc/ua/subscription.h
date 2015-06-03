@@ -40,8 +40,8 @@ namespace OpcUa
     MonitoringFilter Filter;
   };
 
-  typedef std::map<IntegerId, MonitoredItemData> AttValMap;
-  typedef std::map<IntegerId, EventFilter> SimpleAttOpMap;
+  typedef std::map<uint32_t, MonitoredItemData> AttValMap;
+  typedef std::map<uint32_t, EventFilter> SimpleAttOpMap;
 
   class SubscriptionHandler
   {
@@ -115,9 +115,9 @@ namespace OpcUa
       uint32_t SubscribeEvents(const Node& node, const Node& eventType); //subscribe to all variables og given event type 
       uint32_t SubscribeEvents(); //subscribe to variables of baseEventTypes and ServerNode 
 
-      // Subscribe using a MonitoredItemRequest 
+      // Subscribe using a MonitoredItemCreateRequest
       // This method allow to fully customize the subscription
-      std::vector<CreateMonitoredItemsResult> Subscribe(std::vector<MonitoredItemRequest> request);
+      std::vector<CreateMonitoredItemsResult> Subscribe(std::vector<MonitoredItemCreateRequest> request);
       
       // Override this method if you want raw publish results from server
       // for example if you want to make sure you do not miss any packets, etc, ...

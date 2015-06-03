@@ -4,6 +4,7 @@
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/data_value.h>
 #include <opc/ua/protocol/variant.h>
+#include <opc/ua/protocol/attribute_ids.h>
 
 #include <memory>
 #include <stdint.h>
@@ -75,6 +76,90 @@ namespace OpcUa
     NotificationData(DataChangeNotification notification);
     NotificationData(EventNotificationList notification);
     NotificationData(StatusChangeNotification notification);
+  };
+
+
+  // moved from monitored_items.h
+
+  struct DataChangeFilter
+  {
+    DataChangeTrigger Trigger;
+    DeadbandType Deadband;
+    double DeadbandValue;
+  };
+
+  struct SimpleAttributeOperand
+  {
+    NodeId TypeId;
+    std::vector<QualifiedName> BrowsePath;
+    AttributeId Attribute;
+    std::vector<std::string> IndexRange;
+  };
+
+  struct ElementOperand
+  {
+    uint32_t Index;
+  };
+
+  struct LiteralOperand
+  {
+    // BaseDataType Value; // TODO
+    Variant Value;
+  };
+
+  struct AttributeOperand
+  {
+    NodeId Node;
+    std::string Alias;
+    RelativePath Path;
+    IntegerId AttributeId;
+    std::vector<std::string> IndexRange;
+  };
+
+  struct FilterOperand
+  {
+    ExtensionObjectHeader Header;
+    ElementOperand Element;
+    LiteralOperand Literal;
+    AttributeOperand Attribute;
+    SimpleAttributeOperand SimpleAttribute;
+  };
+
+  struct ContentFilterElement
+  {
+    FilterOperator Operator;
+    std::vector<FilterOperand> FilterOperands;
+  };
+
+  struct EventFilter
+  {
+    std::vector<SimpleAttributeOperand> SelectClauses;
+    std::vector<ContentFilterElement> WhereClause;
+  };
+
+  struct AggregateFilter
+  {
+    DateTime StartTime;
+    NodeId AggregateType;
+    Duration ProcessingInterval;
+    //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
+    bool UseServerCapabilitiesDefaults;
+    bool TreatUncertainAsBad;
+    uint8_t PercentDataBad;
+    uint8_t PercentDataGood;
+    bool SteppedSlopedExtrapolation;
+  };
+
+  struct MonitoringFilter
+  {
+    ExtensionObjectHeader Header;
+    DataChangeFilter DataChange;
+    EventFilter Event;
+    AggregateFilter Aggregate;
+    MonitoringFilter() {}
+    MonitoringFilter(DataChangeFilter filter);
+    MonitoringFilter(EventFilter filter);
+    MonitoringFilter(AggregateFilter filter);
   };
 
 } // namespace OpcUa

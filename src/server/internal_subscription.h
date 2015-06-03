@@ -68,7 +68,7 @@ namespace OpcUa
         std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerId>& ids);
         bool EnqueueEvent(IntegerId monitoreditemid, const Event& event);
         bool EnqueueDataChange(IntegerId monitoreditemid, const DataValue& value);
-        CreateMonitoredItemsResult CreateMonitoredItem(const MonitoredItemRequest& request);
+        CreateMonitoredItemsResult CreateMonitoredItem(const MonitoredItemCreateRequest& request);
         void DataChangeCallback(const IntegerId&, const DataValue& value);
         bool HasExpired();
         void TriggerEvent(NodeId node, Event event);

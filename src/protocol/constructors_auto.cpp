@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -411,13 +411,10 @@ namespace OpcUa
     {
     }
 
-/*  DISABLED
-
      CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsRequest_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

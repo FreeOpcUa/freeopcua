@@ -16,120 +16,39 @@
 namespace OpcUa
 {
 
-  struct DataChangeFilter
-  {
-    DataChangeTrigger Trigger;
-    DeadbandType Deadband;
-    double DeadbandValue;
-  };
-
-  struct SimpleAttributeOperand
-  {
-    NodeId TypeId;
-    std::vector<QualifiedName> BrowsePath;
-    AttributeId Attribute;
-    std::vector<std::string> IndexRange; 
-  };
-
-  struct ElementOperand
-  {
-    uint32_t Index;
-  };
-
-  struct LiteralOperand
-  {
-    // BaseDataType Value; // TODO
-    Variant Value;
-  };
-
-  struct AttributeOperand
-  {
-    NodeId Node;
-    std::string Alias;
-    RelativePath Path;
-    IntegerId AttributeId;
-    std::vector<std::string> IndexRange;
-  };
-
-  struct FilterOperand
-  {
-    ExtensionObjectHeader Header;
-    ElementOperand Element;
-    LiteralOperand Literal;
-    AttributeOperand Attribute;
-    SimpleAttributeOperand SimpleAttribute;
-  };
-
-  struct ContentFilterElement
-  {
-    FilterOperator Operator;
-    std::vector<FilterOperand> FilterOperands;
-  };
-
-  struct EventFilter
-  {
-    std::vector<SimpleAttributeOperand> SelectClauses;
-    std::vector<ContentFilterElement> WhereClause;
-  };
-
-  struct AggregateFilter
-  {
-    DateTime StartTime;
-    NodeId AggregateType;
-    Duration ProcessingInterval;
-    //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
-    bool UseServerCapabilitiesDefaults;
-    bool TreatUncertainAsBad;
-    uint8_t PercentDataBad;
-    uint8_t PercentDataGood;
-    bool SteppedSlopedExtrapolation;
-  };
-
-  struct MonitoringFilter
-  {
-    ExtensionObjectHeader Header;
-    DataChangeFilter DataChange;
-    EventFilter Event;
-    AggregateFilter Aggregate;
-    MonitoringFilter() {}
-    MonitoringFilter(DataChangeFilter filter);
-    MonitoringFilter(EventFilter filter);
-    MonitoringFilter(AggregateFilter filter);
-  };
-
-  struct MonitoringParameters
-  {
-    IntegerId ClientHandle;
-    Duration SamplingInterval;
-    MonitoringFilter Filter;
-    uint32_t QueueSize;
-    bool DiscardOldest;
-  };
-
-  struct MonitoredItemRequest
-  {
-    ReadValueId ItemToMonitor;
-    MonitoringMode Mode;
-    MonitoringParameters Parameters;
-  };
-
-  struct MonitoredItemsParameters
-  {
-    IntegerId SubscriptionId;
-    TimestampsToReturn Timestamps;
-    std::vector<MonitoredItemRequest> ItemsToCreate;
-
-    MonitoredItemsParameters();
-  };
-
-  struct CreateMonitoredItemsRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    MonitoredItemsParameters Parameters;
-
-    CreateMonitoredItemsRequest();
-  };
+//   struct MonitoringParameters
+//   {
+//     IntegerId ClientHandle;
+//     Duration SamplingInterval;
+//     MonitoringFilter Filter;
+//     uint32_t QueueSize;
+//     bool DiscardOldest;
+//   };
+//
+//   struct MonitoredItemCreateRequest
+//   {
+//     ReadValueId ItemToMonitor;
+//     MonitoringMode Mode;
+//     MonitoringParameters Parameters;
+//   };
+//
+//   struct MonitoredItemsParameters
+//   {
+//     IntegerId SubscriptionId;
+//     TimestampsToReturn Timestamps;
+//     std::vector<MonitoredItemCreateRequest> ItemsToCreate;
+//
+//     MonitoredItemsParameters();
+//   };
+//
+//   struct CreateMonitoredItemsRequest
+//   {
+//     NodeId TypeId;
+//     RequestHeader Header;
+//     MonitoredItemsParameters Parameters;
+//
+//     CreateMonitoredItemsRequest();
+//   };
 
 
   struct DeleteMonitoredItemsParameters

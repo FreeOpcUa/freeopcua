@@ -202,7 +202,7 @@ namespace OpcUa
     return results.front();
   }
 
-  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(std::vector<MonitoredItemRequest> request)
+  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(std::vector<MonitoredItemCreateRequest> request)
   {
     std::unique_lock<std::mutex> lock(Mutex); 
 
@@ -225,15 +225,15 @@ namespace OpcUa
 
     for (ReadValueId attr : attributes)
     {
-      MonitoredItemRequest req;
+      MonitoredItemCreateRequest req;
       req.ItemToMonitor = attr;
-      req.Mode = MonitoringMode::Reporting;
+      req.MonitoringMode = MonitoringMode::Reporting;
       MonitoringParameters params;
       params.SamplingInterval = Data.RevisedPublishingInterval;
       params.QueueSize = 1;
       params.DiscardOldest = true;
       params.ClientHandle = IntegerId(++LastMonitoredItemHandle);
-      req.Parameters = params;
+      req.RequestedParameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
 
@@ -249,12 +249,12 @@ namespace OpcUa
     for (const auto& res : results)
     {
       CheckStatusCode(res.Status);
-      if (Debug ) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].Parameters.ClientHandle << " and id " << res.MonitoredItemId << std::endl;  }
+      if (Debug ) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle << " and id " << res.MonitoredItemId << std::endl;  }
       MonitoredItemData mdata; 
       mdata.MonitoredItemId = res.MonitoredItemId;
       mdata.Attribute =  attributes[i].AttributeId;
       mdata.TargetNode =  Node(Server, attributes[i].NodeId);
-      AttributeValueMap[itemsParams.ItemsToCreate[i].Parameters.ClientHandle] = mdata;
+      AttributeValueMap[itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle] = mdata;
       monitoredItemsIds.push_back(res.MonitoredItemId);
       ++i;
     }
@@ -327,9 +327,9 @@ namespace OpcUa
     avid.NodeId = node.GetId();
     avid.AttributeId = AttributeId::EventNotifier;
 
-    MonitoredItemRequest req;
+    MonitoredItemCreateRequest req;
     req.ItemToMonitor = avid;
-    req.Mode = MonitoringMode::Reporting;
+    req.MonitoringMode = MonitoringMode::Reporting;
     MonitoringParameters params;
     params.SamplingInterval = Data.RevisedPublishingInterval;
     params.QueueSize = std::numeric_limits<uint32_t>::max();
@@ -338,7 +338,7 @@ namespace OpcUa
 
     MonitoringFilter filter(eventfilter);
     params.Filter = filter;
-    req.Parameters = params;
+    req.RequestedParameters = params;
     itemsParams.ItemsToCreate.push_back(req);
 
     std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;

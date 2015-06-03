@@ -110,7 +110,7 @@ namespace OpcUa
         return data;
       }
 
-      for (const MonitoredItemRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
+      for (const MonitoredItemCreateRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
       {
         CreateMonitoredItemsResult result = itsub->second->CreateMonitoredItem(req);
         data.Results.push_back(result);
