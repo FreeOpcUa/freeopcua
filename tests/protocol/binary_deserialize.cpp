@@ -9,7 +9,6 @@
 ///
 
 #include "common.h"
-#include <opc/ua/protocol/protocol.h>
 
 using namespace testing;
 
