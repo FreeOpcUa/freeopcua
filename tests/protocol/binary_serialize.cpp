@@ -890,7 +890,7 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 TEST_F(OpcUaBinarySerialization, SignatureData)
 {
   OpcUa::SignatureData s;
-  s.Signature = ByteString(std::vector<uint8_t>{1,2,3,4});
+  s.Signature = OpcUa::ByteString(std::vector<uint8_t>{1,2,3,4});
   s.Algorithm = "aes";
  
   const std::vector<char> expectedData = {

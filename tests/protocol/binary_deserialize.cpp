@@ -957,7 +957,7 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
 
   GetChannel().SetData(expectedData);
 
-  OpcUa::SignatureData s;
+  SignatureData s;
   GetStream() >> s;
 
   ASSERT_EQ(s.Signature, ByteString(std::vector<uint8_t>{1,2,3,4}));
