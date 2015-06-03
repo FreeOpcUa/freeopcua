@@ -22,7 +22,7 @@ namespace OpcUa
   ////////////////////////////////////////////////////////
   struct FindServersParameters
   {
-    std::string EndpointURL;
+    std::string EndpointUrl;
     std::vector<LocaleId> Locales;
     std::vector<std::string> ServersToReturn;
   };

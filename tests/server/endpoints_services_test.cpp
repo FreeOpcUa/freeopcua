@@ -161,7 +161,7 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
   EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyUri");
   //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
-  //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyURI");
+  //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyUri");
   EXPECT_EQ(ed.TransportProfileUri, "TransportProfileUri");
 
   ASSERT_EQ(ed.UserIdentityTokens.size(), 1);
@@ -195,7 +195,7 @@ TEST(EndpointParameters, ConvertingToAddonParameters)
   EXPECT_EQ(FindParameter(endpoint, "security_level").Value, "1");
   EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "sign_encrypt");
   EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyUri");
-  //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyURI");
+  //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyUri");
   EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileUri");
 
   ASSERT_EQ(endpoint.Groups.size(), 1);

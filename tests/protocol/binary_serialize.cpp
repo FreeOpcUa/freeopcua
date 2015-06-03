@@ -456,7 +456,7 @@ TEST_F(OpcUaBinarySerialization, Error)
 TEST_F(OpcUaBinarySerialization, Asymmetric)
 {
   OpcUa::Binary::AsymmetricAlgorithmHeader header;
-  header.SecurityPolicyURI = "pol";
+  header.SecurityPolicyUri = "pol";
   header.SenderCertificate = {1, 2, 3};
   header.ReceiverCertificateThumbPrint = {4, 5, 6};
 

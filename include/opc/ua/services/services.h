@@ -34,7 +34,7 @@ namespace OpcUa
     std::vector<uint8_t> ClientCertificate;
     std::string SessionName;
     std::string ServerURI;
-    std::string EndpointURL;
+    std::string EndpointUrl;
     Duration Timeout;
   };
 

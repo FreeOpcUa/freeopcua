@@ -316,13 +316,13 @@ protected:
   FILL_APPLICATION_DESCRIPTION(endpoint.ServerDescription); \
   endpoint.ServerCertificate = {1,2,3,4}; \
   endpoint.SecurityMode = MessageSecurityMode::None; \
-  endpoint.SecurityPolicyURI = "spu"; \
+  endpoint.SecurityPolicyUri = "spu"; \
   UserTokenPolicy token; \
   token.PolicyId = "pi"; \
   token.TokenType = UserTokenType::UserName; \
   token.IssuedTokenType = "itt"; \
-  token.IssuerEndpointURL = "ieu"; \
-  token.SecurityPolicyURI = "spu"; \
+  token.IssuerEndpointUrl = "ieu"; \
+  token.SecurityPolicyUri = "spu"; \
   endpoint.UserIdentifyTokens.push_back(token); \
   endpoint.TransportProfileURI = "tpu"; \
   endpoint.SecurityLevel = 3;
@@ -343,18 +343,18 @@ protected:
   3
 
 #define  ASSERT_ENDPOINT_EQ(e) \
-  ASSERT_EQ(e.EndpointURL, "eu"); \
+  ASSERT_EQ(e.EndpointUrl, "eu"); \
   ASSERT_APPLICATION_DESCRIPTION_EQ(e.ServerDescription); \
   const std::vector<uint8_t> certificate = {1,2,3,4}; \
   ASSERT_EQ(e.ServerCertificate, certificate); \
   ASSERT_EQ(e.SecurityMode, MessageSecurityMode::None); \
-  ASSERT_EQ(e.SecurityPolicyURI, "spu"); \
+  ASSERT_EQ(e.SecurityPolicyUri, "spu"); \
   ASSERT_EQ(e.UserIdentifyTokens.size(), 1); \
   ASSERT_EQ(e.UserIdentifyTokens[0].PolicyId, "pi"); \
   ASSERT_EQ(e.UserIdentifyTokens[0].TokenType, UserTokenType::UserName); \
   ASSERT_EQ(e.UserIdentifyTokens[0].IssuedTokenType, "itt"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].IssuerEndpointURL, "ieu"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].SecurityPolicyURI, "spu"); \
+  ASSERT_EQ(e.UserIdentifyTokens[0].IssuerEndpointUrl, "ieu"); \
+  ASSERT_EQ(e.UserIdentifyTokens[0].SecurityPolicyUri, "spu"); \
   ASSERT_EQ(e.TransportProfileURI, "tpu"); \
   ASSERT_EQ(e.SecurityLevel, 3);
 

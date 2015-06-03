@@ -127,7 +127,7 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
   OpcUa::RemoteSessionParameters session;
   session.ClientDescription.ApplicationName.Text = "opcua client";
   session.SessionName = "opua command line";
-  session.EndpointURL = "opc.tcp://localhost:4841";
+  session.EndpointUrl = "opc.tcp://localhost:4841";
   session.Timeout = 1000;
 
   OpcUa::ActivateSessionParameters session_parameters;

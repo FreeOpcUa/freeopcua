@@ -895,7 +895,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::AsymmetricAlgorithmHeader>(const OpcUa::Binary::AsymmetricAlgorithmHeader& header)
     {
-      *this << header.SecurityPolicyURI;
+      *this << header.SecurityPolicyUri;
       *this << header.SenderCertificate;
       *this << header.ReceiverCertificateThumbPrint;
     }
@@ -903,7 +903,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<OpcUa::Binary::AsymmetricAlgorithmHeader>(OpcUa::Binary::AsymmetricAlgorithmHeader& header)
     {
-      *this >> header.SecurityPolicyURI;
+      *this >> header.SecurityPolicyUri;
       *this >> header.SenderCertificate;
       *this >> header.ReceiverCertificateThumbPrint;
     };

@@ -42,7 +42,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<FindServersParameters>(const FindServersParameters& params)
     {
-      return RawSize(params.EndpointURL) +
+      return RawSize(params.EndpointUrl) +
              RawSizeContainer(params.Locales) +
              RawSizeContainer(params.ServersToReturn);
     }
@@ -50,7 +50,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<FindServersParameters>(const FindServersParameters& params)
     {
-      *this << params.EndpointURL;
+      *this << params.EndpointUrl;
       *this << params.Locales;
       *this << params.ServersToReturn;
     }
@@ -58,7 +58,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<FindServersParameters>(FindServersParameters& params)
     {
-      *this >> params.EndpointURL;
+      *this >> params.EndpointUrl;
       *this >> params.Locales;
       *this >> params.ServersToReturn;
     }

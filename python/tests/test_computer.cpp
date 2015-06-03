@@ -60,7 +60,7 @@ namespace
       endpoint.EndpointUrl = url;
       endpoint.SecurityLevel = 1;
       endpoint.SecurityMode = OpcUa::MessageSecurityMode::None;
-      endpoint.SecurityPolicyUri = "SecurityPolicyURI";
+      endpoint.SecurityPolicyUri = "SecurityPolicyUri";
       endpoint.ServerCertificate.push_back(1);
       endpoint.Server = GetApplications(url).front();
       endpoint.TransportProfileUri = "TransportProfileURI";

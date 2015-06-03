@@ -282,7 +282,7 @@ namespace
   void Print(const OpcUa::EndpointDescription& desc, const Tabs& tab)
   {
     std::cout << tab << "URL: " << desc.EndpointUrl << std::endl;
-    std::cout << tab << "SecurityPolicyURI: " << desc.SecurityPolicyUri << std::endl;
+    std::cout << tab << "SecurityPolicyUri: " << desc.SecurityPolicyUri << std::endl;
     std::cout << tab << "SecurityLevel: " << GetName(desc.SecurityMode) << " (" << (int)desc.SecurityMode << ")" << std::endl;
     std::cout << tab << "TransportProfileURI: " << desc.TransportProfileUri << std::endl;
     std::cout << tab << "SecurityLevel: " << (int)desc.SecurityLevel << std::endl;
@@ -634,7 +634,7 @@ namespace
     session.ClientDescription.ApplicationName.Text = "opcua client";
     session.ClientDescription.ApplicationType = OpcUa::ApplicationType::Client;
     session.SessionName = "opua command line";
-    session.EndpointURL = serverURI;
+    session.EndpointUrl = serverURI;
     session.Timeout = 1200000;
 
     CreateSessionResponse resp = computer->CreateSession(session);

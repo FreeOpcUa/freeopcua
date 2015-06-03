@@ -541,7 +541,7 @@ TEST_F(OpcUaBinaryDeserialization, Asymmetric)
   OpcUa::Binary::AsymmetricAlgorithmHeader header;
   GetStream() >> header;
 
-  ASSERT_EQ(header.SecurityPolicyURI, std::string("pol"));
+  ASSERT_EQ(header.SecurityPolicyUri, std::string("pol"));
   const std::vector<uint8_t> cert = {1, 2, 3};
   ASSERT_EQ(header.SenderCertificate, cert);
   const std::vector<uint8_t> thumb = {4, 5, 6};

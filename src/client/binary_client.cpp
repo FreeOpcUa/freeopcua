@@ -257,7 +257,7 @@ namespace
       request.Parameters.ClientDescription.DiscoveryUrls = parameters.ClientDescription.DiscoveryUrls;
 
       request.Parameters.ServerUri = parameters.ServerURI;
-      request.Parameters.EndpointUrl = parameters.EndpointURL; // TODO make just endpoint.URL;
+      request.Parameters.EndpointUrl = parameters.EndpointUrl; // TODO make just endpoint.URL;
       request.Parameters.SessionName = parameters.SessionName;
       request.Parameters.ClientNonce = ByteString(std::vector<uint8_t>(32,0));
       request.Parameters.ClientCertificate = ByteString(parameters.ClientCertificate);
@@ -844,7 +844,7 @@ private:
   {
     SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelId);
     AsymmetricAlgorithmHeader algorithmHeader;
-    algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
+    algorithmHeader.SecurityPolicyUri = Params.SecurePolicy;
     algorithmHeader.SenderCertificate = Params.SenderCertificate;
     algorithmHeader.ReceiverCertificateThumbPrint = Params.ReceiverCertificateThumbPrint;
     hdr.AddSize(RawSize(algorithmHeader));

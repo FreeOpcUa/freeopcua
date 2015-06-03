@@ -184,9 +184,9 @@ namespace OpcUa
       AsymmetricAlgorithmHeader algorithmHeader;
       istream >> algorithmHeader;
 
-      if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
+      if (algorithmHeader.SecurityPolicyUri != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyUri + std::string("'"));
       }
 
       SequenceHeader sequence;

@@ -188,7 +188,7 @@ namespace OpcUa
     session.ClientDescription.ApplicationName = LocalizedText(SessionName);
     session.ClientDescription.ApplicationType = OpcUa::ApplicationType::Client;
     session.SessionName = SessionName;
-    session.EndpointURL = endpoint.EndpointUrl;
+    session.EndpointUrl = endpoint.EndpointUrl;
     session.Timeout = DefaultTimeout;
     session.ServerURI = endpoint.Server.ApplicationUri;
 
@@ -200,7 +200,7 @@ namespace OpcUa
     ActivateSessionParameters session_parameters;
     {
       //const SessionData &session_data = response.Session;
-      Common::Uri uri(session.EndpointURL);
+      Common::Uri uri(session.EndpointUrl);
       std::string user = uri.User();
       std::string password = uri.Password();
       bool user_identify_token_found = false;
