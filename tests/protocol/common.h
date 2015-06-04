@@ -314,7 +314,7 @@ protected:
 #define FILL_TEST_ENDPOINT(endpoint) \
   endpoint.EndpointUrl = "eu"; \
   FILL_APPLICATION_DESCRIPTION(endpoint.Server); \
-  endpoint.ServerCertificate = ByteString(std::vector<uint8_t>{1,2,3,4})); \
+  endpoint.ServerCertificate = ByteString(std::vector<uint8_t>{1,2,3,4}); \
   endpoint.SecurityMode = MessageSecurityMode::None; \
   endpoint.SecurityPolicyUri = "spu"; \
   UserTokenPolicy token; \
@@ -345,7 +345,7 @@ protected:
 #define  ASSERT_ENDPOINT_EQ(e) \
   ASSERT_EQ(e.EndpointUrl, "eu"); \
   ASSERT_APPLICATION_DESCRIPTION_EQ(e.Server); \
-  const ByteString certificate = ByteString(std::vector<uint8_t>{1,2,3,4})); \
+  const ByteString certificate = ByteString(std::vector<uint8_t>{1,2,3,4}); \
   ASSERT_EQ(e.ServerCertificate, certificate); \
   ASSERT_EQ(e.SecurityMode, MessageSecurityMode::None); \
   ASSERT_EQ(e.SecurityPolicyUri, "spu"); \
