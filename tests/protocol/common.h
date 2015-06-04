@@ -279,15 +279,15 @@ protected:
 
 
 #define FILL_APPLICATION_DESCRIPTION(desc) \
-  desc.URI = "u"; \
-  desc.ProductURI = "pu"; \
-  desc.Name.Encoding = HAS_LOCALE | HAS_TEXT; \
-  desc.Name.Locale = "RU"; \
-  desc.Name.Text = "text"; \
-  desc.Type = ApplicationType::Client; \
-  desc.GatewayServerURI = "gw"; \
-  desc.DiscoveryProfileURI = "dpu"; \
-  desc.DiscoveryURLs.push_back("du");
+  desc.ApplicationUri = "u"; \
+  desc.ProductUri = "pu"; \
+  desc.ApplicationName.Encoding = HAS_LOCALE | HAS_TEXT; \
+  desc.ApplicationName.Locale = "RU"; \
+  desc.ApplicationName.Text = "text"; \
+  desc.ApplicationType = ApplicationType::Client; \
+  desc.GatewayServerUri = "gw"; \
+  desc.DiscoveryProfileUri = "dpu"; \
+  desc.DiscoveryUrls.push_back("du");
 
 #define TEST_APPLICATION_DESCRIPTION_BINARY_DATA \
   1,0,0,0, 'u', \
@@ -301,19 +301,19 @@ protected:
   1,0,0,0, 2,0,0,0, 'd','u'
 
 #define  ASSERT_APPLICATION_DESCRIPTION_EQ(desc) \
-  ASSERT_EQ(desc.URI, "u"); \
-  ASSERT_EQ(desc.ProductURI, "pu"); \
-  ASSERT_EQ(desc.Name.Encoding, HAS_LOCALE | HAS_TEXT); \
-  ASSERT_EQ(desc.Name.Locale, "RU"); \
-  ASSERT_EQ(desc.Name.Text, "text"); \
-  ASSERT_EQ(desc.Type, ApplicationType::Client); \
-  ASSERT_EQ(desc.GatewayServerURI, "gw"); \
-  ASSERT_EQ(desc.DiscoveryProfileURI, "dpu"); \
-  ASSERT_EQ(desc.DiscoveryURLs, std::vector<std::string>(1,"du"));
+  ASSERT_EQ(desc.ApplicationUri, "u"); \
+  ASSERT_EQ(desc.ProductUri, "pu"); \
+  ASSERT_EQ(desc.ApplicationName.Encoding, HAS_LOCALE | HAS_TEXT); \
+  ASSERT_EQ(desc.ApplicationName.Locale, "RU"); \
+  ASSERT_EQ(desc.ApplicationName.Text, "text"); \
+  ASSERT_EQ(desc.ApplicationType, ApplicationType::Client); \
+  ASSERT_EQ(desc.GatewayServerUri, "gw"); \
+  ASSERT_EQ(desc.DiscoveryProfileUri, "dpu"); \
+  ASSERT_EQ(desc.DiscoveryUrls, std::vector<std::string>(1,"du"));
 
 #define FILL_TEST_ENDPOINT(endpoint) \
   endpoint.EndpointUrl = "eu"; \
-  FILL_APPLICATION_DESCRIPTION(endpoint.ServerDescription); \
+  FILL_APPLICATION_DESCRIPTION(endpoint.Server); \
   endpoint.ServerCertificate = {1,2,3,4}; \
   endpoint.SecurityMode = MessageSecurityMode::None; \
   endpoint.SecurityPolicyUri = "spu"; \
@@ -323,8 +323,8 @@ protected:
   token.IssuedTokenType = "itt"; \
   token.IssuerEndpointUrl = "ieu"; \
   token.SecurityPolicyUri = "spu"; \
-  endpoint.UserIdentifyTokens.push_back(token); \
-  endpoint.TransportProfileURI = "tpu"; \
+  endpoint.UserIdentityTokens.push_back(token); \
+  endpoint.TransportProfileUri = "tpu"; \
   endpoint.SecurityLevel = 3;
 
 #define  TEST_ENDPOINT_BINARY_DATA \
@@ -344,18 +344,18 @@ protected:
 
 #define  ASSERT_ENDPOINT_EQ(e) \
   ASSERT_EQ(e.EndpointUrl, "eu"); \
-  ASSERT_APPLICATION_DESCRIPTION_EQ(e.ServerDescription); \
+  ASSERT_APPLICATION_DESCRIPTION_EQ(e.Server); \
   const std::vector<uint8_t> certificate = {1,2,3,4}; \
   ASSERT_EQ(e.ServerCertificate, certificate); \
   ASSERT_EQ(e.SecurityMode, MessageSecurityMode::None); \
   ASSERT_EQ(e.SecurityPolicyUri, "spu"); \
-  ASSERT_EQ(e.UserIdentifyTokens.size(), 1); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].PolicyId, "pi"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].TokenType, UserTokenType::UserName); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].IssuedTokenType, "itt"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].IssuerEndpointUrl, "ieu"); \
-  ASSERT_EQ(e.UserIdentifyTokens[0].SecurityPolicyUri, "spu"); \
-  ASSERT_EQ(e.TransportProfileURI, "tpu"); \
+  ASSERT_EQ(e.UserIdentityTokens.size(), 1); \
+  ASSERT_EQ(e.UserIdentityTokens[0].PolicyId, "pi"); \
+  ASSERT_EQ(e.UserIdentityTokens[0].TokenType, UserTokenType::UserName); \
+  ASSERT_EQ(e.UserIdentityTokens[0].IssuedTokenType, "itt"); \
+  ASSERT_EQ(e.UserIdentityTokens[0].IssuerEndpointUrl, "ieu"); \
+  ASSERT_EQ(e.UserIdentityTokens[0].SecurityPolicyUri, "spu"); \
+  ASSERT_EQ(e.TransportProfileUri, "tpu"); \
   ASSERT_EQ(e.SecurityLevel, 3);
 
 #endif // __OPC_UA_TESTS_COMMON_H__
