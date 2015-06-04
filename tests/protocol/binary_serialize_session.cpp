@@ -45,8 +45,7 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   request.Parameters.EndpointUrl = "eu";
   request.Parameters.SessionName = "sn";
   request.Parameters.ClientNonce =  ByteString(std::vector<uint8_t>{1,2,3,4});
-  request.Parameters.ClientCertificate =
-ByteString(std::vector<uint8_t>{5,6,7,8});
+  request.Parameters.ClientCertificate = ByteString(std::vector<uint8_t>{5,6,7,8});
   request.Parameters.RequestedSessionTimeout = 1200000;
   request.Parameters.MaxResponseMessageSize = 2;
 
@@ -104,8 +103,7 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_EQ(request.Parameters.ServerUri, "su");
   ASSERT_EQ(request.Parameters.EndpointUrl, "eu");
   ASSERT_EQ(request.Parameters.SessionName, "sn");
-  ByteString clientNonce =
-ByteString(std::vector<uint8_t>{1,2,3,4});
+  ByteString clientNonce = ByteString(std::vector<uint8_t>{1,2,3,4});
   ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
   ByteString cert = ByteString(std::vector<uint8_t>{5,6,7,8});
   ASSERT_EQ(request.Parameters.ClientCertificate, cert);
@@ -141,17 +139,14 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
   response.Parameters.AuthenticationToken.FourByteData.Identifier = 2;
 
   response.Parameters.RevisedSessionTimeout = 1200000;
-  response.Parameters.ServerNonce =
-ByteString(std::vector<uint8_t>{1,2,3,4});
-  response.Parameters.ServerCertificate =
-ByteString(std::vector<uint8_t>{5,6,7,8});
+  response.Parameters.ServerNonce = ByteString(std::vector<uint8_t>{1,2,3,4});
+  response.Parameters.ServerCertificate = ByteString(std::vector<uint8_t>{5,6,7,8});
   EndpointDescription e;
   FILL_TEST_ENDPOINT(e);
   response.Parameters.ServerEndpoints.push_back(e);
 
 response.Parameters.ServerSoftwareCertificates.push_back(ByteString(std::vector<uint8_t>{4,3,2,1}));
-  response.Parameters.ServerSignature.Signature =
-ByteString(std::vector<uint8_t>{7,6,5,4});
+  response.Parameters.ServerSignature.Signature = ByteString(std::vector<uint8_t>{7,6,5,4});
   response.Parameters.ServerSignature.Algorithm = "aes";
   
   response.Parameters.MaxRequestMessageSize = 0x1000;
