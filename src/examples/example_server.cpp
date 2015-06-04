@@ -1,7 +1,7 @@
 /// @brief OPC UA Server main.
-/// @license GNU GPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/gpl.html)
 ///
