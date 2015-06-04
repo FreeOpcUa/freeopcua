@@ -5,7 +5,7 @@
 ///
 /// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
 
 #include "opcua_options.h"
