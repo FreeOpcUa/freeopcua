@@ -44,8 +44,9 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   request.Parameters.ServerUri = "su";
   request.Parameters.EndpointUrl = "eu";
   request.Parameters.SessionName = "sn";
-  request.Parameters.ClientNonce =  {1,2,3,4};
-  request.Parameters.ClientCertificate = {5,6,7,8};
+  request.Parameters.ClientNonce =  ByteString(std::vector<uint8_t>{1,2,3,4});
+  request.Parameters.ClientCertificate =
+ByteString(std::vector<uint8_t>{5,6,7,8});
   request.Parameters.RequestedSessionTimeout = 1200000;
   request.Parameters.MaxResponseMessageSize = 2;
 
@@ -103,9 +104,10 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_EQ(request.Parameters.ServerUri, "su");
   ASSERT_EQ(request.Parameters.EndpointUrl, "eu");
   ASSERT_EQ(request.Parameters.SessionName, "sn");
-  std::vector<uint8_t> clientNonce = {1,2,3,4};
+  ByteString clientNonce =
+ByteString(std::vector<uint8_t>{1,2,3,4});
   ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
-  CertificateData cert = {5,6,7,8};
+  ByteString cert = ByteString(std::vector<uint8_t>{5,6,7,8});
   ASSERT_EQ(request.Parameters.ClientCertificate, cert);
   ASSERT_EQ(request.Parameters.RequestedSessionTimeout, 1200000);
   ASSERT_EQ(request.Parameters.MaxResponseMessageSize, 2);
@@ -139,13 +141,17 @@ TEST_F(OpcUaBinarySerialization, CreateSessionResponse)
   response.Parameters.AuthenticationToken.FourByteData.Identifier = 2;
 
   response.Parameters.RevisedSessionTimeout = 1200000;
-  response.Parameters.ServerNonce = {1,2,3,4};
-  response.Parameters.ServerCertificate = {5,6,7,8};
+  response.Parameters.ServerNonce =
+ByteString(std::vector<uint8_t>{1,2,3,4});
+  response.Parameters.ServerCertificate =
+ByteString(std::vector<uint8_t>{5,6,7,8});
   EndpointDescription e;
   FILL_TEST_ENDPOINT(e);
   response.Parameters.ServerEndpoints.push_back(e);
-  response.Parameters.SignedServerCertificates.push_back({4,3,2,1});
-  response.Parameters.ServerSignature.Signature = {7,6,5,4};
+
+response.Parameters.ServerSoftwareCertificates.push_back(ByteString(std::vector<uint8_t>{4,3,2,1}));
+  response.Parameters.ServerSignature.Signature =
+ByteString(std::vector<uint8_t>{7,6,5,4});
   response.Parameters.ServerSignature.Algorithm = "aes";
   
   response.Parameters.MaxRequestMessageSize = 0x1000;
@@ -217,19 +223,19 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionResponse)
 
   ASSERT_EQ(response.Parameters.RevisedSessionTimeout, 1200000);
 
-  std::vector<uint8_t> serverNonce = {1,2,3,4};
+  ByteString serverNonce = ByteString(std::vector<uint8_t>{1,2,3,4});
   ASSERT_EQ(response.Parameters.ServerNonce, serverNonce);
 
-  std::vector<uint8_t> cert = {5,6,7,8};
+  ByteString cert = ByteString(std::vector<uint8_t>{5,6,7,8});
   ASSERT_EQ(response.Parameters.ServerCertificate, cert) ;
 
   ASSERT_EQ(response.Parameters.ServerEndpoints.size(), 1);
   ASSERT_ENDPOINT_EQ(response.Parameters.ServerEndpoints[0]);
 
-  std::vector<CertificateData> certs = {{4,3,2,1}};
+  std::vector<CertificateData> certs = {ByteString(std::vector<uint8_t>{4,3,2,1})};
   ASSERT_EQ(response.Parameters.SignedServerCertificates, certs);
 
-  std::vector<uint8_t> signature = {7,6,5,4};
+  ByteString signature = ByteString(std::vector<uint8_t>{7,6,5,4});
   ASSERT_EQ(response.Parameters.ServerSignature.Signature, signature);
   ASSERT_EQ(response.Parameters.ServerSignature.Algorithm, "aes");
 
