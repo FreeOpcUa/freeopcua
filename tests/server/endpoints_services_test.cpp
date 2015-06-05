@@ -70,16 +70,16 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
   Common::ParametersGroup data;
   data.Name = "application";
   data.Parameters.push_back(Common::Parameter("discovery_profile", "DiscoveryProfileUri"));
-  data.Parameters.push_back(Common::Parameter("uri", "Uri"));
+  data.Parameters.push_back(Common::Parameter("uri", "ApplicationUri"));
   data.Parameters.push_back(Common::Parameter("product_uri", "ProductUri"));
   data.Parameters.push_back(Common::Parameter("gateway_server_uri", "GatewayServerUri"));
-  data.Parameters.push_back(Common::Parameter("name", "Name"));
-  data.Parameters.push_back(Common::Parameter("type", "client"));
+  data.Parameters.push_back(Common::Parameter("name", "ApplicationName"));
+  data.Parameters.push_back(Common::Parameter("type", "ApplicationType"));
 
   Common::ParametersGroup endpoint("endpoint");
   endpoint.Parameters.push_back(Common::Parameter("url", "EndpointUrl"));
   endpoint.Parameters.push_back(Common::Parameter("security_level", "1"));
-  endpoint.Parameters.push_back(Common::Parameter("security_mode", "sign_encrypt"));
+  endpoint.Parameters.push_back(Common::Parameter("security_mode", "3"));
   endpoint.Parameters.push_back(Common::Parameter("security_policy_uri", "SecurityPolicyUri"));
   endpoint.Parameters.push_back(Common::Parameter("transport_profile_uri", "TransportProfileUri"));
 
@@ -99,10 +99,10 @@ std::vector<Common::ParametersGroup> CreateTwoEndpointsParameters()
 std::vector<OpcUa::Server::ApplicationData> CreateTwoEndpointsConfiguration()
 {
   OpcUa::Server::ApplicationData data;
-  data.Application.DiscoveryProfileUri = "DiscoveryProfileURI";
-  data.Application.ApplicationUri = "URI";
-  data.Application.ProductUri = "ProductURI";
-  data.Application.GatewayServerUri = "GatewayServerURI";
+  data.Application.DiscoveryProfileUri = "DiscoveryProfileUri";
+  data.Application.ApplicationUri = "ApplicationUri";
+  data.Application.ProductUri = "ProductUri";
+  data.Application.GatewayServerUri = "GatewayServerUri";
   data.Application.ApplicationName = OpcUa::LocalizedText("Name");
   data.Application.ApplicationType = OpcUa::ApplicationType::Client;
 
@@ -150,7 +150,7 @@ TEST(EndpointParameters, ConvertingFromAddonParameters)
   EXPECT_EQ(app.Application.ApplicationUri, "ApplicationUri");
   EXPECT_EQ(app.Application.ProductUri, "ProductUri");
   EXPECT_TRUE(app.Application.ApplicationName.Encoding & OpcUa::HAS_TEXT);
-  EXPECT_EQ(app.Application.ApplicationName.Text, "Name");
+  EXPECT_EQ(app.Application.ApplicationName.Text, "ApplicationName");
   EXPECT_EQ(app.Application.ApplicationType, OpcUa::ApplicationType::Client);
   EXPECT_EQ(app.Application.GatewayServerUri, "GatewayServerUri");
 
@@ -193,7 +193,7 @@ TEST(EndpointParameters, ConvertingToAddonParameters)
   EXPECT_EQ(endpoint.Name, "endpoint");
   EXPECT_EQ(FindParameter(endpoint, "endpoint_url").Value, "EndpointUrl");
   EXPECT_EQ(FindParameter(endpoint, "security_level").Value, "1");
-  EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "sign_encrypt");
+  EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "3");
   EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyUri");
   //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyUri");
   EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileUri");

@@ -951,8 +951,8 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
   using namespace OpcUa;
 
   const std::vector<char> expectedData = {
-    4, 0, 0, 0, 1,2,3,4,      // Signature
-    3, 0, 0, 0, 'a','e','s'   // Algorithm
+    3, 0, 0, 0, 'a','e','s',   // Algorithm
+    4, 0, 0, 0, 1,2,3,4      // Signature
   };
 
   GetChannel().SetData(expectedData);

@@ -744,8 +744,8 @@ namespace OpcUa
     // A digital signature.
     struct SignatureData 
     {
-         std::string Algorithm;
          OpcUa::ByteString Signature;
+         std::string Algorithm;
     };
 
     struct CreateSessionParameters 
