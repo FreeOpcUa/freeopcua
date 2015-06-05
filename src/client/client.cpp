@@ -69,6 +69,10 @@ namespace OpcUa
       NodeToRead.GetValue();
     }
     Running = false;
+    if (Debug)  
+    {
+      std::cout << "KeepAliveThread | Stopped" << std::endl;
+    }
   }
 
   void KeepAliveThread::Stop()
@@ -76,18 +80,14 @@ namespace OpcUa
     if (Debug)  { std::cout << "KeepAliveThread | Stopping." << std::endl; }
     StopRequest = true;
     Condition.notify_all();
-  }
-
-  void KeepAliveThread::Join()
-  {
-    if (Debug)  { std::cout << "KeepAliveThread | Joining." << std::endl; }
-    if ( ! Running )
+    try
     {
-      if (Debug)  { std::cout << "KeepAliveThread | Thread was not running..." << std::endl; }
-      return;
+      Thread.join();
     }
-    Thread.join();
-    if (Debug)  { std::cout << "KeepAliveThread | Join successfull." << std::endl; }
+    catch (std::system_error ex)
+    {
+      if (Debug) { std::cout << "KeepaliveThread | Exception thrown at attempt to join: " << ex.what() << std::endl; }
+    }
   }
 
   std::vector<EndpointDescription> UaClient::GetServerEndpoints(const std::string& endpoint)
@@ -272,7 +272,6 @@ namespace OpcUa
   void UaClient::Disconnect()
   {
     KeepAlive.Stop();
-    KeepAlive.Join();
 
     if (  Server ) 
     {
