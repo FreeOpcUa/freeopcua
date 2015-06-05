@@ -208,6 +208,7 @@ namespace OpcUa
 
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionId = Data.SubscriptionId;
+    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
     for (auto req : request)
     {
       itemsParams.ItemsToCreate.push_back(req);
@@ -222,6 +223,7 @@ namespace OpcUa
 
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionId = Data.SubscriptionId;
+    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
 
     for (ReadValueId attr : attributes)
     {
@@ -232,7 +234,7 @@ namespace OpcUa
       params.SamplingInterval = Data.RevisedPublishingInterval;
       params.QueueSize = 1;
       params.DiscardOldest = true;
-      params.ClientHandle = uint32_t(++LastMonitoredItemHandle);
+      params.ClientHandle = (uint32_t)++LastMonitoredItemHandle;
       req.RequestedParameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
@@ -322,6 +324,7 @@ namespace OpcUa
 
     MonitoredItemsParameters itemsParams;
     itemsParams.SubscriptionId = Data.SubscriptionId;
+    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
 
     ReadValueId avid;
     avid.NodeId = node.GetId();
@@ -334,7 +337,7 @@ namespace OpcUa
     params.SamplingInterval = Data.RevisedPublishingInterval;
     params.QueueSize = std::numeric_limits<uint32_t>::max();
     params.DiscardOldest = true;
-    params.ClientHandle = uint32_t(++LastMonitoredItemHandle);
+    params.ClientHandle = (uint32_t)++LastMonitoredItemHandle;
 
     MonitoringFilter filter(eventfilter);
     params.Filter = filter;
