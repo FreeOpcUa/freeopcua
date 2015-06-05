@@ -70,7 +70,7 @@ namespace
       return Subscriptions->Republish(request);
     }
 
-    OpcUa::MonitoredItemsData CreateMonitoredItems(const OpcUa::MonitoredItemsParameters& parameters)
+    std::vector<OpcUa::MonitoredItemCreateResult> CreateMonitoredItems(const OpcUa::MonitoredItemsParameters& parameters)
     {
       return Subscriptions->CreateMonitoredItems(parameters);
     }

@@ -2752,8 +2752,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
     {
@@ -2764,7 +2762,6 @@ namespace OpcUa
         *this << data.FilterResult;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
@@ -2784,8 +2781,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
     {
@@ -2795,7 +2790,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 
@@ -2955,8 +2949,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
     {
@@ -2964,9 +2956,6 @@ namespace OpcUa
         SerializeContainer(*this, data.MonitoredItemIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
@@ -2976,9 +2965,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
@@ -2989,7 +2975,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)

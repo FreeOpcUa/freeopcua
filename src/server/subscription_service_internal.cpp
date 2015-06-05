@@ -92,28 +92,28 @@ namespace OpcUa
       return data;
     }
 
-    MonitoredItemsData SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
+    std::vector<MonitoredItemCreateResult> SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      MonitoredItemsData data;
+      std::vector<MonitoredItemCreateResult> data;
 
       SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
       if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
         for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
         {
-          CreateMonitoredItemsResult res;
+          MonitoredItemCreateResult res;
           res.Status = StatusCode::BadSubscriptionIdInvalid;
-          data.Results.push_back(res);
+          data.push_back(res);
         }
         return data;
       }
 
       for (const MonitoredItemCreateRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
       {
-        CreateMonitoredItemsResult result = itsub->second->CreateMonitoredItem(req);
-        data.Results.push_back(result);
+        MonitoredItemCreateResult result = itsub->second->CreateMonitoredItem(req);
+        data.push_back(result);
       }
       return data;
 
@@ -128,14 +128,14 @@ namespace OpcUa
       SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
       if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
-        for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
+        for (int j=0; j<(int)params.MonitoredItemIds.size(); j++)
         {
           results.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
         return results;
       }
 
-      results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
+      results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemIds);
       return results;
     }
 

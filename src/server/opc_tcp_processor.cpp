@@ -567,7 +567,7 @@ namespace OpcUa
 
           CreateMonitoredItemsResponse response;
 
-          response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
+          response.Results = Server->Subscriptions()->CreateMonitoredItems(params);
 
           FillResponseHeader(requestHeader, response.Header);
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);

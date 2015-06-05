@@ -202,7 +202,7 @@ namespace OpcUa
     return results.front();
   }
 
-  std::vector<CreateMonitoredItemsResult> Subscription::Subscribe(std::vector<MonitoredItemCreateRequest> request)
+  std::vector<MonitoredItemCreateResult> Subscription::Subscribe(std::vector<MonitoredItemCreateRequest> request)
   {
     std::unique_lock<std::mutex> lock(Mutex); 
 
@@ -213,7 +213,7 @@ namespace OpcUa
       itemsParams.ItemsToCreate.push_back(req);
     }
 
-    return  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    return  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
   }
  
   std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadValueId>& attributes)
@@ -232,12 +232,12 @@ namespace OpcUa
       params.SamplingInterval = Data.RevisedPublishingInterval;
       params.QueueSize = 1;
       params.DiscardOldest = true;
-      params.ClientHandle = IntegerId(++LastMonitoredItemHandle);
+      params.ClientHandle = uint32_t(++LastMonitoredItemHandle);
       req.RequestedParameters = params;
       itemsParams.ItemsToCreate.push_back(req);
     }
 
-    std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
 
     if ( results.size() != attributes.size() ) 
     {
@@ -272,11 +272,11 @@ namespace OpcUa
 
     DeleteMonitoredItemsParameters params;
     params.SubscriptionId = Data.SubscriptionId;
-    std::vector<IntegerId> mids;
+    std::vector<uint32_t> mids;
     for (auto id : handles)
     {
       if (Debug) std::cout << "Subscription | Sending unsubscribe for monitoreditemsid: " << id << std::endl;
-      mids.push_back(IntegerId(id));
+      mids.push_back(uint32_t(id));
       //Now trying to remove monitoreditem from our internal cache
       for ( auto pair : AttributeValueMap )
       {
@@ -287,7 +287,7 @@ namespace OpcUa
         }
       }
     }
-    params.MonitoredItemsIds = mids;
+    params.MonitoredItemIds = mids;
     auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
     for (auto res : results)
     {
@@ -334,14 +334,14 @@ namespace OpcUa
     params.SamplingInterval = Data.RevisedPublishingInterval;
     params.QueueSize = std::numeric_limits<uint32_t>::max();
     params.DiscardOldest = true;
-    params.ClientHandle = IntegerId(++LastMonitoredItemHandle);
+    params.ClientHandle = uint32_t(++LastMonitoredItemHandle);
 
     MonitoringFilter filter(eventfilter);
     params.Filter = filter;
     req.RequestedParameters = params;
     itemsParams.ItemsToCreate.push_back(req);
 
-    std::vector<CreateMonitoredItemsResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams).Results;
+    std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
     if ( results.size()  != 1 )
     {
       throw(std::runtime_error("Subscription | Protocol Error CreateMonitoredItems should return one result"));
@@ -351,11 +351,11 @@ namespace OpcUa
     mdata.TargetNode = Node(Server, avid.NodeId);
     mdata.Attribute = avid.AttributeId;
     mdata.MonitoredItemId = results[0].MonitoredItemId;
-    mdata.Filter = results[0].Filter;
+    mdata.Filter = results[0].FilterResult;
     AttributeValueMap[params.ClientHandle] = mdata;
 
 
-    CreateMonitoredItemsResult res = results[0];
+    MonitoredItemCreateResult res = results[0];
     CheckStatusCode(res.Status);
     SimpleAttributeOperandMap[res.MonitoredItemId] = eventfilter; //Not used
     return res.MonitoredItemId;

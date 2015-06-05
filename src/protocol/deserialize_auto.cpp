@@ -2800,8 +2800,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<MonitoredItemCreateResult>(MonitoredItemCreateResult& data)
     {
@@ -2812,7 +2810,6 @@ namespace OpcUa
         *this >> data.FilterResult;
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters& data)
@@ -2832,8 +2829,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<CreateMonitoredItemsResponse>(CreateMonitoredItemsResponse& data)
     {
@@ -2843,7 +2838,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 
@@ -3003,8 +2997,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<DeleteMonitoredItemsParameters>(DeleteMonitoredItemsParameters& data)
     {
@@ -3012,9 +3004,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.MonitoredItemIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest& data)
@@ -3024,9 +3013,6 @@ namespace OpcUa
         *this >> data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse& data)
@@ -3037,7 +3023,6 @@ namespace OpcUa
         DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
     template<>
     void DataDeserializer::Deserialize<CreateSubscriptionParameters>(CreateSubscriptionParameters& data)

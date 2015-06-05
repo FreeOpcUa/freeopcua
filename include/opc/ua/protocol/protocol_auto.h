@@ -2398,8 +2398,6 @@ namespace OpcUa
          OpcUa::MonitoringParameters RequestedParameters;
     };
 
-/* DISABLED
-
     struct MonitoredItemCreateResult 
     {
          OpcUa::StatusCode Status;
@@ -2408,7 +2406,6 @@ namespace OpcUa
          uint32_t RevisedQueueSize;
          OpcUa::MonitoringFilter FilterResult;
     };
-*/
 
     struct MonitoredItemsParameters 
     {
@@ -2426,8 +2423,6 @@ namespace OpcUa
          CreateMonitoredItemsRequest();
     };
 
-/* DISABLED
-
     struct CreateMonitoredItemsResponse 
     {
          OpcUa::NodeId TypeId;
@@ -2437,7 +2432,6 @@ namespace OpcUa
 
          CreateMonitoredItemsResponse();
     };
-*/
 
 /* DISABLED
 
@@ -2583,16 +2577,11 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct DeleteMonitoredItemsParameters 
     {
          uint32_t SubscriptionId;
          std::vector<uint32_t> MonitoredItemIds;
     };
-*/
-
-/* DISABLED
 
     struct DeleteMonitoredItemsRequest 
     {
@@ -2602,9 +2591,6 @@ namespace OpcUa
 
          DeleteMonitoredItemsRequest();
     };
-*/
-
-/* DISABLED
 
     struct DeleteMonitoredItemsResponse 
     {
@@ -2615,7 +2601,6 @@ namespace OpcUa
 
          DeleteMonitoredItemsResponse();
     };
-*/
 
     struct CreateSubscriptionParameters 
     {
