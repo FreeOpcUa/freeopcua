@@ -380,7 +380,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.ClientSoftwareCertificates.size(), 1);
-  ASSERT_EQ(request.Parameters.ClientSoftwareCertificates[0].CertificateData, 1);
+  ASSERT_EQ(request.Parameters.ClientSoftwareCertificates[0].CertificateData, ByteString(std::vector<uint8_t>{1}));
 
   ASSERT_EQ(request.Parameters.UserIdentityToken.Header.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(request.Parameters.UserIdentityToken.Header.TypeId.FourByteData.NamespaceIndex, 0);
