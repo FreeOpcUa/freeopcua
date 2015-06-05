@@ -380,7 +380,7 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.ClientSoftwareCertificates.size(), 1);
-  ASSERT_EQ(request.Parameters.ClientSoftwareCertificates[0].CerificateData, 1);
+  ASSERT_EQ(request.Parameters.ClientSoftwareCertificates[0].CertificateData, 1);
 
   ASSERT_EQ(request.Parameters.UserIdentityToken.Header.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(request.Parameters.UserIdentityToken.Header.TypeId.FourByteData.NamespaceIndex, 0);
@@ -408,7 +408,10 @@ TEST_F(OpcUaBinarySerialization, ActivateSessionResponse)
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
   response.Parameters.ServerNonce = ByteString(std::vector<uint8_t>{1,1});
-  response.Parameters.Results = std::vector<StatusCode>(StatusCode(2),StatusCode(1));
+  std::vector<StatusCode> results;
+  results.push_back(StatusCode(1));
+  results.push_back(StatusCode(2));
+  response.Parameters.Results = results;
 
   GetStream() << response << flush;
 
@@ -451,7 +454,10 @@ TEST_F(OpcUaBinaryDeserialization, ActivateSessionResponse)
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
   ASSERT_EQ(response.Parameters.ServerNonce, ByteString(std::vector<uint8_t>{1,1}));
-  ASSERT_EQ(response.Parameters.Results, std::vector<StatusCode>(StatusCode(2),StatusCode(1)));
+  std::vector<StatusCode> results;
+  results.push_back(StatusCode(1));
+  results.push_back(StatusCode(2));
+  ASSERT_EQ(response.Parameters.Results, results);
   ASSERT_TRUE(response.Parameters.DiagnosticInfos.empty());
 }
 
