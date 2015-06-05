@@ -894,8 +894,8 @@ TEST_F(OpcUaBinarySerialization, SignatureData)
   s.Algorithm = "aes";
  
   const std::vector<char> expectedData = {
-    4, 0, 0, 0, 1,2,3,4,      // Signature
-    3, 0, 0, 0, 'a','e','s'   // Algorithm
+    3, 0, 0, 0, 'a','e','s',   // Algorithm
+    4, 0, 0, 0, 1,2,3,4      // Signature
   };
 
   GetStream() << s << flush;
