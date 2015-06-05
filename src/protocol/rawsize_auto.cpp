@@ -3150,8 +3150,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
     {
@@ -3164,7 +3162,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
@@ -3188,8 +3185,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
     {
@@ -3201,7 +3196,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3387,8 +3381,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
     {
@@ -3398,9 +3390,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
@@ -3412,9 +3401,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
@@ -3427,7 +3413,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)

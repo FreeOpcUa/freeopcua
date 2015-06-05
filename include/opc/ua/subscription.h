@@ -117,7 +117,7 @@ namespace OpcUa
 
       // Subscribe using a MonitoredItemCreateRequest
       // This method allow to fully customize the subscription
-      std::vector<CreateMonitoredItemsResult> Subscribe(std::vector<MonitoredItemCreateRequest> request);
+      std::vector<MonitoredItemCreateResult> Subscribe(std::vector<MonitoredItemCreateRequest> request);
       
       // Override this method if you want raw publish results from server
       // for example if you want to make sure you do not miss any packets, etc, ...

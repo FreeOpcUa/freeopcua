@@ -126,9 +126,9 @@ namespace
       return std::vector<StatusCode>();
     }
 
-    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
-      return MonitoredItemsData();
+      return std::vector<MonitoredItemCreateResult>();
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)

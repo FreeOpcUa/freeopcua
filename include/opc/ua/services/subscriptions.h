@@ -32,7 +32,7 @@ namespace OpcUa
       virtual RepublishResponse Republish(const RepublishParameters& params) = 0;
 
       //FIXME: Spec says MonitoredItems methods should be in their own service
-      virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters) = 0; 
+      virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters) = 0;
       virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params) = 0; 
   };
 

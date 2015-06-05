@@ -416,13 +416,10 @@ namespace OpcUa
     {
     }
 
-/*  DISABLED
-
      CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -472,21 +469,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
      CreateSubscriptionRequest::CreateSubscriptionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionRequest_Encoding_DefaultBinary))

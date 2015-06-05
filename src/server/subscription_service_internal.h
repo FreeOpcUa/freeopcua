@@ -50,7 +50,7 @@ namespace OpcUa
 
         virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions);
         virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
-        virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params);
+        virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& params);
         virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
         virtual void Publish(const PublishRequest& request);
         virtual RepublishResponse Republish(const RepublishParameters& request);

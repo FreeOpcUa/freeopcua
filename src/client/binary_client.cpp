@@ -439,14 +439,14 @@ namespace
       return response.Results;
     }
 
-    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
-      return response.Data;
+      return response.Results;
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
