@@ -180,10 +180,10 @@ TEST_F(SubscriptionSerialization, SubscriptionData)
   using namespace OpcUa::Binary;
 
   SubscriptionData data;
-  data.Id = 2;
+  data.SubscriptionId = 2;
   data.RevisedPublishingInterval = 1200000;
   data.RevisedLifetimeCount = 3;
-  data.RevizedMaxKeepAliveCount = 4;
+  data.RevisedMaxKeepAliveCount = 4;
 
   GetStream() << data << flush;
 
@@ -215,10 +215,10 @@ TEST_F(SubscriptionDeserialization, SubscriptionData)
   SubscriptionData data;
   GetStream() >> data;
 
-  ASSERT_EQ(data.Id, 2);
+  ASSERT_EQ(data.SubscriptionId, 2);
   ASSERT_EQ(data.RevisedPublishingInterval, 1200000);
   ASSERT_EQ(data.RevisedLifetimeCount, 3);
-  ASSERT_EQ(data.RevizedMaxKeepAliveCount, 4);
+  ASSERT_EQ(data.RevisedMaxKeepAliveCount, 4);
 }
 //-------------------------------------------------------
 // CreateSubscriptionResponse
@@ -237,10 +237,10 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  response.Data.Id = 2;
+  response.Data.SubscriptionId = 2;
   response.Data.RevisedPublishingInterval = 1200000;
   response.Data.RevisedLifetimeCount = 3;
-  response.Data.RevizedMaxKeepAliveCount = 4;
+  response.Data.RevisedMaxKeepAliveCount = 4;
 
   GetStream() << response << flush;
 
@@ -288,10 +288,10 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Data.Id, 2);
+  ASSERT_EQ(response.Data.SubscriptionId, 2);
   ASSERT_EQ(response.Data.RevisedPublishingInterval, 1200000);
   ASSERT_EQ(response.Data.RevisedLifetimeCount, 3);
-  ASSERT_EQ(response.Data.RevizedMaxKeepAliveCount, 4);
+  ASSERT_EQ(response.Data.RevisedMaxKeepAliveCount, 4);
 }
 
 //-------------------------------------------------------
@@ -521,14 +521,14 @@ TEST_F(SubscriptionSerialization, PublishResult)
 
   PublishResult result;
   result.SubscriptionId = 1;
-  result.AvailableSequenceNumber.push_back(2);
+  result.AvailableSequenceNumbers.push_back(2);
   result.MoreNotifications = true;
 
-  result.Message.SequenceId = 1;
-  result.Message.PublishTime.Value = 2;
-  result.Message.Data.push_back(NotificationData());
+  result.NotificationMessage.SequenceNumber = 1;
+  result.NotificationMessage.PublishTime.Value = 2;
+  result.NotificationMessage.NotificationData.push_back(NotificationData());
 
-  result.Statuses.push_back(StatusCode::Good);
+  result.Results.push_back(StatusCode::Good);
 
   DiagnosticInfo diag;
   diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
@@ -536,7 +536,7 @@ TEST_F(SubscriptionSerialization, PublishResult)
   diag.InnerDiagnostics.reset(new DiagnosticInfo());
   diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
   diag.InnerDiagnostics->AdditionalInfo = "add";
-  result.Diagnostics.push_back(diag);
+  result.DiagnosticInfos.push_back(diag);
 
   GetStream() << result << flush;
 
@@ -607,9 +607,9 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   ASSERT_EQ(result.SubscriptionId, 1);
   ASSERT_EQ(result.AvailableSequenceNumber.size(), 1);
   ASSERT_EQ(result.MoreNotifications, true);
-  ASSERT_EQ(result.Message.Data.size(), 1);
-  ASSERT_EQ(result.Statuses.size(), 1);
-  ASSERT_EQ(result.Diagnostics.size(), 1);
+  ASSERT_EQ(result.NotificationMessage.NotificationData.size(), 1);
+  ASSERT_EQ(result.Results.size(), 1);
+  ASSERT_EQ(result.DiagnosticInfos.size(), 1);
 }
 
 //-------------------------------------------------------
@@ -630,13 +630,13 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   PublishResult result;
-  response.Result.SubscriptionId = 1;
-  response.Result.AvailableSequenceNumber.push_back(2);
-  response.Result.MoreNotifications = true;
-  response.Result.Message.SequenceId = 1;
-  response.Result.Message.PublishTime.Value = 2;
-  response.Result.Message.Data.push_back(NotificationData());
-  response.Result.Statuses.push_back(StatusCode::Good);
+  response.Parameters.SubscriptionId = 1;
+  response.Parameters.AvailableSequenceNumbers.push_back(2);
+  response.Parameters.MoreNotifications = true;
+  response.Parameters.NotificationMessage.SequenceNumber = 1;
+  response.Parameters.NotificationMessage.PublishTime.Value = 2;
+  response.Parameters.NotificationMessage.NotificationData.push_back(NotificationData());
+  response.Parameters.Results.push_back(StatusCode::Good);
 
   DiagnosticInfo diag;
   diag.EncodingMask = static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO);
@@ -644,7 +644,7 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   diag.InnerDiagnostics.reset(new DiagnosticInfo());
   diag.InnerDiagnostics->EncodingMask = DIM_ADDITIONAL_INFO;
   diag.InnerDiagnostics->AdditionalInfo = "add";
-  response.Result.Diagnostics.push_back(diag);
+  response.Parameters.DiagnosticInfos.push_back(diag);
 
   GetStream() << response << flush;
 
@@ -696,7 +696,7 @@ TEST_F(SubscriptionSerialization, PublishResponse_Empty)
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
   PublishResult result;
-  response.Result.Message.PublishTime.Value = 2;
+  response.Parameters.NotificationMessage.PublishTime.Value = 2;
 
   GetStream() << response << flush;
 
@@ -859,7 +859,7 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
-  request.Parameters.Enabled = true;
+  request.Parameters.PublishingEnabled = true;
   request.Parameters.SubscriptionIds.push_back(IntegerId());
 
   GetStream() << request << flush;
@@ -870,7 +870,7 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
-    // Parameters
+    // PublishingEnabled
     1, // Enabled
     1,0,0,0,
     1,0,0,0
@@ -908,7 +908,7 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.Parameters.Enabled, true);
+  ASSERT_EQ(request.Parameters.PublishingEnabled, true);
   ASSERT_EQ(request.Parameters.SubscriptionIds.size(), 1);
   ASSERT_EQ(request.Parameters.SubscriptionIds[0], 1);
 }
@@ -994,7 +994,7 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
-  response.Result.Statuses.push_back(StatusCode::Good);
+  response.Result.Results.push_back(StatusCode::Good);
 
   GetStream() << response << flush;
 
@@ -1069,6 +1069,6 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Result.Statuses.size(), 1);
-  ASSERT_EQ(response.Result.Diagnostics.size(), 0);
+  ASSERT_EQ(response.Result.Results.size(), 1);
+  ASSERT_EQ(response.Result.DiagnosticInfos.size(), 0);
 }
