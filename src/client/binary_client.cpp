@@ -444,6 +444,8 @@ namespace
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
+      std::cout << "SubscritptionId: " << parameters.SubscriptionId << std::endl;
+      std::cout << "TimestampsToReturn: " << (uint32_t)parameters.TimestampsToReturn << std::endl;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
       return response.Results;
