@@ -14,7 +14,6 @@
 #include <opc/ua/protocol/message_identifiers.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/types.h>
-#include <opc/ua/protocol/subscriptions.h>
 
 #include <algorithm>
 #include <stdexcept>

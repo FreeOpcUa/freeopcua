@@ -16,41 +16,6 @@
 namespace OpcUa
 {
 
-//   struct MonitoringParameters
-//   {
-//     IntegerId ClientHandle;
-//     Duration SamplingInterval;
-//     MonitoringFilter Filter;
-//     uint32_t QueueSize;
-//     bool DiscardOldest;
-//   };
-//
-//   struct MonitoredItemCreateRequest
-//   {
-//     ReadValueId ItemToMonitor;
-//     MonitoringMode Mode;
-//     MonitoringParameters Parameters;
-//   };
-//
-//   struct MonitoredItemsParameters
-//   {
-//     IntegerId SubscriptionId;
-//     TimestampsToReturn Timestamps;
-//     std::vector<MonitoredItemCreateRequest> ItemsToCreate;
-//
-//     MonitoredItemsParameters();
-//   };
-//
-//   struct CreateMonitoredItemsRequest
-//   {
-//     NodeId TypeId;
-//     RequestHeader Header;
-//     MonitoredItemsParameters Parameters;
-//
-//     CreateMonitoredItemsRequest();
-//   };
-
-
   struct DeleteMonitoredItemsParameters
   {
     IntegerId SubscriptionId;
