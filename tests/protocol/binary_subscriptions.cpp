@@ -467,9 +467,9 @@ TEST_F(SubscriptionSerialization, NotificationMessage)
   using namespace OpcUa::Binary;
 
   NotificationMessage data;
-  data.SequenceId = 1;
+  data.SequenceNumber = 1;
   data.PublishTime.Value = 2;
-  data.Data.push_back(NotificationData());
+  data.NotificationData.push_back(NotificationData());
 
   GetStream() << data << flush;
 
@@ -506,7 +506,7 @@ TEST_F(SubscriptionDeserialization, NotificationMessage)
   NotificationMessage message;
   GetStream() >> message;
 
-  ASSERT_EQ(message.SequenceId, IntegerId(1));
+  ASSERT_EQ(message.SequenceNumber, IntegerId(1));
   ASSERT_EQ(message.PublishTime, 2);
 }
 
@@ -774,7 +774,7 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
-  ASSERT_EQ(response.Result.Diagnostics.size(), 1);
+  ASSERT_EQ(response.Parameters.DiagnosticInfos.size(), 1);
 }
 
 //-------------------------------------------------------
