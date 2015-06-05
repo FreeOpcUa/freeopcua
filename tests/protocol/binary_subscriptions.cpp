@@ -338,52 +338,52 @@ TEST_F(SubscriptionDeserialization, SubscriptionAcknowledgement)
   ASSERT_EQ(ack.SequenceNumber, 2);
 }
 
-//-------------------------------------------------------
-// PublishParameters
-//-------------------------------------------------------
+// //-------------------------------------------------------
+// // PublishParameters
+// //-------------------------------------------------------
+//
+// TEST_F(SubscriptionSerialization, PublishParameters)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   SubscriptionAcknowledgement ack;
+//   ack.SubscriptionId = 1;
+//   ack.SequenceNumber = 2;
+//
+//   PublishParameters params;
+//   params.Acknowledgements.push_back(ack);
+//
+//   GetStream() << params << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1,0,0,0, // Count of acks
+//     1,0,0,0,
+//     2,0,0,0,
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(params));
+// }
 
-TEST_F(SubscriptionSerialization, PublishParameters)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  SubscriptionAcknowledgement ack;
-  ack.SubscriptionId = 1;
-  ack.SequenceNumber = 2;
-
-  PublishParameters params;
-  params.Acknowledgements.push_back(ack);
-
-  GetStream() << params << flush;
-
-  const std::vector<char> expectedData = {
-    1,0,0,0, // Count of acks
-    1,0,0,0,
-    2,0,0,0,
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(params));
-}
-
-TEST_F(SubscriptionDeserialization, PublishParameters)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  const std::vector<char> expectedData = {
-    1,0,0,0, // Count of acks
-    1,0,0,0,
-    2,0,0,0,
-  };
-
-  GetChannel().SetData(expectedData);
-
-  PublishParameters params;
-  GetStream() >> params;
-
-  ASSERT_EQ(params.Acknowledgements.size(), 1);
-}
+// TEST_F(SubscriptionDeserialization, PublishParameters)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   const std::vector<char> expectedData = {
+//     1,0,0,0, // Count of acks
+//     1,0,0,0,
+//     2,0,0,0,
+//   };
+//
+//   GetChannel().SetData(expectedData);
+//
+//   PublishParameters params;
+//   GetStream() >> params;
+//
+//   ASSERT_EQ(params.Acknowledgements.size(), 1);
+// }
 
 //-------------------------------------------------------
 // CreateSubscriptionRequest
