@@ -682,51 +682,51 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   ASSERT_EQ(expectedData.size(), RawSize(response));
 }
 
-TEST_F(SubscriptionSerialization, PublishResponse_Empty)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  PublishResponse response;
-
-  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
-
-  FILL_TEST_RESPONSE_HEADER(response.Header);
-
-  PublishResult result;
-  response.Parameters.NotificationMessage.PublishTime.Value = 2;
-
-  GetStream() << response << flush;
-
-  const std::vector<char> expectedData = {
-    1, 0, (char)0x3D, 0x3, // TypeId
-
-    // RequestHeader
-    TEST_RESPONSE_HEADER_BINARY_DATA,
-
-    1,0,0,0, // SubscriptionId
-    //AvailableSequenceNumbers
-    0,0,0,0, // count
-    // MoreNotifications
-    0,
-
-    // NotificationData
-    0,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
-    // Data vector
-    0,0,0,0, //Count
-
-    // Statuses
-    0,0,0,0, // Count
-    // Diagnostics
-    0,0,0,0, // Count
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(response));
-}
+// TEST_F(SubscriptionSerialization, PublishResponse_Empty)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   PublishResponse response;
+//
+//   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+//   ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+//   ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+//
+//   FILL_TEST_RESPONSE_HEADER(response.Header);
+//
+//   PublishResult result;
+//   response.Parameters.NotificationMessage.PublishTime.Value = 2;
+//
+//   GetStream() << response << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1, 0, (char)0x3D, 0x3, // TypeId
+//
+//     // RequestHeader
+//     TEST_RESPONSE_HEADER_BINARY_DATA,
+//
+//     1,0,0,0, // SubscriptionId
+//     //AvailableSequenceNumbers
+//     0,0,0,0, // count
+//     // MoreNotifications
+//     0,
+//
+//     // NotificationData
+//     0,0,0,0, // SequenceId
+//     2,0,0,0,0,0,0,0, // PublishTime
+//     // Data vector
+//     0,0,0,0, //Count
+//
+//     // Statuses
+//     0,0,0,0, // Count
+//     // Diagnostics
+//     0,0,0,0, // Count
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(response));
+// }
 
 TEST_F(SubscriptionDeserialization, PublishResponse)
 {
@@ -802,23 +802,23 @@ TEST_F(SubscriptionSerialization, PublishingModeParameters)
   ASSERT_EQ(expectedData.size(), RawSize(params));
 }
 
-TEST_F(SubscriptionSerialization, PublishingModeParameters_Empty)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  PublishingModeParameters params;
-
-  GetStream() << params << flush;
-
-  const std::vector<char> expectedData = {
-    0,
-    0,0,0,0, // Count of subscriptions
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(params));
-}
+// TEST_F(SubscriptionSerialization, PublishingModeParameters_Empty)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   PublishingModeParameters params;
+//
+//   GetStream() << params << flush;
+//
+//   const std::vector<char> expectedData = {
+//     0,
+//     0,0,0,0, // Count of subscriptions
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(params));
+// }
 
 
 TEST_F(SubscriptionDeserialization, PublishingModeParameters)
@@ -917,43 +917,43 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
 // PublishingModeResult
 //-------------------------------------------------------
 
-TEST_F(SubscriptionSerialization, PublishingModeResult)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
+// TEST_F(SubscriptionSerialization, PublishingModeResult)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   PublishingModeResult result;
+//   result.Results.push_back(StatusCode::Good);
+//
+//   GetStream() << result << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1,0,0,0,
+//     0,0,0,0, // StatusCode
+//     0,0,0,0  // Count of diagnostics
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(result));
+// }
 
-  PublishingModeResult result;
-  result.Results.push_back(StatusCode::Good);
-
-  GetStream() << result << flush;
-
-  const std::vector<char> expectedData = {
-    1,0,0,0,
-    0,0,0,0, // StatusCode
-    0,0,0,0  // Count of diagnostics
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(result));
-}
-
-TEST_F(SubscriptionSerialization, PublishingModeResult_Empty)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  PublishingModeResult result;
-
-  GetStream() << result << flush;
-
-  const std::vector<char> expectedData = {
-    0,0,0,0,
-    0,0,0,0, // Count of subscriptions
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(result));
-}
+// TEST_F(SubscriptionSerialization, PublishingModeResult_Empty)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   PublishingModeResult result;
+//
+//   GetStream() << result << flush;
+//
+//   const std::vector<char> expectedData = {
+//     0,0,0,0,
+//     0,0,0,0, // Count of subscriptions
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(result));
+// }
 
 
 TEST_F(SubscriptionDeserialization, PublishingModeResult)
@@ -981,66 +981,66 @@ TEST_F(SubscriptionDeserialization, PublishingModeResult)
 // SetPublishingModeResponse
 //-------------------------------------------------------
 
-TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
+// TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   SetPublishingModeResponse response;
+//
+//   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+//   ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+//   ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+//
+//   FILL_TEST_RESPONSE_HEADER(response.Header);
+//
+//   response.Result.Results.push_back(StatusCode::Good);
+//
+//   GetStream() << response << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1, 0, (char)0x22, 0x3, // TypeId
+//
+//     // RequestHeader
+//     TEST_RESPONSE_HEADER_BINARY_DATA,
+//
+//     1,0,0,0,
+//     0,0,0,0, // StatusCode
+//     0,0,0,0  // Count of diagnostics
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(response));
+// }
 
-  SetPublishingModeResponse response;
-
-  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
-
-  FILL_TEST_RESPONSE_HEADER(response.Header);
-
-  response.Result.Results.push_back(StatusCode::Good);
-
-  GetStream() << response << flush;
-
-  const std::vector<char> expectedData = {
-    1, 0, (char)0x22, 0x3, // TypeId
-
-    // RequestHeader
-    TEST_RESPONSE_HEADER_BINARY_DATA,
-
-    1,0,0,0,
-    0,0,0,0, // StatusCode
-    0,0,0,0  // Count of diagnostics
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(response));
-}
-
-TEST_F(SubscriptionSerialization, SetPublishingModeResponse_Empty)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  SetPublishingModeResponse response;
-
-  ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
-
-  FILL_TEST_RESPONSE_HEADER(response.Header);
-
-  GetStream() << response << flush;
-
-  const std::vector<char> expectedData = {
-    1, 0, (char)0x22, 0x3, // TypeId
-
-    // RequestHeader
-    TEST_RESPONSE_HEADER_BINARY_DATA,
-
-    0,0,0,0, // StatusCode
-    0,0,0,0  // Count of diagnostics
-  };
-
-  ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
-  ASSERT_EQ(expectedData.size(), RawSize(response));
-}
+// TEST_F(SubscriptionSerialization, SetPublishingModeResponse_Empty)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   SetPublishingModeResponse response;
+//
+//   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
+//   ASSERT_EQ(response.TypeId.FourByteData.NamespaceIndex, 0);
+//   ASSERT_EQ(response.TypeId.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+//
+//   FILL_TEST_RESPONSE_HEADER(response.Header);
+//
+//   GetStream() << response << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1, 0, (char)0x22, 0x3, // TypeId
+//
+//     // RequestHeader
+//     TEST_RESPONSE_HEADER_BINARY_DATA,
+//
+//     0,0,0,0, // StatusCode
+//     0,0,0,0  // Count of diagnostics
+//   };
+//
+//   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
+//   ASSERT_EQ(expectedData.size(), RawSize(response));
+// }
 
 TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
 {

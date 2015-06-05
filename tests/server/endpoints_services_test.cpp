@@ -139,72 +139,72 @@ Common::Parameter FindParameter(const Common::ParametersGroup& group, const char
   return Common::Parameter();
 }
 
-TEST(EndpointParameters, ConvertingFromAddonParameters)
-{
-  std::vector<Common::ParametersGroup> params = CreateTwoEndpointsParameters();
-  bool debug = true;
-  std::vector<OpcUa::Server::ApplicationData> apps = OpcUa::ParseEndpointsParameters(params, debug);
-  ASSERT_EQ(apps.size(), 2);
-  OpcUa::Server::ApplicationData app = apps[0];
-  EXPECT_EQ(app.Application.DiscoveryProfileUri, "DiscoveryProfileUri");
-  EXPECT_EQ(app.Application.ApplicationUri, "ApplicationUri");
-  EXPECT_EQ(app.Application.ProductUri, "ProductUri");
-  EXPECT_TRUE(app.Application.ApplicationName.Encoding & OpcUa::HAS_TEXT);
-  EXPECT_EQ(app.Application.ApplicationName.Text, "ApplicationName");
-  EXPECT_EQ(app.Application.ApplicationType, OpcUa::ApplicationType::Client);
-  EXPECT_EQ(app.Application.GatewayServerUri, "GatewayServerUri");
+// TEST(EndpointParameters, ConvertingFromAddonParameters)
+// {
+//   std::vector<Common::ParametersGroup> params = CreateTwoEndpointsParameters();
+//   bool debug = true;
+//   std::vector<OpcUa::Server::ApplicationData> apps = OpcUa::ParseEndpointsParameters(params, debug);
+//   ASSERT_EQ(apps.size(), 2);
+//   OpcUa::Server::ApplicationData app = apps[0];
+//   EXPECT_EQ(app.Application.DiscoveryProfileUri, "DiscoveryProfileUri");
+//   EXPECT_EQ(app.Application.ApplicationUri, "ApplicationUri");
+//   EXPECT_EQ(app.Application.ProductUri, "ProductUri");
+//   EXPECT_TRUE(app.Application.ApplicationName.Encoding & OpcUa::HAS_TEXT);
+//   EXPECT_EQ(app.Application.ApplicationName.Text, "ApplicationName");
+//   EXPECT_EQ(app.Application.ApplicationType, OpcUa::ApplicationType::Client);
+//   EXPECT_EQ(app.Application.GatewayServerUri, "GatewayServerUri");
+//
+//   ASSERT_EQ(app.Endpoints.size(), 1);
+//   OpcUa::EndpointDescription ed = app.Endpoints[0];
+//   EXPECT_EQ(ed.EndpointUrl, "EndpointUrl");
+//   EXPECT_EQ(ed.SecurityLevel, 1);
+//   EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
+//   EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyUri");
+//   //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
+//   //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyUri");
+//   EXPECT_EQ(ed.TransportProfileUri, "TransportProfileUri");
+//
+//   ASSERT_EQ(ed.UserIdentityTokens.size(), 1);
+//   OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentityTokens[0];
+//   EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
+//   EXPECT_EQ(tokenPolicy.IssuerEndpointUrl, "IssuerEndpointUrl");
+//   EXPECT_EQ(tokenPolicy.PolicyId, "PolicyId");
+//   EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyUri");
+//   EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserTokenType::UserName);
+// }
 
-  ASSERT_EQ(app.Endpoints.size(), 1);
-  OpcUa::EndpointDescription ed = app.Endpoints[0];
-  EXPECT_EQ(ed.EndpointUrl, "EndpointUrl");
-  EXPECT_EQ(ed.SecurityLevel, 1);
-  EXPECT_EQ(ed.SecurityMode, OpcUa::MessageSecurityMode::SignAndEncrypt);
-  EXPECT_EQ(ed.SecurityPolicyUri, "SecurityPolicyUri");
-  //EXPECT_EQ(ed.ServerCertificate, std::vector{1,2,3,4,5});
-  //EXPECT_EQ(ed.ServerDescription, "SecurityPolicyUri");
-  EXPECT_EQ(ed.TransportProfileUri, "TransportProfileUri");
-
-  ASSERT_EQ(ed.UserIdentityTokens.size(), 1);
-  OpcUa::UserTokenPolicy tokenPolicy = ed.UserIdentityTokens[0];
-  EXPECT_EQ(tokenPolicy.IssuedTokenType, "IssuedTokenType");
-  EXPECT_EQ(tokenPolicy.IssuerEndpointUrl, "IssuerEndpointUrl");
-  EXPECT_EQ(tokenPolicy.PolicyId, "PolicyId");
-  EXPECT_EQ(tokenPolicy.SecurityPolicyUri, "SecurityPolicyUri");
-  EXPECT_EQ(tokenPolicy.TokenType, OpcUa::UserTokenType::UserName);
-}
-
-TEST(EndpointParameters, ConvertingToAddonParameters)
-{
-  const std::vector<OpcUa::Server::ApplicationData>& application = CreateTwoEndpointsConfiguration();
-  bool debug = true;
-  const std::vector<Common::ParametersGroup>& result = OpcUa::CreateCommonParameters(application, debug);
-  ASSERT_EQ(result.size(), 2);
-  const Common::ParametersGroup applicationGroup = result[0];
-  EXPECT_EQ(applicationGroup.Name, "application");
-  EXPECT_EQ(FindParameter(applicationGroup, "discovery_profile").Value, "DiscoveryProfileUri");
-  EXPECT_EQ(FindParameter(applicationGroup, "product_uri").Value, "ProductUri");
-  EXPECT_EQ(FindParameter(applicationGroup, "application_uri").Value, "ApplicationUri");
-  EXPECT_EQ(FindParameter(applicationGroup, "application_name").Value, "ApplicationName");
-  EXPECT_EQ(FindParameter(applicationGroup, "Application_type").Value, "client");
-  EXPECT_EQ(FindParameter(applicationGroup, "gateway_server_uri").Value, "GatewayServerUri");
-
-  ASSERT_EQ(applicationGroup.Groups.size(), 1) << "Application group has no subgroups with endpoints";
-  Common::ParametersGroup endpoint = applicationGroup.Groups[0];
-  EXPECT_EQ(endpoint.Name, "endpoint");
-  EXPECT_EQ(FindParameter(endpoint, "endpoint_url").Value, "EndpointUrl");
-  EXPECT_EQ(FindParameter(endpoint, "security_level").Value, "1");
-  EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "3");
-  EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyUri");
-  //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyUri");
-  EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileUri");
-
-  ASSERT_EQ(endpoint.Groups.size(), 1);
-  Common::ParametersGroup tokenPolicy = endpoint.Groups[0];
-  EXPECT_EQ(tokenPolicy.Name, "user_token_policy");
-  EXPECT_EQ(FindParameter(tokenPolicy, "issued_token_type").Value, "IssuedTokenType");
-  EXPECT_EQ(FindParameter(tokenPolicy, "issuer_endpoint_url").Value, "IssuerEndpointUrl");
-  EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
-  EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
-  EXPECT_EQ(FindParameter(tokenPolicy, "uri").Value, "SecurityPolicyUri");
-  EXPECT_EQ(FindParameter(tokenPolicy, "type").Value, "user_name");
-}
+// TEST(EndpointParameters, ConvertingToAddonParameters)
+// {
+//   const std::vector<OpcUa::Server::ApplicationData>& application = CreateTwoEndpointsConfiguration();
+//   bool debug = true;
+//   const std::vector<Common::ParametersGroup>& result = OpcUa::CreateCommonParameters(application, debug);
+//   ASSERT_EQ(result.size(), 2);
+//   const Common::ParametersGroup applicationGroup = result[0];
+//   EXPECT_EQ(applicationGroup.Name, "application");
+//   EXPECT_EQ(FindParameter(applicationGroup, "discovery_profile").Value, "DiscoveryProfileUri");
+//   EXPECT_EQ(FindParameter(applicationGroup, "product_uri").Value, "ProductUri");
+//   EXPECT_EQ(FindParameter(applicationGroup, "application_uri").Value, "ApplicationUri");
+//   EXPECT_EQ(FindParameter(applicationGroup, "application_name").Value, "ApplicationName");
+//   EXPECT_EQ(FindParameter(applicationGroup, "Application_type").Value, "client");
+//   EXPECT_EQ(FindParameter(applicationGroup, "gateway_server_uri").Value, "GatewayServerUri");
+//
+//   ASSERT_EQ(applicationGroup.Groups.size(), 1) << "Application group has no subgroups with endpoints";
+//   Common::ParametersGroup endpoint = applicationGroup.Groups[0];
+//   EXPECT_EQ(endpoint.Name, "endpoint");
+//   EXPECT_EQ(FindParameter(endpoint, "endpoint_url").Value, "EndpointUrl");
+//   EXPECT_EQ(FindParameter(endpoint, "security_level").Value, "1");
+//   EXPECT_EQ(FindParameter(endpoint, "security_mode").Value, "3");
+//   EXPECT_EQ(FindParameter(endpoint, "security_policy_uri").Value, "SecurityPolicyUri");
+//   //EXPECT_EQ(FindParameter(endpoint, "server_certificate").Value, "SecurityPolicyUri");
+//   EXPECT_EQ(FindParameter(endpoint, "transport_profile_uri").Value, "TransportProfileUri");
+//
+//   ASSERT_EQ(endpoint.Groups.size(), 1);
+//   Common::ParametersGroup tokenPolicy = endpoint.Groups[0];
+//   EXPECT_EQ(tokenPolicy.Name, "user_token_policy");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "issued_token_type").Value, "IssuedTokenType");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "issuer_endpoint_url").Value, "IssuerEndpointUrl");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "id").Value, "PolicyId");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "uri").Value, "SecurityPolicyUri");
+//   EXPECT_EQ(FindParameter(tokenPolicy, "type").Value, "user_name");
+// }
