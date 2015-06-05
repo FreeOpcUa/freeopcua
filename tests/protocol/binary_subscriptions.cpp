@@ -605,7 +605,7 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   GetStream() >> result;
 
   ASSERT_EQ(result.SubscriptionId, 1);
-  ASSERT_EQ(result.AvailableSequenceNumber.size(), 1);
+  ASSERT_EQ(result.AvailableSequenceNumbers.size(), 1);
   ASSERT_EQ(result.MoreNotifications, true);
   ASSERT_EQ(result.NotificationMessage.NotificationData.size(), 1);
   ASSERT_EQ(result.Results.size(), 1);
