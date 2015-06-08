@@ -22,7 +22,6 @@
 #include <opc/ua/global.h>
 #include <opc/ua/node.h>
 #include <opc/ua/event.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/services/subscriptions.h>
 
 #include <sstream>
@@ -41,8 +40,8 @@ namespace OpcUa
     MonitoringFilter Filter;
   };
 
-  typedef std::map<IntegerId, MonitoredItemData> AttValMap;
-  typedef std::map<IntegerId, EventFilter> SimpleAttOpMap;
+  typedef std::map<uint32_t, MonitoredItemData> AttValMap;
+  typedef std::map<uint32_t, EventFilter> SimpleAttOpMap;
 
   class SubscriptionHandler
   {
@@ -90,7 +89,7 @@ namespace OpcUa
       //Alternative could be
       //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeId> callback);
       //AddEventCallback(std::function<std::vector<Variant>> callback);
-      Subscription(Services::SharedPtr server, const SubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false); 
+      Subscription(Services::SharedPtr server, const CreateSubscriptionParameters& params, SubscriptionHandler& callback, bool debug=false);
       virtual ~Subscription() {}
 
       //Delete the subscription from server
@@ -98,7 +97,7 @@ namespace OpcUa
 
       //Get information about the subscription
       SubscriptionData GetData() {return Data; }
-      uint32_t GetId() const { return Data.Id; } 
+      uint32_t GetId() const { return Data.SubscriptionId; }
       double GetPeriode() const { return Data.RevisedPublishingInterval; } 
 
       //Subscribe to a Node attribute for its value to change
@@ -116,9 +115,9 @@ namespace OpcUa
       uint32_t SubscribeEvents(const Node& node, const Node& eventType); //subscribe to all variables og given event type 
       uint32_t SubscribeEvents(); //subscribe to variables of baseEventTypes and ServerNode 
 
-      // Subscribe using a MonitoredItemRequest 
+      // Subscribe using a MonitoredItemCreateRequest
       // This method allow to fully customize the subscription
-      std::vector<CreateMonitoredItemsResult> Subscribe(std::vector<MonitoredItemRequest> request);
+      std::vector<MonitoredItemCreateResult> Subscribe(std::vector<MonitoredItemCreateRequest> request);
       
       // Override this method if you want raw publish results from server
       // for example if you want to make sure you do not miss any packets, etc, ...

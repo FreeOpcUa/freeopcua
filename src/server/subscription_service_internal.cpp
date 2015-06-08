@@ -42,7 +42,7 @@ namespace OpcUa
     {
       if (Debug) std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl;
 
-      std::vector<IntegerId> ids(SubscriptionsMap.size());
+      std::vector<uint32_t> ids(SubscriptionsMap.size());
       {
         boost::shared_lock<boost::shared_mutex> lock(DbMutex);
         std::transform(SubscriptionsMap.begin(), SubscriptionsMap.end(), ids.begin(), [](const SubscriptionsIdMap::value_type& i){return i.first;});
@@ -51,12 +51,12 @@ namespace OpcUa
       DeleteSubscriptions(ids);
     }
 
-    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       std::vector<StatusCode> result;
-      for (const IntegerId& subid: subscriptions)
+      for (const uint32_t& subid: subscriptions)
       {
         SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(subid);
         if ( itsub == SubscriptionsMap.end())
@@ -80,40 +80,40 @@ namespace OpcUa
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       SubscriptionData data;
-      data.Id = ++LastSubscriptionId;
+      data.SubscriptionId = ++LastSubscriptionId;
       data.RevisedLifetimeCount = request.Parameters.RequestedLifetimeCount;
       data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
-      data.RevizedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
-      if (Debug) std::cout << "SubscriptionService | Creating Subscription with Id: " << data.Id << std::endl;
+      data.RevisedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
+      if (Debug) std::cout << "SubscriptionService | Creating Subscription with Id: " << data.SubscriptionId << std::endl;
 
       std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
       sub->Start();
-      SubscriptionsMap[data.Id] = sub;
+      SubscriptionsMap[data.SubscriptionId] = sub;
       return data;
     }
 
-    MonitoredItemsData SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
+    std::vector<MonitoredItemCreateResult> SubscriptionServiceInternal::CreateMonitoredItems(const MonitoredItemsParameters& params)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-      MonitoredItemsData data;
+      std::vector<MonitoredItemCreateResult> data;
 
       SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
       if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
         for (int j=0; j<(int)params.ItemsToCreate.size(); j++)
         {
-          CreateMonitoredItemsResult res;
+          MonitoredItemCreateResult res;
           res.Status = StatusCode::BadSubscriptionIdInvalid;
-          data.Results.push_back(res);
+          data.push_back(res);
         }
         return data;
       }
 
-      for (const MonitoredItemRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
+      for (const MonitoredItemCreateRequest& req: params.ItemsToCreate) //FIXME: loop could be in InternalSubscription
       {
-        CreateMonitoredItemsResult result = itsub->second->CreateMonitoredItem(req);
-        data.Results.push_back(result);
+        MonitoredItemCreateResult result = itsub->second->CreateMonitoredItem(req);
+        data.push_back(result);
       }
       return data;
 
@@ -128,14 +128,14 @@ namespace OpcUa
       SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(params.SubscriptionId);
       if ( itsub == SubscriptionsMap.end()) //SubscriptionId does not exist, return errors for all items
       {
-        for (int j=0; j<(int)params.MonitoredItemsIds.size(); j++)
+        for (int j=0; j<(int)params.MonitoredItemIds.size(); j++)
         {
           results.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
         return results;
       }
 
-      results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemsIds);
+      results = itsub->second->DeleteMonitoredItemsIds(params.MonitoredItemIds);
       return results;
     }
 
@@ -149,7 +149,7 @@ namespace OpcUa
       }
       //FIXME: else spec says we should return error to warn client
 
-      for (SubscriptionAcknowledgement ack:  request.Parameters.Acknowledgements)
+      for (SubscriptionAcknowledgement ack:  request.SubscriptionAcknowledgements)
       {
         SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(ack.SubscriptionId);
         if ( sub_it != SubscriptionsMap.end())
@@ -163,7 +163,7 @@ namespace OpcUa
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
       
-      SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(params.Subscription);
+      SubscriptionsIdMap::iterator sub_it = SubscriptionsMap.find(params.SubscriptionId);
       if ( sub_it == SubscriptionsMap.end())
       {
         RepublishResponse response;

@@ -122,7 +122,7 @@ TEST_F(OpcBinaryHandshake, GetEndpoints)
   using OpcUa::Binary::flush;
 
   OpcUa::Binary::GetEndpointsRequest request;
-  request.EndpointURL = params.EndpointUrl;
+  request.EndpointUrl = params.EndpointUrl;
   OpcUa::Binary::IOStream io(secureChannel);
   io << request << flush;
 
@@ -137,7 +137,7 @@ TEST_F(OpcBinaryHandshake, GetEndpoints)
 EndpointDescription GetEndpoint(OpcUa::Binary::IOStream& stream)
 {
   OpcUa::Binary::GetEndpointsRequest request;
-  request.EndpointURL = GetEndpointUrl();
+  request.EndpointUrl = GetEndpointUrl();
   stream << request << flush;
 
   OpcUa::Binary::GetEndpointsResponse response;
@@ -171,7 +171,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
-  request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
+  request.EndpointUrl = endpoint.EndpointUrl;
   request.SessionName = "libiocuamappings session test";
   request.ClientNonce = std::vector<uint8_t>(32,0);
 //  request.ClientCertificate = GetCertificate();
@@ -204,7 +204,7 @@ OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream& stre
   request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
-  request.EndpointURL = endpoint.EndpointURL; // TODO make just endpoint.URL;
+  request.EndpointUrl = endpoint.EndpointUrl; // TODO make just endpoint.URL;
   request.SessionName = "libiocuamappings session test";
   request.ClientNonce = std::vector<uint8_t>(32,0);
 //  request.ClientCertificate = GetCertificate();

@@ -20,6 +20,8 @@
 #include <opc/ua/services/subscriptions.h>
 #include <opc/ua/services/view.h>
 
+#include <opc/ua/protocol/protocol.h>
+
 #include <memory>
 #include <vector>
 
@@ -32,7 +34,7 @@ namespace OpcUa
     std::vector<uint8_t> ClientCertificate;
     std::string SessionName;
     std::string ServerURI;
-    std::string EndpointURL;
+    std::string EndpointUrl;
     Duration Timeout;
   };
 
@@ -45,7 +47,7 @@ namespace OpcUa
     virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) = 0;
     virtual void CloseSecureChannel(uint32_t channelId) = 0;
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
-    virtual ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) = 0;
+    virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) = 0;
     virtual CloseSessionResponse CloseSession() = 0;
 
     virtual AttributeServices::SharedPtr Attributes() = 0;

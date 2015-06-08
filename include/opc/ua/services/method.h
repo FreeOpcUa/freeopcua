@@ -13,7 +13,6 @@
 
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
-#include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/protocol.h>
 
 #include <vector>

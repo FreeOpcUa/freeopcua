@@ -456,7 +456,7 @@ TEST_F(OpcUaBinarySerialization, Error)
 TEST_F(OpcUaBinarySerialization, Asymmetric)
 {
   OpcUa::Binary::AsymmetricAlgorithmHeader header;
-  header.SecurityPolicyURI = "pol";
+  header.SecurityPolicyUri = "pol";
   header.SenderCertificate = {1, 2, 3};
   header.ReceiverCertificateThumbPrint = {4, 5, 6};
 
@@ -890,12 +890,12 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 TEST_F(OpcUaBinarySerialization, SignatureData)
 {
   OpcUa::SignatureData s;
-  s.Signature = {1,2,3,4};
+  s.Signature = OpcUa::ByteString(std::vector<uint8_t>{1,2,3,4});
   s.Algorithm = "aes";
  
   const std::vector<char> expectedData = {
-    4, 0, 0, 0, 1,2,3,4,      // Signature
-    3, 0, 0, 0, 'a','e','s'   // Algorithm
+    3, 0, 0, 0, 'a','e','s',   // Algorithm
+    4, 0, 0, 0, 1,2,3,4      // Signature
   };
 
   GetStream() << s << flush;

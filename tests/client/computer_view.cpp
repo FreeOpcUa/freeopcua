@@ -41,7 +41,7 @@ protected:
     RemoteSessionParameters session;
     session.ClientDescription.Name.Text = "opcua view service test";
     session.SessionName = "opua test";
-    session.EndpointURL = GetEndpoint();
+    session.EndpointUrl = GetEndpoint();
     session.Timeout = 1000;
 
     Server->CreateSession(session);

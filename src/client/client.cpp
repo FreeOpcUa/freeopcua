@@ -112,9 +112,9 @@ namespace OpcUa
 
   std::vector<EndpointDescription> UaClient::GetServerEndpoints()
   {
-    EndpointsFilter filter;
-    filter.EndpointURL = Endpoint.EndpointURL;
-    filter.ProfileUries.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
+    GetEndpointsParameters filter;
+    filter.EndpointUrl = Endpoint.EndpointUrl;
+    filter.ProfileUris.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
     
@@ -129,26 +129,26 @@ namespace OpcUa
     bool has_login = !uri.User().empty();
     for ( EndpointDescription ed : endpoints)
     {
-      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointURL << " with security: " << ed.SecurityPolicyURI <<  std::endl; }
-      if ( ed.SecurityPolicyURI == "http://opcfoundation.org/UA/SecurityPolicy#None")
+      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointUrl << " with security: " << ed.SecurityPolicyUri <<  std::endl; }
+      if ( ed.SecurityPolicyUri == "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
         if (Debug)  { std::cout << "UaClient | Security policy is OK, now looking at user token" <<  std::endl; }
-        if (ed.UserIdentifyTokens.empty() )
+        if (ed.UserIdentityTokens.empty() )
         {
           if (Debug)  { std::cout << "UaClient | Server does not use user token, OK" <<  std::endl; }
           return ed;
         }
-        for (  UserTokenPolicy token : ed.UserIdentifyTokens)
+        for (  UserTokenPolicy token : ed.UserIdentityTokens)
         {
           if (has_login)
           {
-            if (token.TokenType == UserIdentifyTokenType::USERNAME)
+            if (token.TokenType == UserTokenType::UserName)
             {
               if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
               return ed;
             }
           }
-          else if (token.TokenType == UserIdentifyTokenType::ANONYMOUS)
+          else if (token.TokenType == UserTokenType::Anonymous)
           {
             if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
             return ed;
@@ -162,18 +162,18 @@ namespace OpcUa
   void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
-    endpointdesc.EndpointURL = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
+    endpointdesc.EndpointUrl = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
    
   void UaClient::Connect(const EndpointDescription& endpoint)
   {
     Endpoint = endpoint;
-    const Common::Uri serverUri(Endpoint.EndpointURL);
+    const Common::Uri serverUri(Endpoint.EndpointUrl);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
 
     OpcUa::SecureConnectionParams params;
-    params.EndpointUrl = Endpoint.EndpointURL;
+    params.EndpointUrl = Endpoint.EndpointUrl;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
     Server = OpcUa::CreateBinaryClient(channel, params, Debug);
@@ -183,41 +183,41 @@ namespace OpcUa
 
     if (Debug)  { std::cout << "UaClient | Creating session ..." <<  std::endl; }
     OpcUa::RemoteSessionParameters session;
-    session.ClientDescription.URI = ApplicationUri;
-    session.ClientDescription.ProductURI = ProductUri;
-    session.ClientDescription.Name = LocalizedText(SessionName);
-    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
+    session.ClientDescription.ApplicationUri = ApplicationUri;
+    session.ClientDescription.ProductUri = ProductUri;
+    session.ClientDescription.ApplicationName = LocalizedText(SessionName);
+    session.ClientDescription.ApplicationType = OpcUa::ApplicationType::Client;
     session.SessionName = SessionName;
-    session.EndpointURL = endpoint.EndpointURL;
+    session.EndpointUrl = endpoint.EndpointUrl;
     session.Timeout = DefaultTimeout;
-    session.ServerURI = endpoint.ServerDescription.URI;
+    session.ServerURI = endpoint.Server.ApplicationUri;
 
     CreateSessionResponse response = Server->CreateSession(session);
     CheckStatusCode(response.Header.ServiceResult);
     if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
 
     if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
-    UpdatedSessionParameters session_parameters;
+    ActivateSessionParameters session_parameters;
     {
       //const SessionData &session_data = response.Session;
-      Common::Uri uri(session.EndpointURL);
+      Common::Uri uri(session.EndpointUrl);
       std::string user = uri.User();
       std::string password = uri.Password();
       bool user_identify_token_found = false;
-      for(auto ep : response.Session.ServerEndpoints) {
+      for(auto ep : response.Parameters.ServerEndpoints) {
         if(ep.SecurityMode == MessageSecurityMode::None) {
-          for(auto token : ep.UserIdentifyTokens) {
+          for(auto token : ep.UserIdentityTokens) {
             if(user.empty()) {
-              if(token.TokenType == UserIdentifyTokenType::ANONYMOUS) {
-                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
+              if(token.TokenType == UserTokenType::Anonymous) {
+                session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
                 user_identify_token_found = true;
                 break;
               }
             }
             else {
-              if(token.TokenType == UserIdentifyTokenType::USERNAME) {
-                session_parameters.IdentifyToken.setPolicyId(token.PolicyId);
-                session_parameters.IdentifyToken.setUser(user, password);
+              if(token.TokenType == UserTokenType::UserName) {
+                session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
+                session_parameters.UserIdentityToken.setUser(user, password);
                 user_identify_token_found = true;
                 break;
               }
@@ -233,9 +233,9 @@ namespace OpcUa
     CheckStatusCode(aresponse.Header.ServiceResult);
     if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
 
-    if (response.Session.RevisedSessionTimeout > 0 && response.Session.RevisedSessionTimeout < DefaultTimeout  )
+    if (response.Parameters.RevisedSessionTimeout > 0 && response.Parameters.RevisedSessionTimeout < DefaultTimeout  )
     {
-      DefaultTimeout = response.Session.RevisedSessionTimeout;
+      DefaultTimeout = response.Parameters.RevisedSessionTimeout;
     }
     KeepAlive.Start(Server, Node(Server, ObjectId::Server_ServerStatus_State), DefaultTimeout);
   }
@@ -337,7 +337,7 @@ namespace OpcUa
 
   std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
-    SubscriptionParameters params;
+    CreateSubscriptionParameters params;
     params.RequestedPublishingInterval = period;
 
     return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));

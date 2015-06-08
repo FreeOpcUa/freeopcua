@@ -55,7 +55,7 @@ namespace
       return Subscriptions->CreateSubscription(request, callback);
     }
 
-    std::vector<OpcUa::StatusCode> DeleteSubscriptions(const std::vector<OpcUa::IntegerId>& subscriptions)
+    std::vector<OpcUa::StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       return Subscriptions->DeleteSubscriptions(subscriptions);
     }
@@ -70,7 +70,7 @@ namespace
       return Subscriptions->Republish(request);
     }
 
-    OpcUa::MonitoredItemsData CreateMonitoredItems(const OpcUa::MonitoredItemsParameters& parameters)
+    std::vector<OpcUa::MonitoredItemCreateResult> CreateMonitoredItems(const OpcUa::MonitoredItemsParameters& parameters)
     {
       return Subscriptions->CreateMonitoredItems(parameters);
     }

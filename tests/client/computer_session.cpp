@@ -21,7 +21,7 @@ TEST(Session, Works)
   OpcUa::RemoteSessionParameters session;
   session.ClientDescription.Name.Text = "opcua client";
   session.SessionName = "test";
-  session.EndpointURL = GetEndpoint();
+  session.EndpointUrl = GetEndpoint();
   session.Timeout = 1000;
 
   computer->CreateSession(session);

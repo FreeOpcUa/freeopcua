@@ -77,7 +77,7 @@ TEST_F(OpcUaProtocolAddonTest, CanListEndpoints)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::EndpointServices> endpoints = computer->Endpoints();
   std::vector<OpcUa::EndpointDescription> desc;
-  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::EndpointsFilter()));
+  ASSERT_NO_THROW(desc = endpoints->GetEndpoints(OpcUa::GetEndpointsParameters()));
   ASSERT_EQ(desc.size(), 1);
   endpoints.reset();
   computer.reset();
@@ -125,12 +125,12 @@ TEST_F(OpcUaProtocolAddonTest, CanCreateSession)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
 
   OpcUa::RemoteSessionParameters session;
-  session.ClientDescription.Name.Text = "opcua client";
+  session.ClientDescription.ApplicationName.Text = "opcua client";
   session.SessionName = "opua command line";
-  session.EndpointURL = "opc.tcp://localhost:4841";
+  session.EndpointUrl = "opc.tcp://localhost:4841";
   session.Timeout = 1000;
 
-  OpcUa::UpdatedSessionParameters session_parameters;
+  OpcUa::ActivateSessionParameters session_parameters;
 
   ASSERT_NO_THROW(computer->CreateSession(session));
   ASSERT_NO_THROW(computer->ActivateSession(session_parameters));
@@ -145,7 +145,7 @@ TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
   std::shared_ptr<OpcUa::Services> computer = computerAddon->GetServices();
   std::shared_ptr<OpcUa::SubscriptionServices> subscriptions = computer->Subscriptions();
 
-  OpcUa::SubscriptionParameters params;
+  OpcUa::CreateSubscriptionParameters params;
   params.MaxNotificationsPerPublish = 3;
   params.Priority = 0;
   params.PublishingEnabled = true;

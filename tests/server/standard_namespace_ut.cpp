@@ -1830,7 +1830,7 @@ TEST_F(StandardNamespaceStructure, ProductName)
   ExpectHasVariableAttributes(ObjectId::BuildInfoType_ProductName);
 }
 
-TEST_F(StandardNamespaceStructure, ProductURI)
+TEST_F(StandardNamespaceStructure, ProductUri)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectId::BuildInfoType_ProductUri);
   EXPECT_EQ(SizeOf(refs), 1);
