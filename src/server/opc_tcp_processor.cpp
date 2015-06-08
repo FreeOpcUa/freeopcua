@@ -143,7 +143,7 @@ namespace OpcUa
       PublishResponse response;
 
       FillResponseHeader(requestData.requestHeader, response.Header);
-      response.Result = result;
+      response.Parameters = result;
      
       requestData.sequence.SequenceNumber = ++SequenceNb;
 
@@ -152,7 +152,7 @@ namespace OpcUa
       secureHeader.AddSize(RawSize(requestData.sequence));
       secureHeader.AddSize(RawSize(response));
       if (Debug) {
-        std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Result.Message.Data.size() << " PublishResults" << std::endl;
+        std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Parameters.NotificationMessage.NotificationData.size() << " PublishResults" << std::endl;
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
     };
@@ -184,9 +184,9 @@ namespace OpcUa
       AsymmetricAlgorithmHeader algorithmHeader;
       istream >> algorithmHeader;
 
-      if (algorithmHeader.SecurityPolicyURI != "http://opcfoundation.org/UA/SecurityPolicy#None")
+      if (algorithmHeader.SecurityPolicyUri != "http://opcfoundation.org/UA/SecurityPolicy#None")
       {
-        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyURI + std::string("'"));
+        throw std::logic_error(std::string("Client want to create secure channel with unsupported policy '") + algorithmHeader.SecurityPolicyUri + std::string("'"));
       }
 
       SequenceHeader sequence;
@@ -269,7 +269,7 @@ namespace OpcUa
         case OpcUa::GET_ENDPOINTS_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing get endpoints request." << std::endl;
-          EndpointsFilter filter;
+          GetEndpointsParameters filter;
           istream >> filter;
 
           GetEndpointsResponse response;
@@ -442,18 +442,18 @@ namespace OpcUa
         case CREATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing create session request." << std::endl;
-          SessionParameters params;
+          CreateSessionParameters params;
           istream >> params;
 
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Session.SessionId = SessionId;
-          response.Session.AuthenticationToken = SessionId;
-          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Session.MaxRequestMessageSize = 65536;
-          EndpointsFilter epf;
-          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+          response.Parameters.SessionId = SessionId;
+          response.Parameters.AuthenticationToken = SessionId;
+          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Parameters.MaxRequestMessageSize = 65536;
+          GetEndpointsParameters epf;
+          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
@@ -467,7 +467,7 @@ namespace OpcUa
         case ACTIVATE_SESSION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing activate session request." << std::endl;
-          UpdatedSessionParameters params;
+          ActivateSessionParameters params;
           istream >> params;
 
           ActivateSessionResponse response;
@@ -526,7 +526,7 @@ namespace OpcUa
                 }
               });
 
-          Subscriptions.push_back(response.Data.Id); //Keep a link to eventually delete subcriptions when exiting
+          Subscriptions.push_back(response.Data.SubscriptionId); //Keep a link to eventually delete subcriptions when exiting
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -539,12 +539,12 @@ namespace OpcUa
         case DELETE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl;
-          std::vector<IntegerId> ids;
+          std::vector<uint32_t> ids;
           istream >> ids;
 
           DeleteSubscriptions(ids); //remove from locale subscription lis
 
-          DeleteSubscriptionResponse response;
+          DeleteSubscriptionsResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
           response.Results = Server->Subscriptions()->DeleteSubscriptions(ids);
@@ -567,7 +567,7 @@ namespace OpcUa
 
           CreateMonitoredItemsResponse response;
 
-          response.Data = Server->Subscriptions()->CreateMonitoredItems(params);
+          response.Results = Server->Subscriptions()->CreateMonitoredItems(params);
 
           FillResponseHeader(requestHeader, response.Header);
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
@@ -606,7 +606,7 @@ namespace OpcUa
           if (Debug) std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl;
           PublishRequest request;
           request.Header = requestHeader;
-          istream >> request.Parameters;
+          istream >> request.SubscriptionAcknowledgements;
 
           PublishRequestElement data;
           data.sequence = sequence;
@@ -629,7 +629,7 @@ namespace OpcUa
           //FIXME: forward request to internal server!!
           SetPublishingModeResponse response;
           FillResponseHeader(requestHeader, response.Header);
-          response.Result.Statuses.resize(params.SubscriptionIds.size(), StatusCode::Good);
+          response.Result.Results.resize(params.SubscriptionIds.size(), StatusCode::Good);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -709,18 +709,18 @@ namespace OpcUa
         case CALL_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
-          SessionParameters params;
+          CreateSessionParameters params;
           istream >> params;
 
           CreateSessionResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Session.SessionId = SessionId;
-          response.Session.AuthenticationToken = SessionId;
-          response.Session.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Session.MaxRequestMessageSize = 65536;
-          EndpointsFilter epf;
-          response.Session.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
+          response.Parameters.SessionId = SessionId;
+          response.Parameters.AuthenticationToken = SessionId;
+          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
+          response.Parameters.MaxRequestMessageSize = 65536;
+          GetEndpointsParameters epf;
+          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
 
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
@@ -760,8 +760,8 @@ namespace OpcUa
 
     void OpcTcpMessages::DeleteAllSubscriptions()
     {
-      std::vector<IntegerId> subs;
-      for (const IntegerId& subid: Subscriptions)
+      std::vector<uint32_t> subs;
+      for (const uint32_t& subid: Subscriptions)
       {
         subs.push_back(subid);
       }
@@ -769,12 +769,12 @@ namespace OpcUa
       Subscriptions.clear();
     }
 
-    void OpcTcpMessages::DeleteSubscriptions(const std::vector<IntegerId>& ids)
+    void OpcTcpMessages::DeleteSubscriptions(const std::vector<uint32_t>& ids)
     {
       for ( auto id : ids )
       {
         Subscriptions.erase(std::remove_if(Subscriptions.begin(), Subscriptions.end(),
-                      [&](const IntegerId d) { return ( d == id) ; }), Subscriptions.end());
+                      [&](const uint32_t d) { return ( d == id) ; }), Subscriptions.end());
       }
     }
 

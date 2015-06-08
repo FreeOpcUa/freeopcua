@@ -12,47 +12,17 @@
 #define __OPC_UA_MESSAGES_DISCOVERY_SERVICE_H__
 
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 namespace OpcUa
 {
-
-  //------------------------------------------------------
-  // Endpoints
-  //------------------------------------------------------
-
-  struct EndpointsFilter
-  {
-    std::string EndpointURL;
-    std::vector<std::string> LocaleIds;
-    std::vector<std::string> ProfileUries;
-  };
-
-  struct GetEndpointsRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    EndpointsFilter Filter;
-
-    GetEndpointsRequest();
-  };
-
-
-  struct GetEndpointsResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-
-    std::vector<EndpointDescription> Endpoints;
-
-    GetEndpointsResponse();
-  };
 
   ////////////////////////////////////////////////////////
   // FindServersRequest
   ////////////////////////////////////////////////////////
   struct FindServersParameters
   {
-    std::string EndpointURL;
+    std::string EndpointUrl;
     std::vector<LocaleId> Locales;
     std::vector<std::string> ServersToReturn;
   };

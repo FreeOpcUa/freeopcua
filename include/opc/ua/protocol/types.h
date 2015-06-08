@@ -49,6 +49,9 @@ namespace OpcUa
     {
       return Data == str.Data;
     }
+
+    // For tests
+
   };
 
   class IntegerId
@@ -261,55 +264,12 @@ namespace OpcUa
 
   typedef std::vector<uint8_t> CertificateData;
 
-  // TODO Serialization, RawSize
-  struct SignatureData
-  {
-    std::vector<uint8_t> Signature;
-    std::string Algorithm;
-  };
-
-  struct ApplicationDescription
-  {
-    std::string URI;
-    std::string ProductURI;
-    LocalizedText Name;
-    ApplicationType Type = ApplicationType::Client;
-    std::string GatewayServerURI;
-    std::string DiscoveryProfileURI;
-    std::vector<std::string> DiscoveryURLs;
-
-    ApplicationDescription();
-  };
-
-  enum class UserIdentifyTokenType : uint32_t
-  {
-    ANONYMOUS    = 0, // no token required
-    USERNAME     = 1, // username/password
-    CERTIFICATE  = 2, // x509v3 certificate
-    ISSUED_TOKEN = 3, // WS_Security token
-  };
-
-  struct UserTokenPolicy
-  {
-    std::string PolicyId;
-    UserIdentifyTokenType TokenType = UserIdentifyTokenType::ANONYMOUS;
-    std::string IssuedTokenType;
-    std::string IssuerEndpointURL;
-    std::string SecurityPolicyURI;
-  };
-
-  struct EndpointDescription
-  {
-    std::string EndpointURL;
-    ApplicationDescription ServerDescription;
-    CertificateData ServerCertificate;
-    MessageSecurityMode SecurityMode = MessageSecurityMode::None;
-    std::string SecurityPolicyURI;
-    std::vector<UserTokenPolicy> UserIdentifyTokens;
-    std::string TransportProfileURI;
-    uint8_t SecurityLevel = 0;
-  };
-
+//   // TODO Serialization, RawSize
+//   struct SignatureData
+//   {
+//     std::vector<uint8_t> Signature;
+//     std::string Algorithm;
+//   };
 
   enum ExtensionObjectEncoding : uint8_t
   {

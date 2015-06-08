@@ -37,7 +37,7 @@ namespace OpcUa
       void CloseChannel(Binary::IStreamBinary& istream);
       void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
       void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
-      void DeleteSubscriptions(const std::vector<IntegerId>& ids);
+      void DeleteSubscriptions(const std::vector<uint32_t>& ids);
       void DeleteAllSubscriptions();
       void ForwardPublishResponse(const PublishResult response);
 
@@ -59,7 +59,7 @@ namespace OpcUa
         Binary::SymmetricAlgorithmHeader algorithmHeader;
       };
 
-      std::list<IntegerId> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
+      std::list<uint32_t> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
       std::mutex PublishRequestQueueMutex;
       std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and
     };

@@ -17,7 +17,6 @@
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/event.h>
 #include <opc/ua/protocol/monitored_items.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
 
@@ -39,7 +38,7 @@ namespace OpcUa
 
     class InternalSubscription;
 
-    typedef std::map <IntegerId, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
+    typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
 
 
     class SubscriptionServiceInternal : public Server::SubscriptionService
@@ -49,9 +48,9 @@ namespace OpcUa
 
        ~SubscriptionServiceInternal();
 
-        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions);
+        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions);
         virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
-        virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& params);
+        virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& params);
         virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
         virtual void Publish(const PublishRequest& request);
         virtual RepublishResponse Republish(const RepublishParameters& request);

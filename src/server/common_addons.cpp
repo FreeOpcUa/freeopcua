@@ -132,7 +132,7 @@ namespace
     Common::ParametersGroup opc_tcp(OpcUa::Server::AsyncOpcTcpAddonId);
     opc_tcp.Parameters.push_back(debugMode);
     OpcUa::Server::ApplicationData applicationData;
-    applicationData.Application = serverParams.Endpoint.ServerDescription;
+    applicationData.Application = serverParams.Endpoint.Server;
     applicationData.Endpoints.push_back(serverParams.Endpoint);
     opc_tcp.Groups = OpcUa::CreateCommonParameters({applicationData}, serverParams.Debug);
     addons.Groups.push_back(opc_tcp);

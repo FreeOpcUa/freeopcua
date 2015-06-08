@@ -122,7 +122,7 @@ namespace OpcUa
 
     struct AsymmetricAlgorithmHeader
     {
-      std::string SecurityPolicyURI;
+      std::string SecurityPolicyUri;
       std::vector<uint8_t> SenderCertificate;
       std::vector<uint8_t> ReceiverCertificateThumbPrint;
     };

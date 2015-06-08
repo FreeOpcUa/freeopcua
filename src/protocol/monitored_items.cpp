@@ -20,44 +20,6 @@
 namespace OpcUa
 {
 
-  MonitoredItemsParameters::MonitoredItemsParameters()
-    : Timestamps(TimestampsToReturn::Neither)
-  {
-  }
-
-  CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
-    : TypeId(MessageId::CREATE_MONITORED_ITEMS_REQUEST)
-  {
-  }
-
-  CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
-    : TypeId(MessageId::CREATE_MONITORED_ITEMS_RESPONSE)
-  {
-  }
-
-  CreateMonitoredItemsResult::CreateMonitoredItemsResult()
-    : Status(StatusCode::BadNotImplemented)
-    , MonitoredItemId(1) // 0 is not allowed for integerId
-    , RevisedSamplingInterval(0)
-    , RevizedQueueSize(0)
-    , Filter()
-  {
-  }
-
-  DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
-    : TypeId(MessageId::DELETE_MONITORED_ITEMS_REQUEST)
-  {
-  }
-
-  DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
-    : TypeId(MessageId::DELETE_MONITORED_ITEMS_RESPONSE)
-  {
-  }
-
-  MonitoredItemsData::MonitoredItemsData()
-  {
-  }
-
   MonitoringFilter::MonitoringFilter(DataChangeFilter filter) : DataChange(filter)
   {
     Header.TypeId  = ExpandedObjectId::DataChangeFilter;
@@ -78,121 +40,6 @@ namespace OpcUa
 
   namespace Binary
   {
-
-    ////////////////////////////////////////////////////////////////
-
-    template <>
-    std::size_t RawSize<MonitoredItemsData>(const MonitoredItemsData& data)
-    {
-      return RawSizeContainer(data.Results) + RawSizeContainer(data.Diagnostics);
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoredItemsData>(const MonitoredItemsData& data)
-    {
-      SerializeContainer(*this, data.Results, 0);
-      SerializeContainer(*this, data.Diagnostics, 0);
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemsData>(MonitoredItemsData& params)
-    {
-      *this >> params.Results;
-      *this >> params.Diagnostics;
-    }
-
-    ////////////////////////////////////////////////////////////////
-
-    template <>
-    std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& response)
-    {
-      return RawSize(response.TypeId) + RawSize(response.Header) + RawSize(response.Data);
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& response)
-    {
-      *this << response.TypeId;
-      *this << response.Header;
-      *this << response.Data;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsResponse>(CreateMonitoredItemsResponse& params)
-    {
-      *this >> params.TypeId;
-      *this >> params.Header;
-      *this >> params.Data;
-    }
-
-    template <>
-    std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
-    {
-      return RawSize(data.SubscriptionId) + RawSizeContainer(data.MonitoredItemsIds);
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
-    {
-      *this << data.SubscriptionId;
-      *this << data.MonitoredItemsIds;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsParameters>(DeleteMonitoredItemsParameters& data)
-    {
-      *this >> data.SubscriptionId;
-      *this >> data.MonitoredItemsIds;
-    }
-
-    template <>
-    std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
-    {
-      return RawSize(data.TypeId) + RawSize(data.Header) + RawSize(data.Parameters);
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
-    {
-      *this << data.TypeId;
-      *this << data.Header;
-      *this << data.Parameters;
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest& data)
-    {
-      *this >> data.TypeId;
-      *this >> data.Header;
-      *this >> data.Parameters;
-    }
-
-
-    template <>
-    std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
-    {
-      return RawSize(data.TypeId) + RawSize(data.Header) + RawSizeContainer(data.Results) + RawSize(data.Diagnostics);
-    }
-
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
-    {
-      *this << data.TypeId;
-      *this << data.Header;
-      *this << data.Results;
-      *this << data.Diagnostics;
-    }
-
-
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse& data)
-    {
-      *this >> data.TypeId;
-      *this >> data.Header;
-      *this >> data.Results;
-      *this >> data.Diagnostics;
-    }
 
     ////////////////////////////////////////////////////////
     // AttributeOperand
@@ -646,176 +493,35 @@ namespace OpcUa
     }
 
     ////////////////////////////////////////////////////////
-    // MonitoringParameters
+    // MonitoredItemCreateRequest
     ////////////////////////////////////////////////////////
 
     template<>
-    std::size_t RawSize<MonitoringParameters>(const OpcUa::MonitoringParameters& params)
-    {
-      return RawSize(params.ClientHandle) +
-          RawSize(params.SamplingInterval) +
-          RawSize(params.Filter) +
-          RawSize(params.QueueSize) +
-          RawSize(params.DiscardOldest); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoringParameters>(MonitoringParameters& params)
-    {
-      *this >> params.ClientHandle;
-      *this >> params.SamplingInterval;
-      *this >> params.Filter;
-      *this >> params.QueueSize;
-      *this >> params.DiscardOldest;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters& params)
-    {
-      *this << params.ClientHandle;
-      *this << params.SamplingInterval;
-      *this << params.Filter;
-      *this << params.QueueSize;
-      *this << params.DiscardOldest;
-    }
-
-    ////////////////////////////////////////////////////////
-    // MonitoredItemRequest
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoredItemRequest>(const OpcUa::MonitoredItemRequest& params)
-    {
-      return RawSize(params.ItemToMonitor) +
-          RawSize(params.Mode) +
-          RawSize(params.Parameters); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemRequest>(MonitoredItemRequest& params)
-    {
-      *this >> params.ItemToMonitor;
-      *this >> params.Mode;
-      *this >> params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoredItemRequest>(const MonitoredItemRequest& params)
-    {
-      *this << params.ItemToMonitor;
-      *this << params.Mode;
-      *this << params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<MonitoredItemRequest>>(const std::vector<MonitoredItemRequest>& targets)
+    void DataSerializer::Serialize<std::vector<MonitoredItemCreateRequest>>(const std::vector<MonitoredItemCreateRequest>& targets)
     {
       SerializeContainer(*this, targets);
     }
 
     template<>
-    void DataDeserializer::Deserialize<std::vector<MonitoredItemRequest>>(std::vector<MonitoredItemRequest>& targets)
+    void DataDeserializer::Deserialize<std::vector<MonitoredItemCreateRequest>>(std::vector<MonitoredItemCreateRequest>& targets)
     {
       DeserializeContainer(*this, targets);
-    }
-
-
-    ////////////////////////////////////////////////////////
-    // MonitoredItemsParameters
-    ////////////////////////////////////////////////////////
-
-    template<>
-    std::size_t RawSize<MonitoredItemsParameters>(const OpcUa::MonitoredItemsParameters& params)
-    {
-      return RawSize(params.SubscriptionId) +
-          RawSize(params.Timestamps) +
-          RawSizeContainer(params.ItemsToCreate); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters& params)
-    {
-      *this >> params.SubscriptionId;
-      *this >> params.Timestamps;
-      *this >> params.ItemsToCreate;
-    }
-
-    template<>
-    void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& params)
-    {
-      *this << params.SubscriptionId;
-      *this << params.Timestamps;
-      *this << params.ItemsToCreate;
     }
 
     ////////////////////////////////////////////////////////
     // CreateMonitoredItemsRequest
     ////////////////////////////////////////////////////////
 
-    template<>
-    std::size_t RawSize<CreateMonitoredItemsRequest>(const OpcUa::CreateMonitoredItemsRequest& params)
-    {
-      return RawSize(params.TypeId) +
-          RawSize(params.Header) +
-          RawSize(params.Parameters); 
-    }
-
-    template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsRequest>(CreateMonitoredItemsRequest& params)
-    {
-      *this >> params.TypeId;
-      *this >> params.Header;
-      *this >> params.Parameters;
-    }
-
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& params)
-    {
-      *this << params.TypeId;
-      *this << params.Header;
-      *this << params.Parameters;
-    }
-
     ////////////////////////////////////////////////////////////////
 
-    template <>
-    std::size_t RawSize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
-    {
-      return RawSize(result.Status) +
-        RawSize(result.MonitoredItemId) +
-        RawSize(result.RevisedSamplingInterval) +
-        RawSize(result.RevizedQueueSize) +
-        RawSize(result.Filter);
-    }
-
     template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsResult>(const CreateMonitoredItemsResult& result)
-    {
-      *this << result.Status;
-      *this << result.MonitoredItemId;
-      *this << result.RevisedSamplingInterval;
-      *this << result.RevizedQueueSize;
-      *this << result.Filter;
-    }
-
-   template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsResult>(CreateMonitoredItemsResult& params)
-    {
-      *this >> params.Status;
-      *this >> params.MonitoredItemId;
-      *this >> params.RevisedSamplingInterval;
-      *this >> params.RevizedQueueSize;
-      *this >> params.Filter;
-    }
-
-    template<>
-    void DataSerializer::Serialize<std::vector<CreateMonitoredItemsResult>>(const std::vector<CreateMonitoredItemsResult>& targets)
+    void DataSerializer::Serialize<std::vector<MonitoredItemCreateResult>>(const std::vector<MonitoredItemCreateResult>& targets)
     {
       SerializeContainer(*this, targets);
     }
 
     template<>
-    void DataDeserializer::Deserialize<std::vector<CreateMonitoredItemsResult>>(std::vector<CreateMonitoredItemsResult>& targets)
+    void DataDeserializer::Deserialize<std::vector<MonitoredItemCreateResult>>(std::vector<MonitoredItemCreateResult>& targets)
     {
       DeserializeContainer(*this, targets);
     }

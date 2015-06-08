@@ -35,7 +35,7 @@ namespace
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  typedef std::map<IntegerId, std::function<void (PublishResult)>> SubscriptionCallbackMap;
+  typedef std::map<uint32_t, std::function<void (PublishResult)>> SubscriptionCallbackMap;
 
   class BufferInputChannel : public OpcUa::InputChannel
   {
@@ -248,28 +248,28 @@ namespace
       CreateSessionRequest request;
       request.Header = CreateRequestHeader();
 
-      request.Parameters.ClientDescription.URI = parameters.ClientDescription.URI;
-      request.Parameters.ClientDescription.ProductURI = parameters.ClientDescription.ProductURI;
-      request.Parameters.ClientDescription.Name = parameters.ClientDescription.Name;
-      request.Parameters.ClientDescription.Type = parameters.ClientDescription.Type;
-      request.Parameters.ClientDescription.GatewayServerURI = parameters.ClientDescription.GatewayServerURI;
-      request.Parameters.ClientDescription.DiscoveryProfileURI = parameters.ClientDescription.DiscoveryProfileURI;
-      request.Parameters.ClientDescription.DiscoveryURLs = parameters.ClientDescription.DiscoveryURLs;
+      request.Parameters.ClientDescription.ApplicationUri = parameters.ClientDescription.ApplicationUri;
+      request.Parameters.ClientDescription.ProductUri = parameters.ClientDescription.ProductUri;
+      request.Parameters.ClientDescription.ApplicationName = parameters.ClientDescription.ApplicationName;
+      request.Parameters.ClientDescription.ApplicationType = parameters.ClientDescription.ApplicationType;
+      request.Parameters.ClientDescription.GatewayServerUri = parameters.ClientDescription.GatewayServerUri;
+      request.Parameters.ClientDescription.DiscoveryProfileUri = parameters.ClientDescription.DiscoveryProfileUri;
+      request.Parameters.ClientDescription.DiscoveryUrls = parameters.ClientDescription.DiscoveryUrls;
 
-      request.Parameters.ServerURI = parameters.ServerURI;
-      request.Parameters.EndpointURL = parameters.EndpointURL; // TODO make just endpoint.URL;
+      request.Parameters.ServerUri = parameters.ServerURI;
+      request.Parameters.EndpointUrl = parameters.EndpointUrl; // TODO make just endpoint.URL;
       request.Parameters.SessionName = parameters.SessionName;
-      request.Parameters.ClientNonce = std::vector<uint8_t>(32,0);
-      request.Parameters.ClientCertificate = parameters.ClientCertificate;
+      request.Parameters.ClientNonce = ByteString(std::vector<uint8_t>(32,0));
+      request.Parameters.ClientCertificate = ByteString(parameters.ClientCertificate);
       request.Parameters.RequestedSessionTimeout = parameters.Timeout;
       request.Parameters.MaxResponseMessageSize = 65536;
       CreateSessionResponse response = Send<CreateSessionResponse>(request);
-      AuthenticationToken = response.Session.AuthenticationToken;
+      AuthenticationToken = response.Parameters.AuthenticationToken;
       if (Debug)  { std::cout << "binary_client| CreateSession <--" << std::endl; }
       return response;
     }
 
-    ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) override
+    ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) override
     {
       if (Debug)  { std::cout << "binary_client| ActivateSession -->" << std::endl; }
       ActivateSessionRequest request;
@@ -343,14 +343,14 @@ namespace
       return response.Data.Descriptions;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       if (Debug)  { std::cout << "binary_client| GetEndpoints -->" << std::endl; }
       OpcUa::GetEndpointsRequest request;
       request.Header = CreateRequestHeader();
-      request.Filter.EndpointURL = filter.EndpointURL;
-      request.Filter.LocaleIds = filter.LocaleIds;
-      request.Filter.ProfileUries = filter.ProfileUries;
+      request.Parameters.EndpointUrl = filter.EndpointUrl;
+      request.Parameters.LocaleIds = filter.LocaleIds;
+      request.Parameters.ProfileUris = filter.ProfileUris;
       const GetEndpointsResponse response = Send<GetEndpointsResponse>(request);
       if (Debug)  { std::cout << "binary_client| GetEndpoints <--" << std::endl; }
       return response.Endpoints;
@@ -424,29 +424,29 @@ namespace
       if (Debug)  { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
-      PublishCallbacks[response.Data.Id] = callback;// TODO Pass calback to the Publish method.
+      PublishCallbacks[response.Data.SubscriptionId] = callback;// TODO Pass calback to the Publish method.
       if (Debug)  { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
-      DeleteSubscriptionRequest request;
-      request.SubscriptionsIds = subscriptions;
-      const DeleteSubscriptionResponse response = Send<DeleteSubscriptionResponse>(request);
+      DeleteSubscriptionsRequest request;
+      request.SubscriptionIds = subscriptions;
+      const DeleteSubscriptionsResponse response = Send<DeleteSubscriptionsResponse>(request);
       if (Debug)  { std::cout << "binary_client| DeleteSubscriptions <--" << std::endl; }
       return response.Results;
     }
 
-    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
       if (Debug)  { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
-      return response.Data;
+      return response.Results;
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
@@ -461,7 +461,7 @@ namespace
 
     virtual void Publish(const PublishRequest& originalrequest)
     {
-      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.Parameters.Acknowledgements.size() << " acks" << std::endl;}
+      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.SubscriptionAcknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest);
       request.Header = CreateRequestHeader();
       request.Header.Timeout = 0; //We do not want the request to timeout!
@@ -484,16 +484,16 @@ namespace
             { 
 			if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
 			{
-				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Result.SubscriptionId << std::endl; }
-				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Result.SubscriptionId);
+				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Parameters.SubscriptionId << std::endl; }
+				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Parameters.SubscriptionId);
 				if (callbackIt == this->PublishCallbacks.end())
 				{
-					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Result.SubscriptionId << std::endl;
+					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Parameters.SubscriptionId << std::endl;
 				}
 				else
 				{
 					try { //calling client code, better put it under try/catch otherwise we crash entire client
-						callbackIt->second(response.Result);
+						callbackIt->second(response.Parameters);
 					}
 					catch (const std::exception& ex)
 					{
@@ -844,7 +844,7 @@ private:
   {
     SecureHeader hdr(MT_SECURE_OPEN, CHT_SINGLE, ChannelSecurityToken.SecureChannelId);
     AsymmetricAlgorithmHeader algorithmHeader;
-    algorithmHeader.SecurityPolicyURI = Params.SecurePolicy;
+    algorithmHeader.SecurityPolicyUri = Params.SecurePolicy;
     algorithmHeader.SenderCertificate = Params.SenderCertificate;
     algorithmHeader.ReceiverCertificateThumbPrint = Params.ReceiverCertificateThumbPrint;
     hdr.AddSize(RawSize(algorithmHeader));

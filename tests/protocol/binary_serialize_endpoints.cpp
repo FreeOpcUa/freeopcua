@@ -45,9 +45,9 @@ TEST_F(EndpointsSerialization, GetEndpointsRequest)
   ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::GET_ENDPOINTS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
-  request.Filter.EndpointURL = "test";
-  request.Filter.LocaleIds.push_back("RU");
-  request.Filter.ProfileUries.push_back("pro");
+  request.Parameters.EndpointUrl = "test";
+  request.Parameters.LocaleIds.push_back("RU");
+  request.Parameters.ProfileUris.push_back("pro");
 
 
   GetStream() << request << flush;
@@ -90,9 +90,9 @@ TEST_F(EndpointsDeserialization, GetEndpointsRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.Filter.EndpointURL, "test");
-  ASSERT_EQ(request.Filter.LocaleIds, std::vector<std::string>(1, "RU"));
-  ASSERT_EQ(request.Filter.ProfileUries, std::vector<std::string>(1, "pro"));
+  ASSERT_EQ(request.Parameters.EndpointUrl, "test");
+  ASSERT_EQ(request.Parameters.LocaleIds, std::vector<std::string>(1, "RU"));
+  ASSERT_EQ(request.Parameters.ProfileUris, std::vector<std::string>(1, "pro"));
 }
 
 //----------------------------------------------------
@@ -316,7 +316,7 @@ TEST_F(EndpointsSerialization, FindServersParameters)
 
   FindServersParameters params;
 
-  params.EndpointURL = "url";
+  params.EndpointUrl = "url";
   params.Locales.push_back("en");
   params.ServersToReturn.push_back("server");
 
@@ -349,7 +349,7 @@ TEST_F(EndpointsDeserialization, FindServersParameters)
   FindServersParameters params;
   GetStream() >> params;
 
-  ASSERT_EQ(params.EndpointURL, "url");
+  ASSERT_EQ(params.EndpointUrl, "url");
   ASSERT_EQ(params.Locales.size(), 1);
   ASSERT_EQ(params.Locales[0], "en");
   ASSERT_EQ(params.ServersToReturn.size(), 1);
@@ -373,7 +373,7 @@ TEST_F(EndpointsSerialization, FindServersRequest)
   ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::FIND_ServerS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
-  request.Parameters.EndpointURL = "url";
+  request.Parameters.EndpointUrl = "url";
   request.Parameters.Locales.push_back("en");
   request.Parameters.ServersToReturn.push_back("server");
 
@@ -418,7 +418,7 @@ TEST_F(EndpointsDeserialization, FindServersRequest)
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
-  ASSERT_EQ(request.Parameters.EndpointURL, "url");
+  ASSERT_EQ(request.Parameters.EndpointUrl, "url");
   ASSERT_EQ(request.Parameters.Locales, std::vector<std::string>(1, "en"));
   ASSERT_EQ(request.Parameters.ServersToReturn, std::vector<std::string>(1, "server"));
 }

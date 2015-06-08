@@ -30,11 +30,11 @@ namespace
   public:
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
     {
-      // TODO appky filter
+      // TODO apply filter
       return Applications;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       // TODO apply filter.
       return Endpoints;

@@ -42,20 +42,20 @@ void py_opcua_enums()
   ;
 
   enum_<MessageSecurityMode>("MessageSecurityMode")
-  .value("None_", MessageSecurityMode::None)
-  //._value(None)
 #define _value(X) value(#X, MessageSecurityMode:: X)
+  ._value(Invalid)
+  ._value(None)
   ._value(Sign)
   ._value(SignAndEncrypt)
 #undef _value
   ;
 
-  enum_<UserIdentifyTokenType>("UserIdentifyTokenType")
-#define _value(X) value(#X, UserIdentifyTokenType:: X)
-  ._value(ANONYMOUS)
-  ._value(USERNAME)
-  ._value(CERTIFICATE)
-  ._value(ISSUED_TOKEN)
+  enum_<UserTokenType>("UserTokenType")
+#define _value(X) value(#X, UserTokenType:: X)
+  ._value(Anonymous)
+  ._value(UserName)
+  ._value(Certificate)
+  ._value(IssuedToken)
 #undef _value
   ;
 

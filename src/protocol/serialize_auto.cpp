@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -18,7 +18,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {
 
@@ -279,8 +279,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ExtensionObject>(const ExtensionObject& data)
     {
@@ -289,7 +287,6 @@ namespace OpcUa
         if ((data.Encoding) & (1<<(0))) *this << data.Body;
     }
 
-*/
 
 /*  DISABLED
 
@@ -659,8 +656,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ApplicationDescription>(const ApplicationDescription& data)
     {
@@ -673,7 +668,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiscoveryUrls);
     }
 
-*/
 
 /*  DISABLED
 
@@ -763,8 +757,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy& data)
     {
@@ -775,9 +767,6 @@ namespace OpcUa
         *this << data.SecurityPolicyUri;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription& data)
@@ -792,9 +781,6 @@ namespace OpcUa
         *this << data.SecurityLevel;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<GetEndpointsParameters>(const GetEndpointsParameters& data)
@@ -804,9 +790,6 @@ namespace OpcUa
         SerializeContainer(*this, data.ProfileUris);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& data)
@@ -816,9 +799,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& data)
@@ -828,7 +808,6 @@ namespace OpcUa
         SerializeContainer(*this, data.Endpoints);
     }
 
-*/
 
 /*  DISABLED
 
@@ -965,8 +944,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
     {
@@ -974,9 +951,6 @@ namespace OpcUa
         *this << data.Signature;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<SignatureData>(const SignatureData& data)
@@ -985,9 +959,6 @@ namespace OpcUa
         *this << data.Signature;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSessionParameters>(const CreateSessionParameters& data)
@@ -1002,9 +973,6 @@ namespace OpcUa
         *this << data.MaxResponseMessageSize;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& data)
@@ -1014,9 +982,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSessionResult>(const CreateSessionResult& data)
@@ -1032,9 +997,6 @@ namespace OpcUa
         *this << data.MaxRequestMessageSize;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse& data)
@@ -1044,7 +1006,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 
@@ -1117,8 +1078,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ActivateSessionParameters>(const ActivateSessionParameters& data)
     {
@@ -1129,9 +1088,6 @@ namespace OpcUa
         *this << data.UserTokenSignature;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionRequest>(const ActivateSessionRequest& data)
@@ -1141,9 +1097,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionResult>(const ActivateSessionResult& data)
@@ -1153,9 +1106,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ActivateSessionResponse>(const ActivateSessionResponse& data)
@@ -1165,7 +1115,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
 /*  DISABLED
 
@@ -2783,8 +2732,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters& data)
     {
@@ -2795,9 +2742,6 @@ namespace OpcUa
         *this << data.DiscardOldest;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
@@ -2807,9 +2751,6 @@ namespace OpcUa
         *this << data.RequestedParameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
@@ -2821,21 +2762,15 @@ namespace OpcUa
         *this << data.FilterResult;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsParameters>(const CreateMonitoredItemsParameters& data)
+    void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
     {
         *this << data.SubscriptionId;
         *this << data.TimestampsToReturn;
         SerializeContainer(*this, data.ItemsToCreate);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
@@ -2845,9 +2780,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
@@ -2858,7 +2790,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 
@@ -3018,8 +2949,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
     {
@@ -3027,9 +2956,6 @@ namespace OpcUa
         SerializeContainer(*this, data.MonitoredItemIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
@@ -3039,9 +2965,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
@@ -3052,9 +2975,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
@@ -3067,9 +2987,6 @@ namespace OpcUa
         *this << data.Priority;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
@@ -3079,12 +2996,9 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<CreateSubscriptionResult>(const CreateSubscriptionResult& data)
+    void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData& data)
     {
         *this << data.SubscriptionId;
         *this << data.RevisedPublishingInterval;
@@ -3092,19 +3006,15 @@ namespace OpcUa
         *this << data.RevisedMaxKeepAliveCount;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.Data;
     }
 
-*/
 
 /*  DISABLED
 
@@ -3157,18 +3067,13 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
-    void DataSerializer::Serialize<SetPublishingModeParameters>(const SetPublishingModeParameters& data)
+    void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters& data)
     {
         *this << data.PublishingEnabled;
         SerializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
@@ -3178,30 +3083,32 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
-    void DataSerializer::Serialize<SetPublishingModeResult>(const SetPublishingModeResult& data)
+    void DataSerializer::Serialize<PublishingModeResult>(const PublishingModeResult& data)
     {
         SerializeContainer(*this, data.Results);
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.Result;
     }
 
-*/
+
+    template<>
+    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
+    {
+        *this << data.SequenceNumber;
+        *this << data.PublishTime;
+        SerializeContainer(*this, data.NotificationData);
+    }
+
 
 /*  DISABLED
 
@@ -3211,18 +3118,6 @@ namespace OpcUa
         *this << data.TypeId;
         *this << data.Encoding;
         if ((data.Encoding) & (1<<(0))) *this << data.Body;
-    }
-
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
-    {
-        *this << data.SequenceNumber;
-        *this << data.PublishTime;
-        SerializeContainer(*this, data.NotificationData);
     }
 
 */
@@ -3323,8 +3218,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
     {
@@ -3332,9 +3225,6 @@ namespace OpcUa
         *this << data.SequenceNumber;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<PublishRequest>(const PublishRequest& data)
@@ -3344,9 +3234,6 @@ namespace OpcUa
         SerializeContainer(*this, data.SubscriptionAcknowledgements);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<PublishResult>(const PublishResult& data)
@@ -3359,9 +3246,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<PublishResponse>(const PublishResponse& data)
@@ -3371,9 +3255,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters& data)
@@ -3382,9 +3263,6 @@ namespace OpcUa
         *this << data.RetransmitSequenceNumber;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest& data)
@@ -3394,29 +3272,15 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<RepublishResult>(const RepublishResult& data)
-    {
-        *this << data.NotificationMessage;
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        *this << data.NotificationMessage;
     }
 
-*/
 
 /*  DISABLED
 
@@ -3475,29 +3339,14 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionsParameters>(const DeleteSubscriptionsParameters& data)
-    {
-        SerializeContainer(*this, data.SubscriptionIds);
-    }
-
-*/
-
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.SubscriptionIds);
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
@@ -3508,7 +3357,6 @@ namespace OpcUa
         SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 
