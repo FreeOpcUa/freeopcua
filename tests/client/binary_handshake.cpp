@@ -171,7 +171,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   request.ClientDescription.Type = ApplicationType::Client;
 
   request.ServerURI = endpoint.ServerDescription.URI;
-  request.EndpointUrl = endpoint.EndpointUrl; // TODO make just endpoint.URL;
+  request.EndpointUrl = endpoint.EndpointUrl;
   request.SessionName = "libiocuamappings session test";
   request.ClientNonce = std::vector<uint8_t>(32,0);
 //  request.ClientCertificate = GetCertificate();
