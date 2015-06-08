@@ -42,9 +42,9 @@ void py_opcua_enums()
   ;
 
   enum_<MessageSecurityMode>("MessageSecurityMode")
-  .value("None_", MessageSecurityMode::None)
-  //._value(None)
 #define _value(X) value(#X, MessageSecurityMode:: X)
+  ._value(Invalid)
+  ._value(None)
   ._value(Sign)
   ._value(SignAndEncrypt)
 #undef _value
