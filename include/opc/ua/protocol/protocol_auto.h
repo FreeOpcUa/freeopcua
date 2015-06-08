@@ -744,8 +744,8 @@ namespace OpcUa
     // A digital signature.
     struct SignatureData 
     {
-         OpcUa::ByteString Signature;
          std::string Algorithm;
+         OpcUa::ByteString Signature;
     };
 
     struct CreateSessionParameters 
@@ -2629,6 +2629,8 @@ namespace OpcUa
          double RevisedPublishingInterval;
          uint32_t RevisedLifetimeCount;
          uint32_t RevisedMaxKeepAliveCount;
+
+         SubscriptionData();
     };
 
     struct CreateSubscriptionResponse 
