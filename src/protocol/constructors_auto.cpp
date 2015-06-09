@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -48,21 +48,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      GetEndpointsRequest::GetEndpointsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      GetEndpointsResponse::GetEndpointsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -115,40 +109,28 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      CreateSessionRequest::CreateSessionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      CreateSessionResponse::CreateSessionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 */
-
-/*  DISABLED
 
      ActivateSessionRequest::ActivateSessionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      ActivateSessionResponse::ActivateSessionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -429,21 +411,15 @@ namespace OpcUa
     {
     }
 
-/*  DISABLED
-
      CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -493,40 +469,25 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsResponse_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
-*/
-
-/*  DISABLED
 
      CreateSubscriptionRequest::CreateSubscriptionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      CreateSubscriptionResponse::CreateSubscriptionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -544,62 +505,35 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-*/
-
-/*  DISABLED
-
      SetPublishingModeRequest::SetPublishingModeRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      SetPublishingModeResponse::SetPublishingModeResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeResponse_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
-*/
-
-/*  DISABLED
 
      PublishRequest::PublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
-*/
-
-/*  DISABLED
 
      PublishResponse::PublishResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishResponse_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      RepublishRequest::RepublishRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      RepublishResponse::RepublishResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 
@@ -617,21 +551,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      DeleteSubscriptionsRequest::DeleteSubscriptionsRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      DeleteSubscriptionsResponse::DeleteSubscriptionsResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

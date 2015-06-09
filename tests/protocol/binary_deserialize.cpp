@@ -541,7 +541,7 @@ TEST_F(OpcUaBinaryDeserialization, Asymmetric)
   OpcUa::Binary::AsymmetricAlgorithmHeader header;
   GetStream() >> header;
 
-  ASSERT_EQ(header.SecurityPolicyURI, std::string("pol"));
+  ASSERT_EQ(header.SecurityPolicyUri, std::string("pol"));
   const std::vector<uint8_t> cert = {1, 2, 3};
   ASSERT_EQ(header.SenderCertificate, cert);
   const std::vector<uint8_t> thumb = {4, 5, 6};
@@ -951,17 +951,16 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
   using namespace OpcUa;
 
   const std::vector<char> expectedData = {
-    4, 0, 0, 0, 1,2,3,4,      // Signature
-    3, 0, 0, 0, 'a','e','s'   // Algorithm
+    3, 0, 0, 0, 'a','e','s',   // Algorithm
+    4, 0, 0, 0, 1,2,3,4      // Signature
   };
 
   GetChannel().SetData(expectedData);
 
-  OpcUa::SignatureData s;
+  SignatureData s;
   GetStream() >> s;
 
-  std::vector<uint8_t> signature = {1,2,3,4};
-  ASSERT_EQ(s.Signature, signature); 
+  ASSERT_EQ(s.Signature, ByteString(std::vector<uint8_t>{1,2,3,4}));
   ASSERT_EQ(s.Algorithm, "aes");
 }
 

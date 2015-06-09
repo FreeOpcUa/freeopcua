@@ -203,7 +203,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<AsymmetricAlgorithmHeader>(const AsymmetricAlgorithmHeader& ack)
     {
-      const std::size_t sizeofUri = RawSize(ack.SecurityPolicyURI);
+      const std::size_t sizeofUri = RawSize(ack.SecurityPolicyUri);
       const std::size_t sizeofCertificate = RawSize(ack.SenderCertificate);
       const std::size_t sizeofThumbprint = RawSize(ack.ReceiverCertificateThumbPrint);
       return sizeofUri + sizeofCertificate +  sizeofThumbprint;
@@ -373,11 +373,11 @@ namespace OpcUa
       return size;
     };
 
-    template<>
-    std::size_t RawSize<SignatureData>(const SignatureData& s)
-    {
-      return RawSize(s.Signature) + RawSize(s.Algorithm);
-    };
+//     template<>
+//     std::size_t RawSize<SignatureData>(const SignatureData& s)
+//     {
+//       return RawSize(s.Signature) + RawSize(s.Algorithm);
+//     };
 
     template<>
     std::size_t RawSize<ExtensionObjectHeader>(const ExtensionObjectHeader& header)

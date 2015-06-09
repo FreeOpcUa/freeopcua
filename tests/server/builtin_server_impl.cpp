@@ -217,7 +217,7 @@ void BuiltinServerAddon::Initialize(Common::AddonsManager& addons, const Common:
 
   const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
   for (OpcUa::Server::ApplicationData d: applications) {
-    std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+    std::cout << "Endpoint is: " << d.Endpoints.front().EndpointUrl << std::endl;
   }
 
   std::vector<OpcUa::ApplicationDescription> applicationDescriptions;

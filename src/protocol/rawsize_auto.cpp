@@ -2,9 +2,9 @@
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -18,7 +18,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {
 
@@ -295,8 +295,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ExtensionObject>(const ExtensionObject& data)
     {
@@ -307,7 +305,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -719,8 +716,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ApplicationDescription>(const ApplicationDescription& data)
     {
@@ -735,7 +730,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -839,8 +833,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& data)
     {
@@ -853,9 +845,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<EndpointDescription>(const EndpointDescription& data)
@@ -872,9 +861,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsParameters>(const GetEndpointsParameters& data)
@@ -886,9 +872,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& data)
@@ -900,9 +883,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& data)
@@ -914,7 +894,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -1073,8 +1052,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
     {
@@ -1084,9 +1061,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<SignatureData>(const SignatureData& data)
@@ -1097,9 +1071,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters& data)
@@ -1116,9 +1087,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& data)
@@ -1130,9 +1098,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionResult>(const CreateSessionResult& data)
@@ -1150,9 +1115,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& data)
@@ -1164,7 +1126,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -1247,8 +1208,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ActivateSessionParameters>(const ActivateSessionParameters& data)
     {
@@ -1261,9 +1220,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& data)
@@ -1275,9 +1231,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResult>(const ActivateSessionResult& data)
@@ -1289,9 +1242,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& data)
@@ -1303,7 +1253,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3177,8 +3126,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<MonitoringParameters>(const MonitoringParameters& data)
     {
@@ -3191,9 +3138,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
@@ -3205,9 +3149,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
@@ -3221,12 +3162,9 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
-    std::size_t RawSize<CreateMonitoredItemsParameters>(const CreateMonitoredItemsParameters& data)
+    std::size_t RawSize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
     {
         size_t size = 0;
         size += RawSize(data.SubscriptionId);
@@ -3235,9 +3173,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
@@ -3249,9 +3184,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
@@ -3264,7 +3196,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3450,8 +3381,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
     {
@@ -3461,9 +3390,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
@@ -3475,9 +3401,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
@@ -3490,9 +3413,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
@@ -3507,9 +3427,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
@@ -3521,12 +3438,9 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
-    std::size_t RawSize<CreateSubscriptionResult>(const CreateSubscriptionResult& data)
+    std::size_t RawSize<SubscriptionData>(const SubscriptionData& data)
     {
         size_t size = 0;
         size += RawSize(data.SubscriptionId);
@@ -3536,9 +3450,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
@@ -3546,11 +3457,10 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.Data);
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3611,10 +3521,8 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
-    std::size_t RawSize<SetPublishingModeParameters>(const SetPublishingModeParameters& data)
+    std::size_t RawSize<PublishingModeParameters>(const PublishingModeParameters& data)
     {
         size_t size = 0;
         size += RawSize(data.PublishingEnabled);
@@ -3622,9 +3530,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
@@ -3636,12 +3541,9 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
-    std::size_t RawSize<SetPublishingModeResult>(const SetPublishingModeResult& data)
+    std::size_t RawSize<PublishingModeResult>(const PublishingModeResult& data)
     {
         size_t size = 0;
         size += RawSizeContainer(data.Results);
@@ -3649,9 +3551,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
@@ -3659,11 +3558,21 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.Result);
         return size;
     }
 
-*/
+
+    template<>
+    std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
+    {
+        size_t size = 0;
+        size += RawSize(data.SequenceNumber);
+        size += RawSize(data.PublishTime);
+        size += RawSizeContainer(data.NotificationData);
+        return size;
+    }
+
 
 /* DISABLED
 
@@ -3674,20 +3583,6 @@ namespace OpcUa
         size += RawSize(data.TypeId);
         size += RawSize(data.Encoding);
         if ((data.Encoding) & (1<<(0))) size += RawSize(data.Body);
-        return size;
-    }
-
-*/
-
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SequenceNumber);
-        size += RawSize(data.PublishTime);
-        size += RawSizeContainer(data.NotificationData);
         return size;
     }
 
@@ -3805,8 +3700,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
     {
@@ -3816,9 +3709,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<PublishRequest>(const PublishRequest& data)
@@ -3830,9 +3720,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<PublishResult>(const PublishResult& data)
@@ -3847,9 +3734,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<PublishResponse>(const PublishResponse& data)
@@ -3861,9 +3745,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishParameters>(const RepublishParameters& data)
@@ -3874,9 +3755,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishRequest>(const RepublishRequest& data)
@@ -3888,21 +3766,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<RepublishResult>(const RepublishResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.NotificationMessage);
-        return size;
-    }
-
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<RepublishResponse>(const RepublishResponse& data)
@@ -3910,11 +3773,10 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSize(data.NotificationMessage);
         return size;
     }
 
-*/
 
 /* DISABLED
 
@@ -3983,33 +3845,16 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<DeleteSubscriptionsParameters>(const DeleteSubscriptionsParameters& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.SubscriptionIds);
-        return size;
-    }
-
-*/
-
-/* DISABLED
-
     template<>
     std::size_t RawSize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
     {
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.SubscriptionIds);
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
@@ -4022,7 +3867,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
 /* DISABLED
 

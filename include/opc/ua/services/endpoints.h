@@ -14,6 +14,7 @@
 #include <opc/common/interface.h>
 #include <opc/common/class_pointers.h>
 #include <opc/ua/protocol/endpoints.h>
+#include <opc/ua/protocol/protocol.h>
 #include <vector>
 
 namespace OpcUa
@@ -34,7 +35,7 @@ namespace OpcUa
   public:
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const = 0;
     // TODO Here all structuresmust be in one namespace.
-    virtual std::vector<EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const = 0;
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const = 0;
     virtual void RegisterServer(const ServerParameters& parameters) = 0;
   };
 

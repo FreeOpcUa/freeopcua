@@ -135,6 +135,7 @@ class EnumValue(object):
         self.name = None
         self.value = None
 
+
 class Model(object):
     def __init__(self):
         self.structs = []
@@ -155,8 +156,6 @@ class Model(object):
         raise Exception("No enum named: " + str(name))
 
 
-
-
 def remove_duplicates(model):
     for struct in model.structs:
         fields = []
@@ -166,7 +165,8 @@ def remove_duplicates(model):
                 names.append(field.name)
                 fields.append(field)
         struct.fields = fields
-    
+
+
 def add_encoding_field(model):
     for struct in model.structs:
         newfields = []

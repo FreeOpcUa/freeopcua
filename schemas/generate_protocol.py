@@ -12,11 +12,14 @@ import generate_model as gm
 
 
 #declare default constructor in header, then constructor must be implemented
-NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
+NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "SubscriptionData", "NotificationMessage", "PublishResult", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse"]
+NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "DeleteMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse", "DeleteSubscriptionsRequest", "DeleteSubscriptionsResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
+OverrideStructTypeName = {"CreateSubscriptionResult": "SubscriptionData", "SetPublishingModeParameters": "PublishingModeParameters", "SetPublishingModeResult": "PublishingModeResult", "CreateMonitoredItemsParameters": "MonitoredItemsParameters"}
+OverrideNameInStruct = {"CreateSubscriptionResponse": {"Parameters": "Data"}, "SetPublishingModeResponse": {"Parameters": "Result"}}
+OverrideTypeInStruct = {"ActivateSessionParameters": {"UserIdentityToken": "UserIdentifyToken"}, "MonitoringParameters": {"Filter": "MonitoringFilter"}, "MonitoredItemCreateResult": {"FilterResult": "MonitoringFilter"}}
 OverrideNames = {"RequestHeader": "Header", "ResponseHeader": "Header", "StatusCode": "Status", "NodesToRead": "AttributesToRead"} # "MonitoringMode": "Mode",, "NotificationMessage": "Notification", "NodeIdType": "Type"}
 
 #list of UA structure we want to enable, some structures may
@@ -40,7 +43,7 @@ EnabledStructs = [\
     #
     #structs we should enable or that we haven't checked yet
     #
-    #'ExtensionObject',
+    'ExtensionObject',
     'XmlElement',
     #'Node',
     #'InstanceNode',
@@ -57,16 +60,17 @@ EnabledStructs = [\
     #'Argument',
     #'EnumValueType',
     #'TimeZoneDataType',
-    #'ApplicationDescription',
+    'ApplicationDescription',
     #'RequestHeader',
     #'ResponseHeader',
     #'ServiceFault',
     #'FindServersRequest',
     #'FindServersResponse',
-    #'UserTokenPolicy',
-    #'EndpointDescription',
-    #'GetEndpointsRequest',
-    #'GetEndpointsResponse',
+    'UserTokenPolicy',
+    'EndpointDescription',
+    'GetEndpointsRequest',
+    'GetEndpointsParameters',
+    'GetEndpointsResponse',
     #'RegisteredServer',
     #'RegisterServerRequest',
     #'RegisterServerResponse',
@@ -75,17 +79,21 @@ EnabledStructs = [\
     #'OpenSecureChannelResponse',
     #'CloseSecureChannelRequest',
     #'CloseSecureChannelResponse',
-    #'SignedSoftwareCertificate',
-    #'SignatureData',
-    #'CreateSessionRequest',
-    #'CreateSessionResponse',
+    'SignedSoftwareCertificate',
+    'SignatureData',
+    'CreateSessionRequest',
+    'CreateSessionParameters',
+    'CreateSessionResponse',
+    'CreateSessionResult',
     #'UserIdentityToken',
     #'AnonymousIdentityToken',
     #'UserNameIdentityToken',
     #'X509IdentityToken',
     #'IssuedIdentityToken',
-    #'ActivateSessionRequest',
-    #'ActivateSessionResponse',
+    'ActivateSessionRequest',
+    'ActivateSessionParameters',
+    'ActivateSessionResponse',
+    'ActivateSessionResult',
     #'CloseSessionRequest',
     #'CloseSessionResponse',
     #'CancelRequest',
@@ -198,11 +206,12 @@ EnabledStructs = [\
     #'MonitoringFilterResult',
     #'EventFilterResult',
     #'AggregateFilterResult',
-    #'MonitoringParameters',
-    #'MonitoredItemCreateRequest',
-    #'MonitoredItemCreateResult',
-    #'CreateMonitoredItemsRequest',
-    #'CreateMonitoredItemsResponse',
+    'MonitoringParameters',
+    'MonitoredItemCreateRequest',
+    'MonitoredItemCreateResult',
+    'MonitoredItemsParameters',
+    'CreateMonitoredItemsRequest',
+    'CreateMonitoredItemsResponse',
     #'MonitoredItemModifyRequest',
     #'MonitoredItemModifyResult',
     #'ModifyMonitoredItemsRequest',
@@ -211,15 +220,20 @@ EnabledStructs = [\
     #'SetMonitoringModeResponse',
     #'SetTriggeringRequest',
     #'SetTriggeringResponse',
-    #'DeleteMonitoredItemsRequest',
-    #'DeleteMonitoredItemsResponse',
-    #'CreateSubscriptionRequest',
-    #'CreateSubscriptionResponse',
+    'DeleteMonitoredItemsParameters',
+    'DeleteMonitoredItemsRequest',
+    'DeleteMonitoredItemsResponse',
+    'CreateSubscriptionRequest',
+    'CreateSubscriptionParameters',
+    'SubscriptionData',
+    'CreateSubscriptionResponse',
     #'ModifySubscriptionRequest',
     #'ModifySubscriptionResponse',
-    #'SetPublishingModeRequest',
-    #'SetPublishingModeResponse',
-    #'NotificationMessage',
+    'SetPublishingModeRequest',
+    'PublishingModeParameters',
+    'SetPublishingModeResponse',
+    'PublishingModeResult',
+    'NotificationMessage',
     #'NotificationData',
     #'DataChangeNotification',
     #'MonitoredItemNotification',
@@ -227,16 +241,18 @@ EnabledStructs = [\
     #'EventFieldList',
     #'HistoryEventFieldList',
     #'StatusChangeNotification',
-    #'SubscriptionAcknowledgement',
-    #'PublishRequest',
-    #'PublishResponse',
-    #'RepublishRequest',
-    #'RepublishResponse',
+    'SubscriptionAcknowledgement',
+    'PublishRequest',
+    'PublishResult',
+    'PublishResponse',
+    'RepublishParameters',
+    'RepublishRequest',
+    'RepublishResponse',
     #'TransferResult',
     #'TransferSubscriptionsRequest',
     #'TransferSubscriptionsResponse',
-    #'DeleteSubscriptionsRequest',
-    #'DeleteSubscriptionsResponse',
+    'DeleteSubscriptionsRequest',
+    'DeleteSubscriptionsResponse',
     #'ScalarTestType',
     #'ArrayTestType',
     #'CompositeTestType',
@@ -305,16 +321,31 @@ def reorder_structs(model):
         #print(waiting)
     model.structs = newstructs
 
+
 def override_types(model):
     for struct in model.structs:
         for field in struct.fields:
             if field.name in OverrideTypes.keys():
                 field.uatype = OverrideTypes[field.name]
 
+            if struct.name in OverrideNameInStruct.keys():
+                if field.name in OverrideNameInStruct[struct.name].keys():
+                    field.name = OverrideNameInStruct[struct.name][field.name]
+
+            if struct.name in OverrideTypeInStruct.keys():
+                if field.name in OverrideTypeInStruct[struct.name].keys():
+                    field.uatype = OverrideTypeInStruct[struct.name][field.name]
+
+            if field.uatype in OverrideStructTypeName.keys():
+                field.uatype = OverrideStructTypeName[field.uatype]
+
+        if struct.name in OverrideStructTypeName.keys():
+            struct.name = OverrideStructTypeName[struct.name]
+
 
 class CodeGenerator(object):
     def __init__(self, model, h_path, enum_path, size_path, ser_path, deser_path, const_path):
-        self.model = model 
+        self.model = model
         self.h_path = h_path
         self.enum_path = enum_path
         self.rawsize_path = size_path
@@ -346,7 +377,7 @@ class CodeGenerator(object):
         self.make_header_serialize()
         self.make_header_deserialize()
         self.make_header_constructors()
-        
+
         for enum in self.model.enums:
             if not enum.name in IgnoredEnums:
                 self.make_enum_h(enum)
@@ -398,10 +429,10 @@ class CodeGenerator(object):
         #if struct.basetype:
             #base = " : public " + struct.basetype
         self.write_h("    struct %s %s\n    {""" % (name, base))
-        for field in struct.fields: 
+        for field in struct.fields:
             #if field.sourcetype:
                 #continue
-            
+
             if field.get_ctype() == "OpcUa::" + struct.name:
                 #we have a problem selv referensing struct
                 self.write_h("         std::shared_ptr<{}> {};".format(field.get_ctype(), field.name))
@@ -505,7 +536,7 @@ class CodeGenerator(object):
                     self.write_deser("        {}*this >> data.{};".format(switch, field.name))
         self.write_deser("    }")
         self.write_deser("")
-    
+
     def make_request_constructors(self, struct):
         if not struct.needconstructor:
             return
@@ -576,6 +607,7 @@ class CodeGenerator(object):
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/types_manual.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
 
@@ -623,9 +655,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -639,7 +671,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -657,9 +689,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -673,7 +705,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -689,9 +721,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -705,7 +737,7 @@ namespace OpcUa
 #include <opc/ua/protocol/binary/stream.h>
 
 namespace OpcUa
-{   
+{
     namespace Binary
     {''')
 
@@ -722,9 +754,9 @@ namespace OpcUa
 // It is automatically generated from opcfoundation.org schemas.
 //
 
-/// @author Olivier Roulet-Dubonnet 
-/// @email olivier@sintef.no 
-/// @brief Opc Ua Binary. 
+/// @author Olivier Roulet-Dubonnet
+/// @email olivier@sintef.no
+/// @brief Opc Ua Binary.
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
@@ -772,9 +804,9 @@ if __name__ == "__main__":
     #remove_vector_length(model)
     #remove_body_length(model)
     #remove_duplicates(model)
-    override_types(model)
     #split_requests(model)
     reorder_structs(model)
+    override_types(model)
 
     f = open("struct_list.txt", "w")
     f.write("enabled_structs = [\\")

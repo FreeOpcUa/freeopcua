@@ -6,7 +6,6 @@
 
 #include <opc/ua/event.h>
 #include <opc/ua/server/address_space.h>
-#include <opc/ua/protocol/subscriptions.h>
 #include <opc/ua/protocol/monitored_items.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
@@ -30,29 +29,29 @@ namespace OpcUa
     //Structure to store description of a MonitoredItems
     struct MonitoredDataChange
     {
-      IntegerId MonitoredItemId;
+      uint32_t MonitoredItemId;
       MonitoringMode Mode;
       time_t LastTrigger;
-      CreateMonitoredItemsResult Parameters;
-      IntegerId ClientHandle;
+      MonitoredItemCreateResult Parameters;
+      uint32_t ClientHandle;
       uint32_t CallbackHandle;
     };
 
     struct TriggeredDataChange
     {
-      IntegerId MonitoredItemId;
+      uint32_t MonitoredItemId;
       MonitoredItems Data;
     };
 
     struct TriggeredEvent
     {
-      IntegerId MonitoredItemId;
+      uint32_t MonitoredItemId;
       EventFieldList Data;
     };
 
     //typedef std::pair<NodeId, AttributeId> MonitoredItemsIndex;
-    typedef std::map<IntegerId, MonitoredDataChange> MonitoredDataChangeMap;
-    typedef std::map<NodeId, IntegerId> MonitoredEventsMap;
+    typedef std::map<uint32_t, MonitoredDataChange> MonitoredDataChangeMap;
+    typedef std::map<NodeId, uint32_t> MonitoredEventsMap;
 
     class AddressSpaceInMemory; //pre-declaration
 
@@ -66,19 +65,19 @@ namespace OpcUa
         void Stop();
 
         void NewAcknowlegment(const SubscriptionAcknowledgement& ack);
-        std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<IntegerId>& ids);
-        bool EnqueueEvent(IntegerId monitoreditemid, const Event& event);
-        bool EnqueueDataChange(IntegerId monitoreditemid, const DataValue& value);
-        CreateMonitoredItemsResult CreateMonitoredItem(const MonitoredItemRequest& request);
-        void DataChangeCallback(const IntegerId&, const DataValue& value);
+        std::vector<StatusCode> DeleteMonitoredItemsIds(const std::vector<uint32_t>& ids);
+        bool EnqueueEvent(uint32_t monitoreditemid, const Event& event);
+        bool EnqueueDataChange(uint32_t monitoreditemid, const DataValue& value);
+        MonitoredItemCreateResult CreateMonitoredItem(const MonitoredItemCreateRequest& request);
+        void DataChangeCallback(const uint32_t&, const DataValue& value);
         bool HasExpired();
         void TriggerEvent(NodeId node, Event event);
         RepublishResponse Republish(const RepublishParameters& params);
 
       private:
         void DeleteAllMonitoredItems(); 
-        bool DeleteMonitoredEvent(IntegerId handle);
-        bool DeleteMonitoredDataChange(IntegerId handle);
+        bool DeleteMonitoredEvent(uint32_t handle);
+        bool DeleteMonitoredDataChange(uint32_t handle);
         std::vector<PublishResult> PopPublishResult(); 
         bool HasPublishResult(); 
         NotificationData GetNotificationData();

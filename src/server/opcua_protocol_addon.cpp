@@ -124,7 +124,7 @@ namespace
     {
       for (const EndpointDescription endpoint : endpoints)
       {
-        const Common::Uri uri(endpoint.EndpointURL);
+        const Common::Uri uri(endpoint.EndpointUrl);
         if (uri.Scheme() == "opc.tcp")
         {
           std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
@@ -180,7 +180,7 @@ namespace
     ApplyAddonParameters(params);
     const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
     for (OpcUa::Server::ApplicationData d: applications) {
-      std::cout << "Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+      std::cout << "Endpoint is: " << d.Endpoints.front().EndpointUrl << std::endl;
     }
 
     std::vector<OpcUa::ApplicationDescription> applicationDescriptions;

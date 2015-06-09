@@ -21,6 +21,7 @@
 
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/protocol.h>
 
 namespace OpcUa
 {

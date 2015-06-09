@@ -65,7 +65,7 @@ namespace
     {
       for (OpcUa::Server::ApplicationData d: applications)
       {
-        std::cout << "opc_tcp_async| Endpoint is: " << d.Endpoints.front().EndpointURL << std::endl;
+        std::cout << "opc_tcp_async| Endpoint is: " << d.Endpoints.front().EndpointUrl << std::endl;
       }
     }
 
@@ -92,7 +92,7 @@ namespace
     OpcUa::Server::ServicesRegistry::SharedPtr internalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
     OpcUa::Server::AsioAddon::SharedPtr asio = addons.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
 
-    params.Port = Common::Uri(endpointDescriptions[0].EndpointURL).Port();
+    params.Port = Common::Uri(endpointDescriptions[0].EndpointUrl).Port();
     Endpoint = CreateAsyncOpcTcp(params, internalServer->GetServer(), asio->GetIoService());
     Endpoint->Listen();
   }

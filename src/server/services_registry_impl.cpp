@@ -56,7 +56,7 @@ namespace
       return std::vector<OpcUa::ApplicationDescription>();
     }
 
-    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const EndpointsFilter& filter) const
+    virtual std::vector<OpcUa::EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
     {
       return std::vector<OpcUa::EndpointDescription>();
     }
@@ -121,14 +121,14 @@ namespace
       return SubscriptionData();
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<IntegerId>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       return std::vector<StatusCode>();
     }
 
-    virtual MonitoredItemsData CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters)
     {
-      return MonitoredItemsData();
+      return std::vector<MonitoredItemCreateResult>();
     }
 
     virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
@@ -166,7 +166,7 @@ namespace
       return CreateSessionResponse();
     }
 
-    virtual ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) override
+    virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) override
     {
       (void)session_parameters;
       return ActivateSessionResponse();

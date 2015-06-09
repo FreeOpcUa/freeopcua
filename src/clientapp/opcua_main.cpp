@@ -80,17 +80,17 @@ namespace
     }
   }
 
-  std::string GetName(OpcUa::UserIdentifyTokenType type)
+  std::string GetName(OpcUa::UserTokenType type)
   {
     switch (type)
     {
-      case OpcUa::UserIdentifyTokenType::ANONYMOUS:
+      case OpcUa::UserTokenType::Anonymous:
         return "anonymous";
-      case OpcUa::UserIdentifyTokenType::USERNAME:
+      case OpcUa::UserTokenType::UserName:
         return "username";
-      case OpcUa::UserIdentifyTokenType::CERTIFICATE:
+      case OpcUa::UserTokenType::Certificate:
         return "x509v3 certificate";
-      case OpcUa::UserIdentifyTokenType::ISSUED_TOKEN:
+      case OpcUa::UserTokenType::IssuedToken:
         return "WS_Security token";
       default:
         return "unknown";
@@ -255,23 +255,23 @@ namespace
     std::cout << tabs << "Id: " << policy.PolicyId << std::endl;
     std::cout << tabs << "TokenType: " << GetName(policy.TokenType) << std::endl;
     std::cout << tabs << "IssuedTokenType: " << policy.IssuedTokenType  << std::endl;
-    std::cout << tabs << "IssuerEndpointURL: " << policy.IssuerEndpointURL << std::endl;
-    std::cout << tabs << "SecurityPolicyURI: " << policy.SecurityPolicyURI << std::endl;
+    std::cout << tabs << "IssuerEndpointUrl: " << policy.IssuerEndpointUrl << std::endl;
+    std::cout << tabs << "SecurityPolicyUri: " << policy.SecurityPolicyUri << std::endl;
   };
 
 
   void Print(const OpcUa::ApplicationDescription& desc, const Tabs& tab)
   {
-    std::cout << tab << "Name: " << desc.Name.Text << " (" << desc.Name.Locale << ")" << std::endl;
-    std::cout << tab << "Type: " << GetName(desc.Type) << std::endl;
-    std::cout << tab << "URI: " << desc.URI << std::endl;
-    std::cout << tab << "ProductURI: " << desc.ProductURI << std::endl;
-    std::cout << tab << "GatewayServerURI: " << desc.GatewayServerURI << std::endl;
-    std::cout << tab << "DiscoveryProfileURI: " << desc.DiscoveryProfileURI << std::endl;
-    if (!desc.DiscoveryURLs.empty())
+    std::cout << tab << "Name: " << desc.ApplicationName.Text << " (" << desc.ApplicationName.Locale << ")" << std::endl;
+    std::cout << tab << "Type: " << GetName(desc.ApplicationType) << std::endl;
+    std::cout << tab << "URI: " << desc.ApplicationUri << std::endl;
+    std::cout << tab << "ProductURI: " << desc.ProductUri << std::endl;
+    std::cout << tab << "GatewayServerURI: " << desc.GatewayServerUri << std::endl;
+    std::cout << tab << "DiscoveryProfileURI: " << desc.DiscoveryProfileUri << std::endl;
+    if (!desc.DiscoveryUrls.empty())
     {
       std::cout << tab << "DiscoveryProfileURLs: ";
-      for (auto it = desc.DiscoveryURLs.begin(); it != desc.DiscoveryURLs.end(); ++it)
+      for (auto it = desc.DiscoveryUrls.begin(); it != desc.DiscoveryUrls.end(); ++it)
       {
         std::cout << "'" << *it << "' ";
       }
@@ -281,18 +281,18 @@ namespace
 
   void Print(const OpcUa::EndpointDescription& desc, const Tabs& tab)
   {
-    std::cout << tab << "URL: " << desc.EndpointURL << std::endl;
-    std::cout << tab << "SecurityPolicyURI: " << desc.SecurityPolicyURI << std::endl;
+    std::cout << tab << "URL: " << desc.EndpointUrl << std::endl;
+    std::cout << tab << "SecurityPolicyUri: " << desc.SecurityPolicyUri << std::endl;
     std::cout << tab << "SecurityLevel: " << GetName(desc.SecurityMode) << " (" << (int)desc.SecurityMode << ")" << std::endl;
-    std::cout << tab << "TransportProfileURI: " << desc.TransportProfileURI << std::endl;
+    std::cout << tab << "TransportProfileURI: " << desc.TransportProfileUri << std::endl;
     std::cout << tab << "SecurityLevel: " << (int)desc.SecurityLevel << std::endl;
     std::cout << tab << "Server description: " << std::endl;
-    Print(desc.ServerDescription, Tabs(tab.Num + 2));
+    Print(desc.Server, Tabs(tab.Num + 2));
 
-    if (!desc.UserIdentifyTokens.empty())
+    if (!desc.UserIdentityTokens.empty())
     {
       std::cout << tab << "User identify tokens: " << std::endl;
-      for (auto it = desc.UserIdentifyTokens.begin(); it != desc.UserIdentifyTokens.end(); ++it)
+      for (auto it = desc.UserIdentityTokens.begin(); it != desc.UserIdentityTokens.end(); ++it)
       {
         std::cout << Tabs(tab.Num + 2) << "token: " << std::endl;
         Print(*it, Tabs(tab.Num + 4));
@@ -306,7 +306,7 @@ namespace
   void PrintEndpoints(OpcUa::Services& computer)
   {
     std::shared_ptr<OpcUa::EndpointServices> service = computer.Endpoints();
-    OpcUa::EndpointsFilter filter;
+    OpcUa::GetEndpointsParameters filter;
     std::vector<OpcUa::EndpointDescription> endpoints = service->GetEndpoints(filter);
     for(auto it = endpoints.begin(); it != endpoints.end(); ++it)
     {
@@ -605,10 +605,10 @@ namespace
     request.Parameters.RequestedMaxKeepAliveCount = 1;
     request.Parameters.RequestedPublishingInterval = 1000;
     const OpcUa::SubscriptionData data = subscriptions.CreateSubscription(request, [](PublishResult){});
-    std::cout << "Id: " << data.Id << std::endl;
+    std::cout << "Id: " << data.SubscriptionId << std::endl;
     std::cout << "RevisedPublishingInterval: " << data.RevisedPublishingInterval << std::endl;
     std::cout << "RevisedLifetimeCount: " << data.RevisedLifetimeCount << std::endl;
-    std::cout << "RevizedMaxKeepAliveCount: " << data.RevizedMaxKeepAliveCount << std::endl;
+    std::cout << "RevisedMaxKeepAliveCount: " << data.RevisedMaxKeepAliveCount << std::endl;
   }
 
   void Process(OpcUa::CommandLine& cmd, const Common::AddonsManager& addons)
@@ -629,16 +629,16 @@ namespace
     }
 
     OpcUa::RemoteSessionParameters session;
-    session.ClientDescription.URI = "https://github.com/treww/opc_layer.git";
-    session.ClientDescription.ProductURI = "https://github.com/treww/opc_layer.git";
-    session.ClientDescription.Name.Text = "opcua client";
-    session.ClientDescription.Type = OpcUa::ApplicationType::Client;
+    session.ClientDescription.ApplicationUri = "https://github.com/treww/opc_layer.git";
+    session.ClientDescription.ProductUri = "https://github.com/treww/opc_layer.git";
+    session.ClientDescription.ApplicationName.Text = "opcua client";
+    session.ClientDescription.ApplicationType = OpcUa::ApplicationType::Client;
     session.SessionName = "opua command line";
-    session.EndpointURL = serverURI;
+    session.EndpointUrl = serverURI;
     session.Timeout = 1200000;
 
     CreateSessionResponse resp = computer->CreateSession(session);
-    UpdatedSessionParameters session_parameters;
+    ActivateSessionParameters session_parameters;
     computer->ActivateSession(session_parameters);
 
     if (cmd.IsBrowseOperation())

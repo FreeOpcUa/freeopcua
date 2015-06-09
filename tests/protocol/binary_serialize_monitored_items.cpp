@@ -28,46 +28,46 @@ class MonitoredItemsDeserialization : public OpcUaBinaryDeserialization
 
 
 //-------------------------------------------------------
-// MonitoredItemsData
+// std::vector<MonitoredItemCreateResult>
 //-------------------------------------------------------
 
-TEST_F(MonitoredItemsSerialization, DISABLED_MonitoredItemsData)
-{
-  using namespace OpcUa;
-  using namespace OpcUa::Binary;
-
-  CreateMonitoredItemsResult monitoringResult;
-  monitoringResult.Status = StatusCode::BadNotImplemented;
-  monitoringResult.MonitoredItemId = 1;
-  monitoringResult.RevisedSamplingInterval = 1200000;
-  monitoringResult.RevizedQueueSize = 3;
-  //monitoringResult.ExtensionObjectHeader FilterResult;
-
-  MonitoredItemsData data;
-  data.Results.push_back(monitoringResult);
-
-  GetStream() << data << flush;
-
-  const std::vector<char> expectedData = {
-    1,0,0,0,         // Results count
-    0,0,(char)0x40,(char)0x80,   // StatusCode
-    1,0,0,0,         // MonitoredItemId
-    0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
-    3,0,0,0,         // RevizedQueueSize
-    0,0,0,           // FilterResult (empty Extension object)
-
-    0,0,0,0  // Diagnostics Count
-  };
-
-  EXPECT_EQ(expectedData, GetChannel().SerializedData) <<
-      "Expected:" << std::endl <<
-      PrintData(expectedData) << std::endl <<
-      "Serialized:" << std::endl <<
-      PrintData(GetChannel().SerializedData) <<
-      std::endl;
-
-  EXPECT_EQ(expectedData.size(), RawSize(data));
-}
+// TEST_F(MonitoredItemsSerialization, DISABLED_std::vector<MonitoredItemCreateResult>)
+// {
+//   using namespace OpcUa;
+//   using namespace OpcUa::Binary;
+//
+//   MonitoredItemCreateResult monitoringResult;
+//   monitoringResult.Status = StatusCode::BadNotImplemented;
+//   monitoringResult.MonitoredItemId = 1;
+//   monitoringResult.RevisedSamplingInterval = 1200000;
+//   monitoringResult.RevisedQueueSize = 3;
+//   //monitoringResult.ExtensionObjectHeader FilterResult;
+//
+//   std::vector<MonitoredItemCreateResult> data;
+//   data.push_back(monitoringResult);
+//
+//   GetStream() << data << flush;
+//
+//   const std::vector<char> expectedData = {
+//     1,0,0,0,         // Results count
+//     0,0,(char)0x40,(char)0x80,   // StatusCode
+//     1,0,0,0,         // MonitoredItemId
+//     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
+//     3,0,0,0,         // RevisedQueueSize
+//     0,0,0,           // FilterResult (empty Extension object)
+//
+//     0,0,0,0  // Diagnostics Count
+//   };
+//
+//   EXPECT_EQ(expectedData, GetChannel().SerializedData) <<
+//       "Expected:" << std::endl <<
+//       PrintData(expectedData) << std::endl <<
+//       "Serialized:" << std::endl <<
+//       PrintData(GetChannel().SerializedData) <<
+//       std::endl;
+//
+//   EXPECT_EQ(expectedData.size(), RawSize(data));
+// }
 
 TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
 {
@@ -76,14 +76,14 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
 
   CreateMonitoredItemsResponse response;
 
-  CreateMonitoredItemsResult monitoringResult;
+  MonitoredItemCreateResult monitoringResult;
   monitoringResult.Status = StatusCode::BadNotImplemented;
   monitoringResult.MonitoredItemId = 1;
   monitoringResult.RevisedSamplingInterval = 1200000;
-  monitoringResult.RevizedQueueSize = 3;
+  monitoringResult.RevisedQueueSize = 3;
   //monitoringResult.ExtensionObjectHeader FilterResult;
 
-  response.Data.Results.push_back(monitoringResult);
+  response.Results.push_back(monitoringResult);
 
 
   ASSERT_EQ(response.TypeId.Encoding, EV_FOUR_BYTE);
@@ -103,7 +103,7 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
     0,0,(char)0x40,(char)0x80,   // StatusCode
     1,0,0,0,         // MonitoredItemId
     0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
-    3,0,0,0,         // RevizedQueueSize
+    3,0,0,0,         // RevisedQueueSize
     0,0,0,           // FilterResult (empty Extension object)
 
     0,0,0,0  // Diagnostics Count

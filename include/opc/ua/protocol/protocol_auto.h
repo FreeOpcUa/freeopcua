@@ -17,6 +17,7 @@
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/nodeid.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/types_manual.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/data_value.h>
 
@@ -98,15 +99,12 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct ExtensionObject 
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
          OpcUa::ByteString Body;
     };
-*/
 
 /* DISABLED
 
@@ -450,8 +448,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // Describes an application and how to find it.
     struct ApplicationDescription 
     {
@@ -463,7 +459,6 @@ namespace OpcUa
          std::string DiscoveryProfileUri;
          std::vector<std::string> DiscoveryUrls;
     };
-*/
 
 /* DISABLED
 
@@ -554,8 +549,6 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // Describes a user token that can be used with a server.
     struct UserTokenPolicy 
     {
@@ -565,9 +558,6 @@ namespace OpcUa
          std::string IssuerEndpointUrl;
          std::string SecurityPolicyUri;
     };
-*/
-
-/* DISABLED
 
     // The description of a endpoint that can be used to access a server.
     struct EndpointDescription 
@@ -581,9 +571,6 @@ namespace OpcUa
          std::string TransportProfileUri;
          uint8_t SecurityLevel;
     };
-*/
-
-/* DISABLED
 
     struct GetEndpointsParameters 
     {
@@ -591,9 +578,6 @@ namespace OpcUa
          std::vector<std::string> LocaleIds;
          std::vector<std::string> ProfileUris;
     };
-*/
-
-/* DISABLED
 
     // Gets the endpoints used by the server.
     struct GetEndpointsRequest 
@@ -604,9 +588,6 @@ namespace OpcUa
 
          GetEndpointsRequest();
     };
-*/
-
-/* DISABLED
 
     // Gets the endpoints used by the server.
     struct GetEndpointsResponse 
@@ -617,7 +598,6 @@ namespace OpcUa
 
          GetEndpointsResponse();
     };
-*/
 
 /* DISABLED
 
@@ -754,17 +734,12 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // A software certificate with a digital signature.
     struct SignedSoftwareCertificate 
     {
          OpcUa::ByteString CertificateData;
          OpcUa::ByteString Signature;
     };
-*/
-
-/* DISABLED
 
     // A digital signature.
     struct SignatureData 
@@ -772,9 +747,6 @@ namespace OpcUa
          std::string Algorithm;
          OpcUa::ByteString Signature;
     };
-*/
-
-/* DISABLED
 
     struct CreateSessionParameters 
     {
@@ -787,9 +759,6 @@ namespace OpcUa
          double RequestedSessionTimeout;
          uint32_t MaxResponseMessageSize;
     };
-*/
-
-/* DISABLED
 
     // Creates a new session with the server.
     struct CreateSessionRequest 
@@ -800,9 +769,6 @@ namespace OpcUa
 
          CreateSessionRequest();
     };
-*/
-
-/* DISABLED
 
     struct CreateSessionResult 
     {
@@ -816,9 +782,6 @@ namespace OpcUa
          OpcUa::SignatureData ServerSignature;
          uint32_t MaxRequestMessageSize;
     };
-*/
-
-/* DISABLED
 
     // Creates a new session with the server.
     struct CreateSessionResponse 
@@ -829,7 +792,6 @@ namespace OpcUa
 
          CreateSessionResponse();
     };
-*/
 
 /* DISABLED
 
@@ -899,19 +861,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct ActivateSessionParameters 
     {
          OpcUa::SignatureData ClientSignature;
          std::vector<OpcUa::SignedSoftwareCertificate> ClientSoftwareCertificates;
          std::vector<std::string> LocaleIds;
-         OpcUa::ExtensionObject UserIdentityToken;
+         OpcUa::UserIdentifyToken UserIdentityToken;
          OpcUa::SignatureData UserTokenSignature;
     };
-*/
-
-/* DISABLED
 
     // Activates a session with the server.
     struct ActivateSessionRequest 
@@ -922,9 +879,6 @@ namespace OpcUa
 
          ActivateSessionRequest();
     };
-*/
-
-/* DISABLED
 
     struct ActivateSessionResult 
     {
@@ -932,9 +886,6 @@ namespace OpcUa
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
     };
-*/
-
-/* DISABLED
 
     // Activates a session with the server.
     struct ActivateSessionResponse 
@@ -945,7 +896,6 @@ namespace OpcUa
 
          ActivateSessionResponse();
     };
-*/
 
 /* DISABLED
 
@@ -2432,19 +2382,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct MonitoringParameters 
     {
          uint32_t ClientHandle;
          double SamplingInterval;
-         OpcUa::ExtensionObject Filter;
+         OpcUa::MonitoringFilter Filter;
          uint32_t QueueSize;
          bool DiscardOldest;
     };
-*/
-
-/* DISABLED
 
     struct MonitoredItemCreateRequest 
     {
@@ -2452,9 +2397,6 @@ namespace OpcUa
          OpcUa::MonitoringMode MonitoringMode;
          OpcUa::MonitoringParameters RequestedParameters;
     };
-*/
-
-/* DISABLED
 
     struct MonitoredItemCreateResult 
     {
@@ -2462,33 +2404,24 @@ namespace OpcUa
          uint32_t MonitoredItemId;
          double RevisedSamplingInterval;
          uint32_t RevisedQueueSize;
-         OpcUa::ExtensionObject FilterResult;
+         OpcUa::MonitoringFilter FilterResult;
     };
-*/
 
-/* DISABLED
-
-    struct CreateMonitoredItemsParameters 
+    struct MonitoredItemsParameters 
     {
          uint32_t SubscriptionId;
          OpcUa::TimestampsToReturn TimestampsToReturn;
          std::vector<OpcUa::MonitoredItemCreateRequest> ItemsToCreate;
     };
-*/
-
-/* DISABLED
 
     struct CreateMonitoredItemsRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::CreateMonitoredItemsParameters Parameters;
+         OpcUa::MonitoredItemsParameters Parameters;
 
          CreateMonitoredItemsRequest();
     };
-*/
-
-/* DISABLED
 
     struct CreateMonitoredItemsResponse 
     {
@@ -2499,7 +2432,6 @@ namespace OpcUa
 
          CreateMonitoredItemsResponse();
     };
-*/
 
 /* DISABLED
 
@@ -2645,16 +2577,11 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct DeleteMonitoredItemsParameters 
     {
          uint32_t SubscriptionId;
          std::vector<uint32_t> MonitoredItemIds;
     };
-*/
-
-/* DISABLED
 
     struct DeleteMonitoredItemsRequest 
     {
@@ -2664,9 +2591,6 @@ namespace OpcUa
 
          DeleteMonitoredItemsRequest();
     };
-*/
-
-/* DISABLED
 
     struct DeleteMonitoredItemsResponse 
     {
@@ -2677,9 +2601,6 @@ namespace OpcUa
 
          DeleteMonitoredItemsResponse();
     };
-*/
-
-/* DISABLED
 
     struct CreateSubscriptionParameters 
     {
@@ -2692,9 +2613,6 @@ namespace OpcUa
 
          CreateSubscriptionParameters();
     };
-*/
-
-/* DISABLED
 
     struct CreateSubscriptionRequest 
     {
@@ -2704,30 +2622,25 @@ namespace OpcUa
 
          CreateSubscriptionRequest();
     };
-*/
 
-/* DISABLED
-
-    struct CreateSubscriptionResult 
+    struct SubscriptionData 
     {
          uint32_t SubscriptionId;
          double RevisedPublishingInterval;
          uint32_t RevisedLifetimeCount;
          uint32_t RevisedMaxKeepAliveCount;
-    };
-*/
 
-/* DISABLED
+         SubscriptionData();
+    };
 
     struct CreateSubscriptionResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::CreateSubscriptionResult Parameters;
+         OpcUa::SubscriptionData Data;
 
          CreateSubscriptionResponse();
     };
-*/
 
 /* DISABLED
 
@@ -2776,61 +2689,35 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
-    struct SetPublishingModeParameters 
+    struct PublishingModeParameters 
     {
          bool PublishingEnabled;
          std::vector<uint32_t> SubscriptionIds;
-
-         SetPublishingModeParameters();
     };
-*/
-
-/* DISABLED
 
     struct SetPublishingModeRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::SetPublishingModeParameters Parameters;
+         OpcUa::PublishingModeParameters Parameters;
 
          SetPublishingModeRequest();
     };
-*/
 
-/* DISABLED
-
-    struct SetPublishingModeResult 
+    struct PublishingModeResult 
     {
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
     };
-*/
-
-/* DISABLED
 
     struct SetPublishingModeResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::SetPublishingModeResult Parameters;
+         OpcUa::PublishingModeResult Result;
 
          SetPublishingModeResponse();
     };
-*/
-
-/* DISABLED
-
-    struct NotificationData 
-    {
-         OpcUa::NodeId TypeId;
-         uint8_t Encoding;
-         OpcUa::ByteString Body;
-    };
-*/
-
-/* DISABLED
 
     struct NotificationMessage 
     {
@@ -2839,6 +2726,15 @@ namespace OpcUa
          std::vector<OpcUa::NotificationData> NotificationData;
 
          NotificationMessage();
+    };
+
+/* DISABLED
+
+    struct NotificationData 
+    {
+         OpcUa::NodeId TypeId;
+         uint8_t Encoding;
+         OpcUa::ByteString Body;
     };
 */
 
@@ -2922,16 +2818,11 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     struct SubscriptionAcknowledgement 
     {
          uint32_t SubscriptionId;
          uint32_t SequenceNumber;
     };
-*/
-
-/* DISABLED
 
     struct PublishRequest 
     {
@@ -2941,9 +2832,6 @@ namespace OpcUa
 
          PublishRequest();
     };
-*/
-
-/* DISABLED
 
     struct PublishResult 
     {
@@ -2956,9 +2844,6 @@ namespace OpcUa
 
          PublishResult();
     };
-*/
-
-/* DISABLED
 
     struct PublishResponse 
     {
@@ -2968,18 +2853,12 @@ namespace OpcUa
 
          PublishResponse();
     };
-*/
-
-/* DISABLED
 
     struct RepublishParameters 
     {
          uint32_t SubscriptionId;
          uint32_t RetransmitSequenceNumber;
     };
-*/
-
-/* DISABLED
 
     struct RepublishRequest 
     {
@@ -2989,27 +2868,15 @@ namespace OpcUa
 
          RepublishRequest();
     };
-*/
-
-/* DISABLED
-
-    struct RepublishResult 
-    {
-         OpcUa::NotificationMessage NotificationMessage;
-    };
-*/
-
-/* DISABLED
 
     struct RepublishResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::RepublishResult Parameters;
+         OpcUa::NotificationMessage NotificationMessage;
 
          RepublishResponse();
     };
-*/
 
 /* DISABLED
 
@@ -3062,27 +2929,14 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
-    struct DeleteSubscriptionsParameters 
-    {
-         std::vector<uint32_t> SubscriptionIds;
-    };
-*/
-
-/* DISABLED
-
     struct DeleteSubscriptionsRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::DeleteSubscriptionsParameters Parameters;
+         std::vector<uint32_t> SubscriptionIds;
 
          DeleteSubscriptionsRequest();
     };
-*/
-
-/* DISABLED
 
     struct DeleteSubscriptionsResponse 
     {
@@ -3093,7 +2947,6 @@ namespace OpcUa
 
          DeleteSubscriptionsResponse();
     };
-*/
 
 /* DISABLED
 
