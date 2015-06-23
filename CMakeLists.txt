@@ -137,6 +137,10 @@ add_library(opcuaprotocol STATIC
 target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 
+if (NOT WIN32)
+    target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
+endif ()
+
 if (BUILD_TESTING)
     add_executable(test_opcuaprotocol
         tests/protocol/binary_deserialize.cpp
