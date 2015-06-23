@@ -567,6 +567,7 @@ namespace
       request.Header = CreateRequestHeader();
       request.Query = query;
       const BrowseResponse response = Send<BrowseResponse>(request);
+      ContinuationPoints.clear();
       for ( BrowseResult result : response.Results )
       {
         if (! result.ContinuationPoint.empty())
@@ -591,6 +592,14 @@ namespace
       request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
       request.ContinuationPoints = ContinuationPoints;
       const BrowseNextResponse response = Send<BrowseNextResponse>(request);
+      ContinuationPoints.clear();
+      for ( auto result : response.Results )
+      {
+      	if (! result.ContinuationPoint.empty())
+	{
+	  ContinuationPoints.push_back(result.ContinuationPoint);
+	}
+      }
       if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
       return response.Results;
     }
