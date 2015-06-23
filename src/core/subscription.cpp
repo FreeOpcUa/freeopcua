@@ -40,7 +40,7 @@ namespace OpcUa
 
   void Subscription::Delete()
   {
-    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<uint32_t>({Data.SubscriptionId}));
+    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<uint32_t>{Data.SubscriptionId});
     for (auto res: results)
     {
       CheckStatusCode(res);
