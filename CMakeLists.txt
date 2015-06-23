@@ -202,8 +202,7 @@ SET(opcuacore_SOURCES
 add_library(opcuacore STATIC ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol
-${Boost_LIBRARIES})
+target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -255,7 +254,6 @@ if (BUILD_CLIENT)
     target_link_libraries(opcuaclient 
         opcuacore 
         ${ADDITIONAL_LINK_LIBRARIES} 
-        ${Boost_LIBRARIES}
         )
 
     #tests/client/binary_handshake.cpp
@@ -283,7 +281,6 @@ if (BUILD_CLIENT)
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
         opcuacore
-        ${Boost_LIBRARIES}
     )
 
     target_compile_options(opcuaclient PUBLIC ${EXECUTABLE_CXX_FLAGS})
@@ -409,7 +406,6 @@ if(BUILD_SERVER)
         opcuaprotocol
         opcuacore
         opcuaserver
-        ${Boost_LIBRARIES}
         )
     target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
@@ -429,7 +425,6 @@ if (BUILD_CLIENT)
         opcuaprotocol
         opcuacore
         opcuaclient
-        ${Boost_LIBRARIES}
     )
 
     target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
@@ -450,7 +445,6 @@ if(BUILD_SERVER)
     opcuaprotocol
     opcuacore
     opcuaserver
-    ${Boost_LIBRARIES}
     )
 
     target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
