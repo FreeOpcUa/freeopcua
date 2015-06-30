@@ -23,7 +23,7 @@ using namespace OpcUa;
 
 class SubClient : public SubscriptionHandler
 {
-  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attr) const override
+  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attr) override
   {
     std::cout << "Received DataChange event for Node " << node << std::endl;
   }
