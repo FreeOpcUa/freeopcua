@@ -24,6 +24,7 @@
 #include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/client/binary_client.h>
+#include <opc/ua/server_operations.h>
 
 #include <thread>
 #include <condition_variable>
@@ -139,6 +140,9 @@ namespace OpcUa
     // returned object can then be used to subscribe 
     // to datachange or custom events from server
     std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& client);
+
+	/// @brief Create a server operations object
+	ServerOperations CreateServerOperations();
 
   private:
     void OpenSecureChannel();
