@@ -201,6 +201,7 @@ SET(opcuacore_SOURCES
     src/core/opcua_errors.cpp
     src/core/socket_channel.cpp
     src/core/subscription.cpp
+    src/core/server_operations.cpp
 )
 
 add_library(opcuacore STATIC ${opcuacore_SOURCES})
