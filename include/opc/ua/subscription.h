@@ -48,7 +48,7 @@ namespace OpcUa
     public:
       virtual ~SubscriptionHandler() {}
       //Called for each datachange events
-      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute) const
+      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(node);
@@ -58,7 +58,7 @@ namespace OpcUa
       }
       //Called for each datachange events
       // Same as DataChange(), but it provides whole DataValue type with aditional fields like time stamps
-      virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute) const
+      virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(node);
@@ -66,14 +66,14 @@ namespace OpcUa
         OPCUA_UNUSED(attribute);
       }
       //Called for every events receive from server
-      virtual void Event(uint32_t handle, const Event& event) const
+      virtual void Event(uint32_t handle, const Event& event)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(event);
         std::cout << "default c++ event callback has been called" << std::endl;
       }
       //Called at server state changed
-      virtual void StatusChange(StatusCode status) const
+      virtual void StatusChange(StatusCode status)
       {
         OPCUA_UNUSED(status);
       }
