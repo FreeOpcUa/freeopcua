@@ -678,6 +678,9 @@ private:
       return requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
     }
 
+    // Prevent multiple threads from sending parts of different packets at the same time.	
+    mutable std::mutex send_mutex;
+
     template <typename Request>
     void Send(Request request) const
     {
@@ -690,6 +693,7 @@ private:
       hdr.AddSize(RawSize(sequence));
       hdr.AddSize(RawSize(request));
 
+	  std::unique_lock<std::mutex> send_lock(send_mutex);
       Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
