@@ -1,11 +1,11 @@
 /// @author Alexander Rykovanov 2014
 /// @email rykovanov.as@gmail.com
 /// @brief Subscription service addon.
-/// @license GNU GPL
+/// @license GNU LGPL
 ///
-/// Distributed under the GNU GPL License
+/// Distributed under the GNU LGPL License
 /// (See accompanying file LICENSE or copy at
-/// http://www.gnu.org/licenses/gpl.html)
+/// http://www.gnu.org/licenses/lgpl.html)
 ///
 
 #pragma once
