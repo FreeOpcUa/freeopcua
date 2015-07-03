@@ -109,6 +109,13 @@ ctest -C Debug
 cd bin\Debug
 example_server.exe
 ```
+
+#### Docker
+
+```
+docker build -f docker/Dockerfile .
+```
+
 ## Developement
 
 C++ style
