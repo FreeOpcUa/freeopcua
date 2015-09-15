@@ -27,4 +27,14 @@ namespace OpcUa {
 
 		return out;
 	}
+
+	void ServerOperations::UnregisterNodes(std::vector<Node>& nodes)
+	{
+		std::vector<OpcUa::NodeId> ids;
+		for (auto& node : nodes) {
+			ids.push_back(node.GetId());
+		}
+
+		Server->Views()->UnregisterNodes(ids);
+	}
 }
