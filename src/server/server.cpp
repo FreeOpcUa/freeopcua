@@ -193,6 +193,10 @@ namespace OpcUa
     return std::unique_ptr<Subscription>(new Subscription (Registry->GetServer(), params, callback, Debug));
   }
 
+  ServerOperations UaServer::CreateServerOperations()
+  {
+	  return std::move(ServerOperations(Registry->GetServer()));
+  }
 
   void UaServer::TriggerEvent(Event event)
   {
