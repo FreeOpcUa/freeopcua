@@ -180,6 +180,41 @@ namespace OpcUa
     TranslateBrowsePathsToNodeIdsResponse();
   };
 
+  struct RegisterNodesRequest
+  {
+	  OpcUa::NodeId TypeId;
+	  OpcUa::RequestHeader Header;
+	  std::vector<OpcUa::NodeId> NodesToRegister;	  
+
+	  RegisterNodesRequest();
+  };
+
+  struct RegisterNodesResponse
+  {
+	  OpcUa::NodeId TypeId;
+	  OpcUa::ResponseHeader Header;
+	  std::vector<OpcUa::NodeId> Result;
+	  
+	  RegisterNodesResponse();
+  };
+
+  struct UnregisterNodesRequest
+  {
+	  OpcUa::NodeId TypeId;
+	  OpcUa::RequestHeader Header;
+	  std::vector<OpcUa::NodeId> NodesToUnregister;
+	  
+	  UnregisterNodesRequest();
+  };
+
+  struct UnregisterNodesResponse
+  {
+	  OpcUa::NodeId TypeId;
+	  OpcUa::ResponseHeader Header;
+
+	  UnregisterNodesResponse();
+  };
+
 } // namespace OpcUa
 
 #endif // __OPC_UA_BINARY_VIEW_H__

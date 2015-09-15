@@ -103,6 +103,16 @@ namespace
       return std::vector<BrowsePathResult>();
     }
 
+	virtual std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const
+	{
+		return std::vector<NodeId>();
+	}
+
+	virtual void UnregisterNodes(const std::vector<NodeId>& params) const
+	{
+		return;
+	}
+
     virtual std::vector<OpcUa::DataValue> Read(const OpcUa::ReadParameters& filter) const
     {
       DataValue value;

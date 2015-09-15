@@ -126,6 +126,20 @@ namespace OpcUa
       return std::vector<BrowseResult>();
     }
 
+	std::vector<NodeId> AddressSpaceInMemory::RegisterNodes(const std::vector<NodeId>& params) const
+	{
+		boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
+		return params;
+	}
+
+	void AddressSpaceInMemory::UnregisterNodes(const std::vector<NodeId>& params) const
+	{
+		boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
+		return;
+	}
+
     std::vector<DataValue> AddressSpaceInMemory::Read(const ReadParameters& params) const
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);

@@ -45,6 +45,8 @@ namespace OpcUa
       virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const;
       virtual std::vector<BrowseResult> BrowseNext() const;
       virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const;
+	  virtual std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const;
+	  virtual void UnregisterNodes(const std::vector<NodeId>& params) const;
 
     public: // AttribueServices
       virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const;

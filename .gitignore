@@ -61,3 +61,6 @@ schemas/ET
 schemas/gm
 schemas/struct_list.txt
 schemas/sys
+
+Debug/
+Release/
