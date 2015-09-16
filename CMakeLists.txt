@@ -11,6 +11,7 @@ option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
+OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
@@ -107,7 +108,7 @@ ADD_CUSTOM_COMMAND(
   )
 
 
-add_library(opcuaprotocol STATIC
+add_library(opcuaprotocol
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
     src/protocol/deserialize_auto.cpp
@@ -203,7 +204,7 @@ SET(opcuacore_SOURCES
     src/core/subscription.cpp
 )
 
-add_library(opcuacore STATIC ${opcuacore_SOURCES})
+add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
@@ -247,7 +248,7 @@ endif(BUILD_TESTING)
 # client library
 ############################################################################
 if (BUILD_CLIENT)
-    add_library(opcuaclient STATIC
+    add_library(opcuaclient
     src/client/binary_connection.cpp
     src/client/binary_client.cpp
     src/client/binary_client_addon.cpp
@@ -304,7 +305,7 @@ if(BUILD_SERVER)
     #)
     #ENDFOREACH(PART)
 
-    add_library(opcuaserver STATIC
+    add_library(opcuaserver
         src/server/address_space_addon.cpp
         src/server/address_space_internal.cpp
         src/server/asio_addon.cpp
