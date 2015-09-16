@@ -97,6 +97,8 @@ if(BUILD_TESTING)
     add_subdirectory(tests/gtest)
 endif(BUILD_TESTING)
 
+install(DIRECTORY include/opc DESTINATION include)
+
 ############################################################################
 # Protocol library
 ############################################################################
@@ -137,6 +139,8 @@ add_library(opcuaprotocol
 
 target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
+install(TARGETS opcuaprotocol LIBRARY DESTINATION lib
+                              ARCHIVE DESTINATION lib/static)
 
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
@@ -208,6 +212,8 @@ add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
+install(TARGETS opcuacore LIBRARY DESTINATION lib
+                          ARCHIVE DESTINATION lib/static)
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -260,6 +266,8 @@ if (BUILD_CLIENT)
         opcuacore 
         ${ADDITIONAL_LINK_LIBRARIES} 
         )
+    install(TARGETS opcuaclient LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -339,6 +347,8 @@ if(BUILD_SERVER)
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
+    install(TARGETS opcuaserver LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
