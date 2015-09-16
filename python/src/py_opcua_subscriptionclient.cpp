@@ -77,7 +77,7 @@ PySubscriptionHandler::PySubscriptionHandler(PyObject * p)
   : self(p)
 {}
 
-void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeId attribute) const
+void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const Variant & val, AttributeId attribute)
 {
   PyGILState_STATE state = PyGILState_Ensure();
 
@@ -95,7 +95,7 @@ void PySubscriptionHandler::DataChange(uint32_t handle, const Node & node, const
   PyGILState_Release(state);
 }
 
-void PySubscriptionHandler::Event(uint32_t handle, const OpcUa::Event & event) const
+void PySubscriptionHandler::Event(uint32_t handle, const OpcUa::Event & event)
 {
   PyGILState_STATE state = PyGILState_Ensure();
 
@@ -112,7 +112,7 @@ void PySubscriptionHandler::Event(uint32_t handle, const OpcUa::Event & event) c
   PyGILState_Release(state);
 }
 
-void PySubscriptionHandler::StatusChange(StatusCode status) const
+void PySubscriptionHandler::StatusChange(StatusCode status)
 {
   PyGILState_STATE state = PyGILState_Ensure();
 

@@ -343,5 +343,9 @@ namespace OpcUa
     return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));
   }
 
+  ServerOperations UaClient::CreateServerOperations()
+  {
+	  return std::move(ServerOperations(Server));
+  }
 } // namespace OpcUa
 

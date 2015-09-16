@@ -8,6 +8,7 @@
 #include <opc/ua/server/subscription_service.h>
 #include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
+#include <opc/ua/server_operations.h>
 
 namespace OpcUa
 {
@@ -82,6 +83,9 @@ namespace OpcUa
       // returned object can then be used to subscribe to 
       // datachange or custom events on server side
       std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& callback);
+
+	  /// @brief Create a server operations object
+	  ServerOperations CreateServerOperations();
 
     protected:
       std::vector<std::string> XmlAddressSpaces;
