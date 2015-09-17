@@ -18,9 +18,9 @@ namespace OpcUa {
 			ids.push_back(node.GetId());
 		}
 		auto result = Server->Views()->RegisterNodes(ids);
-		auto& rit = result.begin();
+		auto rit = result.begin();
 		std::vector<Node> out;
-		for (auto& nit = nodes.begin(); nit != nodes.end() && rit != result.end(); ++nit, ++rit)
+		for (auto nit = nodes.begin(); nit != nodes.end() && rit != result.end(); ++nit, ++rit)
 		{
 			out.push_back(Node(nit->GetServices(), *rit));
 		}
