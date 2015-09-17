@@ -478,4 +478,6 @@ if (BUILD_PYTHON)
     add_subdirectory (python)
 endif (BUILD_PYTHON)
 
-
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")
+INCLUDE(CPack)
