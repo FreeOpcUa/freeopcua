@@ -11,6 +11,7 @@ option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
+OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
@@ -96,6 +97,8 @@ if(BUILD_TESTING)
     add_subdirectory(tests/gtest)
 endif(BUILD_TESTING)
 
+install(DIRECTORY include/opc DESTINATION include)
+
 ############################################################################
 # Protocol library
 ############################################################################
@@ -107,7 +110,7 @@ ADD_CUSTOM_COMMAND(
   )
 
 
-add_library(opcuaprotocol STATIC
+add_library(opcuaprotocol
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
     src/protocol/deserialize_auto.cpp
@@ -136,6 +139,8 @@ add_library(opcuaprotocol STATIC
 
 target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
+install(TARGETS opcuaprotocol LIBRARY DESTINATION lib
+                              ARCHIVE DESTINATION lib/static)
 
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
@@ -204,10 +209,12 @@ SET(opcuacore_SOURCES
     src/core/server_operations.cpp
 )
 
-add_library(opcuacore STATIC ${opcuacore_SOURCES})
+add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
+install(TARGETS opcuacore LIBRARY DESTINATION lib
+                          ARCHIVE DESTINATION lib/static)
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -248,7 +255,7 @@ endif(BUILD_TESTING)
 # client library
 ############################################################################
 if (BUILD_CLIENT)
-    add_library(opcuaclient STATIC
+    add_library(opcuaclient
     src/client/binary_connection.cpp
     src/client/binary_client.cpp
     src/client/binary_client_addon.cpp
@@ -260,6 +267,8 @@ if (BUILD_CLIENT)
         opcuacore 
         ${ADDITIONAL_LINK_LIBRARIES} 
         )
+    install(TARGETS opcuaclient LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -305,7 +314,7 @@ if(BUILD_SERVER)
     #)
     #ENDFOREACH(PART)
 
-    add_library(opcuaserver STATIC
+    add_library(opcuaserver
         src/server/address_space_addon.cpp
         src/server/address_space_internal.cpp
         src/server/asio_addon.cpp
@@ -339,6 +348,8 @@ if(BUILD_SERVER)
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
+    install(TARGETS opcuaserver LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
