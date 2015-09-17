@@ -58,6 +58,26 @@ namespace OpcUa
   {
   }
 
+  RegisterNodesRequest::RegisterNodesRequest()
+	  : TypeId(REGISTER_NODES_REQUEST)
+  {
+  }
+
+  RegisterNodesResponse::RegisterNodesResponse()
+	  : TypeId(REGISTER_NODES_RESPONSE)
+  {
+  }
+
+  UnregisterNodesRequest::UnregisterNodesRequest()
+	  : TypeId(UNREGISTER_NODES_REQUEST)
+  {
+  }
+
+  UnregisterNodesResponse::UnregisterNodesResponse()
+	  : TypeId(UNREGISTER_NODES_RESPONSE)
+  {
+  }
+
   ReferenceDescription::ReferenceDescription()
     : IsForward(false)
     , TargetNodeClass(NodeClass::Unspecified)
@@ -505,6 +525,107 @@ namespace OpcUa
       *this >> response.Result;
     }
 
+	////////////////////////////////////////////////////////////////////
+	// RegisterNodesRequest
+	////////////////////////////////////////////////////////////////////
+
+	template<>
+	std::size_t RawSize<RegisterNodesRequest>(const RegisterNodesRequest& request)
+	{
+		return RawSize(request.TypeId) + RawSize(request.Header) + RawSizeContainer(request.NodesToRegister);
+	}
+
+	template<>
+	void DataSerializer::Serialize<RegisterNodesRequest>(const RegisterNodesRequest& request)
+	{
+		*this << request.TypeId;
+		*this << request.Header;
+		SerializeContainer(*this, request.NodesToRegister);
+	}
+
+	template<>
+	void DataDeserializer::Deserialize<RegisterNodesRequest>(RegisterNodesRequest& request)
+	{
+		*this >> request.TypeId;
+		*this >> request.Header;
+		DeserializeContainer(*this, request.NodesToRegister);
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// RegisterNodesResponse
+	////////////////////////////////////////////////////////////////////
+
+	template<>
+	std::size_t RawSize<RegisterNodesResponse>(const RegisterNodesResponse& response)
+	{
+		return RawSize(response.TypeId) + RawSize(response.Header) + RawSizeContainer(response.Result);
+	}
+
+	template<>
+	void DataSerializer::Serialize<RegisterNodesResponse>(const RegisterNodesResponse& response)
+	{
+		*this << response.TypeId;
+		*this << response.Header;
+		SerializeContainer(*this, response.Result);
+	}
+
+	template<>
+	void DataDeserializer::Deserialize<RegisterNodesResponse>(RegisterNodesResponse& response)
+	{
+		*this >> response.TypeId;
+		*this >> response.Header;
+		DeserializeContainer(*this, response.Result);
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// UnregisterNodesRequest
+	////////////////////////////////////////////////////////////////////
+
+	template<>
+	std::size_t RawSize<UnregisterNodesRequest>(const UnregisterNodesRequest& request)
+	{
+		return RawSize(request.TypeId) + RawSize(request.Header) + RawSizeContainer(request.NodesToUnregister);
+	}
+
+	template<>
+	void DataSerializer::Serialize<UnregisterNodesRequest>(const UnregisterNodesRequest& request)
+	{
+		*this << request.TypeId;
+		*this << request.Header;
+		SerializeContainer(*this, request.NodesToUnregister);
+	}
+
+	template<>
+	void DataDeserializer::Deserialize<UnregisterNodesRequest>(UnregisterNodesRequest& request)
+	{
+		*this >> request.TypeId;
+		*this >> request.Header;
+		DeserializeContainer(*this, request.NodesToUnregister);
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// UnregisterNodesResponse
+	////////////////////////////////////////////////////////////////////
+
+	template<>
+	std::size_t RawSize<UnregisterNodesResponse>(const UnregisterNodesResponse& response)
+	{
+		return RawSize(response.TypeId) + RawSize(response.Header);
+	}
+
+	template<>
+	void DataSerializer::Serialize<UnregisterNodesResponse>(const UnregisterNodesResponse& response)
+	{
+		*this << response.TypeId;
+		*this << response.Header;
+	}
+
+	template<>
+	void DataDeserializer::Deserialize<UnregisterNodesResponse>(UnregisterNodesResponse& response)
+	{
+		*this >> response.TypeId;
+		*this >> response.Header;
+	}
 
     ////////////////////////////////////////////////////////////////////
     // RelativePathElement

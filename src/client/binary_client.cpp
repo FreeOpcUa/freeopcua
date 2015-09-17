@@ -512,97 +512,139 @@ namespace
 			{
 				// TODO
 			}
-            });
-      };
-      std::unique_lock<std::mutex> lock(Mutex);
-      Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
-      lock.unlock();
-      Send(request);
-      if (Debug) {std::cout << "binary_client| Publish  <--" << std::endl;}
-    }
-
-    virtual RepublishResponse Republish(const RepublishParameters& params)
-    {
-      if (Debug) {std::cout << "binary_client| Republish -->" << std::endl; }
-      RepublishRequest request;
-      request.Header = CreateRequestHeader();
-      request.Parameters = params;
-
-      RepublishResponse response = Send<RepublishResponse>(request);
-      if (Debug) {std::cout << "binary_client| Republish  <--" << std::endl;}
-      return response;
-    }
-    
-    ////////////////////////////////////////////////////////////////
-    /// View Services
-    ////////////////////////////////////////////////////////////////
-    virtual std::shared_ptr<ViewServices> Views() override
-    {
-      return shared_from_this();
-    }
-
-    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
-    {
-      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
-      TranslateBrowsePathsToNodeIdsRequest request;
-      request.Header = CreateRequestHeader();
-      request.Parameters = params;
-      const TranslateBrowsePathsToNodeIdsResponse response = Send<TranslateBrowsePathsToNodeIdsResponse>(request);
-      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
-      return response.Result.Paths;
-    }
-
-
-    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
-    {
-      if (Debug)  {
-        std::cout << "binary_client| Browse -->" ;
-        for ( BrowseDescription desc : query.NodesToBrowse )
-        {
-          std::cout << desc.NodeToBrowse << "  ";
-        }
-        std::cout << std::endl;
-      }
-      BrowseRequest request;
-      request.Header = CreateRequestHeader();
-      request.Query = query;
-      const BrowseResponse response = Send<BrowseResponse>(request);
-      ContinuationPoints.clear();
-      for ( BrowseResult result : response.Results )
-      {
-        if (! result.ContinuationPoint.empty())
-        {
-          ContinuationPoints.push_back(result.ContinuationPoint);
-        }
-      }
-      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
-      return  response.Results;
-    }
-
-    virtual std::vector<BrowseResult> BrowseNext() const
-    {
-      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
-      if ( ContinuationPoints.empty() )
-      {
-        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
-        return std::vector<BrowseResult>();
-      }
-      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
-      BrowseNextRequest request;
-      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true: false;
-      request.ContinuationPoints = ContinuationPoints;
-      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
-      ContinuationPoints.clear();
-      for ( auto result : response.Results )
-      {
-      	if (! result.ContinuationPoint.empty())
-	{
-	  ContinuationPoints.push_back(result.ContinuationPoint);
+			});
+	  };
+	  std::unique_lock<std::mutex> lock(Mutex);
+	  Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+	  lock.unlock();
+	  Send(request);
+	  if (Debug) { std::cout << "binary_client| Publish  <--" << std::endl; }
 	}
-      }
-      if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
-      return response.Results;
-    }
+
+	virtual RepublishResponse Republish(const RepublishParameters& params)
+	{
+		if (Debug) { std::cout << "binary_client| Republish -->" << std::endl; }
+		RepublishRequest request;
+		request.Header = CreateRequestHeader();
+		request.Parameters = params;
+
+		RepublishResponse response = Send<RepublishResponse>(request);
+		if (Debug) { std::cout << "binary_client| Republish  <--" << std::endl; }
+		return response;
+	}
+
+	////////////////////////////////////////////////////////////////
+	/// View Services
+	////////////////////////////////////////////////////////////////
+	virtual std::shared_ptr<ViewServices> Views() override
+	{
+		return shared_from_this();
+	}
+
+	virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
+	{
+		if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
+		TranslateBrowsePathsToNodeIdsRequest request;
+		request.Header = CreateRequestHeader();
+		request.Parameters = params;
+		const TranslateBrowsePathsToNodeIdsResponse response = Send<TranslateBrowsePathsToNodeIdsResponse>(request);
+		if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
+		return response.Result.Paths;
+	}
+
+
+	virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
+	{
+		if (Debug)  {
+			std::cout << "binary_client| Browse -->";
+			for (BrowseDescription desc : query.NodesToBrowse)
+			{
+				std::cout << desc.NodeToBrowse << "  ";
+			}
+			std::cout << std::endl;
+		}
+		BrowseRequest request;
+		request.Header = CreateRequestHeader();
+		request.Query = query;
+		const BrowseResponse response = Send<BrowseResponse>(request);
+		ContinuationPoints.clear();
+		for (BrowseResult result : response.Results)
+		{
+			if (!result.ContinuationPoint.empty())
+			{
+				ContinuationPoints.push_back(result.ContinuationPoint);
+			}
+		}
+		if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
+		return  response.Results;
+	}
+
+	virtual std::vector<BrowseResult> BrowseNext() const
+	{
+		//FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
+		if (ContinuationPoints.empty())
+		{
+			if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
+			return std::vector<BrowseResult>();
+		}
+		if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+		BrowseNextRequest request;
+		request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true : false;
+		request.ContinuationPoints = ContinuationPoints;
+		const BrowseNextResponse response = Send<BrowseNextResponse>(request);
+		ContinuationPoints.clear();
+		for (auto result : response.Results)
+		{
+			if (!result.ContinuationPoint.empty())
+			{
+				ContinuationPoints.push_back(result.ContinuationPoint);
+			}
+		}
+		if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
+		return response.Results;
+	}
+
+	std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const
+	{
+		if (Debug)
+		{
+			std::cout << "binary_clinet| RegisterNodes -->\n\tNodes to register:" << std::endl;
+			for (auto& param : params) {
+				std::cout << "\t\t" << param << std::endl;
+			}
+		}
+
+		RegisterNodesRequest request;
+
+		request.NodesToRegister = params;
+		RegisterNodesResponse response = Send<RegisterNodesResponse>(request);
+		if (Debug)
+		{
+			std::cout << "binary_client| RegisterNodes <--\n\tRegistered NodeIds:" << std::endl;
+			for (auto&id : response.Result) {
+				std::cout << "\t\t" << id << std::endl;
+			}
+		}
+		return response.Result;
+	}
+
+	void UnregisterNodes(const std::vector<NodeId>& params) const
+	{
+		if (Debug) {
+			std::cout << "binary_client| UnregisterNodes -->\n\tUnregistering nodes:" << std::endl;
+			for (auto& id : params) {
+				std::cout << "\t\t" << id << std::endl;
+			}
+		}
+
+		UnregisterNodesRequest request;
+		request.NodesToUnregister = params;
+		UnregisterNodesResponse response = Send<UnregisterNodesResponse>(request);
+
+		if (Debug) {
+			std::cout << "binary_client| UnregisterNodes <--" << std::endl;
+		}
+	}
 
   private:
     //FIXME: this method should be removed, better add realease option to BrowseNext
