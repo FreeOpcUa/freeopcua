@@ -19,6 +19,7 @@ namespace OpcUa{
 
 	public:
 		void WriteAttributes(std::vector<WriteValue>&);
+		std::vector<DataValue> ReadAttributes(std::vector<ReadValueId>& attributes);
 		std::vector<Node> RegisterNodes(std::vector<Node>&);
 		//NB This makes the given nodes invalid
 		void UnregisterNodes(std::vector<Node>&);

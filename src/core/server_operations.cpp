@@ -11,6 +11,14 @@ namespace OpcUa {
 		CheckStatusCode(codes.front());
 	}
 
+	std::vector<DataValue> ServerOperations::ReadAttributes(std::vector<ReadValueId>& attributes)
+	{
+		ReadParameters params;
+		params.AttributesToRead = attributes;
+		auto vec = Server->Attributes()->Read(params);
+		return vec;
+	}
+
 	std::vector<Node> ServerOperations::RegisterNodes(std::vector<Node>& nodes)
 	{
 		std::vector<OpcUa::NodeId> ids;
