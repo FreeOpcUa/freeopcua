@@ -19,6 +19,18 @@ namespace OpcUa {
 		return vec;
 	}
 
+	std::vector<DataValue> ServerOperations::ReadAttributes(std::vector<Node>& nodes, AttributeId attr)
+	{
+		std::vector<ReadValueId> request;
+		for (auto& n : nodes) {
+			ReadValueId r;
+			r.NodeId = n.GetId();
+			r.AttributeId = attr;
+			request.push_back(r);
+		}
+		return ReadAttributes(request);
+	}
+
 	std::vector<Node> ServerOperations::RegisterNodes(std::vector<Node>& nodes)
 	{
 		std::vector<OpcUa::NodeId> ids;
