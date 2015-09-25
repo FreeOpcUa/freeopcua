@@ -6,5 +6,6 @@ includedir=@includedir@
 Name: libopcuacore
 Description: Opcua core infrastructure.
 Version: @PACKAGE_VERSION@
+Cflags: -I${includedir}
 Libs: -L${libdir} -lopcuaclient
 
