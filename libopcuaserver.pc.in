@@ -6,5 +6,6 @@ includedir=@includedir@
 Name: libopcuaserver
 Description: Opcua server library.
 Version: @PACKAGE_VERSION@
+Cflags: -I${includedir}
 Libs: -L${libdir} -lopcuaserver
 
