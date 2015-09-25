@@ -31,6 +31,27 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         ""
     )
 
+# Helper function to generate a pkg-config file for a single library
+# Takes the filename of the .pc file as a parameter and replaces all
+# placeholders in the .pc.in file with the actual values
+# (does nothing on non-unix systems)
+function(generate_pkgconfig BASENAME)
+    if(UNIX)
+        include(FindPkgConfig QUIET)
+        if(PKG_CONFIG_FOUND)
+            # prepare variables (the placeholders in the pc.in files are lowercase hence the unusal var names)
+            set(prefix ${CMAKE_INSTALL_PREFIX})
+            set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+            set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+            set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+            # generate pkg-config file
+            configure_file("${BASENAME}.in" "${BASENAME}" @ONLY)
+            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}"
+                    DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+        endif()
+    endif()
+endfunction(generate_pkgconfig)
 
 if(WIN32)
     SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
@@ -142,6 +163,8 @@ target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 install(TARGETS opcuaprotocol LIBRARY DESTINATION lib
                               ARCHIVE DESTINATION lib/static)
 
+generate_pkgconfig("libopcuaprotocol.pc")
+
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
 endif ()
@@ -213,8 +236,11 @@ add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
+
 install(TARGETS opcuacore LIBRARY DESTINATION lib
                           ARCHIVE DESTINATION lib/static)
+
+generate_pkgconfig("libopcuacore.pc")
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -269,6 +295,8 @@ if (BUILD_CLIENT)
         )
     install(TARGETS opcuaclient LIBRARY DESTINATION lib
                                 ARCHIVE DESTINATION lib/static)
+
+    generate_pkgconfig("libopcuaclient.pc")
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -350,6 +378,8 @@ if(BUILD_SERVER)
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
     install(TARGETS opcuaserver LIBRARY DESTINATION lib
                                 ARCHIVE DESTINATION lib/static)
+
+    generate_pkgconfig("libopcuaserver.pc")
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
