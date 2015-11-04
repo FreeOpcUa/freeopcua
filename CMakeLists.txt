@@ -160,7 +160,9 @@ add_library(opcuaprotocol
 
 target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
-install(TARGETS opcuaprotocol LIBRARY DESTINATION lib
+target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
+install(TARGETS opcuaprotocol EXPORT FreeOpcUa
+                              LIBRARY DESTINATION lib
                               ARCHIVE DESTINATION lib/static)
 
 generate_pkgconfig("libopcuaprotocol.pc")
@@ -236,8 +238,9 @@ add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
-
-install(TARGETS opcuacore LIBRARY DESTINATION lib
+target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
+install(TARGETS opcuacore EXPORT FreeOpcUa
+                          LIBRARY DESTINATION lib
                           ARCHIVE DESTINATION lib/static)
 
 generate_pkgconfig("libopcuacore.pc")
@@ -293,7 +296,9 @@ if (BUILD_CLIENT)
         opcuacore 
         ${ADDITIONAL_LINK_LIBRARIES} 
         )
-    install(TARGETS opcuaclient LIBRARY DESTINATION lib
+    target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
+    install(TARGETS opcuaclient EXPORT FreeOpcUa
+                                LIBRARY DESTINATION lib
                                 ARCHIVE DESTINATION lib/static)
 
     generate_pkgconfig("libopcuaclient.pc")
@@ -376,7 +381,9 @@ if(BUILD_SERVER)
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
-    install(TARGETS opcuaserver LIBRARY DESTINATION lib
+    target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
+    install(TARGETS opcuaserver EXPORT FreeOpcUa
+                                LIBRARY DESTINATION lib
                                 ARCHIVE DESTINATION lib/static)
 
     generate_pkgconfig("libopcuaserver.pc")
@@ -507,6 +514,8 @@ endif(BUILD_SERVER)
 if (BUILD_PYTHON)
     add_subdirectory (python)
 endif (BUILD_PYTHON)
+
+install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
 
 SET(CPACK_GENERATOR "DEB")
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")
