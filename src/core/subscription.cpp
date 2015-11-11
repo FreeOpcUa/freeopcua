@@ -263,6 +263,16 @@ namespace OpcUa
     return monitoredItemsIds;
   }
 
+  void Subscription::setUsrPtr(uint32_t handle,UserData *usr)
+  {
+      AttributeValueMap[handle].usrVar = usr;
+  }
+
+  UserData * Subscription::getUsrPtr(uint32_t handle)
+  {
+      return AttributeValueMap[handle].usrVar;
+  }
+
   void Subscription::UnSubscribe(uint32_t handle)
   {
     return UnSubscribe(std::vector<uint32_t>(1, handle));
