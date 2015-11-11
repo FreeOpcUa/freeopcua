@@ -72,6 +72,24 @@ namespace OpcUa
     }
   }
 
+  DataValue Node::GetAttributeAsDataValue(const AttributeId attr) const
+  {
+    ReadParameters params;
+    ReadValueId attribute;
+    attribute.NodeId = Id;
+    attribute.AttributeId = attr;
+    params.AttributesToRead.push_back(attribute);
+    std::vector<DataValue> vec =  Server->Attributes()-> Read(params);
+    if ( vec.size() > 0 )
+    {
+       return vec.front();
+    }
+    else
+    {
+      return DataValue(); //FIXME: What does it mean when not value is found?
+    }
+  }
+
   std::vector<Variant> Node::CallMethod(const NodeId methodId, const std::vector<Variant> inputArguments) const
   {
     std::vector<NodeId> vec_methodId;
@@ -471,6 +489,11 @@ namespace OpcUa
   Variant Node::GetValue() const
   {
     return GetAttribute(AttributeId::Value);
+  }
+
+  DataValue Node::GetDataValue() const
+  {
+    return GetAttributeAsDataValue(AttributeId::Value);
   }
 
   Variant Node::GetDataType() const
