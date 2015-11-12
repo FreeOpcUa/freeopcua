@@ -53,22 +53,21 @@ namespace OpcUa
     return Id;
   }
 
-  Variant Node::GetAttribute(const AttributeId attr) const
+  DataValue Node::GetAttribute(const AttributeId attr) const
   {
     ReadParameters params;
     ReadValueId attribute;
     attribute.NodeId = Id;
     attribute.AttributeId = attr;
     params.AttributesToRead.push_back(attribute);
-    std::vector<DataValue> vec =  Server->Attributes()-> Read(params); 
+    std::vector<DataValue> vec =  Server->Attributes()-> Read(params);
     if ( vec.size() > 0 )
     {
-      DataValue dv =  vec.front(); 
-      return dv.Value;
+       return vec.front();
     }
     else
     {
-      return Variant(); //FIXME: What does it mean when not value is found?
+      return DataValue(); //FIXME: What does it mean when not value is found?
     }
   }
 
@@ -179,7 +178,7 @@ namespace OpcUa
 
   QualifiedName Node::GetBrowseName() const
   {
-    Variant var = GetAttribute(AttributeId::BrowseName);
+    Variant var = GetAttribute(AttributeId::BrowseName).Value;
     if (var.Type() != VariantType::QUALIFIED_NAME)
     {
       throw std::runtime_error("Could not retrieve browse name.");
@@ -470,12 +469,17 @@ namespace OpcUa
 
   Variant Node::GetValue() const
   {
+    return (GetAttribute(AttributeId::Value)).Value;
+  }
+
+  DataValue Node::GetDataValue() const
+  {
     return GetAttribute(AttributeId::Value);
   }
 
   Variant Node::GetDataType() const
   {
-    return GetAttribute(AttributeId::DataType);
+    return (GetAttribute(AttributeId::DataType)).Value;
   }
 
 } // namespace OpcUa

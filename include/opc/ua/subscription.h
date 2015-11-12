@@ -32,12 +32,18 @@
 
 namespace OpcUa
 {
+  // the better void pointer
+  struct UserData
+  {
+  };
+  
   struct MonitoredItemData
   {
     IntegerId MonitoredItemId;
     Node TargetNode;
     AttributeId Attribute;
     MonitoringFilter Filter;
+    UserData *usrVar;
   };
 
   typedef std::map<uint32_t, MonitoredItemData> AttValMap;
@@ -105,6 +111,10 @@ namespace OpcUa
       uint32_t SubscribeDataChange(const Node& node, AttributeId attr=AttributeId::Value);
       std::vector<uint32_t> SubscribeDataChange(const std::vector<ReadValueId>& attributes);
       
+      // UserData pointer to have acces to user data in callback functions DataChange(),DataValueChange()
+      void setUsrPtr(uint32_t handle,UserData *usr);
+      UserData* getUsrPtr(uint32_t handle);
+
       //Unsubscribe to datachange or events
       void UnSubscribe(uint32_t handle); 
       void UnSubscribe(std::vector<uint32_t> handles); 
