@@ -178,6 +178,10 @@ namespace
       return CloseSessionResponse();
     }
 
+    virtual void AbortSession()
+    {
+    }
+
     virtual EndpointServices::SharedPtr Endpoints() override
     {
       return EndpointsServices;

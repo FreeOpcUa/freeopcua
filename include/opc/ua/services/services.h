@@ -46,6 +46,7 @@ namespace OpcUa
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
     virtual ActivateSessionResponse ActivateSession(const UpdatedSessionParameters &session_parameters) = 0;
     virtual CloseSessionResponse CloseSession() = 0;
+    virtual void AbortSession() = 0;
 
     virtual EndpointServices::SharedPtr Endpoints() = 0;
     virtual ViewServices::SharedPtr Views() = 0;
