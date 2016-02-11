@@ -237,6 +237,7 @@ namespace
       ReceiveThread.join();
       if (Debug) std::cout << "binary_client| Receive tread stopped." << std::endl;
 
+      if (Debug) std::cout << "binary_client| Destroyed." << std::endl;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -285,8 +286,16 @@ namespace
       if (Debug)  { std::cout << "binary_client| CloseSession -->" << std::endl; }
       CloseSessionRequest request;
       CloseSessionResponse response = Send<CloseSessionResponse>(request);
+      RemoveSelfReferences();
       if (Debug)  { std::cout << "binary_client| CloseSession <--" << std::endl; }
       return response;
+    }
+
+    virtual void AbortSession()
+    {
+      if (Debug)  { std::cout << "binary_client| AbortSession -->" << std::endl; }
+      RemoveSelfReferences();
+      if (Debug)  { std::cout << "binary_client| AbortSession <--" << std::endl; }
     }
 
     ////////////////////////////////////////////////////////////////
@@ -386,6 +395,7 @@ namespace
     ////////////////////////////////////////////////////////////////
     /// Node management Services
     ////////////////////////////////////////////////////////////////
+
     virtual std::shared_ptr<NodeManagementServices> NodeManagement() override
     {
       return shared_from_this();
@@ -869,6 +879,14 @@ private:
     unsigned GetRequestHandle() const
     {
       return ++RequestHandle;
+    }
+
+    // Binary client is self-referenced from captures of subscription callbacks
+    // Remove this references to make ~BinaryClient() run possible
+    void RemoveSelfReferences()
+    {
+      if (Debug)  { std::cout << "binary_client| Clearing cached references to server" << std::endl; }
+      PublishCallbacks.clear();
     }
 
   private:

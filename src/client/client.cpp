@@ -269,14 +269,21 @@ namespace OpcUa
     Disconnect();//Do not leave any thread or connectino running
   } 
 
-  void UaClient::Disconnect()
+  void UaClient::Disconnect(bool abort)
   {
     KeepAlive.Stop();
 
     if (  Server ) 
     {
-      CloseSessionResponse response = Server->CloseSession();
-      if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
+      if ( abort )
+      {
+        Server->AbortSession();
+      }
+      else
+      {
+        CloseSessionResponse response = Server->CloseSession();
+        if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
+      }
       CloseSecureChannel();
     }
     Server.reset(); //FIXME: check if we still need this

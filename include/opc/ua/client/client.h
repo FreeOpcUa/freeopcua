@@ -92,8 +92,13 @@ namespace OpcUa
     void Connect(const EndpointDescription&);
 
     /// @brief Disconnect from server
-    // close all threads and subscriptions
-    void Disconnect();
+    // close communication with OPC-UA server, close all threads and subscriptions
+    void Disconnect(bool abort = false);
+
+    /// @brief Abort server connection
+    // abort communication with OPC-UA server, close all threads and subcsriptions
+    // Like Disconnect() but without CloseSession() call, which is not possible on faulty connection anyway
+    void Abort() {Disconnect(true);}
 
     /// @brief  Connect to server and get endpoints
     std::vector<EndpointDescription> GetServerEndpoints(const std::string& endpoint);
