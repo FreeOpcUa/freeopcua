@@ -273,12 +273,19 @@ namespace OpcUa
   {
     KeepAlive.Stop();
 
-    if (  Server ) 
+    if (  Server )
     {
       CloseSessionResponse response = Server->CloseSession();
       if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
       CloseSecureChannel();
     }
+    Server.reset(); //FIXME: check if we still need this
+  }
+
+  void UaClient::Abort()
+  {
+    KeepAlive.Stop();
+
     Server.reset(); //FIXME: check if we still need this
   }
 
