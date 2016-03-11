@@ -283,6 +283,13 @@ namespace OpcUa
     Server.reset(); //FIXME: check if we still need this
   }
 
+  void UaClient::Abort()
+  {
+    KeepAlive.Stop();
+
+    Server.reset(); //FIXME: check if we still need this
+  }
+
   std::vector<std::string>  UaClient::GetServerNamespaces()
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
@@ -385,5 +392,9 @@ namespace OpcUa
     return std::unique_ptr<Subscription>(new Subscription (Server, params, callback, Debug));
   }
 
+  ServerOperations UaClient::CreateServerOperations()
+  {
+	  return std::move(ServerOperations(Server));
+  }
 } // namespace OpcUa
 

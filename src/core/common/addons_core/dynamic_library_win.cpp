@@ -56,7 +56,7 @@ namespace Common
       Library = LoadDll(Path.c_str());
     }
 
-    void* func = GetProcAddress((HMODULE)Library, funcName.c_str());
+    void* func = (void*)GetProcAddress((HMODULE)Library, funcName.c_str());
     if (!func)
     {
       std::string msg;

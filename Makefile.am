@@ -322,7 +322,8 @@ opcuainclude_HEADERS = \
   include/opc/ua/node.h \
   include/opc/ua/model.h \
   include/opc/ua/socket_channel.h \
-  include/opc/ua/subscription.h
+  include/opc/ua/subscription.h \
+  include/opc/ua/server_operations.h
 
 servicesinclude_HEADERS = \
   include/opc/ua/services/attributes.h \
@@ -377,7 +378,8 @@ libopcuacore_la_SOURCES = \
                   src/core/node.cpp \
                   src/core/opcua_errors.cpp \
                   src/core/socket_channel.cpp \
-                  src/core/subscription.cpp
+                  src/core/subscription.cpp \
+		  src/core/server_operations.cpp
 
 libopcuacore_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
 libopcuacore_la_LIBADD = libopcuaprotocol.la

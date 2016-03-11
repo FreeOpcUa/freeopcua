@@ -32,12 +32,18 @@
 
 namespace OpcUa
 {
+  // the better void pointer
+  struct UserData
+  {
+  };
+  
   struct MonitoredItemData
   {
     IntegerId MonitoredItemId;
     Node TargetNode;
     AttributeId Attribute;
     MonitoringFilter Filter;
+    UserData *usrVar;
   };
 
   typedef std::map<uint32_t, MonitoredItemData> AttValMap;
@@ -48,7 +54,7 @@ namespace OpcUa
     public:
       virtual ~SubscriptionHandler() {}
       //Called for each datachange events
-      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute) const
+      virtual void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attribute)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(node);
@@ -58,7 +64,7 @@ namespace OpcUa
       }
       //Called for each datachange events
       // Same as DataChange(), but it provides whole DataValue type with aditional fields like time stamps
-      virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute) const
+      virtual void DataValueChange(uint32_t handle, const Node& node, const DataValue& val, AttributeId attribute)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(node);
@@ -66,14 +72,14 @@ namespace OpcUa
         OPCUA_UNUSED(attribute);
       }
       //Called for every events receive from server
-      virtual void Event(uint32_t handle, const Event& event) const
+      virtual void Event(uint32_t handle, const Event& event)
       {
         OPCUA_UNUSED(handle);
         OPCUA_UNUSED(event);
         std::cout << "default c++ event callback has been called" << std::endl;
       }
       //Called at server state changed
-      virtual void StatusChange(StatusCode status) const
+      virtual void StatusChange(StatusCode status)
       {
         OPCUA_UNUSED(status);
       }
@@ -105,6 +111,10 @@ namespace OpcUa
       uint32_t SubscribeDataChange(const Node& node, AttributeId attr=AttributeId::Value);
       std::vector<uint32_t> SubscribeDataChange(const std::vector<ReadValueId>& attributes);
       
+      // UserData pointer to have acces to user data in callback functions DataChange(),DataValueChange()
+      void setUsrPtr(uint32_t handle,UserData *usr);
+      UserData* getUsrPtr(uint32_t handle);
+
       //Unsubscribe to datachange or events
       void UnSubscribe(uint32_t handle); 
       void UnSubscribe(std::vector<uint32_t> handles); 

@@ -24,6 +24,7 @@
 #include <opc/ua/services/services.h>
 #include <opc/ua/subscription.h>
 #include <opc/ua/client/binary_client.h>
+#include <opc/ua/server_operations.h>
 
 #include <thread>
 #include <condition_variable>
@@ -91,8 +92,13 @@ namespace OpcUa
     void Connect(const EndpointDescription&);
 
     /// @brief Disconnect from server
-    // close all threads and subscriptions
+    // close communication with OPC-UA server, close all threads and subscriptions
     void Disconnect();
+
+    /// @brief Abort server connection
+    // abort communication with OPC-UA server, close all threads and subcsriptions
+    // Like Disconnect() but without CloseSession() call, which is not possible on faulty connection anyway
+    void Abort();
 
     /// @brief  Connect to server and get endpoints
     std::vector<EndpointDescription> GetServerEndpoints(const std::string& endpoint);
@@ -140,6 +146,9 @@ namespace OpcUa
     // returned object can then be used to subscribe
     // to datachange or custom events from server
     std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler& client);
+
+	/// @brief Create a server operations object
+	ServerOperations CreateServerOperations();
 
   private:
     void OpenSecureChannel();

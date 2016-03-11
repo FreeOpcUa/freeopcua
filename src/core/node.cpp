@@ -53,22 +53,21 @@ namespace OpcUa
     return Id;
   }
 
-  Variant Node::GetAttribute(const AttributeId attr) const
+  DataValue Node::GetAttribute(const AttributeId attr) const
   {
     ReadParameters params;
     ReadValueId attribute;
     attribute.NodeId = Id;
     attribute.AttributeId = attr;
     params.AttributesToRead.push_back(attribute);
-    std::vector<DataValue> vec =  Server->Attributes()-> Read(params); 
+    std::vector<DataValue> vec =  Server->Attributes()-> Read(params);
     if ( vec.size() > 0 )
     {
-      DataValue dv =  vec.front(); 
-      return dv.Value;
+       return vec.front();
     }
     else
     {
-      return Variant(); //FIXME: What does it mean when not value is found?
+      return DataValue(); //FIXME: What does it mean when not value is found?
     }
   }
 
@@ -179,7 +178,7 @@ namespace OpcUa
 
   QualifiedName Node::GetBrowseName() const
   {
-    Variant var = GetAttribute(AttributeId::BrowseName);
+    Variant var = GetAttribute(AttributeId::BrowseName).Value;
     if (var.Type() != VariantType::QUALIFIED_NAME)
     {
       throw std::runtime_error("Could not retrieve browse name.");
@@ -269,8 +268,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceId::Organizes; 
-    item.TypeDefinition = ObjectId::FolderType; 
+    item.ReferenceTypeId = ReferenceId::Organizes;
+    item.TypeDefinition = ObjectId::FolderType;
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -308,8 +307,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    item.TypeDefinition = ObjectId::BaseObjectType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    item.TypeDefinition = ObjectId::BaseObjectType;
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -349,8 +348,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    item.TypeDefinition = ObjectId::BaseDataVariableType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    item.TypeDefinition = ObjectId::BaseDataVariableType;
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -399,8 +398,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceId::HasProperty; 
-    item.TypeDefinition = ObjectId::PropertyType; 
+    item.ReferenceTypeId = ReferenceId::HasProperty;
+    item.TypeDefinition = ObjectId::PropertyType;
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -446,8 +445,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Method;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    //item.TypeDefinition = ObjectId::BaseDataVariableType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    //item.TypeDefinition = ObjectId::BaseDataVariableType;
     MethodAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -470,12 +469,17 @@ namespace OpcUa
 
   Variant Node::GetValue() const
   {
+    return (GetAttribute(AttributeId::Value)).Value;
+  }
+
+  DataValue Node::GetDataValue() const
+  {
     return GetAttribute(AttributeId::Value);
   }
 
   Variant Node::GetDataType() const
   {
-    return GetAttribute(AttributeId::DataType);
+    return (GetAttribute(AttributeId::DataType)).Value;
   }
 
 } // namespace OpcUa

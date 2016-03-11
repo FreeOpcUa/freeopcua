@@ -11,6 +11,7 @@ option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
+OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
         ${PROJECT_BINARY_DIR}/bin
@@ -30,39 +31,66 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         ""
     )
 
+# Helper function to generate a pkg-config file for a single library
+# Takes the filename of the .pc file as a parameter and replaces all
+# placeholders in the .pc.in file with the actual values
+# (does nothing on non-unix systems)
+function(generate_pkgconfig BASENAME)
+    if(UNIX)
+        include(FindPkgConfig QUIET)
+        if(PKG_CONFIG_FOUND)
+            # prepare variables (the placeholders in the pc.in files are lowercase hence the unusal var names)
+            set(prefix ${CMAKE_INSTALL_PREFIX})
+            set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+            set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+            set(includedir ${CMAKE_INSTALL_PREFIX}/include)
 
-if(WIN32)
-    SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+            # generate pkg-config file
+            configure_file("${BASENAME}.in" "${BASENAME}" @ONLY)
+            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}"
+                    DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+        endif()
+    endif()
+endfunction(generate_pkgconfig)
+if(MSVC)
     SET(STATIC_LIBRARY_CXX_FLAGS  /MDd)
     SET(EXECUTABLE_CXX_FLAGS /MDd)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS /MDd)
     SET(D  /D)
-    SET(ADDITIONAL_LINK_LIBRARIES Wininet.lib wsock32.lib)
-    SET(OS_SUFFIX _win)
-    STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
-    STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${PROJECT_SOURCE_DIR}/tests/core/configs/")
-
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
-
-#    if(MSVC)
-#        set(CMAKE_CXX_STACK_SIZE "2000000")
-#    endif()
-
-else(WIN32)
+else(MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -ggdb -o0")
 
     SET(STATIC_LIBRARY_CXX_FLAGS)
     SET(EXECUTABLE_CXX_FLAGS)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS)
     SET(D -D)
+    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
+    SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
+    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
+endif()
+
+if(WIN32)
+    SET(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+    SET(ADDITIONAL_LINK_LIBRARIES Wininet.lib wsock32.lib)
+    if(CMAKE_COMPILER_IS_GNUCC)
+        SET(ADDITIONAL_LINK_LIBRARIES ${ADDITIONAL_LINK_LIBRARIES} ws2_32.lib)
+    endif()
+
+    SET(OS_SUFFIX _win)
+    STRING(REGEX REPLACE "/" "\\\\\\\\" DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug/test_dynamic_addon.dll")
+    STRING(REGEX REPLACE "/" "\\\\\\\\" TEST_CORE_CONFIG_PATH "${PROJECT_SOURCE_DIR}/tests/core/configs/")
+
+#    if(MSVC)
+#        set(CMAKE_CXX_STACK_SIZE "2000000")
+#    endif()
+
+else(WIN32)
     SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libtest_dynamic_addon.so")
     SET(TEST_CORE_CONFIG_PATH " ${PROJECT_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
 
-    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
-    SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
-    #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 
     find_package(LibXml2 REQUIRED) 
     message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
@@ -74,10 +102,10 @@ else(WIN32)
 endif(WIN32)
 
 find_package( Boost COMPONENTS system program_options filesystem thread REQUIRED )
-include_directories( ${Boost_INCLUDE_DIR} )
-link_directories( ${Boost_LIBRARY_DIR} )
-message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIR})
-message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIR})
+include_directories( ${Boost_INCLUDE_DIRS} )
+link_directories( ${Boost_LIBRARY_DIRS} )
+message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIRS})
+message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIRS})
 
 SET(TEST_INCLUDES, "")
 IF(BUILD_TESTING)
@@ -96,6 +124,8 @@ if(BUILD_TESTING)
     add_subdirectory(tests/gtest)
 endif(BUILD_TESTING)
 
+install(DIRECTORY include/opc DESTINATION include)
+
 ############################################################################
 # Protocol library
 ############################################################################
@@ -107,7 +137,7 @@ ADD_CUSTOM_COMMAND(
   )
 
 
-add_library(opcuaprotocol STATIC
+add_library(opcuaprotocol
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
     src/protocol/deserialize_auto.cpp
@@ -136,6 +166,12 @@ add_library(opcuaprotocol STATIC
 
 target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
+target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
+install(TARGETS opcuaprotocol EXPORT FreeOpcUa
+                              LIBRARY DESTINATION lib
+                              ARCHIVE DESTINATION lib/static)
+
+generate_pkgconfig("libopcuaprotocol.pc")
 
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
@@ -201,12 +237,19 @@ SET(opcuacore_SOURCES
     src/core/opcua_errors.cpp
     src/core/socket_channel.cpp
     src/core/subscription.cpp
+    src/core/server_operations.cpp
 )
 
-add_library(opcuacore STATIC ${opcuacore_SOURCES})
+add_library(opcuacore ${opcuacore_SOURCES})
 
 target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol)
+target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
+install(TARGETS opcuacore EXPORT FreeOpcUa
+                          LIBRARY DESTINATION lib
+                          ARCHIVE DESTINATION lib/static)
+
+generate_pkgconfig("libopcuacore.pc")
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -247,7 +290,7 @@ endif(BUILD_TESTING)
 # client library
 ############################################################################
 if (BUILD_CLIENT)
-    add_library(opcuaclient STATIC
+    add_library(opcuaclient
     src/client/binary_connection.cpp
     src/client/binary_client.cpp
     src/client/binary_client_addon.cpp
@@ -258,7 +301,14 @@ if (BUILD_CLIENT)
     target_link_libraries(opcuaclient 
         opcuacore 
         ${ADDITIONAL_LINK_LIBRARIES} 
+	${Boost_PROGRAMOPTIONS_LIBRARY}
         )
+    target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
+    install(TARGETS opcuaclient EXPORT FreeOpcUa
+                                LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
+
+    generate_pkgconfig("libopcuaclient.pc")
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -283,6 +333,7 @@ if (BUILD_CLIENT)
 
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
+	${Boost_PROGRAM_OPTIONS_LIBRARY}
         opcuaprotocol
         opcuacore
     )
@@ -304,7 +355,7 @@ if(BUILD_SERVER)
     #)
     #ENDFOREACH(PART)
 
-    add_library(opcuaserver STATIC
+    add_library(opcuaserver
         src/server/address_space_addon.cpp
         src/server/address_space_internal.cpp
         src/server/asio_addon.cpp
@@ -337,7 +388,13 @@ if(BUILD_SERVER)
         )
 
     target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-    target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol)
+    target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
+    target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
+    install(TARGETS opcuaserver EXPORT FreeOpcUa
+                                LIBRARY DESTINATION lib
+                                ARCHIVE DESTINATION lib/static)
+
+    generate_pkgconfig("libopcuaserver.pc")
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
@@ -410,6 +467,7 @@ if(BUILD_SERVER)
         opcuaprotocol
         opcuacore
         opcuaserver
+	${Boost_PROGRAM_OPTIONS_LIBRARY}
         )
     target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
@@ -466,4 +524,8 @@ if (BUILD_PYTHON)
     add_subdirectory (python)
 endif (BUILD_PYTHON)
 
+install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
 
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")
+INCLUDE(CPack)

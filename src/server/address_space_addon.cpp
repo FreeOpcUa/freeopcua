@@ -86,6 +86,16 @@ namespace OpcUa
       return Registry->TranslateBrowsePathsToNodeIds(params);
     }
 
+	std::vector<NodeId> AddressSpaceAddon::RegisterNodes(const std::vector<NodeId>& params) const
+	{
+		return Registry->RegisterNodes(params);
+	}
+
+	void AddressSpaceAddon::UnregisterNodes(const std::vector<NodeId>& params) const
+	{
+		return Registry->UnregisterNodes(params);
+	}
+
     std::vector<DataValue> AddressSpaceAddon::Read(const OpcUa::ReadParameters& filter) const
     {
       return Registry->Read(filter);
