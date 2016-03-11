@@ -336,6 +336,47 @@ namespace OpcUa
     return Node(Server, OpcUa::ObjectId::Server);
   }
 
+  void UaClient::DeleteNodes(std::vector<OpcUa::Node>& nodes, bool recursive)
+  {
+    if (recursive)
+    {
+      std::vector<OpcUa::Node> children = AddChilds(nodes);
+      nodes.insert(nodes.end(), children.begin(), children.end());
+    }
+    if (Debug)  { std::cout << "UaClient | Deleting nodes ..." <<  std::endl; }
+    std::vector<OpcUa::DeleteNodesItem> nodesToDelete;
+    nodesToDelete.resize(nodes.size());
+    for (unsigned i = 0; i < nodes.size(); i++)
+    {
+      nodesToDelete[i].NodeId = nodes[i].GetId();
+      nodesToDelete[i].DeleteTargetReferences = true;
+    }
+
+    DeleteNodesResponse response = Server->DeleteNodes(nodesToDelete);
+    for (std::vector<OpcUa::StatusCode>::iterator it = response.Results.begin(); it < response.Results.end(); it++)
+    {
+      CheckStatusCode(*it);
+    }
+  }
+
+  std::vector<OpcUa::Node> UaClient::AddChilds(std::vector<OpcUa::Node> nodes)
+  {
+    std::vector<OpcUa::Node> results;
+    std::vector<OpcUa::Node> temp;
+    for (std::vector<OpcUa::Node>::iterator it = nodes.begin(); it < nodes.end(); it++)
+    {
+      temp.clear();
+      temp = it->GetChildren();
+      if (!temp.empty())
+      {
+        results.insert(results.begin(), temp.begin(), temp.end());
+        temp = AddChilds(temp);
+        results.insert(results.begin(), temp.begin(), temp.end());
+      }
+    }
+    return results;
+  }
+
   std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler& callback)
   {
     CreateSubscriptionParameters params;

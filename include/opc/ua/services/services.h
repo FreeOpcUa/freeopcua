@@ -49,6 +49,7 @@ namespace OpcUa
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
     virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) = 0;
     virtual CloseSessionResponse CloseSession() = 0;
+    virtual DeleteNodesResponse DeleteNodes(const std::vector<OpcUa::DeleteNodesItem> &nodesToDelete) = 0;
 
     virtual AttributeServices::SharedPtr Attributes() = 0;
     virtual EndpointServices::SharedPtr Endpoints() = 0;

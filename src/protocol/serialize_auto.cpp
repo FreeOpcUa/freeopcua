@@ -1461,8 +1461,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<DeleteNodesItem>(const DeleteNodesItem& data)
     {
@@ -1470,52 +1468,25 @@ namespace OpcUa
         *this << data.DeleteTargetReferences;
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<DeleteNodesParameters>(const DeleteNodesParameters& data)
-    {
-        SerializeContainer(*this, data.NodesToDelete);
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteNodesRequest>(const DeleteNodesRequest& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.NodesToDelete);
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataSerializer::Serialize<DeleteNodesResult>(const DeleteNodesResult& data)
-    {
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<DeleteNodesResponse>(const DeleteNodesResponse& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        *this << data.Parameters;
+        SerializeContainer(*this, data.Results);
+        SerializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 

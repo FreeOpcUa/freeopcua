@@ -1645,8 +1645,6 @@ namespace OpcUa
 
 */
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<DeleteNodesItem>(const DeleteNodesItem& data)
     {
@@ -1656,21 +1654,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<DeleteNodesParameters>(const DeleteNodesParameters& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.NodesToDelete);
-        return size;
-    }
-
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesRequest>(const DeleteNodesRequest& data)
@@ -1678,26 +1661,10 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.NodesToDelete);
         return size;
     }
 
-*/
-
-/* DISABLED
-
-    template<>
-    std::size_t RawSize<DeleteNodesResult>(const DeleteNodesResult& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
-
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<DeleteNodesResponse>(const DeleteNodesResponse& data)
@@ -1705,11 +1672,11 @@ namespace OpcUa
         size_t size = 0;
         size += RawSize(data.TypeId);
         size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
+        size += RawSizeContainer(data.Results);
+        size += RawSizeContainer(data.DiagnosticInfos);
         return size;
     }
 
-*/
 
 /* DISABLED
 

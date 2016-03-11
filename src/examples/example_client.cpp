@@ -18,21 +18,13 @@
 
 using namespace OpcUa;
 
-class SubClient : public SubscriptionHandler
-{
-  void DataChange(uint32_t handle, const Node& node, const Variant& val, AttributeId attr) const override
-  {
-    std::cout << "Received DataChange event, value of Node " << node << " is now: "  << val.ToString() << std::endl;
-  }
-};
-
 int main(int argc, char** argv)
 {
 	try
 	{
 		//std::string endpoint = "opc.tcp://192.168.56.101:48030";
 		//std::string endpoint = "opc.tcp://user:password@192.168.56.101:48030";
-		std::string endpoint = "opc.tcp://127.0.0.1:4841/freeopcua/server/";
+		std::string endpoint = "opc.tcp://admin@141.3.80.67:21553/";
 		//std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
 		//std::string endpoint = "opc.tcp://localhost:48010";
 
@@ -40,7 +32,7 @@ int main(int argc, char** argv)
 			endpoint = argv[1];
 
 		std::cout << "Connecting to: " << endpoint << std::endl;
-		bool debug = false;
+		bool debug = true;
 		OpcUa::UaClient client(debug);
 		client.Connect(endpoint);
 
@@ -54,20 +46,19 @@ int main(int argc, char** argv)
 		for (OpcUa::Node node : objects.GetChildren())
 			std::cout << "    " << node << std::endl;
 
-		//get a node from standard namespace using objectId
-		std::cout << "NamespaceArray is: " << std::endl;
-		OpcUa::Node nsnode = client.GetNode(ObjectId::Server_NamespaceArray);
-		OpcUa::Variant ns = nsnode.GetValue();
-
-		for (std::string d : ns.As<std::vector<std::string>>())
-			std::cout << "    " << d << std::endl;
-
-		OpcUa::Node myvar;
+    std::cout << "Trying to get Interaction 1 " << std::endl;
+    OpcUa::Node myvar;
+    std::vector<std::string> varpath{"2:CurrentWorkpiece", "2:Interaction", "2:1", "2:Name"};
+    myvar = objects.GetChild(varpath);
+    std::cout << "got node: " << myvar <<std::endl;
+    std::vector<OpcUa::Node> nodes;
+    nodes.push_back(myvar);
+    client.DeleteNodes(nodes);
 
 		//Initialize Node myvar:
 
 		//Get namespace index we are interested in
-		
+
 		// From freeOpcUa Server:
 		//uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
 		////Get Node using path (BrowsePathToNodeId call)
@@ -75,20 +66,15 @@ int main(int argc, char** argv)
 		//myvar = objects.GetChild(varpath);
 
 		// Example data from Prosys server:
-		//std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"}); 
+		//std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"});
 		//myvar = root.GetChild(varpath);
 
 		// Example from any UA server, standard dynamic variable node:
-		std::vector<std::string> varpath{ "Objects", "Server", "ServerStatus", "CurrentTime" };
+		varpath = { "Objects", "Server", "ServerStatus", "CurrentTime" };
 		myvar = root.GetChild(varpath);
 
 		std::cout << "got node: " << myvar << std::endl;
 
-		//Subscription
-		SubClient sclt;
-		std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
-		uint32_t handle = sub->SubscribeDataChange(myvar);
-		std::cout << "Got sub handle: " << handle << ", sleeping 5 seconds" << std::endl;
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		std::cout << "Disconnecting" << std::endl;
