@@ -47,8 +47,8 @@ namespace OpcUa
     {
       if (Debug)  { std::cout << "KeepAliveThread | Sleeping for: " << (int64_t) ( Period * 0.7 )<< std::endl; }
       std::unique_lock<std::mutex> lock(Mutex);
-      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) )); 
-      if (status == std::cv_status::no_timeout ) 
+      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) ));
+      if (status == std::cv_status::no_timeout )
       {
         break;
       }
@@ -69,7 +69,7 @@ namespace OpcUa
       NodeToRead.GetValue();
     }
     Running = false;
-    if (Debug)  
+    if (Debug)
     {
       std::cout << "KeepAliveThread | Stopped" << std::endl;
     }
@@ -94,7 +94,7 @@ namespace OpcUa
   {
     const Common::Uri serverUri(endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-    
+
     OpcUa::SecureConnectionParams params;
     params.EndpointUrl = endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
@@ -117,7 +117,7 @@ namespace OpcUa
     filter.ProfileUris.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
-    
+
     return endpoints;
   }
 
@@ -165,7 +165,7 @@ namespace OpcUa
     endpointdesc.EndpointUrl = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
-   
+
   void UaClient::Connect(const EndpointDescription& endpoint)
   {
     Endpoint = endpoint;
@@ -204,6 +204,7 @@ namespace OpcUa
       std::string user = uri.User();
       std::string password = uri.Password();
       bool user_identify_token_found = false;
+      session_parameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
       for(auto ep : response.Parameters.ServerEndpoints) {
         if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentityTokens) {
@@ -251,7 +252,7 @@ namespace OpcUa
     const OpenSecureChannelResponse& response = Server->OpenSecureChannel(channelparams);
 
     CheckStatusCode(response.Header.ServiceResult);
-    
+
     SecureChannelId = response.ChannelSecurityToken.SecureChannelId;
     if ( response.ChannelSecurityToken.RevisedLifetime > 0 )
     {
@@ -267,13 +268,13 @@ namespace OpcUa
   UaClient::~UaClient()
   {
     Disconnect();//Do not leave any thread or connectino running
-  } 
+  }
 
   void UaClient::Disconnect()
   {
     KeepAlive.Stop();
 
-    if (  Server ) 
+    if (  Server )
     {
       CloseSessionResponse response = Server->CloseSession();
       if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
@@ -301,7 +302,7 @@ namespace OpcUa
         return i;
       }
     }
-    throw(std::runtime_error("Error namespace uri does not exists in server")); 
+    throw(std::runtime_error("Error namespace uri does not exists in server"));
     //return -1;
   }
 
