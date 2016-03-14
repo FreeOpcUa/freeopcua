@@ -149,14 +149,14 @@ namespace
     virtual void Publish(const PublishRequest& request)
     {
     }
-    
+
     virtual RepublishResponse Republish(const RepublishParameters& params)
     {
       RepublishResponse response;
-      response.Header.ServiceResult = StatusCode::BadNotImplemented; 
+      response.Header.ServiceResult = StatusCode::BadNotImplemented;
       return response;
     }
-    
+
   };
 
   class ServicesRegistry::InternalServer : public Services
@@ -198,6 +198,11 @@ namespace
 
     virtual void AbortSession()
     {
+    }
+
+    virtual DeleteNodesResponse DeleteNodes(const std::vector<OpcUa::DeleteNodesItem> &nodesToDelete) override
+    {
+      return DeleteNodesResponse();
     }
 
     virtual EndpointServices::SharedPtr Endpoints() override
