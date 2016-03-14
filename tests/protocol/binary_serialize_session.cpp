@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -291,7 +291,7 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
   ASSERT_EQ(token.Header.TypeId.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(token.Header.TypeId.FourByteData.Identifier, OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
-  std::vector<uint8_t> policy_id = {1,0,0,0,'0'};
+  std::vector<uint8_t> policy_id = {'0'};
   ASSERT_EQ(token.PolicyId, policy_id);
 }
 
