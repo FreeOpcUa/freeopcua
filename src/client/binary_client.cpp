@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -298,6 +298,16 @@ namespace
       if (Debug)  { std::cout << "binary_client| AbortSession <--" << std::endl; }
     }
 
+    DeleteNodesResponse DeleteNodes(const std::vector<OpcUa::DeleteNodesItem> &nodesToDelete) override
+    {
+      if (Debug)  { std::cout << "binary_client| DeleteNodes -->" << std::endl; }
+      DeleteNodesRequest request;
+      request.NodesToDelete = nodesToDelete;
+      DeleteNodesResponse response = Send<DeleteNodesResponse>(request);
+      if (Debug)  { std::cout << "binary_client| DeleteNodes <--" << std::endl; }
+      return response;
+    }
+
     ////////////////////////////////////////////////////////////////
     /// Attribute Services
     ////////////////////////////////////////////////////////////////
@@ -489,9 +499,9 @@ namespace
 			IStreamBinary in(bufferInput);
 			in >> response;
 		}
-        
-        CallbackService.post([this, response]() 
-            { 
+
+        CallbackService.post([this, response]()
+            {
 			if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
 			{
 				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Parameters.SubscriptionId << std::endl; }
@@ -513,7 +523,7 @@ namespace
 			}
 			else if (response.Header.ServiceResult == OpcUa::StatusCode::BadSessionClosed)
 			{
-				if (Debug) 
+				if (Debug)
 				{
 					std::cout << "BinaryClient | Session is closed";
 				}
@@ -730,7 +740,7 @@ private:
       return requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
     }
 
-    // Prevent multiple threads from sending parts of different packets at the same time.	
+    // Prevent multiple threads from sending parts of different packets at the same time.
     mutable std::mutex send_mutex;
 
     template <typename Request>
@@ -749,13 +759,13 @@ private:
       Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
-    
+
 
     void Receive() const
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
-      
+
       size_t algo_size;
       if (responseHeader.Type == MessageType::MT_SECURE_OPEN )
       {
@@ -808,7 +818,7 @@ private:
         std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
       }
 
-      if (id == SERVICE_FAULT) 
+      if (id == SERVICE_FAULT)
       {
         std::cerr << std::endl;
         std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;

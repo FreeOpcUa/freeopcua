@@ -268,8 +268,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceId::Organizes; 
-    item.TypeDefinition = ObjectId::FolderType; 
+    item.ReferenceTypeId = ReferenceId::Organizes;
+    item.TypeDefinition = ObjectId::FolderType;
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -307,8 +307,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Object;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    item.TypeDefinition = ObjectId::BaseObjectType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    item.TypeDefinition = ObjectId::BaseObjectType;
     ObjectAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -348,8 +348,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    item.TypeDefinition = ObjectId::BaseDataVariableType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    item.TypeDefinition = ObjectId::BaseDataVariableType;
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -398,8 +398,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Variable;
-    item.ReferenceTypeId = ReferenceId::HasProperty; 
-    item.TypeDefinition = ObjectId::PropertyType; 
+    item.ReferenceTypeId = ReferenceId::HasProperty;
+    item.TypeDefinition = ObjectId::PropertyType;
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
@@ -445,8 +445,8 @@ namespace OpcUa
     item.ParentNodeId = this->Id;
     item.RequestedNewNodeId = nodeid;
     item.Class = NodeClass::Method;
-    item.ReferenceTypeId = ReferenceId::HasComponent; 
-    //item.TypeDefinition = ObjectId::BaseDataVariableType; 
+    item.ReferenceTypeId = ReferenceId::HasComponent;
+    //item.TypeDefinition = ObjectId::BaseDataVariableType;
     MethodAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);

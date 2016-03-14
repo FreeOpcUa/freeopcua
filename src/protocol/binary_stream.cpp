@@ -33,12 +33,12 @@ namespace
         float       f;
         uint32_t    i;
     };
-     
+
     union v val;
-     
+
     val.f = value;
     val.i = htonl(val.i);
-                   
+
     return val.f;
   }
 
@@ -47,12 +47,12 @@ namespace
         float       f;
         uint32_t    i;
     };
-     
+
     union v val;
-     
+
     val.f = value;
     val.i = ntohl(val.i);
-                   
+
     return val.f;
   }
 
@@ -367,7 +367,7 @@ namespace OpcUa
     template<>
     void DataSerializer::Serialize<float>(const float& value)
     {
-      //float network_value = float_htonl(value); 
+      //float network_value = float_htonl(value);
       const uint8_t* data = reinterpret_cast<const uint8_t*>(&value);
       for (int i = 0; i < 4; ++i)
       {
@@ -378,7 +378,7 @@ namespace OpcUa
     template<>
     void DataDeserializer::Deserialize<float>(float& value)
     {
-      //float network_value = float_htonl(value); 
+      //float network_value = float_htonl(value);
       uint8_t data[4] = {0};
       for (int i = 0; i < 4; ++i)
       {

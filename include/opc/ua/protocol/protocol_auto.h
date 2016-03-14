@@ -1232,58 +1232,33 @@ namespace OpcUa
     };
 */
 
-/* DISABLED
-
     // A request to delete a node to the server address space.
     struct DeleteNodesItem 
     {
          OpcUa::NodeId NodeId;
          bool DeleteTargetReferences;
     };
-*/
-
-/* DISABLED
-
-    struct DeleteNodesParameters 
-    {
-         std::vector<OpcUa::DeleteNodesItem> NodesToDelete;
-    };
-*/
-
-/* DISABLED
 
     // Delete one or more nodes from the server address space.
     struct DeleteNodesRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         OpcUa::DeleteNodesParameters Parameters;
+         std::vector<OpcUa::DeleteNodesItem> NodesToDelete;
 
          DeleteNodesRequest();
     };
-*/
-
-/* DISABLED
-
-    struct DeleteNodesResult 
-    {
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
-    };
-*/
-
-/* DISABLED
 
     // Delete one or more nodes from the server address space.
     struct DeleteNodesResponse 
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
-         OpcUa::DeleteNodesResult Parameters;
+         std::vector<OpcUa::StatusCode> Results;
+         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
          DeleteNodesResponse();
     };
-*/
 
 /* DISABLED
 

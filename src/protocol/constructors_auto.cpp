@@ -196,21 +196,15 @@ namespace OpcUa
     }
 */
 
-/*  DISABLED
-
      DeleteNodesRequest::DeleteNodesRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      DeleteNodesResponse::DeleteNodesResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
 /*  DISABLED
 

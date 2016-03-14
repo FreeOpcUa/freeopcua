@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -50,13 +50,9 @@ namespace OpcUa
   void UserIdentifyToken::setPolicyId(const std::string &id)
   {
     int sz = id.length();
-    PolicyId.resize(sz + 4);
+    PolicyId.resize(sz);
     for(int i=0; i<sz; i++) {
-      PolicyId[i + 4] = id[i];
-    }
-    for(int i=0; i<4; i++) {
-      PolicyId[i] = (uint8_t)sz;
-      sz /= 256;
+      PolicyId[i] = id[i];
     }
   }
 
@@ -102,7 +98,7 @@ namespace OpcUa
     template<>
     std::size_t RawSize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
-      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId);
+      std::size_t ret = RawSize(token.Header) + RawSize(token.PolicyId) + RawSize(( uint32_t)0);
       if(token.type() == UserTokenType::UserName)
         ret += RawSize(token.UserName);
       return ret;
@@ -112,6 +108,7 @@ namespace OpcUa
     void DataSerializer::Serialize<UserIdentifyToken>(const UserIdentifyToken& token)
     {
       *this << token.Header;
+      *this << int32_t(RawSize(token)-RawSize(token.Header)-RawSize(( uint32_t)0));
       *this << token.PolicyId;
       if(token.type() == UserTokenType::UserName)
         *this << token.UserName;
@@ -121,6 +118,8 @@ namespace OpcUa
     void DataDeserializer::Deserialize<UserIdentifyToken>(UserIdentifyToken& token)
     {
       *this >> token.Header;
+      int32_t tmp;
+      *this >> tmp;
       *this >> token.PolicyId;
       if(token.type() == UserTokenType::UserName)
         *this >> token.UserName;

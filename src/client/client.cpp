@@ -47,8 +47,8 @@ namespace OpcUa
     {
       if (Debug)  { std::cout << "KeepAliveThread | Sleeping for: " << (int64_t) ( Period * 0.7 )<< std::endl; }
       std::unique_lock<std::mutex> lock(Mutex);
-      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) )); 
-      if (status == std::cv_status::no_timeout ) 
+      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds( (int64_t) ( Period * 0.7) ));
+      if (status == std::cv_status::no_timeout )
       {
         break;
       }
@@ -69,7 +69,7 @@ namespace OpcUa
       NodeToRead.GetValue();
     }
     Running = false;
-    if (Debug)  
+    if (Debug)
     {
       std::cout << "KeepAliveThread | Stopped" << std::endl;
     }
@@ -94,7 +94,7 @@ namespace OpcUa
   {
     const Common::Uri serverUri(endpoint);
     OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
-    
+
     OpcUa::SecureConnectionParams params;
     params.EndpointUrl = endpoint;
     params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
@@ -117,7 +117,7 @@ namespace OpcUa
     filter.ProfileUris.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     filter.LocaleIds.push_back("http://opcfoundation.org/UA-Profile/Transport/uatcp-uasc-uabinary");
     std::vector<EndpointDescription> endpoints =  Server->Endpoints()->GetEndpoints(filter);
-    
+
     return endpoints;
   }
 
@@ -165,7 +165,7 @@ namespace OpcUa
     endpointdesc.EndpointUrl = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     Connect(endpointdesc);
   }
-   
+
   void UaClient::Connect(const EndpointDescription& endpoint)
   {
     Endpoint = endpoint;
@@ -204,6 +204,7 @@ namespace OpcUa
       std::string user = uri.User();
       std::string password = uri.Password();
       bool user_identify_token_found = false;
+      session_parameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
       for(auto ep : response.Parameters.ServerEndpoints) {
         if(ep.SecurityMode == MessageSecurityMode::None) {
           for(auto token : ep.UserIdentityTokens) {
@@ -251,7 +252,7 @@ namespace OpcUa
     const OpenSecureChannelResponse& response = Server->OpenSecureChannel(channelparams);
 
     CheckStatusCode(response.Header.ServiceResult);
-    
+
     SecureChannelId = response.ChannelSecurityToken.SecureChannelId;
     if ( response.ChannelSecurityToken.RevisedLifetime > 0 )
     {
@@ -267,7 +268,7 @@ namespace OpcUa
   UaClient::~UaClient()
   {
     Disconnect();//Do not leave any thread or connectino running
-  } 
+  }
 
   void UaClient::Disconnect()
   {
@@ -308,7 +309,7 @@ namespace OpcUa
         return i;
       }
     }
-    throw(std::runtime_error("Error namespace uri does not exists in server")); 
+    throw(std::runtime_error("Error namespace uri does not exists in server"));
     //return -1;
   }
 
@@ -340,6 +341,47 @@ namespace OpcUa
   {
     if ( ! Server ) { throw std::runtime_error("Not connected");}
     return Node(Server, OpcUa::ObjectId::Server);
+  }
+
+  void UaClient::DeleteNodes(std::vector<OpcUa::Node>& nodes, bool recursive)
+  {
+    if (recursive)
+    {
+      std::vector<OpcUa::Node> children = AddChilds(nodes);
+      nodes.insert(nodes.end(), children.begin(), children.end());
+    }
+    if (Debug)  { std::cout << "UaClient | Deleting nodes ..." <<  std::endl; }
+    std::vector<OpcUa::DeleteNodesItem> nodesToDelete;
+    nodesToDelete.resize(nodes.size());
+    for (unsigned i = 0; i < nodes.size(); i++)
+    {
+      nodesToDelete[i].NodeId = nodes[i].GetId();
+      nodesToDelete[i].DeleteTargetReferences = true;
+    }
+
+    DeleteNodesResponse response = Server->DeleteNodes(nodesToDelete);
+    for (std::vector<OpcUa::StatusCode>::iterator it = response.Results.begin(); it < response.Results.end(); it++)
+    {
+      CheckStatusCode(*it);
+    }
+  }
+
+  std::vector<OpcUa::Node> UaClient::AddChilds(std::vector<OpcUa::Node> nodes)
+  {
+    std::vector<OpcUa::Node> results;
+    std::vector<OpcUa::Node> temp;
+    for (std::vector<OpcUa::Node>::iterator it = nodes.begin(); it < nodes.end(); it++)
+    {
+      temp.clear();
+      temp = it->GetChildren();
+      if (!temp.empty())
+      {
+        results.insert(results.begin(), temp.begin(), temp.end());
+        temp = AddChilds(temp);
+        results.insert(results.begin(), temp.begin(), temp.end());
+      }
+    }
+    return results;
   }
 
   std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler& callback)

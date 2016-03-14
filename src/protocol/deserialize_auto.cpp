@@ -1509,8 +1509,6 @@ namespace OpcUa
 
 */
 
-/*  DISABLED
-
     template<>
     void DataDeserializer::Deserialize<DeleteNodesItem>(DeleteNodesItem& data)
     {
@@ -1518,52 +1516,25 @@ namespace OpcUa
         *this >> data.DeleteTargetReferences;
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteNodesParameters>(DeleteNodesParameters& data)
-    {
-        DeserializeContainer(*this, data.NodesToDelete);
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<DeleteNodesRequest>(DeleteNodesRequest& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        DeserializeContainer(*this, data.NodesToDelete);
     }
 
-*/
-
-/*  DISABLED
-
-    template<>
-    void DataDeserializer::Deserialize<DeleteNodesResult>(DeleteNodesResult& data)
-    {
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
-
-*/
-
-/*  DISABLED
 
     template<>
     void DataDeserializer::Deserialize<DeleteNodesResponse>(DeleteNodesResponse& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        *this >> data.Parameters;
+        DeserializeContainer(*this, data.Results);
+        DeserializeContainer(*this, data.DiagnosticInfos);
     }
 
-*/
 
 /*  DISABLED
 
