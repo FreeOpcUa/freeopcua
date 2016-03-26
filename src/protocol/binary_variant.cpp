@@ -614,6 +614,12 @@ namespace OpcUa
 		  case VariantType::DATE_TIME:
 			  str << OpcUa::ToString(boost::any_cast<DateTime> (Value)); //As<DateTime>());
 			  break;
+		  case VariantType::STRING:
+			  str << boost::any_cast<std::string> (Value);
+			  break;
+		  case VariantType::BOOLEAN:
+			  str << ((boost::any_cast<bool> (Value)) ? "true" : "false");
+			  break;
 		  case VariantType::BYTE:
 			  str << boost::any_cast<unsigned char> (Value);
 			  break;
