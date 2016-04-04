@@ -405,6 +405,7 @@ if(BUILD_SERVER)
     if (BUILD_TESTING)
         add_executable(test_opcuaserver
             src/server/opcua_protocol_addon.cpp
+            src/serverapp/server_options.cpp
             tests/server/address_space_registry_test.h
             tests/server/address_space_ut.cpp
             tests/server/builtin_server.h
