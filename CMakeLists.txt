@@ -89,7 +89,7 @@ if(WIN32)
 
 else(WIN32)
     SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libtest_dynamic_addon.so")
-    SET(TEST_CORE_CONFIG_PATH " ${PROJECT_SOURCE_DIR}/tests/core/configs/")
+    SET(TEST_CORE_CONFIG_PATH "${PROJECT_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
 
 
