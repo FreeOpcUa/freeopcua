@@ -120,7 +120,7 @@ include_directories(
     )
 
 if(BUILD_TESTING)
-    set(TESTING_LIB "gtest gtest_main")
+    set(TEST_LIBS gtest_main)
     enable_testing()
     add_subdirectory(tests/gtest)
 endif(BUILD_TESTING)
