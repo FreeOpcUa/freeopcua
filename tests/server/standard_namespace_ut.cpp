@@ -75,8 +75,8 @@ protected:
   {
     ReadParameters params;
     ReadValueId id;
-    id.Node = object;
-    id.Attribute = attribute;
+    id.NodeId = object;
+    id.AttributeId = attribute;
     params.AttributesToRead.push_back(id);
     std::vector<DataValue> values = NameSpace->Read(params);
     return values.size() == 1 && values[0].Status == StatusCode::Good;
