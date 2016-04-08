@@ -255,7 +255,7 @@ namespace OpcUa
 
   Node Node::AddFolder(uint32_t namespaceIdx, const std::string& name) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), namespaceIdx);
+    NodeId nodeid = NumericNodeId(0);
     QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddFolder(nodeid, qn);
   }
@@ -295,7 +295,7 @@ namespace OpcUa
   Node Node::AddObject(uint32_t ns, const std::string& name) const
   {
     //FIXME: should default namespace be the onde from the parent of the browsename?
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
+    NodeId nodeid = NumericNodeId(0);
     QualifiedName qn = ToQualifiedName(name, ns);
     return AddObject(nodeid, qn);
   }
@@ -327,7 +327,7 @@ namespace OpcUa
 
   Node Node::AddVariable(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
+    NodeId nodeid = NumericNodeId(0);
     QualifiedName qn = ToQualifiedName(name, ns);
     return AddVariable(nodeid, qn, val);
   }
@@ -353,11 +353,11 @@ namespace OpcUa
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
-    attr.WriteMask = 0;
-    attr.UserWriteMask = 0;
+    attr.WriteMask = (uint32_t)OpenFileMode::Read;
+    attr.UserWriteMask = (uint32_t)OpenFileMode::Read;
     attr.Value = val;
     attr.Type = datatype;
-    attr.Rank  = 0;
+    attr.Rank  = -1;
     attr.Dimensions = val.Dimensions;
     attr.AccessLevel = VariableAccessLevel::CurrentRead;
     attr.UserAccessLevel = VariableAccessLevel::CurrentRead;
@@ -376,7 +376,7 @@ namespace OpcUa
 
   Node Node::AddProperty(uint32_t ns, const std::string& name, const Variant& val) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
+    NodeId nodeid = NumericNodeId(0);
     const QualifiedName& qname = ToQualifiedName(name, ns);
     return AddProperty(nodeid, qname, val);
   }
@@ -426,7 +426,7 @@ namespace OpcUa
 
   Node Node::AddMethod(uint32_t ns, const std::string& name,  std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
+    NodeId nodeid = NumericNodeId(0);
     QualifiedName qn = ToQualifiedName(name, ns);
     return AddVariable(nodeid, qn, method);
   }
