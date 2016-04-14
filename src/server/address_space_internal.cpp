@@ -454,9 +454,11 @@ namespace OpcUa
       AddNodesResult result;
       if (Debug) std::cout << "AddressSpaceInternal | address_space| Adding new node id='" << item.RequestedNewNodeId << "' name=" << item.BrowseName.Name << std::endl;
 
-      if (!Nodes.empty() && item.RequestedNewNodeId != ObjectId::Null && Nodes.find(item.RequestedNewNodeId) != Nodes.end())
+      const NodeId resultId = GetNewNodeId(item.RequestedNewNodeId);
+
+      if (!Nodes.empty() && resultId != ObjectId::Null && Nodes.find(resultId) != Nodes.end())
       {
-        std::cerr << "AddressSpaceInternal | Error: NodeId '"<< item.RequestedNewNodeId << "' allready exist: " << std::endl;
+        std::cerr << "AddressSpaceInternal | Error: NodeId '"<< resultId << "' allready exist: " << std::endl;
         result.Status = StatusCode::BadNodeIdExists;
         return result;
       }
@@ -473,7 +475,6 @@ namespace OpcUa
         }
       }
 
-      const NodeId resultId = GetNewNodeId(item.RequestedNewNodeId);
       NodeStruct nodestruct;
       //Add Common attributes
       nodestruct.Attributes[AttributeId::NodeId].Value = resultId;
@@ -565,18 +566,13 @@ namespace OpcUa
 
     NodeId AddressSpaceInMemory::GetNewNodeId(const NodeId& id)
     {
-      if (id == ObjectId::Null)
+      if (id == ObjectId::Null || id.IsNull())
       {
-        return OpcUa::NumericNodeId(++MaxNodeIdNum);
+        return OpcUa::NumericNodeId(++MaxNodeIdNum, DefaultIdx);
       }
 
       if (id.HasNullIdentifier())
       {
-        uint32_t idx = id.GetNamespaceIndex();
-        if (id.IsNull())
-        {
-          idx = DefaultIdx;
-        }
         return OpcUa::NumericNodeId(++MaxNodeIdNum, id.GetNamespaceIndex());
       }
 

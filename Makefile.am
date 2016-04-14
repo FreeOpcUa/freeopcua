@@ -1,7 +1,7 @@
 # Author: Alexander Rykovanov 2012
 #
 # Distributed under the GNU LGPL License
-# (See accompanying file LICENSE or copy at 
+# (See accompanying file LICENSE or copy at
 # http://www.gnu.org/copyleft/gpl.html)
 #
 # $Id:  $
@@ -22,7 +22,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 bin_PROGRAMS = opcuaserver opcua
 lib_LTLIBRARIES = libopcuaprotocol.la libopcuacore.la libopcuaserver.la libopcuaclient.la
 
-TESTS = test_opcuaserver test_opcuaprotocol common_gtest common_test  
+TESTS = test_opcuaserver test_opcuaprotocol common_gtest common_test
 TESTS_ENVIRONMENT = LD_LIBRARY_PATH=$(abs_top_builddir)
 
 check_PROGRAMS = $(TESTS)
@@ -82,7 +82,7 @@ serverinclude_HEADERS = \
 	include/opc/ua/server/services_registry.h \
   include/opc/ua/server/standard_address_space.h \
   include/opc/ua/server/subscription_service.h
-	
+
 addonsinclude_HEADERS = \
 	include/opc/ua/server/addons/asio_addon.h \
 	include/opc/ua/server/addons/address_space.h \
@@ -164,7 +164,7 @@ opcuaserver_SOURCES = \
 
 opcuaserver_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
 opcuaserver_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 -DCONFIG_PATH=\"$(sysconfdir)/opcua/server\"
-opcuaserver_LDFLAGS = -ldl -lpthread -lboost_filesystem -lboost_program_options -lboost_system -Wl,--no-undefined 
+opcuaserver_LDFLAGS = -ldl -lpthread -lboost_filesystem -lboost_program_options -lboost_system -Wl,--no-undefined
 
 
 test_opcuaserver_SOURCES = \
@@ -188,7 +188,7 @@ test_opcuaserver_SOURCES = \
 	tests/server/test_server_options.cpp \
 	src/serverapp/server_options.cpp \
 	src/serverapp/server_options.h
-#tests/server/standard_namespace_test.h \ #completely outdated 
+#tests/server/standard_namespace_test.h \ #completely outdated
 #tests/server/standard_namespace_ut.cpp \ #completely outdated
 
 # temporary disabled until new format is discussed.
@@ -281,7 +281,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/status_codes.cpp \
   src/protocol/string_utils.cpp \
   src/protocol/string_utils_statuscode_tostring.cpp \
-  src/protocol/constructors_auto.cpp 
+  src/protocol/constructors_auto.cpp
 
 
 libopcuaprotocol_la_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GCOV_FLAGS)
@@ -308,7 +308,7 @@ test_opcuaprotocol_SOURCES =  \
 
 test_opcuaprotocol_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2 $(GTEST_INCLUDES) $(GMOCK_INCLUDES) $(GCOV_FLAGS)
 test_opcuaprotocol_LDADD = libopcuaprotocol.la
-test_opcuaprotocol_LDFLAGS = -ldl -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GCOV_LIBS) -lpthread 
+test_opcuaprotocol_LDFLAGS = -ldl -lpthread -Wl,-z,defs $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GCOV_LIBS) -lpthread
 
 
 ###########################################################
@@ -341,7 +341,6 @@ common_HEADERS = \
                   include/opc/common/exception.h \
                   include/opc/common/interface.h \
                   include/opc/common/modules.h \
-                  include/opc/common/object_id.h \
                   include/opc/common/thread.h \
                   include/opc/common/uri_facade.h
 
@@ -365,7 +364,6 @@ libopcuacore_la_SOURCES = \
                   src/core/common/addons_core/dynamic_library.h \
                   src/core/common/common_errors.cpp \
                   src/core/common/exception.cpp \
-                  src/core/common/object_id.cpp \
                   src/core/common/uri_facade_lin.cpp \
                   src/core/common/value.cpp \
                   src/core/event.cpp \
@@ -386,7 +384,7 @@ libopcuacore_la_LIBADD = libopcuaprotocol.la
 libopcuacore_la_LDFLAGS = -lpthread -ldl -lboost_thread -lboost_filesystem -lboost_system -lxml2 $(GCOV_LIBS) -Wl,--no-undefined
 
 test_dynamic_addon.o: tests/core/test_dynamic_addon.cpp
-	$(CC) -std=c++0x -I$(top_srcdir)/include -fPIC -g -c -Wall tests/core/test_dynamic_addon.cpp 
+	$(CC) -std=c++0x -I$(top_srcdir)/include -fPIC -g -c -Wall tests/core/test_dynamic_addon.cpp
 
 
 libtest_dynamic_addon.so: test_dynamic_addon.o
@@ -461,7 +459,7 @@ example_client_SOURCES = \
 
 example_client_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_client_LDADD = libopcuaclient.la libopcuaprotocol.la libopcuacore.la
-example_client_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
+example_client_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 
 noinst_PROGRAMS += example_server
 example_server_SOURCES = \
@@ -469,7 +467,7 @@ example_server_SOURCES = \
 
 example_server_CPPFLAGS = -I$(top_srcdir)/include -I/usr/include/libxml2
 example_server_LDADD = libopcuaserver.la libopcuaprotocol.la libopcuacore.la
-example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system 
+example_server_LDFLAGS = -ldl -lpthread -lxml2 -lboost_system
 
 
 
@@ -531,14 +529,14 @@ tests/gtest/lib/.libs/libgmock.a:
 
 tests/gtest/lib/.libs/libgtest.a:
 	$(MAKE) -C $(top_srcdir)/tests/gtest
- 
+
 distclean-local:
 	$(MAKE) -C $(top_srcdir)/tests/gmock distclean
 	$(MAKE) -C $(top_srcdir)/tests/gtest distclean
- 
+
 
 if ENABLE_PYTHON
 python-dist:
 	$(MAKE) -C $(top_srcdir)/python python-dist
 endif
- 
+
