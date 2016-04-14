@@ -47,7 +47,7 @@ namespace OpcUa
     };
 
     typedef std::map<uint32_t, NodeAttribute> ClientIdToAttributeMapType;
-    
+
     struct DataChangeCallbackData
     {
       std::function<Server::DataChangeCallback> Callback;
@@ -65,7 +65,7 @@ namespace OpcUa
     };
 
     typedef std::map<AttributeId, AttributeValue> AttributesMap;
-    
+
     //Store all data related to a Node
     struct NodeStruct
     {
@@ -129,7 +129,8 @@ namespace OpcUa
         mutable boost::shared_mutex DbMutex;
         NodesMap Nodes;
         ClientIdToAttributeMapType ClientIdToAttributeMap; //Use to find callback using callback subcsriptionid
-        uint32_t MaxNodeIdNum = 0;
+        uint32_t MaxNodeIdNum = 2000;
+        uint32_t DefaultIdx = 2;
         std::atomic<uint32_t> DataChangeCallbackHandle;
     };
   }

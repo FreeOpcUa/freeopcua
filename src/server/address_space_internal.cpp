@@ -16,7 +16,7 @@ namespace OpcUa
   namespace Internal
   {
     typedef std::map <IntegerId, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
-    
+
     //store subscription for one attribute
     struct AttSubscription
     {
@@ -570,13 +570,14 @@ namespace OpcUa
         return OpcUa::NumericNodeId(++MaxNodeIdNum);
       }
 
-      if (id.GetNamespaceIndex() == 0)
+      if (id.HasNullIdentifier())
       {
-        const uint32_t number = id.GetIntegerIdentifier();
-        if (MaxNodeIdNum < number)
+        uint32_t idx = id.GetNamespaceIndex();
+        if (id.IsNull())
         {
-          MaxNodeIdNum = number;
+          idx = DefaultIdx;
         }
+        return OpcUa::NumericNodeId(++MaxNodeIdNum, id.GetNamespaceIndex());
       }
 
       return id;

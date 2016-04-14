@@ -21,7 +21,6 @@
 
 #include <boost/chrono.hpp>
 #include <opc/ua/node.h>
-#include <opc/common/object_id.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <functional>
 
@@ -67,7 +66,7 @@ namespace OpcUa
         UpdateTime();
       });
       //Set many values in address space which are expected by clients
-      std::vector<std::string> uris; 
+      std::vector<std::string> uris;
       uris.push_back("http://opcfoundation.org/UA/");
       uris.push_back("http://freeopcua.github.io");
       Node node = Node(Server, ObjectId::Server_NamespaceArray);
