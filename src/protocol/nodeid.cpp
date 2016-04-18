@@ -232,7 +232,7 @@ namespace OpcUa
     node.CopyNodeId(*this);
 
     return node;
-  } 
+  }
 
   NodeId& NodeId::operator=(const NodeId& node)
   {
@@ -336,6 +336,70 @@ namespace OpcUa
   NodeIdEncoding NodeId::GetEncodingValue() const
   {
     return static_cast<NodeIdEncoding>(Encoding & EV_VALUE_MASK);
+  }
+
+  bool NodeId::IsNull() const
+  {
+    switch (GetEncodingValue())
+    {
+      case EV_FOUR_BYTE:
+        if (FourByteData.NamespaceIndex != 0)
+          return false;
+        break;
+      case EV_NUMERIC:
+        if (NumericData.NamespaceIndex != 0)
+          return false;
+        break;
+      case EV_STRING:
+        if (StringData.NamespaceIndex != 0)
+          return false;
+        break;
+      case EV_GUId:
+        if (GuidData.NamespaceIndex != 0)
+          return false;
+        break;
+      case EV_BYTE_STRING:
+        if (BinaryData.NamespaceIndex != 0)
+          return false;
+        break;
+      default:
+      {
+        throw std::logic_error("Invalid Node Id encoding value.");
+      }
+    }
+    return HasNullIdentifier();
+  }
+
+  bool NodeId::HasNullIdentifier() const
+  {
+    switch (GetEncodingValue())
+    {
+      case EV_FOUR_BYTE:
+        if (FourByteData.Identifier != 0)
+          return false;
+        break;
+      case EV_NUMERIC:
+        if (NumericData.Identifier != 0)
+          return false;
+        break;
+      case EV_STRING:
+        if (not StringData.Identifier.empty())
+          return false;
+        break;
+      case EV_GUId:
+        if (not (GuidData.Identifier == Guid()))
+          return false;
+        break;
+      case EV_BYTE_STRING:
+        if (not BinaryData.Identifier.empty())
+          return false;
+        break;
+      default:
+      {
+        throw std::logic_error("Invalid Node Id encoding value.");
+      }
+    }
+    return true;
   }
 
   bool NodeId::HasNamespaceURI() const

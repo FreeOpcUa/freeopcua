@@ -131,8 +131,8 @@ namespace OpcUa
 
     NodeId& operator= (const NodeId& node);
     NodeId& operator= (const ExpandedNodeId& node);
-    
-    explicit operator ExpandedNodeId(); 
+
+    explicit operator ExpandedNodeId();
 
     NodeId& operator= (MessageId messageId)
     {
@@ -173,6 +173,8 @@ namespace OpcUa
     bool operator< (const NodeId& node) const;
 
     NodeIdEncoding GetEncodingValue() const;
+    bool IsNull() const;
+    bool HasNullIdentifier() const;
     bool HasNamespaceURI() const;
     bool HasServerIndex() const;
 

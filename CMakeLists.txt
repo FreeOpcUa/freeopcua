@@ -57,7 +57,7 @@ if(MSVC)
     SET(EXECUTABLE_CXX_FLAGS /MDd  CACHE STRING "")
     SET(DYNAMIC_LIBRARY_CXX_FLAGS /MDd  CACHE STRING "")
     SET(D  /D)
-        
+
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
 else(MSVC)
@@ -67,7 +67,7 @@ else(MSVC)
     SET(EXECUTABLE_CXX_FLAGS)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS)
     SET(D -D)
-    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ") 
+    set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC ")
     SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
     #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 endif()
@@ -93,11 +93,11 @@ else(WIN32)
     SET(OS_SUFFIX _lin)
 
 
-    find_package(LibXml2 REQUIRED) 
+    find_package(LibXml2 REQUIRED)
     message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
     include_directories( ${LIBXML2_INCLUDE_DIR} )
-    
-    #FIXME: remove that variable and link directly when necessary!!!! 
+
+    #FIXME: remove that variable and link directly when necessary!!!!
     SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${LIBXML2_LIBRARIES})
 
 endif(WIN32)
@@ -207,14 +207,14 @@ if (BUILD_TESTING)
 
     target_compile_options(test_opcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
-    add_test(NAME opcuaprotocol COMMAND test_opcuaprotocol) 
+    add_test(NAME opcuaprotocol COMMAND test_opcuaprotocol)
 endif()
 
 ############################################################################
 # core library
 ############################################################################
 
-SET(opcuacore_SOURCES 
+SET(opcuacore_SOURCES
     src/core/common/addons_core/addon_manager.cpp
     src/core/common/addons_core/config_file.cpp
     src/core/common/addons_core/dynamic_library${OS_SUFFIX}.cpp
@@ -223,7 +223,6 @@ SET(opcuacore_SOURCES
     src/core/common/addons_core/errors_addon_manager.cpp
     src/core/common/common_errors.cpp
     src/core/common/exception.cpp
-    src/core/common/object_id.cpp
     src/core/common/thread.cpp
     src/core/common/uri_facade${OS_SUFFIX}.cpp
     src/core/common/value.cpp
@@ -261,7 +260,7 @@ if (BUILD_TESTING)
     target_link_libraries(test_dynamic_addon
         opcuacore
     )
-  
+
 
 
     add_executable(test_opcuacore
@@ -281,7 +280,7 @@ if (BUILD_TESTING)
 
     target_compile_options(test_opcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
 
-    add_test(NAME opcuacore COMMAND test_opcuacore) 
+    add_test(NAME opcuacore COMMAND test_opcuacore)
 
 endif(BUILD_TESTING)
 
@@ -299,9 +298,9 @@ if (BUILD_CLIENT)
     )
 
     target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
-    target_link_libraries(opcuaclient 
-        opcuacore 
-        ${ADDITIONAL_LINK_LIBRARIES} 
+    target_link_libraries(opcuaclient
+        opcuacore
+        ${ADDITIONAL_LINK_LIBRARIES}
 	${Boost_PROGRAMOPTIONS_LIBRARY}
         )
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
@@ -330,7 +329,7 @@ if (BUILD_CLIENT)
     src/clientapp/opcua_options_attribute_ids.h
     src/clientapp/opcua_options.h
     )
-    
+
 
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
@@ -348,7 +347,7 @@ endif(BUILD_CLIENT)
 ############################################################################
 
 if(BUILD_SERVER)
-    
+
     #FOREACH(PART 3 4 5 8 9 10 11 13)
     #ADD_CUSTOM_COMMAND(
     #OUTPUT ${PROJECT_SOURCE_DIR}/src/server/standard_address_space_part${PART}.cpp
@@ -401,7 +400,7 @@ if(BUILD_SERVER)
     #  src/server/xml_address_space_loader.cpp
     #  src/server/xml_address_space_loader.h
     #  src/server/xml_processor.h
-    
+
     if (BUILD_TESTING)
         add_executable(test_opcuaserver
             src/server/opcua_protocol_addon.cpp
@@ -432,7 +431,7 @@ if(BUILD_SERVER)
 
         #  tests/server/xml_addressspace_ut.cpp
         #  tests/server/xml_address_space_addon_ut.cpp
-        
+
         target_link_libraries(test_opcuaserver
             ${ADDITIONAL_LINK_LIBRARIES}
             opcuaclient
@@ -441,7 +440,7 @@ if(BUILD_SERVER)
             opcuaserver
             ${TEST_LIBS}
             )
-        
+
         target_include_directories(test_opcuaserver PUBLIC .)
         target_compile_options(test_opcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
 
@@ -519,7 +518,7 @@ if(BUILD_SERVER)
 endif(BUILD_SERVER)
 
 ############################################################################
-#python binding 
+#python binding
 ############################################################################
 
 if (BUILD_PYTHON)

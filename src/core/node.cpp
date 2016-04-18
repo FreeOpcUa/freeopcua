@@ -22,7 +22,6 @@
 
 #include <opc/ua/node.h>
 
-#include <opc/common/object_id.h>
 #include <opc/ua/protocol/node_management.h>
 #include <opc/ua/protocol/strings.h>
 #include <opc/ua/protocol/string_utils.h>
@@ -204,11 +203,11 @@ namespace OpcUa
   Node Node::GetChild(const std::vector<std::string>& path) const
   {
     std::vector<QualifiedName> vec;
-    uint16_t ns = Id.GetNamespaceIndex();
+    uint16_t namespaceIdx = Id.GetNamespaceIndex();
     for (std::string str: path)
     {
-      QualifiedName qname = ToQualifiedName(str, ns);
-      ns = qname.NamespaceIndex;
+      QualifiedName qname = ToQualifiedName(str, namespaceIdx);
+      namespaceIdx = qname.NamespaceIndex;
       vec.push_back(qname);
     }
     return GetChild(vec);
@@ -255,7 +254,7 @@ namespace OpcUa
 
   Node Node::AddFolder(uint32_t namespaceIdx, const std::string& name) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), namespaceIdx);
+    NodeId nodeid = NumericNodeId(0, namespaceIdx);
     QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddFolder(nodeid, qn);
   }
@@ -292,11 +291,11 @@ namespace OpcUa
      return AddObject(node, qn);
    }
 
-  Node Node::AddObject(uint32_t ns, const std::string& name) const
+  Node Node::AddObject(uint32_t namespaceIdx, const std::string& name) const
   {
     //FIXME: should default namespace be the onde from the parent of the browsename?
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
-    QualifiedName qn = ToQualifiedName(name, ns);
+    NodeId nodeid = NumericNodeId(0, namespaceIdx);
+    QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddObject(nodeid, qn);
   }
 
@@ -325,10 +324,10 @@ namespace OpcUa
     return Node(Server, res.AddedNodeId);
   }
 
-  Node Node::AddVariable(uint32_t ns, const std::string& name, const Variant& val) const
+  Node Node::AddVariable(uint32_t namespaceIdx, const std::string& name, const Variant& val) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
-    QualifiedName qn = ToQualifiedName(name, ns);
+    NodeId nodeid = NumericNodeId(0, namespaceIdx);
+    QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddVariable(nodeid, qn, val);
   }
 
@@ -353,11 +352,11 @@ namespace OpcUa
     VariableAttributes attr;
     attr.DisplayName = LocalizedText(browsename.Name);
     attr.Description = LocalizedText(browsename.Name);
-    attr.WriteMask = 0;
-    attr.UserWriteMask = 0;
+    attr.WriteMask = (uint32_t)OpenFileMode::Read;
+    attr.UserWriteMask = (uint32_t)OpenFileMode::Read;
     attr.Value = val;
     attr.Type = datatype;
-    attr.Rank  = 0;
+    attr.Rank  = -1;
     attr.Dimensions = val.Dimensions;
     attr.AccessLevel = VariableAccessLevel::CurrentRead;
     attr.UserAccessLevel = VariableAccessLevel::CurrentRead;
@@ -374,10 +373,10 @@ namespace OpcUa
   }
 
 
-  Node Node::AddProperty(uint32_t ns, const std::string& name, const Variant& val) const
+  Node Node::AddProperty(uint32_t namespaceIdx, const std::string& name, const Variant& val) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
-    const QualifiedName& qname = ToQualifiedName(name, ns);
+    NodeId nodeid = NumericNodeId(0, namespaceIdx);
+    const QualifiedName& qname = ToQualifiedName(name, namespaceIdx);
     return AddProperty(nodeid, qname, val);
   }
 
@@ -424,10 +423,10 @@ namespace OpcUa
 
   }
 
-  Node Node::AddMethod(uint32_t ns, const std::string& name,  std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  Node Node::AddMethod(uint32_t namespaceIdx, const std::string& name,  std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
   {
-    NodeId nodeid = NumericNodeId(Common::GenerateNewId(), ns);
-    QualifiedName qn = ToQualifiedName(name, ns);
+    NodeId nodeid = NumericNodeId(0, namespaceIdx);
+    QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddVariable(nodeid, qn, method);
   }
 
