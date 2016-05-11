@@ -165,15 +165,11 @@ namespace OpcUa
     
     //force the use of the enpoint the user wants, seems like servers often send wrong hostname
     //if there is a username:password in endpoint it has to be removed
-    std::size_t begin = endpoint.find("//");
-    std::size_t end = endpoint.rfind("@");
-    if (begin < end) 
+    std::size_t begin = endpointdesc.EndpointUrl.find("//");
+    std::size_t end = endpointdesc.EndpointUrl.rfind("@");
+    if (begin < end)
     {
-      endpointdesc.EndpointUrl = endpoint.replace(begin+2, end - begin - 1, "");
-    }  
-    else 
-    {
-      endpointdesc.EndpointUrl = endpoint; 
+      endpointdesc.EndpointUrl.replace(begin+2, end - begin - 1, "");
     }
     Connect(endpointdesc);
   }
