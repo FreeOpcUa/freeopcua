@@ -162,7 +162,19 @@ namespace OpcUa
   void UaClient::Connect(const std::string& endpoint)
   {
     EndpointDescription endpointdesc = SelectEndpoint(endpoint);
-    endpointdesc.EndpointUrl = endpoint; //force the use of the enpoint the user wants, seems like servers often send wrong hostname
+    
+    //force the use of the enpoint the user wants, seems like servers often send wrong hostname
+    //if there is a username:password in endpoint it has to be removed
+    std::size_t begin = endpoint.find("//");
+    std::size_t end = endpoint.rfind("@");
+    if (begin < end) 
+    {
+      endpointdesc.EndpointUrl = endpoint.replace(begin+2, end - begin - 1, "");
+    }  
+    else 
+    {
+      endpointdesc.EndpointUrl = endpoint; 
+    }
     Connect(endpointdesc);
   }
 
