@@ -96,7 +96,9 @@ namespace
 
     T WaitForData(std::chrono::milliseconds msec)
     {
-      doneEvent.wait_for(lock, msec);
+	  if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
+		  throw std::exception("Response timed out");
+
       T result;
 	  result.Header = std::move(this->header);
       if ( Data.empty() )
@@ -518,6 +520,7 @@ namespace
 					catch (const std::exception& ex)
 					{
 						std::cout << "Error calling application callback " << ex.what() << std::endl;
+						throw ex;
 					}
 				}
 			}
@@ -737,7 +740,19 @@ private:
 
       Send(request);
 
+	  Response res;
+	  try {
       return requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
+	  }
+	  catch (std::exception &ex)
+	  {
+		  //Remove the callback on timeout
+		  std::unique_lock<std::mutex> lock(Mutex);
+		  Callbacks.erase(request.Header.RequestHandle);
+		  lock.unlock();
+	  }
+
+	  return res;
     }
 
     // Prevent multiple threads from sending parts of different packets at the same time.
