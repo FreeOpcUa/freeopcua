@@ -97,7 +97,7 @@ namespace
     T WaitForData(std::chrono::milliseconds msec)
     {
 	  if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
-		  throw std::exception("Response timed out");
+		  throw std::runtime_error("Response timed out");
 
       T result;
 	  result.Header = std::move(this->header);
