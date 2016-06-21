@@ -520,7 +520,6 @@ namespace
 					catch (const std::exception& ex)
 					{
 						std::cout << "Error calling application callback " << ex.what() << std::endl;
-						throw ex;
 					}
 				}
 			}
