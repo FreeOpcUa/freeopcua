@@ -741,7 +741,7 @@ private:
 
 	  Response res;
 	  try {
-      return requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
+      res = requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
 	  }
 	  catch (std::exception &ex)
 	  {
