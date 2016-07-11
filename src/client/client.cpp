@@ -87,6 +87,7 @@ namespace OpcUa
     catch (std::system_error ex)
     {
       if (Debug) { std::cout << "KeepaliveThread | Exception thrown at attempt to join: " << ex.what() << std::endl; }
+	  throw ex;
     }
   }
 
