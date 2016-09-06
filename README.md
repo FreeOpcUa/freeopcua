@@ -113,7 +113,7 @@ example_server.exe
 #### Docker
 
 ```
-docker build -f docker/Dockerfile .
+docker build .
 ```
 
 ## Developement
