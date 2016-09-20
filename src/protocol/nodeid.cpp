@@ -383,15 +383,15 @@ namespace OpcUa
           return false;
         break;
       case EV_STRING:
-        if (not StringData.Identifier.empty())
+        if (! StringData.Identifier.empty())
           return false;
         break;
       case EV_GUId:
-        if (not (GuidData.Identifier == Guid()))
+        if (! (GuidData.Identifier == Guid()))
           return false;
         break;
       case EV_BYTE_STRING:
-        if (not BinaryData.Identifier.empty())
+        if (! BinaryData.Identifier.empty())
           return false;
         break;
       default:
