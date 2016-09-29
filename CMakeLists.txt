@@ -110,12 +110,12 @@ message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIRS})
 
 SET(TEST_INCLUDES, "")
 IF(BUILD_TESTING)
-	SET(TEST_INCLUDES ${PROJECT_SOURCE_DIR}/tests/gtest/include ${PROJECT_SOURCE_DIR}/tests/gmock/include)
+    SET(TEST_INCLUDES ${PROJECT_SOURCE_DIR}/tests/gtest/include ${PROJECT_SOURCE_DIR}/tests/gmock/include)
 ENDIF(BUILD_TESTING)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
-	${TEST_INCLUDES}
+    ${TEST_INCLUDES}
     ${ADDITIONAL_INCLUDES}
     )
 
@@ -301,7 +301,7 @@ if (BUILD_CLIENT)
     target_link_libraries(opcuaclient
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
-	${Boost_PROGRAMOPTIONS_LIBRARY}
+        ${Boost_PROGRAMOPTIONS_LIBRARY}
         )
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaclient EXPORT FreeOpcUa
@@ -333,7 +333,7 @@ if (BUILD_CLIENT)
 
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
-	${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
         opcuaprotocol
         opcuacore
     )
@@ -468,7 +468,7 @@ if(BUILD_SERVER)
         opcuaprotocol
         opcuacore
         opcuaserver
-	${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
         )
     target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
 
@@ -522,7 +522,7 @@ endif(BUILD_SERVER)
 ############################################################################
 
 if (BUILD_PYTHON)
-    add_subdirectory (python)
+    add_subdirectory(python)
 endif (BUILD_PYTHON)
 
 install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
