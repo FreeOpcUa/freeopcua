@@ -50,7 +50,7 @@ namespace
     {
     }
 
-    virtual ~AddonsManagerImpl()
+    virtual ~AddonsManagerImpl() noexcept (false)
     {
       try
       {
