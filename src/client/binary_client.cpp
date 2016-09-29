@@ -219,7 +219,8 @@ namespace
         }
         catch (const std::exception& exc)
         {
-          if (Debug)  { std::cerr << "binary_client| CallbackThread : Error receiving data: "; }
+          if (Finished) return;
+          if (Debug)  { std::cerr << "binary_client| ReceiveThread : Error receiving data: "; }
           std::cerr << exc.what() << std::endl;
         }
       }));
@@ -237,7 +238,7 @@ namespace
       Channel->Stop();
       if (Debug) std::cout << "binary_client| Joining receive thread." << std::endl;
       ReceiveThread.join();
-      if (Debug) std::cout << "binary_client| Receive tread stopped." << std::endl;
+      if (Debug) std::cout << "binary_client| Receive thread stopped." << std::endl;
 
       if (Debug) std::cout << "binary_client| Destroyed." << std::endl;
     }
