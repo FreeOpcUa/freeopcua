@@ -56,7 +56,11 @@ class CodeGenerator(object):
 
     def run(self):
         sys.stderr.write("Generating C++ {} for XML file {}".format(self.output_path, self.input_path) + "\n")
-        self.output_file = open(self.output_path, "w")
+        if sys.version_info < (3,):
+          import codecs
+          self.output_file = codecs.open(self.output_path, 'w', 'utf-8')
+        else:
+          self.output_file = open(self.output_path, "w")
         self.make_header()
         tree = ET.parse(xmlpath)
         root = tree.getroot()
@@ -188,7 +192,7 @@ namespace OpcUa
                             obj.value.append('+{}'.format(mytext))
                         else:
                             def batch_gen(data, batch_size):
-                                for i in xrange(0, len(data), batch_size):
+                                for i in range(0, len(data), batch_size):
                                     yield data[i:i+batch_size]
                             mytext = '({}).c_str()'.format(
                                 ' +\n'.join(
@@ -335,7 +339,7 @@ namespace OpcUa
         self.writecode(indent, "{")
         self.make_node_code(obj, indent)
         self.writecode(indent, 'DataTypeAttributes attrs;')
-        if obj.desc: self.writecode(indent, u'attrs.Description = LocalizedText("{}");'.format(obj.desc.encode('ascii', 'replace')))
+        if obj.desc: self.writecode(indent, u'attrs.Description = LocalizedText("{}");'.format(obj.desc))
         self.writecode(indent, 'attrs.DisplayName = LocalizedText("{}");'.format(obj.displayname))
         if obj.abstract: self.writecode(indent, 'attrs.IsAbstract = {};'.format(obj.abstract))
         self.writecode(indent, 'node.Attributes = attrs;')

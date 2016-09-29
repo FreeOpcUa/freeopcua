@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+
 from __future__ import print_function
 
 # https://opcfoundation.org/UA/schemas/OPC%20UA%20Schema%20Files%20Readme.xls
@@ -13,7 +13,7 @@ resources = [
   'https://opcfoundation.org/UA/schemas/1.02/SecuredApplication.xsd',
 
   'https://opcfoundation.org/UA/schemas/1.02/UANodeSet.xsd',
-  'https://opcfoundation.org/UA/schemas/1.02/UAVariant.xsd',
+  'https://opcfoundation.org/UA/schemas/1.02/UAVariant.xsd', # gone
   'https://opcfoundation.org/UA/schemas/1.02/Opc.Ua.NodeSet2.xml',
   'https://opcfoundation.org/UA/schemas/1.02/Opc.Ua.NodeSet2.Part3.xml',
   'https://opcfoundation.org/UA/schemas/1.02/Opc.Ua.NodeSet2.Part4.xml',
@@ -40,12 +40,12 @@ import os
 
 try:
   from urllib.request import urlopen
-  from urllib.parse import urlparse
   from urllib.request import build_opener
+  from urllib.parse import urlparse
 except ImportError:
-  from urlparse import urlparse
   from urllib import urlopen
   from urllib2 import build_opener
+  from urlparse import urlparse
 
 opener = build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
