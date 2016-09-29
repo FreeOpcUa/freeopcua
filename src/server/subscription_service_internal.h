@@ -76,17 +76,3 @@ namespace OpcUa
 
 }
 
-namespace 
-{
-  OpcUa::ByteString GenerateEventId()
-  {
-    //stupid id generator
-    OpcUa::ByteString str;
-    for (int i = 0; i < 8; i++)
-      {
-        int32_t val = rand() % std::numeric_limits<int32_t>::max(); 
-        str.Data.push_back(val);
-      }
-    return str;
-  }
-}

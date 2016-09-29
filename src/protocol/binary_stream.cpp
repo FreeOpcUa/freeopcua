@@ -27,6 +27,9 @@
 namespace
 {
 
+  /*
+   * not used
+   *
   float float_htonl(float value){
     std::cout << "sizez: " << sizeof(float) << "  " << sizeof(uint32_t) << std::endl;
     union v {
@@ -55,7 +58,7 @@ namespace
 
     return val.f;
   }
-
+   */
 
   template <typename Integer16>
   inline int8_t LoByte(Integer16 value)
