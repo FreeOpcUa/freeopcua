@@ -173,7 +173,7 @@ namespace OpcUa
         node.ParentNodeId = ToNodeId("i=27");
         node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?32,768 and 32,767.");
+        attrs.Description = LocalizedText("Describes a value that is an integer between −32,768 and 32,767.");
         attrs.DisplayName = LocalizedText("Int16");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
@@ -203,7 +203,7 @@ namespace OpcUa
         node.ParentNodeId = ToNodeId("i=27");
         node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?2,147,483,648  and 2,147,483,647.");
+        attrs.Description = LocalizedText("Describes a value that is an integer between −2,147,483,648  and 2,147,483,647.");
         attrs.DisplayName = LocalizedText("Int32");
         attrs.IsAbstract = false;
         node.Attributes = attrs;
@@ -233,7 +233,7 @@ namespace OpcUa
         node.ParentNodeId = ToNodeId("i=27");
         node.ReferenceTypeId = ReferenceId::HasSubtype;
         DataTypeAttributes attrs;
-        attrs.Description = LocalizedText("Describes a value that is an integer between ?9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.");
+        attrs.Description = LocalizedText("Describes a value that is an integer between −9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.");
         attrs.DisplayName = LocalizedText("Int64");
         attrs.IsAbstract = false;
         node.Attributes = attrs;

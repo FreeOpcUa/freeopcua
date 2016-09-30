@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 schema_files = dict(
   object_ids = 'NodeIds.csv',
@@ -263,7 +262,7 @@ if __name__ == '__main__':
   if len(sys.argv) != 3: usage()
   target, what = sys.argv[1:]
   if target not in ('cxx','py',): usage()
-  if what not in (schema_files.keys()): usage()
+  if what not in schema_files.keys(): usage()
   call='{0}_{1}'.format(target,what)
   try:
     relpath = os.path.dirname(__file__)

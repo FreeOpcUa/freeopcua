@@ -1,0 +1,14 @@
+#! /bin/sh
+
+PYTHON=python3
+
+${PYTHON} download.py
+${PYTHON} codegen.py cxx object_ids > ../include/opc/ua/protocol/object_ids.h
+${PYTHON} codegen.py cxx status_codes > ../include/opc/ua/protocol/status_codes.h
+${PYTHON} codegen.py cxx status_codes_tostring > ../src/protocol/string_utils_statuscode_tostring.cpp
+${PYTHON} codegen.py cxx attribute_ids > ../include/opc/ua/protocol/attribute_ids.h
+${PYTHON} codegen.py cxx attribute_ids_getoptionvalue > ../src/clientapp/opcua_options_attribute_ids.h
+for part in 3 4 5 8 9 10 11 13; do
+  ${PYTHON} generate_address_space.py Opc.Ua.NodeSet2.Part${part}.xml ../src/server/standard_address_space_part${part}.cpp
+done
+
