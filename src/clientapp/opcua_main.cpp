@@ -95,7 +95,7 @@ namespace
       default:
         return "unknown";
     }
-  };
+  }
 
   std::string GetNodeClassName(unsigned cls)
   {
@@ -257,7 +257,7 @@ namespace
     std::cout << tabs << "IssuedTokenType: " << policy.IssuedTokenType  << std::endl;
     std::cout << tabs << "IssuerEndpointUrl: " << policy.IssuerEndpointUrl << std::endl;
     std::cout << tabs << "SecurityPolicyUri: " << policy.SecurityPolicyUri << std::endl;
-  };
+  }
 
 
   void Print(const OpcUa::ApplicationDescription& desc, const Tabs& tab)

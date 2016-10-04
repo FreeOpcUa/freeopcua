@@ -23,7 +23,7 @@ namespace
   class DynamicAddonFactory : public AddonFactory
   {
   public:
-    DEFINE_CLASS_POINTERS(DynamicAddonFactory);
+    DEFINE_CLASS_POINTERS(DynamicAddonFactory)
 
   public:
     DynamicAddonFactory(const std::string& modulePath);

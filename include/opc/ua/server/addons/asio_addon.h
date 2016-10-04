@@ -44,7 +44,7 @@ namespace OpcUa
     class AsioAddon : public Common::Addon
     {
     public:
-      DEFINE_CLASS_POINTERS(AsioAddon);
+      DEFINE_CLASS_POINTERS(AsioAddon)
 
     public:
       virtual boost::asio::io_service& GetIoService() = 0;

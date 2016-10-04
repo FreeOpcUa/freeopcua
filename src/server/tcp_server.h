@@ -33,7 +33,7 @@ namespace OpcUa
     class TcpServer : public Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(TcpServer);
+      DEFINE_CLASS_POINTERS(TcpServer)
 
       virtual void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) = 0;
       virtual void StopListen(const OpcUa::Server::TcpParameters& params) = 0;

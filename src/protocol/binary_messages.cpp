@@ -42,7 +42,7 @@ namespace OpcUa
     {
       Size += size;
       return Size;
-    };
+    }
 
 
     std::size_t Header::MessageSize() const
@@ -77,7 +77,7 @@ namespace OpcUa
     {
       Size += size;
       return Size;
-    };
+    }
 
 
     std::size_t SecureHeader::MessageSize() const

@@ -24,7 +24,7 @@ namespace OpcUa
   class ViewServices : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(ViewServices);
+    DEFINE_CLASS_POINTERS(ViewServices)
 
   public:
     virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const = 0;

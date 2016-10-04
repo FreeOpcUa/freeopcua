@@ -23,7 +23,7 @@ namespace OpcUa
   class SubscriptionServices : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(SubscriptionServices);
+    DEFINE_CLASS_POINTERS(SubscriptionServices)
 
     public:
       virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest&, std::function<void (PublishResult)> callbackPublish) = 0; 

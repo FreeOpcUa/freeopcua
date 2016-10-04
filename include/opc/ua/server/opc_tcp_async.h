@@ -38,7 +38,7 @@ namespace OpcUa
     class AsyncOpcTcp : private Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(AsyncOpcTcp);
+      DEFINE_CLASS_POINTERS(AsyncOpcTcp)
 
     public:
       struct Parameters

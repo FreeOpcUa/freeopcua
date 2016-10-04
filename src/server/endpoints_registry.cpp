@@ -25,7 +25,7 @@ namespace
   class EndpointServicesRegistry : public OpcUa::Server::EndpointsRegistry
   {
   public:
-    DEFINE_CLASS_POINTERS(EndpointServices);
+    DEFINE_CLASS_POINTERS(EndpointServices)
 
   public:
     virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const

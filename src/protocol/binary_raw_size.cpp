@@ -252,7 +252,7 @@ namespace OpcUa
       const std::size_t sizeofRequestLifeTime = 4;
 
       return sizeofTypeId + sizeofHeader + sizeofClientProtocolVersion + sizeofRequestType + sizeofSecurityMode + sizeofClientNonce + sizeofRequestLifeTime;
-    };
+    }
 
     template<>
     std::size_t RawSize<SymmetricAlgorithmHeader>(const SymmetricAlgorithmHeader& header)
@@ -335,7 +335,7 @@ namespace OpcUa
       const std::size_t sizeofRevisedLifetime = 4;
 
       return sizeofSecureChannelId + sizeofTokenId + sizeofCreatedAt + sizeofRevisedLifetime;
-    };
+    }
 
     template<>
     std::size_t RawSize<OpenSecureChannelResponse>(const OpenSecureChannelResponse& response)
@@ -347,7 +347,7 @@ namespace OpcUa
       const std::size_t sizeofServerNonce = 4 + response.ServerNonce.size();
 
       return sizeofTypeId + sizeofHeader + sizeofServerProtocolVersion + sizeofChannelSecurityToken + sizeofServerNonce;
-    };
+    }
 
     template<>
     std::size_t RawSize<CloseSecureChannelRequest>(const CloseSecureChannelRequest& request)
@@ -371,32 +371,32 @@ namespace OpcUa
         size += RawSize(text.Text);
       }
       return size;
-    };
+    }
 
 //     template<>
 //     std::size_t RawSize<SignatureData>(const SignatureData& s)
 //     {
 //       return RawSize(s.Signature) + RawSize(s.Algorithm);
-//     };
+//     }
 
     template<>
     std::size_t RawSize<ExtensionObjectHeader>(const ExtensionObjectHeader& header)
     {
       const std::size_t sizeofEncoding = 1;
       return RawSize(header.TypeId) + sizeofEncoding;
-    };
+    }
 
     template<>
     std::size_t RawSize<QualifiedName>(const QualifiedName& name)
     {
       return RawSize(name.NamespaceIndex) + RawSize(name.Name);
-    };
-    template<>
+    }
 
+    template<>
     std::size_t RawSize<IntegerId>(const IntegerId&)
     {
       return 4;
-    };
+    }
 
   }
 }

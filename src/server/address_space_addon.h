@@ -28,7 +28,7 @@ namespace OpcUa
       , public Server::AddressSpace
     {
     public:
-      DEFINE_CLASS_POINTERS(AddressSpaceAddon);
+      DEFINE_CLASS_POINTERS(AddressSpaceAddon)
 
     AddressSpaceAddon();
     virtual ~AddressSpaceAddon();

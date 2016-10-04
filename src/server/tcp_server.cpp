@@ -262,9 +262,9 @@ namespace
 
   private:
     const unsigned short Port;
-    std::shared_ptr<IncomingConnectionProcessor> Processor;
     volatile bool Stopped;
     volatile int Socket;
+    std::shared_ptr<IncomingConnectionProcessor> Processor;
     std::unique_ptr<Common::Thread> ServerThread;
     std::mutex ClientsMutex;
     std::map<int, std::shared_ptr<Client>> ClientThreads;
@@ -273,7 +273,7 @@ namespace
   class TcpServer : public OpcUa::Server::TcpServer
   {
   public:
-    DEFINE_CLASS_POINTERS(TcpServer);
+    DEFINE_CLASS_POINTERS(TcpServer)
 
     void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) override
     {

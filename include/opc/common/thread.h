@@ -33,7 +33,7 @@ namespace Common
   class Thread
   {
   public:
-    DEFINE_CLASS_POINTERS(Thread);
+    DEFINE_CLASS_POINTERS(Thread)
 
   public:
     /// @brief Starts f in a separate thread.

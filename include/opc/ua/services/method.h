@@ -23,7 +23,7 @@ namespace OpcUa
   class MethodServices : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(MethodServices);
+    DEFINE_CLASS_POINTERS(MethodServices)
 
   public:
     virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall) = 0;

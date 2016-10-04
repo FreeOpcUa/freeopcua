@@ -36,7 +36,7 @@ namespace Common
   class AddonsManager : private Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(AddonsManager);
+    DEFINE_CLASS_POINTERS(AddonsManager)
 
   public:
     /// @brief register new addon.
