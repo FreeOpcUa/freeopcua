@@ -27,7 +27,7 @@ namespace OpcUa
     class EndpointsRegistry : public OpcUa::EndpointServices
     {
     public:
-      DEFINE_CLASS_POINTERS(EndpointsRegistry);
+      DEFINE_CLASS_POINTERS(EndpointsRegistry)
 
     public:
       virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints) = 0;

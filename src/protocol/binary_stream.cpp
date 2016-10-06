@@ -909,7 +909,7 @@ namespace OpcUa
       *this >> header.SecurityPolicyUri;
       *this >> header.SenderCertificate;
       *this >> header.ReceiverCertificateThumbPrint;
-    };
+    }
 
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::SymmetricAlgorithmHeader>(const OpcUa::Binary::SymmetricAlgorithmHeader& header)
@@ -921,7 +921,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<OpcUa::Binary::SymmetricAlgorithmHeader>(OpcUa::Binary::SymmetricAlgorithmHeader& header)
     {
       *this >> header.TokenId;
-    };
+    }
 
 
     template<>
@@ -936,7 +936,7 @@ namespace OpcUa
     {
       *this >> header.SequenceNumber;
       *this >> header.RequestId;
-    };
+    }
 
 
     template<>
@@ -951,7 +951,7 @@ namespace OpcUa
     {
       *this >> header.TypeId;
       *this >> header.Encoding;
-    };
+    }
 
 
     template<>
@@ -976,7 +976,7 @@ namespace OpcUa
       *this >> header.AuditEntryId;
       *this >> header.Timeout; // in miliseconds
       *this >> header.Additional;
-    };
+    }
 
     template<>
     void DataSerializer::Serialize<DiagnosticInfoMask>(const DiagnosticInfoMask& value)
@@ -1062,8 +1062,8 @@ namespace OpcUa
         std::shared_ptr<DiagnosticInfo> tmp(new DiagnosticInfo);
         *this >> *tmp;
         info.InnerDiagnostics = tmp;
-      };
-    };
+      }
+    }
 
     template<>
     void DataSerializer::Serialize<OpcUa::DiagnosticInfoList>(const OpcUa::DiagnosticInfoList& infos)
@@ -1097,7 +1097,7 @@ namespace OpcUa
       *this >> header.InnerDiagnostics;
       DeserializeContainer(*this, header.StringTable);
       *this >> header.Additional;
-    };
+    }
 
 
     template<>
@@ -1130,7 +1130,7 @@ namespace OpcUa
 
       DeserializeContainer(*this, request.Parameters.ClientNonce);
       *this >> request.Parameters.RequestLifeTime;
-    };
+    }
 
 
     template<>
@@ -1149,7 +1149,7 @@ namespace OpcUa
       *this >> token.TokenId;
       *this >> token.CreatedAt;
       *this >> token.RevisedLifetime;
-    };
+    }
 
 
     template<>
@@ -1170,7 +1170,7 @@ namespace OpcUa
       *this >> response.ServerProtocolVersion;
       *this >> response.ChannelSecurityToken;
       DeserializeContainer(*this, response.ServerNonce);
-    };
+    }
 
     template<>
     void DataSerializer::Serialize<OpcUa::Binary::RawMessage>(const OpcUa::Binary::RawMessage& raw)
@@ -1182,7 +1182,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<OpcUa::Binary::RawBuffer>(OpcUa::Binary::RawBuffer& raw)
     {
       GetData(In, raw.Data, raw.Size);
-    };
+    }
 
     template<>
     void DataSerializer::Serialize<OpcUa::CloseSecureChannelRequest>(const OpcUa::CloseSecureChannelRequest& request)
@@ -1196,7 +1196,7 @@ namespace OpcUa
     {
       *this >> request.TypeId;
       *this >> request.Header;
-    };
+    }
 
     template<>
     void DataSerializer::Serialize<OpcUa::LocalizedText>(const OpcUa::LocalizedText& lt)
@@ -1224,7 +1224,7 @@ namespace OpcUa
       {
         *this >> lt.Text;
       }
-    };
+    }
 
 
     template<>

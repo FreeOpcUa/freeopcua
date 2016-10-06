@@ -20,7 +20,7 @@ namespace OpcUa
     class ServicesRegistry : private Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(ServicesRegistry);
+      DEFINE_CLASS_POINTERS(ServicesRegistry)
 
     public:
       virtual std::shared_ptr<OpcUa::Services> GetServer() const = 0;

@@ -51,7 +51,7 @@ namespace
   class OpcTcpServer : public OpcUa::Server::AsyncOpcTcp
   {
   public:
-    DEFINE_CLASS_POINTERS(OpcTcpServer);
+    DEFINE_CLASS_POINTERS(OpcTcpServer)
 
   public:
     OpcTcpServer(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& ioService);
@@ -79,7 +79,7 @@ namespace
   class OpcTcpConnection : public std::enable_shared_from_this<OpcTcpConnection>, private OpcUa::OutputChannel
   {
   public:
-    DEFINE_CLASS_POINTERS(OpcTcpConnection);
+    DEFINE_CLASS_POINTERS(OpcTcpConnection)
 
   public:
     OpcTcpConnection(tcp::socket socket, OpcTcpServer& tcpServer, Services::SharedPtr uaServer, bool debug);

@@ -98,5 +98,5 @@ inline AttributeId GetAttributeIdOptionValue(const po::variables_map& vm)
     }
 
     throw std::logic_error(std::string("Unknown AttributeId: ") + name);
-  };
+  }
 

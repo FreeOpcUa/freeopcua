@@ -22,7 +22,7 @@ namespace
   class StandardNamespaceAddon : public Common::Addon
   {
   public:
-    DEFINE_CLASS_POINTERS(StandardNamespaceAddon);
+    DEFINE_CLASS_POINTERS(StandardNamespaceAddon)
 
     void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
     {

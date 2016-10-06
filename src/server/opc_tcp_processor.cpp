@@ -155,7 +155,7 @@ namespace OpcUa
         std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Parameters.NotificationMessage.NotificationData.size() << " PublishResults" << std::endl;
       }
       OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
-    };
+    }
     
     void OpcTcpMessages::HelloClient(IStreamBinary& istream, OStreamBinary& ostream)
     {

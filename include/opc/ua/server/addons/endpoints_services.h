@@ -25,7 +25,7 @@ namespace OpcUa
     class EndpointsRegistryAddonFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(EndpointsRegistryAddonFactory);
+      DEFINE_CLASS_POINTERS(EndpointsRegistryAddonFactory)
 
     public:
       virtual Common::Addon::UniquePtr CreateAddon() override;

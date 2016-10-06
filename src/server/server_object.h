@@ -40,7 +40,7 @@ namespace OpcUa
     class ServerObject
     {
     public:
-      DEFINE_CLASS_POINTERS(ServerObject);
+      DEFINE_CLASS_POINTERS(ServerObject)
 
     public:
       ServerObject(Services::SharedPtr services, boost::asio::io_service& io, bool debug);

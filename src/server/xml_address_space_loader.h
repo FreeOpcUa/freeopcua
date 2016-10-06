@@ -25,7 +25,7 @@ namespace OpcUa
     class XmlAddressSpaceLoader : private Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader);
+      DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader)
 
     public:
       explicit XmlAddressSpaceLoader(OpcUa::NodeManagementServices& registry, bool debug = false);
@@ -46,7 +46,7 @@ namespace OpcUa
     class XmlAddressSpaceAddon : public OpcUa::Server::XmlAddressSpace
     {
     public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon);
+      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon)
 
     public:
       virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
@@ -65,7 +65,7 @@ namespace OpcUa
     class XmlAddressSpaceAddonFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddonFactory);
+      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddonFactory)
 
     public:
       virtual Common::Addon::UniquePtr CreateAddon()

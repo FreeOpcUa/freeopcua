@@ -23,7 +23,7 @@ namespace OpcUa
     class ServicesRegistryFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(ServicesRegistryFactory);
+      DEFINE_CLASS_POINTERS(ServicesRegistryFactory)
 
     public:
       virtual Common::Addon::UniquePtr CreateAddon();

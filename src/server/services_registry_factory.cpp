@@ -17,7 +17,7 @@ namespace
   class ServicesRegistryAddon : public Common::Addon, public OpcUa::Server::ServicesRegistry
   {
   public:
-    DEFINE_CLASS_POINTERS(ServicesRegistryAddon);
+    DEFINE_CLASS_POINTERS(ServicesRegistryAddon)
 
   public:
     virtual void Initialize(Common::AddonsManager&, const Common::AddonParameters&)

@@ -18,7 +18,7 @@ namespace OpcUa
   class Daemon
   {
   public:
-    DEFINE_CLASS_POINTERS(Daemon);
+    DEFINE_CLASS_POINTERS(Daemon)
 
   public:
     Daemon();

@@ -14,5 +14,5 @@
 
 #define DEFINE_COMMON_ERROR(name) extern Common::ErrorData name;
 
-DEFINE_COMMON_ERROR(CannotCreateChannelOnInvalidSocket);
+DEFINE_COMMON_ERROR(CannotCreateChannelOnInvalidSocket)
 

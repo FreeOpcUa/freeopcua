@@ -25,7 +25,7 @@ namespace OpcUa
     class OpcUaProtocolAddonFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(OpcUaProtocolAddonFactory);
+      DEFINE_CLASS_POINTERS(OpcUaProtocolAddonFactory)
 
     public:
       virtual Common::Addon::UniquePtr CreateAddon() override;

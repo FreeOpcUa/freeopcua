@@ -26,7 +26,7 @@ namespace OpcUa
     class OpcUaProtocol : public Common::Interface
     {
     public:
-      DEFINE_CLASS_POINTERS(OpcUaProtocol);
+      DEFINE_CLASS_POINTERS(OpcUaProtocol)
 
       virtual void StartEndpoints(const std::vector<EndpointDescription>& Endpoints, Services::SharedPtr server) = 0;
       virtual void StopEndpoints() = 0;

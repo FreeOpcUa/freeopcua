@@ -53,7 +53,7 @@ namespace
 
       if (Debug) std::clog << "opc_tcp_processor| Hello client!" << std::endl;
 
-      std::auto_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, *clientChannel, Debug));
+      std::unique_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, *clientChannel, Debug));
 
       for(;;)
       {
@@ -111,7 +111,7 @@ namespace
   class OpcUaProtocol : public OpcUa::Server::OpcUaProtocol
   {
   public:
-    DEFINE_CLASS_POINTERS(OpcUaProtocol);
+    DEFINE_CLASS_POINTERS(OpcUaProtocol)
 
   public:
     OpcUaProtocol(OpcUa::Server::TcpServer& tcpServer, bool debug)
@@ -166,7 +166,8 @@ namespace
 
   private:
     void ApplyAddonParameters(const Common::AddonParameters& params);
-    void PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
+    // not used
+    // void PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const;
 
   private:
     OpcUa::Server::ServicesRegistry::SharedPtr InternalServer;
@@ -224,18 +225,19 @@ namespace
       }
     }
   }
-
-  void OpcUaProtocolAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
-  {
-    OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
-    if (!endpointsAddon)
-    {
-      std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
-      return;
-    }
-    endpointsAddon->AddEndpoints(endpoints);
-    endpointsAddon->AddApplications(applications);
-  }
+  
+  // not used
+  //void OpcUaProtocolAddon::PublishApplicationsInformation(std::vector<OpcUa::ApplicationDescription> applications, std::vector<OpcUa::EndpointDescription> endpoints, const Common::AddonsManager& addons) const
+  //{
+  //  OpcUa::Server::EndpointsRegistry::SharedPtr endpointsAddon = addons.GetAddon<OpcUa::Server::EndpointsRegistry>(OpcUa::Server::EndpointsRegistryAddonId);
+  //  if (!endpointsAddon)
+  //  {
+  //    std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
+  //    return;
+  //  }
+  //  endpointsAddon->AddEndpoints(endpoints);
+  //  endpointsAddon->AddApplications(applications);
+  //}
 
 } // namespace
 

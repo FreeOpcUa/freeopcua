@@ -22,7 +22,7 @@ namespace Common
   class Addon : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(Addon);
+    DEFINE_CLASS_POINTERS(Addon)
 
   public:
     /// @brief initialize addon.
@@ -39,7 +39,7 @@ namespace Common
   class AddonFactory : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(AddonFactory);
+    DEFINE_CLASS_POINTERS(AddonFactory)
 
   public:
     /// @brief Create instance of addon.

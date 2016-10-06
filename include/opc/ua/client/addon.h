@@ -22,7 +22,7 @@ namespace OpcUa
     class Addon : public Common::Addon
     {
     public:
-      DEFINE_CLASS_POINTERS(Addon);
+      DEFINE_CLASS_POINTERS(Addon)
 
     public:
       virtual std::string GetProtocol() const = 0;

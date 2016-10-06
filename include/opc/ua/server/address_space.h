@@ -30,7 +30,7 @@ namespace OpcUa
       , public NodeManagementServices
     {
     public:
-      DEFINE_CLASS_POINTERS(AddressSpace);
+      DEFINE_CLASS_POINTERS(AddressSpace)
       
       //Server side methods
       virtual uint32_t AddDataChangeCallback(const NodeId& node, AttributeId attribute, std::function<DataChangeCallback> callback) = 0;

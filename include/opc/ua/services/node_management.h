@@ -25,7 +25,7 @@ namespace OpcUa
   class NodeManagementServices : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(NodeManagementServices);
+    DEFINE_CLASS_POINTERS(NodeManagementServices)
 
   public:
     virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items) = 0;

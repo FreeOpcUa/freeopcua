@@ -723,7 +723,7 @@ namespace OpcUa
       {
         *this >> id.ServerIndex;
       }
-    };
+    }
 
     template<>
     std::size_t RawSize<ExpandedNodeId>(const ExpandedNodeId& id)
@@ -804,7 +804,7 @@ namespace OpcUa
     void DataDeserializer::Deserialize<OpcUa::ExpandedNodeId>(OpcUa::ExpandedNodeId& id)
     {
       *this >> *(NodeId*) &id;
-    };
+    }
 
 
   } // namespace Binary

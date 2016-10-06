@@ -33,7 +33,7 @@ namespace OpcUa
     class AsyncOpcTcpAddonFactory : public Common::AddonFactory
     {
     public:
-      DEFINE_CLASS_POINTERS(AsyncOpcTcpAddonFactory);
+      DEFINE_CLASS_POINTERS(AsyncOpcTcpAddonFactory)
 
     public:
       virtual Common::Addon::UniquePtr CreateAddon() override;

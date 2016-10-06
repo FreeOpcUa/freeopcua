@@ -41,7 +41,7 @@ namespace OpcUa
   class Services : private Common::Interface
   {
   public:
-    DEFINE_CLASS_POINTERS(Services);
+    DEFINE_CLASS_POINTERS(Services)
 
   public:
     virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) = 0;

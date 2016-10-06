@@ -31,7 +31,7 @@ namespace OpcUa
     class SubscriptionService : public SubscriptionServices
     {
     public:
-      DEFINE_CLASS_POINTERS(SubscriptionService);
+      DEFINE_CLASS_POINTERS(SubscriptionService)
 
       virtual void TriggerEvent(NodeId node, Event event) = 0;
     };

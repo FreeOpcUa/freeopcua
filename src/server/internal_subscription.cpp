@@ -165,7 +165,7 @@ namespace OpcUa
       resultlist.push_back(result);
 
       return resultlist;
-    };
+    }
 
     RepublishResponse InternalSubscription::Republish(const RepublishParameters& params)
     {
