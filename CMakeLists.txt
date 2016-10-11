@@ -13,8 +13,12 @@ option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
 OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
 
+IF (NOT DEFINED CMAKE_INSTALL_LIBDIR)
+    SET(CMAKE_INSTALL_LIBDIR lib)
+ENDIF ()
+
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
+        ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
         CACHE PATH
         ""
     )
@@ -26,7 +30,7 @@ SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
     )
 
 SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/lib
+        ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
         CACHE PATH
         ""
     )
@@ -42,13 +46,13 @@ function(generate_pkgconfig BASENAME)
             # prepare variables (the placeholders in the pc.in files are lowercase hence the unusal var names)
             set(prefix ${CMAKE_INSTALL_PREFIX})
             set(exec_prefix ${CMAKE_INSTALL_PREFIX})
-            set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+            set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
             set(includedir ${CMAKE_INSTALL_PREFIX}/include)
 
             # generate pkg-config file
             configure_file("${BASENAME}.in" "${BASENAME}" @ONLY)
             install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}"
-                    DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+                    DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkgconfig")
         endif()
     endif()
 endfunction(generate_pkgconfig)
@@ -169,8 +173,8 @@ target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuaprotocol EXPORT FreeOpcUa
-                              LIBRARY DESTINATION lib
-                              ARCHIVE DESTINATION lib/static)
+                              LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                              ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
 generate_pkgconfig("libopcuaprotocol.pc")
 
@@ -246,8 +250,8 @@ target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
-                          LIBRARY DESTINATION lib
-                          ARCHIVE DESTINATION lib/static)
+                          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
 generate_pkgconfig("libopcuacore.pc")
 
@@ -305,8 +309,8 @@ if (BUILD_CLIENT)
         )
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaclient EXPORT FreeOpcUa
-                                LIBRARY DESTINATION lib
-                                ARCHIVE DESTINATION lib/static)
+                                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
     generate_pkgconfig("libopcuaclient.pc")
 
@@ -391,8 +395,8 @@ if(BUILD_SERVER)
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
     target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
-                                LIBRARY DESTINATION lib
-                                ARCHIVE DESTINATION lib/static)
+                                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
     generate_pkgconfig("libopcuaserver.pc")
 
