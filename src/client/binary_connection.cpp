@@ -58,6 +58,11 @@ namespace
     int error = connect(sock, (sockaddr*)& addr, sizeof(addr));
     if (error < 0)
     {
+#ifdef _WIN32
+			closesocket(sock);
+#else
+			close(sock);
+#endif
       THROW_OS_ERROR(std::string("Unable connect to host '") + host + std::string("'. "));
     }
     return sock;
