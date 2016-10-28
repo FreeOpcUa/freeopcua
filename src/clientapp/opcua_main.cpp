@@ -384,7 +384,7 @@ namespace
   struct VariantPrinter
   {
     template <typename T>
-    void PrintVallue(const T& val)
+    void PrintValue(const T& val)
     {
       std::cout << val;
     }
