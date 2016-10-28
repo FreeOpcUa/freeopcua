@@ -35,7 +35,10 @@ libraries = [
   'opcuaserver',
 ]
 
-setup(name='python-freeopcua',
+if sys.version_info.major == 2: name='python-freeopcua'
+else: name='python{}-freeopcua'.format(sys.version_info.major)
+
+setup(name=name,
   version='0.2',
   description='Python bindings to freeopcua.',
   author='Matthieu Bec',
