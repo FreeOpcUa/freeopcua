@@ -77,6 +77,7 @@ namespace OpcUa
 
   void KeepAliveThread::Stop()
   {
+    if (! Running) { return; }
     if (Debug)  { std::cout << "KeepAliveThread | Stopping." << std::endl; }
     StopRequest = true;
     Condition.notify_all();
@@ -268,20 +269,21 @@ namespace OpcUa
 
   UaClient::~UaClient()
   {
-    Disconnect();//Do not leave any thread or connectino running
+    Disconnect();//Do not leave any thread or connection running
   }
 
   void UaClient::Disconnect()
   {
     KeepAlive.Stop();
 
-    if (  Server )
+    if ( Server.get() )
     {
       CloseSessionResponse response = Server->CloseSession();
       if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
       CloseSecureChannel();
+      Server.reset();
     }
-    Server.reset(); //FIXME: check if we still need this
+  
   }
 
   void UaClient::Abort()
