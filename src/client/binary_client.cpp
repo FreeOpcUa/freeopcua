@@ -434,6 +434,12 @@ namespace
       return response.Results;
     }
 
+    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    {
+      if (Debug)  { std::cout << "binary_client| SetMethod has no effect on client!" << std::endl; }
+      return;
+    }
+
     ////////////////////////////////////////////////////////////////
     /// Subscriptions Services
     ////////////////////////////////////////////////////////////////

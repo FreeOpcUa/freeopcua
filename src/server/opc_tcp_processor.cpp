@@ -709,19 +709,25 @@ namespace OpcUa
         case CALL_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
-          CreateSessionParameters params;
+          CallRequestParameters params;
           istream >> params;
 
-          CreateSessionResponse response;
+          CallResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Parameters.SessionId = SessionId;
-          response.Parameters.AuthenticationToken = SessionId;
-          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Parameters.MaxRequestMessageSize = 65536;
-          GetEndpointsParameters epf;
-          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
-
+          if (std::shared_ptr<OpcUa::MethodServices> service = Server->Method())
+          {
+            response.Results = service->Call(params.MethodsToCall);
+          }
+          else
+          {
+            for (auto callMethodRequest : params.MethodsToCall)
+            {
+              OpcUa::CallMethodResult result;
+              result.Status = OpcUa::StatusCode::BadNotImplemented;
+              response.Results.push_back(result);
+            }
+          }
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));

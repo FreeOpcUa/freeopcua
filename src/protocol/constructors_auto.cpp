@@ -395,6 +395,10 @@ namespace OpcUa
     }
 */
 
+     CallRequestParameters::CallRequestParameters()
+    {
+    }
+
      CallRequest::CallRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::CallRequest_Encoding_DefaultBinary))
     {

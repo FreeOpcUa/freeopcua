@@ -80,6 +80,11 @@ namespace
       return std::vector<StatusCode>();
     }
 
+    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    {
+      return;
+    }
+
     virtual void AddAttribute(const NodeId& node, AttributeId attribute, const Variant& value)
     {
     }
@@ -169,6 +174,7 @@ namespace
       SetViews(Services);
       SetAttributes(Services);
       SetSubscriptions(Services);
+      SetMethod(Services);
     }
 
     virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)

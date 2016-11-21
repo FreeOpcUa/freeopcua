@@ -51,6 +51,7 @@ namespace OpcUa
       InternalServer->RegisterViewServices(Registry);
       InternalServer->RegisterAttributeServices(Registry);
       InternalServer->RegisterNodeManagementServices(Registry);
+      InternalServer->RegisterMethodServices(Registry);
     }
 
     void AddressSpaceAddon::Stop()
@@ -58,6 +59,7 @@ namespace OpcUa
       InternalServer->UnregisterViewServices();
       InternalServer->UnregisterAttributeServices();
       InternalServer->UnregisterNodeManagementServices();
+      InternalServer->UnregisterMethodServices();
       InternalServer.reset();
       Registry.reset();
     }
@@ -119,6 +121,17 @@ namespace OpcUa
     StatusCode AddressSpaceAddon::SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback)
     {
       return Registry->SetValueCallback(node, attribute, callback);
+    }
+
+    void AddressSpaceAddon::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    {
+      Registry->SetMethod(node, callback);
+      return;
+    }
+
+    std::vector<CallMethodResult> AddressSpaceAddon::Call(const std::vector<CallMethodRequest>& methodsToCall)
+    {
+      return Registry->Call(methodsToCall);
     }
  
 

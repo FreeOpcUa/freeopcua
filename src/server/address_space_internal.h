@@ -94,7 +94,7 @@ namespace OpcUa
 		virtual void UnregisterNodes(const std::vector<NodeId>& params) const;
         virtual std::vector<DataValue> Read(const ReadParameters& params) const;
         virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& values);
-        virtual std::vector<OpcUa::CallMethodResult> Call(std::vector<OpcUa::CallMethodRequest> methodsToCall);
+        virtual std::vector<OpcUa::CallMethodResult> Call(const std::vector<OpcUa::CallMethodRequest>& methodsToCall);
 
         //Server side methods
 

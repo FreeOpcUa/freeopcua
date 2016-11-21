@@ -103,13 +103,14 @@ namespace OpcUa
 
     std::vector<CallMethodResult> results = Server->Method()->Call(methodsToCall);
 
+    std::vector<Variant> result;
     std::vector<std::vector<Variant>> ret;
     for (std::vector<CallMethodResult>::iterator it = results.begin(); it != results.end(); ++it)
     {
       CheckStatusCode(it->Status);
-      ret.push_back(it->OutputArguments);
+      result.push_back(it->OutputArguments);
     }
-
+    ret.push_back(result);
     return ret;
   }
 
@@ -427,14 +428,14 @@ namespace OpcUa
   {
     NodeId nodeid = NumericNodeId(0, namespaceIdx);
     QualifiedName qn = ToQualifiedName(name, namespaceIdx);
-    return AddVariable(nodeid, qn, method);
+    return AddMethod(nodeid, qn, method);
   }
 
   Node Node::AddMethod(const std::string& nodeid, const std::string& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
   {
     NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
-    return AddVariable(node, qn, method);
+    return AddMethod(node, qn, method);
   }
 
   Node Node::AddMethod(const NodeId& nodeid, const QualifiedName& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
@@ -459,7 +460,7 @@ namespace OpcUa
 
     AddNodesResult res = addnodesresults.front(); //This should always work
     CheckStatusCode(res.Status);
-    //addressspace.SetMethod(res.AddedNodeId, method);
+    Server->Method()->SetMethod(res.AddedNodeId, method);
 
     return Node(Server, res.AddedNodeId);
   }

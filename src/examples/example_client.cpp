@@ -32,7 +32,7 @@ int main(int argc, char** argv)
   {
     //std::string endpoint = "opc.tcp://192.168.56.101:48030";
     //std::string endpoint = "opc.tcp://user:password@192.168.56.101:48030";
-    std::string endpoint = "opc.tcp://127.0.0.1:4841/freeopcua/server/";
+    std::string endpoint = "opc.tcp://127.0.0.1:4840/freeopcua/server/";
     //std::string endpoint = "opc.tcp://localhost:53530/OPCUA/SimulationServer/";
     //std::string endpoint = "opc.tcp://localhost:48010";
 
@@ -63,16 +63,22 @@ int main(int argc, char** argv)
       std::cout << "    " << d << std::endl;
 
     OpcUa::Node myvar;
+    OpcUa::Node mymethod;
 
     //Initialize Node myvar:
 
     //Get namespace index we are interested in
 
     // From freeOpcUa Server:
-    //uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
+    uint32_t idx = client.GetNamespaceIndex("http://examples.freeopcua.github.io");
     ////Get Node using path (BrowsePathToNodeId call)
     //std::vector<std::string> varpath({ std::to_string(idx) + ":NewObject", "MyVariable" });
     //myvar = objects.GetChild(varpath);
+    std::vector<std::string> methodpath({ std::to_string(idx) + ":NewObject", "MyMethod" });
+    mymethod = objects.GetChild(methodpath);
+    std::vector<OpcUa::Variant> arguments;
+    arguments.push_back(static_cast<uint8_t>(0));
+    mymethod.CallMethod(mymethod.GetId(), arguments);
 
     // Example data from Prosys server:
     //std::vector<std::string> varpath({"Objects", "5:Simulation", "5:Random1"});

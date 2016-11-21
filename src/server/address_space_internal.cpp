@@ -311,15 +311,18 @@ namespace OpcUa
 
     void AddressSpaceInMemory::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
     {
+      boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+
       NodesMap::iterator it = Nodes.find(node);
       if ( it != Nodes.end() )
       {
         it->second.Method = callback;
       }
-      throw std::runtime_error("While setting node callback: node does not exist.");
+      else
+        throw std::runtime_error("While setting node callback: node does not exist.");
     }
 
-    std::vector<OpcUa::CallMethodResult> AddressSpaceInMemory::Call(std::vector<OpcUa::CallMethodRequest> methodsToCall)
+    std::vector<OpcUa::CallMethodResult> AddressSpaceInMemory::Call(const std::vector<OpcUa::CallMethodRequest>& methodsToCall)
     {
       std::vector<OpcUa::CallMethodResult>  results;
       for (auto method : methodsToCall)
@@ -366,6 +369,7 @@ namespace OpcUa
       {
         result.InputArgumentResults.push_back(StatusCode::Good);
       }
+      result.Status = StatusCode::Good;
       return result;
     }
 
