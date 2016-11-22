@@ -123,7 +123,7 @@ namespace OpcUa
       return Registry->SetValueCallback(node, attribute, callback);
     }
 
-    void AddressSpaceAddon::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    void AddressSpaceAddon::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback)
     {
       Registry->SetMethod(node, callback);
       return;

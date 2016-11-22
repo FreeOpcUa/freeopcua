@@ -29,7 +29,7 @@ class SubClient : public SubscriptionHandler
   }
 };
 
-std::vector<OpcUa::Variant> MyMethod(std::vector<OpcUa::Variant> arguments)
+std::vector<OpcUa::Variant> MyMethod(NodeId context, std::vector<OpcUa::Variant> arguments)
 {
   std::cout << "MyMethod called! " << std::endl;
   std::vector<OpcUa::Variant> result;

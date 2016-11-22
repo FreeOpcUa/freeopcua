@@ -59,7 +59,7 @@ namespace OpcUa
       virtual uint32_t AddDataChangeCallback(const NodeId& node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
       virtual void DeleteDataChangeCallback(uint32_t clienthandle);
       virtual StatusCode SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback);
-      virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback);
+      virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback);
 
     private:
       struct Options

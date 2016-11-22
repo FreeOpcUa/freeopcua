@@ -424,21 +424,21 @@ namespace OpcUa
 
   }
 
-  Node Node::AddMethod(uint32_t namespaceIdx, const std::string& name,  std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  Node Node::AddMethod(uint32_t namespaceIdx, const std::string& name,  std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> method) const
   {
     NodeId nodeid = NumericNodeId(0, namespaceIdx);
     QualifiedName qn = ToQualifiedName(name, namespaceIdx);
     return AddMethod(nodeid, qn, method);
   }
 
-  Node Node::AddMethod(const std::string& nodeid, const std::string& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  Node Node::AddMethod(const std::string& nodeid, const std::string& browsename, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> method) const
   {
     NodeId node = ToNodeId(nodeid, this->Id.GetNamespaceIndex());
     QualifiedName qn = ToQualifiedName(browsename, GetBrowseName().NamespaceIndex);
     return AddMethod(node, qn, method);
   }
 
-  Node Node::AddMethod(const NodeId& nodeid, const QualifiedName& browsename, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> method) const
+  Node Node::AddMethod(const NodeId& nodeid, const QualifiedName& browsename, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> method) const
   {
     AddNodesItem item;
     item.BrowseName = browsename;

@@ -309,7 +309,7 @@ namespace OpcUa
       return StatusCode::BadAttributeIdInvalid;
     }
 
-    void AddressSpaceInMemory::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback)
+    void AddressSpaceInMemory::SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback)
     {
       boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -357,7 +357,7 @@ namespace OpcUa
       //FIXME: find a way to return more information about failure to client
       try
       {
-        result.OutputArguments = method_it->second.Method(request.InputArguments);
+        result.OutputArguments = method_it->second.Method(node_it->first, request.InputArguments);
       }
       catch (std::exception& ex)
       {

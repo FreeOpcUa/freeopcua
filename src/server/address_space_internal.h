@@ -71,7 +71,7 @@ namespace OpcUa
     {
       AttributesMap Attributes;
       std::vector<ReferenceDescription> References;
-      std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant>)> Method;
+      std::function<std::vector<OpcUa::Variant> (NodeId, std::vector<OpcUa::Variant>)> Method;
     };
 
     typedef std::map<NodeId, NodeStruct> NodesMap;
@@ -109,7 +109,7 @@ namespace OpcUa
         StatusCode SetValueCallback(const NodeId& node, AttributeId attribute, std::function<DataValue(void)> callback);
 
         /// @brief Set method function for a method node.
-        void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback);
+        void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback);
 
       private:
         std::tuple<bool, NodeId> FindElementInNode(const NodeId& nodeid, const RelativePathElement& element) const;

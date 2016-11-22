@@ -27,7 +27,7 @@ namespace OpcUa
 
   public:
     virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall) = 0;
-    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (std::vector<OpcUa::Variant> arguments)> callback) = 0;
+    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback) = 0;
   };
 
 } // namespace OpcUa
