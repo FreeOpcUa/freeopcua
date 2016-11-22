@@ -2576,18 +2576,20 @@ namespace OpcUa
 
 
     template<>
-    void DataDeserializer::Deserialize<CallRequestParameters>(CallRequestParameters& data)
+    void DataDeserializer::Deserialize<CallParameters>(CallParameters& data)
     {
         DeserializeContainer(*this, data.MethodsToCall);
     }
+
 
     template<>
     void DataDeserializer::Deserialize<CallRequest>(CallRequest& data)
     {
         *this >> data.TypeId;
         *this >> data.Header;
-        DeserializeContainer(*this, data.MethodsToCall);
+        *this >> data.Parameters;
     }
+
 
     template<>
     void DataDeserializer::Deserialize<CallResponse>(CallResponse& data)

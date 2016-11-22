@@ -2203,18 +2203,16 @@ namespace OpcUa
          std::vector<OpcUa::Variant> OutputArguments;
     };
 
-    struct CallRequestParameters
+    struct CallParameters 
     {
          std::vector<OpcUa::CallMethodRequest> MethodsToCall;
-
-         CallRequestParameters();
     };
 
     struct CallRequest 
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
-         std::vector<OpcUa::CallMethodRequest> MethodsToCall;
+         OpcUa::CallParameters Parameters;
 
          CallRequest();
     };

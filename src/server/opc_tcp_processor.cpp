@@ -709,7 +709,7 @@ namespace OpcUa
         case CALL_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
-          CallRequestParameters params;
+          CallParameters params;
           istream >> params;
 
           CallResponse response;

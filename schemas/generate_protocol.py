@@ -15,7 +15,7 @@ import generate_model as gm
 NeedConstructor = ["RelativePathElement", "OpenSecureChannelParameters", "UserIdentityToken", "RequestHeader", "ResponseHeader", "ReadParameters", "UserIdentityToken", "BrowseDescription", "ReferenceDescription", "CreateSubscriptionParameters", "SubscriptionData", "NotificationMessage", "PublishResult", "PublishResult", "NotificationMessage", "SetPublishingModeParameters"]
 IgnoredEnums = ["IdType", "NodeIdType"]
 #by default we split requests and respons in header and parameters, but some are so simple we do not split them
-NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "DeleteMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallRequest", "CallResponse", "RepublishResponse", "DeleteSubscriptionsRequest", "DeleteSubscriptionsResponse", "DeleteNodesRequest", "DeleteNodesResponse"]
+NoSplitStruct = ["GetEndpointsResponse", "CloseSessionRequest", "AddNodesResponse", "BrowseResponse", "HistoryReadResponse", "HistoryUpdateResponse", "RegisterServerResponse", "CloseSecureChannelRequest", "CloseSecureChannelResponse", "CloseSessionRequest", "CloseSessionResponse", "UnregisterNodesResponse", "MonitoredItemModifyRequest", "MonitoredItemsCreateRequest", "ReadResponse", "WriteResponse", "TranslateBrowsePathsToNodeIdsResponse", "DeleteSubscriptionsResponse", "DeleteMonitoredItemsResponse", "PublishRequest", "CreateMonitoredItemsResponse", "DeleteMonitoredItemsResponse", "ServiceFault", "AddReferencesRequest", "AddReferencesResponse", "ModifyMonitoredItemsResponse", "CallResponse", "RepublishResponse", "DeleteSubscriptionsRequest", "DeleteSubscriptionsResponse", "DeleteNodesRequest", "DeleteNodesResponse"]
 OverrideTypes = {"AttributeId": "AttributeId",  "ResultMask": "BrowseResultMask", "NodeClassMask": "NodeClass", "AccessLevel": "VariableAccessLevel", "UserAccessLevel": "VariableAccessLevel", "NotificationData": "NotificationData"}
 OverrideStructTypeName = {"CreateSubscriptionResult": "SubscriptionData", "SetPublishingModeParameters": "PublishingModeParameters", "SetPublishingModeResult": "PublishingModeResult", "CreateMonitoredItemsParameters": "MonitoredItemsParameters"}
 OverrideNameInStruct = {"CreateSubscriptionResponse": {"Parameters": "Data"}, "SetPublishingModeResponse": {"Parameters": "Result"}}
@@ -196,6 +196,7 @@ EnabledStructs = [\
     #'HistoryUpdateResponse',
     'CallMethodRequest',
     'CallMethodResult',
+    'CallParameters',
     'CallRequest',
     'CallResponse',
     #'MonitoringFilter',

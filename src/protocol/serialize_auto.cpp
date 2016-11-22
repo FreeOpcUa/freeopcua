@@ -2528,11 +2528,18 @@ namespace OpcUa
 
 
     template<>
+    void DataSerializer::Serialize<CallParameters>(const CallParameters& data)
+    {
+        SerializeContainer(*this, data.MethodsToCall);
+    }
+
+
+    template<>
     void DataSerializer::Serialize<CallRequest>(const CallRequest& data)
     {
         *this << data.TypeId;
         *this << data.Header;
-        SerializeContainer(*this, data.MethodsToCall);
+        *this << data.Parameters;
     }
 
 
