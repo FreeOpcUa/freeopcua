@@ -16,7 +16,6 @@
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/variant_visitor.h>
-#include <opc/ua/protocol/protocol_auto.h>
 
 #include <algorithm>
 #include <functional>
