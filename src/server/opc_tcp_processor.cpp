@@ -709,19 +709,25 @@ namespace OpcUa
         case CALL_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing call request." << std::endl;
-          CreateSessionParameters params;
+          CallParameters params;
           istream >> params;
 
-          CreateSessionResponse response;
+          CallResponse response;
           FillResponseHeader(requestHeader, response.Header);
 
-          response.Parameters.SessionId = SessionId;
-          response.Parameters.AuthenticationToken = SessionId;
-          response.Parameters.RevisedSessionTimeout = params.RequestedSessionTimeout;
-          response.Parameters.MaxRequestMessageSize = 65536;
-          GetEndpointsParameters epf;
-          response.Parameters.ServerEndpoints = Server->Endpoints()->GetEndpoints(epf);
-
+          if (std::shared_ptr<OpcUa::MethodServices> service = Server->Method())
+          {
+            response.Results = service->Call(params.MethodsToCall);
+          }
+          else
+          {
+            for (auto callMethodRequest : params.MethodsToCall)
+            {
+              OpcUa::CallMethodResult result;
+              result.Status = OpcUa::StatusCode::BadNotImplemented;
+              response.Results.push_back(result);
+            }
+          }
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
           secureHeader.AddSize(RawSize(algorithmHeader));
@@ -731,7 +737,48 @@ namespace OpcUa
 
           return;
         }
- 
+
+        case OpcUa::REGISTER_NODES_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing register nodes request." << std::endl;
+          RegisterNodesRequest request;
+
+          istream >> request.NodesToRegister;
+
+          RegisterNodesResponse response;
+          response.Result = Server->Views()->RegisterNodes(request.NodesToRegister);
+
+          FillResponseHeader(requestHeader, response.Header);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to register nodes request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
+        case OpcUa::UNREGISTER_NODES_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing unregister nodes request." << std::endl;
+          UnregisterNodesRequest request;
+
+          istream >> request.NodesToUnregister;
+
+          UnregisterNodesResponse response;
+          Server->Views()->UnregisterNodes(request.NodesToUnregister);
+
+          FillResponseHeader(requestHeader, response.Header);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to unregister nodes request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
 
         default:
         {

@@ -394,7 +394,7 @@ namespace
     {
       if (Debug) {std::cout << "binary_clinent | Call -->" << std::endl;}
       CallRequest request;
-      request.MethodsToCall = methodsToCall;
+      request.Parameters.MethodsToCall = methodsToCall;
       const CallResponse response = Send<CallResponse>(request);
       if (Debug) {std::cout << "binary_clinent | Call <--" << std::endl;}
       // Manage errors
@@ -432,6 +432,12 @@ namespace
       const AddReferencesResponse response = Send<AddReferencesResponse>(request);
       if (Debug)  { std::cout << "binary_client| AddReferences <--" << std::endl; }
       return response.Results;
+    }
+
+    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback)
+    {
+      if (Debug)  { std::cout << "binary_client| SetMethod has no effect on client!" << std::endl; }
+      return;
     }
 
     ////////////////////////////////////////////////////////////////

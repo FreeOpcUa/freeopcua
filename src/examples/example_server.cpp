@@ -29,12 +29,20 @@ class SubClient : public SubscriptionHandler
   }
 };
 
+std::vector<OpcUa::Variant> MyMethod(NodeId context, std::vector<OpcUa::Variant> arguments)
+{
+  std::cout << "MyMethod called! " << std::endl;
+  std::vector<OpcUa::Variant> result;
+  result.push_back(Variant(static_cast<uint8_t>(0)));
+  return result;
+}
+
 void RunServer()
 {
   //First setup our server
   const bool debug = true;
   OpcUa::UaServer server(debug);
-  server.SetEndpoint("opc.tcp://localhost:4841/freeopcua/server");
+  server.SetEndpoint("opc.tcp://localhost:4840/freeopcua/server");
   server.SetServerURI("urn://exampleserver.freeopcua.github.io");
   server.Start();
   
@@ -52,6 +60,7 @@ void RunServer()
   //Add a variable and a property with auto-generated nodeid to our custom object
   Node myvar = newobject.AddVariable(idx, "MyVariable", Variant(8));
   Node myprop = newobject.AddVariable(idx, "MyProperty", Variant(8.8));
+  Node mymethod = newobject.AddMethod(idx, "MyMethod", MyMethod);
 
   //browse root node on server side
   Node root = server.GetRootNode();
