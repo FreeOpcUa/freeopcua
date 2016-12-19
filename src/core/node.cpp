@@ -103,14 +103,13 @@ namespace OpcUa
 
     std::vector<CallMethodResult> results = Server->Method()->Call(methodsToCall);
 
-    std::vector<Variant> result;
     std::vector<std::vector<Variant>> ret;
     for (std::vector<CallMethodResult>::iterator it = results.begin(); it != results.end(); ++it)
     {
       CheckStatusCode(it->Status);
-      result.push_back(it->OutputArguments);
+      ret.push_back(it->OutputArguments);
     }
-    ret.push_back(result);
+
     return ret;
   }
 
