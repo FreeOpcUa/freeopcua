@@ -27,8 +27,6 @@ AC_ARG_ENABLE([gcov],
                 AC_SUBST([GCOV_FLAGS], ["-fprofile-arcs -ftest-coverage"])
                 AC_SUBST([GCOV_LIBS], [-lgcov])
                 AC_MSG_NOTICE([Enabled support of code coverage analysis.])
-              ],
-              [
               ])
 
 AC_ARG_ENABLE([python-bindings],
