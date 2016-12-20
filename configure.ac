@@ -22,11 +22,11 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
 
 AC_ARG_ENABLE([gcov],
-              [AS_HELP_STRING([--enable-gcov],[Enable support of coverage analize with gcov.])],
+              [AS_HELP_STRING([--enable-gcov],[Enable support of coverage analysis with gcov.])],
               [
                 AC_SUBST([GCOV_FLAGS], ["-fprofile-arcs -ftest-coverage"])
                 AC_SUBST([GCOV_LIBS], [-lgcov])
-                AC_MSG_NOTICE([Enabled support of code coverage analize.])
+                AC_MSG_NOTICE([Enabled support of code coverage analysis.])
               ],
               [
               ])
