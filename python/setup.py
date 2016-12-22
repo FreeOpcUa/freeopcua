@@ -27,7 +27,7 @@ library_dirs = [
   os.path.join(opcua_server_path,'lib'),
 ]
 
-boost_library='boost_python3' if sys.version_info.major == 3 and platform.dist()[0] == 'fedora' else 'boost_python'
+boost_library='boost_python3' if sys.version_info[0] == 3 and platform.dist()[0] == 'fedora' else 'boost_python'
 
 libraries = [
   boost_library,
@@ -35,7 +35,7 @@ libraries = [
   'opcuaserver',
 ]
 
-if sys.version_info.major == 2: name='python-freeopcua'
+if sys.version_info[0] == 2: name='python-freeopcua'
 else: name='python{}-freeopcua'.format(sys.version_info.major)
 
 setup(name=name,
