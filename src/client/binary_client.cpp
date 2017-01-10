@@ -193,6 +193,7 @@ namespace
   private:
     typedef std::function<void(std::vector<char>, ResponseHeader)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
+		std::vector<char> finalBuffer;
 
   public:
     BinaryClient(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
@@ -782,7 +783,7 @@ private:
 
 
 
-    void Receive() const
+    void Receive()
     {
       Binary::SecureHeader responseHeader;
       Stream >> responseHeader;
@@ -810,7 +811,8 @@ private:
         Stream >> responseAlgo;
         algo_size = RawSize(responseAlgo);
       }
-
+			
+			NodeId id;
       Binary::SequenceHeader responseSequence;
       Stream >> responseSequence; // TODO Check for request Number
 
@@ -822,40 +824,67 @@ private:
         throw std::runtime_error(stream.str());
       }
 
-      const std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
-      std::vector<char> buffer(dataSize);
-      BufferInputChannel bufferInput(buffer);
-      Binary::RawBuffer raw(&buffer[0], dataSize);
-      Stream >> raw;
-
-      IStreamBinary in(bufferInput);
-      NodeId id;
-      in >> id;
-      ResponseHeader header;
-      in >> header;
-      if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
-
-      if (header.ServiceResult != StatusCode::Good) {
-        std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
-      }
-
-      if (id == SERVICE_FAULT)
+      std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
+      if(responseHeader.Chunk == CHT_SINGLE)
       {
-        std::cerr << std::endl;
-        std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
-        std::cerr << std::endl;
-      }
-      std::unique_lock<std::mutex> lock(Mutex);
-      CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
-      if (callbackIt == Callbacks.end())
+		  	parseMessage(dataSize, id);			  
+			  firstMsgParsed = false;
+			  
+		  	std::unique_lock<std::mutex> lock(Mutex);
+				CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
+				if (callbackIt == Callbacks.end())
+				{
+					std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
+					return;
+				}
+				callbackIt->second(std::move(finalBuffer), std::move(header));
+				finalBuffer.clear();
+				Callbacks.erase(callbackIt);
+			
+			}
+			else if(responseHeader.Chunk == CHT_INTERMEDIATE)
       {
-        std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
-        return;
-      }
-	  callbackIt->second(std::move(buffer), std::move(header));
-
-      Callbacks.erase(callbackIt);
+				parseMessage(dataSize, id);
+				firstMsgParsed = true;		  
+			}	  
     }
+
+    ResponseHeader parseMessage(std::size_t &dataSize, NodeId &id)
+	  {
+			std::vector<char> buffer(dataSize);
+			BufferInputChannel bufferInput(buffer);
+			Binary::RawBuffer raw(&buffer[0], dataSize);
+
+			Stream >> raw;
+
+			if(!firstMsgParsed)
+			{
+
+				IStreamBinary in(bufferInput);
+				in >> id;
+				in >> header;
+
+				if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
+
+				if (header.ServiceResult != StatusCode::Good) {
+						std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
+				}
+
+				if (id == SERVICE_FAULT)
+				{
+						std::cerr << std::endl;
+						std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
+						std::cerr << std::endl;
+				}
+
+				finalBuffer.insert(finalBuffer.end(), buffer.begin(), buffer.end());
+				return header;
+			}
+			else
+			{
+				finalBuffer.insert(finalBuffer.end(), buffer.begin(), buffer.end());
+			}
+		}
 
     Binary::Acknowledge HelloServer(const SecureConnectionParams& params)
     {
@@ -940,7 +969,9 @@ private:
     std::thread callback_thread;
     CallbackThread CallbackService;
     mutable std::mutex Mutex;
-
+    
+		bool firstMsgParsed = false;
+		ResponseHeader header;
   };
 
   template <>

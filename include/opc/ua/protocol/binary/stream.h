@@ -19,7 +19,7 @@
 #include <memory>
 #include <vector>
 
-#define OPCUA_DEFAULT_BUFFER_SIZE 4096
+#define OPCUA_DEFAULT_BUFFER_SIZE 8192
 
 namespace OpcUa
 {
