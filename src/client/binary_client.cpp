@@ -193,7 +193,7 @@ namespace
   private:
     typedef std::function<void(std::vector<char>, ResponseHeader)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
-		std::vector<char> finalBuffer;
+		std::vector<char> messageBuffer;
 
   public:
     BinaryClient(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
@@ -812,7 +812,7 @@ private:
         algo_size = RawSize(responseAlgo);
       }
 			
-			NodeId id;
+	  NodeId id;
       Binary::SequenceHeader responseSequence;
       Stream >> responseSequence; // TODO Check for request Number
 
@@ -827,64 +827,63 @@ private:
       std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
       if(responseHeader.Chunk == CHT_SINGLE)
       {
-		  	parseMessage(dataSize, id);			  
-			  firstMsgParsed = false;
+		parseMessage(dataSize, id);			  
+		firstMsgParsed = false;
 			  
-		  	std::unique_lock<std::mutex> lock(Mutex);
-				CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
-				if (callbackIt == Callbacks.end())
-				{
-					std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
-					return;
-				}
-				callbackIt->second(std::move(finalBuffer), std::move(header));
-				finalBuffer.clear();
-				Callbacks.erase(callbackIt);
+		std::unique_lock<std::mutex> lock(Mutex);
+		CallbackMap::const_iterator callbackIt = Callbacks.find(header.RequestHandle);
+		if (callbackIt == Callbacks.end())
+		{
+		  std::cout << "binary_client| No callback found for message with id: " << id << " and handle " << header.RequestHandle << std::endl;
+		  return;
+		}
+		callbackIt->second(std::move(messageBuffer), std::move(header));
+		messageBuffer.clear();
+		Callbacks.erase(callbackIt);
 			
-			}
-			else if(responseHeader.Chunk == CHT_INTERMEDIATE)
+	  }
+	  else if(responseHeader.Chunk == CHT_INTERMEDIATE)
       {
-				parseMessage(dataSize, id);
-				firstMsgParsed = true;		  
-			}	  
+	    parseMessage(dataSize, id);
+		firstMsgParsed = true;		  
+	  }	  
     }
 
     ResponseHeader parseMessage(std::size_t &dataSize, NodeId &id)
+    {
+	  std::vector<char> buffer(dataSize);
+	  BufferInputChannel bufferInput(buffer);
+	  Binary::RawBuffer raw(&buffer[0], dataSize);
+
+	  Stream >> raw;
+
+	  if(!firstMsgParsed)
 	  {
-			std::vector<char> buffer(dataSize);
-			BufferInputChannel bufferInput(buffer);
-			Binary::RawBuffer raw(&buffer[0], dataSize);
+		IStreamBinary in(bufferInput);
+		in >> id;
+		in >> header;
 
-			Stream >> raw;
+		if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
 
-			if(!firstMsgParsed)
-			{
-
-				IStreamBinary in(bufferInput);
-				in >> id;
-				in >> header;
-
-				if ( Debug )std::cout << "binary_client| Got response id: " << id << " and handle " << header.RequestHandle<< std::endl;
-
-				if (header.ServiceResult != StatusCode::Good) {
-						std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
-				}
-
-				if (id == SERVICE_FAULT)
-				{
-						std::cerr << std::endl;
-						std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
-						std::cerr << std::endl;
-				}
-
-				finalBuffer.insert(finalBuffer.end(), buffer.begin(), buffer.end());
-				return header;
-			}
-			else
-			{
-				finalBuffer.insert(finalBuffer.end(), buffer.begin(), buffer.end());
-			}
+		if (header.ServiceResult != StatusCode::Good) {
+		  std::cout << "binary_client| Received a response from server with error status: " << OpcUa::ToString(header.ServiceResult) <<  std::endl;
 		}
+
+		if (id == SERVICE_FAULT)
+		{
+		  std::cerr << std::endl;
+		  std::cerr << "Receive ServiceFault from Server with StatusCode " << OpcUa::ToString(header.ServiceResult) << std::endl;
+		  std::cerr << std::endl;
+		}
+
+		messageBuffer.insert(messageBuffer.end(), buffer.begin(), buffer.end());
+		return header;
+	  }
+	  else
+	  {
+		messageBuffer.insert(messageBuffer.end(), buffer.begin(), buffer.end());
+	  }
+	}
 
     Binary::Acknowledge HelloServer(const SecureConnectionParams& params)
     {
