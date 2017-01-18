@@ -757,6 +757,7 @@ private:
 		  std::unique_lock<std::mutex> lock(Mutex);
 		  Callbacks.erase(request.Header.RequestHandle);
 		  lock.unlock();
+		  throw;
 	  }
 
 	  return res;
