@@ -27,7 +27,6 @@
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/services_registry.h>
 
-#include <boost/thread/locks.hpp>
 #include <chrono>
 #include <iostream>
 #include <list>
@@ -73,7 +72,7 @@ namespace OpcUa
 
     bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary& iStream)
     {
-      boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
+      std::lock_guard<std::mutex> lock(ProcessMutex);
 
       switch (msgType)
       {
@@ -129,7 +128,7 @@ namespace OpcUa
 
     void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
     {
-      boost::unique_lock<boost::shared_mutex> lock(ProcessMutex);
+      std::lock_guard<std::mutex> lock(ProcessMutex);
 
       if (Debug) std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl;
       if ( PublishRequestQueue.empty() )
