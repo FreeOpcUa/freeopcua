@@ -12,7 +12,6 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/services/services.h>
 
-#include <boost/thread/shared_mutex.hpp>
 #include <chrono>
 #include <list>
 #include <mutex>
@@ -42,7 +41,7 @@ namespace OpcUa
       void ForwardPublishResponse(const PublishResult response);
 
     private:
-      boost::shared_mutex ProcessMutex;
+      std::mutex ProcessMutex;
       std::shared_ptr<OpcUa::Services> Server;
       OpcUa::Binary::OStreamBinary OutputStream;
       bool Debug;

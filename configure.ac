@@ -9,7 +9,7 @@
 AC_INIT([opcuaserver], [0.1.3], [rykovanov.as@gmail.com])
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([src/serverapp/server_main.cpp])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 CXXFLAGS="-O0 -g -std=c++11"
 
