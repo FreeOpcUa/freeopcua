@@ -251,6 +251,7 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/strings.h \
   include/opc/ua/protocol/string_utils.h \
   include/opc/ua/protocol/types.h \
+  include/opc/ua/protocol/types_manual.h \
   include/opc/ua/protocol/variable_access_level.h \
   include/opc/ua/protocol/variant.h \
   include/opc/ua/protocol/variant_visitor.h \
@@ -319,6 +320,7 @@ opcuainclude_HEADERS = \
   include/opc/ua/connection_listener.h \
   include/opc/ua/errors.h \
   include/opc/ua/event.h \
+  include/opc/ua/global.h \
   include/opc/ua/node.h \
   include/opc/ua/model.h \
   include/opc/ua/socket_channel.h \
