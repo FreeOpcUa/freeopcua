@@ -33,7 +33,7 @@ Not implemented yet (patches are welcome)
 * Security: Authentication, Certificates handling, ..
 
 
-##Usage
+## Usage
 
 Documentation is sparse but several examples are availables:
 
@@ -68,7 +68,7 @@ https://github.com/FreeOpcUa/freeopcua/blob/master/python/tests/test_highlevel.p
 * unified automation sdk (client and server tested)
 
 
-##Installation
+## Installation
 
 An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4 or VS2013
 
