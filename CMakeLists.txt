@@ -169,7 +169,9 @@ add_library(opcuaprotocol
     src/protocol/subscriptions.cpp
 )
 
-target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+    target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+endif ()
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuaprotocol EXPORT FreeOpcUa
@@ -209,7 +211,9 @@ if (BUILD_TESTING)
         gtest_main
     )
 
-    target_compile_options(test_opcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(test_opcuaprotocol PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    endif ()
 
     add_test(NAME opcuaprotocol COMMAND test_opcuaprotocol)
 endif()
@@ -246,7 +250,10 @@ SET(opcuacore_SOURCES
 
 add_library(opcuacore ${opcuacore_SOURCES})
 
-target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+    target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+endif ()
+
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
@@ -282,7 +289,9 @@ if (BUILD_TESTING)
         ${TEST_LIBS}
     )
 
-    target_compile_options(test_opcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(test_opcuacore PUBLIC ${D}DYNAMIC_ADDON_PATH="${DYNAMIC_ADDON_PATH}" ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${EXECUTABLE_CXX_FLAGS})
+    endif ()
 
     add_test(NAME opcuacore COMMAND test_opcuacore)
 
@@ -301,7 +310,9 @@ if (BUILD_CLIENT)
     src/client/client.cpp
     )
 
-    target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    endif ()
     target_link_libraries(opcuaclient
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
@@ -342,7 +353,9 @@ if (BUILD_CLIENT)
         opcuacore
     )
 
-    target_compile_options(opcuaclient PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(opcuaclient PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    endif ()
 endif(BUILD_CLIENT)
 
 
@@ -391,7 +404,9 @@ if(BUILD_SERVER)
         src/server/subscription_service_internal.cpp
         )
 
-    target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
+    endif ()
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
     target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
@@ -446,7 +461,9 @@ if(BUILD_SERVER)
             )
 
         target_include_directories(test_opcuaserver PUBLIC .)
-        target_compile_options(test_opcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
+        if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+            target_compile_options(test_opcuaserver PUBLIC ${D}TEST_CORE_CONFIG_PATH="${TEST_CORE_CONFIG_PATH}" ${STATIC_LIBRARY_CXX_FLAGS})
+        endif ()
 
         add_test(NAME opcuaserverapp COMMAND test_opcuaserver)
 
@@ -474,7 +491,9 @@ if(BUILD_SERVER)
         opcuaserver
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
         )
-    target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    endif ()
 
 endif(BUILD_SERVER)
 
@@ -494,7 +513,9 @@ if (BUILD_CLIENT)
         opcuaclient
     )
 
-    target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(example_client PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    endif ()
 
 endif (BUILD_CLIENT)
 
@@ -514,7 +535,9 @@ if(BUILD_SERVER)
     opcuaserver
     )
 
-    target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+        target_compile_options(example_server PUBLIC ${EXECUTABLE_CXX_FLAGS})
+    endif ()
     if(MSVC)
         set_target_properties(example_server PROPERTIES LINK_FLAGS /STACK:3000000)
     endif(MSVC)
