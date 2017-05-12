@@ -18,9 +18,15 @@ namespace Common
   {
   protected:
     Interface(){}
+
+    // do _not_ allow destructors to throw exceptions as it
+    // creates a compiler error on OSX and may break shared_ptr
+    // cleanup and cause memory leaks
+    /*
     // c++11 destructors default to noexcept
     // allow implementations to do so.
-//    virtual ~Interface() noexcept (false) {}
+    virtual ~Interface() noexcept (false) {}
+    */
 
     Interface(const Interface&) = delete;
     const Interface& operator=(const Interface&) = delete;
