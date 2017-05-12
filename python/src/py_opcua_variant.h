@@ -42,6 +42,28 @@ list ToList(const std::vector<SourceType> objects)
   return result;
 }
 
+// This specialisation is needed because on OS-X 10.12 clang-802.0.42
+// with boost 1.59.0 gives the following compile error:
+// /opt/local/include/boost/python/converter/arg_to_python.hpp:209:9:
+//   error: no matching constructor for initialization of
+//      'boost::python::converter::detail::arg_to_python_base'
+//      : arg_to_python_base(&x, registered<T>::converters)
+template <>
+list ToList(const std::vector<bool> objects)
+{
+  list result;
+
+  std::vector<bool>::const_iterator i = objects.begin();
+  std::vector<bool>::const_iterator end = objects.end();
+  for( ; i != end; ++i)
+    {
+      bool obj = *i;
+      result.append(obj);
+    }
+
+  return result;
+}
+
 template <typename T>
 std::vector<T> ToVector(const object & list)
 {
