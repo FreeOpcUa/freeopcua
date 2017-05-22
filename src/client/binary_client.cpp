@@ -90,33 +90,33 @@ namespace
     {
       //PrintBlob(data);
       Data = std::move(data);
-	  this->header = std::move(h);
+      this->header = std::move(h);
       doneEvent.notify_all();
     }
 
     T WaitForData(std::chrono::milliseconds msec)
     {
-	  if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
-		  throw std::runtime_error("Response timed out");
+      if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
+        throw std::runtime_error("Response timed out");
 
       T result;
-	  result.Header = std::move(this->header);
+      result.Header = std::move(this->header);
       if ( Data.empty() )
       {
         std::cout << "Error: received empty packet from server" << std::endl;
       }
-	  else
-	  {
-		  BufferInputChannel bufferInput(Data);
-		  IStreamBinary in(bufferInput);
-		  in >> result;
-	  }
+      else
+      {
+        BufferInputChannel bufferInput(Data);
+        IStreamBinary in(bufferInput);
+        in >> result;
+      }
       return result;
     }
 
   private:
     std::vector<char> Data;
-	ResponseHeader	  header;
+    ResponseHeader header;
     std::mutex m;
     std::unique_lock<std::mutex> lock;
     std::condition_variable doneEvent;
@@ -193,7 +193,7 @@ namespace
   private:
     typedef std::function<void(std::vector<char>, ResponseHeader)> ResponseCallback;
     typedef std::map<uint32_t, ResponseCallback> CallbackMap;
-		std::vector<char> messageBuffer;
+    std::vector<char> messageBuffer;
 
   public:
     BinaryClient(std::shared_ptr<IOChannel> channel, const SecureConnectionParams& params, bool debug)
@@ -247,7 +247,7 @@ namespace
     ////////////////////////////////////////////////////////////////
     /// Session Services
     ////////////////////////////////////////////////////////////////
-    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) override
     {
       if (Debug)  { std::cout << "binary_client| CreateSession -->" << std::endl; }
       CreateSessionRequest request;
@@ -285,7 +285,7 @@ namespace
       return response;
     }
 
-    virtual CloseSessionResponse CloseSession()
+    virtual CloseSessionResponse CloseSession() override
     {
       if (Debug)  { std::cout << "binary_client| CloseSession -->" << std::endl; }
       CloseSessionRequest request;
@@ -295,7 +295,7 @@ namespace
       return response;
     }
 
-    virtual void AbortSession()
+    virtual void AbortSession() override
     {
       if (Debug)  { std::cout << "binary_client| AbortSession -->" << std::endl; }
       RemoveSelfReferences();
@@ -321,7 +321,7 @@ namespace
     }
 
   public:
-    virtual std::vector<DataValue> Read(const ReadParameters& params) const
+    virtual std::vector<DataValue> Read(const ReadParameters& params) const override
     {
       if (Debug)  {
         std::cout << "binary_client| Read -->" << std::endl;
@@ -338,7 +338,7 @@ namespace
       return response.Results;
     }
 
-    virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values)
+    virtual std::vector<OpcUa::StatusCode> Write(const std::vector<WriteValue>& values) override
     {
       if (Debug)  { std::cout << "binary_client| Write -->" << std::endl; }
       WriteRequest request;
@@ -356,7 +356,7 @@ namespace
       return shared_from_this();
     }
 
-    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
+    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const override
     {
       if (Debug)  { std::cout << "binary_client| FindServers -->" << std::endl; }
       OpcUa::FindServersRequest request;
@@ -366,7 +366,7 @@ namespace
       return response.Data.Descriptions;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const override
     {
       if (Debug)  { std::cout << "binary_client| GetEndpoints -->" << std::endl; }
       OpcUa::GetEndpointsRequest request;
@@ -379,7 +379,7 @@ namespace
       return response.Endpoints;
     }
 
-    virtual void RegisterServer(const ServerParameters& parameters)
+    virtual void RegisterServer(const ServerParameters& parameters) override
     {
     }
 
@@ -391,7 +391,7 @@ namespace
       return shared_from_this();
     }
 
-    virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall)
+    virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest>& methodsToCall) override
     {
       if (Debug) {std::cout << "binary_clinent | Call -->" << std::endl;}
       CallRequest request;
@@ -415,7 +415,7 @@ namespace
       return shared_from_this();
     }
 
-    virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items)
+    virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items) override
     {
       if (Debug)  { std::cout << "binary_client| AddNodes -->" << std::endl; }
       AddNodesRequest request;
@@ -425,7 +425,7 @@ namespace
       return response.results;
     }
 
-    virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items)
+    virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items) override
     {
       if (Debug)  { std::cout << "binary_client| AddReferences -->" << std::endl; }
       AddReferencesRequest request;
@@ -435,7 +435,7 @@ namespace
       return response.Results;
     }
 
-    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback)
+    virtual void SetMethod(const NodeId& node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback) override
     {
       if (Debug)  { std::cout << "binary_client| SetMethod has no effect on client!" << std::endl; }
       return;
@@ -449,232 +449,231 @@ namespace
       return shared_from_this();
     }
 
-    virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
+    virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback) override
     {
-      if (Debug)  { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
+      if (Debug) { std::cout << "binary_client| CreateSubscription -->" << std::endl; }
       const CreateSubscriptionResponse response = Send<CreateSubscriptionResponse>(request);
       if (Debug) std::cout << "BinaryClient | got CreateSubscriptionResponse" << std::endl;
       PublishCallbacks[response.Data.SubscriptionId] = callback;// TODO Pass calback to the Publish method.
-      if (Debug)  { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
+      if (Debug) { std::cout << "binary_client| CreateSubscription <--" << std::endl; }
       return response.Data;
     }
 
-    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
+    virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions) override
     {
-      if (Debug)  { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
+      if (Debug) { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }
       DeleteSubscriptionsRequest request;
       request.SubscriptionIds = subscriptions;
       const DeleteSubscriptionsResponse response = Send<DeleteSubscriptionsResponse>(request);
-      if (Debug)  { std::cout << "binary_client| DeleteSubscriptions <--" << std::endl; }
+      if (Debug) { std::cout << "binary_client| DeleteSubscriptions <--" << std::endl; }
       return response.Results;
     }
 
-    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters)
+    virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& parameters) override
     {
-      if (Debug)  { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
+      if (Debug) { std::cout << "binary_client| CreateMonitoredItems -->" << std::endl; }
       CreateMonitoredItemsRequest request;
       request.Parameters = parameters;
       const CreateMonitoredItemsResponse response = Send<CreateMonitoredItemsResponse>(request);
-      if (Debug)  { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
+      if (Debug) { std::cout << "binary_client| CreateMonitoredItems <--" << std::endl; }
       return response.Results;
     }
 
-    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params)
+    virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params) override
     {
-      if (Debug)  { std::cout << "binary_client| DeleteMonitoredItems -->" << std::endl; }
+      if (Debug) { std::cout << "binary_client| DeleteMonitoredItems -->" << std::endl; }
       DeleteMonitoredItemsRequest request;
       request.Parameters = params;
       const DeleteMonitoredItemsResponse response = Send<DeleteMonitoredItemsResponse>(request);
-      if (Debug)  { std::cout << "binary_client| DeleteMonitoredItems <--" << std::endl; }
+      if (Debug) { std::cout << "binary_client| DeleteMonitoredItems <--" << std::endl; }
       return response.Results;
     }
 
-    virtual void Publish(const PublishRequest& originalrequest)
+    virtual void Publish(const PublishRequest& originalrequest) override
     {
-      if (Debug) {std::cout << "binary_client| Publish -->" << "request with " << originalrequest.SubscriptionAcknowledgements.size() << " acks" << std::endl;}
+      if (Debug) { std::cout << "binary_client| Publish -->" << "request with " << originalrequest.SubscriptionAcknowledgements.size() << " acks" << std::endl;}
       PublishRequest request(originalrequest);
       request.Header = CreateRequestHeader();
       request.Header.Timeout = 0; //We do not want the request to timeout!
 
-      ResponseCallback responseCallback = [this](std::vector<char> buffer, ResponseHeader h){
-        if (Debug) {std::cout << "BinaryClient | Got Publish Response, from server " << std::endl;}
-		PublishResponse response;
-		if (h.ServiceResult != OpcUa::StatusCode::Good)
-		{
-			response.Header = std::move(h);
-		}
-		else
-		{
-			BufferInputChannel bufferInput(buffer);
-			IStreamBinary in(bufferInput);
-			in >> response;
-		}
+      ResponseCallback responseCallback = [this](std::vector<char> buffer, ResponseHeader h) {
+        if (Debug) { std::cout << "BinaryClient | Got Publish Response, from server " << std::endl;}
+        PublishResponse response;
+        if (h.ServiceResult != OpcUa::StatusCode::Good)
+        {
+          response.Header = std::move(h);
+        }
+        else
+        {
+          BufferInputChannel bufferInput(buffer);
+          IStreamBinary in(bufferInput);
+          in >> response;
+        }
 
-        CallbackService.post([this, response]()
+        CallbackService.post([this, response]() {
+          if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
+          {
+            if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Parameters.SubscriptionId << std::endl; }
+            SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Parameters.SubscriptionId);
+            if (callbackIt == this->PublishCallbacks.end())
             {
-			if (response.Header.ServiceResult == OpcUa::StatusCode::Good)
-			{
-				if (Debug) { std::cout << "BinaryClient | Calling callback for Subscription " << response.Parameters.SubscriptionId << std::endl; }
-				SubscriptionCallbackMap::const_iterator callbackIt = this->PublishCallbacks.find(response.Parameters.SubscriptionId);
-				if (callbackIt == this->PublishCallbacks.end())
-				{
-					std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Parameters.SubscriptionId << std::endl;
-				}
-				else
-				{
-					try { //calling client code, better put it under try/catch otherwise we crash entire client
-						callbackIt->second(response.Parameters);
-					}
-					catch (const std::exception& ex)
-					{
-						std::cout << "Error calling application callback " << ex.what() << std::endl;
-					}
-				}
-			}
-			else if (response.Header.ServiceResult == OpcUa::StatusCode::BadSessionClosed)
-			{
-				if (Debug)
-				{
-					std::cout << "BinaryClient | Session is closed";
-				}
-			}
-			else
-			{
-				// TODO
-			}
-			});
-	  };
-	  std::unique_lock<std::mutex> lock(Mutex);
-	  Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
-	  lock.unlock();
-	  Send(request);
-	  if (Debug) { std::cout << "binary_client| Publish  <--" << std::endl; }
-	}
+              std::cout << "BinaryClient | Error Unknown SubscriptionId " << response.Parameters.SubscriptionId << std::endl;
+            }
+            else
+            {
+              try { //calling client code, better put it under try/catch otherwise we crash entire client
+                callbackIt->second(response.Parameters);
+              }
+              catch (const std::exception& ex)
+              {
+                std::cout << "Error calling application callback " << ex.what() << std::endl;
+              }
+            }
+          }
+          else if (response.Header.ServiceResult == OpcUa::StatusCode::BadSessionClosed)
+          {
+            if (Debug)
+            {
+              std::cout << "BinaryClient | Session is closed";
+            }
+          }
+          else
+          {
+            // TODO
+          }
+          });
+      };
+      std::unique_lock<std::mutex> lock(Mutex);
+      Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+      lock.unlock();
+      Send(request);
+      if (Debug) { std::cout << "binary_client| Publish  <--" << std::endl; }
+    }
 
-	virtual RepublishResponse Republish(const RepublishParameters& params)
-	{
-		if (Debug) { std::cout << "binary_client| Republish -->" << std::endl; }
-		RepublishRequest request;
-		request.Header = CreateRequestHeader();
-		request.Parameters = params;
+    virtual RepublishResponse Republish(const RepublishParameters& params) override
+    {
+      if (Debug) { std::cout << "binary_client| Republish -->" << std::endl; }
+      RepublishRequest request;
+      request.Header = CreateRequestHeader();
+      request.Parameters = params;
 
-		RepublishResponse response = Send<RepublishResponse>(request);
-		if (Debug) { std::cout << "binary_client| Republish  <--" << std::endl; }
-		return response;
-	}
+      RepublishResponse response = Send<RepublishResponse>(request);
+      if (Debug) { std::cout << "binary_client| Republish  <--" << std::endl; }
+      return response;
+    }
 
-	////////////////////////////////////////////////////////////////
-	/// View Services
-	////////////////////////////////////////////////////////////////
-	virtual std::shared_ptr<ViewServices> Views() override
-	{
-		return shared_from_this();
-	}
+    ////////////////////////////////////////////////////////////////
+    /// View Services
+    ////////////////////////////////////////////////////////////////
+    virtual std::shared_ptr<ViewServices> Views() override
+    {
+      return shared_from_this();
+    }
 
-	virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const
-	{
-		if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
-		TranslateBrowsePathsToNodeIdsRequest request;
-		request.Header = CreateRequestHeader();
-		request.Parameters = params;
-		const TranslateBrowsePathsToNodeIdsResponse response = Send<TranslateBrowsePathsToNodeIdsResponse>(request);
-		if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
-		return response.Result.Paths;
-	}
+    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const override
+    {
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds -->" << std::endl; }
+      TranslateBrowsePathsToNodeIdsRequest request;
+      request.Header = CreateRequestHeader();
+      request.Parameters = params;
+      const TranslateBrowsePathsToNodeIdsResponse response = Send<TranslateBrowsePathsToNodeIdsResponse>(request);
+      if (Debug)  { std::cout << "binary_client| TranslateBrowsePathsToNodeIds <--" << std::endl; }
+      return response.Result.Paths;
+    }
 
 
-	virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const
-	{
-		if (Debug)  {
-			std::cout << "binary_client| Browse -->";
-			for (BrowseDescription desc : query.NodesToBrowse)
-			{
-				std::cout << desc.NodeToBrowse << "  ";
-			}
-			std::cout << std::endl;
-		}
-		BrowseRequest request;
-		request.Header = CreateRequestHeader();
-		request.Query = query;
-		const BrowseResponse response = Send<BrowseResponse>(request);
-		ContinuationPoints.clear();
-		for (BrowseResult result : response.Results)
-		{
-			if (!result.ContinuationPoint.empty())
-			{
-				ContinuationPoints.push_back(result.ContinuationPoint);
-			}
-		}
-		if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
-		return  response.Results;
-	}
+    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const override
+    {
+      if (Debug)  {
+        std::cout << "binary_client| Browse -->";
+        for (BrowseDescription desc : query.NodesToBrowse)
+        {
+          std::cout << desc.NodeToBrowse << "  ";
+        }
+        std::cout << std::endl;
+      }
+      BrowseRequest request;
+      request.Header = CreateRequestHeader();
+      request.Query = query;
+      const BrowseResponse response = Send<BrowseResponse>(request);
+      ContinuationPoints.clear();
+      for (BrowseResult result : response.Results)
+      {
+        if (!result.ContinuationPoint.empty())
+        {
+          ContinuationPoints.push_back(result.ContinuationPoint);
+        }
+      }
+      if (Debug)  { std::cout << "binary_client| Browse <--" << std::endl; }
+      return  response.Results;
+    }
 
-	virtual std::vector<BrowseResult> BrowseNext() const
-	{
-		//FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
-		if (ContinuationPoints.empty())
-		{
-			if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
-			return std::vector<BrowseResult>();
-		}
-		if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
-		BrowseNextRequest request;
-		request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true : false;
-		request.ContinuationPoints = ContinuationPoints;
-		const BrowseNextResponse response = Send<BrowseNextResponse>(request);
-		ContinuationPoints.clear();
-		for (auto result : response.Results)
-		{
-			if (!result.ContinuationPoint.empty())
-			{
-				ContinuationPoints.push_back(result.ContinuationPoint);
-			}
-		}
-		if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
-		return response.Results;
-	}
+    virtual std::vector<BrowseResult> BrowseNext() const override
+    {
+      //FIXME: fix method interface so we do not need to decice arbitriraly if we need to send BrowseNext or not...
+      if (ContinuationPoints.empty())
+      {
+        if (Debug)  { std::cout << "No Continuation point, no need to send browse next request" << std::endl; }
+        return std::vector<BrowseResult>();
+      }
+      if (Debug)  { std::cout << "binary_client| BrowseNext -->" << std::endl; }
+      BrowseNextRequest request;
+      request.ReleaseContinuationPoints = ContinuationPoints.empty() ? true : false;
+      request.ContinuationPoints = ContinuationPoints;
+      const BrowseNextResponse response = Send<BrowseNextResponse>(request);
+      ContinuationPoints.clear();
+      for (auto result : response.Results)
+      {
+        if (!result.ContinuationPoint.empty())
+        {
+          ContinuationPoints.push_back(result.ContinuationPoint);
+        }
+      }
+      if (Debug)  { std::cout << "binary_client| BrowseNext <--" << std::endl; }
+      return response.Results;
+    }
 
-	std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const
-	{
-		if (Debug)
-		{
-			std::cout << "binary_clinet| RegisterNodes -->\n\tNodes to register:" << std::endl;
-			for (auto& param : params) {
-				std::cout << "\t\t" << param << std::endl;
-			}
-		}
+    std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const override
+    {
+      if (Debug)
+      {
+        std::cout << "binary_clinet| RegisterNodes -->\n\tNodes to register:" << std::endl;
+        for (auto& param : params) {
+          std::cout << "\t\t" << param << std::endl;
+        }
+      }
 
-		RegisterNodesRequest request;
+      RegisterNodesRequest request;
 
-		request.NodesToRegister = params;
-		RegisterNodesResponse response = Send<RegisterNodesResponse>(request);
-		if (Debug)
-		{
-			std::cout << "binary_client| RegisterNodes <--\n\tRegistered NodeIds:" << std::endl;
-			for (auto&id : response.Result) {
-				std::cout << "\t\t" << id << std::endl;
-			}
-		}
-		return response.Result;
-	}
+      request.NodesToRegister = params;
+      RegisterNodesResponse response = Send<RegisterNodesResponse>(request);
+      if (Debug)
+      {
+        std::cout << "binary_client| RegisterNodes <--\n\tRegistered NodeIds:" << std::endl;
+        for (auto&id : response.Result) {
+          std::cout << "\t\t" << id << std::endl;
+        }
+      }
+      return response.Result;
+    }
 
-	void UnregisterNodes(const std::vector<NodeId>& params) const
-	{
-		if (Debug) {
-			std::cout << "binary_client| UnregisterNodes -->\n\tUnregistering nodes:" << std::endl;
-			for (auto& id : params) {
-				std::cout << "\t\t" << id << std::endl;
-			}
-		}
+    void UnregisterNodes(const std::vector<NodeId>& params) const override
+    {
+      if (Debug) {
+        std::cout << "binary_client| UnregisterNodes -->\n\tUnregistering nodes:" << std::endl;
+        for (auto& id : params) {
+          std::cout << "\t\t" << id << std::endl;
+        }
+      }
 
-		UnregisterNodesRequest request;
-		request.NodesToUnregister = params;
-		UnregisterNodesResponse response = Send<UnregisterNodesResponse>(request);
+      UnregisterNodesRequest request;
+      request.NodesToUnregister = params;
+      UnregisterNodesResponse response = Send<UnregisterNodesResponse>(request);
 
-		if (Debug) {
-			std::cout << "binary_client| UnregisterNodes <--" << std::endl;
-		}
-	}
+      if (Debug) {
+        std::cout << "binary_client| UnregisterNodes <--" << std::endl;
+      }
+    }
 
   private:
     //FIXME: this method should be removed, better add realease option to BrowseNext
@@ -689,7 +688,7 @@ namespace
     ////////////////////////////////////////////////////////////////
     /// SecureChannel Services
     ////////////////////////////////////////////////////////////////
-    virtual OpcUa::OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& params)
+    virtual OpcUa::OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& params) override
     {
       if (Debug) {std::cout << "binary_client| OpenChannel -->" << std::endl;}
 
@@ -704,7 +703,7 @@ namespace
       return response;
     }
 
-    virtual void CloseSecureChannel(uint32_t channelId)
+    virtual void CloseSecureChannel(uint32_t channelId) override
     {
       try
       {
@@ -731,7 +730,7 @@ namespace
       if (Debug) {std::cout << "binary_client| CloseSecureChannel <--" << std::endl;}
     }
 
-private:
+  private:
     template <typename Response, typename Request>
     Response Send(Request request) const
     {
@@ -747,20 +746,20 @@ private:
 
       Send(request);
 
-	  Response res;
-	  try {
-      res = requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
-	  }
-	  catch (std::exception &ex)
-	  {
-		  //Remove the callback on timeout
-		  std::unique_lock<std::mutex> lock(Mutex);
-		  Callbacks.erase(request.Header.RequestHandle);
-		  lock.unlock();
-		  throw;
-	  }
+      Response res;
+      try {
+        res = requestCallback.WaitForData(std::chrono::milliseconds(request.Header.Timeout));
+      }
+      catch (std::exception &ex)
+      {
+        //Remove the callback on timeout
+        std::unique_lock<std::mutex> lock(Mutex);
+        Callbacks.erase(request.Header.RequestHandle);
+        lock.unlock();
+        throw;
+      }
 
-	  return res;
+      return res;
     }
 
     // Prevent multiple threads from sending parts of different packets at the same time.
@@ -778,7 +777,7 @@ private:
       hdr.AddSize(RawSize(sequence));
       hdr.AddSize(RawSize(request));
 
-	  std::unique_lock<std::mutex> send_lock(send_mutex);
+      std::unique_lock<std::mutex> send_lock(send_mutex);
       Stream << hdr << algorithmHeader << sequence << request << flush;
     }
 
@@ -812,7 +811,7 @@ private:
         Stream >> responseAlgo;
         algo_size = RawSize(responseAlgo);
       }
-			
+
       NodeId id;
       Binary::SequenceHeader responseSequence;
       Stream >> responseSequence; // TODO Check for request Number
@@ -828,7 +827,7 @@ private:
       std::size_t dataSize = responseHeader.Size - expectedHeaderSize;
       if(responseHeader.Chunk == CHT_SINGLE)
       {
-        parseMessage(dataSize, id);			  
+        parseMessage(dataSize, id);
         firstMsgParsed = false;
 
         std::unique_lock<std::mutex> lock(Mutex);
@@ -841,12 +840,12 @@ private:
         callbackIt->second(std::move(messageBuffer), std::move(header));
         messageBuffer.clear();
         Callbacks.erase(callbackIt);
-			}
+      }
       else if(responseHeader.Chunk == CHT_INTERMEDIATE)
       {
         parseMessage(dataSize, id);
-        firstMsgParsed = true;		  
-      }	  
+        firstMsgParsed = true;
+      }
     }
 
     ResponseHeader parseMessage(std::size_t &dataSize, NodeId &id)
@@ -969,8 +968,8 @@ private:
     CallbackThread CallbackService;
     mutable std::mutex Mutex;
     
-		bool firstMsgParsed = false;
-		ResponseHeader header;
+    bool firstMsgParsed = false;
+    ResponseHeader header;
   };
 
   template <>

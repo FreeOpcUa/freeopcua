@@ -22,7 +22,7 @@ namespace
     ServicesRegistry();
 
   public: // InternalServerAddon
-    virtual OpcUa::Services::SharedPtr GetServer() const;
+    virtual OpcUa::Services::SharedPtr GetServer() const override;
     virtual void RegisterEndpointsServices(EndpointServices::SharedPtr endpoints) override;
     virtual void UnregisterEndpointsServices()  override;
     virtual void RegisterViewServices(ViewServices::SharedPtr views) override;
@@ -177,7 +177,7 @@ namespace
       SetMethod(Services);
     }
 
-    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters)
+    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) override
     {
       return CreateSessionResponse();
     }
@@ -188,21 +188,21 @@ namespace
       return ActivateSessionResponse();
     }
 
-    virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters)
+    virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) override
     {
       return OpenSecureChannelResponse();
     }
 
-    virtual void CloseSecureChannel(uint32_t channelId)
+    virtual void CloseSecureChannel(uint32_t channelId) override
     {
     }
 
-    virtual CloseSessionResponse CloseSession()
+    virtual CloseSessionResponse CloseSession() override
     {
       return CloseSessionResponse();
     }
 
-    virtual void AbortSession()
+    virtual void AbortSession() override
     {
     }
 
