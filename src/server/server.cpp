@@ -38,27 +38,27 @@ namespace OpcUa
 
   void UaServer::SetEndpoint(const std::string& endpoint)
   {
-	  Endpoint = endpoint;
+    Endpoint = endpoint;
   }
 
   void UaServer::SetProductURI(const std::string& uri)
   {
-	  ProductUri = uri;
+    ProductUri = uri;
   }
 
   void UaServer::SetServerURI(const std::string& uri)
   {
-	  ServerUri = uri;
+    ServerUri = uri;
   }
 
   void UaServer::SetServerName(const std::string& name)
   {
-	  Name = name;
+    Name = name;
   }
 
   void UaServer::AddAddressSpace(const std::string& path)
   {
-	  XmlAddressSpaces.push_back(path);
+    XmlAddressSpaces.push_back(path);
   }
 
   void UaServer::CheckStarted() const
@@ -195,7 +195,7 @@ namespace OpcUa
 
   ServerOperations UaServer::CreateServerOperations()
   {
-	  return std::move(ServerOperations(Registry->GetServer()));
+    return std::move(ServerOperations(Registry->GetServer()));
   }
 
   void UaServer::TriggerEvent(Event event)

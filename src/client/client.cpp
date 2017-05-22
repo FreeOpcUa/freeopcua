@@ -88,7 +88,7 @@ namespace OpcUa
     catch (std::system_error ex)
     {
       if (Debug) { std::cout << "KeepaliveThread | Exception thrown at attempt to join: " << ex.what() << std::endl; }
-	  throw ex;
+      throw ex;
     }
   }
 
@@ -397,7 +397,7 @@ namespace OpcUa
 
   ServerOperations UaClient::CreateServerOperations()
   {
-	  return std::move(ServerOperations(Server));
+    return std::move(ServerOperations(Server));
   }
 } // namespace OpcUa
 

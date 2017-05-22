@@ -60,17 +60,17 @@ namespace
     }
 
 
-    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
+    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const override
     {
       return Endpoints->FindServers(params);
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const override
     {
       return Endpoints->GetEndpoints(filter);
     }
 
-    virtual void RegisterServer(const ServerParameters& parameters)
+    virtual void RegisterServer(const ServerParameters& parameters) override
     {
       Endpoints->RegisterServer(parameters);
     }
