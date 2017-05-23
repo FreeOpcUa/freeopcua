@@ -53,12 +53,10 @@ list ToList(const std::vector<bool> objects)
 {
   list result;
 
-  std::vector<bool>::const_iterator i = objects.begin();
-  std::vector<bool>::const_iterator end = objects.end();
-  for( ; i != end; ++i)
+  for (auto obj : objects)
     {
-      bool obj = *i;
-      result.append(obj);
+      bool tmp = obj;
+      result.append(tmp);
     }
 
   return result;
