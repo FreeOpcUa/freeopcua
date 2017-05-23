@@ -30,7 +30,7 @@
 
 #include <array>
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include <future>
 #include <iostream>
 #include <set>
 
@@ -94,10 +94,10 @@ namespace
       Socket.close();
 
       /* queue a dummy operation to io_service to make sure we do not return
-       * until all existing async io request of this instance are actually
+       * until all existing async io requests of this instance are actually
        * processed
        */
-      typedef boost::promise<void> Promise;
+      typedef std::promise<void> Promise;
       Promise promise;
       Socket.get_io_service().post(bind(&Promise::set_value, &promise));
       promise.get_future().wait();
@@ -331,9 +331,11 @@ namespace
     // So have a copy of this container to have a stable iterator.
 
     // guard copy operation
-    Mutex.lock();
-    std::set<std::shared_ptr<OpcTcpConnection>> tmp(Clients);
-    Mutex.unlock();
+    typedef std::set<std::shared_ptr<OpcTcpConnection>> OpcTcpConnectionSet;
+    OpcTcpConnectionSet tmp;
+    { std::unique_lock<std::mutex> lock(Mutex);
+      tmp = OpcTcpConnectionSet(Clients);
+    }
 
     // Unlock before client->Stop() because stop will interrupt all pending
     // async read/write operations, which may then call OpcTcpConnection::GoodBye(),
@@ -347,6 +349,15 @@ namespace
     { std::unique_lock<std::mutex> lock(Mutex);
       Clients.clear();
     }
+
+    /* queue a dummy operation to io_service to make sure we do not return
+     * until all existing async io requests of this instance are actually
+     * processed
+     */
+    typedef std::promise<void> Promise;
+    Promise promise;
+    acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
+    promise.get_future().wait();
   }
 
   void OpcTcpServer::Accept()
