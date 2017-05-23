@@ -327,19 +327,23 @@ namespace
     // Actively shutdown OpcTcpConnections to clear open async requests from worker
     // thread.
     // Warning: the Clients container may be modified by OpcTcpConnections::GoodBye
-    // when calling Stop() which makes our iterator invalid. So have a copy of thiss
-    // container to iterate have a stable iterator.
+    // when calling Stop() which makes the iterator used in our for loop invalid.
+    // So have a copy of this container to have a stable iterator.
+
+    // guard copy operation
     Mutex.lock();
     std::set<std::shared_ptr<OpcTcpConnection>> tmp(Clients);
     Mutex.unlock();
-    auto i = tmp.begin();
-    while (i != tmp.end()) {
-      (*i)->Stop();
-      ++i;
+
+    // Unlock before client->Stop() because stop will interrupt all pending
+    // async read/write operations, which may then call OpcTcpConnection::GoodBye(),
+    // which needs access to OpcTcpServer::Clients. Otherwise we run into a deadlock
+    // because stop waits for completion of pending operations.
+    for (auto client : tmp) {
+      client->Stop();
     }
 
     // clear possibly remaining Client's
-
     { std::unique_lock<std::mutex> lock(Mutex);
       Clients.clear();
     }
@@ -351,7 +355,7 @@ namespace
     {
       acceptor.async_accept(socket, [this](boost::system::error_code errorCode) {
         if (!acceptor.is_open()) {
-            return;
+          return;
         }
         if (!errorCode)
         {
