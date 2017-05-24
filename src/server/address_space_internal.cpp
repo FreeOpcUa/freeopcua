@@ -572,13 +572,11 @@ namespace OpcUa
     {
       if (id == ObjectId::Null || id.IsNull())
       {
-        return OpcUa::NumericNodeId(++MaxNodeIdNum, DefaultIdx);
         return CreateUniqueNodeId(DefaultIdx);
       }
 
       if (id.HasNullIdentifier())
       {
-        return OpcUa::NumericNodeId(++MaxNodeIdNum, id.GetNamespaceIndex());
         return CreateUniqueNodeId(id.GetNamespaceIndex());
       }
 
