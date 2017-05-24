@@ -30,6 +30,7 @@
 
 #include <array>
 #include <boost/asio.hpp>
+#include <future>
 #include <iostream>
 #include <set>
 
@@ -69,6 +70,7 @@ namespace
   private:
     Parameters Params;
     Services::SharedPtr Server;
+    std::mutex Mutex;
     std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
     tcp::socket socket;
@@ -90,6 +92,15 @@ namespace
     virtual void Stop()
     {
       Socket.close();
+
+      /* queue a dummy operation to io_service to make sure we do not return
+       * until all existing async io requests of this instance are actually
+       * processed
+       */
+      typedef std::promise<void> Promise;
+      Promise promise;
+      Socket.get_io_service().post(bind(&Promise::set_value, &promise));
+      promise.get_future().wait();
     }
 
 
@@ -232,7 +243,7 @@ namespace
       std::cerr << "opc_tcp_async| ERROR!!! Message from client has been processed partially." << std::endl;
     }
 
-    if ( ! cont )
+    if (!cont)
     {
       GoodBye();
       return;
@@ -281,17 +292,17 @@ namespace
     , acceptor(ioService)
   {
     tcp::endpoint ep;
-    if (params.Host.empty() )
+    if (params.Host.empty())
     {
-      ep = tcp::endpoint( tcp::v4(), params.Port );
+      ep = tcp::endpoint(tcp::v4(), params.Port);
     }
-    else if ( params.Host == "localhost" )
+    else if (params.Host == "localhost")
     {
-      ep = tcp::endpoint( ip::address::from_string("127.0.0.1"), params.Port );
+      ep = tcp::endpoint(ip::address::from_string("127.0.0.1"), params.Port);
     }
     else
     {
-      ep = tcp::endpoint( ip::address::from_string(params.Host), params.Port );
+      ep = tcp::endpoint(ip::address::from_string(params.Host), params.Port);
     }
     acceptor.open(ep.protocol());
     acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
@@ -301,28 +312,69 @@ namespace
   void OpcTcpServer::Listen()
   {
     std::clog << "opc_tcp_async| Running server." << std::endl;
+
+    std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
+    acceptor.listen();
+
     Accept();
   }
 
   void OpcTcpServer::Shutdown()
   {
     std::clog << "opc_tcp_async| Shutting down server." << std::endl;
-    Clients.clear();
     acceptor.close();
+
+    // Actively shutdown OpcTcpConnections to clear open async requests from worker
+    // thread.
+    // Warning: the Clients container may be modified by OpcTcpConnections::GoodBye
+    // when calling Stop() which makes the iterator used in our for loop invalid.
+    // So have a copy of this container to have a stable iterator.
+
+    // guard copy operation
+    typedef std::set<std::shared_ptr<OpcTcpConnection>> OpcTcpConnectionSet;
+    OpcTcpConnectionSet tmp;
+    { std::unique_lock<std::mutex> lock(Mutex);
+      tmp = OpcTcpConnectionSet(Clients);
+    }
+
+    // Unlock before client->Stop() because stop will interrupt all pending
+    // async read/write operations, which may then call OpcTcpConnection::GoodBye(),
+    // which needs access to OpcTcpServer::Clients. Otherwise we run into a deadlock
+    // because stop waits for completion of pending operations.
+    for (auto client : tmp) {
+      client->Stop();
+    }
+
+    // clear possibly remaining Client's
+    { std::unique_lock<std::mutex> lock(Mutex);
+      Clients.clear();
+    }
+
+    /* queue a dummy operation to io_service to make sure we do not return
+     * until all existing async io requests of this instance are actually
+     * processed
+     */
+    typedef std::promise<void> Promise;
+    Promise promise;
+    acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
+    promise.get_future().wait();
   }
 
   void OpcTcpServer::Accept()
   {
     try
     {
-      std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
-      acceptor.listen();
-      acceptor.async_accept(socket, [this](boost::system::error_code errorCode){
+      acceptor.async_accept(socket, [this](boost::system::error_code errorCode) {
+        if (!acceptor.is_open()) {
+          return;
+        }
         if (!errorCode)
         {
           std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
           std::shared_ptr<OpcTcpConnection> connection = std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode);
-          Clients.insert(connection);
+          { std::unique_lock<std::mutex> lock(Mutex);
+            Clients.insert(connection);
+          }
           connection->Start();
         }
         else
@@ -340,6 +392,7 @@ namespace
 
   void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)
   {
+    std::unique_lock<std::mutex> lock(Mutex);
     Clients.erase(client);
   }
 

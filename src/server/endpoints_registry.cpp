@@ -28,13 +28,13 @@ namespace
     DEFINE_CLASS_POINTERS(EndpointServices)
 
   public:
-    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const
+    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const override
     {
       // TODO apply filter
       return Applications;
     }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const
+    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const override
     {
       // TODO apply filter.
       return Endpoints;
