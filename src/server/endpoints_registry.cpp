@@ -57,7 +57,6 @@ namespace
 
   private:
     Server::ServicesRegistry::SharedPtr InternalServer;
-    bool Debug;
 
     std::vector<EndpointDescription> Endpoints;
     std::vector<ApplicationDescription> Applications;

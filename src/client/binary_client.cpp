@@ -848,7 +848,7 @@ namespace
       }
     }
 
-    ResponseHeader parseMessage(std::size_t &dataSize, NodeId &id)
+    void parseMessage(std::size_t &dataSize, NodeId &id)
     {
       std::vector<char> buffer(dataSize);
       BufferInputChannel bufferInput(buffer);
@@ -876,7 +876,6 @@ namespace
         }
 
         messageBuffer.insert(messageBuffer.end(), buffer.begin(), buffer.end());
-        return header;
       }
       else
       {
