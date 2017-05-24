@@ -18,9 +18,8 @@ namespace Common
   {
   protected:
     Interface(){}
-    // c++11 destructors default to noexcept
-    // allow implementations to do so.
-    virtual ~Interface() noexcept (false) {}
+
+    virtual ~Interface() {}
 
     Interface(const Interface&) = delete;
     const Interface& operator=(const Interface&) = delete;
