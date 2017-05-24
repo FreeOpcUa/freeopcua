@@ -21,7 +21,7 @@ list ToList(const std::vector<T> objects)
 {
   list result;
 
-  for (auto obj : objects)
+  for (T obj : objects)
     {
       result.append(obj);
     }
