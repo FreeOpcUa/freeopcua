@@ -573,14 +573,28 @@ namespace OpcUa
       if (id == ObjectId::Null || id.IsNull())
       {
         return OpcUa::NumericNodeId(++MaxNodeIdNum, DefaultIdx);
+        return CreateUniqueNodeId(DefaultIdx);
       }
 
       if (id.HasNullIdentifier())
       {
         return OpcUa::NumericNodeId(++MaxNodeIdNum, id.GetNamespaceIndex());
+        return CreateUniqueNodeId(id.GetNamespaceIndex());
       }
 
       return id;
+    }
+
+    NodeId AddressSpaceInMemory::CreateUniqueNodeId(uint32_t idx)
+    {
+      for (;;)
+      {
+        NodeId result = OpcUa::NumericNodeId(++MaxNodeIdNum, idx);
+        if (Nodes.find(result) == Nodes.end())
+        {
+          return result;
+        }
+      }
     }
   }
 
