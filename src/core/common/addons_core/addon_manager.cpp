@@ -50,7 +50,7 @@ namespace
     {
     }
 
-    virtual ~AddonsManagerImpl() noexcept (false)
+    virtual ~AddonsManagerImpl()
     {
       try
       {
@@ -65,8 +65,8 @@ namespace
       }
       catch (...)
       {
-        std::cerr << "unknown exception" << std::endl;
-        throw;
+        std::cerr << "unknown exception, terminating" << std::endl;
+        std::terminate();
       }
     }
 
