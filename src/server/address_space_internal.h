@@ -122,7 +122,6 @@ namespace OpcUa
         AddNodesResult AddNode( const AddNodesItem& item );
         StatusCode AddReference(const AddReferencesItem& item);
         NodeId GetNewNodeId(const NodeId& id);
-        NodeId CreateUniqueNodeId(uint32_t idx);
         CallMethodResult CallMethod(CallMethodRequest method);
 
       private:

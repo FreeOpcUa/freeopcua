@@ -570,21 +570,19 @@ namespace OpcUa
 
     NodeId AddressSpaceInMemory::GetNewNodeId(const NodeId& id)
     {
+      uint32_t idx;
       if (id == ObjectId::Null || id.IsNull())
       {
-        return CreateUniqueNodeId(DefaultIdx);
+        idx = DefaultIdx;
+      } else {
+        if (id.HasNullIdentifier())
+        {
+          idx = id.GetNamespaceIndex();
+        } else {
+          return id;
+        }
       }
 
-      if (id.HasNullIdentifier())
-      {
-        return CreateUniqueNodeId(id.GetNamespaceIndex());
-      }
-
-      return id;
-    }
-
-    NodeId AddressSpaceInMemory::CreateUniqueNodeId(uint32_t idx)
-    {
       for (;;)
       {
         NodeId result = OpcUa::NumericNodeId(++MaxNodeIdNum, idx);
