@@ -583,12 +583,22 @@ namespace OpcUa
         }
       }
 
+      // skip over already assigned node id's
+      // this should be a very seldom operation - it only happens when
+      // we actively assign static node id's to some nodes and after that
+      // create nodes using automatic id allocation and even then it
+      // only happens once. So we don't care about optimiziation here.
       for (;;)
       {
         NodeId result = OpcUa::NumericNodeId(++MaxNodeIdNum, idx);
         if (Nodes.find(result) == Nodes.end())
         {
           return result;
+        }
+        // completly unlikly - we would have to allocate 4gig nodes to
+        // fullfill this condition
+        if (MaxNodeIdNum == std::numeric_limits<uint32_t>::max()) {
+          throw std::runtime_error("AddressSpaceInternal | unable to assign new NodeId: range exceeded");
         }
       }
     }
