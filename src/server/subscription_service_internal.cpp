@@ -89,13 +89,13 @@ namespace OpcUa
       return result;
     }
 
-    ModifySubscriptionResponse SubscriptionServiceInternal::ModifySubscription(const ModifySubscriptionRequest& request)
+    ModifySubscriptionResponse SubscriptionServiceInternal::ModifySubscription(const ModifySubscriptionParameters& parameters)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
       ModifySubscriptionResponse response;
 
-      uint32_t subid = request.Parameters.SubscriptionId;
+      uint32_t subid = parameters.SubscriptionId;
       SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(subid);
       if (itsub == SubscriptionsMap.end())
       {
@@ -106,7 +106,7 @@ namespace OpcUa
       if (Debug) std::cout << "SubscriptionService | Modify Subscription with Id: " << subid << std::endl;
 
       std::shared_ptr<InternalSubscription> sub = itsub->second;
-      response.Parameters = sub->ModifySubscription(request.Parameters);
+      response.Parameters = sub->ModifySubscription(parameters);
       return response;
     }
 

@@ -459,9 +459,11 @@ namespace
       return response.Data;
     }
 
-    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionRequest& request) override
+    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters& parameters) override
     {
       if (Debug) { std::cout << "binary_client| ModifySubscription -->" << std::endl; }
+      ModifySubscriptionRequest request;
+      request.Parameters = parameters;
       const ModifySubscriptionResponse response = Send<ModifySubscriptionResponse>(request);
       if (Debug) { std::cout << "binary_client| ModifySubscription <--" << std::endl; }
       return response;

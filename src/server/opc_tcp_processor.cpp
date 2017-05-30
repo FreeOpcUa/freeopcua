@@ -542,7 +542,7 @@ namespace OpcUa
           istream >> request.Parameters;
           request.Header = requestHeader;
 
-          ModifySubscriptionResponse response = Server->Subscriptions()->ModifySubscription(request);
+          ModifySubscriptionResponse response = Server->Subscriptions()->ModifySubscription(request.Parameters);
           FillResponseHeader(requestHeader, response.Header);
 
           SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);

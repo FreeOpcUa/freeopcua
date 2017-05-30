@@ -136,7 +136,7 @@ namespace
       return SubscriptionData();
     }
 
-    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionRequest& request)
+    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters& parameters)
     {
       return ModifySubscriptionResponse();
     }
