@@ -26,31 +26,32 @@
 namespace OpcUa
 {
 
-  InputFromBuffer::InputFromBuffer(const char* buf, std::size_t bufSize)
-    : Buffer(buf)
-    , Size(bufSize)
-  {
-    if (!Buffer) throw std::invalid_argument("InputFromBuffer: Input buffer cannot be empty.");
-    if (!bufSize) throw std::invalid_argument("InputFromBuffer: Invalid size of buffer");
-  }
+InputFromBuffer::InputFromBuffer(const char * buf, std::size_t bufSize)
+  : Buffer(buf)
+  , Size(bufSize)
+{
+  if (!Buffer) { throw std::invalid_argument("InputFromBuffer: Input buffer cannot be empty."); }
 
-  std::size_t InputFromBuffer::Receive(char* data, std::size_t size)
-  {
-    if (Size == 0)
+  if (!bufSize) { throw std::invalid_argument("InputFromBuffer: Invalid size of buffer"); }
+}
+
+std::size_t InputFromBuffer::Receive(char * data, std::size_t size)
+{
+  if (Size == 0)
     {
       return 0;
     }
 
-    const std::size_t sizeToRead = std::min(Size, size);
-    memcpy(data, Buffer, sizeToRead);
-    Size -= sizeToRead;
-    Buffer += sizeToRead;
-    return sizeToRead;
-  }
+  const std::size_t sizeToRead = std::min(Size, size);
+  memcpy(data, Buffer, sizeToRead);
+  Size -= sizeToRead;
+  Buffer += sizeToRead;
+  return sizeToRead;
+}
 
-  size_t InputFromBuffer::GetRemainSize() const
-  {
-    return Size;
-  }
+size_t InputFromBuffer::GetRemainSize() const
+{
+  return Size;
+}
 
 }

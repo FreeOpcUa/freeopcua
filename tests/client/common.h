@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -21,28 +21,31 @@
 
 inline std::string GetHost()
 {
-  if (const char* uri = getenv("TEST_Server_URI"))
-  {
-    return OpcUa::Internal::Uri(uri).Host();
-  }
+  if (const char * uri = getenv("TEST_Server_URI"))
+    {
+      return OpcUa::Internal::Uri(uri).Host();
+    }
+
   return "localhost";
 }
 
 inline int GetPort()
 {
-  if (const char* uri = getenv("TEST_Server_URI"))
-  {
-    return OpcUa::Internal::Uri(uri).Port();
-  }
+  if (const char * uri = getenv("TEST_Server_URI"))
+    {
+      return OpcUa::Internal::Uri(uri).Port();
+    }
+
   return 4841;
 }
 
 inline std::string GetEndpoint()
 {
-  if (char* endpoint = getenv("TEST_Server_URI"))
-  {
-    return endpoint;
-  }
+  if (char * endpoint = getenv("TEST_Server_URI"))
+    {
+      return endpoint;
+    }
+
   return "opc.tcp://localhost:4841";
 }
 

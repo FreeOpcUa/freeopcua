@@ -94,19 +94,20 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0xF2, 0x2, // TypeId
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0,         // Results count
-    0,0,(char)0x40,(char)0x80,   // StatusCode
-    1,0,0,0,         // MonitoredItemId
-    0,0,0,0,(char)0x80,(char)0x4f,(char)0x32,(char)0x41, // RevisedSamplingInterval
-    3,0,0,0,         // RevisedQueueSize
-    0,0,0,           // FilterResult (empty Extension object)
+    1, 0, 0, 0,      // Results count
+    0, 0, (char)0x40, (char)0x80, // StatusCode
+    1, 0, 0, 0,      // MonitoredItemId
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41, // RevisedSamplingInterval
+    3, 0, 0, 0,      // RevisedQueueSize
+    0, 0, 0,         // FilterResult (empty Extension object)
 
-    0,0,0,0  // Diagnostics Count
+    0, 0, 0, 0 // Diagnostics Count
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) <<

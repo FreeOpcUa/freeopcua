@@ -25,75 +25,80 @@
 
 namespace
 {
-  class AsioAddonImpl : public OpcUa::Server::AsioAddon
+class AsioAddonImpl : public OpcUa::Server::AsioAddon
+{
+public:
+  AsioAddonImpl()
+    : Work(IoService)
   {
-  public:
-    AsioAddonImpl()
-      : Work(IoService)
-    {
-    }
+  }
 
 
-    void Initialize(Common::AddonsManager&, const Common::AddonParameters& params) override
-    {
-      const unsigned threadsNumber = GetThreadsNumber(params);
-      //std::cout << "asio| Starting " << threadsNumber << "threads." << std::endl;
-      for (unsigned i = 0; i < threadsNumber; ++i)
+  void Initialize(Common::AddonsManager &, const Common::AddonParameters & params) override
+  {
+    const unsigned threadsNumber = GetThreadsNumber(params);
+
+    //std::cout << "asio| Starting " << threadsNumber << "threads." << std::endl;
+    for (unsigned i = 0; i < threadsNumber; ++i)
       {
-        Threads.emplace_back([this, i](){
+        Threads.emplace_back([this, i]()
+        {
           //std::cout << "asio| Starting thread " << i << "." << std::endl;
           IoService.run();
           //std::cout << "asio| Thread " << i << "exited." << std::endl;
         });
       }
-    }
+  }
 
-    void Stop() override
+  void Stop() override
+  {
+    //std::cout << "asio| stopping io service." << std::endl;
+    IoService.stop();
+    //std::cout << "asio| joining threads." << std::endl;
+    std::for_each(Threads.begin(), Threads.end(), [](std::thread & thread)
     {
-      //std::cout << "asio| stopping io service." << std::endl;
-      IoService.stop();
-      //std::cout << "asio| joining threads." << std::endl;
-      std::for_each(Threads.begin(), Threads.end(), [](std::thread& thread){
-        thread.join();
-      });
-    }
+      thread.join();
+    });
+  }
 
-    virtual boost::asio::io_service& GetIoService() override
-    {
-      return IoService;
-    }
+  virtual boost::asio::io_service & GetIoService() override
+  {
+    return IoService;
+  }
 
-  unsigned GetThreadsNumber(const Common::AddonParameters& params) const
+  unsigned GetThreadsNumber(const Common::AddonParameters & params) const
   {
     unsigned num = 1;
+
     for (auto paramIt : params.Parameters)
-    {
-      if (paramIt.Name == "threads")
       {
-        num = std::stoi(paramIt.Value);
-        break;
+        if (paramIt.Name == "threads")
+          {
+            num = std::stoi(paramIt.Value);
+            break;
+          }
       }
-    }
+
     return num;
   }
 
-  private:
-    boost::asio::io_service IoService;
-    boost::asio::io_service::work Work;
-    std::vector<std::thread> Threads;
-  };
+private:
+  boost::asio::io_service IoService;
+  boost::asio::io_service::work Work;
+  std::vector<std::thread> Threads;
+};
 }
 
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    Common::Addon::UniquePtr AsioAddonFactory::CreateAddon()
-    {
-      return Common::Addon::UniquePtr(new AsioAddonImpl);
-    }
+Common::Addon::UniquePtr AsioAddonFactory::CreateAddon()
+{
+  return Common::Addon::UniquePtr(new AsioAddonImpl);
+}
 
-  }
+}
 }

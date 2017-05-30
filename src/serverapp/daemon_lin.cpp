@@ -28,77 +28,85 @@
 namespace
 {
 
-  OpcUa::Daemon* DaemonInstance = 0;
+OpcUa::Daemon * DaemonInstance = 0;
 
-  void TerminateSignal(int signum)
-  {
-    std::cout << "terminating.." << std::endl;
-    if (DaemonInstance)
+void TerminateSignal(int signum)
+{
+  std::cout << "terminating.." << std::endl;
+
+  if (DaemonInstance)
     {
       DaemonInstance->Terminate();
       DaemonInstance = nullptr;
     }
-  }
+}
 
 }
 
 namespace OpcUa
 {
-  void Daemon::SetTerminateHandlers()
-  {
-    if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
+void Daemon::SetTerminateHandlers()
+{
+  if (signal(SIGTERM, TerminateSignal) == SIG_ERR)
     {
       std::cerr << "unable to set SIGTERM handler" << std::endl;
     }
-    if (signal(SIGINT, TerminateSignal) == SIG_ERR)
+
+  if (signal(SIGINT, TerminateSignal) == SIG_ERR)
     {
       std::cerr << "unable to set SIGINT handler" << std::endl;
     }
-    if (signal(SIGSTOP, TerminateSignal) == SIG_ERR)
+
+  if (signal(SIGSTOP, TerminateSignal) == SIG_ERR)
     {
       std::cerr << "unable to set SIGSTOP handler" << std::endl;
     }
-    DaemonInstance = this;
-  }
 
-  void Daemon::Daemonize(const std::string& logFile)
-  {
-    pid_t pid, sid;
+  DaemonInstance = this;
+}
 
-    pid = fork();
-    if (pid < 0)
+void Daemon::Daemonize(const std::string & logFile)
+{
+  pid_t pid, sid;
+
+  pid = fork();
+
+  if (pid < 0)
     {
       std::cerr << "Failed to fork: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
-    if (pid > 0)
+
+  if (pid > 0)
     {
       exit(EXIT_SUCCESS);
     }
 
-    umask(0);
+  umask(0);
 
-    sid = setsid();
-    if (sid < 0)
+  sid = setsid();
+
+  if (sid < 0)
     {
       std::cerr << "setsid() failed: " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
-    if ((chdir("/")) < 0)
+  if ((chdir("/")) < 0)
     {
       std::cerr << "Cannot change dir. " << strerror(errno) << std::endl;
       exit(EXIT_FAILURE);
     }
 
-    if (!logFile.empty())
+  if (!logFile.empty())
     {
-      FILE* tmp = fopen(logFile.c_str(), "w");
+      FILE * tmp = fopen(logFile.c_str(), "w");
+
       if (!tmp)
-      {
-        std::cerr << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
-        exit(EXIT_FAILURE);
-      }
+        {
+          std::cerr << "Cannot open log file " << logFile << ". " << strerror(errno) << std::endl;
+          exit(EXIT_FAILURE);
+        }
 
       close(STDIN_FILENO);
       close(STDOUT_FILENO);
@@ -107,5 +115,5 @@ namespace OpcUa
       dup2(fileno(tmp), STDOUT_FILENO);
       dup2(fileno(tmp), STDERR_FILENO);
     }
-  }
+}
 }

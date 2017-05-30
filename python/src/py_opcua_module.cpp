@@ -31,8 +31,8 @@
 #include "py_opcua_variant.h"
 
 #if PY_MAJOR_VERSION >= 3
-  #define PyString_Check               PyUnicode_Check
-  #define PyString_AsString(S)           PyBytes_AsString(PyUnicode_AsUTF8String(S)) 
+#define PyString_Check PyUnicode_Check
+#define PyString_AsString(S) PyBytes_AsString(PyUnicode_AsUTF8String(S))
 #endif
 
 using namespace boost::python;
@@ -51,51 +51,52 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SubscriptionSubscribeDataChange_stubs, Su
 // DateTime helpers
 //--------------------------------------------------------------------------
 
-static  boost::python::object ToPyDateTime(const DateTime& self )
+static  boost::python::object ToPyDateTime(const DateTime & self)
 {
-  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
-  boost::posix_time::ptime dt = ref + boost::posix_time::microseconds(self.Value/10);
+  boost::posix_time::ptime ref(boost::gregorian::date(1601, 1, 1));
+  boost::posix_time::ptime dt = ref + boost::posix_time::microseconds(self.Value / 10);
   // The constructor of the python datetime objects creates a datetime object using the locale timezone
   // but returns a naive timezone objects...this sounds a bit crazy...
   // we may want to add timezone... I do not know how
   uint32_t precision = dt.time_of_day().num_fractional_digits();
-  PyObject* obj = PyDateTime_FromDateAndTime((int)dt.date().year(),
-					  (int)dt.date().month(),
-					  (int)dt.date().day(),
-					  dt.time_of_day().hours(),
-					  dt.time_of_day().minutes(),
-					  dt.time_of_day().seconds(),
-					  dt.time_of_day().fractional_seconds() / pow(10, precision-6));
+  PyObject * obj = PyDateTime_FromDateAndTime((int)dt.date().year(),
+                   (int)dt.date().month(),
+                   (int)dt.date().day(),
+                   dt.time_of_day().hours(),
+                   dt.time_of_day().minutes(),
+                   dt.time_of_day().seconds(),
+                   dt.time_of_day().fractional_seconds() / pow(10, precision - 6));
   return boost::python::object(boost::python::handle<>(obj));
 }
 
-static uint64_t ToWinEpoch(PyObject* pydate)
+static uint64_t ToWinEpoch(PyObject * pydate)
 {
   boost::gregorian::date _date(PyDateTime_GET_YEAR(pydate), PyDateTime_GET_MONTH(pydate), PyDateTime_GET_DAY(pydate));
   boost::posix_time::time_duration _duration(PyDateTime_DATE_GET_HOUR(pydate), PyDateTime_DATE_GET_MINUTE(pydate), PyDateTime_DATE_GET_SECOND(pydate), 0);
   _duration += boost::posix_time::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydate));
 
-	boost::posix_time::ptime myptime(_date, _duration);
-  boost::posix_time::ptime ref(boost::gregorian::date(1601,1,1));
+  boost::posix_time::ptime myptime(_date, _duration);
+  boost::posix_time::ptime ref(boost::gregorian::date(1601, 1, 1));
   return (myptime - ref).total_microseconds() * 10;
 }
 
-static boost::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object& bobj)
+static boost::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object & bobj)
 {
-  PyObject* pydate = bobj.ptr();
-  if ( ! PyDateTime_Check(pydate) )
-  {
-    throw std::runtime_error("method take a python datetime as argument");
-  }
+  PyObject * pydate = bobj.ptr();
+
+  if (! PyDateTime_Check(pydate))
+    {
+      throw std::runtime_error("method take a python datetime as argument");
+    }
 
   return boost::shared_ptr<DateTime>(new DateTime(ToWinEpoch(pydate)));
 }
 
 struct DateTimeOpcUaToPythonConverter
 {
-  static PyObject* convert(const DateTime& dt)
+  static PyObject * convert(const DateTime & dt)
   {
-    return boost::python::incref( ToPyDateTime(dt).ptr());
+    return boost::python::incref(ToPyDateTime(dt).ptr());
   }
 };
 
@@ -107,21 +108,20 @@ struct DateTimePythonToOpcUaConverter
     boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<DateTime>());
   }
 
-  static void* convertible(PyObject* obj_ptr)
+  static void * convertible(PyObject * obj_ptr)
   {
-    if (!PyDateTime_Check(obj_ptr)) return 0;
+    if (!PyDateTime_Check(obj_ptr)) { return 0; }
+
     return obj_ptr;
   }
 
-  static void construct( PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
+  static void construct(PyObject * obj_ptr, boost::python::converter::rvalue_from_python_stage1_data * data)
   {
-      void* storage = (
-        (boost::python::converter::rvalue_from_python_storage<DateTime>*)
-        data)->storage.bytes;
- 
-      new (storage) DateTime(ToWinEpoch(obj_ptr));
- 
-      data->convertible = storage;
+    void * storage = ((boost::python::converter::rvalue_from_python_storage<DateTime> *)data)->storage.bytes;
+
+    new(storage) DateTime(ToWinEpoch(obj_ptr));
+
+    data->convertible = storage;
   }
 };
 
@@ -131,7 +131,7 @@ struct DateTimePythonToOpcUaConverter
 
 struct LocalizedTextToPythonConverter
 {
-  static PyObject* convert(const LocalizedText& text)
+  static PyObject * convert(const LocalizedText & text)
   {
     return boost::python::incref(boost::python::object(text.Text.c_str()).ptr());
   }
@@ -145,18 +145,19 @@ struct PythonStringToLocalizedTextConverter
     boost::python::converter::registry::push_back(&convertible, &construct, boost::python::type_id<LocalizedText>());
   }
 
-  static void* convertible(PyObject* obj_ptr)
+  static void * convertible(PyObject * obj_ptr)
   {
-    if (!PyString_Check(obj_ptr)) return 0;
+    if (!PyString_Check(obj_ptr)) { return 0; }
+
     return obj_ptr;
   }
 
-  static void construct( PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
+  static void construct(PyObject * obj_ptr, boost::python::converter::rvalue_from_python_stage1_data * data)
   {
-      void* storage = ( (boost::python::converter::rvalue_from_python_storage<LocalizedText>*)data)->storage.bytes;
-      const char* value = PyString_AsString(obj_ptr);
-      new (storage) LocalizedText(std::string(value));
-      data->convertible = storage;
+    void * storage = ((boost::python::converter::rvalue_from_python_storage<LocalizedText> *)data)->storage.bytes;
+    const char * value = PyString_AsString(obj_ptr);
+    new(storage) LocalizedText(std::string(value));
+    data->convertible = storage;
   }
 };
 
@@ -274,7 +275,7 @@ static Node UaServer_GetNode(UaServer & self, ObjectId objectid)
 
 BOOST_PYTHON_MODULE(opcua)
 {
-  PyDateTime_IMPORT; 
+  PyDateTime_IMPORT;
 
   using self_ns::str; // hack to enable __str__ in python classes with str(self)
 
@@ -282,11 +283,11 @@ BOOST_PYTHON_MODULE(opcua)
 
   py_opcua_enums();
 
-  DateTimePythonToOpcUaConverter(); 
-  PythonStringToLocalizedTextConverter(); 
-  to_python_converter<LocalizedText, LocalizedTextToPythonConverter>(); 
+  DateTimePythonToOpcUaConverter();
+  PythonStringToLocalizedTextConverter();
+  to_python_converter<LocalizedText, LocalizedTextToPythonConverter>();
   // Enable next line to return PyDateTime instead og DateTime in python
-  //to_python_converter<DateTime, DateTimeOpcUaToPythonConverter>(); 
+  //to_python_converter<DateTime, DateTimeOpcUaToPythonConverter>();
 
 
 
@@ -300,7 +301,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def(init<int64_t>())
   .def("now", &DateTime::DateTime::Current)
   .def("__init__", make_constructor(makeOpcUaDateTime))
-  .def("from_time_t", &DateTime::FromTimeT, DateTimeFromTimeT_stub((arg("sec"), arg("usec")=0)))
+  .def("from_time_t", &DateTime::FromTimeT, DateTimeFromTimeT_stub((arg("sec"), arg("usec") = 0)))
   .staticmethod("from_time_t")
   .def("to_datetime", &ToPyDateTime)
   .def("to_time_t", &DateTime::ToTimeT)
@@ -313,23 +314,23 @@ BOOST_PYTHON_MODULE(opcua)
   //.def_readwrite("Text", &LocalizedText::Text)
   //;
 
-  
+
   class_<NodeId, boost::shared_ptr<NodeId>>("NodeId")
-  .def(init<uint32_t, uint16_t>())
-  .def(init<std::string, uint16_t>())
-  .def("__init__", make_constructor(NodeId_constructor)) // XXX add this constructor to freeopcua
-  .add_property("namespace_index", &NodeId::GetNamespaceIndex)
-  .add_property("identifier", &NodeId_GetIdentifier)
-  .add_property("encoding", &NodeId::GetEncodingValue)
-  .add_property("is_integer", &NodeId::IsInteger)
-  .add_property("is_binary", &NodeId::IsBinary)
-  .add_property("is_guid", &NodeId::IsGuid)
-  .add_property("is_string", &NodeId::IsString)
-  .def_readonly("namespace_uri", &NodeId::NamespaceURI)
-  .def(str(self))
-  .def(repr(self))
-  .def(self == self)
-  ;
+                                         .def(init<uint32_t, uint16_t>())
+                                         .def(init<std::string, uint16_t>())
+                                         .def("__init__", make_constructor(NodeId_constructor)) // XXX add this constructor to freeopcua
+                                         .add_property("namespace_index", &NodeId::GetNamespaceIndex)
+                                         .add_property("identifier", &NodeId_GetIdentifier)
+                                         .add_property("encoding", &NodeId::GetEncodingValue)
+                                         .add_property("is_integer", &NodeId::IsInteger)
+                                         .add_property("is_binary", &NodeId::IsBinary)
+                                         .add_property("is_guid", &NodeId::IsGuid)
+                                         .add_property("is_string", &NodeId::IsString)
+                                         .def_readonly("namespace_uri", &NodeId::NamespaceURI)
+                                         .def(str(self))
+                                         .def(repr(self))
+                                         .def(self == self)
+                                         ;
 
   to_python_converter<std::vector<QualifiedName>, vector_to_python_converter<QualifiedName>>();
   to_python_converter<std::vector<std::vector<QualifiedName>>, vector_to_python_converter<std::vector<QualifiedName>>>();
@@ -345,17 +346,17 @@ BOOST_PYTHON_MODULE(opcua)
   ;
 
   class_<DataValue, boost::shared_ptr<DataValue>>("DataValue")
-  .def(init<const Variant &>())
-  .def("__init__", make_constructor(DataValue_constructor1))  // Variant, VariantType
+      .def(init<const Variant &>())
+      .def("__init__", make_constructor(DataValue_constructor1))  // Variant, VariantType
 #define _property(X) add_property( #X, &DataValue_get_ ## X, &DataValue_set_ ## X)
-  ._property(value)
-  ._property(status)
-  ._property(source_timestamp)
-  ._property(source_picoseconds)
-  ._property(server_timestamp)
-  ._property(server_picoseconds)
+      ._property(value)
+      ._property(status)
+      ._property(source_timestamp)
+      ._property(source_picoseconds)
+      ._property(server_timestamp)
+      ._property(server_picoseconds)
 #undef _property
-  ;
+      ;
 
   to_python_converter<std::vector<DataValue>, vector_to_python_converter<DataValue>>();
 
@@ -468,7 +469,7 @@ BOOST_PYTHON_MODULE(opcua)
 
   to_python_converter<std::vector<Node>, vector_to_python_converter<Node>>();
   vector_from_python_converter<Node>();
-  
+
   class_<SubscriptionHandler, PySubscriptionHandler, boost::noncopyable>("SubscriptionHandler", init<>())
   .def("data_change", &PySubscriptionHandler::DefaultDataChange)
   .staticmethod("data_change")
@@ -508,18 +509,18 @@ BOOST_PYTHON_MODULE(opcua)
 
   class_<UaClient, boost::noncopyable>("Client", init<>())
   .def(init<bool>())
-  .def("connect", (void (UaClient::*)(const std::string&)) &UaClient::Connect)
-  .def("connect", (void (UaClient::*)(const EndpointDescription&)) &UaClient::Connect)
+  .def("connect", (void (UaClient::*)(const std::string &)) &UaClient::Connect)
+  .def("connect", (void (UaClient::*)(const EndpointDescription &)) &UaClient::Connect)
   .def("disconnect", &UaClient::Disconnect)
   .def("get_namespace_index", &UaClient::GetNamespaceIndex)
   .def("get_root_node", &UaClient::GetRootNode)
   .def("get_objects_node", &UaClient::GetObjectsNode)
   .def("get_server_node", &UaClient::GetServerNode)
-  .def("get_node", (Node(UaClient::*)(const std::string&) const) &UaClient::GetNode)
-  .def("get_node", (Node(UaClient::*)(const NodeId&) const) &UaClient::GetNode)
+  .def("get_node", (Node(UaClient::*)(const std::string &) const) &UaClient::GetNode)
+  .def("get_node", (Node(UaClient::*)(const NodeId &) const) &UaClient::GetNode)
   .def("get_node", &UaClient_GetNode)
   .def("get_endpoint", &UaClient::GetEndpoint)
-  .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)(const std::string&)) &UaClient::GetServerEndpoints)
+  .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)(const std::string &)) &UaClient::GetServerEndpoints)
   .def("get_server_endpoints", (std::vector<EndpointDescription> (UaClient::*)()) &UaClient::GetServerEndpoints)
   .def("set_session_name", &UaClient::SetSessionName)
   .def("get_session_name", &UaClient::GetSessionName)
@@ -541,8 +542,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_root_node", &UaServer::GetRootNode)
   .def("get_objects_node", &UaServer::GetObjectsNode)
   .def("get_server_node", &UaServer::GetServerNode)
-  .def("get_node", (Node(UaServer::*)(const std::string&) const) &UaServer::GetNode)
-  .def("get_node", (Node(UaServer::*)(const NodeId&) const) &UaServer::GetNode)
+  .def("get_node", (Node(UaServer::*)(const std::string &) const) &UaServer::GetNode)
+  .def("get_node", (Node(UaServer::*)(const NodeId &) const) &UaServer::GetNode)
   .def("get_node", &UaServer_GetNode)
   .def("set_uri", &UaServer::SetServerURI)
   .def("add_xml_address_space", &UaServer::AddAddressSpace)

@@ -157,7 +157,8 @@ TEST_F(OpcUaProtocolAddonTest, ManipulateSubscriptions)
   OpcUa::CreateSubscriptionRequest req;
   req.Parameters = params;
   OpcUa::SubscriptionData data;
-  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(req, [](OpcUa::PublishResult){
+  ASSERT_NO_THROW(data = subscriptions->CreateSubscription(req, [](OpcUa::PublishResult)
+  {
 
   }));
 

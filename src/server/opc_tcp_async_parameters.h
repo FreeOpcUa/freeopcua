@@ -24,10 +24,10 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters& addonParams);
+AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters & addonParams);
 
-  }
+}
 }

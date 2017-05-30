@@ -17,12 +17,12 @@
 namespace Common
 {
 
-  AddonFactory::UniquePtr CreateDynamicAddonFactory(const char* modulePath);
+AddonFactory::UniquePtr CreateDynamicAddonFactory(const char * modulePath);
 
-  inline AddonFactory::UniquePtr CreateDynamicAddonFactory(const std::string& modulePath)
-  {
-    return ::Common::CreateDynamicAddonFactory(modulePath.c_str());
-  }
+inline AddonFactory::UniquePtr CreateDynamicAddonFactory(const std::string & modulePath)
+{
+  return ::Common::CreateDynamicAddonFactory(modulePath.c_str());
+}
 
 }
 

@@ -19,8 +19,8 @@ using namespace testing;
 #define TEST_CORE_CONFIG_PATH "./tests/core/configs/"
 #endif
 
-const char* TestConfigFile = TEST_CORE_CONFIG_PATH "test.conf";
-const char* TestConfigPath = TEST_CORE_CONFIG_PATH;
+const char * TestConfigFile = TEST_CORE_CONFIG_PATH "test.conf";
+const char * TestConfigPath = TEST_CORE_CONFIG_PATH;
 
 TEST(ModulesConfiguration, ParsesConfigurationFile)
 {
@@ -87,9 +87,9 @@ TEST(ModulesConfiguration, SavesConfigurationFile)
   addon.Parameters.Groups.push_back(group);
 
   Common::SaveConfiguration(Common::ModulesConfiguration({addon}), "test_config.config");
-  const Common::Configuration& config = Common::ParseConfiguration("test_config.config");
+  const Common::Configuration & config = Common::ParseConfiguration("test_config.config");
   ASSERT_EQ(config.Modules.size(), 1);
-  const Common::ModuleConfiguration& module = config.Modules[0];
+  const Common::ModuleConfiguration & module = config.Modules[0];
   ASSERT_EQ(module.Id, "test_addon");
   ASSERT_EQ(module.Path, "path");
   ASSERT_EQ(module.Dependencies.size(), 2);

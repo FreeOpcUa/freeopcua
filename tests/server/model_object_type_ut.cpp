@@ -81,7 +81,7 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneVariable()
   {
-    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem variable;
     variable.BrowseName = OpcUa::QualifiedName("new_variable1");
     variable.Class = OpcUa::NodeClass::Variable;
@@ -96,7 +96,7 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneUntypedObject()
   {
-    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("new_sub_object1");
     object.Class = OpcUa::NodeClass::Object;
@@ -111,8 +111,8 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneTypedObject()
   {
-    const OpcUa::NodeId& resultTypeId = CreateEmptyObjectType();
-    const OpcUa::NodeId& objectTypeWithVar = CreateObjectTypeWithOneVariable();
+    const OpcUa::NodeId & resultTypeId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectTypeWithVar = CreateObjectTypeWithOneVariable();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("new_sub_object1");
     object.Class = OpcUa::NodeClass::Object;

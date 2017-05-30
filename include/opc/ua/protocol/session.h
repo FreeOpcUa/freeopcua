@@ -16,38 +16,38 @@
 
 namespace OpcUa
 {
-  //-------------------------------------------------
-  // CloseSessionRequest
-  //-------------------------------------------------
+//-------------------------------------------------
+// CloseSessionRequest
+//-------------------------------------------------
 
-  struct CloseSessionRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
+struct CloseSessionRequest
+{
+  NodeId TypeId;
+  RequestHeader Header;
 
-    bool DeleteSubscriptions;
+  bool DeleteSubscriptions;
 
-    CloseSessionRequest();
-  };
+  CloseSessionRequest();
+};
 
-  struct CloseSessionResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
+struct CloseSessionResponse
+{
+  NodeId TypeId;
+  ResponseHeader Header;
 
-    CloseSessionResponse();
-  };
+  CloseSessionResponse();
+};
 
-  ExpandedNodeId GenerateSessionId();
+ExpandedNodeId GenerateSessionId();
 
-  struct ServiceFaultResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
+struct ServiceFaultResponse
+{
+  NodeId TypeId;
+  ResponseHeader Header;
 
-    ServiceFaultResponse();
-  };
-  
+  ServiceFaultResponse();
+};
+
 
 } // namespace OpcUa
 

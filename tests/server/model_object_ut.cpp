@@ -81,7 +81,7 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneVariable()
   {
-    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem variable;
     variable.BrowseName = OpcUa::QualifiedName("variable");
     variable.Class = OpcUa::NodeClass::Variable;
@@ -96,7 +96,7 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneUntypedObject()
   {
-    const OpcUa::NodeId& objectId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectId = CreateEmptyObjectType();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
@@ -111,8 +111,8 @@ protected:
 
   OpcUa::NodeId CreateObjectTypeWithOneTypedObject()
   {
-    const OpcUa::NodeId& resultTypeId = CreateEmptyObjectType();
-    const OpcUa::NodeId& objectTypeWithVar = CreateObjectTypeWithOneVariable();
+    const OpcUa::NodeId & resultTypeId = CreateEmptyObjectType();
+    const OpcUa::NodeId & objectTypeWithVar = CreateObjectTypeWithOneVariable();
     OpcUa::AddNodesItem object;
     object.BrowseName = OpcUa::QualifiedName("sub_object");
     object.Class = OpcUa::NodeClass::Object;
@@ -156,10 +156,10 @@ TEST_F(ModelObject, ObjectCanCreateVariable)
 
 TEST_F(ModelObject, CanInstantiateEmptyObjectType)
 {
-  const OpcUa::NodeId& typeId = CreateEmptyObjectType();
+  const OpcUa::NodeId & typeId = CreateEmptyObjectType();
   OpcUa::Model::ObjectType objectType(typeId, Services);
   OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
-  const char* objectDesc = "Empty object.";
+  const char * objectDesc = "Empty object.";
   const OpcUa::QualifiedName browseName("empty_object");
   const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
   OpcUa::Model::Object object(objectId, Services);
@@ -173,10 +173,10 @@ TEST_F(ModelObject, CanInstantiateEmptyObjectType)
 
 TEST_F(ModelObject, CanInstantiateObjectTypeWithOneVariable)
 {
-  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneVariable();
+  const OpcUa::NodeId & typeId = CreateObjectTypeWithOneVariable();
   OpcUa::Model::ObjectType objectType(typeId, Services);
   OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
+  const char * objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
   const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
   OpcUa::Model::Object object(objectId, Services);
@@ -190,10 +190,10 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneVariable)
 
 TEST_F(ModelObject, CanInstantiateObjectTypeWithOneUntypedObject)
 {
-  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneUntypedObject();
+  const OpcUa::NodeId & typeId = CreateObjectTypeWithOneUntypedObject();
   OpcUa::Model::ObjectType objectType(typeId, Services);
   OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
+  const char * objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
   const OpcUa::NodeId objectId = rootObject.CreateObject(objectType, browseName, objectDesc).GetId();
   OpcUa::Model::Object object(objectId, Services);
@@ -214,11 +214,11 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
   // ObjectType2
   //   +-variable
 
-  const OpcUa::NodeId& typeId = CreateObjectTypeWithOneTypedObject();
+  const OpcUa::NodeId & typeId = CreateObjectTypeWithOneTypedObject();
   OpcUa::Model::ObjectType objectType(typeId, Services);
   // we will create objects under root folder.
   OpcUa::Model::Object rootObject(OpcUa::ObjectId::RootFolder, Services);
-  const char* objectDesc = "object_with_var.";
+  const char * objectDesc = "object_with_var.";
   const OpcUa::QualifiedName browseName("object_with_var");
   // Instantiate object type we have created first.
   // Get only id of that object.
@@ -236,7 +236,7 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
   // Created object will have one sub object.
   std::vector<OpcUa::Model::Object> objects = object.GetObjects();
   ASSERT_EQ(objects.size(), 1);
-  const OpcUa::Model::Object& subObject = objects[0];
+  const OpcUa::Model::Object & subObject = objects[0];
   // Sub object in the source object type dedn't have any sub objects.
   // But it has a type definition which has one variable.
   // And new instantiated object have to restore full hierarchy.
@@ -245,7 +245,7 @@ TEST_F(ModelObject, CanInstantiateObjectTypeWithOneTypedObject)
   ASSERT_EQ(variables.size(), 1);
 }
 
-OpcUa::RelativePathElement GetHierarchicalElement(const std::string& browseName)
+OpcUa::RelativePathElement GetHierarchicalElement(const std::string & browseName)
 {
   OpcUa::RelativePathElement element;
   element.ReferenceTypeId = OpcUa::ObjectId::HierarchicalReferences;

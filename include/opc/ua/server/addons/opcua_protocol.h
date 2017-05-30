@@ -17,19 +17,19 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char OpcUaProtocolAddonId[] = "opcua_protocol";
+const char OpcUaProtocolAddonId[] = "opcua_protocol";
 
-    class OpcUaProtocolAddonFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(OpcUaProtocolAddonFactory)
+class OpcUaProtocolAddonFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(OpcUaProtocolAddonFactory)
 
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon() override;
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon() override;
+};
 
-  } // namespace UaServer
+} // namespace UaServer
 } // nmespace OpcUa

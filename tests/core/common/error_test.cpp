@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -24,7 +24,7 @@ protected:
   void Test();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( ErrorTestCase );
+CPPUNIT_TEST_SUITE_REGISTRATION(ErrorTestCase);
 
 void ErrorTestCase::Test()
 {

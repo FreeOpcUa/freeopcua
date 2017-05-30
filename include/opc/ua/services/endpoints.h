@@ -20,24 +20,24 @@
 namespace OpcUa
 {
 
-  struct ApplicationFilter
-  {
-  };
-  struct ServerParameters
-  {
-  };
+struct ApplicationFilter
+{
+};
+struct ServerParameters
+{
+};
 
-  class EndpointServices : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(EndpointServices)
+class EndpointServices : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(EndpointServices)
 
-  public:
-    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const = 0;
-    // TODO Here all structuresmust be in one namespace.
-    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const = 0;
-    virtual void RegisterServer(const ServerParameters& parameters) = 0;
-  };
+public:
+  virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters & params) const = 0;
+  // TODO Here all structuresmust be in one namespace.
+  virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters & filter) const = 0;
+  virtual void RegisterServer(const ServerParameters & parameters) = 0;
+};
 
 } // namespace OpcUa
 

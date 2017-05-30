@@ -47,11 +47,12 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionParameters)
 
   GetStream() << params << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    2,0,0,0,
-    3,0,0,0,
-    4,0,0,0,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
     1,
     5
   };
@@ -65,11 +66,12 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionParameters)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    2,0,0,0,
-    3,0,0,0,
-    4,0,0,0,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
     1,
     5
   };
@@ -113,16 +115,17 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x13, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    2,0,0,0,
-    3,0,0,0,
-    4,0,0,0,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
     1,
     5
   };
@@ -136,16 +139,17 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x13, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    2,0,0,0,
-    3,0,0,0,
-    4,0,0,0,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
     1,
     5
   };
@@ -187,11 +191,12 @@ TEST_F(SubscriptionSerialization, SubscriptionData)
 
   GetStream() << data << flush;
 
-  const std::vector<char> expectedData = {
-    2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    2, 0, 0, 0,
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    3,0,0,0,
-    4,0,0,0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -203,11 +208,12 @@ TEST_F(SubscriptionDeserialization, SubscriptionData)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-    2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    2, 0, 0, 0,
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    3,0,0,0,
-    4,0,0,0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -244,16 +250,17 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x16, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    2,0,0,0,
+    2, 0, 0, 0,
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    3,0,0,0,
-    4,0,0,0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -265,16 +272,17 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x16, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    2,0,0,0,
+    2, 0, 0, 0,
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-    3,0,0,0,
-    4,0,0,0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -310,9 +318,10 @@ TEST_F(SubscriptionSerialization, SubscriptionAcknowledgement)
 
   GetStream() << ack << flush;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0,
-    2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    2, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -324,9 +333,10 @@ TEST_F(SubscriptionDeserialization, SubscriptionAcknowledgement)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0,
-    2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    2, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -410,16 +420,17 @@ TEST_F(SubscriptionSerialization, PublishRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x3A, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
     // Parameters
-    1,0,0,0, // Count of acks
-    1,0,0,0,
-    2,0,0,0
+    1, 0, 0, 0, // Count of acks
+    1, 0, 0, 0,
+    2, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -431,16 +442,17 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x3A, 0x3, // TypeId
 
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
     // Parameters
-    1,0,0,0, // Count of acks
-    1,0,0,0,
-    2,0,0,0
+    1, 0, 0, 0, // Count of acks
+    1, 0, 0, 0,
+    2, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -473,13 +485,14 @@ TEST_F(SubscriptionSerialization, NotificationMessage)
 
   GetStream() << data << flush;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
 
-    1,0,0,0, // Count of data
+    1, 0, 0, 0, // Count of data
     //Message.Header
-    0,0, // TypeId
+    0, 0, // TypeId
     0,   // Encoding
   };
 
@@ -492,12 +505,13 @@ TEST_F(SubscriptionDeserialization, NotificationMessage)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
     // Data vector
-    1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeId
+    1, 0, 0, 0, //Count of Data
+    0, 0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
   };
 
@@ -540,28 +554,29 @@ TEST_F(SubscriptionSerialization, PublishResult)
 
   GetStream() << result << flush;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0, // SubscriptionId
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // SubscriptionId
     //AvailableSequenceNumbers
-    1,0,0,0, // count
-    2,0,0,0,
+    1, 0, 0, 0, // count
+    2, 0, 0, 0,
     // MoreNotifications
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
     // Data vector
-    1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeId
+    1, 0, 0, 0, //Count of Data
+    0, 0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
-    1,0,0,0,
-    0,0,0,0,
+    1, 0, 0, 0,
+    0, 0, 0, 0,
     // Diagnostics
-    1,0,0,0, // Count
-    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -574,28 +589,29 @@ TEST_F(SubscriptionDeserialization, PublishResult)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0, // SubscriptionId
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // SubscriptionId
     //AvailableSequenceNumbers
-    1,0,0,0, // count
-    2,0,0,0,
+    1, 0, 0, 0, // count
+    2, 0, 0, 0,
     // MoreNotifications
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
     // Data vector
-    1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeId
+    1, 0, 0, 0, //Count of Data
+    0, 0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
-    1,0,0,0,
-    0,0,0,0,
+    1, 0, 0, 0,
+    0, 0, 0, 0,
     // Diagnostics
-    1,0,0,0, // Count
-    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -648,33 +664,34 @@ TEST_F(SubscriptionSerialization, PublishResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x3D, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0, // SubscriptionId
+    1, 0, 0, 0, // SubscriptionId
     //AvailableSequenceNumbers
-    1,0,0,0, // count
-    2,0,0,0,
+    1, 0, 0, 0, // count
+    2, 0, 0, 0,
     // MoreNotifications
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
     // Data vector
-    1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeId
+    1, 0, 0, 0, //Count of Data
+    0, 0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
-    1,0,0,0,
-    0,0,0,0,
+    1, 0, 0, 0,
+    0, 0, 0, 0,
     // Diagnostics
-    1,0,0,0, // Count
-    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -733,33 +750,34 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x3D, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0, // SubscriptionId
+    1, 0, 0, 0, // SubscriptionId
     //AvailableSequenceNumbers
-    1,0,0,0, // count
-    2,0,0,0,
+    1, 0, 0, 0, // count
+    2, 0, 0, 0,
     // MoreNotifications
     1,
 
     // NotificationData
-    1,0,0,0, // SequenceId
-    2,0,0,0,0,0,0,0, // PublishTime
+    1, 0, 0, 0, // SequenceId
+    2, 0, 0, 0, 0, 0, 0, 0, // PublishTime
     // Data vector
-    1,0,0,0, //Count of Data
-    0,0, // Data.Header.TypeId
+    1, 0, 0, 0, //Count of Data
+    0, 0, // Data.Header.TypeId
     0,   // Data.Header.Encoding
 
     // Statuses
-    1,0,0,0,
-    0,0,0,0,
+    1, 0, 0, 0,
+    0, 0, 0, 0,
     // Diagnostics
-    1,0,0,0, // Count
-    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
     DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
@@ -792,10 +810,11 @@ TEST_F(SubscriptionSerialization, PublishingModeParameters)
 
   GetStream() << params << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1,
-    1,0,0,0, // SubscriptionId
-    1,0,0,0
+    1, 0, 0, 0, // SubscriptionId
+    1, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -826,10 +845,11 @@ TEST_F(SubscriptionDeserialization, PublishingModeParameters)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1,
-    1,0,0,0, // SubscriptionId
-    1,0,0,0
+    1, 0, 0, 0, // SubscriptionId
+    1, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -864,7 +884,8 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x1F, 0x3, // TypeId
 
     // RequestHeader
@@ -872,8 +893,8 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
 
     // PublishingEnabled
     1, // Enabled
-    1,0,0,0,
-    1,0,0,0
+    1, 0, 0, 0,
+    1, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << "Actual:" << std::endl << PrintData(GetChannel().SerializedData) << std::endl << "Expected" << std::endl << PrintData(expectedData);
@@ -885,7 +906,8 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x1F, 0x3, // TypeId
 
     // RequestHeader
@@ -893,8 +915,8 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
 
     // Parameters
     1, // Enabled
-    1,0,0,0,
-    1,0,0,0
+    1, 0, 0, 0,
+    1, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -961,10 +983,11 @@ TEST_F(SubscriptionDeserialization, PublishingModeResult)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-    1,0,0,0,
-    0,0,0,0, // StatusCode
-    0,0,0,0  // Count of diagnostics
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    0, 0, 0, 0, // StatusCode
+    0, 0, 0, 0 // Count of diagnostics
   };
 
   GetChannel().SetData(expectedData);
@@ -1047,15 +1070,16 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x22, 0x3, // TypeId
 
     // RequestHeader
     TEST_RESPONSE_HEADER_BINARY_DATA,
 
-    1,0,0,0,
-    0,0,0,0, // StatusCode
-    0,0,0,0  // Count of diagnostics
+    1, 0, 0, 0,
+    0, 0, 0, 0, // StatusCode
+    0, 0, 0, 0 // Count of diagnostics
   };
 
   GetChannel().SetData(expectedData);

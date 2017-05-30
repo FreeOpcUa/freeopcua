@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,7 +18,7 @@ using namespace testing;
 
 TEST_F(OpcUaBinaryDeserialization, UInt8)
 {
-  std::vector<char> serializedData = {-1};
+  std::vector<char> serializedData = { -1};
   GetChannel().SetData(serializedData);
   uint8_t byte = 0;
   GetStream() >> byte;
@@ -27,7 +27,7 @@ TEST_F(OpcUaBinaryDeserialization, UInt8)
 
 TEST_F(OpcUaBinaryDeserialization, Int8)
 {
-  std::vector<char> serializedData = {-1};
+  std::vector<char> serializedData = { -1};
   GetChannel().SetData(serializedData);
   int8_t byte = 0;
   GetStream() >> byte;
@@ -121,7 +121,7 @@ TEST_F(OpcUaBinaryDeserialization, StdString)
 
   std::string deserializedString;
   GetStream() >> deserializedString;
-  
+
   std::string expectedString = {'u', 'r', 'l'};
   ASSERT_EQ(deserializedString, expectedString);
 }
@@ -134,19 +134,19 @@ TEST_F(OpcUaBinaryDeserialization, ZeroEndStdString)
 
   std::string deserializedString;
   GetStream() >> deserializedString;
-  
+
   std::string expectedString = {'u', 'r', 'l'};
   ASSERT_EQ(deserializedString, expectedString);
 }
 */
 TEST_F(OpcUaBinaryDeserialization, EmptyStdString)
 {
-  const std::vector<char> serializedData = {-1, -1, -1, -1};
+  const std::vector<char> serializedData = { -1, -1, -1, -1};
   GetChannel().SetData(serializedData);
 
   std::string deserializedString;
   GetStream() >> deserializedString;
-  
+
   std::string expectedString;
   ASSERT_EQ(deserializedString, expectedString);
 }
@@ -163,19 +163,19 @@ TEST_F(OpcUaBinaryDeserialization, ByteString)
 
   std::vector<uint8_t> deserializedBytes;
   GetStream() >> deserializedBytes;
-  
+
   std::vector<uint8_t> expectedBytes = {'u', 'r', 'l'};
   ASSERT_EQ(deserializedBytes, expectedBytes);
 }
 
 TEST_F(OpcUaBinaryDeserialization, AbsentBytes)
 {
-  const std::vector<char> serializedData = {-1, -1, -1, -1};
+  const std::vector<char> serializedData = { -1, -1, -1, -1};
   GetChannel().SetData(serializedData);
 
   std::vector<uint8_t> deserializedBytes;
   GetStream() >> deserializedBytes;
-  
+
   std::vector<uint8_t> expectedBytes;
   ASSERT_EQ(deserializedBytes, expectedBytes);
 }
@@ -203,36 +203,36 @@ TEST_F(OpcUaBinaryDeserialization, RawBuffer)
 
 TEST_F(OpcUaBinaryDeserialization, LocalizedText_Full)
 {
-  const std::vector<char> serializedData = {3, 2,0,0,0,'e','n', 4,0,0,0,'t','e','x','t'};
+  const std::vector<char> serializedData = {3, 2, 0, 0, 0, 'e', 'n', 4, 0, 0, 0, 't', 'e', 'x', 't'};
   GetChannel().SetData(serializedData);
 
   OpcUa::LocalizedText lt;
   GetStream() >> lt;
-  
+
   ASSERT_EQ(lt.Locale, "en");
   ASSERT_EQ(lt.Text, "text");
 }
 
 TEST_F(OpcUaBinaryDeserialization, LocalizedText_Locale)
 {
-  const std::vector<char> serializedData = {1, 2,0,0,0,'e','n', 4,0,0,0,'t','e','x','t'};
+  const std::vector<char> serializedData = {1, 2, 0, 0, 0, 'e', 'n', 4, 0, 0, 0, 't', 'e', 'x', 't'};
   GetChannel().SetData(serializedData);
 
   OpcUa::LocalizedText lt;
   GetStream() >> lt;
-  
+
   ASSERT_EQ(lt.Locale, "en");
   ASSERT_EQ(lt.Text, "");
 }
 
 TEST_F(OpcUaBinaryDeserialization, LocalizedText_Text)
 {
-  const std::vector<char> serializedData = {2, 2,0,0,0,'e','n', 4,0,0,0,'t','e','x','t'};
+  const std::vector<char> serializedData = {2, 2, 0, 0, 0, 'e', 'n', 4, 0, 0, 0, 't', 'e', 'x', 't'};
   GetChannel().SetData(serializedData);
 
   OpcUa::LocalizedText lt;
   GetStream() >> lt;
-  
+
   ASSERT_EQ(lt.Locale, "");
   ASSERT_EQ(lt.Text, "en");
 }
@@ -249,7 +249,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageTypeHello)
 
   OpcUa::Binary::MessageType msgType = OpcUa::Binary::MT_ERROR;
   GetStream() >> msgType;
-  
+
   ASSERT_EQ(msgType, OpcUa::Binary::MT_HELLO);
 }
 
@@ -260,7 +260,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageTypeAcknowledge)
 
   OpcUa::Binary::MessageType msgType = OpcUa::Binary::MT_ERROR;
   GetStream() >> msgType;
-  
+
   ASSERT_EQ(msgType, OpcUa::Binary::MT_ACKNOWLEDGE);
 }
 
@@ -271,7 +271,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageTypeError)
 
   OpcUa::Binary::MessageType msgType = OpcUa::Binary::MT_HELLO;
   GetStream() >> msgType;
-  
+
   ASSERT_EQ(msgType, OpcUa::Binary::MT_ERROR);
 }
 
@@ -282,7 +282,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageTypeSecureOpen)
 
   OpcUa::Binary::MessageType msgType = OpcUa::Binary::MT_ERROR;
   GetStream() >> msgType;
-  
+
   ASSERT_EQ(msgType, OpcUa::Binary::MT_SECURE_OPEN);
 }
 
@@ -293,7 +293,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageTypeSecureClose)
 
   OpcUa::Binary::MessageType msgType = OpcUa::Binary::MT_ERROR;
   GetStream() >> msgType;
-  
+
   ASSERT_EQ(msgType, OpcUa::Binary::MT_SECURE_CLOSE);
 }
 
@@ -317,7 +317,7 @@ TEST_F(OpcUaBinaryDeserialization, ChunkTypeSingle)
 
   OpcUa::Binary::ChunkType chunkType = OpcUa::Binary::CHT_FINAL;
   GetStream() >> chunkType;
-  
+
   ASSERT_EQ(chunkType, OpcUa::Binary::CHT_SINGLE);
 }
 
@@ -328,7 +328,7 @@ TEST_F(OpcUaBinaryDeserialization, ChunkTypeIntermediate)
 
   OpcUa::Binary::ChunkType chunkType = OpcUa::Binary::CHT_FINAL;
   GetStream() >> chunkType;
-  
+
   ASSERT_EQ(chunkType, OpcUa::Binary::CHT_INTERMEDIATE);
 }
 
@@ -339,7 +339,7 @@ TEST_F(OpcUaBinaryDeserialization, ChunkTypeFinal)
 
   OpcUa::Binary::ChunkType chunkType = OpcUa::Binary::CHT_SINGLE;
   GetStream() >> chunkType;
-  
+
   ASSERT_EQ(chunkType, OpcUa::Binary::CHT_FINAL);
 }
 
@@ -364,7 +364,7 @@ TEST_F(OpcUaBinaryDeserialization, MessageHeader)
 
   OpcUa::Binary::Header hdr;
   GetStream() >> hdr;
- 
+
   ASSERT_EQ(hdr.Type,  OpcUa::Binary::MT_HELLO);
   ASSERT_EQ(hdr.Chunk, OpcUa::Binary::CHT_SINGLE);
   ASSERT_EQ(hdr.Size, (uint32_t)0x01020304);
@@ -377,21 +377,22 @@ TEST_F(OpcUaBinaryDeserialization, MessageHeader)
 
 TEST_F(OpcUaBinaryDeserialization, Message)
 {
-  const std::vector<char> serializedData = {
-  1, 0, 0, 0,      // ProtocolVersion
-  2, 0, 0, 0,      // ReceiveBufferSize
-  3, 0, 0, 0,      // SendBufferSize
-  4, 0, 0, 0,      // MaxMessageSize
-  5, 0, 0, 0,      // MaxChunkCount
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+  const std::vector<char> serializedData =
+  {
+    1, 0, 0, 0,      // ProtocolVersion
+    2, 0, 0, 0,      // ReceiveBufferSize
+    3, 0, 0, 0,      // SendBufferSize
+    4, 0, 0, 0,      // MaxMessageSize
+    5, 0, 0, 0,      // MaxChunkCount
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
 
   GetChannel().SetData(serializedData);
 
   OpcUa::Binary::Hello message;
   GetStream() >> message;
- 
+
   ASSERT_EQ(message.ProtocolVersion,   1);
   ASSERT_EQ(message.ReceiveBufferSize, 2);
   ASSERT_EQ(message.SendBufferSize,    3);
@@ -402,14 +403,15 @@ TEST_F(OpcUaBinaryDeserialization, Message)
 
 TEST_F(OpcUaBinaryDeserialization, InvalidMessage)
 {
-  const std::vector<char> serializedData = {
+  const std::vector<char> serializedData =
+  {
 //  4, 3, 2, 1,      // ProtocolVersion
-  4, 3, 2, 1,      // ReceiveBufferSize
-  4, 3, 2, 1,      // SendBufferSize
-  4, 3, 2, 1,      // MaxMessageSize
-  4, 3, 2, 1,      // MaxChunkCount
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+    4, 3, 2, 1,      // ReceiveBufferSize
+    4, 3, 2, 1,      // SendBufferSize
+    4, 3, 2, 1,      // MaxMessageSize
+    4, 3, 2, 1,      // MaxChunkCount
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
 
   GetChannel().SetData(serializedData);
@@ -425,14 +427,15 @@ TEST_F(OpcUaBinaryDeserialization, InvalidMessage)
 
 TEST_F(OpcUaBinaryDeserialization, Acknowledge)
 {
-  std::vector<char> serializedData = {
-  1, 0, 0, 0,      // ProtocolVersion
-  2, 0, 0, 0,      // ReceiveBufferSize
-  3, 0, 0, 0,      // SendBufferSize
-  4, 0, 0, 0,      // MaxMessageSize
-  5, 0, 0, 0,      // MaxChunkCount
+  std::vector<char> serializedData =
+  {
+    1, 0, 0, 0,      // ProtocolVersion
+    2, 0, 0, 0,      // ReceiveBufferSize
+    3, 0, 0, 0,      // SendBufferSize
+    4, 0, 0, 0,      // MaxMessageSize
+    5, 0, 0, 0,      // MaxChunkCount
   };
- 
+
   GetChannel().SetData(serializedData);
 
   OpcUa::Binary::Acknowledge message;
@@ -447,13 +450,14 @@ TEST_F(OpcUaBinaryDeserialization, Acknowledge)
 
 TEST_F(OpcUaBinaryDeserialization, InvalidAcknowledge)
 {
-  std::vector<char> serializedData = {
+  std::vector<char> serializedData =
+  {
 //  4, 3, 2, 1,      // ProtocolVersion
-  4, 3, 2, 1,      // ReceiveBufferSize
-  4, 3, 2, 1,      // MaxMessageSize
-  4, 3, 2, 1,      // MaxChunkCount
+    4, 3, 2, 1,      // ReceiveBufferSize
+    4, 3, 2, 1,      // MaxMessageSize
+    4, 3, 2, 1,      // MaxChunkCount
   };
- 
+
   GetChannel().SetData(serializedData);
 
   OpcUa::Binary::Acknowledge message;
@@ -466,12 +470,13 @@ TEST_F(OpcUaBinaryDeserialization, InvalidAcknowledge)
 
 TEST_F(OpcUaBinaryDeserialization, Error)
 {
-  std::vector<char> serializedData = {
-  4, 3, 2, 1,      // Error code
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+  std::vector<char> serializedData =
+  {
+    4, 3, 2, 1,      // Error code
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
- 
+
   GetChannel().SetData(serializedData);
 
   OpcUa::Binary::Error message;
@@ -484,12 +489,13 @@ TEST_F(OpcUaBinaryDeserialization, Error)
 
 TEST_F(OpcUaBinaryDeserialization, InvalidError)
 {
-  std::vector<char> serializedData = {
+  std::vector<char> serializedData =
+  {
 //  4, 3, 2, 1,      // Error code
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
- 
+
   GetChannel().SetData(serializedData);
 
   OpcUa::Binary::Error message;
@@ -502,7 +508,7 @@ TEST_F(OpcUaBinaryDeserialization, InvalidError)
 
 TEST_F(OpcUaBinaryDeserialization, SecureMessageHeader)
 {
-  const std::vector<char> serializedData = 
+  const std::vector<char> serializedData =
   {
     'H', 'E', 'L',
     'F',
@@ -514,7 +520,7 @@ TEST_F(OpcUaBinaryDeserialization, SecureMessageHeader)
 
   OpcUa::Binary::SecureHeader hdr;
   GetStream() >> hdr;
- 
+
   ASSERT_EQ(hdr.Type,  OpcUa::Binary::MT_HELLO);
   ASSERT_EQ(hdr.Chunk, OpcUa::Binary::CHT_SINGLE);
   ASSERT_EQ(hdr.Size, (uint32_t)0x01020304);
@@ -527,17 +533,18 @@ TEST_F(OpcUaBinaryDeserialization, SecureMessageHeader)
 
 TEST_F(OpcUaBinaryDeserialization, Asymmetric)
 {
-  const std::vector<char> serializedData = {
-  3, 0, 0, 0,      
-  'p', 'o', 'l',
-  3, 0, 0, 0,
-  1, 2, 3,
-  3, 0, 0, 0,
-  4, 5, 6
+  const std::vector<char> serializedData =
+  {
+    3, 0, 0, 0,
+    'p', 'o', 'l',
+    3, 0, 0, 0,
+    1, 2, 3,
+    3, 0, 0, 0,
+    4, 5, 6
   };
 
   GetChannel().SetData(serializedData);
-  
+
   OpcUa::Binary::AsymmetricAlgorithmHeader header;
   GetStream() >> header;
 
@@ -554,12 +561,13 @@ TEST_F(OpcUaBinaryDeserialization, Asymmetric)
 
 TEST_F(OpcUaBinaryDeserialization, Symmetric)
 {
-  const std::vector<char> serializedData = {
-  7, 6, 5, 4
+  const std::vector<char> serializedData =
+  {
+    7, 6, 5, 4
   };
 
   GetChannel().SetData(serializedData);
-  
+
   OpcUa::Binary::SymmetricAlgorithmHeader header;
   GetStream() >> header;
   ASSERT_EQ(header.TokenId, 0x04050607);
@@ -571,13 +579,14 @@ TEST_F(OpcUaBinaryDeserialization, Symmetric)
 
 TEST_F(OpcUaBinaryDeserialization, SequenceHeader)
 {
-  const std::vector<char> serializedData = {
-  3, 0, 0, 0,      
-  1, 0, 0, 0,
+  const std::vector<char> serializedData =
+  {
+    3, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(serializedData);
-  
+
   OpcUa::Binary::SequenceHeader header;
   GetStream() >> header;
 
@@ -593,15 +602,16 @@ TEST_F(OpcUaBinaryDeserialization, AdditionalHeader)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i',
-  1, 0, 0, 0,
-  1
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i',
+    1, 0, 0, 0,
+    1
   };
 
   GetChannel().SetData(expectedData);
@@ -627,17 +637,18 @@ TEST_F(OpcUaBinaryDeserialization, RequestHeader)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  EV_TWO_BYTE, 1,
-  2, 0, 0, 0, 0, 0, 0, 0,
-  3, 0, 0, 0,
-  4, 0, 0, 0,
-  5, 0, 0, 0,
-  'a', 'u', 'd', 'i', 't',
-  5, 0, 0, 0,
-  0,
-  6,
-  8
+  const std::vector<char> expectedData =
+  {
+    EV_TWO_BYTE, 1,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0,
+    4, 0, 0, 0,
+    5, 0, 0, 0,
+    'a', 'u', 'd', 'i', 't',
+    5, 0, 0, 0,
+    0,
+    6,
+    8
   };
 
   GetChannel().SetData(expectedData);
@@ -667,8 +678,9 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_Empty)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  0
+  const std::vector<char> expectedData =
+  {
+    0
   };
 
   GetChannel().SetData(expectedData);
@@ -682,9 +694,10 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_SymbolicId)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id,
-  2, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id,
+    2, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -701,10 +714,11 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_SymbolicId_Namespace)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id | DIM_NAMESPACE,
-  2, 0, 0, 0,
-  3, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id | DIM_NAMESPACE,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -721,17 +735,18 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_SymbolicId_LocalizedText)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT,
-  2, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT,
+    2, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
 
   DiagnosticInfo info;
   GetStream() >> info;
-  
+
   ASSERT_EQ(info.EncodingMask, DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT);
   ASSERT_EQ(info.SymbolicId, 2);
   ASSERT_EQ(info.LocalizedText, 4);
@@ -741,17 +756,18 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_LocalizedText_Locale)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_LOCALIZED_TEXT | DIM_LOCALE,
-  2, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_LOCALIZED_TEXT | DIM_LOCALE,
+    2, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
 
   DiagnosticInfo info;
   GetStream() >> info;
- 
+
   ASSERT_EQ(info.EncodingMask, DIM_LOCALIZED_TEXT | DIM_LOCALE);
   ASSERT_EQ(info.LocalizedText, 2);
   ASSERT_EQ(info.Locale, 4);
@@ -761,17 +777,18 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_AdditionalInfo)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_ADDITIONAL_INFO,
-  3,0,0,0,
-  'a', 'd', 'd'
+  const std::vector<char> expectedData =
+  {
+    DIM_ADDITIONAL_INFO,
+    3, 0, 0, 0,
+    'a', 'd', 'd'
   };
 
   GetChannel().SetData(expectedData);
 
   DiagnosticInfo info;
   GetStream() >> info;
- 
+
   ASSERT_EQ(info.EncodingMask, DIM_ADDITIONAL_INFO);
   ASSERT_EQ(info.AdditionalInfo, "add");
 }
@@ -780,16 +797,17 @@ TEST_F(OpcUaBinaryDeserialization, DiagnosticInfo_InnerStatusCode)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  DIM_INNER_STATUS_CODE,
-  6,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    DIM_INNER_STATUS_CODE,
+    6, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
 
   DiagnosticInfo info;
   GetStream() >> info;
- 
+
   ASSERT_EQ(info.EncodingMask, DIM_INNER_STATUS_CODE);
   ASSERT_EQ(info.InnerStatusCode, static_cast<StatusCode>(6));
 }
@@ -802,8 +820,9 @@ TEST_F(OpcUaBinaryDeserialization, ResponseHeader)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  TEST_RESPONSE_HEADER_BINARY_DATA
+  const std::vector<char> expectedData =
+  {
+    TEST_RESPONSE_HEADER_BINARY_DATA
   };
 
   GetChannel().SetData(expectedData);
@@ -822,17 +841,18 @@ TEST_F(OpcUaBinaryDeserialization, OpenSequreChannelRequest)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xbe, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xbe, 0x1, // TypeId
 
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  1, 0, 0, 0,
-  (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
-  (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
-  1, 0, 0, 0,
-  1,
-  5, 0, 0, 0,
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    1, 0, 0, 0,
+    (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
+    (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
+    1, 0, 0, 0,
+    1,
+    5, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -857,11 +877,12 @@ TEST_F(OpcUaBinaryDeserialization, SecurityToken)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0, 0, 0,
-  2, 0, 0, 0,
-  3, 0, 0, 0, 0, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    2, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -883,19 +904,20 @@ TEST_F(OpcUaBinaryDeserialization, OpenSecureChannelResponse)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xC1, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xC1, 0x1, // TypeId
 
-  // ResponseHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+    // ResponseHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1, 0, 0, 0,
-  2, 0, 0, 0,
-  3,  0, 0, 0,
-  4, 0, 0, 0, 0, 0, 0, 0,
-  5, 0, 0, 0,
-  1, 0, 0, 0,
-  6
+    1, 0, 0, 0,
+    2, 0, 0, 0,
+    3,  0, 0, 0,
+    4, 0, 0, 0, 0, 0, 0, 0,
+    5, 0, 0, 0,
+    1, 0, 0, 0,
+    6
   };
 
   GetChannel().SetData(expectedData);
@@ -926,11 +948,12 @@ TEST_F(OpcUaBinaryDeserialization, CloseSequreChannelRequest)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xc4, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xc4, 0x1, // TypeId
 
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
   };
 
   GetChannel().SetData(expectedData);
@@ -950,9 +973,10 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
 
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-    3, 0, 0, 0, 'a','e','s',   // Algorithm
-    4, 0, 0, 0, 1,2,3,4      // Signature
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0, 'a', 'e', 's', // Algorithm
+    4, 0, 0, 0, 1, 2, 3, 4   // Signature
   };
 
   GetChannel().SetData(expectedData);
@@ -960,7 +984,7 @@ TEST_F(OpcUaBinaryDeserialization, SignatureData)
   SignatureData s;
   GetStream() >> s;
 
-  ASSERT_EQ(s.Signature, ByteString(std::vector<uint8_t>{1,2,3,4}));
+  ASSERT_EQ(s.Signature, ByteString(std::vector<uint8_t> {1, 2, 3, 4}));
   ASSERT_EQ(s.Algorithm, "aes");
 }
 
@@ -972,15 +996,16 @@ TEST_F(OpcUaBinaryDeserialization, ExtensionObjectHeader)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeId
-  HAS_BINARY_BODY
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x41, 0x1, // TypeId
+    HAS_BINARY_BODY
   };
 
   GetChannel().SetData(expectedData);
   ExtensionObjectHeader header(OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS, HAS_BINARY_BODY);
   GetStream() >> header;
-  
+
   ASSERT_EQ(header.TypeId.Encoding, EV_FOUR_BYTE);
   ASSERT_EQ(header.TypeId.FourByteData.NamespaceIndex, 0);
   ASSERT_EQ(header.TypeId.FourByteData.Identifier, OpcUa::USER_IdENTIFY_TOKEN_ANONYMOUS);
@@ -995,9 +1020,10 @@ TEST_F(OpcUaBinaryDeserialization, QualifiedName)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  1, 0,
-  4, 0, 0, 0, 'n','a','m','e'
+  const std::vector<char> expectedData =
+  {
+    1, 0,
+    4, 0, 0, 0, 'n', 'a', 'm', 'e'
   };
 
   GetChannel().SetData(expectedData);
@@ -1018,8 +1044,9 @@ TEST_F(OpcUaBinaryDeserialization, IntegerId)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  5, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    5, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);

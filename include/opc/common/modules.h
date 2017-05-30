@@ -5,7 +5,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -14,14 +14,14 @@
 
 namespace Common
 {
-  enum Modules
-  {
-    MODULE_OS = 0,
-    MODULE_COMMON,
-    MODULE_ADDONS_MANAGER,
-    MODULE_OPCUA_CORE,
-    MODULE_OPCUA_Client,
-  };
+enum Modules
+{
+  MODULE_OS = 0,
+  MODULE_COMMON,
+  MODULE_ADDONS_MANAGER,
+  MODULE_OPCUA_CORE,
+  MODULE_OPCUA_Client,
+};
 }
 
 #endif // __modules_h__f01eb2ae_a824_4dc3_a0f2_bf586d241024

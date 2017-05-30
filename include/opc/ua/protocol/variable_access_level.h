@@ -15,14 +15,14 @@
 
 namespace OpcUa
 {
-  enum class VariableAccessLevel : uint8_t
-  {
-    CurrentRead  = 1,
-    CurrentWrite = 2,
-    HistoryRead  = 4,
-    HistoryWrite = 8,
-    SemanticChange = 16,
-  };
+enum class VariableAccessLevel : uint8_t
+{
+  CurrentRead  = 1,
+  CurrentWrite = 2,
+  HistoryRead  = 4,
+  HistoryWrite = 8,
+  SemanticChange = 16,
+};
 }
 
 #endif /* OPC_UA_VARIABLE_ACCESS_LEVEL_H_ */

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,44 +18,44 @@
 namespace Common
 {
 
-  struct Parameter
+struct Parameter
+{
+  std::string Name;
+  std::string Value;
+
+  Parameter()
   {
-    std::string Name;
-    std::string Value;
+  }
 
-    Parameter()
-    {
-    }
-
-    Parameter(const std::string& name, const std::string& value)
-      : Name(name)
-      , Value(value)
-    {
-    }
-  };
-
-  struct ParametersGroup
+  Parameter(const std::string & name, const std::string & value)
+    : Name(name)
+    , Value(value)
   {
-    std::string Name;
-    std::vector<Parameter> Parameters;
-    std::vector<ParametersGroup> Groups;
+  }
+};
 
-    ParametersGroup()
-    {
-    }
+struct ParametersGroup
+{
+  std::string Name;
+  std::vector<Parameter> Parameters;
+  std::vector<ParametersGroup> Groups;
 
-    ParametersGroup(const std::string& name)
-      : Name(name)
-    {
-    }
-  };
-
-
-  struct AddonParameters
+  ParametersGroup()
   {
-    std::vector<ParametersGroup> Groups;
-    std::vector<Parameter> Parameters;
-  };
+  }
+
+  ParametersGroup(const std::string & name)
+    : Name(name)
+  {
+  }
+};
+
+
+struct AddonParameters
+{
+  std::vector<ParametersGroup> Groups;
+  std::vector<Parameter> Parameters;
+};
 
 }
 

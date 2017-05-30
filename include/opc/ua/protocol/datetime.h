@@ -17,40 +17,40 @@
 namespace OpcUa
 {
 
-  struct DateTime
+struct DateTime
+{
+  DateTime()
+    : Value(0)
   {
-    DateTime()
-      : Value(0)
-    {
-    }
+  }
 
-    explicit DateTime(int64_t value)
-      : Value(value)
-    {
-    }
+  explicit DateTime(int64_t value)
+    : Value(value)
+  {
+  }
 
-    static DateTime Current();
-    static DateTime FromTimeT(time_t t, unsigned usec = 0);
-    static time_t ToTimeT(DateTime dateTime);
+  static DateTime Current();
+  static DateTime FromTimeT(time_t t, unsigned usec = 0);
+  static time_t ToTimeT(DateTime dateTime);
 
-    DateTime(const DateTime&) = default;
-    DateTime& operator=(const DateTime&) = default;
-    DateTime& operator+=(const DateTime& val)
-    {
-      Value += val.Value;
-      return *this;
-    }
+  DateTime(const DateTime &) = default;
+  DateTime & operator=(const DateTime &) = default;
+  DateTime & operator+=(const DateTime & val)
+  {
+    Value += val.Value;
+    return *this;
+  }
 
-    operator int64_t() const
-    {
-      return Value;
-    }
+  operator int64_t() const
+  {
+    return Value;
+  }
 
-    int64_t Value;
-  };
+  int64_t Value;
+};
 
 
-  typedef double Duration; // Time duration in miliseconds.
+typedef double Duration; // Time duration in miliseconds.
 
 } // OpcUa
 

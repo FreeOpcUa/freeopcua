@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -14,16 +14,16 @@
 namespace Common
 {
 
-  class Interface
-  {
-  protected:
-    Interface(){}
+class Interface
+{
+protected:
+  Interface() {}
 
-    virtual ~Interface() {}
+  virtual ~Interface() {}
 
-    Interface(const Interface&) = delete;
-    const Interface& operator=(const Interface&) = delete;
-  };
+  Interface(const Interface &) = delete;
+  const Interface & operator=(const Interface &) = delete;
+};
 
 }
 

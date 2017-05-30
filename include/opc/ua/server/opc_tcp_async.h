@@ -24,36 +24,36 @@
 
 namespace boost
 {
-  namespace asio
-  {
-    class io_service;
-  }
+namespace asio
+{
+class io_service;
+}
 }
 
 namespace OpcUa
 {
-  namespace Server
+namespace Server
+{
+
+class AsyncOpcTcp : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(AsyncOpcTcp)
+
+public:
+  struct Parameters
   {
+    std::string Host;
+    unsigned Port = 4840;
+    bool DebugMode = false;
+  };
 
-    class AsyncOpcTcp : private Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AsyncOpcTcp)
+public:
+  virtual void Listen() = 0;
+  virtual void Shutdown() = 0;
+};
 
-    public:
-      struct Parameters
-      {
-        std::string Host;
-        unsigned Port = 4840;
-        bool DebugMode = false;
-      };
+AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io);
 
-    public:
-      virtual void Listen() = 0;
-      virtual void Shutdown() = 0;
-    };
-
-    AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters& params, Services::SharedPtr server, boost::asio::io_service& io);
-
-  }
+}
 }

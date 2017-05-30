@@ -17,38 +17,38 @@
 namespace OpcUa
 {
 
-  ////////////////////////////////////////////////////////
-  // FindServersRequest
-  ////////////////////////////////////////////////////////
-  struct FindServersParameters
-  {
-    std::string EndpointUrl;
-    std::vector<LocaleId> Locales;
-    std::vector<std::string> ServersToReturn;
-  };
+////////////////////////////////////////////////////////
+// FindServersRequest
+////////////////////////////////////////////////////////
+struct FindServersParameters
+{
+  std::string EndpointUrl;
+  std::vector<LocaleId> Locales;
+  std::vector<std::string> ServersToReturn;
+};
 
-  struct FindServersRequest
-  {
-    NodeId TypeId;
-    RequestHeader Header;
-    FindServersParameters Parameters;
+struct FindServersRequest
+{
+  NodeId TypeId;
+  RequestHeader Header;
+  FindServersParameters Parameters;
 
-    FindServersRequest();
-  };
+  FindServersRequest();
+};
 
-  struct FindServersData
-  {
-    std::vector<ApplicationDescription> Descriptions;
-  };
+struct FindServersData
+{
+  std::vector<ApplicationDescription> Descriptions;
+};
 
-  struct FindServersResponse
-  {
-    NodeId TypeId;
-    ResponseHeader Header;
-    FindServersData Data;
+struct FindServersResponse
+{
+  NodeId TypeId;
+  ResponseHeader Header;
+  FindServersData Data;
 
-    FindServersResponse();
-  };
+  FindServersResponse();
+};
 
 } // namespace OpcUa
 

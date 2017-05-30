@@ -53,10 +53,12 @@ protected:
   virtual void TearDown()
   {
     Service = std::unique_ptr<ViewServices>();
+
     if (Server)
-    {
-      Server->CloseSession();
-    }
+      {
+        Server->CloseSession();
+      }
+
     Server.reset();
   }
 
@@ -95,16 +97,20 @@ TEST_F(View, BrowseFinishes)
   Service->Browse(Query);
   std::vector<ReferenceDescription> browsedRefs;
   unsigned count = 0;
+
   while (true)
-  {
-    const std::vector<ReferenceDescription> refs = Service->BrowseNext();
-    if (refs.empty())
     {
-      break;
+      const std::vector<ReferenceDescription> refs = Service->BrowseNext();
+
+      if (refs.empty())
+        {
+          break;
+        }
+
+      browsedRefs.insert(browsedRefs.end(), refs.begin(), refs.end());
+      ++count;
     }
-    browsedRefs.insert(browsedRefs.end(), refs.begin(), refs.end());
-    ++count;
-  }
+
   EXPECT_TRUE(count > 0);
   EXPECT_EQ(browsedRefs.size(), count);
 }

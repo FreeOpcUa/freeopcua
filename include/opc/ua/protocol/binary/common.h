@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -22,127 +22,127 @@
 
 namespace OpcUa
 {
-  namespace Binary
-  {
-    template<typename T>
-    std::size_t RawSize(const T& obj);
+namespace Binary
+{
+template<typename T>
+std::size_t RawSize(const T & obj);
 
-    template<typename T>
-    std::size_t RawSizeContainer(const T& container)
-    {
-      const std::size_t headerSize = 4;
-      std::size_t totalSize = headerSize;
-      std::for_each(container.begin(), container.end(), [&] (const typename T::value_type& val) {totalSize += RawSize(val);});
-      return totalSize;
-    }
-
-
-    enum MessageType
-    {
-      MT_INVALID = 0,
-      MT_HELLO = 1,
-      MT_ACKNOWLEDGE,
-      MT_ERROR,
-      MT_SECURE_OPEN,
-      MT_SECURE_CLOSE,
-      MT_SECURE_MESSAGE,
-    };
-
-    enum ChunkType
-    {
-      CHT_INVALID = 0,
-      CHT_SINGLE = 1,
-      CHT_INTERMEDIATE,
-      CHT_FINAL,
-    };
-
-    struct Header
-    {
-      MessageType Type;
-      ChunkType Chunk;
-      uint32_t Size;
-
-      Header();
-      explicit Header(MessageType type, ChunkType chunk);
-      std::size_t AddSize(std::size_t size);
-      std::size_t MessageSize() const;
-      void ResetSize();
-    };
+template<typename T>
+std::size_t RawSizeContainer(const T & container)
+{
+  const std::size_t headerSize = 4;
+  std::size_t totalSize = headerSize;
+  std::for_each(container.begin(), container.end(), [&](const typename T::value_type & val) {totalSize += RawSize(val);});
+  return totalSize;
+}
 
 
-    // Hello
-    // os << Header << Hello << flush
-    // is >> Header >> Acknowledge;
+enum MessageType
+{
+  MT_INVALID = 0,
+  MT_HELLO = 1,
+  MT_ACKNOWLEDGE,
+  MT_ERROR,
+  MT_SECURE_OPEN,
+  MT_SECURE_CLOSE,
+  MT_SECURE_MESSAGE,
+};
 
-    struct Hello
-    {
-      uint32_t ProtocolVersion;
-      uint32_t ReceiveBufferSize;
-      uint32_t SendBufferSize;
-      uint32_t MaxMessageSize;
-      uint32_t MaxChunkCount;
-      std::string EndpointUrl;
+enum ChunkType
+{
+  CHT_INVALID = 0,
+  CHT_SINGLE = 1,
+  CHT_INTERMEDIATE,
+  CHT_FINAL,
+};
 
-      Hello();
-    };
+struct Header
+{
+  MessageType Type;
+  ChunkType Chunk;
+  uint32_t Size;
 
-    struct Acknowledge
-    {
-      uint32_t ProtocolVersion;
-      uint32_t ReceiveBufferSize;
-      uint32_t SendBufferSize;
-      uint32_t MaxMessageSize;
-      uint32_t MaxChunkCount;
+  Header();
+  explicit Header(MessageType type, ChunkType chunk);
+  std::size_t AddSize(std::size_t size);
+  std::size_t MessageSize() const;
+  void ResetSize();
+};
 
-      Acknowledge();
-    };
 
-    struct Error
-    {
-      uint32_t Code;
-      std::string Reason;
+// Hello
+// os << Header << Hello << flush
+// is >> Header >> Acknowledge;
 
-      Error();
-    };
+struct Hello
+{
+  uint32_t ProtocolVersion;
+  uint32_t ReceiveBufferSize;
+  uint32_t SendBufferSize;
+  uint32_t MaxMessageSize;
+  uint32_t MaxChunkCount;
+  std::string EndpointUrl;
 
-    struct SecureHeader
-    {
-      MessageType Type;
-      ChunkType Chunk;
-      uint32_t Size;
-      uint32_t ChannelId;
+  Hello();
+};
 
-      SecureHeader();
-      explicit SecureHeader(MessageType type, ChunkType chunk, uint32_t channelId);
+struct Acknowledge
+{
+  uint32_t ProtocolVersion;
+  uint32_t ReceiveBufferSize;
+  uint32_t SendBufferSize;
+  uint32_t MaxMessageSize;
+  uint32_t MaxChunkCount;
 
-      std::size_t AddSize(std::size_t size);
-      std::size_t MessageSize() const;
-      void ResetSize();
-    };
+  Acknowledge();
+};
 
-    struct AsymmetricAlgorithmHeader
-    {
-      std::string SecurityPolicyUri;
-      std::vector<uint8_t> SenderCertificate;
-      std::vector<uint8_t> ReceiverCertificateThumbPrint;
-    };
+struct Error
+{
+  uint32_t Code;
+  std::string Reason;
 
-    struct SymmetricAlgorithmHeader
-    {
-      uint32_t TokenId;
+  Error();
+};
 
-      SymmetricAlgorithmHeader();
-    };
+struct SecureHeader
+{
+  MessageType Type;
+  ChunkType Chunk;
+  uint32_t Size;
+  uint32_t ChannelId;
 
-    struct SequenceHeader
-    {
-      uint32_t SequenceNumber;
-      uint32_t RequestId;
+  SecureHeader();
+  explicit SecureHeader(MessageType type, ChunkType chunk, uint32_t channelId);
 
-      SequenceHeader();
-    };
+  std::size_t AddSize(std::size_t size);
+  std::size_t MessageSize() const;
+  void ResetSize();
+};
 
-  } // namespace Binary
+struct AsymmetricAlgorithmHeader
+{
+  std::string SecurityPolicyUri;
+  std::vector<uint8_t> SenderCertificate;
+  std::vector<uint8_t> ReceiverCertificateThumbPrint;
+};
+
+struct SymmetricAlgorithmHeader
+{
+  uint32_t TokenId;
+
+  SymmetricAlgorithmHeader();
+};
+
+struct SequenceHeader
+{
+  uint32_t SequenceNumber;
+  uint32_t RequestId;
+
+  SequenceHeader();
+};
+
+} // namespace Binary
 } // namespace OpcUa
 
 

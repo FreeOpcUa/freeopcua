@@ -4,11 +4,11 @@
 
 namespace OpcUa
 {
-  ReadValueId inline ToReadValueId(NodeId id, AttributeId attr)
-  {
-    ReadValueId rv;
-    rv.NodeId = id;
-    rv.AttributeId = attr;
-    return rv;
-  }
+ReadValueId inline ToReadValueId(NodeId id, AttributeId attr)
+{
+  ReadValueId rv;
+  rv.NodeId = id;
+  rv.AttributeId = attr;
+  return rv;
+}
 }

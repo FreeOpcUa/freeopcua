@@ -25,41 +25,41 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    struct Parameters
-    {
-      /// @Endpoint configuration.
-      /// listen parameters will be taked from EndpointUrl.
-      /// Example:
-      /// opc.tcp://localhost:4841
-      /// opc.tcp://10.250.1.1:4841
-      /// opc.tcp://opcua.server.com:4841
-      EndpointDescription Endpoint;
-      unsigned ThreadsCount = 1;
-      bool Debug = false;
-    };
+struct Parameters
+{
+  /// @Endpoint configuration.
+  /// listen parameters will be taked from EndpointUrl.
+  /// Example:
+  /// opc.tcp://localhost:4841
+  /// opc.tcp://10.250.1.1:4841
+  /// opc.tcp://opcua.server.com:4841
+  EndpointDescription Endpoint;
+  unsigned ThreadsCount = 1;
+  bool Debug = false;
+};
 
-    /// @brief parameters of server.
-    /// can be used at embedded.
-    void RegisterCommonAddons(const Parameters& params, Common::AddonsManager& addons);
+/// @brief parameters of server.
+/// can be used at embedded.
+void RegisterCommonAddons(const Parameters & params, Common::AddonsManager & addons);
 
-    /// @brief Load parameters from configuration files.
-    /// This function will enumerate '*.config' files in the directory.
-    /// configuration file can load third party dynamic addons.
-    void LoadConfiguration(const std::string& configDirectoryPath, Common::AddonsManager& addons);
+/// @brief Load parameters from configuration files.
+/// This function will enumerate '*.config' files in the directory.
+/// configuration file can load third party dynamic addons.
+void LoadConfiguration(const std::string & configDirectoryPath, Common::AddonsManager & addons);
 
-    Common::AddonInformation CreateServicesRegistryAddon();
-    Common::AddonInformation CreateAddressSpaceAddon();
-    Common::AddonInformation CreateStandardNamespaceAddon();
-    Common::AddonInformation CreateEndpointsRegistryAddon();
-    Common::AddonInformation CreateBinaryServerAddon();
-    Common::AddonInformation CreateOpcTcpAsyncAddon();
-    Common::AddonInformation CreateServerObjectAddon();
-    Common::AddonInformation CreateAsioAddon();
-    Common::AddonInformation CreateSubscriptionServiceAddon();
+Common::AddonInformation CreateServicesRegistryAddon();
+Common::AddonInformation CreateAddressSpaceAddon();
+Common::AddonInformation CreateStandardNamespaceAddon();
+Common::AddonInformation CreateEndpointsRegistryAddon();
+Common::AddonInformation CreateBinaryServerAddon();
+Common::AddonInformation CreateOpcTcpAsyncAddon();
+Common::AddonInformation CreateServerObjectAddon();
+Common::AddonInformation CreateAsioAddon();
+Common::AddonInformation CreateSubscriptionServiceAddon();
 
 
-  }
+}
 }

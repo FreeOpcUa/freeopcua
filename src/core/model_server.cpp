@@ -21,32 +21,32 @@
 
 namespace OpcUa
 {
-  namespace Model
-  {
-    Server::Server(Services::SharedPtr services)
-      : Connection(services)
-    {
-    }
+namespace Model
+{
+Server::Server(Services::SharedPtr services)
+  : Connection(services)
+{
+}
 
-    Object Server::RootObject() const
-    {
-      return Object(ObjectId::RootFolder, Connection);
-    }
+Object Server::RootObject() const
+{
+  return Object(ObjectId::RootFolder, Connection);
+}
 
-    Object Server::GetObject(const NodeId& id) const
-    {
-      return Object(id, Connection);
-    }
+Object Server::GetObject(const NodeId & id) const
+{
+  return Object(id, Connection);
+}
 
-    ObjectType Server::GetObjectType(const NodeId& typeId) const
-    {
-      return ObjectType(typeId, Connection);
-    }
+ObjectType Server::GetObjectType(const NodeId & typeId) const
+{
+  return ObjectType(typeId, Connection);
+}
 
-    Services::SharedPtr Server::GetServices() const
-    {
-      return Connection;
-    }
+Services::SharedPtr Server::GetServices() const
+{
+  return Connection;
+}
 
-  }
+}
 }

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -17,27 +17,28 @@
 namespace OpcUa
 {
 
-  struct Tabs
+struct Tabs
+{
+  explicit Tabs(unsigned num = 0)
+    : Num(num)
   {
-    explicit Tabs(unsigned num = 0)
-      : Num(num)
-    { 
-    }
+  }
 
-    unsigned Num;
-  };
+  unsigned Num;
+};
 
-  std::ostream& operator <<(std::ostream& os, const Tabs& tabs)
-  {
-    for (unsigned i = 0; i < tabs.Num; ++i)
+std::ostream & operator <<(std::ostream & os, const Tabs & tabs)
+{
+  for (unsigned i = 0; i < tabs.Num; ++i)
     {
       os << " ";
     }
-    return os;
-  }
 
-  template<typename T>
-  std::string Describe(const T& object, const Tabs& tabs);
+  return os;
+}
+
+template<typename T>
+std::string Describe(const T & object, const Tabs & tabs);
 
 }
 

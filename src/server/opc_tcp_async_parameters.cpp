@@ -22,19 +22,21 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters& addonParams)
+AsyncOpcTcp::Parameters GetOpcTcpParameters(const Common::AddonParameters & addonParams)
+{
+  AsyncOpcTcp::Parameters result;
+
+  for (const Common::Parameter & param : addonParams.Parameters)
     {
-      AsyncOpcTcp::Parameters result;
-      for (const Common::Parameter& param : addonParams.Parameters)
-      {
-        if (param.Name == "debug")
-          result.DebugMode = param.Value == "false" || param.Value == "0" ? false : true;
-      }
-      return result;
+      if (param.Name == "debug")
+        { result.DebugMode = param.Value == "false" || param.Value == "0" ? false : true; }
     }
 
-  } // namespace UaServer
+  return result;
+}
+
+} // namespace UaServer
 } // namespace OpcUa

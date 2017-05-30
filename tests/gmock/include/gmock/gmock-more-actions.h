@@ -40,8 +40,10 @@
 
 #include "gmock/gmock-generated-actions.h"
 
-namespace testing {
-namespace internal {
+namespace testing
+{
+namespace internal
+{
 
 // Implements the Invoke(f) action.  The template argument
 // FunctionImpl is the implementation type of f, which can be either a
@@ -49,19 +51,21 @@ namespace internal {
 // Action<F> as long as f's type is compatible with F (i.e. f can be
 // assigned to a tr1::function<F>).
 template <typename FunctionImpl>
-class InvokeAction {
- public:
+class InvokeAction
+{
+public:
   // The c'tor makes a copy of function_impl (either a function
   // pointer or a functor).
   explicit InvokeAction(FunctionImpl function_impl)
-      : function_impl_(function_impl) {}
+    : function_impl_(function_impl) {}
 
   template <typename Result, typename ArgumentTuple>
-  Result Perform(const ArgumentTuple& args) {
+  Result Perform(const ArgumentTuple & args)
+  {
     return InvokeHelper<Result, ArgumentTuple>::Invoke(function_impl_, args);
   }
 
- private:
+private:
   FunctionImpl function_impl_;
 
   GTEST_DISALLOW_ASSIGN_(InvokeAction);
@@ -69,19 +73,21 @@ class InvokeAction {
 
 // Implements the Invoke(object_ptr, &Class::Method) action.
 template <class Class, typename MethodPtr>
-class InvokeMethodAction {
- public:
-  InvokeMethodAction(Class* obj_ptr, MethodPtr method_ptr)
-      : obj_ptr_(obj_ptr), method_ptr_(method_ptr) {}
+class InvokeMethodAction
+{
+public:
+  InvokeMethodAction(Class * obj_ptr, MethodPtr method_ptr)
+    : obj_ptr_(obj_ptr), method_ptr_(method_ptr) {}
 
   template <typename Result, typename ArgumentTuple>
-  Result Perform(const ArgumentTuple& args) const {
+  Result Perform(const ArgumentTuple & args) const
+  {
     return InvokeHelper<Result, ArgumentTuple>::InvokeMethod(
-        obj_ptr_, method_ptr_, args);
+             obj_ptr_, method_ptr_, args);
   }
 
- private:
-  Class* const obj_ptr_;
+private:
+  Class * const obj_ptr_;
   const MethodPtr method_ptr_;
 
   GTEST_DISALLOW_ASSIGN_(InvokeMethodAction);
@@ -95,18 +101,20 @@ class InvokeMethodAction {
 // function's arguments.
 template <typename FunctionImpl>
 PolymorphicAction<internal::InvokeAction<FunctionImpl> > Invoke(
-    FunctionImpl function_impl) {
+  FunctionImpl function_impl)
+{
   return MakePolymorphicAction(
-      internal::InvokeAction<FunctionImpl>(function_impl));
+           internal::InvokeAction<FunctionImpl>(function_impl));
 }
 
 // Creates an action that invokes the given method on the given object
 // with the mock function's arguments.
 template <class Class, typename MethodPtr>
 PolymorphicAction<internal::InvokeMethodAction<Class, MethodPtr> > Invoke(
-    Class* obj_ptr, MethodPtr method_ptr) {
+  Class * obj_ptr, MethodPtr method_ptr)
+{
   return MakePolymorphicAction(
-      internal::InvokeMethodAction<Class, MethodPtr>(obj_ptr, method_ptr));
+           internal::InvokeMethodAction<Class, MethodPtr>(obj_ptr, method_ptr));
 }
 
 // WithoutArgs(inner_action) can be used in a mock function with a
@@ -115,7 +123,8 @@ PolymorphicAction<internal::InvokeMethodAction<Class, MethodPtr> > Invoke(
 // argument to one that accepts (and ignores) arguments.
 template <typename InnerAction>
 inline internal::WithArgsAction<InnerAction>
-WithoutArgs(const InnerAction& action) {
+WithoutArgs(const InnerAction & action)
+{
   return internal::WithArgsAction<InnerAction>(action);
 }
 
@@ -126,7 +135,8 @@ WithoutArgs(const InnerAction& action) {
 // WithArgs<k>(an_action) (defined below) as a synonym.
 template <int k, typename InnerAction>
 inline internal::WithArgsAction<InnerAction, k>
-WithArg(const InnerAction& action) {
+WithArg(const InnerAction & action)
+{
   return internal::WithArgsAction<InnerAction, k>(action);
 }
 
@@ -143,7 +153,8 @@ WithArg(const InnerAction& action) {
 // Action ReturnArg<k>() returns the k-th argument of the mock function.
 ACTION_TEMPLATE(ReturnArg,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_0_VALUE_PARAMS()) {
+                AND_0_VALUE_PARAMS())
+{
   return std::tr1::get<k>(args);
 }
 
@@ -151,7 +162,8 @@ ACTION_TEMPLATE(ReturnArg,
 // mock function to *pointer.
 ACTION_TEMPLATE(SaveArg,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_1_VALUE_PARAMS(pointer)) {
+                AND_1_VALUE_PARAMS(pointer))
+{
   *pointer = ::std::tr1::get<k>(args);
 }
 
@@ -159,7 +171,8 @@ ACTION_TEMPLATE(SaveArg,
 // by the k-th (0-based) argument of the mock function to *pointer.
 ACTION_TEMPLATE(SaveArgPointee,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_1_VALUE_PARAMS(pointer)) {
+                AND_1_VALUE_PARAMS(pointer))
+{
   *pointer = *::std::tr1::get<k>(args);
 }
 
@@ -167,7 +180,8 @@ ACTION_TEMPLATE(SaveArgPointee,
 // referenced by the k-th (0-based) argument of the mock function.
 ACTION_TEMPLATE(SetArgReferee,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_1_VALUE_PARAMS(value)) {
+                AND_1_VALUE_PARAMS(value))
+{
   typedef typename ::std::tr1::tuple_element<k, args_type>::type argk_type;
   // Ensures that argument #k is a reference.  If you get a compiler
   // error on the next line, you are using SetArgReferee<k>(value) in
@@ -184,7 +198,8 @@ ACTION_TEMPLATE(SetArgReferee,
 // source range.
 ACTION_TEMPLATE(SetArrayArgument,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_2_VALUE_PARAMS(first, last)) {
+                AND_2_VALUE_PARAMS(first, last))
+{
   // Microsoft compiler deprecates ::std::copy, so we want to suppress warning
   // 4996 (Function call with parameters that may be unsafe) there.
 #ifdef _MSC_VER
@@ -201,7 +216,8 @@ ACTION_TEMPLATE(SetArrayArgument,
 // function.
 ACTION_TEMPLATE(DeleteArg,
                 HAS_1_TEMPLATE_PARAMS(int, k),
-                AND_0_VALUE_PARAMS()) {
+                AND_0_VALUE_PARAMS())
+{
   delete ::std::tr1::get<k>(args);
 }
 

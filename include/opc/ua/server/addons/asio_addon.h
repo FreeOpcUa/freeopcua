@@ -25,37 +25,37 @@
 
 namespace boost
 {
-  namespace asio
-  {
+namespace asio
+{
 
-    class io_service;
+class io_service;
 
-  }
+}
 }
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char AsioAddonId[] = "async";
-
-
-    class AsioAddon : public Common::Addon
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AsioAddon)
-
-    public:
-      virtual boost::asio::io_service& GetIoService() = 0;
-    };
+const char AsioAddonId[] = "async";
 
 
-    class AsioAddonFactory : public Common::AddonFactory
-    {
-    public:
-      Common::Addon::UniquePtr CreateAddon() override;
-    };
+class AsioAddon : public Common::Addon
+{
+public:
+  DEFINE_CLASS_POINTERS(AsioAddon)
 
-  }
+public:
+  virtual boost::asio::io_service & GetIoService() = 0;
+};
+
+
+class AsioAddonFactory : public Common::AddonFactory
+{
+public:
+  Common::Addon::UniquePtr CreateAddon() override;
+};
+
+}
 }

@@ -16,14 +16,14 @@
 
 namespace OpcUa
 {
-  namespace Test
-  {
+namespace Test
+{
 
-    inline void RegisterStandardNamespace(Common::AddonsManager& addons)
-    {
-      Common::AddonInformation config = Server::CreateStandardNamespaceAddon();
-      addons.Register(config);
-    }
+inline void RegisterStandardNamespace(Common::AddonsManager & addons)
+{
+  Common::AddonInformation config = Server::CreateStandardNamespaceAddon();
+  addons.Register(config);
+}
 
-  }
+}
 }

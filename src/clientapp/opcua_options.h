@@ -18,116 +18,116 @@
 namespace OpcUa
 {
 
-  class CommandLine
+class CommandLine
+{
+public:
+  CommandLine(int argc, char ** argv);
+
+  std::string GetServerURI() const
   {
-  public:
-    CommandLine(int argc, char** argv);
+    return ServerURI;
+  }
 
-    std::string GetServerURI() const
-    {
-      return ServerURI;
-    }
+  NodeId GetNodeId() const
+  {
+    return Node;
+  }
 
-    NodeId GetNodeId() const
-    {
-      return Node;
-    }
+  uint16_t GetNamespaceIndex() const
+  {
+    return NamespaceIndex;
+  }
 
-    uint16_t GetNamespaceIndex() const
-    {
-      return NamespaceIndex;
-    }
+  Variant GetValue() const
+  {
+    return Value;
+  }
 
-    Variant GetValue() const
-    {
-      return Value;
-    }
+  AttributeId GetAttribute() const
+  {
+    return Attribute;
+  }
 
-    AttributeId GetAttribute() const
-    {
-      return Attribute;
-    }
+  std::string GetModuleId() const
+  {
+    return ModuleId;
+  }
 
-    std::string GetModuleId() const
-    {
-      return ModuleId;
-    }
+  std::string GetModulePath() const
+  {
+    return ModulePath;
+  }
 
-    std::string GetModulePath() const
-    {
-      return ModulePath;
-    }
+  std::string GetConfigDir() const
+  {
+    return ConfigDir;
+  }
 
-    std::string GetConfigDir() const
-    {
-      return ConfigDir;
-    }
+  bool IsGetEndpointsOperation() const
+  {
+    return IsGetEndpoints;
+  }
 
-    bool IsGetEndpointsOperation() const
-    {
-      return IsGetEndpoints;
-    }
+  bool IsBrowseOperation() const
+  {
+    return IsBrowse;
+  }
 
-    bool IsBrowseOperation() const
-    {
-      return IsBrowse;
-    }
+  bool IsReadOperation() const
+  {
+    return IsRead;
+  }
 
-    bool IsReadOperation() const
-    {
-      return IsRead;
-    }
+  bool IsWriteOperation() const
+  {
+    return IsWrite;
+  }
 
-    bool IsWriteOperation() const
-    {
-      return IsWrite;
-    }
+  bool IsCreateSubscriptionOperation() const
+  {
+    return IsCreateSubscription;
+  }
 
-    bool IsCreateSubscriptionOperation() const
-    {
-      return IsCreateSubscription;
-    }
+  bool IsFindServersOperation() const
+  {
+    return IsFindServers;
+  }
 
-    bool IsFindServersOperation() const
-    {
-      return IsFindServers;
-    }
+  bool IsRegisterModuleOperation() const
+  {
+    return IsAddModule;
+  }
 
-    bool IsRegisterModuleOperation() const
-    {
-      return IsAddModule;
-    }
+  bool IsUnregisterModuleOperation() const
+  {
+    return IsRemoveModule;
+  }
 
-    bool IsUnregisterModuleOperation() const
-    {
-      return IsRemoveModule;
-    }
+  bool IsHelpOperation() const
+  {
+    return IsHelp;
+  }
 
-    bool IsHelpOperation() const
-    {
-      return IsHelp;
-    }
+private:
+  std::string ServerURI;
+  NodeId Node;
+  uint16_t NamespaceIndex;
+  Variant Value;
+  AttributeId Attribute;
+  std::string ModuleId;
+  std::string ModulePath;
+  std::string ConfigDir;
 
-  private:
-    std::string ServerURI;
-    NodeId Node;
-    uint16_t NamespaceIndex;
-    Variant Value;
-    AttributeId Attribute;
-    std::string ModuleId;
-    std::string ModulePath;
-    std::string ConfigDir;
-
-    bool IsHelp;
-    bool IsGetEndpoints;
-    bool IsBrowse;
-    bool IsRead;
-    bool IsWrite;
-    bool IsCreateSubscription;
-    bool IsFindServers;
-    bool IsAddModule;
-    bool IsRemoveModule;
-  };
+  bool IsHelp;
+  bool IsGetEndpoints;
+  bool IsBrowse;
+  bool IsRead;
+  bool IsWrite;
+  bool IsCreateSubscription;
+  bool IsFindServers;
+  bool IsAddModule;
+  bool IsRemoveModule;
+};
 
 }
 

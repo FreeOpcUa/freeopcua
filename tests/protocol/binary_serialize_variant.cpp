@@ -34,8 +34,9 @@ TEST_F(OpcUaBinarySerialization, Variant_NUL)
 
   GetStream() << var << flush;
 
-  const std::vector<char> expectedData = {
-  0
+  const std::vector<char> expectedData =
+  {
+    0
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(var));
@@ -53,9 +54,10 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN)
   GetStream() << var << flush;
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(var));
@@ -68,16 +70,17 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_Array)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  Variant var = std::vector<bool>{true, true};
+  Variant var = std::vector<bool> {true, true};
 
   GetStream() << var << flush;
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_ARRAY_MASK;
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  1,
-  1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    1,
+    1
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(var));
@@ -97,11 +100,12 @@ TEST_F(OpcUaBinarySerialization, Variant_BOOLEAN_DIMENSIONS)
   GetStream() << var << flush;
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_DIMENSIONS_MASK;
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1,
-  1,0,0,0,
-  1,0,0,0
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1,
+    1, 0, 0, 0,
+    1, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(var));
@@ -118,8 +122,9 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NUL)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0
+  const std::vector<char> expectedData =
+  {
+    0
   };
 
   GetChannel().SetData(expectedData);
@@ -139,9 +144,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1
   };
 
   GetChannel().SetData(expectedData);
@@ -162,11 +168,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  1,
-  1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    1,
+    1
   };
 
   GetChannel().SetData(expectedData);
@@ -192,11 +199,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BOOLEAN_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -217,7 +225,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE)
 
   char encodingMask = static_cast<char>(VariantType::BYTE);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     (char)200
   };
@@ -240,11 +249,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BYTE) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  (char)200,
-  (char)201
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    (char)200,
+    (char)201
   };
 
   GetChannel().SetData(expectedData);
@@ -271,12 +281,13 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BYTE) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  (char)200,
-  2,0,0,0,
-  2,0,0,0,
-  3,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    (char)200,
+    2, 0, 0, 0,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -300,9 +311,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_SBYTE)
 
   char encodingMask = static_cast<char>(VariantType::SBYTE);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    (char)-5
+    (char) - 5
   };
 
   GetChannel().SetData(expectedData);
@@ -323,11 +335,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_SBYTE_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::SBYTE) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  -2,
-  -3
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    -2,
+    -3
   };
 
   GetChannel().SetData(expectedData);
@@ -354,11 +367,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_SBYTE_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::SBYTE) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  -5,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    -5,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -380,7 +394,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT16)
 
   char encodingMask = static_cast<char>(VariantType::INT16);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     0x00, 0x20 // 0x2000
   };
@@ -404,11 +419,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT16_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT16) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00, 0x20, // 0x2000
-  0x00, 0x20  // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, // 0x2000
+    0x00, 0x20  // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -435,11 +451,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT16_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT16) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00, 0x20, // 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, // 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -463,7 +480,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT16)
 
   char encodingMask = static_cast<char>(VariantType::UINT16);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     0x00, 0x20 // 0x2000
   };
@@ -487,11 +505,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT16_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT16) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00, 0x20, // 0x2000
-  0x00, 0x20  // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, // 0x2000
+    0x00, 0x20  // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -518,11 +537,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT16_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT16) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00, 0x20, // 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, // 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -546,9 +566,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT32)
 
   char encodingMask = static_cast<char>(VariantType::INT32);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    0x00,0x20,0,0 // 0x2000
+    0x00, 0x20, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -570,11 +591,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT32_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT32) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00, 0x20, 0, 0, // 0x2000
-  0x00, 0x20, 0, 0  // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, 0, 0, // 0x2000
+    0x00, 0x20, 0, 0  // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -601,11 +623,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT32_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT32) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00, 0x20, 0, 0,// 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, 0, 0,// 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -629,9 +652,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT32)
 
   char encodingMask = static_cast<char>(VariantType::UINT32);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    0x00, 0x20,0,0 // 0x2000
+    0x00, 0x20, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -653,11 +677,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT32_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT32) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00, 0x20,0,0, // 0x2000
-  0x00, 0x20,0,0  // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, 0, 0, // 0x2000
+    0x00, 0x20, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -684,11 +709,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT32_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT32) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00, 0x20,0,0, // 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, 0, 0, // 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -712,9 +738,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT64)
 
   char encodingMask = static_cast<char>(VariantType::INT64);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    0x00,0x20,0,0, 0,0,0,0 // 0x2000
+    0x00, 0x20, 0, 0, 0, 0, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -736,11 +763,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT64_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT64) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00,0x20,0,0, 0,0,0,0, // 0x2000
-  0x00,0x20,0,0, 0,0,0,0  // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, 0, 0, 0, 0, 0, 0, // 0x2000
+    0x00, 0x20, 0, 0, 0, 0, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -767,11 +795,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_INT64_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::INT64) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00,0x20,0,0, 0,0,0,0,// 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, 0, 0, 0, 0, 0, 0, // 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -795,9 +824,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT64)
 
   char encodingMask = static_cast<char>(VariantType::UINT64);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    0x00,0x20,0,0, 0,0,0,0 // 0x2000
+    0x00, 0x20, 0, 0, 0, 0, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -819,11 +849,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT64_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT64) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0x00,0x20,0,0, 0,0,0,0, // 0x2000
-  0x00,0x20,0,0, 0,0,0,0 // 0x2000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0x00, 0x20, 0, 0, 0, 0, 0, 0, // 0x2000
+    0x00, 0x20, 0, 0, 0, 0, 0, 0 // 0x2000
   };
 
   GetChannel().SetData(expectedData);
@@ -850,11 +881,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_UINT64_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::UINT64) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0x00,0x20,0,0, 0,0,0,0, // 0x2000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0x00, 0x20, 0, 0, 0, 0, 0, 0, // 0x2000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -878,7 +910,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT)
 
   char encodingMask = static_cast<char>(VariantType::FLOAT);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     //(char)0xC0, (char)0xD0, 0, 0 // -6.5
     0, 0, (char)0xD0, (char)0xC0 // -6.5
@@ -903,13 +936,14 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::FLOAT) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0, 0, (char)0xD0, (char)0xC0, // -6.5
-  0, 0, (char)0xD0, (char)0xC0 // -6.5
-  //(char)0xC0, (char)0xD0, 0, 0, // -6.5
-  //(char)0xC0, (char)0xD0, 0, 0 // -6.5
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0, 0, (char)0xD0, (char)0xC0, // -6.5
+    0, 0, (char)0xD0, (char)0xC0 // -6.5
+    //(char)0xC0, (char)0xD0, 0, 0, // -6.5
+    //(char)0xC0, (char)0xD0, 0, 0 // -6.5
   };
 
   GetChannel().SetData(expectedData);
@@ -936,12 +970,13 @@ TEST_F(OpcUaBinaryDeserialization, Variant_FLOAT_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::FLOAT) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0, 0, (char)0xD0, (char)0xC0, // -6.5
-  //(char)0xC0, (char)0xD0, 0, 0, // -6.5
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0, 0, (char)0xD0, (char)0xC0, // -6.5
+    //(char)0xC0, (char)0xD0, 0, 0, // -6.5
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -965,7 +1000,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DOUBLE)
 
   char encodingMask = static_cast<char>(VariantType::DOUBLE);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41 // 1200000
   };
@@ -989,11 +1025,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DOUBLE_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::DOUBLE) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41, // 1200000
-  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41  // 1200000
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41, // 1200000
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41  // 1200000
   };
 
   GetChannel().SetData(expectedData);
@@ -1020,11 +1057,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DOUBLE_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::DOUBLE) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41, // 1200000
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41, // 1200000
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1048,9 +1086,10 @@ OpcUa::Guid CreateTestGuid()
   guid.Data3 = 0x0708;
 
   for (unsigned i = 0; i < 8; ++i)
-  {
-    guid.Data4[i] = i + 1;
-  }
+    {
+      guid.Data4[i] = i + 1;
+    }
+
   return guid;
 }
 
@@ -1062,9 +1101,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUId)
 
   char encodingMask = static_cast<char>(VariantType::GUId);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    4,3,2,1, 6,5, 8,7, 1,2,3,4,5,6,7,8
+    4, 3, 2, 1, 6, 5, 8, 7, 1, 2, 3, 4, 5, 6, 7, 8
   };
 
   GetChannel().SetData(expectedData);
@@ -1088,11 +1128,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUId_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::GUId) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  4,3,2,1, 6,5, 8,7, 1,2,3,4,5,6,7,8,
-  4,3,2,1, 6,5, 8,7, 1,2,3,4,5,6,7,8
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    4, 3, 2, 1, 6, 5, 8, 7, 1, 2, 3, 4, 5, 6, 7, 8,
+    4, 3, 2, 1, 6, 5, 8, 7, 1, 2, 3, 4, 5, 6, 7, 8
   };
 
   GetChannel().SetData(expectedData);
@@ -1121,11 +1162,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_GUId_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::GUId) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  4,3,2,1, 6,5, 8,7, 1,2,3,4,5,6,7,8,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    4, 3, 2, 1, 6, 5, 8, 7, 1, 2, 3, 4, 5, 6, 7, 8,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1151,9 +1193,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_STRING)
 
   char encodingMask = static_cast<char>(VariantType::STRING);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    4,0,0,0, 'R','o','o','t'
+    4, 0, 0, 0, 'R', 'o', 'o', 't'
   };
 
   GetChannel().SetData(expectedData);
@@ -1175,11 +1218,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_STRING_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::STRING) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  4,0,0,0, 'R','o','o','t',
-  4,0,0,0, 'R','o','o','t'
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    4, 0, 0, 0, 'R', 'o', 'o', 't',
+    4, 0, 0, 0, 'R', 'o', 'o', 't'
   };
 
   GetChannel().SetData(expectedData);
@@ -1208,11 +1252,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_STRING_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::STRING) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  4,0,0,0, 'R','o','o','t',
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    4, 0, 0, 0, 'R', 'o', 'o', 't',
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1238,9 +1283,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING)
 
   char encodingMask = static_cast<char>(VariantType::BYTE_STRING);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    2,0,0,0, 1,2
+    2, 0, 0, 0, 1, 2
   };
 
   GetChannel().SetData(expectedData);
@@ -1249,7 +1295,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING)
   GetStream() >> var;
 
   ASSERT_EQ(var.Type(), VariantType::BYTE_STRING);
-  ASSERT_EQ(var.As<ByteString>(), ByteString(std::vector<uint8_t>{1,2}));
+  ASSERT_EQ(var.As<ByteString>(), ByteString(std::vector<uint8_t> {1, 2}));
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
   ASSERT_TRUE(var.Dimensions.empty());
@@ -1262,11 +1308,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BYTE_STRING) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  2,0,0,0, 1,2,
-  2,0,0,0, 1,2
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    2, 0, 0, 0, 1, 2,
+    2, 0, 0, 0, 1, 2
   };
 
   GetChannel().SetData(expectedData);
@@ -1278,8 +1325,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING_Array)
   std::vector<ByteString> vals;
   ASSERT_NO_THROW(vals = var.As<std::vector<ByteString>>());
   ASSERT_EQ(vals.size(), 2);
-  ASSERT_EQ(vals[0], ByteString(std::vector<uint8_t>{1,2}));
-  ASSERT_EQ(vals[1], ByteString(std::vector<uint8_t>{1,2}));
+  ASSERT_EQ(vals[0], ByteString(std::vector<uint8_t> {1, 2}));
+  ASSERT_EQ(vals[1], ByteString(std::vector<uint8_t> {1, 2}));
   ASSERT_FALSE(var.IsNul());
   ASSERT_TRUE(var.IsArray());
   ASSERT_TRUE(var.Dimensions.empty());
@@ -1293,11 +1340,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::BYTE_STRING) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0, 1,2,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0, 1, 2,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1308,7 +1356,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING_DIMENSIONS)
   OpcUa::Guid guid = CreateTestGuid();
 
   ASSERT_EQ(var.Type(), VariantType::BYTE_STRING);
-  ASSERT_EQ(var.As<ByteString>(), ByteString(std::vector<uint8_t>{1,2}));
+  ASSERT_EQ(var.As<ByteString>(), ByteString(std::vector<uint8_t> {1, 2}));
   ASSERT_FALSE(var.IsNul());
   ASSERT_FALSE(var.IsArray());
   ASSERT_EQ(var.Dimensions.size(), 1);
@@ -1323,7 +1371,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DATETIME)
 
   char encodingMask = static_cast<char>(VariantType::DATE_TIME);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     8, 7, 6, 5, 4, 3, 2, 1
   };
@@ -1347,11 +1396,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DATE_TIME_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::DATE_TIME) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  8, 7, 6, 5, 4, 3, 2, 1,
-  8, 7, 6, 5, 4, 3, 2, 1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    8, 7, 6, 5, 4, 3, 2, 1,
+    8, 7, 6, 5, 4, 3, 2, 1
   };
 
   GetChannel().SetData(expectedData);
@@ -1378,11 +1428,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_DATE_TIME_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::DATE_TIME) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  8, 7, 6, 5, 4, 3, 2, 1,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    8, 7, 6, 5, 4, 3, 2, 1,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1406,9 +1457,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_LOCALIZED_TEXT)
 
   char encodingMask = static_cast<char>(VariantType::LOCALIZED_TEXT);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    2, 4,0,0,0,'t','e','x','t'
+    2, 4, 0, 0, 0, 't', 'e', 'x', 't'
   };
 
   GetChannel().SetData(expectedData);
@@ -1430,11 +1482,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_LOCALIZED_TEXT_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::LOCALIZED_TEXT) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  2, 4,0,0,0,'t','e','x','t',
-  2, 4,0,0,0,'t','e','x','t'
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    2, 4, 0, 0, 0, 't', 'e', 'x', 't',
+    2, 4, 0, 0, 0, 't', 'e', 'x', 't'
   };
 
   GetChannel().SetData(expectedData);
@@ -1461,11 +1514,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_LOCALIZED_TEXT_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::LOCALIZED_TEXT) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2, 4,0,0,0,'t','e','x','t',
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 4, 0, 0, 0, 't', 'e', 'x', 't',
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1489,9 +1543,10 @@ TEST_F(OpcUaBinaryDeserialization, Variant_QUALIFIED_NAME)
 
   char encodingMask = static_cast<char>(VariantType::QUALIFIED_NAME);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
-    1,0,  4,0,0,0,  'n','a','m','e'
+    1, 0,  4, 0, 0, 0,  'n', 'a', 'm', 'e'
   };
 
   GetChannel().SetData(expectedData);
@@ -1513,11 +1568,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_QUALIFIED_NAME_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::QUALIFIED_NAME) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  1,0,  4,0,0,0,  'n','a','m','e',
-  1,0,  4,0,0,0,  'n','a','m','e'
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    1, 0,  4, 0, 0, 0,  'n', 'a', 'm', 'e',
+    1, 0,  4, 0, 0, 0,  'n', 'a', 'm', 'e'
   };
 
   GetChannel().SetData(expectedData);
@@ -1544,11 +1600,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_QUALIFIED_NAME_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::QUALIFIED_NAME) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1,0,  4,0,0,0,  'n','a','m','e',
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1, 0,  4, 0, 0, 0,  'n', 'a', 'm', 'e',
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -1572,7 +1629,8 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id)
 
   char encodingMask = static_cast<char>(VariantType::NODE_Id);
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     encodingMask,
     1, 0, (char)0xC1, 0x1
   };
@@ -1596,11 +1654,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id_Array)
 
   char encodingMask = static_cast<uint8_t>(VariantType::NODE_Id) | HAS_ARRAY_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  2,0,0,0,
-  1, 0, (char)0xC1, 0x1,
-  1, 0, (char)0xC1, 0x1
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    2, 0, 0, 0,
+    1, 0, (char)0xC1, 0x1,
+    1, 0, (char)0xC1, 0x1
   };
 
   GetChannel().SetData(expectedData);
@@ -1626,11 +1685,12 @@ TEST_F(OpcUaBinaryDeserialization, Variant_NODE_Id_DIMENSIONS)
 
   char encodingMask = static_cast<uint8_t>(VariantType::NODE_Id) | HAS_DIMENSIONS_MASK;
 
-  const std::vector<char> expectedData = {
-  encodingMask,
-  1, 0, (char)0xC1, 0x1,
-  1,0,0,0,
-  1,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    1, 0, (char)0xC1, 0x1,
+    1, 0, 0, 0,
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);

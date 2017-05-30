@@ -16,21 +16,21 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char EndpointsRegistryAddonId[] = "endpoints_services";
+const char EndpointsRegistryAddonId[] = "endpoints_services";
 
 
-    class EndpointsRegistryAddonFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(EndpointsRegistryAddonFactory)
+class EndpointsRegistryAddonFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(EndpointsRegistryAddonFactory)
 
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon() override;
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon() override;
+};
 
-  } // namespace UaServer
+} // namespace UaServer
 } // nmespace OpcUa
 

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -17,25 +17,25 @@
 namespace Common
 {
 
-  class DynamicLibrary
+class DynamicLibrary
+{
+public:
+  DynamicLibrary(const std::string & libraryPath);
+  ~DynamicLibrary();
+
+  template <typename FuncType>
+  FuncType Find(const std::string & funcName)
   {
-  public:
-    DynamicLibrary(const std::string& libraryPath);
-    ~DynamicLibrary();
+    return reinterpret_cast<FuncType>(FindSymbol(funcName));
+  }
 
-    template <typename FuncType> 
-    FuncType Find(const std::string& funcName)
-    {
-      return reinterpret_cast<FuncType>(FindSymbol(funcName));
-    }
+private:
+  void * FindSymbol(const std::string & funcName);
 
-  private:
-    void* FindSymbol(const std::string& funcName);
-
-  private:
-     const std::string Path;
-     void* Library;
-  };
+private:
+  const std::string Path;
+  void * Library;
+};
 
 }
 

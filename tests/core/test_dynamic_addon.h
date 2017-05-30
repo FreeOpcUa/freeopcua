@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,14 +18,14 @@
 
 namespace OpcCoreTests
 {
-  class TestDynamicAddon : public Common::Addon
-  {
-  public:
-    DEFINE_CLASS_POINTERS(TestDynamicAddon);
-  public:
-    virtual const char* GetStringWithHello() const = 0;
-    virtual Common::AddonParameters GetParameters() const = 0;
-  };
+class TestDynamicAddon : public Common::Addon
+{
+public:
+  DEFINE_CLASS_POINTERS(TestDynamicAddon);
+public:
+  virtual const char * GetStringWithHello() const = 0;
+  virtual Common::AddonParameters GetParameters() const = 0;
+};
 
 }
 

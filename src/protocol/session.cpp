@@ -2,12 +2,12 @@
 
 namespace OpcUa
 {
-  ExpandedNodeId GenerateSessionId()
-  { 
-    static uint32_t sessionId;
-    return ExpandedNodeId(NumericNodeId(++sessionId + 5, 0));
-  }
+ExpandedNodeId GenerateSessionId()
+{
+  static uint32_t sessionId;
+  return ExpandedNodeId(NumericNodeId(++sessionId + 5, 0));
 }
-  
+}
+
 
 

@@ -21,42 +21,42 @@
 
 namespace OpcUa
 {
-  namespace Server
+namespace Server
+{
+
+class CommandLine
+{
+public:
+  CommandLine(int argc, const char ** argv);
+
+  bool NeedStartServer() const
   {
-
-    class CommandLine
-    {
-    public:
-      CommandLine(int argc, const char** argv);
-
-      bool NeedStartServer() const
-      {
-        return StartPossible;
-      }
-
-      bool IsDaemonMode() const
-      {
-        return IsDaemon;
-      }
-
-      std::string GetConfigDir() const
-      {
-    	return ConfigDir;
-      }
-
-      std::string GetLogFile() const
-      {
-        return LogFile;
-      }
-
-    private:
-      bool StartPossible;
-      bool IsDaemon;
-      std::string ConfigDir;
-      std::string LogFile;
-    };
-
+    return StartPossible;
   }
+
+  bool IsDaemonMode() const
+  {
+    return IsDaemon;
+  }
+
+  std::string GetConfigDir() const
+  {
+    return ConfigDir;
+  }
+
+  std::string GetLogFile() const
+  {
+    return LogFile;
+  }
+
+private:
+  bool StartPossible;
+  bool IsDaemon;
+  std::string ConfigDir;
+  std::string LogFile;
+};
+
+}
 }
 
 #endif // _OPC_UA_Server_OPTIONS_H_

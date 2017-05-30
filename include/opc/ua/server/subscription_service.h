@@ -17,26 +17,26 @@
 
 namespace boost
 {
-  namespace asio
-  {
-    class io_service;
-  }
+namespace asio
+{
+class io_service;
+}
 }
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    class SubscriptionService : public SubscriptionServices
-    {
-    public:
-      DEFINE_CLASS_POINTERS(SubscriptionService)
+class SubscriptionService : public SubscriptionServices
+{
+public:
+  DEFINE_CLASS_POINTERS(SubscriptionService)
 
-      virtual void TriggerEvent(NodeId node, Event event) = 0;
-    };
+  virtual void TriggerEvent(NodeId node, Event event) = 0;
+};
 
-    SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service& io, bool debug);
+SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service & io, bool debug);
 
-  } // namespace UaServer
+} // namespace UaServer
 } // nmespace OpcUa

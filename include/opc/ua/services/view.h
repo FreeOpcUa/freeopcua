@@ -21,18 +21,18 @@
 namespace OpcUa
 {
 
-  class ViewServices : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(ViewServices)
+class ViewServices : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(ViewServices)
 
-  public:
-    virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery& query) const = 0;
-    virtual std::vector<BrowseResult> BrowseNext() const = 0;
-    virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters& params) const = 0;
-    virtual std::vector<NodeId> RegisterNodes(const std::vector<NodeId>& params) const = 0;
-    virtual void UnregisterNodes(const std::vector<NodeId>& params) const = 0;
-  };
+public:
+  virtual std::vector<BrowseResult> Browse(const OpcUa::NodesQuery & query) const = 0;
+  virtual std::vector<BrowseResult> BrowseNext() const = 0;
+  virtual std::vector<BrowsePathResult> TranslateBrowsePathsToNodeIds(const TranslateBrowsePathsParameters & params) const = 0;
+  virtual std::vector<NodeId> RegisterNodes(const std::vector<NodeId> & params) const = 0;
+  virtual void UnregisterNodes(const std::vector<NodeId> & params) const = 0;
+};
 
 } // namespace OpcUa
 

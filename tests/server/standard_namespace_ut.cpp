@@ -32,11 +32,12 @@ protected:
   virtual void SetUp()
   {
     const bool debug = false;
+
     if (!NameSpace)
-    {
-      NameSpace = OpcUa::Server::CreateAddressSpace(debug);
-      OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
-    }
+      {
+        NameSpace = OpcUa::Server::CreateAddressSpace(debug);
+        OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
+      }
   }
 
   virtual void TearDown()
@@ -45,29 +46,32 @@ protected:
   }
 
 protected:
-  std::vector<ReferenceDescription> Browse(const NodeId& id) const
+  std::vector<ReferenceDescription> Browse(const NodeId & id) const
   {
     OpcUa::BrowseDescription description;
     description.NodeToBrowse = id;
     OpcUa::NodesQuery query;
     query.NodesToBrowse.push_back(description);
     auto result = NameSpace->Browse(query);
+
     if (result.empty())
-    {
-      return std::vector<ReferenceDescription>();
-    }
+      {
+        return std::vector<ReferenceDescription>();
+      }
+
     return result[0].Referencies;
   }
 
   bool HasReference(std::vector<ReferenceDescription> refs, ReferenceId referenceId,  NodeId targetNode) const
   {
     for (const ReferenceDescription ref : refs)
-    {
-      if (ref.TargetNodeId == targetNode && ref.ReferenceTypeId == referenceId)
       {
-        return true;
+        if (ref.TargetNodeId == targetNode && ref.ReferenceTypeId == referenceId)
+          {
+            return true;
+          }
       }
-    }
+
     return false;
   }
 
@@ -1450,7 +1454,7 @@ TEST_F(StandardNamespaceStructure, ObjectTypes)
 TEST_F(StandardNamespaceStructure, BaseObjectType)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectId::BaseObjectType);
-  EXPECT_EQ(SizeOf(refs), 24); 
+  EXPECT_EQ(SizeOf(refs), 24);
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::BaseEventType));
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::DataTypeEncodingType));
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::DataTypeSystemType));
@@ -2091,7 +2095,7 @@ TEST_F(StandardNamespaceStructure, Organizes)
 TEST_F(StandardNamespaceStructure, NonHierarchicalReferences)
 {
   const std::vector<ReferenceDescription> refs = Browse(ObjectId::NonHierarchicalReferences);
-  EXPECT_EQ(SizeOf(refs), 10-1); // XXX
+  EXPECT_EQ(SizeOf(refs), 10 - 1); // XXX
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::FromState));
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::GeneratesEvent));
   EXPECT_TRUE(HasReference(refs, ReferenceId::HasSubtype, ObjectId::HasCause));

@@ -1,0 +1,13 @@
+--break-blocks
+--break-blocks=all
+--add-brackets
+--add-one-line-brackets
+--suffix=none
+--indent=spaces=2
+--convert-tabs
+-A7
+--align-pointer=middle
+--align-reference=middle
+--pad-header
+--pad-oper
+--unpad-paren

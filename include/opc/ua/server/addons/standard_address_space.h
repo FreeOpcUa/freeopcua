@@ -15,17 +15,17 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    class StandardNamespaceAddonFactory : public Common::AddonFactory
-    {
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon();
-    };
+class StandardNamespaceAddonFactory : public Common::AddonFactory
+{
+public:
+  virtual Common::Addon::UniquePtr CreateAddon();
+};
 
-    const char StandardNamespaceAddonId[] = "standard_namespace";
+const char StandardNamespaceAddonId[] = "standard_namespace";
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa
 

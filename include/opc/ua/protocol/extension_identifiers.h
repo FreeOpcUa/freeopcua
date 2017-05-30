@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -15,11 +15,11 @@
 
 namespace OpcUa
 {
-  enum ExtensionObjectId : uint16_t
-  {
-    USER_IdENTIFY_TOKEN_ANONYMOUS = 0x141, // 321
-    USER_IdENTIFY_TOKEN_USERNAME = 0x144, // 324
-  };
+enum ExtensionObjectId : uint16_t
+{
+  USER_IdENTIFY_TOKEN_ANONYMOUS = 0x141, // 321
+  USER_IdENTIFY_TOKEN_USERNAME = 0x144, // 324
+};
 }
 
 #endif // __OPC_UA_BINARY_EXTENSION_IdENTIFIERS

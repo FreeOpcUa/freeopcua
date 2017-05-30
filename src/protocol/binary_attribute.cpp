@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -23,31 +23,31 @@
 namespace OpcUa
 {
 
-  namespace Binary
-  {
+namespace Binary
+{
 
-    template<> 
-    std::size_t RawSize<AttributeId>(const AttributeId&)
-    {
-      return 4;
-    }
+template<>
+std::size_t RawSize<AttributeId>(const AttributeId &)
+{
+  return 4;
+}
 
-    template<>
-    void DataSerializer::Serialize<AttributeId>(const AttributeId& attr)
-    {
-      *this << static_cast<uint32_t>(attr);
-    }
+template<>
+void DataSerializer::Serialize<AttributeId>(const AttributeId & attr)
+{
+  *this << static_cast<uint32_t>(attr);
+}
 
-    template<>
-    void DataDeserializer::Deserialize<AttributeId>(AttributeId& t)
-    {
-      uint32_t tmp = 0;
-      *this >> tmp;
-      t = static_cast<AttributeId>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<AttributeId>(AttributeId & t)
+{
+  uint32_t tmp = 0;
+  *this >> tmp;
+  t = static_cast<AttributeId>(tmp);
+}
 
 
 
-  } // namespace Binary
+} // namespace Binary
 } // namespace OpcUa
 

@@ -25,7 +25,7 @@ namespace
 #define DYNAMIC_ADDON_PATH "./libtest_dynamic_addon.so"
 #endif
 
-const char* modulePath = DYNAMIC_ADDON_PATH;
+const char * modulePath = DYNAMIC_ADDON_PATH;
 
 }
 

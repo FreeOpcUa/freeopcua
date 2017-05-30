@@ -103,6 +103,7 @@ void PySubscriptionHandler::Event(uint32_t handle, const OpcUa::Event & event)
     {
       call_method<void>(self, "event", handle, event);
     }
+
   catch (const error_already_set & ex)
     {
       std::string perror_str = parse_python_exception();

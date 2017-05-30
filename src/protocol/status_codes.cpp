@@ -17,7 +17,7 @@
 void OpcUa::CheckStatusCode(StatusCode code)
 {
   if (code == StatusCode::Good)
-    return;
+    { return; }
 
   throw std::runtime_error(OpcUa::ToString(code));
 }

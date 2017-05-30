@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,39 +18,45 @@
 namespace Common
 {
 
-  void Uri::Initialize(const char* uriString, std::size_t)
-  {
-    xmlURIPtr uri = xmlParseURI(uriString);
-    if (!uri)
+void Uri::Initialize(const char * uriString, std::size_t)
+{
+  xmlURIPtr uri = xmlParseURI(uriString);
+
+  if (!uri)
     {
       THROW_ERROR1(CannotParseUri, uriString);
     }
-    if (uri->scheme)
+
+  if (uri->scheme)
     {
       SchemeStr = uri->scheme;
     }
-    if (uri->user)
+
+  if (uri->user)
     {
       UserStr = uri->user;
       int ix = UserStr.find(':');
-      if(ix > 0) {
-        PasswordStr = UserStr.substr(ix + 1);
-        UserStr = UserStr.substr(0, ix);
-      }
+
+      if (ix > 0)
+        {
+          PasswordStr = UserStr.substr(ix + 1);
+          UserStr = UserStr.substr(0, ix);
+        }
     }
-    if (uri->server)
+
+  if (uri->server)
     {
       HostStr = uri->server;
     }
 
-    PortNum = uri->port;
-    xmlFreeURI(uri);
+  PortNum = uri->port;
+  xmlFreeURI(uri);
 
-    if (SchemeStr.empty() || HostStr.empty())
+  if (SchemeStr.empty() || HostStr.empty())
     {
       THROW_ERROR1(CannotParseUri, uriString);
     }
-  }
+}
 
 } // namespace Common
 

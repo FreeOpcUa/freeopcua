@@ -26,206 +26,239 @@
 
 namespace OpcUa
 {
-  Subscription::Subscription(Services::SharedPtr server, const CreateSubscriptionParameters& params, SubscriptionHandler& callback, bool debug)
-    : Server(server), Client(callback), Debug(debug)
-  {
-    CreateSubscriptionRequest request;
-    request.Parameters = params;
-    Services::SharedPtr serverptr = Server;
-    Data = Server->Subscriptions()->CreateSubscription(request, [this, serverptr](PublishResult i){ this->PublishCallback(serverptr, i); } );
-    //After creating the subscription, it is expected to send at least one publish request
-    Server->Subscriptions()->Publish(PublishRequest());
-    Server->Subscriptions()->Publish(PublishRequest());
-  }
+Subscription::Subscription(Services::SharedPtr server, const CreateSubscriptionParameters & params, SubscriptionHandler & callback, bool debug)
+  : Server(server), Client(callback), Debug(debug)
+{
+  CreateSubscriptionRequest request;
+  request.Parameters = params;
+  Services::SharedPtr serverptr = Server;
+  Data = Server->Subscriptions()->CreateSubscription(request, [this, serverptr](PublishResult i) { this->PublishCallback(serverptr, i); });
+  //After creating the subscription, it is expected to send at least one publish request
+  Server->Subscriptions()->Publish(PublishRequest());
+  Server->Subscriptions()->Publish(PublishRequest());
+}
 
-  void Subscription::Delete()
-  {
-    std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<uint32_t>{Data.SubscriptionId});
-    for (auto res: results)
+void Subscription::Delete()
+{
+  std::vector<StatusCode> results = Server->Subscriptions()->DeleteSubscriptions(std::vector<uint32_t> {Data.SubscriptionId});
+
+  for (auto res : results)
     {
       CheckStatusCode(res);
     }
-  }
+}
 
-  void Subscription::PublishCallback(Services::SharedPtr server, const PublishResult result)
-  {
+void Subscription::PublishCallback(Services::SharedPtr server, const PublishResult result)
+{
 
-    if (Debug){ std::cout << "Subscription | Suscription::PublishCallback called with " <<result.NotificationMessage.NotificationData.size() << " notifications " << std::endl; }
-    for (const NotificationData& data: result.NotificationMessage.NotificationData )
+  if (Debug) { std::cout << "Subscription | Suscription::PublishCallback called with " << result.NotificationMessage.NotificationData.size() << " notifications " << std::endl; }
+
+  for (const NotificationData & data : result.NotificationMessage.NotificationData)
     {
       if (data.Header.TypeId == ExpandedObjectId::DataChangeNotification)
-      {
-        if (Debug) { std::cout << "Subscription | Notification is of type DataChange\n"; }
-        CallDataChangeCallback(data);
-      }
-      else if (data.Header.TypeId == ExpandedObjectId::EventNotificationList)
-      {
-        if (Debug) { std::cout << "Subscription | Notification is of type Event\n"; }
-        CallEventCallback(data);
-      }
-      else if (data.Header.TypeId == ExpandedObjectId::StatusChangeNotification)
-      {
-        if (Debug) { std::cout << "Subscription | Notification is of type StatusChange\n"; }
-        CallStatusChangeCallback(data);
-      }
-      else
-      {
-        std::cout << "Subscription | Error unknown notficiation type received: " << data.Header.TypeId <<std::endl;
-      }
-    }
-    OpcUa::SubscriptionAcknowledgement ack;
-    ack.SubscriptionId = GetId();
-    ack.SequenceNumber = result.NotificationMessage.SequenceNumber;
-    PublishRequest request;
-    request.SubscriptionAcknowledgements.push_back(ack);
-    server->Subscriptions()->Publish(request);
-  }
+        {
+          if (Debug) { std::cout << "Subscription | Notification is of type DataChange\n"; }
 
-  void Subscription::CallDataChangeCallback(const NotificationData& data)
-  {
-    for ( const MonitoredItems& item: data.DataChange.Notification)
+          CallDataChangeCallback(data);
+        }
+
+      else if (data.Header.TypeId == ExpandedObjectId::EventNotificationList)
+        {
+          if (Debug) { std::cout << "Subscription | Notification is of type Event\n"; }
+
+          CallEventCallback(data);
+        }
+
+      else if (data.Header.TypeId == ExpandedObjectId::StatusChangeNotification)
+        {
+          if (Debug) { std::cout << "Subscription | Notification is of type StatusChange\n"; }
+
+          CallStatusChangeCallback(data);
+        }
+
+      else
+        {
+          std::cout << "Subscription | Error unknown notficiation type received: " << data.Header.TypeId << std::endl;
+        }
+    }
+
+  OpcUa::SubscriptionAcknowledgement ack;
+  ack.SubscriptionId = GetId();
+  ack.SequenceNumber = result.NotificationMessage.SequenceNumber;
+  PublishRequest request;
+  request.SubscriptionAcknowledgements.push_back(ack);
+  server->Subscriptions()->Publish(request);
+}
+
+void Subscription::CallDataChangeCallback(const NotificationData & data)
+{
+  for (const MonitoredItems & item : data.DataChange.Notification)
     {
       std::unique_lock<std::mutex> lock(Mutex); //could used boost::shared_lock to improve perf
 
       AttValMap::iterator mapit = AttributeValueMap.find(item.ClientHandle);
-      if ( mapit == AttributeValueMap.end() )
-      {
-        std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< item.ClientHandle << std::endl; 
-      }
+
+      if (mapit == AttributeValueMap.end())
+        {
+          std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : " << item.ClientHandle << std::endl;
+        }
+
       else
-      {
-        AttributeId attr = mapit->second.Attribute;
-        Node node = mapit->second.TargetNode;
-        lock.unlock(); //unlock before calling client cades, you never know what they may do
-        if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
-        Client.DataValueChange(mapit->second.MonitoredItemId, node, item.Value, attr);
-        Client.DataChange(mapit->second.MonitoredItemId, node, item.Value.Value, attr);
-      }
+        {
+          AttributeId attr = mapit->second.Attribute;
+          Node node = mapit->second.TargetNode;
+          lock.unlock(); //unlock before calling client cades, you never know what they may do
+
+          if (Debug) { std::cout << "Subscription | Debug: Calling DataChange user callback " << item.ClientHandle << " and node: " << mapit->second.TargetNode << std::endl; }
+
+          Client.DataValueChange(mapit->second.MonitoredItemId, node, item.Value, attr);
+          Client.DataChange(mapit->second.MonitoredItemId, node, item.Value.Value, attr);
+        }
     }
-  }
+}
 
-  void Subscription::CallStatusChangeCallback(const NotificationData& data)
-  {
-     Client.StatusChange(data.StatusChange.Status);
-  }
+void Subscription::CallStatusChangeCallback(const NotificationData & data)
+{
+  Client.StatusChange(data.StatusChange.Status);
+}
 
-  void Subscription::CallEventCallback(const NotificationData& data)
-  {
-    for ( EventFieldList ef :  data.Events.Events)
+void Subscription::CallEventCallback(const NotificationData & data)
+{
+  for (EventFieldList ef :  data.Events.Events)
     {
       std::unique_lock<std::mutex> lock(Mutex); //could used boost::shared_lock to improve perf
 
       AttValMap::iterator mapit = AttributeValueMap.find(ef.ClientHandle);
-      if ( mapit == AttributeValueMap.end() )
-      {
-        std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : "<< ef.ClientHandle << std::endl; 
-      }
+
+      if (mapit == AttributeValueMap.end())
+        {
+          std::cout << "Subscription | Server Error got publishresult for an unknown  monitoreditem id : " << ef.ClientHandle << std::endl;
+        }
+
       else
-      {
-        Event ev;
-        uint32_t count = 0;
-        if ( mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size() )
         {
-          throw std::runtime_error("Subscription | Error receive event format does not match requested filter");
+          Event ev;
+          uint32_t count = 0;
+
+          if (mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size())
+            {
+              throw std::runtime_error("Subscription | Error receive event format does not match requested filter");
+            }
+
+          for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses)
+            {
+              //set the default fiedls of events into their event attributes
+              if (op.BrowsePath.size() == 1)
+                {
+                  if (op.BrowsePath[0] == QualifiedName("EventId", 0))
+                    {
+                      ev.EventId = ef.EventFields[count].As<ByteString>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("EventType", 0))
+                    {
+                      ev.EventType = ef.EventFields[count].As<NodeId>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("SourceNode", 0))
+                    {
+                      ev.SourceNode = ef.EventFields[count].As<NodeId>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("SourceName", 0))
+                    {
+                      ev.SourceName = ef.EventFields[count].As<std::string>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("Message", 0))
+                    {
+                      ev.Message = ef.EventFields[count].As<LocalizedText>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("Severity", 0))
+                    {
+                      ev.Severity = ef.EventFields[count].As<uint16_t>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("LocalTime", 0))
+                    {
+                      ev.LocalTime = ef.EventFields[count].As<DateTime>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("ReceiveTime", 0))
+                    {
+                      ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
+                    }
+
+                  else if (op.BrowsePath[0] == QualifiedName("Time", 0))
+                    {
+                      ev.Time = ef.EventFields[count].As<DateTime>();
+                    }
+                }
+
+              //Add anyway all fields as value
+              ev.SetValue(op.BrowsePath, ef.EventFields[count]);
+              ++count;
+            }
+
+          lock.unlock();
+
+          if (Debug) { std::cout << "Subscription | Debug: Calling client event callback\n"; }
+
+          Client.Event(mapit->second.MonitoredItemId, ev);
+
+          if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
         }
-        for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses )
-        {
-          //set the default fiedls of events into their event attributes
-          if ( op.BrowsePath.size() == 1 )
-          {
-            if ( op.BrowsePath[0] == QualifiedName("EventId", 0) )
-            {
-              ev.EventId = ef.EventFields[count].As<ByteString>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("EventType", 0) )
-            {
-              ev.EventType = ef.EventFields[count].As<NodeId>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("SourceNode", 0) )
-            {
-              ev.SourceNode = ef.EventFields[count].As<NodeId>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("SourceName", 0) )
-            {
-              ev.SourceName = ef.EventFields[count].As<std::string>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("Message", 0) )
-            {
-              ev.Message = ef.EventFields[count].As<LocalizedText>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("Severity", 0) )
-            {
-              ev.Severity = ef.EventFields[count].As<uint16_t>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("LocalTime", 0) )
-            {
-              ev.LocalTime = ef.EventFields[count].As<DateTime>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("ReceiveTime", 0) )
-            {
-              ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
-            }
-            else if ( op.BrowsePath[0] == QualifiedName("Time", 0) )
-            {
-              ev.Time = ef.EventFields[count].As<DateTime>();
-            }
-          }
-          //Add anyway all fields as value
-          ev.SetValue(op.BrowsePath, ef.EventFields[count]);
-          ++count;
-        }
-        lock.unlock(); 
-        if (Debug) { std::cout << "Subscription | Debug: Calling client event callback\n"; }
-        Client.Event(mapit->second.MonitoredItemId, ev);
-        if (Debug) { std::cout << "Subscription | Debug: callback call finished\n"; }
-      }
     }
-  }
+}
 
-  RepublishResponse Subscription::Republish(uint32_t sequenceNumber)
-  {
-    RepublishParameters params;
-    params.SubscriptionId = Data.SubscriptionId;
-    params.RetransmitSequenceNumber = sequenceNumber;
-    RepublishResponse response = Server->Subscriptions()->Republish(params);
-    return response;
-  }
+RepublishResponse Subscription::Republish(uint32_t sequenceNumber)
+{
+  RepublishParameters params;
+  params.SubscriptionId = Data.SubscriptionId;
+  params.RetransmitSequenceNumber = sequenceNumber;
+  RepublishResponse response = Server->Subscriptions()->Republish(params);
+  return response;
+}
 
-  uint32_t Subscription::SubscribeDataChange(const Node& node, AttributeId attr)
-  {
-    ReadValueId avid;
-    avid.NodeId = node.GetId();
-    avid.AttributeId = attr;
-    //avid.IndexRange //We leave it null, then the entire array is returned
-    std::vector<uint32_t> results = SubscribeDataChange(std::vector<ReadValueId>({avid}));
-    if (results.size() != 1) { throw std::runtime_error("Subscription | Server error, SubscribeDataChange should have returned exactly one result"); }
-    return results.front();
-  }
+uint32_t Subscription::SubscribeDataChange(const Node & node, AttributeId attr)
+{
+  ReadValueId avid;
+  avid.NodeId = node.GetId();
+  avid.AttributeId = attr;
+  //avid.IndexRange //We leave it null, then the entire array is returned
+  std::vector<uint32_t> results = SubscribeDataChange(std::vector<ReadValueId>({avid}));
 
-  std::vector<MonitoredItemCreateResult> Subscription::Subscribe(std::vector<MonitoredItemCreateRequest> request)
-  {
-    std::unique_lock<std::mutex> lock(Mutex); 
+  if (results.size() != 1) { throw std::runtime_error("Subscription | Server error, SubscribeDataChange should have returned exactly one result"); }
 
-    MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.SubscriptionId;
-    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
-    for (auto req : request)
+  return results.front();
+}
+
+std::vector<MonitoredItemCreateResult> Subscription::Subscribe(std::vector<MonitoredItemCreateRequest> request)
+{
+  std::unique_lock<std::mutex> lock(Mutex);
+
+  MonitoredItemsParameters itemsParams;
+  itemsParams.SubscriptionId = Data.SubscriptionId;
+  itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
+
+  for (auto req : request)
     {
       itemsParams.ItemsToCreate.push_back(req);
     }
 
-    return  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
-  }
- 
-  std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadValueId>& attributes)
-  {
-    std::unique_lock<std::mutex> lock(Mutex); 
+  return  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
+}
 
-    MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.SubscriptionId;
-    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
+std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadValueId> & attributes)
+{
+  std::unique_lock<std::mutex> lock(Mutex);
 
-    for (ReadValueId attr : attributes)
+  MonitoredItemsParameters itemsParams;
+  itemsParams.SubscriptionId = Data.SubscriptionId;
+  itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
+
+  for (ReadValueId attr : attributes)
     {
       MonitoredItemCreateRequest req;
       req.ItemToMonitor = attr;
@@ -239,20 +272,23 @@ namespace OpcUa
       itemsParams.ItemsToCreate.push_back(req);
     }
 
-    std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
+  std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
 
-    if ( results.size() != attributes.size() ) 
+  if (results.size() != attributes.size())
     {
-      throw(std::runtime_error("Subscription | Error server did not send answer for all monitoreditem requests"));
+      throw (std::runtime_error("Subscription | Error server did not send answer for all monitoreditem requests"));
     }
 
-    std::vector<uint32_t> monitoredItemsIds;
-    unsigned int i = 0;
-    for (const auto& res : results)
+  std::vector<uint32_t> monitoredItemsIds;
+  unsigned int i = 0;
+
+  for (const auto & res : results)
     {
       CheckStatusCode(res.Status);
-      if (Debug ) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle << " and id " << res.MonitoredItemId << std::endl;  }
-      MonitoredItemData mdata; 
+
+      if (Debug) { std::cout << "Subscription | storing monitoreditem with handle " << itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle << " and id " << res.MonitoredItemId << std::endl;  }
+
+      MonitoredItemData mdata;
       mdata.MonitoredItemId = res.MonitoredItemId;
       mdata.Attribute =  attributes[i].AttributeId;
       mdata.TargetNode =  Node(Server, attributes[i].NodeId);
@@ -260,118 +296,129 @@ namespace OpcUa
       monitoredItemsIds.push_back(res.MonitoredItemId);
       ++i;
     }
-    return monitoredItemsIds;
-  }
 
-  void Subscription::setUsrPtr(uint32_t handle,UserData *usr)
-  {
-      AttributeValueMap[handle].usrVar = usr;
-  }
+  return monitoredItemsIds;
+}
 
-  UserData * Subscription::getUsrPtr(uint32_t handle)
-  {
-      return AttributeValueMap[handle].usrVar;
-  }
+void Subscription::setUsrPtr(uint32_t handle, UserData * usr)
+{
+  AttributeValueMap[handle].usrVar = usr;
+}
 
-  void Subscription::UnSubscribe(uint32_t handle)
-  {
-    return UnSubscribe(std::vector<uint32_t>(1, handle));
-  }
+UserData * Subscription::getUsrPtr(uint32_t handle)
+{
+  return AttributeValueMap[handle].usrVar;
+}
 
-  void Subscription::UnSubscribe(std::vector<uint32_t> handles) 
-  {
-    std::unique_lock<std::mutex> lock(Mutex); 
+void Subscription::UnSubscribe(uint32_t handle)
+{
+  return UnSubscribe(std::vector<uint32_t>(1, handle));
+}
 
-    DeleteMonitoredItemsParameters params;
-    params.SubscriptionId = Data.SubscriptionId;
-    std::vector<uint32_t> mids;
-    for (auto id : handles)
+void Subscription::UnSubscribe(std::vector<uint32_t> handles)
+{
+  std::unique_lock<std::mutex> lock(Mutex);
+
+  DeleteMonitoredItemsParameters params;
+  params.SubscriptionId = Data.SubscriptionId;
+  std::vector<uint32_t> mids;
+
+  for (auto id : handles)
     {
-      if (Debug) std::cout << "Subscription | Sending unsubscribe for monitoreditemsid: " << id << std::endl;
+      if (Debug) { std::cout << "Subscription | Sending unsubscribe for monitoreditemsid: " << id << std::endl; }
+
       mids.push_back(uint32_t(id));
+
       //Now trying to remove monitoreditem from our internal cache
-      for ( auto pair : AttributeValueMap )
-      {
-        if (pair.second.MonitoredItemId == id)
+      for (auto pair : AttributeValueMap)
         {
-          AttributeValueMap.erase(pair.first);
-          break; //we modified our iterating object, so quit!!
+          if (pair.second.MonitoredItemId == id)
+            {
+              AttributeValueMap.erase(pair.first);
+              break; //we modified our iterating object, so quit!!
+            }
         }
-      }
     }
-    params.MonitoredItemIds = mids;
-    auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
-    for (auto res : results)
+
+  params.MonitoredItemIds = mids;
+  auto results = Server->Subscriptions()-> DeleteMonitoredItems(params);
+
+  for (auto res : results)
     {
       CheckStatusCode(res);
     }
-  }
+}
 
-  uint32_t Subscription::SubscribeEvents()
-  {
-    return SubscribeEvents(Node(Server, ObjectId::Server), Node(Server, ObjectId::BaseEventType));
-  }
+uint32_t Subscription::SubscribeEvents()
+{
+  return SubscribeEvents(Node(Server, ObjectId::Server), Node(Server, ObjectId::BaseEventType));
+}
 
-  uint32_t Subscription::SubscribeEvents(const Node& node, const Node& eventtype)  
-  {
-    EventFilter filter;
-    if (Debug) std::cout << "Subscription | Subscribing events with filter for properties:" << std::endl;
-    for ( Node& child: eventtype.GetProperties() )
+uint32_t Subscription::SubscribeEvents(const Node & node, const Node & eventtype)
+{
+  EventFilter filter;
+
+  if (Debug) { std::cout << "Subscription | Subscribing events with filter for properties:" << std::endl; }
+
+  for (Node & child : eventtype.GetProperties())
     {
-      if (Debug) std::cout << "      property: "<< child.GetBrowseName() << std::endl;
+      if (Debug) { std::cout << "      property: " << child.GetBrowseName() << std::endl; }
+
       SimpleAttributeOperand op;
       op.TypeId = eventtype.GetId();
       op.Attribute = AttributeId::Value;
       op.BrowsePath = std::vector<QualifiedName>({child.GetBrowseName()});
       filter.SelectClauses.push_back(op);
     }
-    return SubscribeEvents(node, filter);
-  }
 
-  uint32_t Subscription::SubscribeEvents(const Node& node, const EventFilter& eventfilter)
-  {
-    std::unique_lock<std::mutex> lock(Mutex); 
+  return SubscribeEvents(node, filter);
+}
 
-    MonitoredItemsParameters itemsParams;
-    itemsParams.SubscriptionId = Data.SubscriptionId;
-    itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
+uint32_t Subscription::SubscribeEvents(const Node & node, const EventFilter & eventfilter)
+{
+  std::unique_lock<std::mutex> lock(Mutex);
 
-    ReadValueId avid;
-    avid.NodeId = node.GetId();
-    avid.AttributeId = AttributeId::EventNotifier;
+  MonitoredItemsParameters itemsParams;
+  itemsParams.SubscriptionId = Data.SubscriptionId;
+  itemsParams.TimestampsToReturn = TimestampsToReturn(2); // Don't know for better
 
-    MonitoredItemCreateRequest req;
-    req.ItemToMonitor = avid;
-    req.MonitoringMode = MonitoringMode::Reporting;
-    MonitoringParameters params;
-    params.SamplingInterval = Data.RevisedPublishingInterval;
-    params.QueueSize = std::numeric_limits<uint32_t>::max();
-    params.DiscardOldest = true;
-    params.ClientHandle = (uint32_t)++LastMonitoredItemHandle;
+  ReadValueId avid;
+  avid.NodeId = node.GetId();
+  avid.AttributeId = AttributeId::EventNotifier;
 
-    MonitoringFilter filter(eventfilter);
-    params.Filter = filter;
-    req.RequestedParameters = params;
-    itemsParams.ItemsToCreate.push_back(req);
+  MonitoredItemCreateRequest req;
+  req.ItemToMonitor = avid;
+  req.MonitoringMode = MonitoringMode::Reporting;
+  MonitoringParameters params;
+  params.SamplingInterval = Data.RevisedPublishingInterval;
+  params.QueueSize = std::numeric_limits<uint32_t>::max();
+  params.DiscardOldest = true;
+  params.ClientHandle = (uint32_t)++LastMonitoredItemHandle;
 
-    std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
-    if ( results.size()  != 1 )
+  MonitoringFilter filter(eventfilter);
+  params.Filter = filter;
+  req.RequestedParameters = params;
+  itemsParams.ItemsToCreate.push_back(req);
+
+  std::vector<MonitoredItemCreateResult> results =  Server->Subscriptions()->CreateMonitoredItems(itemsParams);
+
+  if (results.size()  != 1)
     {
-      throw(std::runtime_error("Subscription | Protocol Error CreateMonitoredItems should return one result"));
+      throw (std::runtime_error("Subscription | Protocol Error CreateMonitoredItems should return one result"));
     }
 
-    MonitoredItemData mdata;
-    mdata.TargetNode = Node(Server, avid.NodeId);
-    mdata.Attribute = avid.AttributeId;
-    mdata.MonitoredItemId = results[0].MonitoredItemId;
-    mdata.Filter = results[0].FilterResult;
-    AttributeValueMap[params.ClientHandle] = mdata;
+  MonitoredItemData mdata;
+  mdata.TargetNode = Node(Server, avid.NodeId);
+  mdata.Attribute = avid.AttributeId;
+  mdata.MonitoredItemId = results[0].MonitoredItemId;
+  mdata.Filter = results[0].FilterResult;
+  AttributeValueMap[params.ClientHandle] = mdata;
 
 
-    MonitoredItemCreateResult res = results[0];
-    CheckStatusCode(res.Status);
-    SimpleAttributeOperandMap[res.MonitoredItemId] = eventfilter; //Not used
-    return res.MonitoredItemId;
-  }
+  MonitoredItemCreateResult res = results[0];
+  CheckStatusCode(res.Status);
+  SimpleAttributeOperandMap[res.MonitoredItemId] = eventfilter; //Not used
+  return res.MonitoredItemId;
+}
 
 }

@@ -16,28 +16,28 @@
 namespace Common
 {
 
-  struct ModuleConfiguration
-  {
-    AddonId Id;
-    std::vector<AddonId> Dependencies;
-    std::string Path;
-    AddonParameters Parameters;
-  };
+struct ModuleConfiguration
+{
+  AddonId Id;
+  std::vector<AddonId> Dependencies;
+  std::string Path;
+  AddonParameters Parameters;
+};
 
-  typedef std::vector<Common::ModuleConfiguration> ModulesConfiguration;
+typedef std::vector<Common::ModuleConfiguration> ModulesConfiguration;
 
-  struct Configuration
-  {
-    Common::AddonParameters Parameters;
-    std::vector<ModuleConfiguration> Modules;
-  };
+struct Configuration
+{
+  Common::AddonParameters Parameters;
+  std::vector<ModuleConfiguration> Modules;
+};
 
-  Common::AddonInformation GetAddonInfomation(const ModuleConfiguration& config);
+Common::AddonInformation GetAddonInfomation(const ModuleConfiguration & config);
 
-  Configuration ParseConfiguration(const std::string& configPath);
-  void SaveConfiguration(const ModulesConfiguration& configuration, const std::string& configPath);
+Configuration ParseConfiguration(const std::string & configPath);
+void SaveConfiguration(const ModulesConfiguration & configuration, const std::string & configPath);
 
-  Configuration ParseConfigurationFiles(const std::string& directory);
+Configuration ParseConfigurationFiles(const std::string & directory);
 
 }
 

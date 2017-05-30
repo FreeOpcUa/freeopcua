@@ -27,45 +27,45 @@
 namespace
 {
 
-  class ServerObjectAddon : public Common::Addon
+class ServerObjectAddon : public Common::Addon
+{
+public:
+  void Initialize(Common::AddonsManager & manager, const Common::AddonParameters & parameters) override
   {
-  public:
-    void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters) override
-    {
-      for (const Common::Parameter& param : parameters.Parameters)
+    for (const Common::Parameter & param : parameters.Parameters)
       {
         if (param.Name == "debug")
-          Debug = param.Value == "false" || param.Value == "0" ? false : true;
+          { Debug = param.Value == "false" || param.Value == "0" ? false : true; }
       }
 
-      OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
-      OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
-      OpcUa::Services::SharedPtr services = registry->GetServer();
-      Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService(), Debug));
-    }
+    OpcUa::Server::ServicesRegistry::SharedPtr registry = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
+    OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
+    OpcUa::Services::SharedPtr services = registry->GetServer();
+    Object.reset(new OpcUa::Server::ServerObject(services, asio->GetIoService(), Debug));
+  }
 
-    void Stop() override
-    {
-      Object.reset();
-    }
+  void Stop() override
+  {
+    Object.reset();
+  }
 
-  private:
-    bool Debug = false;
-    OpcUa::Server::ServerObject::UniquePtr Object;
-  };
+private:
+  bool Debug = false;
+  OpcUa::Server::ServerObject::UniquePtr Object;
+};
 
 } // namespace
 
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    Common::Addon::UniquePtr ServerObjectFactory::CreateAddon()
-    {
-      return Common::Addon::UniquePtr(new ServerObjectAddon());
-    }
+Common::Addon::UniquePtr ServerObjectFactory::CreateAddon()
+{
+  return Common::Addon::UniquePtr(new ServerObjectAddon());
+}
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

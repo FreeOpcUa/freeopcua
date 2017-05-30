@@ -27,70 +27,72 @@
 namespace OpcUa
 {
 
-  std::string ToString(const NodeId& id);
-  std::string ToString(const Guid& guid);
-  std::string ToString(const DateTime& t);
-  std::string ToString(const BrowseDirection& direction);
-  std::string ToString(const StatusCode& code);
-  std::string ToString(const LocalizedText& code);
+std::string ToString(const NodeId & id);
+std::string ToString(const Guid & guid);
+std::string ToString(const DateTime & t);
+std::string ToString(const BrowseDirection & direction);
+std::string ToString(const StatusCode & code);
+std::string ToString(const LocalizedText & code);
 
-  Guid ToGuid(const std::string& str);
-  NodeId ToNodeId(const std::string& str, uint32_t defaultNamespace=0);
-  QualifiedName ToQualifiedName(const std::string& str, uint32_t default_ns=0);
+Guid ToGuid(const std::string & str);
+NodeId ToNodeId(const std::string & str, uint32_t defaultNamespace = 0);
+QualifiedName ToQualifiedName(const std::string & str, uint32_t default_ns = 0);
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::NodeId& nodeid)
-  {
-    os << OpcUa::ToString(nodeid).c_str();
-    return os;
-  }
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::NodeId & nodeid)
+{
+  os << OpcUa::ToString(nodeid).c_str();
+  return os;
+}
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::LocalizedText& t)
-  {
-    os << OpcUa::ToString(t).c_str();
-    return os;
-  }
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::LocalizedText & t)
+{
+  os << OpcUa::ToString(t).c_str();
+  return os;
+}
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::QualifiedName& qn)
-  {
-     os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
-     return os;
-  }
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::QualifiedName & qn)
+{
+  os << "QualifiedName(" << qn.NamespaceIndex << ":" << qn.Name.c_str() << ")";
+  return os;
+}
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::BrowseDirection& direction)
-  {
-     os << OpcUa::ToString(direction);
-     return os;
-  }
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::BrowseDirection & direction)
+{
+  os << OpcUa::ToString(direction);
+  return os;
+}
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::Guid& guid)
-  {
-     os << "{" << ToString(guid) << "}";
-     return os;
-  }
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::Guid & guid)
+{
+  os << "{" << ToString(guid) << "}";
+  return os;
+}
 
-  inline std::ostream& operator<<(std::ostream& os, const OpcUa::ByteString& buf)
-  {
-    const std::size_t size = buf.Data.size();
-    unsigned pos = 0;
-    os << "Data size: " << size << std::endl;
-    while (pos < size)
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::ByteString & buf)
+{
+  const std::size_t size = buf.Data.size();
+  unsigned pos = 0;
+  os << "Data size: " << size << std::endl;
+
+  while (pos < size)
     {
       if (pos)
-        printf((pos % 16 == 0) ? "\n" : " ");
+        { printf((pos % 16 == 0) ? "\n" : " "); }
 
       const char letter = buf.Data[pos];
       printf("%02x", (unsigned)letter & 0x000000FF);
 
       if (letter > ' ')
-        os << "(" << letter << ")";
+        { os << "(" << letter << ")"; }
+
       else
-        os << "   ";
+        { os << "   "; }
 
       ++pos;
     }
 
-    os << std::endl;
-    return os;
-  }
+  os << std::endl;
+  return os;
+}
 }
 

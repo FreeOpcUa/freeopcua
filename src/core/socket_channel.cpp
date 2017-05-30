@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -36,10 +36,11 @@ OpcUa::SocketChannel::SocketChannel(int sock)
 {
   int flag = 1;
   setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));
+
   if (Socket < 0)
-  {
-    THROW_ERROR(CannotCreateChannelOnInvalidSocket);
-  }
+    {
+      THROW_ERROR(CannotCreateChannelOnInvalidSocket);
+    }
 }
 
 OpcUa::SocketChannel::~SocketChannel()
@@ -50,31 +51,36 @@ OpcUa::SocketChannel::~SocketChannel()
 void OpcUa::SocketChannel::Stop()
 {
   int error = shutdown(Socket, 2);
+
   if (error < 0)
-  {
-    std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
-  }
+    {
+      std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
+    }
 }
 
-std::size_t OpcUa::SocketChannel::Receive(char* data, std::size_t size)
+std::size_t OpcUa::SocketChannel::Receive(char * data, std::size_t size)
 {
   int received = recv(Socket, data, size, MSG_WAITALL);
+
   if (received < 0)
-  {
-    THROW_OS_ERROR("Failed to receive data from host.");
-  }
+    {
+      THROW_OS_ERROR("Failed to receive data from host.");
+    }
+
   if (received == 0)
-  {
-    THROW_OS_ERROR("Connection was closed by host.");
-  }
+    {
+      THROW_OS_ERROR("Connection was closed by host.");
+    }
+
   return (std::size_t)size;
 }
 
-void OpcUa::SocketChannel::Send(const char* message, std::size_t size)
+void OpcUa::SocketChannel::Send(const char * message, std::size_t size)
 {
   int sent = send(Socket, message, size, 0);
+
   if (sent != (int)size)
-  {
-    THROW_OS_ERROR("unable to send data to the host. ");
-  }
+    {
+      THROW_OS_ERROR("unable to send data to the host. ");
+    }
 }

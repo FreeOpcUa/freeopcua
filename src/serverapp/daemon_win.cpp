@@ -8,7 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
-#include <windows.h> 
+#include <windows.h>
 
 #include "daemon.h"
 #include <mutex>
@@ -19,50 +19,52 @@
 namespace
 {
 
-  OpcUa::Daemon* DaemonInstance = 0;
+OpcUa::Daemon * DaemonInstance = 0;
 
-  BOOL CtrlHandler( DWORD fdwCtrlType ) 
-  { 
-    switch( fdwCtrlType ) 
-    { 
-      // Handle the CTRL-C signal. 
-      case CTRL_C_EVENT: 
-      case CTRL_CLOSE_EVENT: 
-      case CTRL_BREAK_EVENT: 
-      case CTRL_LOGOFF_EVENT: 
-      case CTRL_SHUTDOWN_EVENT: 
+BOOL CtrlHandler(DWORD fdwCtrlType)
+{
+  switch (fdwCtrlType)
+    {
+    // Handle the CTRL-C signal.
+    case CTRL_C_EVENT:
+    case CTRL_CLOSE_EVENT:
+    case CTRL_BREAK_EVENT:
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT:
 
-	if (DaemonInstance)
+      if (DaemonInstance)
         {
           std::cout << "terminating.." << std::endl;
           DaemonInstance->Terminate();
           DaemonInstance = nullptr;
         }
-        return TRUE;
 
-      default: 
-        return FALSE; 
-    } 
-  } 
+      return TRUE;
+
+    default:
+      return FALSE;
+    }
+}
 
 }
 
 namespace OpcUa
 {
 
-  void Daemon::Daemonize(const std::string& logFile)
-  {
-    // TODO Implement windows srvice behavior.
-  }
+void Daemon::Daemonize(const std::string & logFile)
+{
+  // TODO Implement windows srvice behavior.
+}
 
-  void Daemon::SetTerminateHandlers()
-  {
-    if(!SetConsoleCtrlHandler( (PHANDLER_ROUTINE) CtrlHandler, TRUE))
+void Daemon::SetTerminateHandlers()
+{
+  if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE) CtrlHandler, TRUE))
     {
       std::cerr << "Cannot set terminate handler. Application may not response on exit event." << std::endl;
     }
-    DaemonInstance = this;
-  }
+
+  DaemonInstance = this;
+}
 
 }
 

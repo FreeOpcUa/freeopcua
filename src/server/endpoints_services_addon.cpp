@@ -23,87 +23,88 @@ using namespace OpcUa::Server;
 namespace
 {
 
-  class EndpointsAddon : public Common::Addon, public EndpointsRegistry
+class EndpointsAddon : public Common::Addon, public EndpointsRegistry
+{
+public:
+  virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params) override
   {
-  public:
-    virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params) override
-    {
-      ApplyAddonParameters(params);
+    ApplyAddonParameters(params);
 
-      Endpoints = OpcUa::Server::CreateEndpointsRegistry();
-      InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonId);
-      InternalServer->RegisterEndpointsServices(Endpoints);
+    Endpoints = OpcUa::Server::CreateEndpointsRegistry();
+    InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonId);
+    InternalServer->RegisterEndpointsServices(Endpoints);
 
-      const std::vector<OpcUa::Server::ApplicationData>& data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
-      for (const OpcUa::Server::ApplicationData& application : data)
+    const std::vector<OpcUa::Server::ApplicationData> & data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+
+    for (const OpcUa::Server::ApplicationData & application : data)
       {
         Endpoints->AddApplications(std::vector<OpcUa::ApplicationDescription>(1, application.Application));
         Endpoints->AddEndpoints(application.Endpoints);
       }
-    }
+  }
 
-    virtual void Stop() override
-    {
-      InternalServer->UnregisterEndpointsServices();
-      InternalServer.reset();
-      Endpoints.reset();
-    }
+  virtual void Stop() override
+  {
+    InternalServer->UnregisterEndpointsServices();
+    InternalServer.reset();
+    Endpoints.reset();
+  }
 
-    virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints) override
-    {
-      Endpoints->AddEndpoints(endpoints);
-    }
+  virtual void AddEndpoints(const std::vector<EndpointDescription> & endpoints) override
+  {
+    Endpoints->AddEndpoints(endpoints);
+  }
 
-    virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& applications) override
-    {
-      Endpoints->AddApplications(applications);
-    }
+  virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription> & applications) override
+  {
+    Endpoints->AddApplications(applications);
+  }
 
 
-    virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters& params) const override
-    {
-      return Endpoints->FindServers(params);
-    }
+  virtual std::vector<ApplicationDescription> FindServers(const FindServersParameters & params) const override
+  {
+    return Endpoints->FindServers(params);
+  }
 
-    virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters& filter) const override
-    {
-      return Endpoints->GetEndpoints(filter);
-    }
+  virtual std::vector<EndpointDescription> GetEndpoints(const GetEndpointsParameters & filter) const override
+  {
+    return Endpoints->GetEndpoints(filter);
+  }
 
-    virtual void RegisterServer(const ServerParameters& parameters) override
-    {
-      Endpoints->RegisterServer(parameters);
-    }
+  virtual void RegisterServer(const ServerParameters & parameters) override
+  {
+    Endpoints->RegisterServer(parameters);
+  }
 
-  private:
-    void ApplyAddonParameters(const Common::AddonParameters& addons)
-    {
-      for (const Common::Parameter parameter : addons.Parameters)
+private:
+  void ApplyAddonParameters(const Common::AddonParameters & addons)
+  {
+    for (const Common::Parameter parameter : addons.Parameters)
       {
         if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
-        {
-          Debug = true;
-        }
+          {
+            Debug = true;
+          }
       }
-    }
+  }
 
-  private:
-    EndpointsRegistry::SharedPtr Endpoints;
-    ServicesRegistry::SharedPtr InternalServer;
-    bool Debug = false;
-  };
+private:
+  EndpointsRegistry::SharedPtr Endpoints;
+  ServicesRegistry::SharedPtr InternalServer;
+  bool Debug = false;
+};
 
 } // namespace
 
 
 namespace OpcUa
 {
-  namespace Server
-  {
-    Common::Addon::UniquePtr EndpointsRegistryAddonFactory::CreateAddon()
-    {
-      return Common::Addon::UniquePtr(new ::EndpointsAddon());
-    }
-  }
+namespace Server
+{
+Common::Addon::UniquePtr EndpointsRegistryAddonFactory::CreateAddon()
+{
+  return Common::Addon::UniquePtr(new ::EndpointsAddon());
+}
+}
 }
 

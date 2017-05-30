@@ -24,16 +24,16 @@
 namespace OpcUa
 {
 
-    // An XML element encoded as a UTF-8 string.
-    struct XmlElement 
-    {
-         int32_t Length;
-         std::vector<uint8_t> Value;
-    };
+// An XML element encoded as a UTF-8 string.
+struct XmlElement
+{
+  int32_t Length;
+  std::vector<uint8_t> Value;
+};
 
 /* DISABLED
 
-    struct TwoByteNodeId 
+    struct TwoByteNodeId
     {
          uint8_t Identifier;
     };
@@ -41,7 +41,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct FourByteNodeId 
+    struct FourByteNodeId
     {
          uint8_t NamespaceIndex;
          uint16_t Identifier;
@@ -50,7 +50,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct NumericNodeId 
+    struct NumericNodeId
     {
          uint16_t NamespaceIndex;
          uint32_t Identifier;
@@ -59,7 +59,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct StringNodeId 
+    struct StringNodeId
     {
          uint16_t NamespaceIndex;
          std::string Identifier;
@@ -68,7 +68,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct GuidNodeId 
+    struct GuidNodeId
     {
          uint16_t NamespaceIndex;
          OpcUa::Guid Identifier;
@@ -77,7 +77,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ByteStringNodeId 
+    struct ByteStringNodeId
     {
          uint16_t NamespaceIndex;
          OpcUa::ByteString Identifier;
@@ -87,7 +87,7 @@ namespace OpcUa
 /* DISABLED
 
     // An identifier for a node in a UA server address space.
-    struct NodeId 
+    struct NodeId
     {
          OpcUa::NodeIdType NodeIdType;
          OpcUa::TwoByteNodeId TwoByte;
@@ -99,17 +99,17 @@ namespace OpcUa
     };
 */
 
-    struct ExtensionObject 
-    {
-         OpcUa::NodeId TypeId;
-         uint8_t Encoding;
-         OpcUa::ByteString Body;
-    };
+struct ExtensionObject
+{
+  OpcUa::NodeId TypeId;
+  uint8_t Encoding;
+  OpcUa::ByteString Body;
+};
 
 /* DISABLED
 
     // An identifier for a node in a UA server address space qualified with a complete namespace string.
-    struct ExpandedNodeId 
+    struct ExpandedNodeId
     {
          OpcUa::NodeIdType NodeIdType;
          OpcUa::TwoByteNodeId TwoByte;
@@ -126,7 +126,7 @@ namespace OpcUa
 /* DISABLED
 
     // A recursive structure containing diagnostic information associated with a status code.
-    struct DiagnosticInfo 
+    struct DiagnosticInfo
     {
          uint8_t Encoding;
          int32_t SymbolicId;
@@ -141,7 +141,7 @@ namespace OpcUa
 /* DISABLED
 
     // A string qualified with a namespace index.
-    struct QualifiedName 
+    struct QualifiedName
     {
          int32_t NamespaceIndex;
          std::string Name;
@@ -151,7 +151,7 @@ namespace OpcUa
 /* DISABLED
 
     // A string qualified with a namespace index.
-    struct LocalizedText 
+    struct LocalizedText
     {
          uint8_t Encoding;
          std::string Locale;
@@ -162,7 +162,7 @@ namespace OpcUa
 /* DISABLED
 
     // A union of several types.
-    struct Variant 
+    struct Variant
     {
          uint8_t Encoding;
          int32_t ArrayLength;
@@ -197,7 +197,7 @@ namespace OpcUa
 /* DISABLED
 
     // A value with an associated timestamp, and quality.
-    struct DataValue 
+    struct DataValue
     {
          uint8_t Encoding;
          OpcUa::Variant Value;
@@ -212,7 +212,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies a reference which belongs to a node.
-    struct ReferenceNode 
+    struct ReferenceNode
     {
          OpcUa::NodeId ReferenceTypeId;
          bool IsInverse;
@@ -223,7 +223,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to all nodes.
-    struct Node 
+    struct Node
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -238,7 +238,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct InstanceNode 
+    struct InstanceNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -253,7 +253,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TypeNode 
+    struct TypeNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -269,7 +269,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to object nodes.
-    struct ObjectNode 
+    struct ObjectNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -286,7 +286,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to object type nodes.
-    struct ObjectTypeNode 
+    struct ObjectTypeNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -303,7 +303,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to variable nodes.
-    struct VariableNode 
+    struct VariableNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -327,7 +327,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to variable type nodes.
-    struct VariableTypeNode 
+    struct VariableTypeNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -348,7 +348,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to reference type nodes.
-    struct ReferenceTypeNode 
+    struct ReferenceTypeNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -367,7 +367,7 @@ namespace OpcUa
 /* DISABLED
 
     // Specifies the attributes which belong to method nodes.
-    struct MethodNode 
+    struct MethodNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -384,7 +384,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ViewNode 
+    struct ViewNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -401,7 +401,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DataTypeNode 
+    struct DataTypeNode
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeClass NodeClass;
@@ -418,7 +418,7 @@ namespace OpcUa
 /* DISABLED
 
     // An argument for a method.
-    struct Argument 
+    struct Argument
     {
          std::string Name;
          OpcUa::NodeId DataType;
@@ -431,7 +431,7 @@ namespace OpcUa
 /* DISABLED
 
     // A mapping between a value of an enumerated type and a name and description.
-    struct EnumValueType 
+    struct EnumValueType
     {
          int64_t Value;
          OpcUa::LocalizedText DisplayName;
@@ -441,29 +441,29 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TimeZoneDataType 
+    struct TimeZoneDataType
     {
          int16_t Offset;
          bool DaylightSavingInOffset;
     };
 */
 
-    // Describes an application and how to find it.
-    struct ApplicationDescription 
-    {
-         std::string ApplicationUri;
-         std::string ProductUri;
-         OpcUa::LocalizedText ApplicationName;
-         OpcUa::ApplicationType ApplicationType;
-         std::string GatewayServerUri;
-         std::string DiscoveryProfileUri;
-         std::vector<std::string> DiscoveryUrls;
-    };
+// Describes an application and how to find it.
+struct ApplicationDescription
+{
+  std::string ApplicationUri;
+  std::string ProductUri;
+  OpcUa::LocalizedText ApplicationName;
+  OpcUa::ApplicationType ApplicationType;
+  std::string GatewayServerUri;
+  std::string DiscoveryProfileUri;
+  std::vector<std::string> DiscoveryUrls;
+};
 
 /* DISABLED
 
     // The header passed with every server request.
-    struct RequestHeader 
+    struct RequestHeader
     {
          OpcUa::NodeId AuthenticationToken;
          OpcUa::DateTime Timestamp;
@@ -480,7 +480,7 @@ namespace OpcUa
 /* DISABLED
 
     // The header passed with every server response.
-    struct ResponseHeader 
+    struct ResponseHeader
     {
          OpcUa::DateTime Timestamp;
          uint32_t RequestHandle;
@@ -496,7 +496,7 @@ namespace OpcUa
 /* DISABLED
 
     // The response returned by all services when there is a service level error.
-    struct ServiceFault 
+    struct ServiceFault
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -507,7 +507,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct FindServersParameters 
+    struct FindServersParameters
     {
          std::string EndpointUrl;
          std::vector<std::string> LocaleIds;
@@ -518,7 +518,7 @@ namespace OpcUa
 /* DISABLED
 
     // Finds the servers known to the discovery server.
-    struct FindServersRequest 
+    struct FindServersRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -530,7 +530,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct FindServersResult 
+    struct FindServersResult
     {
          std::vector<OpcUa::ApplicationDescription> Servers;
     };
@@ -539,7 +539,7 @@ namespace OpcUa
 /* DISABLED
 
     // Finds the servers known to the discovery server.
-    struct FindServersResponse 
+    struct FindServersResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -549,60 +549,60 @@ namespace OpcUa
     };
 */
 
-    // Describes a user token that can be used with a server.
-    struct UserTokenPolicy 
-    {
-         std::string PolicyId;
-         OpcUa::UserTokenType TokenType;
-         std::string IssuedTokenType;
-         std::string IssuerEndpointUrl;
-         std::string SecurityPolicyUri;
-    };
+// Describes a user token that can be used with a server.
+struct UserTokenPolicy
+{
+  std::string PolicyId;
+  OpcUa::UserTokenType TokenType;
+  std::string IssuedTokenType;
+  std::string IssuerEndpointUrl;
+  std::string SecurityPolicyUri;
+};
 
-    // The description of a endpoint that can be used to access a server.
-    struct EndpointDescription 
-    {
-         std::string EndpointUrl;
-         OpcUa::ApplicationDescription Server;
-         OpcUa::ByteString ServerCertificate;
-         OpcUa::MessageSecurityMode SecurityMode;
-         std::string SecurityPolicyUri;
-         std::vector<OpcUa::UserTokenPolicy> UserIdentityTokens;
-         std::string TransportProfileUri;
-         uint8_t SecurityLevel;
-    };
+// The description of a endpoint that can be used to access a server.
+struct EndpointDescription
+{
+  std::string EndpointUrl;
+  OpcUa::ApplicationDescription Server;
+  OpcUa::ByteString ServerCertificate;
+  OpcUa::MessageSecurityMode SecurityMode;
+  std::string SecurityPolicyUri;
+  std::vector<OpcUa::UserTokenPolicy> UserIdentityTokens;
+  std::string TransportProfileUri;
+  uint8_t SecurityLevel;
+};
 
-    struct GetEndpointsParameters 
-    {
-         std::string EndpointUrl;
-         std::vector<std::string> LocaleIds;
-         std::vector<std::string> ProfileUris;
-    };
+struct GetEndpointsParameters
+{
+  std::string EndpointUrl;
+  std::vector<std::string> LocaleIds;
+  std::vector<std::string> ProfileUris;
+};
 
-    // Gets the endpoints used by the server.
-    struct GetEndpointsRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::GetEndpointsParameters Parameters;
+// Gets the endpoints used by the server.
+struct GetEndpointsRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::GetEndpointsParameters Parameters;
 
-         GetEndpointsRequest();
-    };
+  GetEndpointsRequest();
+};
 
-    // Gets the endpoints used by the server.
-    struct GetEndpointsResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::EndpointDescription> Endpoints;
+// Gets the endpoints used by the server.
+struct GetEndpointsResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::EndpointDescription> Endpoints;
 
-         GetEndpointsResponse();
-    };
+  GetEndpointsResponse();
+};
 
 /* DISABLED
 
     // The information required to register a server with a discovery server.
-    struct RegisteredServer 
+    struct RegisteredServer
     {
          std::string ServerUri;
          std::string ProductUri;
@@ -617,7 +617,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct RegisterServerParameters 
+    struct RegisterServerParameters
     {
          OpcUa::RegisteredServer Server;
     };
@@ -626,7 +626,7 @@ namespace OpcUa
 /* DISABLED
 
     // Registers a server with the discovery server.
-    struct RegisterServerRequest 
+    struct RegisterServerRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -639,7 +639,7 @@ namespace OpcUa
 /* DISABLED
 
     // Registers a server with the discovery server.
-    struct RegisterServerResponse 
+    struct RegisterServerResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -651,7 +651,7 @@ namespace OpcUa
 /* DISABLED
 
     // The token that identifies a set of keys for an active secure channel.
-    struct ChannelSecurityToken 
+    struct ChannelSecurityToken
     {
          uint32_t ChannelId;
          uint32_t TokenId;
@@ -662,7 +662,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct OpenSecureChannelParameters 
+    struct OpenSecureChannelParameters
     {
          uint32_t ClientProtocolVersion;
          OpcUa::SecurityTokenRequestType RequestType;
@@ -677,7 +677,7 @@ namespace OpcUa
 /* DISABLED
 
     // Creates a secure channel with a server.
-    struct OpenSecureChannelRequest 
+    struct OpenSecureChannelRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -689,7 +689,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct OpenSecureChannelResult 
+    struct OpenSecureChannelResult
     {
          uint32_t ServerProtocolVersion;
          OpcUa::ChannelSecurityToken SecurityToken;
@@ -700,7 +700,7 @@ namespace OpcUa
 /* DISABLED
 
     // Creates a secure channel with a server.
-    struct OpenSecureChannelResponse 
+    struct OpenSecureChannelResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -713,7 +713,7 @@ namespace OpcUa
 /* DISABLED
 
     // Closes a secure channel.
-    struct CloseSecureChannelRequest 
+    struct CloseSecureChannelRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -725,7 +725,7 @@ namespace OpcUa
 /* DISABLED
 
     // Closes a secure channel.
-    struct CloseSecureChannelResponse 
+    struct CloseSecureChannelResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -734,69 +734,69 @@ namespace OpcUa
     };
 */
 
-    // A software certificate with a digital signature.
-    struct SignedSoftwareCertificate 
-    {
-         OpcUa::ByteString CertificateData;
-         OpcUa::ByteString Signature;
-    };
+// A software certificate with a digital signature.
+struct SignedSoftwareCertificate
+{
+  OpcUa::ByteString CertificateData;
+  OpcUa::ByteString Signature;
+};
 
-    // A digital signature.
-    struct SignatureData 
-    {
-         std::string Algorithm;
-         OpcUa::ByteString Signature;
-    };
+// A digital signature.
+struct SignatureData
+{
+  std::string Algorithm;
+  OpcUa::ByteString Signature;
+};
 
-    struct CreateSessionParameters 
-    {
-         OpcUa::ApplicationDescription ClientDescription;
-         std::string ServerUri;
-         std::string EndpointUrl;
-         std::string SessionName;
-         OpcUa::ByteString ClientNonce;
-         OpcUa::ByteString ClientCertificate;
-         double RequestedSessionTimeout;
-         uint32_t MaxResponseMessageSize;
-    };
+struct CreateSessionParameters
+{
+  OpcUa::ApplicationDescription ClientDescription;
+  std::string ServerUri;
+  std::string EndpointUrl;
+  std::string SessionName;
+  OpcUa::ByteString ClientNonce;
+  OpcUa::ByteString ClientCertificate;
+  double RequestedSessionTimeout;
+  uint32_t MaxResponseMessageSize;
+};
 
-    // Creates a new session with the server.
-    struct CreateSessionRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::CreateSessionParameters Parameters;
+// Creates a new session with the server.
+struct CreateSessionRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::CreateSessionParameters Parameters;
 
-         CreateSessionRequest();
-    };
+  CreateSessionRequest();
+};
 
-    struct CreateSessionResult 
-    {
-         OpcUa::NodeId SessionId;
-         OpcUa::NodeId AuthenticationToken;
-         double RevisedSessionTimeout;
-         OpcUa::ByteString ServerNonce;
-         OpcUa::ByteString ServerCertificate;
-         std::vector<OpcUa::EndpointDescription> ServerEndpoints;
-         std::vector<OpcUa::SignedSoftwareCertificate> ServerSoftwareCertificates;
-         OpcUa::SignatureData ServerSignature;
-         uint32_t MaxRequestMessageSize;
-    };
+struct CreateSessionResult
+{
+  OpcUa::NodeId SessionId;
+  OpcUa::NodeId AuthenticationToken;
+  double RevisedSessionTimeout;
+  OpcUa::ByteString ServerNonce;
+  OpcUa::ByteString ServerCertificate;
+  std::vector<OpcUa::EndpointDescription> ServerEndpoints;
+  std::vector<OpcUa::SignedSoftwareCertificate> ServerSoftwareCertificates;
+  OpcUa::SignatureData ServerSignature;
+  uint32_t MaxRequestMessageSize;
+};
 
-    // Creates a new session with the server.
-    struct CreateSessionResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::CreateSessionResult Parameters;
+// Creates a new session with the server.
+struct CreateSessionResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::CreateSessionResult Parameters;
 
-         CreateSessionResponse();
-    };
+  CreateSessionResponse();
+};
 
 /* DISABLED
 
     // A base type for a user identity token.
-    struct UserIdentityToken 
+    struct UserIdentityToken
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -810,7 +810,7 @@ namespace OpcUa
 /* DISABLED
 
     // A token representing an anonymous user.
-    struct AnonymousIdentityToken 
+    struct AnonymousIdentityToken
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -822,7 +822,7 @@ namespace OpcUa
 /* DISABLED
 
     // A token representing a user identified by a user name and password.
-    struct UserNameIdentityToken 
+    struct UserNameIdentityToken
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -837,7 +837,7 @@ namespace OpcUa
 /* DISABLED
 
     // A token representing a user identified by an X509 certificate.
-    struct X509IdentityToken 
+    struct X509IdentityToken
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -850,7 +850,7 @@ namespace OpcUa
 /* DISABLED
 
     // A token representing a user identified by a WS-Security XML token.
-    struct IssuedIdentityToken 
+    struct IssuedIdentityToken
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -861,46 +861,46 @@ namespace OpcUa
     };
 */
 
-    struct ActivateSessionParameters 
-    {
-         OpcUa::SignatureData ClientSignature;
-         std::vector<OpcUa::SignedSoftwareCertificate> ClientSoftwareCertificates;
-         std::vector<std::string> LocaleIds;
-         OpcUa::UserIdentifyToken UserIdentityToken;
-         OpcUa::SignatureData UserTokenSignature;
-    };
+struct ActivateSessionParameters
+{
+  OpcUa::SignatureData ClientSignature;
+  std::vector<OpcUa::SignedSoftwareCertificate> ClientSoftwareCertificates;
+  std::vector<std::string> LocaleIds;
+  OpcUa::UserIdentifyToken UserIdentityToken;
+  OpcUa::SignatureData UserTokenSignature;
+};
 
-    // Activates a session with the server.
-    struct ActivateSessionRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::ActivateSessionParameters Parameters;
+// Activates a session with the server.
+struct ActivateSessionRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::ActivateSessionParameters Parameters;
 
-         ActivateSessionRequest();
-    };
+  ActivateSessionRequest();
+};
 
-    struct ActivateSessionResult 
-    {
-         OpcUa::ByteString ServerNonce;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
-    };
+struct ActivateSessionResult
+{
+  OpcUa::ByteString ServerNonce;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+};
 
-    // Activates a session with the server.
-    struct ActivateSessionResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::ActivateSessionResult Parameters;
+// Activates a session with the server.
+struct ActivateSessionResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::ActivateSessionResult Parameters;
 
-         ActivateSessionResponse();
-    };
+  ActivateSessionResponse();
+};
 
 /* DISABLED
 
     // Closes a session with the server.
-    struct CloseSessionRequest 
+    struct CloseSessionRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -913,7 +913,7 @@ namespace OpcUa
 /* DISABLED
 
     // Closes a session with the server.
-    struct CloseSessionResponse 
+    struct CloseSessionResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -924,7 +924,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct CancelParameters 
+    struct CancelParameters
     {
          uint32_t RequestHandle;
     };
@@ -933,7 +933,7 @@ namespace OpcUa
 /* DISABLED
 
     // Cancels an outstanding request.
-    struct CancelRequest 
+    struct CancelRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -945,7 +945,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct CancelResult 
+    struct CancelResult
     {
          uint32_t CancelCount;
     };
@@ -954,7 +954,7 @@ namespace OpcUa
 /* DISABLED
 
     // Cancels an outstanding request.
-    struct CancelResponse 
+    struct CancelResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -967,7 +967,7 @@ namespace OpcUa
 /* DISABLED
 
     // The base attributes for all nodes.
-    struct NodeAttributes 
+    struct NodeAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -983,7 +983,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for an object node.
-    struct ObjectAttributes 
+    struct ObjectAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1000,7 +1000,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a variable node.
-    struct VariableAttributes 
+    struct VariableAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1024,7 +1024,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a method node.
-    struct MethodAttributes 
+    struct MethodAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1042,7 +1042,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for an object type node.
-    struct ObjectTypeAttributes 
+    struct ObjectTypeAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1059,7 +1059,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a variable type node.
-    struct VariableTypeAttributes 
+    struct VariableTypeAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1080,7 +1080,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a reference type node.
-    struct ReferenceTypeAttributes 
+    struct ReferenceTypeAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1099,7 +1099,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a data type node.
-    struct DataTypeAttributes 
+    struct DataTypeAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1116,7 +1116,7 @@ namespace OpcUa
 /* DISABLED
 
     // The attributes for a view node.
-    struct ViewAttributes 
+    struct ViewAttributes
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1134,7 +1134,7 @@ namespace OpcUa
 /* DISABLED
 
     // A request to add a node to the server address space.
-    struct AddNodesItem 
+    struct AddNodesItem
     {
          OpcUa::ExpandedNodeId ParentNodeId;
          OpcUa::NodeId ReferenceTypeId;
@@ -1149,7 +1149,7 @@ namespace OpcUa
 /* DISABLED
 
     // A result of an add node operation.
-    struct AddNodesResult 
+    struct AddNodesResult
     {
          OpcUa::StatusCode Status;
          OpcUa::NodeId AddedNodeId;
@@ -1158,7 +1158,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AddNodesParameters 
+    struct AddNodesParameters
     {
          std::vector<OpcUa::AddNodesItem> NodesToAdd;
     };
@@ -1167,7 +1167,7 @@ namespace OpcUa
 /* DISABLED
 
     // Adds one or more nodes to the server address space.
-    struct AddNodesRequest 
+    struct AddNodesRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1180,7 +1180,7 @@ namespace OpcUa
 /* DISABLED
 
     // Adds one or more nodes to the server address space.
-    struct AddNodesResponse 
+    struct AddNodesResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1194,7 +1194,7 @@ namespace OpcUa
 /* DISABLED
 
     // A request to add a reference to the server address space.
-    struct AddReferencesItem 
+    struct AddReferencesItem
     {
          OpcUa::NodeId SourceNodeId;
          OpcUa::NodeId ReferenceTypeId;
@@ -1208,7 +1208,7 @@ namespace OpcUa
 /* DISABLED
 
     // Adds one or more references to the server address space.
-    struct AddReferencesRequest 
+    struct AddReferencesRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1221,7 +1221,7 @@ namespace OpcUa
 /* DISABLED
 
     // Adds one or more references to the server address space.
-    struct AddReferencesResponse 
+    struct AddReferencesResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1232,38 +1232,38 @@ namespace OpcUa
     };
 */
 
-    // A request to delete a node to the server address space.
-    struct DeleteNodesItem 
-    {
-         OpcUa::NodeId NodeId;
-         bool DeleteTargetReferences;
-    };
+// A request to delete a node to the server address space.
+struct DeleteNodesItem
+{
+  OpcUa::NodeId NodeId;
+  bool DeleteTargetReferences;
+};
 
-    // Delete one or more nodes from the server address space.
-    struct DeleteNodesRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         std::vector<OpcUa::DeleteNodesItem> NodesToDelete;
+// Delete one or more nodes from the server address space.
+struct DeleteNodesRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  std::vector<OpcUa::DeleteNodesItem> NodesToDelete;
 
-         DeleteNodesRequest();
-    };
+  DeleteNodesRequest();
+};
 
-    // Delete one or more nodes from the server address space.
-    struct DeleteNodesResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+// Delete one or more nodes from the server address space.
+struct DeleteNodesResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         DeleteNodesResponse();
-    };
+  DeleteNodesResponse();
+};
 
 /* DISABLED
 
     // A request to delete a node from the server address space.
-    struct DeleteReferencesItem 
+    struct DeleteReferencesItem
     {
          OpcUa::NodeId SourceNodeId;
          OpcUa::NodeId ReferenceTypeId;
@@ -1275,7 +1275,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DeleteReferencesParameters 
+    struct DeleteReferencesParameters
     {
          std::vector<OpcUa::DeleteReferencesItem> ReferencesToDelete;
     };
@@ -1284,7 +1284,7 @@ namespace OpcUa
 /* DISABLED
 
     // Delete one or more references from the server address space.
-    struct DeleteReferencesRequest 
+    struct DeleteReferencesRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1296,7 +1296,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DeleteReferencesResult 
+    struct DeleteReferencesResult
     {
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
@@ -1306,7 +1306,7 @@ namespace OpcUa
 /* DISABLED
 
     // Delete one or more references from the server address space.
-    struct DeleteReferencesResponse 
+    struct DeleteReferencesResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1319,7 +1319,7 @@ namespace OpcUa
 /* DISABLED
 
     // The view to browse.
-    struct ViewDescription 
+    struct ViewDescription
     {
          OpcUa::NodeId ViewId;
          OpcUa::DateTime Timestamp;
@@ -1330,7 +1330,7 @@ namespace OpcUa
 /* DISABLED
 
     // A request to browse the the references from a node.
-    struct BrowseDescription 
+    struct BrowseDescription
     {
          OpcUa::NodeId NodeId;
          OpcUa::BrowseDirection BrowseDirection;
@@ -1346,7 +1346,7 @@ namespace OpcUa
 /* DISABLED
 
     // The description of a reference.
-    struct ReferenceDescription 
+    struct ReferenceDescription
     {
          OpcUa::NodeId ReferenceTypeId;
          bool IsForward;
@@ -1363,7 +1363,7 @@ namespace OpcUa
 /* DISABLED
 
     // The result of a browse operation.
-    struct BrowseResult 
+    struct BrowseResult
     {
          OpcUa::StatusCode Status;
          OpcUa::ByteString ContinuationPoint;
@@ -1373,7 +1373,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct BrowseParameters 
+    struct BrowseParameters
     {
          OpcUa::ViewDescription View;
          uint32_t RequestedMaxReferencesPerNode;
@@ -1384,7 +1384,7 @@ namespace OpcUa
 /* DISABLED
 
     // Browse the references for one or more nodes from the server address space.
-    struct BrowseRequest 
+    struct BrowseRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1397,7 +1397,7 @@ namespace OpcUa
 /* DISABLED
 
     // Browse the references for one or more nodes from the server address space.
-    struct BrowseResponse 
+    struct BrowseResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1410,7 +1410,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct BrowseNextParameters 
+    struct BrowseNextParameters
     {
          bool ReleaseContinuationPoints;
          std::vector<OpcUa::ByteString> ContinuationPoints;
@@ -1420,7 +1420,7 @@ namespace OpcUa
 /* DISABLED
 
     // Continues one or more browse operations.
-    struct BrowseNextRequest 
+    struct BrowseNextRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1432,7 +1432,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct BrowseNextResult 
+    struct BrowseNextResult
     {
          std::vector<OpcUa::BrowseResult> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
@@ -1442,7 +1442,7 @@ namespace OpcUa
 /* DISABLED
 
     // Continues one or more browse operations.
-    struct BrowseNextResponse 
+    struct BrowseNextResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1455,7 +1455,7 @@ namespace OpcUa
 /* DISABLED
 
     // An element in a relative path.
-    struct RelativePathElement 
+    struct RelativePathElement
     {
          OpcUa::NodeId ReferenceTypeId;
          bool IsInverse;
@@ -1469,7 +1469,7 @@ namespace OpcUa
 /* DISABLED
 
     // A relative path constructed from reference types and browse names.
-    struct RelativePath 
+    struct RelativePath
     {
          std::vector<OpcUa::RelativePathElement> Elements;
     };
@@ -1478,7 +1478,7 @@ namespace OpcUa
 /* DISABLED
 
     // A request to translate a path into a node id.
-    struct BrowsePath 
+    struct BrowsePath
     {
          OpcUa::NodeId StartingNode;
          OpcUa::RelativePath RelativePath;
@@ -1488,7 +1488,7 @@ namespace OpcUa
 /* DISABLED
 
     // The target of the translated path.
-    struct BrowsePathTarget 
+    struct BrowsePathTarget
     {
          OpcUa::ExpandedNodeId TargetId;
          uint32_t RemainingPathIndex;
@@ -1498,7 +1498,7 @@ namespace OpcUa
 /* DISABLED
 
     // The result of a translate opearation.
-    struct BrowsePathResult 
+    struct BrowsePathResult
     {
          OpcUa::StatusCode Status;
          std::vector<OpcUa::BrowsePathTarget> Targets;
@@ -1507,7 +1507,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TranslateBrowsePathsToNodeIdsParameters 
+    struct TranslateBrowsePathsToNodeIdsParameters
     {
          std::vector<OpcUa::BrowsePath> BrowsePaths;
     };
@@ -1516,7 +1516,7 @@ namespace OpcUa
 /* DISABLED
 
     // Translates one or more paths in the server address space.
-    struct TranslateBrowsePathsToNodeIdsRequest 
+    struct TranslateBrowsePathsToNodeIdsRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1529,7 +1529,7 @@ namespace OpcUa
 /* DISABLED
 
     // Translates one or more paths in the server address space.
-    struct TranslateBrowsePathsToNodeIdsResponse 
+    struct TranslateBrowsePathsToNodeIdsResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1542,7 +1542,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct RegisterNodesParameters 
+    struct RegisterNodesParameters
     {
          std::vector<OpcUa::NodeId> NodesToRegister;
     };
@@ -1551,7 +1551,7 @@ namespace OpcUa
 /* DISABLED
 
     // Registers one or more nodes for repeated use within a session.
-    struct RegisterNodesRequest 
+    struct RegisterNodesRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1563,7 +1563,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct RegisterNodesResult 
+    struct RegisterNodesResult
     {
          std::vector<OpcUa::NodeId> RegisteredNodeIds;
     };
@@ -1572,7 +1572,7 @@ namespace OpcUa
 /* DISABLED
 
     // Registers one or more nodes for repeated use within a session.
-    struct RegisterNodesResponse 
+    struct RegisterNodesResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1584,7 +1584,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct UnregisterNodesParameters 
+    struct UnregisterNodesParameters
     {
          std::vector<OpcUa::NodeId> NodesToUnregister;
     };
@@ -1593,7 +1593,7 @@ namespace OpcUa
 /* DISABLED
 
     // Unregisters one or more previously registered nodes.
-    struct UnregisterNodesRequest 
+    struct UnregisterNodesRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1606,7 +1606,7 @@ namespace OpcUa
 /* DISABLED
 
     // Unregisters one or more previously registered nodes.
-    struct UnregisterNodesResponse 
+    struct UnregisterNodesResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1617,7 +1617,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EndpointConfiguration 
+    struct EndpointConfiguration
     {
          int32_t OperationTimeout;
          bool UseBinaryEncoding;
@@ -1633,7 +1633,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SupportedProfile 
+    struct SupportedProfile
     {
          std::string OrganizationUri;
          std::string ProfileId;
@@ -1646,7 +1646,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SoftwareCertificate 
+    struct SoftwareCertificate
     {
          std::string ProductName;
          std::string ProductUri;
@@ -1663,7 +1663,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryDataDescription 
+    struct QueryDataDescription
     {
          OpcUa::RelativePath RelativePath;
          OpcUa::AttributeId AttributeId;
@@ -1673,7 +1673,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct NodeTypeDescription 
+    struct NodeTypeDescription
     {
          OpcUa::ExpandedNodeId TypeDefinitionNode;
          bool IncludeSubTypes;
@@ -1683,7 +1683,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryDataSet 
+    struct QueryDataSet
     {
          OpcUa::ExpandedNodeId NodeId;
          OpcUa::ExpandedNodeId TypeDefinitionNode;
@@ -1693,7 +1693,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct NodeReference 
+    struct NodeReference
     {
          OpcUa::NodeId NodeId;
          OpcUa::NodeId ReferenceTypeId;
@@ -1704,7 +1704,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ContentFilterElement 
+    struct ContentFilterElement
     {
          OpcUa::FilterOperator FilterOperator;
          std::vector<OpcUa::ExtensionObject> FilterOperands;
@@ -1713,7 +1713,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ContentFilter 
+    struct ContentFilter
     {
          std::vector<OpcUa::ContentFilterElement> Elements;
     };
@@ -1721,7 +1721,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct FilterOperand 
+    struct FilterOperand
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1731,7 +1731,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ElementOperand 
+    struct ElementOperand
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1742,7 +1742,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct LiteralOperand 
+    struct LiteralOperand
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1753,7 +1753,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AttributeOperand 
+    struct AttributeOperand
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1768,7 +1768,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SimpleAttributeOperand 
+    struct SimpleAttributeOperand
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1782,7 +1782,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ContentFilterElementResult 
+    struct ContentFilterElementResult
     {
          OpcUa::StatusCode Status;
          std::vector<OpcUa::StatusCode> OperandStatusCodes;
@@ -1792,7 +1792,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ContentFilterResult 
+    struct ContentFilterResult
     {
          std::vector<OpcUa::ContentFilterElementResult> ElementResults;
          std::vector<OpcUa::DiagnosticInfo> ElementDiagnosticInfos;
@@ -1801,7 +1801,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ParsingResult 
+    struct ParsingResult
     {
          OpcUa::StatusCode Status;
          std::vector<OpcUa::StatusCode> DataStatusCodes;
@@ -1811,7 +1811,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryFirstParameters 
+    struct QueryFirstParameters
     {
          OpcUa::ViewDescription View;
          std::vector<OpcUa::NodeTypeDescription> NodeTypes;
@@ -1823,7 +1823,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryFirstRequest 
+    struct QueryFirstRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1835,7 +1835,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryFirstResult 
+    struct QueryFirstResult
     {
          std::vector<OpcUa::QueryDataSet> QueryDataSets;
          OpcUa::ByteString ContinuationPoint;
@@ -1847,7 +1847,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryFirstResponse 
+    struct QueryFirstResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1859,7 +1859,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryNextParameters 
+    struct QueryNextParameters
     {
          bool ReleaseContinuationPoint;
          OpcUa::ByteString ContinuationPoint;
@@ -1868,7 +1868,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryNextRequest 
+    struct QueryNextRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -1880,7 +1880,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryNextResult 
+    struct QueryNextResult
     {
          std::vector<OpcUa::QueryDataSet> QueryDataSets;
          OpcUa::ByteString RevisedContinuationPoint;
@@ -1889,7 +1889,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct QueryNextResponse 
+    struct QueryNextResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -1899,45 +1899,45 @@ namespace OpcUa
     };
 */
 
-    struct ReadValueId 
-    {
-         OpcUa::NodeId NodeId;
-         OpcUa::AttributeId AttributeId;
-         std::string IndexRange;
-         OpcUa::QualifiedName DataEncoding;
-    };
+struct ReadValueId
+{
+  OpcUa::NodeId NodeId;
+  OpcUa::AttributeId AttributeId;
+  std::string IndexRange;
+  OpcUa::QualifiedName DataEncoding;
+};
 
-    struct ReadParameters 
-    {
-         double MaxAge;
-         OpcUa::TimestampsToReturn TimestampsToReturn;
-         std::vector<OpcUa::ReadValueId> AttributesToRead;
+struct ReadParameters
+{
+  double MaxAge;
+  OpcUa::TimestampsToReturn TimestampsToReturn;
+  std::vector<OpcUa::ReadValueId> AttributesToRead;
 
-         ReadParameters();
-    };
+  ReadParameters();
+};
 
-    struct ReadRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::ReadParameters Parameters;
+struct ReadRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::ReadParameters Parameters;
 
-         ReadRequest();
-    };
+  ReadRequest();
+};
 
-    struct ReadResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::DataValue> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct ReadResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::DataValue> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         ReadResponse();
-    };
+  ReadResponse();
+};
 
 /* DISABLED
 
-    struct HistoryReadValueId 
+    struct HistoryReadValueId
     {
          OpcUa::NodeId NodeId;
          std::string IndexRange;
@@ -1948,7 +1948,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryReadResult 
+    struct HistoryReadResult
     {
          OpcUa::StatusCode Status;
          OpcUa::ByteString ContinuationPoint;
@@ -1958,7 +1958,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryReadDetails 
+    struct HistoryReadDetails
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1968,7 +1968,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ReadRawModifiedDetails 
+    struct ReadRawModifiedDetails
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1983,7 +1983,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ReadAtTimeDetails 
+    struct ReadAtTimeDetails
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -1995,7 +1995,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryData 
+    struct HistoryData
     {
          std::vector<OpcUa::DataValue> DataValues;
     };
@@ -2003,7 +2003,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ModificationInfo 
+    struct ModificationInfo
     {
          OpcUa::DateTime ModificationTime;
          OpcUa::HistoryUpdateType UpdateType;
@@ -2013,7 +2013,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryModifiedData 
+    struct HistoryModifiedData
     {
          std::vector<OpcUa::DataValue> DataValues;
          std::vector<OpcUa::ModificationInfo> ModificationInfos;
@@ -2022,7 +2022,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryReadParameters 
+    struct HistoryReadParameters
     {
          OpcUa::ExtensionObject HistoryReadDetails;
          OpcUa::TimestampsToReturn TimestampsToReturn;
@@ -2033,7 +2033,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryReadRequest 
+    struct HistoryReadRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2045,7 +2045,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryReadResponse 
+    struct HistoryReadResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2056,41 +2056,41 @@ namespace OpcUa
     };
 */
 
-    struct WriteValue 
-    {
-         OpcUa::NodeId NodeId;
-         OpcUa::AttributeId AttributeId;
-         std::string IndexRange;
-         OpcUa::DataValue Value;
-    };
+struct WriteValue
+{
+  OpcUa::NodeId NodeId;
+  OpcUa::AttributeId AttributeId;
+  std::string IndexRange;
+  OpcUa::DataValue Value;
+};
 
-    struct WriteParameters 
-    {
-         std::vector<OpcUa::WriteValue> NodesToWrite;
-    };
+struct WriteParameters
+{
+  std::vector<OpcUa::WriteValue> NodesToWrite;
+};
 
-    struct WriteRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::WriteParameters Parameters;
+struct WriteRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::WriteParameters Parameters;
 
-         WriteRequest();
-    };
+  WriteRequest();
+};
 
-    struct WriteResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct WriteResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         WriteResponse();
-    };
+  WriteResponse();
+};
 
 /* DISABLED
 
-    struct HistoryUpdateDetails 
+    struct HistoryUpdateDetails
     {
          OpcUa::NodeId NodeId;
     };
@@ -2098,7 +2098,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct UpdateDataDetails 
+    struct UpdateDataDetails
     {
          OpcUa::NodeId NodeId;
          OpcUa::PerformUpdateType PerformInsertReplace;
@@ -2108,7 +2108,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct UpdateStructureDataDetails 
+    struct UpdateStructureDataDetails
     {
          OpcUa::NodeId NodeId;
          OpcUa::PerformUpdateType PerformInsertReplace;
@@ -2118,7 +2118,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DeleteRawModifiedDetails 
+    struct DeleteRawModifiedDetails
     {
          OpcUa::NodeId NodeId;
          bool IsDeleteModified;
@@ -2129,7 +2129,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DeleteAtTimeDetails 
+    struct DeleteAtTimeDetails
     {
          OpcUa::NodeId NodeId;
          std::vector<OpcUa::DateTime> ReqTimes;
@@ -2138,7 +2138,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DeleteEventDetails 
+    struct DeleteEventDetails
     {
          OpcUa::NodeId NodeId;
          std::vector<OpcUa::ByteString> EventIds;
@@ -2147,7 +2147,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryUpdateResult 
+    struct HistoryUpdateResult
     {
          OpcUa::StatusCode Status;
          std::vector<OpcUa::StatusCode> OperationResults;
@@ -2157,7 +2157,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryUpdateParameters 
+    struct HistoryUpdateParameters
     {
          std::vector<OpcUa::ExtensionObject> HistoryUpdateDetails;
     };
@@ -2165,7 +2165,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryUpdateRequest 
+    struct HistoryUpdateRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2177,7 +2177,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryUpdateResponse 
+    struct HistoryUpdateResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2188,48 +2188,48 @@ namespace OpcUa
     };
 */
 
-    struct CallMethodRequest 
-    {
-         OpcUa::NodeId ObjectId;
-         OpcUa::NodeId MethodId;
-         std::vector<OpcUa::Variant> InputArguments;
-    };
+struct CallMethodRequest
+{
+  OpcUa::NodeId ObjectId;
+  OpcUa::NodeId MethodId;
+  std::vector<OpcUa::Variant> InputArguments;
+};
 
-    struct CallMethodResult 
-    {
-         OpcUa::StatusCode Status;
-         std::vector<OpcUa::StatusCode> InputArgumentResults;
-         std::vector<OpcUa::DiagnosticInfo> InputArgumentDiagnosticInfos;
-         std::vector<OpcUa::Variant> OutputArguments;
-    };
+struct CallMethodResult
+{
+  OpcUa::StatusCode Status;
+  std::vector<OpcUa::StatusCode> InputArgumentResults;
+  std::vector<OpcUa::DiagnosticInfo> InputArgumentDiagnosticInfos;
+  std::vector<OpcUa::Variant> OutputArguments;
+};
 
-    struct CallParameters 
-    {
-         std::vector<OpcUa::CallMethodRequest> MethodsToCall;
-    };
+struct CallParameters
+{
+  std::vector<OpcUa::CallMethodRequest> MethodsToCall;
+};
 
-    struct CallRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::CallParameters Parameters;
+struct CallRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::CallParameters Parameters;
 
-         CallRequest();
-    };
+  CallRequest();
+};
 
-    struct CallResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::CallMethodResult> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct CallResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::CallMethodResult> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         CallResponse();
-    };
+  CallResponse();
+};
 
 /* DISABLED
 
-    struct MonitoringFilter 
+    struct MonitoringFilter
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2239,7 +2239,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DataChangeFilter 
+    struct DataChangeFilter
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2252,7 +2252,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EventFilter 
+    struct EventFilter
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2264,7 +2264,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ReadEventDetails 
+    struct ReadEventDetails
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2278,7 +2278,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AggregateConfiguration 
+    struct AggregateConfiguration
     {
          bool UseServerCapabilitiesDefaults;
          bool TreatUncertainAsBad;
@@ -2290,7 +2290,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ReadProcessedDetails 
+    struct ReadProcessedDetails
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2305,7 +2305,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AggregateFilter 
+    struct AggregateFilter
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2319,7 +2319,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct MonitoringFilterResult 
+    struct MonitoringFilterResult
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2329,7 +2329,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EventFilterResult 
+    struct EventFilterResult
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2342,7 +2342,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryUpdateEventResult 
+    struct HistoryUpdateEventResult
     {
          OpcUa::StatusCode Status;
          OpcUa::EventFilterResult EventFilterResult;
@@ -2351,7 +2351,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AggregateFilterResult 
+    struct AggregateFilterResult
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2362,60 +2362,60 @@ namespace OpcUa
     };
 */
 
-    struct MonitoringParameters 
-    {
-         uint32_t ClientHandle;
-         double SamplingInterval;
-         OpcUa::MonitoringFilter Filter;
-         uint32_t QueueSize;
-         bool DiscardOldest;
-    };
+struct MonitoringParameters
+{
+  uint32_t ClientHandle;
+  double SamplingInterval;
+  OpcUa::MonitoringFilter Filter;
+  uint32_t QueueSize;
+  bool DiscardOldest;
+};
 
-    struct MonitoredItemCreateRequest 
-    {
-         OpcUa::ReadValueId ItemToMonitor;
-         OpcUa::MonitoringMode MonitoringMode;
-         OpcUa::MonitoringParameters RequestedParameters;
-    };
+struct MonitoredItemCreateRequest
+{
+  OpcUa::ReadValueId ItemToMonitor;
+  OpcUa::MonitoringMode MonitoringMode;
+  OpcUa::MonitoringParameters RequestedParameters;
+};
 
-    struct MonitoredItemCreateResult 
-    {
-         OpcUa::StatusCode Status;
-         uint32_t MonitoredItemId;
-         double RevisedSamplingInterval;
-         uint32_t RevisedQueueSize;
-         OpcUa::MonitoringFilter FilterResult;
-    };
+struct MonitoredItemCreateResult
+{
+  OpcUa::StatusCode Status;
+  uint32_t MonitoredItemId;
+  double RevisedSamplingInterval;
+  uint32_t RevisedQueueSize;
+  OpcUa::MonitoringFilter FilterResult;
+};
 
-    struct MonitoredItemsParameters 
-    {
-         uint32_t SubscriptionId;
-         OpcUa::TimestampsToReturn TimestampsToReturn;
-         std::vector<OpcUa::MonitoredItemCreateRequest> ItemsToCreate;
-    };
+struct MonitoredItemsParameters
+{
+  uint32_t SubscriptionId;
+  OpcUa::TimestampsToReturn TimestampsToReturn;
+  std::vector<OpcUa::MonitoredItemCreateRequest> ItemsToCreate;
+};
 
-    struct CreateMonitoredItemsRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::MonitoredItemsParameters Parameters;
+struct CreateMonitoredItemsRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::MonitoredItemsParameters Parameters;
 
-         CreateMonitoredItemsRequest();
-    };
+  CreateMonitoredItemsRequest();
+};
 
-    struct CreateMonitoredItemsResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::MonitoredItemCreateResult> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct CreateMonitoredItemsResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::MonitoredItemCreateResult> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         CreateMonitoredItemsResponse();
-    };
+  CreateMonitoredItemsResponse();
+};
 
 /* DISABLED
 
-    struct MonitoredItemModifyRequest 
+    struct MonitoredItemModifyRequest
     {
          uint32_t MonitoredItemId;
          OpcUa::MonitoringParameters RequestedParameters;
@@ -2424,7 +2424,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct MonitoredItemModifyResult 
+    struct MonitoredItemModifyResult
     {
          OpcUa::StatusCode Status;
          double RevisedSamplingInterval;
@@ -2435,7 +2435,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ModifyMonitoredItemsParameters 
+    struct ModifyMonitoredItemsParameters
     {
          uint32_t SubscriptionId;
          OpcUa::TimestampsToReturn TimestampsToReturn;
@@ -2445,7 +2445,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ModifyMonitoredItemsRequest 
+    struct ModifyMonitoredItemsRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2457,7 +2457,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ModifyMonitoredItemsResponse 
+    struct ModifyMonitoredItemsResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2470,7 +2470,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetMonitoringModeParameters 
+    struct SetMonitoringModeParameters
     {
          uint32_t SubscriptionId;
          OpcUa::MonitoringMode MonitoringMode;
@@ -2480,7 +2480,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetMonitoringModeRequest 
+    struct SetMonitoringModeRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2492,7 +2492,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetMonitoringModeResult 
+    struct SetMonitoringModeResult
     {
          std::vector<OpcUa::StatusCode> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
@@ -2501,7 +2501,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetMonitoringModeResponse 
+    struct SetMonitoringModeResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2513,7 +2513,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetTriggeringParameters 
+    struct SetTriggeringParameters
     {
          uint32_t SubscriptionId;
          uint32_t TriggeringItemId;
@@ -2524,7 +2524,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetTriggeringRequest 
+    struct SetTriggeringRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2536,7 +2536,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetTriggeringResult 
+    struct SetTriggeringResult
     {
          std::vector<OpcUa::StatusCode> AddResults;
          std::vector<OpcUa::DiagnosticInfo> AddDiagnosticInfos;
@@ -2547,7 +2547,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SetTriggeringResponse 
+    struct SetTriggeringResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2557,148 +2557,148 @@ namespace OpcUa
     };
 */
 
-    struct DeleteMonitoredItemsParameters 
-    {
-         uint32_t SubscriptionId;
-         std::vector<uint32_t> MonitoredItemIds;
-    };
+struct DeleteMonitoredItemsParameters
+{
+  uint32_t SubscriptionId;
+  std::vector<uint32_t> MonitoredItemIds;
+};
 
-    struct DeleteMonitoredItemsRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::DeleteMonitoredItemsParameters Parameters;
+struct DeleteMonitoredItemsRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::DeleteMonitoredItemsParameters Parameters;
 
-         DeleteMonitoredItemsRequest();
-    };
+  DeleteMonitoredItemsRequest();
+};
 
-    struct DeleteMonitoredItemsResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct DeleteMonitoredItemsResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         DeleteMonitoredItemsResponse();
-    };
+  DeleteMonitoredItemsResponse();
+};
 
-    struct CreateSubscriptionParameters 
-    {
-         double RequestedPublishingInterval;
-         uint32_t RequestedLifetimeCount;
-         uint32_t RequestedMaxKeepAliveCount;
-         uint32_t MaxNotificationsPerPublish;
-         bool PublishingEnabled;
-         uint8_t Priority;
+struct CreateSubscriptionParameters
+{
+  double RequestedPublishingInterval;
+  uint32_t RequestedLifetimeCount;
+  uint32_t RequestedMaxKeepAliveCount;
+  uint32_t MaxNotificationsPerPublish;
+  bool PublishingEnabled;
+  uint8_t Priority;
 
-         CreateSubscriptionParameters();
-    };
+  CreateSubscriptionParameters();
+};
 
-    struct CreateSubscriptionRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::CreateSubscriptionParameters Parameters;
+struct CreateSubscriptionRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::CreateSubscriptionParameters Parameters;
 
-         CreateSubscriptionRequest();
-    };
+  CreateSubscriptionRequest();
+};
 
-    struct SubscriptionData 
-    {
-         uint32_t SubscriptionId;
-         double RevisedPublishingInterval;
-         uint32_t RevisedLifetimeCount;
-         uint32_t RevisedMaxKeepAliveCount;
+struct SubscriptionData
+{
+  uint32_t SubscriptionId;
+  double RevisedPublishingInterval;
+  uint32_t RevisedLifetimeCount;
+  uint32_t RevisedMaxKeepAliveCount;
 
-         SubscriptionData();
-    };
+  SubscriptionData();
+};
 
-    struct CreateSubscriptionResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::SubscriptionData Data;
+struct CreateSubscriptionResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::SubscriptionData Data;
 
-         CreateSubscriptionResponse();
-    };
+  CreateSubscriptionResponse();
+};
 
-    struct ModifySubscriptionParameters 
-    {
-         uint32_t SubscriptionId;
-         double RequestedPublishingInterval;
-         uint32_t RequestedLifetimeCount;
-         uint32_t RequestedMaxKeepAliveCount;
-         uint32_t MaxNotificationsPerPublish;
-         uint8_t Priority;
-    };
+struct ModifySubscriptionParameters
+{
+  uint32_t SubscriptionId;
+  double RequestedPublishingInterval;
+  uint32_t RequestedLifetimeCount;
+  uint32_t RequestedMaxKeepAliveCount;
+  uint32_t MaxNotificationsPerPublish;
+  uint8_t Priority;
+};
 
-    struct ModifySubscriptionRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::ModifySubscriptionParameters Parameters;
+struct ModifySubscriptionRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::ModifySubscriptionParameters Parameters;
 
-         ModifySubscriptionRequest();
-    };
+  ModifySubscriptionRequest();
+};
 
-    struct ModifySubscriptionResult 
-    {
-         double RevisedPublishingInterval;
-         uint32_t RevisedLifetimeCount;
-         uint32_t RevisedMaxKeepAliveCount;
-    };
+struct ModifySubscriptionResult
+{
+  double RevisedPublishingInterval;
+  uint32_t RevisedLifetimeCount;
+  uint32_t RevisedMaxKeepAliveCount;
+};
 
-    struct ModifySubscriptionResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::ModifySubscriptionResult Parameters;
+struct ModifySubscriptionResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::ModifySubscriptionResult Parameters;
 
-         ModifySubscriptionResponse();
-    };
+  ModifySubscriptionResponse();
+};
 
-    struct PublishingModeParameters 
-    {
-         bool PublishingEnabled;
-         std::vector<uint32_t> SubscriptionIds;
-    };
+struct PublishingModeParameters
+{
+  bool PublishingEnabled;
+  std::vector<uint32_t> SubscriptionIds;
+};
 
-    struct SetPublishingModeRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::PublishingModeParameters Parameters;
+struct SetPublishingModeRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::PublishingModeParameters Parameters;
 
-         SetPublishingModeRequest();
-    };
+  SetPublishingModeRequest();
+};
 
-    struct PublishingModeResult 
-    {
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
-    };
+struct PublishingModeResult
+{
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+};
 
-    struct SetPublishingModeResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::PublishingModeResult Result;
+struct SetPublishingModeResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::PublishingModeResult Result;
 
-         SetPublishingModeResponse();
-    };
+  SetPublishingModeResponse();
+};
 
-    struct NotificationMessage 
-    {
-         uint32_t SequenceNumber;
-         OpcUa::DateTime PublishTime;
-         std::vector<OpcUa::NotificationData> NotificationData;
+struct NotificationMessage
+{
+  uint32_t SequenceNumber;
+  OpcUa::DateTime PublishTime;
+  std::vector<OpcUa::NotificationData> NotificationData;
 
-         NotificationMessage();
-    };
+  NotificationMessage();
+};
 
 /* DISABLED
 
-    struct NotificationData 
+    struct NotificationData
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2708,7 +2708,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct MonitoredItemNotification 
+    struct MonitoredItemNotification
     {
          uint32_t ClientHandle;
          OpcUa::DataValue Value;
@@ -2717,7 +2717,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DataChangeNotification 
+    struct DataChangeNotification
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2729,7 +2729,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EventFieldList 
+    struct EventFieldList
     {
          uint32_t ClientHandle;
          std::vector<OpcUa::Variant> EventFields;
@@ -2738,7 +2738,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EventNotificationList 
+    struct EventNotificationList
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2749,7 +2749,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryEventFieldList 
+    struct HistoryEventFieldList
     {
          std::vector<OpcUa::Variant> EventFields;
     };
@@ -2757,7 +2757,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct HistoryEvent 
+    struct HistoryEvent
     {
          std::vector<OpcUa::HistoryEventFieldList> Events;
     };
@@ -2765,7 +2765,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct UpdateEventDetails 
+    struct UpdateEventDetails
     {
          OpcUa::NodeId NodeId;
          OpcUa::PerformUpdateType PerformInsertReplace;
@@ -2776,7 +2776,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct StatusChangeNotification 
+    struct StatusChangeNotification
     {
          OpcUa::NodeId TypeId;
          uint8_t Encoding;
@@ -2786,69 +2786,69 @@ namespace OpcUa
     };
 */
 
-    struct SubscriptionAcknowledgement 
-    {
-         uint32_t SubscriptionId;
-         uint32_t SequenceNumber;
-    };
+struct SubscriptionAcknowledgement
+{
+  uint32_t SubscriptionId;
+  uint32_t SequenceNumber;
+};
 
-    struct PublishRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         std::vector<OpcUa::SubscriptionAcknowledgement> SubscriptionAcknowledgements;
+struct PublishRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  std::vector<OpcUa::SubscriptionAcknowledgement> SubscriptionAcknowledgements;
 
-         PublishRequest();
-    };
+  PublishRequest();
+};
 
-    struct PublishResult 
-    {
-         uint32_t SubscriptionId;
-         std::vector<uint32_t> AvailableSequenceNumbers;
-         bool MoreNotifications;
-         OpcUa::NotificationMessage NotificationMessage;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct PublishResult
+{
+  uint32_t SubscriptionId;
+  std::vector<uint32_t> AvailableSequenceNumbers;
+  bool MoreNotifications;
+  OpcUa::NotificationMessage NotificationMessage;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         PublishResult();
-    };
+  PublishResult();
+};
 
-    struct PublishResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::PublishResult Parameters;
+struct PublishResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::PublishResult Parameters;
 
-         PublishResponse();
-    };
+  PublishResponse();
+};
 
-    struct RepublishParameters 
-    {
-         uint32_t SubscriptionId;
-         uint32_t RetransmitSequenceNumber;
-    };
+struct RepublishParameters
+{
+  uint32_t SubscriptionId;
+  uint32_t RetransmitSequenceNumber;
+};
 
-    struct RepublishRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         OpcUa::RepublishParameters Parameters;
+struct RepublishRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  OpcUa::RepublishParameters Parameters;
 
-         RepublishRequest();
-    };
+  RepublishRequest();
+};
 
-    struct RepublishResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         OpcUa::NotificationMessage NotificationMessage;
+struct RepublishResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  OpcUa::NotificationMessage NotificationMessage;
 
-         RepublishResponse();
-    };
+  RepublishResponse();
+};
 
 /* DISABLED
 
-    struct TransferResult 
+    struct TransferResult
     {
          OpcUa::StatusCode Status;
          std::vector<uint32_t> AvailableSequenceNumbers;
@@ -2857,7 +2857,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TransferSubscriptionsParameters 
+    struct TransferSubscriptionsParameters
     {
          std::vector<uint32_t> SubscriptionIds;
          bool SendInitialValues;
@@ -2866,7 +2866,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TransferSubscriptionsRequest 
+    struct TransferSubscriptionsRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -2878,7 +2878,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TransferSubscriptionsResult 
+    struct TransferSubscriptionsResult
     {
          std::vector<OpcUa::TransferResult> Results;
          std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
@@ -2887,7 +2887,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TransferSubscriptionsResponse 
+    struct TransferSubscriptionsResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -2897,29 +2897,29 @@ namespace OpcUa
     };
 */
 
-    struct DeleteSubscriptionsRequest 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::RequestHeader Header;
-         std::vector<uint32_t> SubscriptionIds;
+struct DeleteSubscriptionsRequest
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::RequestHeader Header;
+  std::vector<uint32_t> SubscriptionIds;
 
-         DeleteSubscriptionsRequest();
-    };
+  DeleteSubscriptionsRequest();
+};
 
-    struct DeleteSubscriptionsResponse 
-    {
-         OpcUa::NodeId TypeId;
-         OpcUa::ResponseHeader Header;
-         std::vector<OpcUa::StatusCode> Results;
-         std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
+struct DeleteSubscriptionsResponse
+{
+  OpcUa::NodeId TypeId;
+  OpcUa::ResponseHeader Header;
+  std::vector<OpcUa::StatusCode> Results;
+  std::vector<OpcUa::DiagnosticInfo> DiagnosticInfos;
 
-         DeleteSubscriptionsResponse();
-    };
+  DeleteSubscriptionsResponse();
+};
 
 /* DISABLED
 
     // A complex type containing all possible scalar types used for testing.
-    struct ScalarTestType 
+    struct ScalarTestType
     {
          bool Boolean;
          uint8_t SByte;
@@ -2952,7 +2952,7 @@ namespace OpcUa
 /* DISABLED
 
     // A complex type containing all possible array types used for testing.
-    struct ArrayTestType 
+    struct ArrayTestType
     {
          std::vector<bool> Booleans;
          std::vector<uint8_t> SBytes;
@@ -2984,7 +2984,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct CompositeTestType 
+    struct CompositeTestType
     {
          OpcUa::ScalarTestType Field1;
          OpcUa::ArrayTestType Field2;
@@ -2993,7 +2993,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackParameters 
+    struct TestStackParameters
     {
          uint32_t TestId;
          int32_t Iteration;
@@ -3003,7 +3003,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackRequest 
+    struct TestStackRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -3015,7 +3015,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackResult 
+    struct TestStackResult
     {
          OpcUa::Variant Output;
     };
@@ -3023,7 +3023,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackResponse 
+    struct TestStackResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -3035,7 +3035,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackExParameters 
+    struct TestStackExParameters
     {
          uint32_t TestId;
          int32_t Iteration;
@@ -3045,7 +3045,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackExRequest 
+    struct TestStackExRequest
     {
          OpcUa::NodeId TypeId;
          OpcUa::RequestHeader Header;
@@ -3057,7 +3057,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackExResult 
+    struct TestStackExResult
     {
          OpcUa::CompositeTestType Output;
     };
@@ -3065,7 +3065,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct TestStackExResponse 
+    struct TestStackExResponse
     {
          OpcUa::NodeId TypeId;
          OpcUa::ResponseHeader Header;
@@ -3077,7 +3077,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct BuildInfo 
+    struct BuildInfo
     {
          std::string ProductUri;
          std::string ManufacturerName;
@@ -3090,7 +3090,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct RedundantServerDataType 
+    struct RedundantServerDataType
     {
          std::string ServerId;
          uint8_t ServiceLevel;
@@ -3100,7 +3100,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EndpointUrlListDataType 
+    struct EndpointUrlListDataType
     {
          std::vector<std::string> EndpointUrlList;
     };
@@ -3108,7 +3108,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct NetworkGroupDataType 
+    struct NetworkGroupDataType
     {
          std::string ServerUri;
          std::vector<OpcUa::EndpointUrlListDataType> NetworkPaths;
@@ -3117,7 +3117,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SamplingIntervalDiagnosticsDataType 
+    struct SamplingIntervalDiagnosticsDataType
     {
          double SamplingInterval;
          uint32_t MonitoredItemCount;
@@ -3128,7 +3128,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ServerDiagnosticsSummaryDataType 
+    struct ServerDiagnosticsSummaryDataType
     {
          uint32_t ServerViewCount;
          uint32_t CurrentSessionCount;
@@ -3147,7 +3147,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ServerStatusDataType 
+    struct ServerStatusDataType
     {
          OpcUa::DateTime StartTime;
          OpcUa::DateTime CurrentTime;
@@ -3160,7 +3160,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SessionSecurityDiagnosticsDataType 
+    struct SessionSecurityDiagnosticsDataType
     {
          OpcUa::NodeId SessionId;
          std::string ClientUserIdOfSession;
@@ -3176,7 +3176,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ServiceCounterDataType 
+    struct ServiceCounterDataType
     {
          uint32_t TotalCount;
          uint32_t ErrorCount;
@@ -3185,7 +3185,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SessionDiagnosticsDataType 
+    struct SessionDiagnosticsDataType
     {
          OpcUa::NodeId SessionId;
          std::string SessionName;
@@ -3235,7 +3235,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct StatusResult 
+    struct StatusResult
     {
          OpcUa::StatusCode Status;
          OpcUa::DiagnosticInfo DiagnosticInfo;
@@ -3244,7 +3244,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SubscriptionDiagnosticsDataType 
+    struct SubscriptionDiagnosticsDataType
     {
          OpcUa::NodeId SessionId;
          uint32_t SubscriptionId;
@@ -3282,7 +3282,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ModelChangeStructureDataType 
+    struct ModelChangeStructureDataType
     {
          OpcUa::NodeId Affected;
          OpcUa::NodeId AffectedType;
@@ -3292,7 +3292,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct SemanticChangeStructureDataType 
+    struct SemanticChangeStructureDataType
     {
          OpcUa::NodeId Affected;
          OpcUa::NodeId AffectedType;
@@ -3301,7 +3301,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct Range 
+    struct Range
     {
          double Low;
          double High;
@@ -3310,7 +3310,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct EUInformation 
+    struct EUInformation
     {
          std::string NamespaceUri;
          int32_t UnitId;
@@ -3321,7 +3321,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ComplexNumberType 
+    struct ComplexNumberType
     {
          float Real;
          float Imaginary;
@@ -3330,7 +3330,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct DoubleComplexNumberType 
+    struct DoubleComplexNumberType
     {
          double Real;
          double Imaginary;
@@ -3339,7 +3339,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct AxisInformation 
+    struct AxisInformation
     {
          OpcUa::EUInformation EngineeringUnits;
          OpcUa::Range EURange;
@@ -3351,7 +3351,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct XVType 
+    struct XVType
     {
          double X;
          float Value;
@@ -3360,7 +3360,7 @@ namespace OpcUa
 
 /* DISABLED
 
-    struct ProgramDiagnosticDataType 
+    struct ProgramDiagnosticDataType
     {
          OpcUa::NodeId CreateSessionId;
          std::string CreateClientName;
@@ -3375,12 +3375,12 @@ namespace OpcUa
     };
 */
 
-    struct Annotation 
-    {
-         std::string Message;
-         std::string UserName;
-         OpcUa::DateTime AnnotationTime;
-    };
+struct Annotation
+{
+  std::string Message;
+  std::string UserName;
+  OpcUa::DateTime AnnotationTime;
+};
 
 } // namespace
-    
+

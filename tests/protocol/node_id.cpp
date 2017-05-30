@@ -124,9 +124,10 @@ TEST(Node, DefferentIfDifferentNameSpace)
 
 TEST_F(NodeDeserialization, TwoByte)
 {
-  const std::vector<char> expectedData = {
-  EV_TWO_BYTE,
-  1
+  const std::vector<char> expectedData =
+  {
+    EV_TWO_BYTE,
+    1
   };
 
   GetChannel().SetData(expectedData);
@@ -142,10 +143,11 @@ TEST_F(NodeDeserialization, FourByte)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  EV_FOUR_BYTE,
-  1,
-  2, 0
+  const std::vector<char> expectedData =
+  {
+    EV_FOUR_BYTE,
+    1,
+    2, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -162,10 +164,11 @@ TEST_F(NodeDeserialization, Numeric)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  EV_NUMERIC,
-  1, 0,
-  2, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    EV_NUMERIC,
+    1, 0,
+    2, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -182,11 +185,12 @@ TEST_F(NodeDeserialization, String)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  EV_STRING,
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd'
+  const std::vector<char> expectedData =
+  {
+    EV_STRING,
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd'
   };
 
   GetChannel().SetData(expectedData);
@@ -203,11 +207,12 @@ TEST_F(NodeDeserialization, Guid)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  EV_BYTE_STRING,
-  1, 0,
-  4, 0, 0, 0,
-  1, 2, 3, 4
+  const std::vector<char> expectedData =
+  {
+    EV_BYTE_STRING,
+    1, 0,
+    4, 0, 0, 0,
+    1, 2, 3, 4
   };
 
   GetChannel().SetData(expectedData);
@@ -225,7 +230,8 @@ TEST_F(NodeDeserialization, ByteString)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     EV_GUId,
     1, 0,
     4, 3, 2, 1,
@@ -258,13 +264,14 @@ TEST_F(NodeDeserialization, NamespaceUri)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i'
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i'
   };
 
   GetChannel().SetData(expectedData);
@@ -282,12 +289,13 @@ TEST_F(NodeDeserialization, ServerIndexFlag)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  1, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    1, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -305,14 +313,15 @@ TEST_F(NodeDeserialization, NamespaceUriAndServerIndex)
 {
   using namespace OpcUa;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i',
-  1, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i',
+    1, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -339,9 +348,10 @@ TEST_F(NodeSerialization, ToByte)
   id.Encoding = EV_TWO_BYTE;
   id.TwoByteData.Identifier = 0x1;
 
-  const std::vector<char> expectedData = {
-  EV_TWO_BYTE,
-  1
+  const std::vector<char> expectedData =
+  {
+    EV_TWO_BYTE,
+    1
   };
 
   GetStream() << id << flush;
@@ -359,10 +369,11 @@ TEST_F(NodeSerialization, FourByte)
   id.FourByteData.NamespaceIndex = 0x1;
   id.FourByteData.Identifier = 0x2;
 
-  const std::vector<char> expectedData = {
-  EV_FOUR_BYTE,
-  1,
-  2, 0
+  const std::vector<char> expectedData =
+  {
+    EV_FOUR_BYTE,
+    1,
+    2, 0
   };
 
   GetStream() << id << flush;
@@ -380,10 +391,11 @@ TEST_F(NodeSerialization, Numeric)
   id.NumericData.NamespaceIndex = 0x1;
   id.NumericData.Identifier = 0x2;
 
-  const std::vector<char> expectedData = {
-  EV_NUMERIC,
-  1, 0,
-  2, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    EV_NUMERIC,
+    1, 0,
+    2, 0, 0, 0
   };
 
   GetStream() << id << flush;
@@ -401,11 +413,12 @@ TEST_F(NodeSerialization, String)
   id.StringData.NamespaceIndex = 0x1;
   id.StringData.Identifier = "id";
 
-  const std::vector<char> expectedData = {
-  EV_STRING,
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd'
+  const std::vector<char> expectedData =
+  {
+    EV_STRING,
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd'
   };
 
   GetStream() << id << flush;
@@ -423,11 +436,12 @@ TEST_F(NodeSerialization, ByteString)
   id.BinaryData.NamespaceIndex = 0x1;
   id.BinaryData.Identifier = {1, 2, 3, 4};
 
-  const std::vector<char> expectedData = {
-  EV_BYTE_STRING,
-  1, 0,
-  4, 0, 0, 0,
-  1, 2, 3, 4
+  const std::vector<char> expectedData =
+  {
+    EV_BYTE_STRING,
+    1, 0,
+    4, 0, 0, 0,
+    1, 2, 3, 4
   };
 
   GetStream() << id << flush;
@@ -455,7 +469,8 @@ TEST_F(NodeSerialization, Guid)
   id.GuidData.Identifier.Data4[6] = 0x07;
   id.GuidData.Identifier.Data4[7] = 0x08;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     EV_GUId,
     1, 0,
     4, 3, 2, 1,
@@ -480,13 +495,14 @@ TEST_F(NodeSerialization, NamespaceUri)
   id.StringData.Identifier = "id";
   id.NamespaceURI = "uri";
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i'
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i'
   };
 
   GetStream() << id << flush;
@@ -505,12 +521,13 @@ TEST_F(NodeSerialization, ServerIndexFlag)
   id.StringData.Identifier = "id";
   id.ServerIndex = 1;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  1, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    1, 0, 0, 0,
   };
 
   GetStream() << id << flush;
@@ -530,14 +547,15 @@ TEST_F(NodeSerialization, NamespaceUriAndServerIndex)
   id.NamespaceURI = "uri";
   id.ServerIndex = 1;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i',
-  1, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i',
+    1, 0, 0, 0
   };
 
   GetStream() << id << flush;
@@ -622,7 +640,7 @@ TEST_F(NodeComparing, BinaryNotLess)
 
 TEST_F(NodeComparing, BinaryEqual)
 {
-  EXPECT_TRUE(BinaryNodeId({2, 2}) == BinaryNodeId({2,2}));
+  EXPECT_TRUE(BinaryNodeId({2, 2}) == BinaryNodeId({2, 2}));
 }
 
 TEST_F(NodeComparing, GuidForLess)

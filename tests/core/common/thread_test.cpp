@@ -18,38 +18,38 @@ using namespace testing;
 namespace
 {
 
-  class TestThreadObserver : public Common::ThreadObserver
-  {
-  public:
-    TestThreadObserver()
-      : OnSuccessCallCount(0)
-      , OnErrorCallCount(0)
-    {
-    }
-
-    virtual void OnSuccess() override
-    {
-      ++OnSuccessCallCount;
-    }
-
-    virtual void OnError(const std::exception& exc) override
-    {
-      ++OnErrorCallCount;
-    }
-
-  public:
-    volatile unsigned OnSuccessCallCount;
-    volatile unsigned OnErrorCallCount;
-  };
-
-  void DoNothing()
+class TestThreadObserver : public Common::ThreadObserver
+{
+public:
+  TestThreadObserver()
+    : OnSuccessCallCount(0)
+    , OnErrorCallCount(0)
   {
   }
 
-  void ThrowsException()
+  virtual void OnSuccess() override
   {
-    throw std::logic_error("oppps!");
+    ++OnSuccessCallCount;
   }
+
+  virtual void OnError(const std::exception & exc) override
+  {
+    ++OnErrorCallCount;
+  }
+
+public:
+  volatile unsigned OnSuccessCallCount;
+  volatile unsigned OnErrorCallCount;
+};
+
+void DoNothing()
+{
+}
+
+void ThrowsException()
+{
+  throw std::logic_error("oppps!");
+}
 
 }
 

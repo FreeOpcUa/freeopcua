@@ -19,231 +19,231 @@
 
 namespace OpcUa
 {
-    namespace Binary
-    {
+namespace Binary
+{
 
-    template<>
-    void DataDeserializer::Deserialize<OpenFileMode>(OpenFileMode& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<OpenFileMode>(tmp);
-    }
-
-
-    template<>
-    void DataDeserializer::Deserialize<NodeClass>(NodeClass& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<NodeClass>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<OpenFileMode>(OpenFileMode & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<OpenFileMode>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ApplicationType>(ApplicationType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<ApplicationType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<NodeClass>(NodeClass & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<NodeClass>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<MessageSecurityMode>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<ApplicationType>(ApplicationType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<ApplicationType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<UserTokenType>(UserTokenType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<UserTokenType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<MessageSecurityMode>(MessageSecurityMode & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<MessageSecurityMode>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<SecurityTokenRequestType>(SecurityTokenRequestType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<SecurityTokenRequestType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<UserTokenType>(UserTokenType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<UserTokenType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<NodeAttributesMask>(NodeAttributesMask& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<NodeAttributesMask>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<SecurityTokenRequestType>(SecurityTokenRequestType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<SecurityTokenRequestType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<AttributeWriteMask>(AttributeWriteMask& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<AttributeWriteMask>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<NodeAttributesMask>(NodeAttributesMask & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<NodeAttributesMask>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<BrowseDirection>(BrowseDirection& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<BrowseDirection>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<AttributeWriteMask>(AttributeWriteMask & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<AttributeWriteMask>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<BrowseResultMask>(BrowseResultMask& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<BrowseResultMask>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<BrowseDirection>(BrowseDirection & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<BrowseDirection>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ComplianceLevel>(ComplianceLevel& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<ComplianceLevel>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<BrowseResultMask>(BrowseResultMask & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<BrowseResultMask>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<FilterOperator>(FilterOperator& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<FilterOperator>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<ComplianceLevel>(ComplianceLevel & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<ComplianceLevel>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<TimestampsToReturn>(TimestampsToReturn& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<TimestampsToReturn>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<FilterOperator>(FilterOperator & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<FilterOperator>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<HistoryUpdateType>(HistoryUpdateType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<HistoryUpdateType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<TimestampsToReturn>(TimestampsToReturn & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<TimestampsToReturn>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PerformUpdateType>(PerformUpdateType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<PerformUpdateType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<HistoryUpdateType>(HistoryUpdateType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<HistoryUpdateType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<MonitoringMode>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<PerformUpdateType>(PerformUpdateType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<PerformUpdateType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<DataChangeTrigger>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<MonitoringMode>(MonitoringMode & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<MonitoringMode>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeadbandType>(DeadbandType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<DeadbandType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<DataChangeTrigger>(DataChangeTrigger & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<DataChangeTrigger>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<EnumeratedTestType>(EnumeratedTestType& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<EnumeratedTestType>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<DeadbandType>(DeadbandType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<DeadbandType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<RedundancySupport>(RedundancySupport& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<RedundancySupport>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<EnumeratedTestType>(EnumeratedTestType & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<EnumeratedTestType>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ServerState>(ServerState& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<ServerState>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<RedundancySupport>(RedundancySupport & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<RedundancySupport>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ModelChangeStructureVerbMask>(ModelChangeStructureVerbMask& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<ModelChangeStructureVerbMask>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<ServerState>(ServerState & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<ServerState>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<AxisScaleEnumeration>(AxisScaleEnumeration& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<AxisScaleEnumeration>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<ModelChangeStructureVerbMask>(ModelChangeStructureVerbMask & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<ModelChangeStructureVerbMask>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ExceptionDeviationFormat>(ExceptionDeviationFormat& data)
-    {
-        uint32_t tmp;
-        *this >> tmp;
-        data = static_cast<ExceptionDeviationFormat>(tmp);
-    }
+template<>
+void DataDeserializer::Deserialize<AxisScaleEnumeration>(AxisScaleEnumeration & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<AxisScaleEnumeration>(tmp);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<XmlElement>(XmlElement& data)
-    {
-        *this >> data.Length;
-        DeserializeContainer(*this, data.Value);
-    }
+template<>
+void DataDeserializer::Deserialize<ExceptionDeviationFormat>(ExceptionDeviationFormat & data)
+{
+  uint32_t tmp;
+  *this >> tmp;
+  data = static_cast<ExceptionDeviationFormat>(tmp);
+}
+
+
+template<>
+void DataDeserializer::Deserialize<XmlElement>(XmlElement & data)
+{
+  *this >> data.Length;
+  DeserializeContainer(*this, data.Value);
+}
 
 
 /*  DISABLED
@@ -327,13 +327,14 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<ExtensionObject>(ExtensionObject& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Encoding;
-        if ((data.Encoding) & (1>>(0))) *this >> data.Body;
-    }
+template<>
+void DataDeserializer::Deserialize<ExtensionObject>(ExtensionObject & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Encoding;
+
+  if ((data.Encoding) & (1 >> (0))) { *this >> data.Body; }
+}
 
 
 /*  DISABLED
@@ -704,17 +705,17 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<ApplicationDescription>(ApplicationDescription& data)
-    {
-        *this >> data.ApplicationUri;
-        *this >> data.ProductUri;
-        *this >> data.ApplicationName;
-        *this >> data.ApplicationType;
-        *this >> data.GatewayServerUri;
-        *this >> data.DiscoveryProfileUri;
-        DeserializeContainer(*this, data.DiscoveryUrls);
-    }
+template<>
+void DataDeserializer::Deserialize<ApplicationDescription>(ApplicationDescription & data)
+{
+  *this >> data.ApplicationUri;
+  *this >> data.ProductUri;
+  *this >> data.ApplicationName;
+  *this >> data.ApplicationType;
+  *this >> data.GatewayServerUri;
+  *this >> data.DiscoveryProfileUri;
+  DeserializeContainer(*this, data.DiscoveryUrls);
+}
 
 
 /*  DISABLED
@@ -805,56 +806,56 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<UserTokenPolicy>(UserTokenPolicy& data)
-    {
-        *this >> data.PolicyId;
-        *this >> data.TokenType;
-        *this >> data.IssuedTokenType;
-        *this >> data.IssuerEndpointUrl;
-        *this >> data.SecurityPolicyUri;
-    }
+template<>
+void DataDeserializer::Deserialize<UserTokenPolicy>(UserTokenPolicy & data)
+{
+  *this >> data.PolicyId;
+  *this >> data.TokenType;
+  *this >> data.IssuedTokenType;
+  *this >> data.IssuerEndpointUrl;
+  *this >> data.SecurityPolicyUri;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<EndpointDescription>(EndpointDescription& data)
-    {
-        *this >> data.EndpointUrl;
-        *this >> data.Server;
-        *this >> data.ServerCertificate;
-        *this >> data.SecurityMode;
-        *this >> data.SecurityPolicyUri;
-        DeserializeContainer(*this, data.UserIdentityTokens);
-        *this >> data.TransportProfileUri;
-        *this >> data.SecurityLevel;
-    }
+template<>
+void DataDeserializer::Deserialize<EndpointDescription>(EndpointDescription & data)
+{
+  *this >> data.EndpointUrl;
+  *this >> data.Server;
+  *this >> data.ServerCertificate;
+  *this >> data.SecurityMode;
+  *this >> data.SecurityPolicyUri;
+  DeserializeContainer(*this, data.UserIdentityTokens);
+  *this >> data.TransportProfileUri;
+  *this >> data.SecurityLevel;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<GetEndpointsParameters>(GetEndpointsParameters& data)
-    {
-        *this >> data.EndpointUrl;
-        DeserializeContainer(*this, data.LocaleIds);
-        DeserializeContainer(*this, data.ProfileUris);
-    }
+template<>
+void DataDeserializer::Deserialize<GetEndpointsParameters>(GetEndpointsParameters & data)
+{
+  *this >> data.EndpointUrl;
+  DeserializeContainer(*this, data.LocaleIds);
+  DeserializeContainer(*this, data.ProfileUris);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<GetEndpointsRequest>(GetEndpointsRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Endpoints);
-    }
+template<>
+void DataDeserializer::Deserialize<GetEndpointsResponse>(GetEndpointsResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Endpoints);
+}
 
 
 /*  DISABLED
@@ -992,67 +993,67 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<SignedSoftwareCertificate>(SignedSoftwareCertificate& data)
-    {
-        *this >> data.CertificateData;
-        *this >> data.Signature;
-    }
+template<>
+void DataDeserializer::Deserialize<SignedSoftwareCertificate>(SignedSoftwareCertificate & data)
+{
+  *this >> data.CertificateData;
+  *this >> data.Signature;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<SignatureData>(SignatureData& data)
-    {
-        *this >> data.Algorithm;
-        *this >> data.Signature;
-    }
+template<>
+void DataDeserializer::Deserialize<SignatureData>(SignatureData & data)
+{
+  *this >> data.Algorithm;
+  *this >> data.Signature;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionParameters>(CreateSessionParameters& data)
-    {
-        *this >> data.ClientDescription;
-        *this >> data.ServerUri;
-        *this >> data.EndpointUrl;
-        *this >> data.SessionName;
-        *this >> data.ClientNonce;
-        *this >> data.ClientCertificate;
-        *this >> data.RequestedSessionTimeout;
-        *this >> data.MaxResponseMessageSize;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSessionParameters>(CreateSessionParameters & data)
+{
+  *this >> data.ClientDescription;
+  *this >> data.ServerUri;
+  *this >> data.EndpointUrl;
+  *this >> data.SessionName;
+  *this >> data.ClientNonce;
+  *this >> data.ClientCertificate;
+  *this >> data.RequestedSessionTimeout;
+  *this >> data.MaxResponseMessageSize;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionRequest>(CreateSessionRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSessionRequest>(CreateSessionRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionResult>(CreateSessionResult& data)
-    {
-        *this >> data.SessionId;
-        *this >> data.AuthenticationToken;
-        *this >> data.RevisedSessionTimeout;
-        *this >> data.ServerNonce;
-        *this >> data.ServerCertificate;
-        DeserializeContainer(*this, data.ServerEndpoints);
-        DeserializeContainer(*this, data.ServerSoftwareCertificates);
-        *this >> data.ServerSignature;
-        *this >> data.MaxRequestMessageSize;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSessionResult>(CreateSessionResult & data)
+{
+  *this >> data.SessionId;
+  *this >> data.AuthenticationToken;
+  *this >> data.RevisedSessionTimeout;
+  *this >> data.ServerNonce;
+  *this >> data.ServerCertificate;
+  DeserializeContainer(*this, data.ServerEndpoints);
+  DeserializeContainer(*this, data.ServerSoftwareCertificates);
+  *this >> data.ServerSignature;
+  *this >> data.MaxRequestMessageSize;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSessionResponse>(CreateSessionResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
 /*  DISABLED
@@ -1126,42 +1127,42 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<ActivateSessionParameters>(ActivateSessionParameters& data)
-    {
-        *this >> data.ClientSignature;
-        DeserializeContainer(*this, data.ClientSoftwareCertificates);
-        DeserializeContainer(*this, data.LocaleIds);
-        *this >> data.UserIdentityToken;
-        *this >> data.UserTokenSignature;
-    }
+template<>
+void DataDeserializer::Deserialize<ActivateSessionParameters>(ActivateSessionParameters & data)
+{
+  *this >> data.ClientSignature;
+  DeserializeContainer(*this, data.ClientSoftwareCertificates);
+  DeserializeContainer(*this, data.LocaleIds);
+  *this >> data.UserIdentityToken;
+  *this >> data.UserTokenSignature;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ActivateSessionRequest>(ActivateSessionRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<ActivateSessionRequest>(ActivateSessionRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ActivateSessionResult>(ActivateSessionResult& data)
-    {
-        *this >> data.ServerNonce;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<ActivateSessionResult>(ActivateSessionResult & data)
+{
+  *this >> data.ServerNonce;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ActivateSessionResponse>(ActivateSessionResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<ActivateSessionResponse>(ActivateSessionResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
 /*  DISABLED
@@ -1509,31 +1510,31 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteNodesItem>(DeleteNodesItem& data)
-    {
-        *this >> data.NodeId;
-        *this >> data.DeleteTargetReferences;
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteNodesItem>(DeleteNodesItem & data)
+{
+  *this >> data.NodeId;
+  *this >> data.DeleteTargetReferences;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteNodesRequest>(DeleteNodesRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.NodesToDelete);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteNodesRequest>(DeleteNodesRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.NodesToDelete);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteNodesResponse>(DeleteNodesResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteNodesResponse>(DeleteNodesResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2227,42 +2228,42 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<ReadValueId>(ReadValueId& data)
-    {
-        *this >> data.NodeId;
-        *this >> data.AttributeId;
-        *this >> data.IndexRange;
-        *this >> data.DataEncoding;
-    }
+template<>
+void DataDeserializer::Deserialize<ReadValueId>(ReadValueId & data)
+{
+  *this >> data.NodeId;
+  *this >> data.AttributeId;
+  *this >> data.IndexRange;
+  *this >> data.DataEncoding;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ReadParameters>(ReadParameters& data)
-    {
-        *this >> data.MaxAge;
-        *this >> data.TimestampsToReturn;
-        DeserializeContainer(*this, data.AttributesToRead);
-    }
+template<>
+void DataDeserializer::Deserialize<ReadParameters>(ReadParameters & data)
+{
+  *this >> data.MaxAge;
+  *this >> data.TimestampsToReturn;
+  DeserializeContainer(*this, data.AttributesToRead);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ReadRequest>(ReadRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<ReadRequest>(ReadRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ReadResponse>(ReadResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<ReadResponse>(ReadResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2404,40 +2405,40 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<WriteValue>(WriteValue& data)
-    {
-        *this >> data.NodeId;
-        *this >> data.AttributeId;
-        *this >> data.IndexRange;
-        *this >> data.Value;
-    }
+template<>
+void DataDeserializer::Deserialize<WriteValue>(WriteValue & data)
+{
+  *this >> data.NodeId;
+  *this >> data.AttributeId;
+  *this >> data.IndexRange;
+  *this >> data.Value;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<WriteParameters>(WriteParameters& data)
-    {
-        DeserializeContainer(*this, data.NodesToWrite);
-    }
+template<>
+void DataDeserializer::Deserialize<WriteParameters>(WriteParameters & data)
+{
+  DeserializeContainer(*this, data.NodesToWrite);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<WriteRequest>(WriteRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<WriteRequest>(WriteRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<WriteResponse>(WriteResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<WriteResponse>(WriteResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2556,49 +2557,49 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<CallMethodRequest>(CallMethodRequest& data)
-    {
-        *this >> data.ObjectId;
-        *this >> data.MethodId;
-        DeserializeContainer(*this, data.InputArguments);
-    }
+template<>
+void DataDeserializer::Deserialize<CallMethodRequest>(CallMethodRequest & data)
+{
+  *this >> data.ObjectId;
+  *this >> data.MethodId;
+  DeserializeContainer(*this, data.InputArguments);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CallMethodResult>(CallMethodResult& data)
-    {
-        *this >> data.Status;
-        DeserializeContainer(*this, data.InputArgumentResults);
-        DeserializeContainer(*this, data.InputArgumentDiagnosticInfos);
-        DeserializeContainer(*this, data.OutputArguments);
-    }
+template<>
+void DataDeserializer::Deserialize<CallMethodResult>(CallMethodResult & data)
+{
+  *this >> data.Status;
+  DeserializeContainer(*this, data.InputArgumentResults);
+  DeserializeContainer(*this, data.InputArgumentDiagnosticInfos);
+  DeserializeContainer(*this, data.OutputArguments);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CallParameters>(CallParameters& data)
-    {
-        DeserializeContainer(*this, data.MethodsToCall);
-    }
+template<>
+void DataDeserializer::Deserialize<CallParameters>(CallParameters & data)
+{
+  DeserializeContainer(*this, data.MethodsToCall);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CallRequest>(CallRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<CallRequest>(CallRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CallResponse>(CallResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<CallResponse>(CallResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2758,63 +2759,63 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<MonitoringParameters>(MonitoringParameters& data)
-    {
-        *this >> data.ClientHandle;
-        *this >> data.SamplingInterval;
-        *this >> data.Filter;
-        *this >> data.QueueSize;
-        *this >> data.DiscardOldest;
-    }
+template<>
+void DataDeserializer::Deserialize<MonitoringParameters>(MonitoringParameters & data)
+{
+  *this >> data.ClientHandle;
+  *this >> data.SamplingInterval;
+  *this >> data.Filter;
+  *this >> data.QueueSize;
+  *this >> data.DiscardOldest;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemCreateRequest>(MonitoredItemCreateRequest& data)
-    {
-        *this >> data.ItemToMonitor;
-        *this >> data.MonitoringMode;
-        *this >> data.RequestedParameters;
-    }
+template<>
+void DataDeserializer::Deserialize<MonitoredItemCreateRequest>(MonitoredItemCreateRequest & data)
+{
+  *this >> data.ItemToMonitor;
+  *this >> data.MonitoringMode;
+  *this >> data.RequestedParameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemCreateResult>(MonitoredItemCreateResult& data)
-    {
-        *this >> data.Status;
-        *this >> data.MonitoredItemId;
-        *this >> data.RevisedSamplingInterval;
-        *this >> data.RevisedQueueSize;
-        *this >> data.FilterResult;
-    }
+template<>
+void DataDeserializer::Deserialize<MonitoredItemCreateResult>(MonitoredItemCreateResult & data)
+{
+  *this >> data.Status;
+  *this >> data.MonitoredItemId;
+  *this >> data.RevisedSamplingInterval;
+  *this >> data.RevisedQueueSize;
+  *this >> data.FilterResult;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters& data)
-    {
-        *this >> data.SubscriptionId;
-        *this >> data.TimestampsToReturn;
-        DeserializeContainer(*this, data.ItemsToCreate);
-    }
+template<>
+void DataDeserializer::Deserialize<MonitoredItemsParameters>(MonitoredItemsParameters & data)
+{
+  *this >> data.SubscriptionId;
+  *this >> data.TimestampsToReturn;
+  DeserializeContainer(*this, data.ItemsToCreate);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsRequest>(CreateMonitoredItemsRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateMonitoredItemsRequest>(CreateMonitoredItemsRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateMonitoredItemsResponse>(CreateMonitoredItemsResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<CreateMonitoredItemsResponse>(CreateMonitoredItemsResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2975,153 +2976,153 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsParameters>(DeleteMonitoredItemsParameters& data)
-    {
-        *this >> data.SubscriptionId;
-        DeserializeContainer(*this, data.MonitoredItemIds);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteMonitoredItemsParameters>(DeleteMonitoredItemsParameters & data)
+{
+  *this >> data.SubscriptionId;
+  DeserializeContainer(*this, data.MonitoredItemIds);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteMonitoredItemsRequest>(DeleteMonitoredItemsRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteMonitoredItemsResponse>(DeleteMonitoredItemsResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionParameters>(CreateSubscriptionParameters& data)
-    {
-        *this >> data.RequestedPublishingInterval;
-        *this >> data.RequestedLifetimeCount;
-        *this >> data.RequestedMaxKeepAliveCount;
-        *this >> data.MaxNotificationsPerPublish;
-        *this >> data.PublishingEnabled;
-        *this >> data.Priority;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSubscriptionParameters>(CreateSubscriptionParameters & data)
+{
+  *this >> data.RequestedPublishingInterval;
+  *this >> data.RequestedLifetimeCount;
+  *this >> data.RequestedMaxKeepAliveCount;
+  *this >> data.MaxNotificationsPerPublish;
+  *this >> data.PublishingEnabled;
+  *this >> data.Priority;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionRequest>(CreateSubscriptionRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSubscriptionRequest>(CreateSubscriptionRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<SubscriptionData>(SubscriptionData& data)
-    {
-        *this >> data.SubscriptionId;
-        *this >> data.RevisedPublishingInterval;
-        *this >> data.RevisedLifetimeCount;
-        *this >> data.RevisedMaxKeepAliveCount;
-    }
+template<>
+void DataDeserializer::Deserialize<SubscriptionData>(SubscriptionData & data)
+{
+  *this >> data.SubscriptionId;
+  *this >> data.RevisedPublishingInterval;
+  *this >> data.RevisedLifetimeCount;
+  *this >> data.RevisedMaxKeepAliveCount;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<CreateSubscriptionResponse>(CreateSubscriptionResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Data;
-    }
+template<>
+void DataDeserializer::Deserialize<CreateSubscriptionResponse>(CreateSubscriptionResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Data;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ModifySubscriptionParameters>(ModifySubscriptionParameters& data)
-    {
-        *this >> data.SubscriptionId;
-        *this >> data.RequestedPublishingInterval;
-        *this >> data.RequestedLifetimeCount;
-        *this >> data.RequestedMaxKeepAliveCount;
-        *this >> data.MaxNotificationsPerPublish;
-        *this >> data.Priority;
-    }
+template<>
+void DataDeserializer::Deserialize<ModifySubscriptionParameters>(ModifySubscriptionParameters & data)
+{
+  *this >> data.SubscriptionId;
+  *this >> data.RequestedPublishingInterval;
+  *this >> data.RequestedLifetimeCount;
+  *this >> data.RequestedMaxKeepAliveCount;
+  *this >> data.MaxNotificationsPerPublish;
+  *this >> data.Priority;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ModifySubscriptionRequest>(ModifySubscriptionRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<ModifySubscriptionRequest>(ModifySubscriptionRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ModifySubscriptionResult>(ModifySubscriptionResult& data)
-    {
-        *this >> data.RevisedPublishingInterval;
-        *this >> data.RevisedLifetimeCount;
-        *this >> data.RevisedMaxKeepAliveCount;
-    }
+template<>
+void DataDeserializer::Deserialize<ModifySubscriptionResult>(ModifySubscriptionResult & data)
+{
+  *this >> data.RevisedPublishingInterval;
+  *this >> data.RevisedLifetimeCount;
+  *this >> data.RevisedMaxKeepAliveCount;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<ModifySubscriptionResponse>(ModifySubscriptionResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<ModifySubscriptionResponse>(ModifySubscriptionResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PublishingModeParameters>(PublishingModeParameters& data)
-    {
-        *this >> data.PublishingEnabled;
-        DeserializeContainer(*this, data.SubscriptionIds);
-    }
+template<>
+void DataDeserializer::Deserialize<PublishingModeParameters>(PublishingModeParameters & data)
+{
+  *this >> data.PublishingEnabled;
+  DeserializeContainer(*this, data.SubscriptionIds);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<SetPublishingModeRequest>(SetPublishingModeRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<SetPublishingModeRequest>(SetPublishingModeRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PublishingModeResult>(PublishingModeResult& data)
-    {
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<PublishingModeResult>(PublishingModeResult & data)
+{
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<SetPublishingModeResponse>(SetPublishingModeResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Result;
-    }
+template<>
+void DataDeserializer::Deserialize<SetPublishingModeResponse>(SetPublishingModeResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Result;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage& data)
-    {
-        *this >> data.SequenceNumber;
-        *this >> data.PublishTime;
-        DeserializeContainer(*this, data.NotificationData);
-    }
+template<>
+void DataDeserializer::Deserialize<NotificationMessage>(NotificationMessage & data)
+{
+  *this >> data.SequenceNumber;
+  *this >> data.PublishTime;
+  DeserializeContainer(*this, data.NotificationData);
+}
 
 
 /*  DISABLED
@@ -3232,68 +3233,68 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement& data)
-    {
-        *this >> data.SubscriptionId;
-        *this >> data.SequenceNumber;
-    }
+template<>
+void DataDeserializer::Deserialize<SubscriptionAcknowledgement>(SubscriptionAcknowledgement & data)
+{
+  *this >> data.SubscriptionId;
+  *this >> data.SequenceNumber;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PublishRequest>(PublishRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.SubscriptionAcknowledgements);
-    }
+template<>
+void DataDeserializer::Deserialize<PublishRequest>(PublishRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.SubscriptionAcknowledgements);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PublishResult>(PublishResult& data)
-    {
-        *this >> data.SubscriptionId;
-        DeserializeContainer(*this, data.AvailableSequenceNumbers);
-        *this >> data.MoreNotifications;
-        *this >> data.NotificationMessage;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<PublishResult>(PublishResult & data)
+{
+  *this >> data.SubscriptionId;
+  DeserializeContainer(*this, data.AvailableSequenceNumbers);
+  *this >> data.MoreNotifications;
+  *this >> data.NotificationMessage;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<PublishResponse>(PublishResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<PublishResponse>(PublishResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters& data)
-    {
-        *this >> data.SubscriptionId;
-        *this >> data.RetransmitSequenceNumber;
-    }
+template<>
+void DataDeserializer::Deserialize<RepublishParameters>(RepublishParameters & data)
+{
+  *this >> data.SubscriptionId;
+  *this >> data.RetransmitSequenceNumber;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.Parameters;
-    }
+template<>
+void DataDeserializer::Deserialize<RepublishRequest>(RepublishRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.Parameters;
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        *this >> data.NotificationMessage;
-    }
+template<>
+void DataDeserializer::Deserialize<RepublishResponse>(RepublishResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  *this >> data.NotificationMessage;
+}
 
 
 /*  DISABLED
@@ -3353,23 +3354,23 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteSubscriptionsRequest>(DeleteSubscriptionsRequest& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.SubscriptionIds);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteSubscriptionsRequest>(DeleteSubscriptionsRequest & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.SubscriptionIds);
+}
 
 
-    template<>
-    void DataDeserializer::Deserialize<DeleteSubscriptionsResponse>(DeleteSubscriptionsResponse& data)
-    {
-        *this >> data.TypeId;
-        *this >> data.Header;
-        DeserializeContainer(*this, data.Results);
-        DeserializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataDeserializer::Deserialize<DeleteSubscriptionsResponse>(DeleteSubscriptionsResponse & data)
+{
+  *this >> data.TypeId;
+  *this >> data.Header;
+  DeserializeContainer(*this, data.Results);
+  DeserializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -3885,16 +3886,16 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataDeserializer::Deserialize<Annotation>(Annotation& data)
-    {
-        *this >> data.Message;
-        *this >> data.UserName;
-        *this >> data.AnnotationTime;
-    }
+template<>
+void DataDeserializer::Deserialize<Annotation>(Annotation & data)
+{
+  *this >> data.Message;
+  *this >> data.UserName;
+  *this >> data.AnnotationTime;
+}
 
 
-   }
+}
 
 } // namespace
-    
+

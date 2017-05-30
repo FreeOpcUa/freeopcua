@@ -18,16 +18,16 @@
 
 namespace OpcUa
 {
-  namespace Test
-  {
+namespace Test
+{
 
-    inline void RegisterAddressSpace(Common::AddonsManager& addons)
-    {
-      Common::AddonInformation config = Server::CreateAddressSpaceAddon();
-      addons.Register(config);
-    }
+inline void RegisterAddressSpace(Common::AddonsManager & addons)
+{
+  Common::AddonInformation config = Server::CreateAddressSpaceAddon();
+  addons.Register(config);
+}
 
-  }
+}
 }
 
 

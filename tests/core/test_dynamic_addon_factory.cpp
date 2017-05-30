@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -19,7 +19,7 @@
 #define DYNAMIC_ADDON_PATH "./libtest_dynamic_addon.so"
 #endif
 
-const char* modulePath = DYNAMIC_ADDON_PATH;
+const char * modulePath = DYNAMIC_ADDON_PATH;
 
 TEST(DynamicAddonFactory, CanCreateAddons)
 {

@@ -33,47 +33,47 @@
 
 namespace OpcUa
 {
-  namespace Internal
-  {
+namespace Internal
+{
 
-    class InternalSubscription;
+class InternalSubscription;
 
-    typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
-
-
-    class SubscriptionServiceInternal : public Server::SubscriptionService
-    {
-      public:
-        SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service& io, bool debug);
-
-       ~SubscriptionServiceInternal();
-
-        virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions);
-        virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters& parameters);
-        virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
-        virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& params);
-        virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
-        virtual void Publish(const PublishRequest& request);
-        virtual RepublishResponse Republish(const RepublishParameters& request);
-
-        void DeleteAllSubscriptions();
-        boost::asio::io_service& GetIOService();
-        bool PopPublishRequest(NodeId node);
-        void TriggerEvent(NodeId node, Event event);
-        Server::AddressSpace& GetAddressSpace();
-
-      private:
-        boost::asio::io_service& io;
-        Server::AddressSpace::SharedPtr AddressSpace;
-        bool Debug;
-        mutable boost::shared_mutex DbMutex;
-        SubscriptionsIdMap SubscriptionsMap; // Map SubscptioinId, SubscriptionData
-        uint32_t LastSubscriptionId = 2;
-        std::map<NodeId, uint32_t> PublishRequestQueues;
-    };
+typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> SubscriptionsIdMap; // Map SubscptioinId, SubscriptionData
 
 
-  }
+class SubscriptionServiceInternal : public Server::SubscriptionService
+{
+public:
+  SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & io, bool debug);
+
+  ~SubscriptionServiceInternal();
+
+  virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t> & subscriptions);
+  virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters & parameters);
+  virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest & request, std::function<void (PublishResult)> callback);
+  virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters & params);
+  virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters & params);
+  virtual void Publish(const PublishRequest & request);
+  virtual RepublishResponse Republish(const RepublishParameters & request);
+
+  void DeleteAllSubscriptions();
+  boost::asio::io_service & GetIOService();
+  bool PopPublishRequest(NodeId node);
+  void TriggerEvent(NodeId node, Event event);
+  Server::AddressSpace & GetAddressSpace();
+
+private:
+  boost::asio::io_service & io;
+  Server::AddressSpace::SharedPtr AddressSpace;
+  bool Debug;
+  mutable boost::shared_mutex DbMutex;
+  SubscriptionsIdMap SubscriptionsMap; // Map SubscptioinId, SubscriptionData
+  uint32_t LastSubscriptionId = 2;
+  std::map<NodeId, uint32_t> PublishRequestQueues;
+};
+
+
+}
 
 }
 

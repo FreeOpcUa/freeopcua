@@ -19,63 +19,63 @@
 
 namespace OpcUa
 {
-  namespace Internal
+namespace Internal
+{
+
+class XmlAddressSpaceLoader : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader)
+
+public:
+  explicit XmlAddressSpaceLoader(OpcUa::NodeManagementServices & registry, bool debug = false);
+
+  void Load(const char * fileName);
+
+  void Load(const std::string & fileName)
   {
+    Load(fileName.c_str());
+  }
 
-    class XmlAddressSpaceLoader : private Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceLoader)
-
-    public:
-      explicit XmlAddressSpaceLoader(OpcUa::NodeManagementServices& registry, bool debug = false);
-
-      void Load(const char* fileName);
-
-      void Load(const std::string& fileName)
-      {
-        Load(fileName.c_str());
-      }
-
-    private:
-      OpcUa::NodeManagementServices& Registry;
-      const bool Debug;
-    };
+private:
+  OpcUa::NodeManagementServices & Registry;
+  const bool Debug;
+};
 
 
-    class XmlAddressSpaceAddon : public OpcUa::Server::XmlAddressSpace
-    {
-    public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon)
+class XmlAddressSpaceAddon : public OpcUa::Server::XmlAddressSpace
+{
+public:
+  DEFINE_CLASS_POINTERS(XmlAddressSpaceAddon)
 
-    public:
-      virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
-      virtual void Stop();
+public:
+  virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params);
+  virtual void Stop();
 
-      virtual void Load(const char* path);
+  virtual void Load(const char * path);
 
-    private:
-      void Load(const char* file, OpcUa::NodeManagementServices& registry);
+private:
+  void Load(const char * file, OpcUa::NodeManagementServices & registry);
 
-    private:
-      NodeManagementServices::SharedPtr Registry;
-    };
+private:
+  NodeManagementServices::SharedPtr Registry;
+};
 
 
-    class XmlAddressSpaceAddonFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(XmlAddressSpaceAddonFactory)
+class XmlAddressSpaceAddonFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(XmlAddressSpaceAddonFactory)
 
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon()
-      {
-        return Common::Addon::UniquePtr(new XmlAddressSpaceAddon());
-      }
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon()
+  {
+    return Common::Addon::UniquePtr(new XmlAddressSpaceAddon());
+  }
+};
 
-    const char XmlAddressSpaceAddonId[] = "xml_address_space_loader";
+const char XmlAddressSpaceAddonId[] = "xml_address_space_loader";
 
-  } // namespace Internal
+} // namespace Internal
 } // namespace OpcUa
 

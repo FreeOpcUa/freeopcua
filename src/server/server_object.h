@@ -26,38 +26,38 @@
 
 namespace boost
 {
-  namespace asio
-  {
-    class io_service;
-  }
+namespace asio
+{
+class io_service;
+}
 }
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    class ServerObject
-    {
-    public:
-      DEFINE_CLASS_POINTERS(ServerObject)
+class ServerObject
+{
+public:
+  DEFINE_CLASS_POINTERS(ServerObject)
 
-    public:
-      ServerObject(Services::SharedPtr services, boost::asio::io_service& io, bool debug);
-      ~ServerObject();
+public:
+  ServerObject(Services::SharedPtr services, boost::asio::io_service & io, bool debug);
+  ~ServerObject();
 
-    private:
-      Model::Object CreateServerObject(const Services::SharedPtr& services) const;
-      void UpdateTime();
+private:
+  Model::Object CreateServerObject(const Services::SharedPtr & services) const;
+  void UpdateTime();
 
-    private:
-      Services::SharedPtr Server;
-      boost::asio::io_service& Io;
-      bool Debug = false;
-      Model::Object Instance;
-      Model::Variable ServerTime;
-      PeriodicTimer Timer;
-    };
+private:
+  Services::SharedPtr Server;
+  boost::asio::io_service & Io;
+  bool Debug = false;
+  Model::Object Instance;
+  Model::Variable ServerTime;
+  PeriodicTimer Timer;
+};
 
-  }
+}
 }

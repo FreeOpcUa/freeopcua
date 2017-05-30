@@ -121,8 +121,9 @@ docker build .
 C++ style
 * 2 spaces not tab
 * CamelCase
-* local variables start with small letter
-* gobal/member variables starts with capital letters. 
+* Local variables start with small letter
+* Global/member variables starts with capital letters
+* Use provided automatic formatter ([Artistic Style](http://astyle.sourceforge.net)) by invoking ``./restyle``
 
 python code and API should follows PEP8 (many places should be fixed)
 
