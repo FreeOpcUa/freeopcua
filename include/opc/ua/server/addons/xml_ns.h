@@ -15,17 +15,17 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char XmlAddressSpaceAddonId[] = "xml_address_space";
+const char XmlAddressSpaceAddonId[] = "xml_address_space";
 
-    class XmlAddressSpace : public Common::Addon
-    {
-    public:
-      virtual void Load(const char* path) = 0;
-    };
+class XmlAddressSpace : public Common::Addon
+{
+public:
+  virtual void Load(const char * path) = 0;
+};
 
-  }
+}
 }
 

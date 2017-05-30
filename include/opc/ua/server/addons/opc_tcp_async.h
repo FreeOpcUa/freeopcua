@@ -25,20 +25,20 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char AsyncOpcTcpAddonId[] = "opc_tcp_async";
+const char AsyncOpcTcpAddonId[] = "opc_tcp_async";
 
-    class AsyncOpcTcpAddonFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AsyncOpcTcpAddonFactory)
+class AsyncOpcTcpAddonFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(AsyncOpcTcpAddonFactory)
 
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon() override;
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon() override;
+};
 
-  }
+}
 }
 

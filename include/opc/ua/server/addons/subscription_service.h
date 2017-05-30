@@ -14,16 +14,16 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char SubscriptionServiceAddonId[] = "subscriptions";
+const char SubscriptionServiceAddonId[] = "subscriptions";
 
-    class SubscriptionServiceAddonFactory : public Common::AddonFactory
-    {
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon();
-    };
+class SubscriptionServiceAddonFactory : public Common::AddonFactory
+{
+public:
+  virtual Common::Addon::UniquePtr CreateAddon();
+};
 
-  }
+}
 }

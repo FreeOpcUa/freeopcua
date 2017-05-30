@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,7 +18,7 @@ Common::Error::Error()
 {
 }
 
-Common::Error::Error(unsigned lineNum, const char* fileName, unsigned errorCode, const char* msg)
+Common::Error::Error(unsigned lineNum, const char * fileName, unsigned errorCode, const char * msg)
   : LineNum(lineNum)
   , FileName(fileName)
   , Code(errorCode)
@@ -50,7 +50,7 @@ std::string Common::Error::GetMessage() const
   return Message;
 }
 
-Common::Error& Common::Error::AddError(const Error& subError)
+Common::Error & Common::Error::AddError(const Error & subError)
 {
   SubErrors.push_back(subError);
   return *this;
@@ -64,14 +64,15 @@ std::string Common::Error::GetFullMessage() const
   std::vector<Common::Error>::const_iterator it = SubErrors.begin();
 
   for (; it != SubErrors.end(); ++ it)
-  {
-    msg += "\n";
-    msg += it->GetMessage();
-  }
+    {
+      msg += "\n";
+      msg += it->GetMessage();
+    }
+
   return msg;
 }
 
-const char* Common::Error::what() const throw()
+const char * Common::Error::what() const throw()
 {
   return  Message.c_str();
 }

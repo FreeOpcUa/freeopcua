@@ -40,8 +40,9 @@ TEST_F(ViewSerialization, BrowseDirection)
 
   GetStream() << BrowseDirection::Both << flush;
 
-  const std::vector<char> expectedData = {
-  2,0,0,0
+  const std::vector<char> expectedData =
+  {
+    2, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -53,8 +54,9 @@ TEST_F(ViewDeserialization, BrowseDirection)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  2,0,0,0
+  const std::vector<char> expectedData =
+  {
+    2, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -84,10 +86,11 @@ TEST_F(ViewSerialization, ViewDescription)
 
   GetStream() << desc << flush;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  2,0,0,0,0,0,0,0,
-  3,0,0,0
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -100,10 +103,11 @@ TEST_F(ViewDeserialization, ViewDescription)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  2,0,0,0,0,0,0,0,
-  3,0,0,0
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -140,13 +144,14 @@ TEST_F(ViewSerialization, BrowseDescription)
 
   GetStream() << desc << flush;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  1,0,0,0,
-  0, 2,
-  1,
-  2,0,0,0,
-  4,0,0,0
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    1, 0, 0, 0,
+    0, 2,
+    1,
+    2, 0, 0, 0,
+    4, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -159,13 +164,14 @@ TEST_F(ViewDeserialization, BrowseDescription)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  1,0,0,0,
-  0, 2,
-  1,
-  2,0,0,0,
-  4,0,0,0
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    1, 0, 0, 0,
+    0, 2,
+    1,
+    2, 0, 0, 0,
+    4, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -203,7 +209,7 @@ OpcUa::BrowseDescription CreateBrowseDescription()
   return desc;
 }
 
-bool operator==(const OpcUa::BrowseDescription& lhs, const OpcUa::BrowseDescription& rhs)
+bool operator==(const OpcUa::BrowseDescription & lhs, const OpcUa::BrowseDescription & rhs)
 {
   return
     rhs.NodeToBrowse.Encoding == lhs.NodeToBrowse.Encoding &&
@@ -242,20 +248,21 @@ TEST_F(ViewSerialization, BrowseRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x0f, 0x2, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x0f, 0x2, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
 
-  0, 1,  // View.Id
-  2,0,0,0,0,0,0,0, // View.TimeStamp
-  3,0,0,0, // View.Version
+    0, 1,  // View.Id
+    2, 0, 0, 0, 0, 0, 0, 0, // View.TimeStamp
+    3, 0, 0, 0, // View.Version
 
-  4,0,0,0, // MaxReferenciesPerNode
+    4, 0, 0, 0, // MaxReferenciesPerNode
 
-  2,0,0,0, // Count of Nodes
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0, // Node 1
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0, // Node 2
+    2, 0, 0, 0, // Count of Nodes
+    0, 1, 1, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 4, 0, 0, 0, // Node 1
+    0, 1, 1, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 4, 0, 0, 0, // Node 2
 
 
   };
@@ -270,20 +277,21 @@ TEST_F(ViewDeserialization, BrowseRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x0f, 0x2, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x0f, 0x2, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
 
-  0, 1,
-  2,0,0,0,0,0,0,0,
-  3,0,0,0,
+    0, 1,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0,
 
-  4,0,0,0,
+    4, 0, 0, 0,
 
-  2,0,0,0,
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
-  0,1, 1,0,0,0, 0,2, 1, 2,0,0,0, 4,0,0,0,
+    2, 0, 0, 0,
+    0, 1, 1, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 4, 0, 0, 0,
+    0, 1, 1, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 4, 0, 0, 0,
 
   };
 
@@ -348,16 +356,17 @@ TEST_F(ViewSerialization, ReferenceDescription)
 
   GetStream() << desc << flush;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -370,16 +379,17 @@ TEST_F(ViewDeserialization, ReferenceDescription)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5
   };
 
   GetChannel().SetData(expectedData);
@@ -449,25 +459,26 @@ TEST_F(ViewSerialization, BrowseResult)
 
   BrowseResult result;
   result.Status = static_cast<OpcUa::StatusCode>(1);
-  result.ContinuationPoint = {2,3,4,5};
+  result.ContinuationPoint = {2, 3, 4, 5};
   result.Referencies.push_back(CreateReferenceDescription());
 
   GetStream() << result << flush;
 
-  const std::vector<char> expectedData = {
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
 
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(result));
@@ -479,20 +490,21 @@ TEST_F(ViewDeserialization, BrowseResult)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
 
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5
   };
 
   GetChannel().SetData(expectedData);
@@ -501,11 +513,11 @@ TEST_F(ViewDeserialization, BrowseResult)
   GetStream() >> result;
 
   ASSERT_EQ(result.Status, static_cast<OpcUa::StatusCode>(1));
-  std::vector<uint8_t> cont = {2,3,4,5};
+  std::vector<uint8_t> cont = {2, 3, 4, 5};
   ASSERT_EQ(result.ContinuationPoint, cont);
   ASSERT_FALSE(result.Referencies.empty());
 
-  const ReferenceDescription& desc = result.Referencies[0];
+  const ReferenceDescription & desc = result.Referencies[0];
   ASSERT_EQ(desc.ReferenceTypeId.Encoding, EV_TWO_BYTE);
   ASSERT_EQ(desc.ReferenceTypeId.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.IsForward, true);
@@ -529,7 +541,7 @@ OpcUa::BrowseResult CreateBrowseResult()
 {
   OpcUa::BrowseResult result;
   result.Status = static_cast<OpcUa::StatusCode>(1);
-  result.ContinuationPoint = {2,3,4,5};
+  result.ContinuationPoint = {2, 3, 4, 5};
   result.Referencies.push_back(CreateReferenceDescription());
   return result;
 }
@@ -560,31 +572,32 @@ TEST_F(ViewSerialization, BrowseResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x12, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x12, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0,
+    // BrowseResults
+    1, 0, 0, 0,
 
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5,
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5,
 
-  2,0,0,0,
-  // Diagnostics
-  DIM_LOCALIZED_TEXT, 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+    2, 0, 0, 0,
+    // Diagnostics
+    DIM_LOCALIZED_TEXT, 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -596,31 +609,32 @@ TEST_F(ViewDeserialization, BrowseResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x12, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x12, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0,
+    // BrowseResults
+    1, 0, 0, 0,
 
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5,
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5,
 
-  2,0,0,0,
-  // Diagnostics
-  DIM_LOCALIZED_TEXT, 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+    2, 0, 0, 0,
+    // Diagnostics
+    DIM_LOCALIZED_TEXT, 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
 
@@ -658,17 +672,18 @@ TEST_F(ViewSerialization, BrowseNextRequest)
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   request.ReleaseContinuationPoints = true;
-  request.ContinuationPoints.push_back(std::vector<uint8_t>{1});
+  request.ContinuationPoints.push_back(std::vector<uint8_t> {1});
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x15, 0x2, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x15, 0x2, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1,
-  1,0,0,0, 1,0,0,0, 1
+    1,
+    1, 0, 0, 0, 1, 0, 0, 0, 1
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -681,13 +696,14 @@ TEST_F(ViewDeserialization, BrowseNextRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x15, 0x2, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x15, 0x2, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1,
-  1,0,0,0, 1,0,0,0, 1
+    1,
+    1, 0, 0, 0, 1, 0, 0, 0, 1
   };
 
   GetChannel().SetData(expectedData);
@@ -702,7 +718,7 @@ TEST_F(ViewDeserialization, BrowseNextRequest)
 
   ASSERT_EQ(request.ReleaseContinuationPoints, true);
   ASSERT_TRUE(!request.ContinuationPoints.empty());
-  ASSERT_EQ(request.ContinuationPoints[0], std::vector<uint8_t>(1,1));
+  ASSERT_EQ(request.ContinuationPoints[0], std::vector<uint8_t>(1, 1));
 }
 
 //-------------------------------------------------------
@@ -733,31 +749,32 @@ TEST_F(ViewSerialization, BrowseNextResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x18, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x18, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0,
+    // BrowseResults
+    1, 0, 0, 0,
 
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5,
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5,
 
-  1,0,0,0,
-  // Diagnostics
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+    1, 0, 0, 0,
+    // Diagnostics
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -769,31 +786,32 @@ TEST_F(ViewDeserialization, BrowseNextResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x18, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x18, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0,
+    // BrowseResults
+    1, 0, 0, 0,
 
-  1,0,0,0,
-  4,0,0,0, 2,3,4,5,
-  1,0,0,0,
-  0, 1,
-  1,
-  0, 2,
-  3,0, 4,0,0,0, 'n','a','m','e',
-  3,
-  3,0,0,0, 'l','o','c',
-  4,0,0,0, 't','e','x','t',
-  4,0,0,0,
-  0, 5,
+    1, 0, 0, 0,
+    4, 0, 0, 0, 2, 3, 4, 5,
+    1, 0, 0, 0,
+    0, 1,
+    1,
+    0, 2,
+    3, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e',
+    3,
+    3, 0, 0, 0, 'l', 'o', 'c',
+    4, 0, 0, 0, 't', 'e', 'x', 't',
+    4, 0, 0, 0,
+    0, 5,
 
-  1,0,0,0,
-  // Diagnostics
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+    1, 0, 0, 0,
+    // Diagnostics
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
 
@@ -829,9 +847,10 @@ TEST_F(ViewSerialization, BrowsePathTarget)
 
   GetStream() << target << flush;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    2, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -844,9 +863,10 @@ TEST_F(ViewDeserialization, BrowsePathTarget)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0, 1,
-  2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    0, 1,
+    2, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -881,11 +901,12 @@ TEST_F(ViewSerialization, BrowsePathResult)
 
   GetStream() << result << flush;
 
-  const std::vector<char> expectedData = {
-  3,0,0,0,
-  1,0,0,0,
-  0, 1,
-  2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0,
+    1, 0, 0, 0,
+    0, 1,
+    2, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -898,11 +919,12 @@ TEST_F(ViewDeserialization, BrowsePathResult)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  3,0,0,0,
-  1,0,0,0,
-  0, 1,
-  2,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0,
+    1, 0, 0, 0,
+    0, 1,
+    2, 0, 0, 0,
   };
 
   GetChannel().SetData(expectedData);
@@ -942,14 +964,15 @@ TEST_F(ViewSerialization, TranslateBrowsePathsResult)
 
   GetStream() << translateResult << flush;
 
-  const std::vector<char> expectedData = {
-  1,0,0,0, // Count of results
-  3,0,0,0, // StatusCode
-  1,0,0,0, // TargetsCount
-  0, 1,    // TargetNode
-  2,0,0,0, // Index
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // Count of results
+    3, 0, 0, 0, // StatusCode
+    1, 0, 0, 0, // TargetsCount
+    0, 1,    // TargetNode
+    2, 0, 0, 0, // Index
 
-  0,0,0,0, // Count of Diagnostics
+    0, 0, 0, 0, // Count of Diagnostics
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -961,14 +984,15 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsResult)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1,0,0,0, // Count of results
-  3,0,0,0, // StatusCode
-  1,0,0,0, // TargetsCount
-  0, 1,    // TargetNode
-  2,0,0,0, // Index
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0, // Count of results
+    3, 0, 0, 0, // StatusCode
+    1, 0, 0, 0, // TargetsCount
+    0, 1,    // TargetNode
+    2, 0, 0, 0, // Index
 
-  0,0,0,0, // Count of Diagnostics
+    0, 0, 0, 0, // Count of Diagnostics
   };
 
   GetChannel().SetData(expectedData);
@@ -1018,22 +1042,23 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIdsResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x2D, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x2D, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0, // Count of results
-  3,0,0,0, // StatusCode
-  1,0,0,0, // TargetsCount
-  0, 1,    // TargetNode
-  2,0,0,0, // Index
+    // BrowseResults
+    1, 0, 0, 0, // Count of results
+    3, 0, 0, 0, // StatusCode
+    1, 0, 0, 0, // TargetsCount
+    0, 1,    // TargetNode
+    2, 0, 0, 0, // Index
 
-  // Diagnostics
-  1,0,0,0, // Count
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
+    // Diagnostics
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd', \
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -1045,22 +1070,23 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIdsResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x2D, 0x2, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x2D, 0x2, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  // BrowseResults
-  1,0,0,0, // Count of results
-  3,0,0,0, // StatusCode
-  1,0,0,0, // TargetsCount
-  0, 1,    // TargetNode
-  2,0,0,0, // Index
+    // BrowseResults
+    1, 0, 0, 0, // Count of results
+    3, 0, 0, 0, // StatusCode
+    1, 0, 0, 0, // TargetsCount
+    0, 1,    // TargetNode
+    2, 0, 0, 0, // Index
 
-  // Diagnostics
-  1,0,0,0, // Count
-  static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4,0,0,0, \
-  DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd',
+    // Diagnostics
+    1, 0, 0, 0, // Count
+    static_cast<DiagnosticInfoMask>(DIM_LOCALIZED_TEXT | DIM_INNER_DIAGNOSTIC_INFO), 4, 0, 0, 0, \
+    DIM_ADDITIONAL_INFO, 3, 0, 0, 0, 'a', 'd', 'd',
   };
 
   GetChannel().SetData(expectedData);
@@ -1109,18 +1135,19 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIdsRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x2A, 0x2, // TypeId
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
-    1,0,0,0, // Number of BrowsePaths
-    0,2,
-    1,0,0,0, // Number of Elements
-    0,1,     // Reference Type (Two Byte Node Id)
+    1, 0, 0, 0, // Number of BrowsePaths
+    0, 2,
+    1, 0, 0, 0, // Number of Elements
+    0, 1,    // Reference Type (Two Byte Node Id)
     1,       // IsInverse
     1,       // IncludeSubTypes
-    2,0, 4,0,0,0, 'n','a','m','e', // TargetName
+    2, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e', // TargetName
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) <<
@@ -1134,18 +1161,19 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIdsRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     1, 0, (char)0x2A, 0x2, // TypeId
     // RequestHeader
     TEST_REQUEST_HEADER_BINARY_DATA,
 
-    1,0,0,0, // Number of BrowsePaths
-    0,2,     // Starting node
-    1,0,0,0, // Number of Elements
-    0,1,     // Reference Type (Two Byte Node Id)
+    1, 0, 0, 0, // Number of BrowsePaths
+    0, 2,    // Starting node
+    1, 0, 0, 0, // Number of Elements
+    0, 1,    // Reference Type (Two Byte Node Id)
     1,       // IsInverse
     1,       // IncludeSubTypes
-    2,0, 4,0,0,0, 'n','a','m','e', // TargetName
+    2, 0, 4, 0, 0, 0, 'n', 'a', 'm', 'e', // TargetName
   };
 
   GetChannel().SetData(expectedData);
@@ -1160,11 +1188,11 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIdsRequest)
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Parameters.BrowsePaths.size(), 1);
-  const BrowsePath& browsePath = request.Parameters.BrowsePaths[0];
+  const BrowsePath & browsePath = request.Parameters.BrowsePaths[0];
   ASSERT_EQ(browsePath.StartingNode, OpcUa::TwoByteNodeId(2));
   ASSERT_EQ(browsePath.Path.Elements.size(), 1);
 
-  const RelativePathElement& element = browsePath.Path.Elements[0];
+  const RelativePathElement & element = browsePath.Path.Elements[0];
   ASSERT_TRUE(element.IncludeSubtypes);
   ASSERT_TRUE(element.IsInverse);
   ASSERT_EQ(element.ReferenceTypeId, OpcUa::TwoByteNodeId(1));

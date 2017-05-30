@@ -15,19 +15,19 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char ServicesRegistryAddonId[] = "services_registry";
+const char ServicesRegistryAddonId[] = "services_registry";
 
-    class ServicesRegistryFactory : public Common::AddonFactory
-    {
-    public:
-      DEFINE_CLASS_POINTERS(ServicesRegistryFactory)
+class ServicesRegistryFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(ServicesRegistryFactory)
 
-    public:
-      virtual Common::Addon::UniquePtr CreateAddon();
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon();
+};
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

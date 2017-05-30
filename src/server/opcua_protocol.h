@@ -20,19 +20,19 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    class OpcUaProtocol : public Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(OpcUaProtocol)
+class OpcUaProtocol : public Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(OpcUaProtocol)
 
-      virtual void StartEndpoints(const std::vector<EndpointDescription>& Endpoints, Services::SharedPtr server) = 0;
-      virtual void StopEndpoints() = 0;
-    };
+  virtual void StartEndpoints(const std::vector<EndpointDescription> & Endpoints, Services::SharedPtr server) = 0;
+  virtual void StopEndpoints() = 0;
+};
 
-    OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer& tcpServer, bool debug);
+OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer & tcpServer, bool debug);
 
-  } // namespace UaServer
+} // namespace UaServer
 } // nmespace OpcUa

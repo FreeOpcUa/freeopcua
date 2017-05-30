@@ -28,36 +28,36 @@
 namespace OpcUa
 {
 
-  struct RemoteSessionParameters
-  {
-    ApplicationDescription ClientDescription;
-    std::vector<uint8_t> ClientCertificate;
-    std::string SessionName;
-    std::string ServerURI;
-    std::string EndpointUrl;
-    Duration Timeout;
-  };
+struct RemoteSessionParameters
+{
+  ApplicationDescription ClientDescription;
+  std::vector<uint8_t> ClientCertificate;
+  std::string SessionName;
+  std::string ServerURI;
+  std::string EndpointUrl;
+  Duration Timeout;
+};
 
-  class Services : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(Services)
+class Services : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(Services)
 
-  public:
-    virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters& parameters) = 0;
-    virtual void CloseSecureChannel(uint32_t channelId) = 0;
-    virtual CreateSessionResponse CreateSession(const RemoteSessionParameters& parameters) = 0;
-    virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters &session_parameters) = 0;
-    virtual CloseSessionResponse CloseSession() = 0;
-    virtual void AbortSession() = 0;
-    virtual DeleteNodesResponse DeleteNodes(const std::vector<OpcUa::DeleteNodesItem> &nodesToDelete) = 0;
+public:
+  virtual OpenSecureChannelResponse OpenSecureChannel(const OpenSecureChannelParameters & parameters) = 0;
+  virtual void CloseSecureChannel(uint32_t channelId) = 0;
+  virtual CreateSessionResponse CreateSession(const RemoteSessionParameters & parameters) = 0;
+  virtual ActivateSessionResponse ActivateSession(const ActivateSessionParameters & session_parameters) = 0;
+  virtual CloseSessionResponse CloseSession() = 0;
+  virtual void AbortSession() = 0;
+  virtual DeleteNodesResponse DeleteNodes(const std::vector<OpcUa::DeleteNodesItem> & nodesToDelete) = 0;
 
-    virtual AttributeServices::SharedPtr Attributes() = 0;
-    virtual EndpointServices::SharedPtr Endpoints() = 0;
-    virtual MethodServices::SharedPtr Method() = 0;
-    virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
-    virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
-    virtual ViewServices::SharedPtr Views() = 0;
-  };
+  virtual AttributeServices::SharedPtr Attributes() = 0;
+  virtual EndpointServices::SharedPtr Endpoints() = 0;
+  virtual MethodServices::SharedPtr Method() = 0;
+  virtual NodeManagementServices::SharedPtr NodeManagement() = 0;
+  virtual SubscriptionServices::SharedPtr Subscriptions() = 0;
+  virtual ViewServices::SharedPtr Views() = 0;
+};
 
 }

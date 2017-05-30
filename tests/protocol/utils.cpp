@@ -22,12 +22,12 @@ TEST(DateTime, FixedTimeT_to_DateTime)
   time_t timet03_10_1980 = 321494400;
   unsigned usec = 1;
   const DateTime dateTime_03_10_1980 = DateTime::FromTimeT(timet03_10_1980, usec);
-  ASSERT_EQ(dateTime_03_10_1980, 138495*24*3600LL*10000000LL + 10);
+  ASSERT_EQ(dateTime_03_10_1980, 138495 * 24 * 3600LL * 10000000LL + 10);
 }
 
 TEST(DateTime, FixedDateTime_to_TimeT)
 {
-  const DateTime dateTime_03_10_1980(138495*24*3600LL*10000000LL);
+  const DateTime dateTime_03_10_1980(138495 * 24 * 3600LL * 10000000LL);
   time_t timet_03_10_1980 = DateTime::ToTimeT(dateTime_03_10_1980);
   ASSERT_EQ(timet_03_10_1980, 321494400);
 }
@@ -50,7 +50,7 @@ TEST(DateTime, FromDateTime)
 {
   OpcUa::DateTime t = OpcUa::DateTime::Current();
   const OpcUa::DateTime converted = OpcUa::DateTime::FromTimeT(OpcUa::DateTime::ToTimeT(t));
-  ASSERT_EQ(t/10000000LL*10000000LL, converted);
+  ASSERT_EQ(t / 10000000LL * 10000000LL, converted);
 }
 
 TEST(DateTime, ZeroDateTime_ThrowInvalidArgument)
@@ -63,7 +63,7 @@ TEST(DateTime, ZeroTimeT)
 {
   time_t t = 0;
   const DateTime converted = OpcUa::DateTime::FromTimeT(t);
-  const DateTime expected(134774LL*24*3600*10000000LL);
+  const DateTime expected(134774LL * 24 * 3600 * 10000000LL);
   ASSERT_EQ(converted, expected);
 }
 
@@ -114,14 +114,14 @@ TEST(Guid, InvalidString)
 
 TEST(NodeId, NumericToString)
 {
-  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1, 2);
   std::string strId = OpcUa::ToString(id);
   ASSERT_EQ(strId, "ns=2;i=1;");
 }
 
 TEST(NodeId, NumericFromString)
 {
-  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1, 2);
   OpcUa::NodeId converted = OpcUa::ToNodeId("ns=2;i=1;");
   ASSERT_EQ(expected, converted);
 }
@@ -135,7 +135,7 @@ TEST(NodeId, StringToString)
 
 TEST(NodeId, StringFromString)
 {
-  OpcUa::NodeId expected = OpcUa::StringNodeId("str",2);
+  OpcUa::NodeId expected = OpcUa::StringNodeId("str", 2);
   OpcUa::NodeId converted = OpcUa::ToNodeId("ns=2;s=str;");
   ASSERT_EQ(expected, converted);
 }
@@ -175,7 +175,7 @@ TEST(NodeId, GuidFromString)
   guid.Data4[6] = 0x0F;
   guid.Data4[7] = 0x10;
 
-  OpcUa::NodeId expected = OpcUa::GuidNodeId(guid,2);
+  OpcUa::NodeId expected = OpcUa::GuidNodeId(guid, 2);
   OpcUa::NodeId converted = OpcUa::ToNodeId("ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
   ASSERT_EQ(expected.Encoding, converted.Encoding);
 
@@ -185,7 +185,7 @@ TEST(NodeId, GuidFromString)
 
 TEST(NodeId, NamespaceUriToString)
 {
-  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1, 2);
   id.SetNamespaceURI("uri");
 
   std::string strId = OpcUa::ToString(id);
@@ -194,7 +194,7 @@ TEST(NodeId, NamespaceUriToString)
 
 TEST(NodeId, NamespaceUriFromString)
 {
-  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1, 2);
   expected.SetNamespaceURI("uri");
 
   OpcUa::NodeId converted = OpcUa::ToNodeId("nsu=uri;ns=2;i=1;");
@@ -203,7 +203,7 @@ TEST(NodeId, NamespaceUriFromString)
 
 TEST(NodeId, ServerIndexToString)
 {
-  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1, 2);
   id.SetServerIndex(3);
 
   std::string strId = OpcUa::ToString(id);
@@ -212,7 +212,7 @@ TEST(NodeId, ServerIndexToString)
 
 TEST(NodeId, ServerIndexFromString)
 {
-  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1, 2);
   expected.SetServerIndex(3);
 
   OpcUa::NodeId converted = OpcUa::ToNodeId("srv=3;ns=2;i=1;");
@@ -221,7 +221,7 @@ TEST(NodeId, ServerIndexFromString)
 
 TEST(NodeId, ServerIndexAndNamespaceUriToString)
 {
-  OpcUa::NodeId id = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId id = OpcUa::NumericNodeId(1, 2);
   id.SetServerIndex(3);
   id.SetNamespaceURI("uri");
 
@@ -231,7 +231,7 @@ TEST(NodeId, ServerIndexAndNamespaceUriToString)
 
 TEST(NodeId, ServerIndexAndNamespaceUriString)
 {
-  OpcUa::NodeId expected = OpcUa::NumericNodeId(1,2);
+  OpcUa::NodeId expected = OpcUa::NumericNodeId(1, 2);
   expected.SetServerIndex(3);
   expected.SetNamespaceURI("uri");
 

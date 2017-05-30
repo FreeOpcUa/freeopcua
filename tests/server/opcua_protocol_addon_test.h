@@ -46,8 +46,8 @@
 
 namespace OpcUa
 {
-  namespace Test
-  {
+namespace Test
+{
 /*
     void RegisterOpcTcpAddon(Common::AddonsManager& addons)
     {
@@ -79,5 +79,5 @@ namespace OpcUa
       addons.Register(opcTcp);
     }
 */
-  }
+}
 }

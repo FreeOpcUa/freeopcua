@@ -15,152 +15,152 @@
 
 namespace OpcUa
 {
-  /// Moved from session.h
-  struct UserIdentifyToken
+/// Moved from session.h
+struct UserIdentifyToken
+{
+  ExtensionObjectHeader Header;
+  std::vector<uint8_t> PolicyId;
+
+  struct UserNameStruct
   {
-    ExtensionObjectHeader Header;
-    std::vector<uint8_t> PolicyId;
+    std::string UserName;
+    std::string Password;
+    std::string EncryptionAlgorithm;
+  } UserName;
 
-    struct UserNameStruct
-    {
-      std::string UserName;
-      std::string Password;
-      std::string EncryptionAlgorithm;
-    } UserName;
+  UserIdentifyToken();
 
-    UserIdentifyToken();
+  UserTokenType type() const;
+  void setUser(const std::string & user, const std::string & password);
+  void setPolicyId(const std::string & id);
+};
 
-    UserTokenType type() const;
-    void setUser(const std::string &user, const std::string &password);
-    void setPolicyId(const std::string &id);
-  };
+// Moved from subscriptions.h
+struct StatusChangeNotification
+{
+  StatusCode Status;
+  DiagnosticInfo Diagnostic;
+};
 
-  // Moved from subscriptions.h
-  struct StatusChangeNotification
-  {
-    StatusCode Status;
-    DiagnosticInfo Diagnostic;
-  };
+struct EventFieldList
+{
+  IntegerId ClientHandle;
+  std::vector<Variant> EventFields;
+};
 
-  struct EventFieldList
-  {
-    IntegerId ClientHandle;
-    std::vector<Variant> EventFields;
-  };
+struct MonitoredItems
+{
+  IntegerId ClientHandle;
+  DataValue Value;
+};
 
-  struct MonitoredItems
-  {
-    IntegerId ClientHandle;
-    DataValue Value;
-  };
+struct EventNotificationList
+{
+  std::vector<EventFieldList> Events;
+};
 
-  struct EventNotificationList
-  {
-    std::vector<EventFieldList> Events;
-  };
+struct DataChangeNotification
+{
+  std::vector<MonitoredItems> Notification;
+  DiagnosticInfoList Diagnostic;
+};
 
-  struct DataChangeNotification
-  {
-    std::vector<MonitoredItems> Notification;
-    DiagnosticInfoList Diagnostic;
-  };
+struct NotificationData
+{
+  ExtensionObjectHeader Header;
+  DataChangeNotification DataChange;
+  EventNotificationList Events;
+  StatusChangeNotification StatusChange;
 
-  struct NotificationData
-  {
-    ExtensionObjectHeader Header;
-    DataChangeNotification DataChange;
-    EventNotificationList Events;
-    StatusChangeNotification StatusChange;
-
-    NotificationData(){}
-    NotificationData(DataChangeNotification notification);
-    NotificationData(EventNotificationList notification);
-    NotificationData(StatusChangeNotification notification);
-  };
+  NotificationData() {}
+  NotificationData(DataChangeNotification notification);
+  NotificationData(EventNotificationList notification);
+  NotificationData(StatusChangeNotification notification);
+};
 
 
-  // moved from monitored_items.h
+// moved from monitored_items.h
 
-  struct DataChangeFilter
-  {
-    DataChangeTrigger Trigger;
-    DeadbandType Deadband;
-    double DeadbandValue;
-  };
+struct DataChangeFilter
+{
+  DataChangeTrigger Trigger;
+  DeadbandType Deadband;
+  double DeadbandValue;
+};
 
-  struct SimpleAttributeOperand
-  {
-    NodeId TypeId;
-    std::vector<QualifiedName> BrowsePath;
-    AttributeId Attribute;
-    std::vector<std::string> IndexRange;
-  };
+struct SimpleAttributeOperand
+{
+  NodeId TypeId;
+  std::vector<QualifiedName> BrowsePath;
+  AttributeId Attribute;
+  std::vector<std::string> IndexRange;
+};
 
-  struct ElementOperand
-  {
-    uint32_t Index;
-  };
+struct ElementOperand
+{
+  uint32_t Index;
+};
 
-  struct LiteralOperand
-  {
-    // BaseDataType Value; // TODO
-    Variant Value;
-  };
+struct LiteralOperand
+{
+  // BaseDataType Value; // TODO
+  Variant Value;
+};
 
-  struct AttributeOperand
-  {
-    NodeId Node;
-    std::string Alias;
-    RelativePath Path;
-    IntegerId AttributeId;
-    std::vector<std::string> IndexRange;
-  };
+struct AttributeOperand
+{
+  NodeId Node;
+  std::string Alias;
+  RelativePath Path;
+  IntegerId AttributeId;
+  std::vector<std::string> IndexRange;
+};
 
-  struct FilterOperand
-  {
-    ExtensionObjectHeader Header;
-    ElementOperand Element;
-    LiteralOperand Literal;
-    AttributeOperand Attribute;
-    SimpleAttributeOperand SimpleAttribute;
-  };
+struct FilterOperand
+{
+  ExtensionObjectHeader Header;
+  ElementOperand Element;
+  LiteralOperand Literal;
+  AttributeOperand Attribute;
+  SimpleAttributeOperand SimpleAttribute;
+};
 
-  struct ContentFilterElement
-  {
-    FilterOperator Operator;
-    std::vector<FilterOperand> FilterOperands;
-  };
+struct ContentFilterElement
+{
+  FilterOperator Operator;
+  std::vector<FilterOperand> FilterOperands;
+};
 
-  struct EventFilter
-  {
-    std::vector<SimpleAttributeOperand> SelectClauses;
-    std::vector<ContentFilterElement> WhereClause;
-  };
+struct EventFilter
+{
+  std::vector<SimpleAttributeOperand> SelectClauses;
+  std::vector<ContentFilterElement> WhereClause;
+};
 
-  struct AggregateFilter
-  {
-    DateTime StartTime;
-    NodeId AggregateType;
-    Duration ProcessingInterval;
-    //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
-    bool UseServerCapabilitiesDefaults;
-    bool TreatUncertainAsBad;
-    uint8_t PercentDataBad;
-    uint8_t PercentDataGood;
-    bool SteppedSlopedExtrapolation;
-  };
+struct AggregateFilter
+{
+  DateTime StartTime;
+  NodeId AggregateType;
+  Duration ProcessingInterval;
+  //AggregateConfiguration Configuration; //aggregate conf is in fact the following parameters
+  bool UseServerCapabilitiesDefaults;
+  bool TreatUncertainAsBad;
+  uint8_t PercentDataBad;
+  uint8_t PercentDataGood;
+  bool SteppedSlopedExtrapolation;
+};
 
-  struct MonitoringFilter
-  {
-    ExtensionObjectHeader Header;
-    DataChangeFilter DataChange;
-    EventFilter Event;
-    AggregateFilter Aggregate;
-    MonitoringFilter() {}
-    MonitoringFilter(DataChangeFilter filter);
-    MonitoringFilter(EventFilter filter);
-    MonitoringFilter(AggregateFilter filter);
-  };
+struct MonitoringFilter
+{
+  ExtensionObjectHeader Header;
+  DataChangeFilter DataChange;
+  EventFilter Event;
+  AggregateFilter Aggregate;
+  MonitoringFilter() {}
+  MonitoringFilter(DataChangeFilter filter);
+  MonitoringFilter(EventFilter filter);
+  MonitoringFilter(AggregateFilter filter);
+};
 
 } // namespace OpcUa
 

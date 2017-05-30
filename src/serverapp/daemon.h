@@ -15,28 +15,28 @@
 namespace OpcUa
 {
 
-  class Daemon
-  {
-  public:
-    DEFINE_CLASS_POINTERS(Daemon)
+class Daemon
+{
+public:
+  DEFINE_CLASS_POINTERS(Daemon)
 
-  public:
-    Daemon();
-    ~Daemon();
+public:
+  Daemon();
+  ~Daemon();
 
-    void Daemonize(const std::string& str);
-    void WaitForTerminate();
+  void Daemonize(const std::string & str);
+  void WaitForTerminate();
 
-    void Terminate();
+  void Terminate();
 
-  private:
-    void SetTerminateHandlers();
+private:
+  void SetTerminateHandlers();
 
-  private:
-    std::mutex Mutex;
-    std::condition_variable ExitEvent;
-    volatile bool Terminating = false;
-  };
+private:
+  std::mutex Mutex;
+  std::condition_variable ExitEvent;
+  volatile bool Terminating = false;
+};
 
 } // namespace OpcUa
 

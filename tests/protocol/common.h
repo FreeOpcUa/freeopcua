@@ -26,56 +26,62 @@
 #include <stdlib.h>
 #include <string>
 
-inline std::string PrintData(const std::vector<char>& vec)
+inline std::string PrintData(const std::vector<char> & vec)
 {
   std::stringstream stream;
+
   for (std::size_t i = 0; i < vec.size(); ++i)
-  {
-    stream << "0x" << std::setfill('0') << std::setw(2) << std::hex << ((int)vec[i] & 0xff) << ' ';
-    if ((i + 1) % 4 == 0)
     {
-      stream << ' ';
+      stream << "0x" << std::setfill('0') << std::setw(2) << std::hex << ((int)vec[i] & 0xff) << ' ';
+
+      if ((i + 1) % 4 == 0)
+        {
+          stream << ' ';
+        }
+
+      if ((i + 1) % 32 == 0)
+        {
+          stream << std::endl;
+        }
     }
 
-    if ((i + 1) % 32 == 0)
-    {
-      stream << std::endl;
-    }
-  }
   return stream.str();
 }
 
 inline std::string GetHost()
 {
-  if (const char* host = getenv("OPCUA_HOST"))
-  {
-    return host;
-  }
+  if (const char * host = getenv("OPCUA_HOST"))
+    {
+      return host;
+    }
+
   return "localhost";
 }
 
 inline int GetPort()
 {
-  if (char* port = getenv("OPCUA_PORT"))
-  {
-    return atoi(port);
-  }
+  if (char * port = getenv("OPCUA_PORT"))
+    {
+      return atoi(port);
+    }
+
   return 4841;
 }
 
 inline std::string GetEndpoint()
 {
-  if (char* endpoint = getenv("OPCUA_ENDPOINT"))
-  {
-    return endpoint;
-  }
+  if (char * endpoint = getenv("OPCUA_ENDPOINT"))
+    {
+      return endpoint;
+    }
+
   return "opc.tcp://localhost:4841";
 }
 
 class OutputChannel
 {
 public:
-  virtual void Send(const char* data, std::size_t size)
+  virtual void Send(const char * data, std::size_t size)
   {
     SerializedData = std::vector<char>(data, data + size);
   }
@@ -107,12 +113,12 @@ protected:
   {
   }
 
-  OutputChannel& GetChannel()
+  OutputChannel & GetChannel()
   {
     return *Channel;
   }
 
-  BinaryOStream& GetStream()
+  BinaryOStream & GetStream()
   {
     return *Stream;
   }
@@ -134,20 +140,21 @@ public:
   {
   }
 
-  virtual std::size_t Receive(char* data, std::size_t size)
+  virtual std::size_t Receive(char * data, std::size_t size)
   {
     if (CurPos == SerializedData.end())
-    {
-      return 0;
-    }
+      {
+        return 0;
+      }
+
     const std::size_t dist = static_cast<std::size_t>(std::distance(CurPos, SerializedData.end()));
     const std::size_t minSize = std::min(size, dist);
     std::copy(CurPos, CurPos + minSize, data);
-    CurPos+=minSize;
+    CurPos += minSize;
     return minSize;
   }
 
-  void SetData(const std::vector<char>& data)
+  void SetData(const std::vector<char> & data)
   {
     SerializedData = data;
     CurPos = SerializedData.begin();
@@ -184,12 +191,12 @@ protected:
   {
   }
 
-  InputChannel& GetChannel()
+  InputChannel & GetChannel()
   {
     return *Channel;
   }
 
-  BinaryIStream& GetStream()
+  BinaryIStream & GetStream()
   {
     return *Stream;
   }

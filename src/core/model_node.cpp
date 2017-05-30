@@ -21,44 +21,44 @@
 
 namespace OpcUa
 {
-  namespace Model
-  {
-    Node::Node(NodeId id, Services::SharedPtr services)
-      : Id(id)
-      , OpcUaServices(services)
-    {
-      ReadParameters attrs;
-      attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::DisplayName));
-      attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::BrowseName));
-      std::vector<DataValue> values = services->Attributes()->Read(attrs);
-      DisplayName = values[0].Value.As<LocalizedText>();
-      BrowseName = values[1].Value.As<QualifiedName>();
-    }
+namespace Model
+{
+Node::Node(NodeId id, Services::SharedPtr services)
+  : Id(id)
+  , OpcUaServices(services)
+{
+  ReadParameters attrs;
+  attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::DisplayName));
+  attrs.AttributesToRead.push_back(ToReadValueId(id, AttributeId::BrowseName));
+  std::vector<DataValue> values = services->Attributes()->Read(attrs);
+  DisplayName = values[0].Value.As<LocalizedText>();
+  BrowseName = values[1].Value.As<QualifiedName>();
+}
 
-    Node::Node(Services::SharedPtr services)
-      : OpcUaServices(services)
-    {
-    }
+Node::Node(Services::SharedPtr services)
+  : OpcUaServices(services)
+{
+}
 
-    NodeId Node::GetId() const
-    {
-      return Id;
-    }
+NodeId Node::GetId() const
+{
+  return Id;
+}
 
-    QualifiedName Node::GetBrowseName() const
-    {
-      return BrowseName;
-    }
+QualifiedName Node::GetBrowseName() const
+{
+  return BrowseName;
+}
 
-    LocalizedText Node::GetDisplayName() const
-    {
-      return DisplayName;
-    }
+LocalizedText Node::GetDisplayName() const
+{
+  return DisplayName;
+}
 
-    std::vector<Reference> Node::GetReferencies() const
-    {
-      return std::vector<Reference>();
-    }
+std::vector<Reference> Node::GetReferencies() const
+{
+  return std::vector<Reference>();
+}
 
-  }
+}
 }

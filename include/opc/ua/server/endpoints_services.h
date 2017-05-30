@@ -15,26 +15,26 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    struct ApplicationData
-    {
-      ApplicationDescription Application;
-      std::vector<EndpointDescription> Endpoints;
-    };
+struct ApplicationData
+{
+  ApplicationDescription Application;
+  std::vector<EndpointDescription> Endpoints;
+};
 
-    class EndpointsRegistry : public OpcUa::EndpointServices
-    {
-    public:
-      DEFINE_CLASS_POINTERS(EndpointsRegistry)
+class EndpointsRegistry : public OpcUa::EndpointServices
+{
+public:
+  DEFINE_CLASS_POINTERS(EndpointsRegistry)
 
-    public:
-      virtual void AddEndpoints(const std::vector<EndpointDescription>& endpoints) = 0;
-      virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription>& application) = 0;
-    };
+public:
+  virtual void AddEndpoints(const std::vector<EndpointDescription> & endpoints) = 0;
+  virtual void AddApplications(const std::vector<OpcUa::ApplicationDescription> & application) = 0;
+};
 
-    EndpointsRegistry::UniquePtr CreateEndpointsRegistry();
+EndpointsRegistry::UniquePtr CreateEndpointsRegistry();
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

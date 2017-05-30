@@ -40,7 +40,8 @@
 
 #include "gtest/internal/gtest-death-test-internal.h"
 
-namespace testing {
+namespace testing
+{
 
 // This flag controls the style of death tests.  Valid values are "threadsafe",
 // meaning that the death test child process will re-execute the test binary
@@ -51,7 +52,8 @@ GTEST_DECLARE_string_(death_test_style);
 
 #if GTEST_HAS_DEATH_TEST
 
-namespace internal {
+namespace internal
+{
 
 // Returns a Boolean value indicating whether the caller is currently
 // executing in the context of the death test child process.  Tools such as
@@ -187,13 +189,14 @@ GTEST_API_ bool InDeathTestChild();
 // Two predicate classes that can be used in {ASSERT,EXPECT}_EXIT*:
 
 // Tests that an exit code describes a normal exit with a given exit code.
-class GTEST_API_ ExitedWithCode {
- public:
+class GTEST_API_ ExitedWithCode
+{
+public:
   explicit ExitedWithCode(int exit_code);
   bool operator()(int exit_status) const;
- private:
+private:
   // No implementation - assignment is unsupported.
-  void operator=(const ExitedWithCode& other);
+  void operator=(const ExitedWithCode & other);
 
   const int exit_code_;
 };
@@ -201,11 +204,12 @@ class GTEST_API_ ExitedWithCode {
 # if !GTEST_OS_WINDOWS
 // Tests that an exit code describes an exit due to termination by a
 // given signal.
-class GTEST_API_ KilledBySignal {
- public:
+class GTEST_API_ KilledBySignal
+{
+public:
   explicit KilledBySignal(int signum);
   bool operator()(int exit_status) const;
- private:
+private:
   const int signum_;
 };
 # endif  // !GTEST_OS_WINDOWS

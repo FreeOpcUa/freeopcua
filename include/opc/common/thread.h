@@ -19,52 +19,52 @@
 namespace Common
 {
 
-  class ThreadObserver : private Common::Interface
+class ThreadObserver : private Common::Interface
+{
+public:
+  /// @brief thread exited with Success.
+  virtual void OnSuccess() = 0;
+  /// @brief Thread exited with error.
+  virtual void OnError(const std::exception & exc) = 0;
+};
+
+typedef std::function<void()> ThreadProc;
+
+class Thread
+{
+public:
+  DEFINE_CLASS_POINTERS(Thread)
+
+public:
+  /// @brief Starts f in a separate thread.
+  Thread(std::function<void()> f, ThreadObserver * observer = 0);
+
+  static Thread::UniquePtr Create(ThreadProc f, ThreadObserver * observer = 0)
   {
-  public:
-    /// @brief thread exited with Success.
-    virtual void OnSuccess() = 0;
-    /// @brief Thread exited with error.
-    virtual void OnError(const std::exception& exc) = 0;
-  };
+    return Thread::UniquePtr(new Thread(f, observer));
+  }
 
-  typedef std::function<void()> ThreadProc;
-
-  class Thread
+  static Thread::UniquePtr Create(void (*f)(), ThreadObserver * observer = 0)
   {
-  public:
-    DEFINE_CLASS_POINTERS(Thread)
+    Common::ThreadProc proc(f);
+    return Thread::UniquePtr(new Common::Thread(proc, observer));
+  }
 
-  public:
-    /// @brief Starts f in a separate thread.
-    Thread(std::function<void()> f, ThreadObserver* observer = 0);
+  ~Thread();
+  /// @brief Wait until started thread stop.
+  void Join();
 
-    static Thread::UniquePtr Create(ThreadProc f, ThreadObserver* observer = 0)
-    {
-      return Thread::UniquePtr(new Thread(f, observer));
-    }
+public:
+  /// @brief Calls in the separate thread from ThreadProc.
+  void Run();
+  /// @brief static member required for std::thread
+  static void ThreadProc(Thread * thread);
 
-    static Thread::UniquePtr Create(void (*f)(), ThreadObserver* observer = 0)
-    {
-      Common::ThreadProc proc(f);
-      return Thread::UniquePtr(new Common::Thread(proc, observer));
-    }
-
-    ~Thread();
-    /// @brief Wait until started thread stop.
-    void Join();
-
-  public:
-    /// @brief Calls in the separate thread from ThreadProc.
-    void Run();
-    /// @brief static member required for std::thread
-    static void ThreadProc(Thread* thread);
-
-  private:
-    ThreadObserver* Observer;
-    Common::ThreadProc Func;
-    std::thread Impl;
-  };
+private:
+  ThreadObserver * Observer;
+  Common::ThreadProc Func;
+  std::thread Impl;
+};
 
 } // namespace Common
 

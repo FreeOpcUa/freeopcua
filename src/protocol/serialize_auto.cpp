@@ -19,183 +19,183 @@
 
 namespace OpcUa
 {
-    namespace Binary
-    {
+namespace Binary
+{
 
-    template<>
-    void DataSerializer::Serialize<OpenFileMode>(const OpenFileMode& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
-
-
-    template<>
-    void DataSerializer::Serialize<NodeClass>(const NodeClass& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<OpenFileMode>(const OpenFileMode & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ApplicationType>(const ApplicationType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<NodeClass>(const NodeClass & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<MessageSecurityMode>(const MessageSecurityMode& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<ApplicationType>(const ApplicationType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<UserTokenType>(const UserTokenType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<MessageSecurityMode>(const MessageSecurityMode & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<SecurityTokenRequestType>(const SecurityTokenRequestType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<UserTokenType>(const UserTokenType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<NodeAttributesMask>(const NodeAttributesMask& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<SecurityTokenRequestType>(const SecurityTokenRequestType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<AttributeWriteMask>(const AttributeWriteMask& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<NodeAttributesMask>(const NodeAttributesMask & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<BrowseDirection>(const BrowseDirection& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<AttributeWriteMask>(const AttributeWriteMask & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<BrowseResultMask>(const BrowseResultMask& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<BrowseDirection>(const BrowseDirection & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ComplianceLevel>(const ComplianceLevel& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<BrowseResultMask>(const BrowseResultMask & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<FilterOperator>(const FilterOperator& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<ComplianceLevel>(const ComplianceLevel & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<TimestampsToReturn>(const TimestampsToReturn& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<FilterOperator>(const FilterOperator & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<HistoryUpdateType>(const HistoryUpdateType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<TimestampsToReturn>(const TimestampsToReturn & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PerformUpdateType>(const PerformUpdateType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<HistoryUpdateType>(const HistoryUpdateType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<PerformUpdateType>(const PerformUpdateType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<MonitoringMode>(const MonitoringMode & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeadbandType>(const DeadbandType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<DataChangeTrigger>(const DataChangeTrigger & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<EnumeratedTestType>(const EnumeratedTestType& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<DeadbandType>(const DeadbandType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<RedundancySupport>(const RedundancySupport& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<EnumeratedTestType>(const EnumeratedTestType & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ServerState>(const ServerState& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<RedundancySupport>(const RedundancySupport & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<ServerState>(const ServerState & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<AxisScaleEnumeration>(const AxisScaleEnumeration& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ExceptionDeviationFormat>(const ExceptionDeviationFormat& data)
-    {
-        *this << static_cast<uint32_t>(data);
-    }
+template<>
+void DataSerializer::Serialize<AxisScaleEnumeration>(const AxisScaleEnumeration & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<XmlElement>(const XmlElement& data)
-    {
-        *this << data.Length;
-        SerializeContainer(*this, data.Value);
-    }
+template<>
+void DataSerializer::Serialize<ExceptionDeviationFormat>(const ExceptionDeviationFormat & data)
+{
+  *this << static_cast<uint32_t>(data);
+}
+
+
+template<>
+void DataSerializer::Serialize<XmlElement>(const XmlElement & data)
+{
+  *this << data.Length;
+  SerializeContainer(*this, data.Value);
+}
 
 
 /*  DISABLED
@@ -279,13 +279,14 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<ExtensionObject>(const ExtensionObject& data)
-    {
-        *this << data.TypeId;
-        *this << data.Encoding;
-        if ((data.Encoding) & (1<<(0))) *this << data.Body;
-    }
+template<>
+void DataSerializer::Serialize<ExtensionObject>(const ExtensionObject & data)
+{
+  *this << data.TypeId;
+  *this << data.Encoding;
+
+  if ((data.Encoding) & (1 << (0))) { *this << data.Body; }
+}
 
 
 /*  DISABLED
@@ -656,17 +657,17 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<ApplicationDescription>(const ApplicationDescription& data)
-    {
-        *this << data.ApplicationUri;
-        *this << data.ProductUri;
-        *this << data.ApplicationName;
-        *this << data.ApplicationType;
-        *this << data.GatewayServerUri;
-        *this << data.DiscoveryProfileUri;
-        SerializeContainer(*this, data.DiscoveryUrls);
-    }
+template<>
+void DataSerializer::Serialize<ApplicationDescription>(const ApplicationDescription & data)
+{
+  *this << data.ApplicationUri;
+  *this << data.ProductUri;
+  *this << data.ApplicationName;
+  *this << data.ApplicationType;
+  *this << data.GatewayServerUri;
+  *this << data.DiscoveryProfileUri;
+  SerializeContainer(*this, data.DiscoveryUrls);
+}
 
 
 /*  DISABLED
@@ -757,56 +758,56 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy& data)
-    {
-        *this << data.PolicyId;
-        *this << data.TokenType;
-        *this << data.IssuedTokenType;
-        *this << data.IssuerEndpointUrl;
-        *this << data.SecurityPolicyUri;
-    }
+template<>
+void DataSerializer::Serialize<UserTokenPolicy>(const UserTokenPolicy & data)
+{
+  *this << data.PolicyId;
+  *this << data.TokenType;
+  *this << data.IssuedTokenType;
+  *this << data.IssuerEndpointUrl;
+  *this << data.SecurityPolicyUri;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription& data)
-    {
-        *this << data.EndpointUrl;
-        *this << data.Server;
-        *this << data.ServerCertificate;
-        *this << data.SecurityMode;
-        *this << data.SecurityPolicyUri;
-        SerializeContainer(*this, data.UserIdentityTokens);
-        *this << data.TransportProfileUri;
-        *this << data.SecurityLevel;
-    }
+template<>
+void DataSerializer::Serialize<EndpointDescription>(const EndpointDescription & data)
+{
+  *this << data.EndpointUrl;
+  *this << data.Server;
+  *this << data.ServerCertificate;
+  *this << data.SecurityMode;
+  *this << data.SecurityPolicyUri;
+  SerializeContainer(*this, data.UserIdentityTokens);
+  *this << data.TransportProfileUri;
+  *this << data.SecurityLevel;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<GetEndpointsParameters>(const GetEndpointsParameters& data)
-    {
-        *this << data.EndpointUrl;
-        SerializeContainer(*this, data.LocaleIds);
-        SerializeContainer(*this, data.ProfileUris);
-    }
+template<>
+void DataSerializer::Serialize<GetEndpointsParameters>(const GetEndpointsParameters & data)
+{
+  *this << data.EndpointUrl;
+  SerializeContainer(*this, data.LocaleIds);
+  SerializeContainer(*this, data.ProfileUris);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<GetEndpointsRequest>(const GetEndpointsRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Endpoints);
-    }
+template<>
+void DataSerializer::Serialize<GetEndpointsResponse>(const GetEndpointsResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Endpoints);
+}
 
 
 /*  DISABLED
@@ -944,67 +945,67 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
-    {
-        *this << data.CertificateData;
-        *this << data.Signature;
-    }
+template<>
+void DataSerializer::Serialize<SignedSoftwareCertificate>(const SignedSoftwareCertificate & data)
+{
+  *this << data.CertificateData;
+  *this << data.Signature;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<SignatureData>(const SignatureData& data)
-    {
-        *this << data.Algorithm;
-        *this << data.Signature;
-    }
+template<>
+void DataSerializer::Serialize<SignatureData>(const SignatureData & data)
+{
+  *this << data.Algorithm;
+  *this << data.Signature;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSessionParameters>(const CreateSessionParameters& data)
-    {
-        *this << data.ClientDescription;
-        *this << data.ServerUri;
-        *this << data.EndpointUrl;
-        *this << data.SessionName;
-        *this << data.ClientNonce;
-        *this << data.ClientCertificate;
-        *this << data.RequestedSessionTimeout;
-        *this << data.MaxResponseMessageSize;
-    }
+template<>
+void DataSerializer::Serialize<CreateSessionParameters>(const CreateSessionParameters & data)
+{
+  *this << data.ClientDescription;
+  *this << data.ServerUri;
+  *this << data.EndpointUrl;
+  *this << data.SessionName;
+  *this << data.ClientNonce;
+  *this << data.ClientCertificate;
+  *this << data.RequestedSessionTimeout;
+  *this << data.MaxResponseMessageSize;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<CreateSessionRequest>(const CreateSessionRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSessionResult>(const CreateSessionResult& data)
-    {
-        *this << data.SessionId;
-        *this << data.AuthenticationToken;
-        *this << data.RevisedSessionTimeout;
-        *this << data.ServerNonce;
-        *this << data.ServerCertificate;
-        SerializeContainer(*this, data.ServerEndpoints);
-        SerializeContainer(*this, data.ServerSoftwareCertificates);
-        *this << data.ServerSignature;
-        *this << data.MaxRequestMessageSize;
-    }
+template<>
+void DataSerializer::Serialize<CreateSessionResult>(const CreateSessionResult & data)
+{
+  *this << data.SessionId;
+  *this << data.AuthenticationToken;
+  *this << data.RevisedSessionTimeout;
+  *this << data.ServerNonce;
+  *this << data.ServerCertificate;
+  SerializeContainer(*this, data.ServerEndpoints);
+  SerializeContainer(*this, data.ServerSoftwareCertificates);
+  *this << data.ServerSignature;
+  *this << data.MaxRequestMessageSize;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<CreateSessionResponse>(const CreateSessionResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
 /*  DISABLED
@@ -1078,42 +1079,42 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<ActivateSessionParameters>(const ActivateSessionParameters& data)
-    {
-        *this << data.ClientSignature;
-        SerializeContainer(*this, data.ClientSoftwareCertificates);
-        SerializeContainer(*this, data.LocaleIds);
-        *this << data.UserIdentityToken;
-        *this << data.UserTokenSignature;
-    }
+template<>
+void DataSerializer::Serialize<ActivateSessionParameters>(const ActivateSessionParameters & data)
+{
+  *this << data.ClientSignature;
+  SerializeContainer(*this, data.ClientSoftwareCertificates);
+  SerializeContainer(*this, data.LocaleIds);
+  *this << data.UserIdentityToken;
+  *this << data.UserTokenSignature;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ActivateSessionRequest>(const ActivateSessionRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<ActivateSessionRequest>(const ActivateSessionRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ActivateSessionResult>(const ActivateSessionResult& data)
-    {
-        *this << data.ServerNonce;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<ActivateSessionResult>(const ActivateSessionResult & data)
+{
+  *this << data.ServerNonce;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ActivateSessionResponse>(const ActivateSessionResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<ActivateSessionResponse>(const ActivateSessionResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
 /*  DISABLED
@@ -1461,31 +1462,31 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<DeleteNodesItem>(const DeleteNodesItem& data)
-    {
-        *this << data.NodeId;
-        *this << data.DeleteTargetReferences;
-    }
+template<>
+void DataSerializer::Serialize<DeleteNodesItem>(const DeleteNodesItem & data)
+{
+  *this << data.NodeId;
+  *this << data.DeleteTargetReferences;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeleteNodesRequest>(const DeleteNodesRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.NodesToDelete);
-    }
+template<>
+void DataSerializer::Serialize<DeleteNodesRequest>(const DeleteNodesRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.NodesToDelete);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeleteNodesResponse>(const DeleteNodesResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<DeleteNodesResponse>(const DeleteNodesResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2179,42 +2180,42 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<ReadValueId>(const ReadValueId& data)
-    {
-        *this << data.NodeId;
-        *this << data.AttributeId;
-        *this << data.IndexRange;
-        *this << data.DataEncoding;
-    }
+template<>
+void DataSerializer::Serialize<ReadValueId>(const ReadValueId & data)
+{
+  *this << data.NodeId;
+  *this << data.AttributeId;
+  *this << data.IndexRange;
+  *this << data.DataEncoding;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ReadParameters>(const ReadParameters& data)
-    {
-        *this << data.MaxAge;
-        *this << data.TimestampsToReturn;
-        SerializeContainer(*this, data.AttributesToRead);
-    }
+template<>
+void DataSerializer::Serialize<ReadParameters>(const ReadParameters & data)
+{
+  *this << data.MaxAge;
+  *this << data.TimestampsToReturn;
+  SerializeContainer(*this, data.AttributesToRead);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ReadRequest>(const ReadRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<ReadRequest>(const ReadRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ReadResponse>(const ReadResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<ReadResponse>(const ReadResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2356,40 +2357,40 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<WriteValue>(const WriteValue& data)
-    {
-        *this << data.NodeId;
-        *this << data.AttributeId;
-        *this << data.IndexRange;
-        *this << data.Value;
-    }
+template<>
+void DataSerializer::Serialize<WriteValue>(const WriteValue & data)
+{
+  *this << data.NodeId;
+  *this << data.AttributeId;
+  *this << data.IndexRange;
+  *this << data.Value;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<WriteParameters>(const WriteParameters& data)
-    {
-        SerializeContainer(*this, data.NodesToWrite);
-    }
+template<>
+void DataSerializer::Serialize<WriteParameters>(const WriteParameters & data)
+{
+  SerializeContainer(*this, data.NodesToWrite);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<WriteRequest>(const WriteRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<WriteRequest>(const WriteRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<WriteResponse>(const WriteResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<WriteResponse>(const WriteResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2508,49 +2509,49 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<CallMethodRequest>(const CallMethodRequest& data)
-    {
-        *this << data.ObjectId;
-        *this << data.MethodId;
-        SerializeContainer(*this, data.InputArguments);
-    }
+template<>
+void DataSerializer::Serialize<CallMethodRequest>(const CallMethodRequest & data)
+{
+  *this << data.ObjectId;
+  *this << data.MethodId;
+  SerializeContainer(*this, data.InputArguments);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CallMethodResult>(const CallMethodResult& data)
-    {
-        *this << data.Status;
-        SerializeContainer(*this, data.InputArgumentResults);
-        SerializeContainer(*this, data.InputArgumentDiagnosticInfos);
-        SerializeContainer(*this, data.OutputArguments);
-    }
+template<>
+void DataSerializer::Serialize<CallMethodResult>(const CallMethodResult & data)
+{
+  *this << data.Status;
+  SerializeContainer(*this, data.InputArgumentResults);
+  SerializeContainer(*this, data.InputArgumentDiagnosticInfos);
+  SerializeContainer(*this, data.OutputArguments);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CallParameters>(const CallParameters& data)
-    {
-        SerializeContainer(*this, data.MethodsToCall);
-    }
+template<>
+void DataSerializer::Serialize<CallParameters>(const CallParameters & data)
+{
+  SerializeContainer(*this, data.MethodsToCall);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CallRequest>(const CallRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<CallRequest>(const CallRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CallResponse>(const CallResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<CallResponse>(const CallResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2710,63 +2711,63 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters& data)
-    {
-        *this << data.ClientHandle;
-        *this << data.SamplingInterval;
-        *this << data.Filter;
-        *this << data.QueueSize;
-        *this << data.DiscardOldest;
-    }
+template<>
+void DataSerializer::Serialize<MonitoringParameters>(const MonitoringParameters & data)
+{
+  *this << data.ClientHandle;
+  *this << data.SamplingInterval;
+  *this << data.Filter;
+  *this << data.QueueSize;
+  *this << data.DiscardOldest;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
-    {
-        *this << data.ItemToMonitor;
-        *this << data.MonitoringMode;
-        *this << data.RequestedParameters;
-    }
+template<>
+void DataSerializer::Serialize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest & data)
+{
+  *this << data.ItemToMonitor;
+  *this << data.MonitoringMode;
+  *this << data.RequestedParameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
-    {
-        *this << data.Status;
-        *this << data.MonitoredItemId;
-        *this << data.RevisedSamplingInterval;
-        *this << data.RevisedQueueSize;
-        *this << data.FilterResult;
-    }
+template<>
+void DataSerializer::Serialize<MonitoredItemCreateResult>(const MonitoredItemCreateResult & data)
+{
+  *this << data.Status;
+  *this << data.MonitoredItemId;
+  *this << data.RevisedSamplingInterval;
+  *this << data.RevisedQueueSize;
+  *this << data.FilterResult;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
-    {
-        *this << data.SubscriptionId;
-        *this << data.TimestampsToReturn;
-        SerializeContainer(*this, data.ItemsToCreate);
-    }
+template<>
+void DataSerializer::Serialize<MonitoredItemsParameters>(const MonitoredItemsParameters & data)
+{
+  *this << data.SubscriptionId;
+  *this << data.TimestampsToReturn;
+  SerializeContainer(*this, data.ItemsToCreate);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -2927,153 +2928,153 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
-    {
-        *this << data.SubscriptionId;
-        SerializeContainer(*this, data.MonitoredItemIds);
-    }
+template<>
+void DataSerializer::Serialize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters & data)
+{
+  *this << data.SubscriptionId;
+  SerializeContainer(*this, data.MonitoredItemIds);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
-    {
-        *this << data.RequestedPublishingInterval;
-        *this << data.RequestedLifetimeCount;
-        *this << data.RequestedMaxKeepAliveCount;
-        *this << data.MaxNotificationsPerPublish;
-        *this << data.PublishingEnabled;
-        *this << data.Priority;
-    }
+template<>
+void DataSerializer::Serialize<CreateSubscriptionParameters>(const CreateSubscriptionParameters & data)
+{
+  *this << data.RequestedPublishingInterval;
+  *this << data.RequestedLifetimeCount;
+  *this << data.RequestedMaxKeepAliveCount;
+  *this << data.MaxNotificationsPerPublish;
+  *this << data.PublishingEnabled;
+  *this << data.Priority;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<CreateSubscriptionRequest>(const CreateSubscriptionRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData& data)
-    {
-        *this << data.SubscriptionId;
-        *this << data.RevisedPublishingInterval;
-        *this << data.RevisedLifetimeCount;
-        *this << data.RevisedMaxKeepAliveCount;
-    }
+template<>
+void DataSerializer::Serialize<SubscriptionData>(const SubscriptionData & data)
+{
+  *this << data.SubscriptionId;
+  *this << data.RevisedPublishingInterval;
+  *this << data.RevisedLifetimeCount;
+  *this << data.RevisedMaxKeepAliveCount;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Data;
-    }
+template<>
+void DataSerializer::Serialize<CreateSubscriptionResponse>(const CreateSubscriptionResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Data;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ModifySubscriptionParameters>(const ModifySubscriptionParameters& data)
-    {
-        *this << data.SubscriptionId;
-        *this << data.RequestedPublishingInterval;
-        *this << data.RequestedLifetimeCount;
-        *this << data.RequestedMaxKeepAliveCount;
-        *this << data.MaxNotificationsPerPublish;
-        *this << data.Priority;
-    }
+template<>
+void DataSerializer::Serialize<ModifySubscriptionParameters>(const ModifySubscriptionParameters & data)
+{
+  *this << data.SubscriptionId;
+  *this << data.RequestedPublishingInterval;
+  *this << data.RequestedLifetimeCount;
+  *this << data.RequestedMaxKeepAliveCount;
+  *this << data.MaxNotificationsPerPublish;
+  *this << data.Priority;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ModifySubscriptionRequest>(const ModifySubscriptionRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<ModifySubscriptionRequest>(const ModifySubscriptionRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ModifySubscriptionResult>(const ModifySubscriptionResult& data)
-    {
-        *this << data.RevisedPublishingInterval;
-        *this << data.RevisedLifetimeCount;
-        *this << data.RevisedMaxKeepAliveCount;
-    }
+template<>
+void DataSerializer::Serialize<ModifySubscriptionResult>(const ModifySubscriptionResult & data)
+{
+  *this << data.RevisedPublishingInterval;
+  *this << data.RevisedLifetimeCount;
+  *this << data.RevisedMaxKeepAliveCount;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<ModifySubscriptionResponse>(const ModifySubscriptionResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<ModifySubscriptionResponse>(const ModifySubscriptionResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters& data)
-    {
-        *this << data.PublishingEnabled;
-        SerializeContainer(*this, data.SubscriptionIds);
-    }
+template<>
+void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters & data)
+{
+  *this << data.PublishingEnabled;
+  SerializeContainer(*this, data.SubscriptionIds);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<SetPublishingModeRequest>(const SetPublishingModeRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PublishingModeResult>(const PublishingModeResult& data)
-    {
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<PublishingModeResult>(const PublishingModeResult & data)
+{
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Result;
-    }
+template<>
+void DataSerializer::Serialize<SetPublishingModeResponse>(const SetPublishingModeResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Result;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage& data)
-    {
-        *this << data.SequenceNumber;
-        *this << data.PublishTime;
-        SerializeContainer(*this, data.NotificationData);
-    }
+template<>
+void DataSerializer::Serialize<NotificationMessage>(const NotificationMessage & data)
+{
+  *this << data.SequenceNumber;
+  *this << data.PublishTime;
+  SerializeContainer(*this, data.NotificationData);
+}
 
 
 /*  DISABLED
@@ -3184,68 +3185,68 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
-    {
-        *this << data.SubscriptionId;
-        *this << data.SequenceNumber;
-    }
+template<>
+void DataSerializer::Serialize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement & data)
+{
+  *this << data.SubscriptionId;
+  *this << data.SequenceNumber;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PublishRequest>(const PublishRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.SubscriptionAcknowledgements);
-    }
+template<>
+void DataSerializer::Serialize<PublishRequest>(const PublishRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.SubscriptionAcknowledgements);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PublishResult>(const PublishResult& data)
-    {
-        *this << data.SubscriptionId;
-        SerializeContainer(*this, data.AvailableSequenceNumbers);
-        *this << data.MoreNotifications;
-        *this << data.NotificationMessage;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<PublishResult>(const PublishResult & data)
+{
+  *this << data.SubscriptionId;
+  SerializeContainer(*this, data.AvailableSequenceNumbers);
+  *this << data.MoreNotifications;
+  *this << data.NotificationMessage;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<PublishResponse>(const PublishResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<PublishResponse>(const PublishResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters& data)
-    {
-        *this << data.SubscriptionId;
-        *this << data.RetransmitSequenceNumber;
-    }
+template<>
+void DataSerializer::Serialize<RepublishParameters>(const RepublishParameters & data)
+{
+  *this << data.SubscriptionId;
+  *this << data.RetransmitSequenceNumber;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.Parameters;
-    }
+template<>
+void DataSerializer::Serialize<RepublishRequest>(const RepublishRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.Parameters;
+}
 
 
-    template<>
-    void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        *this << data.NotificationMessage;
-    }
+template<>
+void DataSerializer::Serialize<RepublishResponse>(const RepublishResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  *this << data.NotificationMessage;
+}
 
 
 /*  DISABLED
@@ -3305,23 +3306,23 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.SubscriptionIds);
-    }
+template<>
+void DataSerializer::Serialize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.SubscriptionIds);
+}
 
 
-    template<>
-    void DataSerializer::Serialize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
-    {
-        *this << data.TypeId;
-        *this << data.Header;
-        SerializeContainer(*this, data.Results);
-        SerializeContainer(*this, data.DiagnosticInfos);
-    }
+template<>
+void DataSerializer::Serialize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse & data)
+{
+  *this << data.TypeId;
+  *this << data.Header;
+  SerializeContainer(*this, data.Results);
+  SerializeContainer(*this, data.DiagnosticInfos);
+}
 
 
 /*  DISABLED
@@ -3837,16 +3838,16 @@ namespace OpcUa
 
 */
 
-    template<>
-    void DataSerializer::Serialize<Annotation>(const Annotation& data)
-    {
-        *this << data.Message;
-        *this << data.UserName;
-        *this << data.AnnotationTime;
-    }
+template<>
+void DataSerializer::Serialize<Annotation>(const Annotation & data)
+{
+  *this << data.Message;
+  *this << data.UserName;
+  *this << data.AnnotationTime;
+}
 
 
-   }
+}
 
 } // namespace
-    
+

@@ -19,34 +19,34 @@
 namespace
 {
 
-  class StandardNamespaceAddon : public Common::Addon
+class StandardNamespaceAddon : public Common::Addon
+{
+public:
+  DEFINE_CLASS_POINTERS(StandardNamespaceAddon)
+
+  void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params)
   {
-  public:
-    DEFINE_CLASS_POINTERS(StandardNamespaceAddon)
+    OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::Server::AddressSpaceRegistryAddonId);
+    const bool debug = false;
+    OpcUa::Server::FillStandardNamespace(*registry, debug);
+  }
 
-    void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
-    {
-      OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::Server::AddressSpaceRegistryAddonId);
-      const bool debug = false;
-      OpcUa::Server::FillStandardNamespace(*registry, debug);
-    }
-
-    void Stop()
-    {
-    }
-  };
+  void Stop()
+  {
+  }
+};
 
 } // namespace
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    Common::Addon::UniquePtr StandardNamespaceAddonFactory::CreateAddon()
-    {
-      return Common::Addon::UniquePtr(new StandardNamespaceAddon());
-    }
+Common::Addon::UniquePtr StandardNamespaceAddonFactory::CreateAddon()
+{
+  return Common::Addon::UniquePtr(new StandardNamespaceAddon());
+}
 
-  }
+}
 }

@@ -17,58 +17,66 @@
 namespace
 {
 
-  void* LoadLibrary(const char* path)
-  {
-    void* library = dlopen(path, RTLD_LAZY);
-    if (!library)
+void * LoadLibrary(const char * path)
+{
+  void * library = dlopen(path, RTLD_LAZY);
+
+  if (!library)
     {
       std::string msg;
-      if (const char* err = dlerror())
-      {
-        msg = err;
-      }
+
+      if (const char * err = dlerror())
+        {
+          msg = err;
+        }
+
       THROW_ERROR2(UnableToLoadDynamicLibrary, path, msg);
     }
-    return library;
-  }
+
+  return library;
+}
 
 }
 
 namespace Common
 {
 
-  DynamicLibrary::DynamicLibrary(const std::string& libraryPath)
-    : Path(libraryPath)
-    , Library(0)
-  {
-  }
+DynamicLibrary::DynamicLibrary(const std::string & libraryPath)
+  : Path(libraryPath)
+  , Library(0)
+{
+}
 
-  DynamicLibrary::~DynamicLibrary()
-  {
-    if (Library)
+DynamicLibrary::~DynamicLibrary()
+{
+  if (Library)
     {
       //dlclose(Library);
     }
-  }
+}
 
-  void* DynamicLibrary::FindSymbol(const std::string& funcName)
-  {
-    if (!Library)
+void * DynamicLibrary::FindSymbol(const std::string & funcName)
+{
+  if (!Library)
     {
       Library = LoadLibrary(Path.c_str());
     }
 
-    void* func = dlsym(Library, funcName.c_str());
-    if (!func)
+  void * func = dlsym(Library, funcName.c_str());
+
+  if (!func)
     {
       std::string msg;
-      if (const char* err =dlerror())
-      {
-        msg = err;
-      }
+
+      if (const char * err = dlerror())
+        {
+          msg = err;
+        }
+
       THROW_ERROR3(UnableToFundSymbolInTheLibrary, funcName, Path, msg);
     }
-    return func;
-  }
+
+  return func;
+}
 
 }

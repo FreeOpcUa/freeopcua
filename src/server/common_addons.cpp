@@ -36,148 +36,154 @@
 namespace
 {
 
-  using namespace OpcUa;
+using namespace OpcUa;
 
-  void AddParameters(Common::AddonInformation& info, const Common::ParametersGroup& params)
-  {
-    info.Parameters.Groups = params.Groups;
-    info.Parameters.Parameters = params.Parameters;
-  }
+void AddParameters(Common::AddonInformation & info, const Common::ParametersGroup & params)
+{
+  info.Parameters.Groups = params.Groups;
+  info.Parameters.Parameters = params.Parameters;
+}
 
-  void CreateCommonAddonsConfiguration(const Common::AddonParameters& params, std::vector<Common::AddonInformation>& addons)
-  {
-    Common::AddonInformation endpointsRegistry = Server::CreateEndpointsRegistryAddon();
-    Common::AddonInformation addressSpaceRegistry = Server::CreateAddressSpaceAddon();
-    Common::AddonInformation asioAddon = Server::CreateAsioAddon();
-    Common::AddonInformation subscriptionService = Server::CreateSubscriptionServiceAddon();
-    Common::AddonInformation serverObject = Server::CreateServerObjectAddon();
+void CreateCommonAddonsConfiguration(const Common::AddonParameters & params, std::vector<Common::AddonInformation> & addons)
+{
+  Common::AddonInformation endpointsRegistry = Server::CreateEndpointsRegistryAddon();
+  Common::AddonInformation addressSpaceRegistry = Server::CreateAddressSpaceAddon();
+  Common::AddonInformation asioAddon = Server::CreateAsioAddon();
+  Common::AddonInformation subscriptionService = Server::CreateSubscriptionServiceAddon();
+  Common::AddonInformation serverObject = Server::CreateServerObjectAddon();
 
-    for (const Common::ParametersGroup& group : params.Groups)
+  for (const Common::ParametersGroup & group : params.Groups)
     {
       if (group.Name == OpcUa::Server::EndpointsRegistryAddonId)
-      {
-        AddParameters(endpointsRegistry, group);
-      }
-/*
-      else if (group.Name == OpcUa::Server::OpcUaProtocolAddonId)
-      {
-        Common::AddonInformation binaryProtocol = Server::CreateBinaryServerAddon();
-        AddParameters(binaryProtocol, group);
-        addons.push_back(binaryProtocol);
-      }
-*/
+        {
+          AddParameters(endpointsRegistry, group);
+        }
+
+      /*
+            else if (group.Name == OpcUa::Server::OpcUaProtocolAddonId)
+            {
+              Common::AddonInformation binaryProtocol = Server::CreateBinaryServerAddon();
+              AddParameters(binaryProtocol, group);
+              addons.push_back(binaryProtocol);
+            }
+      */
       else if (group.Name == OpcUa::Server::AddressSpaceRegistryAddonId)
-      {
-        AddParameters(addressSpaceRegistry, group);
-      }
+        {
+          AddParameters(addressSpaceRegistry, group);
+        }
+
       else if (group.Name == OpcUa::Server::AsyncOpcTcpAddonId)
-      {
-        Common::AddonInformation opcTcpAsync = Server::CreateOpcTcpAsyncAddon();
-        AddParameters(opcTcpAsync, group);
-        addons.push_back(opcTcpAsync);
-      }
+        {
+          Common::AddonInformation opcTcpAsync = Server::CreateOpcTcpAsyncAddon();
+          AddParameters(opcTcpAsync, group);
+          addons.push_back(opcTcpAsync);
+        }
+
       else if (group.Name == OpcUa::Server::AsioAddonId)
-      {
-        AddParameters(asioAddon, group);
-      }
+        {
+          AddParameters(asioAddon, group);
+        }
+
       else if (group.Name == OpcUa::Server::SubscriptionServiceAddonId)
-      {
-        AddParameters(subscriptionService, group);
-      }
+        {
+          AddParameters(subscriptionService, group);
+        }
+
       else if (group.Name == OpcUa::Server::ServerObjectAddonId)
-      {
-        AddParameters(serverObject, group);
-      }
+        {
+          AddParameters(serverObject, group);
+        }
     }
 
-    addons.push_back(endpointsRegistry);
-    addons.push_back(addressSpaceRegistry);
-    addons.push_back(asioAddon);
-    addons.push_back(subscriptionService);
-    addons.push_back(Server::CreateServicesRegistryAddon());
-    addons.push_back(Server::CreateStandardNamespaceAddon());
-    addons.push_back(serverObject);
-  }
+  addons.push_back(endpointsRegistry);
+  addons.push_back(addressSpaceRegistry);
+  addons.push_back(asioAddon);
+  addons.push_back(subscriptionService);
+  addons.push_back(Server::CreateServicesRegistryAddon());
+  addons.push_back(Server::CreateStandardNamespaceAddon());
+  addons.push_back(serverObject);
+}
 
-  inline void RegisterAddons(std::vector<Common::AddonInformation> addons, Common::AddonsManager& manager)
+inline void RegisterAddons(std::vector<Common::AddonInformation> addons, Common::AddonsManager & manager)
+{
+  std::for_each(std::begin(addons), std::end(addons), [&manager](const Common::AddonInformation & addonConfig)
   {
-    std::for_each(std::begin(addons), std::end(addons), [&manager](const Common::AddonInformation& addonConfig){
-      manager.Register(addonConfig);
-    });
-  }
+    manager.Register(addonConfig);
+  });
+}
 
-  Common::AddonParameters CreateAddonsParameters(const OpcUa::Server::Parameters& serverParams)
-  {
-    Common::Parameter debugMode("debug", std::to_string(serverParams.Debug));
+Common::AddonParameters CreateAddonsParameters(const OpcUa::Server::Parameters & serverParams)
+{
+  Common::Parameter debugMode("debug", std::to_string(serverParams.Debug));
 
-    Common::AddonParameters addons;
+  Common::AddonParameters addons;
 
-    Common::ParametersGroup async("async");
-    async.Parameters.push_back(Common::Parameter("threads", std::to_string(serverParams.ThreadsCount)));
-    async.Parameters.push_back(debugMode);
-    addons.Groups.push_back(async);
+  Common::ParametersGroup async("async");
+  async.Parameters.push_back(Common::Parameter("threads", std::to_string(serverParams.ThreadsCount)));
+  async.Parameters.push_back(debugMode);
+  addons.Groups.push_back(async);
 
-    Common::ParametersGroup addressSpace(OpcUa::Server::AddressSpaceRegistryAddonId);
-    addressSpace.Parameters.push_back(debugMode);
-    addons.Groups.push_back(addressSpace);
+  Common::ParametersGroup addressSpace(OpcUa::Server::AddressSpaceRegistryAddonId);
+  addressSpace.Parameters.push_back(debugMode);
+  addons.Groups.push_back(addressSpace);
 
-    Common::ParametersGroup endpointServices(OpcUa::Server::EndpointsRegistryAddonId);
-    endpointServices.Parameters.push_back(debugMode);
-    addons.Groups.push_back(endpointServices);
+  Common::ParametersGroup endpointServices(OpcUa::Server::EndpointsRegistryAddonId);
+  endpointServices.Parameters.push_back(debugMode);
+  addons.Groups.push_back(endpointServices);
 
-    Common::ParametersGroup subscriptionServices(OpcUa::Server::SubscriptionServiceAddonId);
-    subscriptionServices.Parameters.push_back(debugMode);
-    addons.Groups.push_back(subscriptionServices);
+  Common::ParametersGroup subscriptionServices(OpcUa::Server::SubscriptionServiceAddonId);
+  subscriptionServices.Parameters.push_back(debugMode);
+  addons.Groups.push_back(subscriptionServices);
 
-    Common::ParametersGroup opc_tcp(OpcUa::Server::AsyncOpcTcpAddonId);
-    opc_tcp.Parameters.push_back(debugMode);
-    OpcUa::Server::ApplicationData applicationData;
-    applicationData.Application = serverParams.Endpoint.Server;
-    applicationData.Endpoints.push_back(serverParams.Endpoint);
-    opc_tcp.Groups = OpcUa::CreateCommonParameters({applicationData}, serverParams.Debug);
-    addons.Groups.push_back(opc_tcp);
+  Common::ParametersGroup opc_tcp(OpcUa::Server::AsyncOpcTcpAddonId);
+  opc_tcp.Parameters.push_back(debugMode);
+  OpcUa::Server::ApplicationData applicationData;
+  applicationData.Application = serverParams.Endpoint.Server;
+  applicationData.Endpoints.push_back(serverParams.Endpoint);
+  opc_tcp.Groups = OpcUa::CreateCommonParameters({applicationData}, serverParams.Debug);
+  addons.Groups.push_back(opc_tcp);
 
-    return addons;
-  }
+  return addons;
+}
 
 } // namespace
 
 namespace OpcUa
 {
-  Common::AddonInformation Server::CreateServicesRegistryAddon()
-  {
-    Common::AddonInformation services;
-    services.Factory = std::make_shared<OpcUa::Server::ServicesRegistryFactory>();
-    services.Id = OpcUa::Server::ServicesRegistryAddonId;
-    return services;
-  }
+Common::AddonInformation Server::CreateServicesRegistryAddon()
+{
+  Common::AddonInformation services;
+  services.Factory = std::make_shared<OpcUa::Server::ServicesRegistryFactory>();
+  services.Id = OpcUa::Server::ServicesRegistryAddonId;
+  return services;
+}
 
-  Common::AddonInformation Server::CreateAddressSpaceAddon()
-  {
-    Common::AddonInformation config;
-    config.Factory = std::make_shared<OpcUa::Server::AddressSpaceAddonFactory>();
-    config.Id = OpcUa::Server::AddressSpaceRegistryAddonId;
-    config.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
-    return config;
-  }
+Common::AddonInformation Server::CreateAddressSpaceAddon()
+{
+  Common::AddonInformation config;
+  config.Factory = std::make_shared<OpcUa::Server::AddressSpaceAddonFactory>();
+  config.Id = OpcUa::Server::AddressSpaceRegistryAddonId;
+  config.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
+  return config;
+}
 
-  Common::AddonInformation Server::CreateStandardNamespaceAddon()
-  {
-    Common::AddonInformation config;
-    config.Factory = std::make_shared<OpcUa::Server::StandardNamespaceAddonFactory>();
-    config.Id = OpcUa::Server::StandardNamespaceAddonId;
-    config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonId);
-    return config;
-  }
+Common::AddonInformation Server::CreateStandardNamespaceAddon()
+{
+  Common::AddonInformation config;
+  config.Factory = std::make_shared<OpcUa::Server::StandardNamespaceAddonFactory>();
+  config.Id = OpcUa::Server::StandardNamespaceAddonId;
+  config.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonId);
+  return config;
+}
 
-  Common::AddonInformation Server::CreateEndpointsRegistryAddon()
-  {
-    Common::AddonInformation endpoints;
-    endpoints.Factory = std::make_shared<OpcUa::Server::EndpointsRegistryAddonFactory>();
-    endpoints.Id = OpcUa::Server::EndpointsRegistryAddonId;
-    endpoints.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
-    return endpoints;
-  }
+Common::AddonInformation Server::CreateEndpointsRegistryAddon()
+{
+  Common::AddonInformation endpoints;
+  endpoints.Factory = std::make_shared<OpcUa::Server::EndpointsRegistryAddonFactory>();
+  endpoints.Id = OpcUa::Server::EndpointsRegistryAddonId;
+  endpoints.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
+  return endpoints;
+}
 /*
   Common::AddonInformation Server::CreateBinaryServerAddon()
   {
@@ -189,65 +195,66 @@ namespace OpcUa
     return opcTcp;
   }
 */
-  Common::AddonInformation Server::CreateOpcTcpAsyncAddon()
-  {
-    Common::AddonInformation opcTcp;
-    opcTcp.Factory = std::make_shared<OpcUa::Server::AsyncOpcTcpAddonFactory>();
-    opcTcp.Id = OpcUa::Server::AsyncOpcTcpAddonId;
-    opcTcp.Dependencies.push_back(OpcUa::Server::AsioAddonId);
-    opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsRegistryAddonId);
-    opcTcp.Dependencies.push_back(OpcUa::Server::SubscriptionServiceAddonId);
-    return opcTcp;
-  }
+Common::AddonInformation Server::CreateOpcTcpAsyncAddon()
+{
+  Common::AddonInformation opcTcp;
+  opcTcp.Factory = std::make_shared<OpcUa::Server::AsyncOpcTcpAddonFactory>();
+  opcTcp.Id = OpcUa::Server::AsyncOpcTcpAddonId;
+  opcTcp.Dependencies.push_back(OpcUa::Server::AsioAddonId);
+  opcTcp.Dependencies.push_back(OpcUa::Server::EndpointsRegistryAddonId);
+  opcTcp.Dependencies.push_back(OpcUa::Server::SubscriptionServiceAddonId);
+  return opcTcp;
+}
 
-  Common::AddonInformation Server::CreateServerObjectAddon()
-  {
-    Common::AddonInformation serverObjectAddon;
-    serverObjectAddon.Factory = std::make_shared<OpcUa::Server::ServerObjectFactory>();
-    serverObjectAddon.Id = OpcUa::Server::ServerObjectAddonId;
-    serverObjectAddon.Dependencies.push_back(OpcUa::Server::StandardNamespaceAddonId);
-    serverObjectAddon.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
-    serverObjectAddon.Dependencies.push_back(OpcUa::Server::AsioAddonId);
-    return serverObjectAddon;
-  }
+Common::AddonInformation Server::CreateServerObjectAddon()
+{
+  Common::AddonInformation serverObjectAddon;
+  serverObjectAddon.Factory = std::make_shared<OpcUa::Server::ServerObjectFactory>();
+  serverObjectAddon.Id = OpcUa::Server::ServerObjectAddonId;
+  serverObjectAddon.Dependencies.push_back(OpcUa::Server::StandardNamespaceAddonId);
+  serverObjectAddon.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
+  serverObjectAddon.Dependencies.push_back(OpcUa::Server::AsioAddonId);
+  return serverObjectAddon;
+}
 
-  Common::AddonInformation Server::CreateAsioAddon()
-  {
-    Common::AddonInformation asioAddon;
-    asioAddon.Factory = std::make_shared<OpcUa::Server::AsioAddonFactory>();
-    asioAddon.Id = OpcUa::Server::AsioAddonId;
-    return asioAddon;
-  }
+Common::AddonInformation Server::CreateAsioAddon()
+{
+  Common::AddonInformation asioAddon;
+  asioAddon.Factory = std::make_shared<OpcUa::Server::AsioAddonFactory>();
+  asioAddon.Id = OpcUa::Server::AsioAddonId;
+  return asioAddon;
+}
 
-  Common::AddonInformation Server::CreateSubscriptionServiceAddon()
-  {
-    Common::AddonInformation subscriptionAddon;
-    subscriptionAddon.Factory = std::make_shared<OpcUa::Server::SubscriptionServiceAddonFactory>();
-    subscriptionAddon.Id = OpcUa::Server::SubscriptionServiceAddonId;
-    subscriptionAddon.Dependencies.push_back(OpcUa::Server::AsioAddonId);
-    subscriptionAddon.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonId);
-    subscriptionAddon.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
-    return subscriptionAddon;
-  }
+Common::AddonInformation Server::CreateSubscriptionServiceAddon()
+{
+  Common::AddonInformation subscriptionAddon;
+  subscriptionAddon.Factory = std::make_shared<OpcUa::Server::SubscriptionServiceAddonFactory>();
+  subscriptionAddon.Id = OpcUa::Server::SubscriptionServiceAddonId;
+  subscriptionAddon.Dependencies.push_back(OpcUa::Server::AsioAddonId);
+  subscriptionAddon.Dependencies.push_back(OpcUa::Server::AddressSpaceRegistryAddonId);
+  subscriptionAddon.Dependencies.push_back(OpcUa::Server::ServicesRegistryAddonId);
+  return subscriptionAddon;
+}
 
-  void Server::RegisterCommonAddons(const Parameters& serverParams, Common::AddonsManager& manager)
-  {
-    std::vector<Common::AddonInformation> addons;
-    Common::AddonParameters addonParameters = CreateAddonsParameters(serverParams);
-    CreateCommonAddonsConfiguration(addonParameters, addons);
-    RegisterAddons(addons, manager);
-  }
+void Server::RegisterCommonAddons(const Parameters & serverParams, Common::AddonsManager & manager)
+{
+  std::vector<Common::AddonInformation> addons;
+  Common::AddonParameters addonParameters = CreateAddonsParameters(serverParams);
+  CreateCommonAddonsConfiguration(addonParameters, addons);
+  RegisterAddons(addons, manager);
+}
 
-  void Server::LoadConfiguration(const std::string& configDirectoryPath, Common::AddonsManager& manager)
+void Server::LoadConfiguration(const std::string & configDirectoryPath, Common::AddonsManager & manager)
+{
+  const Common::Configuration & configuration = Common::ParseConfigurationFiles(configDirectoryPath);
+  std::vector<Common::AddonInformation> addons(configuration.Modules.size());
+  // modules are dynamic addons.
+  std::transform(configuration.Modules.begin(), configuration.Modules.end(), addons.begin(), [](const Common::ModuleConfiguration & module)
   {
-    const Common::Configuration& configuration = Common::ParseConfigurationFiles(configDirectoryPath);
-    std::vector<Common::AddonInformation> addons(configuration.Modules.size());
-    // modules are dynamic addons.
-    std::transform(configuration.Modules.begin(), configuration.Modules.end(), addons.begin(), [] (const Common::ModuleConfiguration& module){
-    	return Common::GetAddonInfomation(module);
-    });
-    CreateCommonAddonsConfiguration(configuration.Parameters, addons);
-	RegisterAddons(addons, manager);
-  }
+    return Common::GetAddonInfomation(module);
+  });
+  CreateCommonAddonsConfiguration(configuration.Parameters, addons);
+  RegisterAddons(addons, manager);
+}
 
 }

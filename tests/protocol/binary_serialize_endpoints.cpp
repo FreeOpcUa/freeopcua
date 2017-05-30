@@ -52,13 +52,14 @@ TEST_F(EndpointsSerialization, GetEndpointsRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xac, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  4,0,0,0, 't','e','s','t',
-  1,0,0,0, 2,0,0,0, 'R','U',
-  1,0,0,0, 3,0,0,0, 'p','r','o'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xac, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    4, 0, 0, 0, 't', 'e', 's', 't',
+    1, 0, 0, 0, 2, 0, 0, 0, 'R', 'U',
+    1, 0, 0, 0, 3, 0, 0, 0, 'p', 'r', 'o'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -70,13 +71,14 @@ TEST_F(EndpointsDeserialization, GetEndpointsRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xac, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  4,0,0,0, 't','e','s','t',
-  1,0,0,0, 2,0,0,0, 'R','U',
-  1,0,0,0, 3,0,0,0, 'p','r','o'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xac, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    4, 0, 0, 0, 't', 'e', 's', 't',
+    1, 0, 0, 0, 2, 0, 0, 0, 'R', 'U',
+    1, 0, 0, 0, 3, 0, 0, 0, 'p', 'r', 'o'
   };
 
   GetChannel().SetData(expectedData);
@@ -119,13 +121,14 @@ TEST_F(EndpointsSerialization, GetEndpointsResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xaf, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xaf, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1,0,0,0,
-  TEST_ENDPOINT_BINARY_DATA
+    1, 0, 0, 0,
+    TEST_ENDPOINT_BINARY_DATA
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -137,13 +140,14 @@ TEST_F(EndpointsDeserialization, GetEndpointsResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xaf, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xaf, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1,0,0,0,
-  TEST_ENDPOINT_BINARY_DATA
+    1, 0, 0, 0,
+    TEST_ENDPOINT_BINARY_DATA
   };
 
   GetChannel().SetData(expectedData);
@@ -163,7 +167,8 @@ TEST_F(EndpointsDeserialization, GetEndpointsResponse)
   ASSERT_TRUE(Channel->IsEmpty());
 }
 
-const std::vector<unsigned char> GetEndpointsResponseRealData = {
+const std::vector<unsigned char> GetEndpointsResponseRealData =
+{
   0x4d, 0x53, 0x47, 0x46, 0xd2, 0x06, 0x00, 0x00, 0xfc, 0x4b, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00,  // MSGF.....K......
   0x34, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0xaf, 0x01, 0xd8, 0xcd, 0x4e, 0x53,  // 4.............NS
   0x36, 0xda, 0xcd, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // 6...............
@@ -273,7 +278,8 @@ const std::vector<unsigned char> GetEndpointsResponseRealData = {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00,  // ................
   0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,  // ................
   0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,  // ................
-  0xff, 0x00 };                                                                       //  ..
+  0xff, 0x00
+};                                                                       //  ..
 
 TEST_F(EndpointsDeserialization, GetEndpointsResponseReal)
 {
@@ -322,10 +328,11 @@ TEST_F(EndpointsSerialization, FindServersParameters)
 
   GetStream() << params << flush;
 
-  const std::vector<char> expectedData = {
-  3,0,0,0, 'u','r','l',
-  1,0,0,0, 2,0,0,0, 'e','n',
-  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0, 'u', 'r', 'l',
+    1, 0, 0, 0, 2, 0, 0, 0, 'e', 'n',
+    1, 0, 0, 0, 6, 0, 0, 0, 's', 'e', 'r', 'v', 'e', 'r'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -338,10 +345,11 @@ TEST_F(EndpointsDeserialization, FindServersParameters)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  3,0,0,0, 'u','r','l',
-  1,0,0,0, 2,0,0,0, 'e','n',
-  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0, 'u', 'r', 'l',
+    1, 0, 0, 0, 2, 0, 0, 0, 'e', 'n',
+    1, 0, 0, 0, 6, 0, 0, 0, 's', 'e', 'r', 'v', 'e', 'r'
   };
 
   GetChannel().SetData(expectedData);
@@ -380,13 +388,14 @@ TEST_F(EndpointsSerialization, FindServersRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xa6, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  3,0,0,0, 'u','r','l',
-  1,0,0,0, 2,0,0,0, 'e','n',
-  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xa6, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    3, 0, 0, 0, 'u', 'r', 'l',
+    1, 0, 0, 0, 2, 0, 0, 0, 'e', 'n',
+    1, 0, 0, 0, 6, 0, 0, 0, 's', 'e', 'r', 'v', 'e', 'r'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -398,13 +407,14 @@ TEST_F(EndpointsDeserialization, FindServersRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xa6, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  3,0,0,0, 'u','r','l',
-  1,0,0,0, 2,0,0,0, 'e','n',
-  1,0,0,0, 6,0,0,0, 's','e','r','v','e','r'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xa6, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    3, 0, 0, 0, 'u', 'r', 'l',
+    1, 0, 0, 0, 2, 0, 0, 0, 'e', 'n',
+    1, 0, 0, 0, 6, 0, 0, 0, 's', 'e', 'r', 'v', 'e', 'r'
   };
 
   GetChannel().SetData(expectedData);
@@ -447,13 +457,14 @@ TEST_F(EndpointsSerialization, FindServersResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xa9, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xa9, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1,0,0,0,
-  TEST_APPLICATION_DESCRIPTION_BINARY_DATA
+    1, 0, 0, 0,
+    TEST_APPLICATION_DESCRIPTION_BINARY_DATA
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -465,13 +476,14 @@ TEST_F(EndpointsDeserialization, FindServersResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xa9, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xa9, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1,0,0,0,
-  TEST_APPLICATION_DESCRIPTION_BINARY_DATA
+    1, 0, 0, 0,
+    TEST_APPLICATION_DESCRIPTION_BINARY_DATA
   };
 
   GetChannel().SetData(expectedData);

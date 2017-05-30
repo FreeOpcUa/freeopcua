@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -16,20 +16,20 @@
 namespace OpcUa
 {
 
-  class SocketChannel : public OpcUa::IOChannel
-  {
-  public:
-    SocketChannel(int sock);
-    virtual ~SocketChannel();
+class SocketChannel : public OpcUa::IOChannel
+{
+public:
+  SocketChannel(int sock);
+  virtual ~SocketChannel();
 
-    virtual std::size_t Receive(char* data, std::size_t size);
-    virtual void Send(const char* message, std::size_t size);
+  virtual std::size_t Receive(char * data, std::size_t size);
+  virtual void Send(const char * message, std::size_t size);
 
-    virtual void Stop();
+  virtual void Stop();
 
-  private:
-    int Socket;
-  };
+private:
+  int Socket;
+};
 
 }
 

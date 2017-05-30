@@ -14,18 +14,18 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    class BuiltinServer : public Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(BuiltingServerFactory);
+class BuiltinServer : public Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(BuiltingServerFactory);
 
-    public:
-      virtual OpcUa::Services::SharedPtr GetServices() const = 0;
-    };
+public:
+  virtual OpcUa::Services::SharedPtr GetServices() const = 0;
+};
 
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

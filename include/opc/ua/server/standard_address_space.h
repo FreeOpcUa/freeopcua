@@ -14,11 +14,11 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    void FillStandardNamespace(OpcUa::NodeManagementServices& registry, bool debug);
+void FillStandardNamespace(OpcUa::NodeManagementServices & registry, bool debug);
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa
 

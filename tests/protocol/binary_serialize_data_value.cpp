@@ -34,8 +34,9 @@ TEST_F(OpcUaBinarySerialization, DataValue_NULL)
 
   GetStream() << data << flush;
 
-  const std::vector<char> expectedData = {
-  0
+  const std::vector<char> expectedData =
+  {
+    0
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(data));
@@ -55,9 +56,10 @@ TEST_F(OpcUaBinarySerialization, DataValue_Value)
   GetStream() << data << flush;
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
-  const std::vector<char> expectedData = {
-  1,
-  encodingMask, 1
+  const std::vector<char> expectedData =
+  {
+    1,
+    encodingMask, 1
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(data));
@@ -71,12 +73,12 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
   using namespace OpcUa::Binary;
 
   char encodingMask =
-     DATA_VALUE |
-     DATA_VALUE_STATUS_CODE |
-     DATA_VALUE_SOURCE_TIMESTAMP |
-     DATA_VALUE_Server_TIMESTAMP |
-     DATA_VALUE_SOURCE_PICOSECONDS |
-     DATA_VALUE_Server_PICOSECONDS;
+    DATA_VALUE |
+    DATA_VALUE_STATUS_CODE |
+    DATA_VALUE_SOURCE_TIMESTAMP |
+    DATA_VALUE_Server_TIMESTAMP |
+    DATA_VALUE_SOURCE_PICOSECONDS |
+    DATA_VALUE_Server_PICOSECONDS;
 
   DataValue data;
   data.Encoding = encodingMask;
@@ -91,17 +93,18 @@ TEST_F(OpcUaBinarySerialization, DataValue_Full)
 
 
   char variantMask = static_cast<uint8_t>(VariantType::QUALIFIED_NAME);
-  const std::vector<char> expectedData = {
-  encodingMask,
-  variantMask,
-  1, 0, // QualifiedName::NamespaceIndex
-  4,0,0,0, // Qualified::Name.size()
-  'R', 'o', 'o', 't', // QualifiedName::Name::c_str()
-  1,0,0,0,
-  2,0,0,0,0,0,0,0,
-  3,0,
-  4,0,0,0,0,0,0,0,
-  5,0
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    variantMask,
+    1, 0, // QualifiedName::NamespaceIndex
+    4, 0, 0, 0, // Qualified::Name.size()
+    'R', 'o', 'o', 't', // QualifiedName::Name::c_str()
+    1, 0, 0, 0,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0,
+    4, 0, 0, 0, 0, 0, 0, 0,
+    5, 0
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(data));
@@ -118,8 +121,9 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_NUL)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  0
+  const std::vector<char> expectedData =
+  {
+    0
   };
 
   GetChannel().SetData(expectedData);
@@ -136,9 +140,10 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Value)
   using namespace OpcUa::Binary;
 
   char encodingMask = static_cast<uint8_t>(VariantType::BOOLEAN);
-  const std::vector<char> expectedData = {
-  1,
-  encodingMask, 1
+  const std::vector<char> expectedData =
+  {
+    1,
+    encodingMask, 1
   };
 
   GetChannel().SetData(expectedData);
@@ -156,23 +161,24 @@ TEST_F(OpcUaBinaryDeserialization, DataValue_Full)
   using namespace OpcUa::Binary;
 
   char encodingMask =
-     DATA_VALUE |
-     DATA_VALUE_STATUS_CODE |
-     DATA_VALUE_SOURCE_TIMESTAMP |
-     DATA_VALUE_Server_TIMESTAMP |
-     DATA_VALUE_SOURCE_PICOSECONDS |
-     DATA_VALUE_Server_PICOSECONDS;
+    DATA_VALUE |
+    DATA_VALUE_STATUS_CODE |
+    DATA_VALUE_SOURCE_TIMESTAMP |
+    DATA_VALUE_Server_TIMESTAMP |
+    DATA_VALUE_SOURCE_PICOSECONDS |
+    DATA_VALUE_Server_PICOSECONDS;
 
 
   char variantMask = static_cast<uint8_t>(VariantType::BOOLEAN);
-  const std::vector<char> expectedData = {
-  encodingMask,
-  variantMask, 1,
-  1,0,0,0,
-  2,0,0,0,0,0,0,0,
-  3,0,
-  4,0,0,0,0,0,0,0,
-  5,0
+  const std::vector<char> expectedData =
+  {
+    encodingMask,
+    variantMask, 1,
+    1, 0, 0, 0,
+    2, 0, 0, 0, 0, 0, 0, 0,
+    3, 0,
+    4, 0, 0, 0, 0, 0, 0, 0,
+    5, 0
   };
 
   GetChannel().SetData(expectedData);

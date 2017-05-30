@@ -24,20 +24,20 @@
 namespace OpcUa
 {
 
-  class InputFromBuffer : public OpcUa::InputChannel
-  {
-  public:
-    InputFromBuffer(const char* buf, std::size_t bufSize);
+class InputFromBuffer : public OpcUa::InputChannel
+{
+public:
+  InputFromBuffer(const char * buf, std::size_t bufSize);
 
-    virtual std::size_t Receive(char* data, std::size_t size) override;
+  virtual std::size_t Receive(char * data, std::size_t size) override;
 
-    size_t GetRemainSize() const;
+  size_t GetRemainSize() const;
 
-    virtual void Stop() override {}
+  virtual void Stop() override {}
 
-  private:
-    const char* Buffer;
-    std::size_t Size;
-  };
+private:
+  const char * Buffer;
+  std::size_t Size;
+};
 
 }

@@ -43,8 +43,8 @@ TEST_F(AddNodesSerialization, AddNodesItem)
   item.ParentNodeId = OpcUa::NodeId(85, 0);
   item.RequestedNewNodeId = OpcUa::NodeId(99, 3);
   item.Class = NodeClass::Variable;
-  item.ReferenceTypeId = ReferenceId::HasComponent; 
-  item.TypeDefinition = ObjectId::BaseVariableType; 
+  item.ReferenceTypeId = ReferenceId::HasComponent;
+  item.TypeDefinition = ObjectId::BaseVariableType;
   VariableAttributes attr;
   attr.DisplayName = LocalizedText(item.BrowseName.Name);
   attr.Description = LocalizedText(item.BrowseName.Name);
@@ -63,33 +63,34 @@ TEST_F(AddNodesSerialization, AddNodesItem)
 
   GetStream() << item << flush;
 
-  const std::vector<char> expectedData = {
-  2 ,0 ,0 ,(char)0x55 ,0 ,0 ,0 , //parent node id
-  2 ,0 ,0 ,(char)0x2f ,0 ,0 ,0 , //referencetypeid
-  2 ,3 ,0 ,(char)0x63 ,0 ,0 ,0 , //requested nodeid
-  2 ,0 ,4 ,0 ,0 ,0 ,(char)0x74 ,(char)0x69 ,(char)0x74 ,(char)0x69 , //browsename
-  2 ,0 ,0 ,0 , //Node class
-  //start NodeAttributes
-    1 ,0 ,(char)0x65 ,1 ,//TypeId
+  const std::vector<char> expectedData =
+  {
+    2 , 0 , 0 , (char)0x55 , 0 , 0 , 0 , //parent node id
+    2 , 0 , 0 , (char)0x2f , 0 , 0 , 0 , //referencetypeid
+    2 , 3 , 0 , (char)0x63 , 0 , 0 , 0 , //requested nodeid
+    2 , 0 , 4 , 0 , 0 , 0 , (char)0x74 , (char)0x69 , (char)0x74 , (char)0x69 , //browsename
+    2 , 0 , 0 , 0 , //Node class
+    //start NodeAttributes
+    1 , 0 , (char)0x65 , 1 , //TypeId
     1 , //encoding
     //start attributes
-      (char)0x3d ,0 ,0 ,0 , //size
-      (char)0x73 ,(char)0x12 ,(char)0x3d ,0 , //Specified Attributes
-      2 ,4 ,0 ,0 ,0 ,(char)0x74 ,(char)0x69 , (char)0x74 ,(char)0x69 ,//disaply name
-      2 ,4 ,0 ,0 ,0,(char)0x74 ,(char)0x69 ,(char)0x74 ,(char)0x69 , //description
-      0 ,0 ,0 ,0 , //writemask
-      0 ,0 ,0 ,0 ,//Userwritemask
-      //variant
-        6, //variant type
-        7, 0, 0 ,0, //variant value
-      2, 0 ,0 ,7 ,0 ,0, 0, //DataType
-      0, 0, 0, 0, //value rank
-      (char)0xff ,(char)0xff ,(char)0xff ,(char)0xff , //array of simple type ??
-      1 , //access
-      2 , //user access level
-      0 , 0 , 0 ,0 , 0, 0, (char)0xf0, (char)0x3f, //Minimum sampleing rate
-      1, //historyzing
-      2, 0, 0, (char)0x3e, 0 , 0, 0 //type definition
+    (char)0x3d , 0 , 0 , 0 , //size
+    (char)0x73 , (char)0x12 , (char)0x3d , 0 , //Specified Attributes
+    2 , 4 , 0 , 0 , 0 , (char)0x74 , (char)0x69 , (char)0x74 , (char)0x69 , //disaply name
+    2 , 4 , 0 , 0 , 0, (char)0x74 , (char)0x69 , (char)0x74 , (char)0x69 , //description
+    0 , 0 , 0 , 0 , //writemask
+    0 , 0 , 0 , 0 , //Userwritemask
+    //variant
+    6, //variant type
+    7, 0, 0 , 0, //variant value
+    2, 0 , 0 , 7 , 0 , 0, 0, //DataType
+    0, 0, 0, 0, //value rank
+    (char)0xff , (char)0xff , (char)0xff , (char)0xff , //array of simple type ??
+    1 , //access
+    2 , //user access level
+    0 , 0 , 0 , 0 , 0, 0, (char)0xf0, (char)0x3f, //Minimum sampleing rate
+    1, //historyzing
+    2, 0, 0, (char)0x3e, 0 , 0, 0 //type definition
   };
 
 

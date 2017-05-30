@@ -17,57 +17,59 @@
 
 namespace OpcUa
 {
-  namespace Internal
-  {
+namespace Internal
+{
 
-    void XmlAddressSpaceAddon::Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params)
+void XmlAddressSpaceAddon::Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params)
+{
+  Registry = addons.GetAddon<NodeManagementServices>(Server::AddressSpaceRegistryAddonId);
+
+  if (!Registry)
     {
-      Registry = addons.GetAddon<NodeManagementServices>(Server::AddressSpaceRegistryAddonId);
-      if (!Registry)
-      {
-        std::stringstream stream;
-        stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonId << "'. " << std::endl;
-        throw std::logic_error(stream.str());
-      }
+      std::stringstream stream;
+      stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonId << "'. " << std::endl;
+      throw std::logic_error(stream.str());
+    }
 
-      for (const Common::Parameter& param : params.Parameters)
-      {
-        if (param.Name == "file_name")
+  for (const Common::Parameter & param : params.Parameters)
+    {
+      if (param.Name == "file_name")
         {
           try
-          {
-            Load(param.Value.c_str(), *Registry);
-          }
-          catch (const std::exception& err)
-          {
-            std::cerr << "Unable to load address space from the file '" << param.Value << "'. " << err.what() << std::endl;
-          }
+            {
+              Load(param.Value.c_str(), *Registry);
+            }
+
+          catch (const std::exception & err)
+            {
+              std::cerr << "Unable to load address space from the file '" << param.Value << "'. " << err.what() << std::endl;
+            }
         }
-      }
     }
+}
 
-    void XmlAddressSpaceAddon::Stop()
+void XmlAddressSpaceAddon::Stop()
+{
+  Registry.reset();
+}
+
+void XmlAddressSpaceAddon::Load(const char * path)
+{
+  Load(path, *Registry);
+}
+
+void XmlAddressSpaceAddon::Load(const char * file, OpcUa::NodeManagementServices & registry)
+{
+  if (!Registry)
     {
-      Registry.reset();
+      std::stringstream stream;
+      stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonId << "'. " << std::endl;
+      throw std::logic_error(stream.str());
     }
 
-    void XmlAddressSpaceAddon::Load(const char* path)
-    {
-      Load(path, *Registry);
-    }
+  XmlAddressSpaceLoader xml(*Registry);
+  xml.Load(file);
+}
 
-    void XmlAddressSpaceAddon::Load(const char* file, OpcUa::NodeManagementServices& registry)
-    {
-      if (!Registry)
-      {
-        std::stringstream stream;
-        stream << "Unable to find addon '" << Server::AddressSpaceRegistryAddonId << "'. " << std::endl;
-        throw std::logic_error(stream.str());
-      }
-
-      XmlAddressSpaceLoader xml(*Registry);
-      xml.Load(file);
-    }
-
-  } // namespace Internal
+} // namespace Internal
 } // namespace OpcUa

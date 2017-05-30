@@ -27,34 +27,36 @@
 namespace OpcUa
 {
 
-  inline void PrintBlob(const std::vector<char>& buf, std::size_t size)
-  {
-    size = std::min(size, buf.size());
-    unsigned pos = 0;
-    std::cout << "Data size: " << size << std::endl;
-    while (pos < size)
+inline void PrintBlob(const std::vector<char> & buf, std::size_t size)
+{
+  size = std::min(size, buf.size());
+  unsigned pos = 0;
+  std::cout << "Data size: " << size << std::endl;
+
+  while (pos < size)
     {
       if (pos)
-        printf((pos % 16 == 0) ? "\n" : " ");
+        { printf((pos % 16 == 0) ? "\n" : " "); }
 
       const char letter = buf[pos];
       printf("%02x", (unsigned)letter & 0x000000FF);
 
       if (letter > ' ')
-        std::cout << "(" << letter << ")";
+        { std::cout << "(" << letter << ")"; }
+
       else
-        std::cout << "   ";
+        { std::cout << "   "; }
 
       ++pos;
     }
 
-    std::cout << std::endl << std::flush;
-  }
+  std::cout << std::endl << std::flush;
+}
 
-  inline void PrintBlob(const std::vector<char>& buf)
-  {
-    PrintBlob(buf, buf.size());
-  }
+inline void PrintBlob(const std::vector<char> & buf)
+{
+  PrintBlob(buf, buf.size());
+}
 
 
 }

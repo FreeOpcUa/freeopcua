@@ -17,16 +17,16 @@
 
 namespace OpcUa
 {
-  namespace Internal
-  {
+namespace Internal
+{
 
-    class XmlProcessor : private Common::Interface
-    {
-    public:
-      virtual void Process(xmlNode& node) = 0;
-    };
+class XmlProcessor : private Common::Interface
+{
+public:
+  virtual void Process(xmlNode & node) = 0;
+};
 
-  } // namespace Internal
+} // namespace Internal
 
 } // namespace OpcUa
 

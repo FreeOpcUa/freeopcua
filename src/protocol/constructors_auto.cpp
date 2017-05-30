@@ -16,7 +16,7 @@
 #include <opc/ua/protocol/object_ids.h>
 
 namespace OpcUa
-{   
+{
 
 /*  DISABLED
 */
@@ -48,15 +48,15 @@ namespace OpcUa
     }
 */
 
-     GetEndpointsRequest::GetEndpointsRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsRequest_Encoding_DefaultBinary))
-    {
-    }
+GetEndpointsRequest::GetEndpointsRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsRequest_Encoding_DefaultBinary))
+{
+}
 
-     GetEndpointsResponse::GetEndpointsResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsResponse_Encoding_DefaultBinary))
-    {
-    }
+GetEndpointsResponse::GetEndpointsResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::GetEndpointsResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -109,28 +109,28 @@ namespace OpcUa
     }
 */
 
-     CreateSessionRequest::CreateSessionRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionRequest_Encoding_DefaultBinary))
-    {
-    }
+CreateSessionRequest::CreateSessionRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionRequest_Encoding_DefaultBinary))
+{
+}
 
-     CreateSessionResponse::CreateSessionResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionResponse_Encoding_DefaultBinary))
-    {
-    }
+CreateSessionResponse::CreateSessionResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSessionResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 */
 
-     ActivateSessionRequest::ActivateSessionRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionRequest_Encoding_DefaultBinary))
-    {
-    }
+ActivateSessionRequest::ActivateSessionRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionRequest_Encoding_DefaultBinary))
+{
+}
 
-     ActivateSessionResponse::ActivateSessionResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionResponse_Encoding_DefaultBinary))
-    {
-    }
+ActivateSessionResponse::ActivateSessionResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ActivateSessionResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -196,15 +196,15 @@ namespace OpcUa
     }
 */
 
-     DeleteNodesRequest::DeleteNodesRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesRequest_Encoding_DefaultBinary))
-    {
-    }
+DeleteNodesRequest::DeleteNodesRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesRequest_Encoding_DefaultBinary))
+{
+}
 
-     DeleteNodesResponse::DeleteNodesResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesResponse_Encoding_DefaultBinary))
-    {
-    }
+DeleteNodesResponse::DeleteNodesResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteNodesResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -343,15 +343,15 @@ namespace OpcUa
     }
 */
 
-     ReadRequest::ReadRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ReadRequest_Encoding_DefaultBinary))
-    {
-    }
+ReadRequest::ReadRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ReadRequest_Encoding_DefaultBinary))
+{
+}
 
-     ReadResponse::ReadResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ReadResponse_Encoding_DefaultBinary))
-    {
-    }
+ReadResponse::ReadResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ReadResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -369,15 +369,15 @@ namespace OpcUa
     }
 */
 
-     WriteRequest::WriteRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::WriteRequest_Encoding_DefaultBinary))
-    {
-    }
+WriteRequest::WriteRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::WriteRequest_Encoding_DefaultBinary))
+{
+}
 
-     WriteResponse::WriteResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::WriteResponse_Encoding_DefaultBinary))
-    {
-    }
+WriteResponse::WriteResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::WriteResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -395,25 +395,25 @@ namespace OpcUa
     }
 */
 
-     CallRequest::CallRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CallRequest_Encoding_DefaultBinary))
-    {
-    }
+CallRequest::CallRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CallRequest_Encoding_DefaultBinary))
+{
+}
 
-     CallResponse::CallResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CallResponse_Encoding_DefaultBinary))
-    {
-    }
+CallResponse::CallResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CallResponse_Encoding_DefaultBinary))
+{
+}
 
-     CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsRequest_Encoding_DefaultBinary))
-    {
-    }
+CreateMonitoredItemsRequest::CreateMonitoredItemsRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsRequest_Encoding_DefaultBinary))
+{
+}
 
-     CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsResponse_Encoding_DefaultBinary))
-    {
-    }
+CreateMonitoredItemsResponse::CreateMonitoredItemsResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateMonitoredItemsResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -463,65 +463,65 @@ namespace OpcUa
     }
 */
 
-     DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsRequest_Encoding_DefaultBinary))
-    {
-    }
+DeleteMonitoredItemsRequest::DeleteMonitoredItemsRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsRequest_Encoding_DefaultBinary))
+{
+}
 
-     DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsResponse_Encoding_DefaultBinary))
-    {
-    }
+DeleteMonitoredItemsResponse::DeleteMonitoredItemsResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteMonitoredItemsResponse_Encoding_DefaultBinary))
+{
+}
 
-     CreateSubscriptionRequest::CreateSubscriptionRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionRequest_Encoding_DefaultBinary))
-    {
-    }
+CreateSubscriptionRequest::CreateSubscriptionRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionRequest_Encoding_DefaultBinary))
+{
+}
 
-     CreateSubscriptionResponse::CreateSubscriptionResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionResponse_Encoding_DefaultBinary))
-    {
-    }
+CreateSubscriptionResponse::CreateSubscriptionResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::CreateSubscriptionResponse_Encoding_DefaultBinary))
+{
+}
 
-     ModifySubscriptionRequest::ModifySubscriptionRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionRequest_Encoding_DefaultBinary))
-    {
-    }
+ModifySubscriptionRequest::ModifySubscriptionRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionRequest_Encoding_DefaultBinary))
+{
+}
 
-     ModifySubscriptionResponse::ModifySubscriptionResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionResponse_Encoding_DefaultBinary))
-    {
-    }
+ModifySubscriptionResponse::ModifySubscriptionResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionResponse_Encoding_DefaultBinary))
+{
+}
 
-     SetPublishingModeRequest::SetPublishingModeRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeRequest_Encoding_DefaultBinary))
-    {
-    }
+SetPublishingModeRequest::SetPublishingModeRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeRequest_Encoding_DefaultBinary))
+{
+}
 
-     SetPublishingModeResponse::SetPublishingModeResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeResponse_Encoding_DefaultBinary))
-    {
-    }
+SetPublishingModeResponse::SetPublishingModeResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeResponse_Encoding_DefaultBinary))
+{
+}
 
-     PublishRequest::PublishRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))
-    {
-    }
+PublishRequest::PublishRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishRequest_Encoding_DefaultBinary))
+{
+}
 
-     PublishResponse::PublishResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishResponse_Encoding_DefaultBinary))
-    {
-    }
+PublishResponse::PublishResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::PublishResponse_Encoding_DefaultBinary))
+{
+}
 
-     RepublishRequest::RepublishRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishRequest_Encoding_DefaultBinary))
-    {
-    }
+RepublishRequest::RepublishRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishRequest_Encoding_DefaultBinary))
+{
+}
 
-     RepublishResponse::RepublishResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishResponse_Encoding_DefaultBinary))
-    {
-    }
+RepublishResponse::RepublishResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::RepublishResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -539,15 +539,15 @@ namespace OpcUa
     }
 */
 
-     DeleteSubscriptionsRequest::DeleteSubscriptionsRequest()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsRequest_Encoding_DefaultBinary))
-    {
-    }
+DeleteSubscriptionsRequest::DeleteSubscriptionsRequest()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsRequest_Encoding_DefaultBinary))
+{
+}
 
-     DeleteSubscriptionsResponse::DeleteSubscriptionsResponse()
-        : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsResponse_Encoding_DefaultBinary))
-    {
-    }
+DeleteSubscriptionsResponse::DeleteSubscriptionsResponse()
+  : TypeId(FourByteNodeId((uint16_t)ObjectId::DeleteSubscriptionsResponse_Encoding_DefaultBinary))
+{
+}
 
 /*  DISABLED
 
@@ -582,4 +582,4 @@ namespace OpcUa
 */
 
 } // namespace
-    
+

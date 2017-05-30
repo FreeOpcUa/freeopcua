@@ -41,8 +41,10 @@
 
 #include <stdio.h>
 
-namespace testing {
-namespace internal {
+namespace testing
+{
+namespace internal
+{
 
 GTEST_DECLARE_string_(internal_run_death_test);
 
@@ -66,8 +68,9 @@ const char kInternalRunDeathTestFlag[] = "internal_run_death_test";
 //               by wait(2)
 // exit code:    The integer code passed to exit(3), _exit(2), or
 //               returned from main()
-class GTEST_API_ DeathTest {
- public:
+class GTEST_API_ DeathTest
+{
+public:
   // Create returns false if there was an error determining the
   // appropriate action to take for the current death test; for example,
   // if the gtest_death_test_style flag is set to an invalid value.
@@ -76,18 +79,19 @@ class GTEST_API_ DeathTest {
   // argument is set.  If the death test should be skipped, the pointer
   // is set to NULL; otherwise, it is set to the address of a new concrete
   // DeathTest object that controls the execution of the current test.
-  static bool Create(const char* statement, const RE* regex,
-                     const char* file, int line, DeathTest** test);
+  static bool Create(const char * statement, const RE * regex,
+                     const char * file, int line, DeathTest ** test);
   DeathTest();
   virtual ~DeathTest() { }
 
   // A helper class that aborts a death test when it's deleted.
-  class ReturnSentinel {
-   public:
-    explicit ReturnSentinel(DeathTest* test) : test_(test) { }
+  class ReturnSentinel
+  {
+  public:
+    explicit ReturnSentinel(DeathTest * test) : test_(test) { }
     ~ReturnSentinel() { test_->Abort(TEST_ENCOUNTERED_RETURN_STATEMENT); }
-   private:
-    DeathTest* const test_;
+  private:
+    DeathTest * const test_;
     GTEST_DISALLOW_COPY_AND_ASSIGN_(ReturnSentinel);
   } GTEST_ATTRIBUTE_UNUSED_;
 
@@ -99,7 +103,8 @@ class GTEST_API_ DeathTest {
   enum TestRole { OVERSEE_TEST, EXECUTE_TEST };
 
   // An enumeration of the three reasons that a test might be aborted.
-  enum AbortReason {
+  enum AbortReason
+  {
     TEST_ENCOUNTERED_RETURN_STATEMENT,
     TEST_THREW_EXCEPTION,
     TEST_DID_NOT_DIE
@@ -125,11 +130,11 @@ class GTEST_API_ DeathTest {
 
   // Returns a human-readable outcome message regarding the outcome of
   // the last death test.
-  static const char* LastMessage();
+  static const char * LastMessage();
 
-  static void set_last_death_test_message(const std::string& message);
+  static void set_last_death_test_message(const std::string & message);
 
- private:
+private:
   // A string containing a description of the outcome of the last death test.
   static std::string last_death_test_message_;
 
@@ -137,18 +142,20 @@ class GTEST_API_ DeathTest {
 };
 
 // Factory interface for death tests.  May be mocked out for testing.
-class DeathTestFactory {
- public:
+class DeathTestFactory
+{
+public:
   virtual ~DeathTestFactory() { }
-  virtual bool Create(const char* statement, const RE* regex,
-                      const char* file, int line, DeathTest** test) = 0;
+  virtual bool Create(const char * statement, const RE * regex,
+                      const char * file, int line, DeathTest ** test) = 0;
 };
 
 // A concrete DeathTestFactory implementation for normal use.
-class DefaultDeathTestFactory : public DeathTestFactory {
- public:
-  virtual bool Create(const char* statement, const RE* regex,
-                      const char* file, int line, DeathTest** test);
+class DefaultDeathTestFactory : public DeathTestFactory
+{
+public:
+  virtual bool Create(const char * statement, const RE * regex,
+                      const char * file, int line, DeathTest ** test);
 };
 
 // Returns true if exit_status describes a process that was terminated
@@ -231,26 +238,28 @@ GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
 // A class representing the parsed contents of the
 // --gtest_internal_run_death_test flag, as it existed when
 // RUN_ALL_TESTS was called.
-class InternalRunDeathTestFlag {
- public:
-  InternalRunDeathTestFlag(const std::string& a_file,
+class InternalRunDeathTestFlag
+{
+public:
+  InternalRunDeathTestFlag(const std::string & a_file,
                            int a_line,
                            int an_index,
                            int a_write_fd)
-      : file_(a_file), line_(a_line), index_(an_index),
-        write_fd_(a_write_fd) {}
+    : file_(a_file), line_(a_line), index_(an_index),
+      write_fd_(a_write_fd) {}
 
-  ~InternalRunDeathTestFlag() {
+  ~InternalRunDeathTestFlag()
+  {
     if (write_fd_ >= 0)
-      posix::Close(write_fd_);
+      { posix::Close(write_fd_); }
   }
 
-  const std::string& file() const { return file_; }
+  const std::string & file() const { return file_; }
   int line() const { return line_; }
   int index() const { return index_; }
   int write_fd() const { return write_fd_; }
 
- private:
+private:
   std::string file_;
   int line_;
   int index_;
@@ -262,7 +271,7 @@ class InternalRunDeathTestFlag {
 // Returns a newly created InternalRunDeathTestFlag object with fields
 // initialized from the GTEST_FLAG(internal_run_death_test) flag if
 // the flag is specified; otherwise returns NULL.
-InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag();
+InternalRunDeathTestFlag * ParseInternalRunDeathTestFlag();
 
 #else  // GTEST_HAS_DEATH_TEST
 

@@ -15,20 +15,20 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char BuiltinServerAddonId[] = "builtin_server_addon";
+const char BuiltinServerAddonId[] = "builtin_server_addon";
 
-    class BuiltingServerFactory : public Common::AddonFactory
-    {
-    public:
-        DEFINE_CLASS_POINTERS(BuiltingServerFactory);
+class BuiltingServerFactory : public Common::AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(BuiltingServerFactory);
 
-      public:
-        virtual Common::Addon::UniquePtr CreateAddon();
-    };
+public:
+  virtual Common::Addon::UniquePtr CreateAddon();
+};
 
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

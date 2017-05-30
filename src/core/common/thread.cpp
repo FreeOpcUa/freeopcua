@@ -15,52 +15,55 @@
 namespace Common
 {
 
-    Thread::Thread(std::function<void()> f, ThreadObserver* observer)
-      : Observer(observer)
-      , Func(f)
-      , Impl(Thread::ThreadProc, this)
+Thread::Thread(std::function<void()> f, ThreadObserver * observer)
+  : Observer(observer)
+  , Func(f)
+  , Impl(Thread::ThreadProc, this)
+{
+}
+
+Thread::~Thread()
+{
+  try
     {
+      Join();
     }
 
-    Thread::~Thread()
+  catch (std::exception &)
     {
-      try
-      {
-        Join();
-      }
-      catch (std::exception&)
-      {
-      }
     }
+}
 
-    void Thread::Join()
-    {
-      Impl.join();
-    }
+void Thread::Join()
+{
+  Impl.join();
+}
 
-    void Thread::Run()
+void Thread::Run()
+{
+  try
     {
-      try
-      {
-        Func();
-        if (Observer)
+      Func();
+
+      if (Observer)
         {
           Observer->OnSuccess();
         }
-      }
-      catch (const std::exception& exc)
-      {
-        if (Observer)
+    }
+
+  catch (const std::exception & exc)
+    {
+      if (Observer)
         {
           Observer->OnError(exc);
         }
-      }
     }
+}
 
-    void Thread::ThreadProc(Thread* thread)
-    {
-      thread->Run();
-    }
+void Thread::ThreadProc(Thread * thread)
+{
+  thread->Run();
+}
 
 } // namespace Common
 

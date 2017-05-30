@@ -23,30 +23,31 @@
 
 namespace OpcUa
 {
-  namespace Model
+namespace Model
+{
+template <typename T>
+std::vector<T> Browse(const NodeId & node, NodeClass nodeClassMask, Services::SharedPtr services)
+{
+  BrowseDescription desc;
+  desc.Direction = BrowseDirection::Forward;
+  desc.IncludeSubtypes = true;
+  desc.NodeClasses =   nodeClassMask;
+  desc.ReferenceTypeId = ObjectId::HierarchicalReferences;
+  desc.NodeToBrowse = node;
+  desc.ResultMask = BrowseResultMask::None;
+
+  NodesQuery query;
+  query.NodesToBrowse.push_back(desc);
+  ViewServices::SharedPtr views = services->Views();
+  std::vector<BrowseResult> results = views->Browse(query);
+
+  std::vector<T> objects;
+  std::for_each(results[0].Referencies.begin(), results[0].Referencies.end(), [&node, &services, &objects](const ReferenceDescription & ref)
   {
-    template <typename T>
-    std::vector<T> Browse(const NodeId& node, NodeClass nodeClassMask, Services::SharedPtr services)
-    {
-      BrowseDescription desc;
-      desc.Direction = BrowseDirection::Forward;
-      desc.IncludeSubtypes = true;
-      desc.NodeClasses =   nodeClassMask;
-      desc.ReferenceTypeId = ObjectId::HierarchicalReferences;
-      desc.NodeToBrowse = node;
-      desc.ResultMask = BrowseResultMask::None;
+    objects.push_back(T(ref.TargetNodeId, services));
+  });
 
-      NodesQuery query;
-      query.NodesToBrowse.push_back(desc);
-      ViewServices::SharedPtr views = services->Views();
-      std::vector<BrowseResult> results = views->Browse(query);
-
-      std::vector<T> objects;
-      std::for_each(results[0].Referencies.begin(), results[0].Referencies.end(), [&node, &services, &objects](const ReferenceDescription& ref){
-        objects.push_back(T(ref.TargetNodeId, services));
-      });
-
-      return objects;
-    }
-  }
+  return objects;
+}
+}
 }

@@ -43,7 +43,7 @@ protected:
   }
 
 protected:
-  std::vector<ReferenceDescription> Browse(const NodeId& id) const
+  std::vector<ReferenceDescription> Browse(const NodeId & id) const
   {
     OpcUa::BrowseDescription description;
     description.NodeToBrowse = id;
@@ -55,17 +55,18 @@ protected:
   bool HasReference(std::vector<ReferenceDescription> refs, ReferenceId referenceId,  NodeId targetNode) const
   {
     for (const ReferenceDescription ref : refs)
-    {
-      if (ref.TargetNodeId == targetNode && ref.ReferenceTypeId == referenceId)
       {
-        return true;
+        if (ref.TargetNodeId == targetNode && ref.ReferenceTypeId == referenceId)
+          {
+            return true;
+          }
       }
-    }
+
     return false;
   }
 
   template <typename T>
-  bool HasAttribute(const NodeId& object, OpcUa::AttributeId attribute, T value)
+  bool HasAttribute(const NodeId & object, OpcUa::AttributeId attribute, T value)
   {
     ReadParameters params;
     ReadValueId id;
@@ -74,17 +75,18 @@ protected:
     params.AttributesToRead.push_back(id);
     std::vector<DataValue> values = NameSpace->Read(params);
     EXPECT_EQ(values.size(), 1);
+
     if (values.size() != 1)
-    {
-      return false;
-    }
+      {
+        return false;
+      }
 
     const DataValue var = values.front();
     EXPECT_EQ(var.Status, StatusCode::Good);
     return var == value;
   }
 
-  std::string ConfigPath(const char* name)
+  std::string ConfigPath(const char * name)
   {
     return std::string("tests/server/") + name;
   }
@@ -216,7 +218,7 @@ TEST_F(XmlAddressSpace, BaseNodeHasEventNotifier)
   XmlAddressSpaceLoader loader(*NameSpace);
   ASSERT_NO_THROW(loader.Load(ConfigPath("base_node.xml")));
 
-  ASSERT_TRUE(HasAttribute(NumericNodeId(84, 10), AttributeId::EventNotifier, std::vector<uint8_t>{0}));
+  ASSERT_TRUE(HasAttribute(NumericNodeId(84, 10), AttributeId::EventNotifier, std::vector<uint8_t> {0}));
 }
 
 TEST_F(XmlAddressSpace, BaseNodeHasValue)

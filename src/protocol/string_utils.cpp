@@ -27,52 +27,59 @@
 #include <limits>
 
 
-std::string OpcUa::ToString(const NodeId& id)
+std::string OpcUa::ToString(const NodeId & id)
 {
   std::stringstream stream;
 
   if (id.HasServerIndex())
+    {
+      stream << "srv=" << id.ServerIndex << ";";
+    }
+
   {
-    stream << "srv=" << id.ServerIndex << ";";
-  }
-  {
-  if (id.HasNamespaceURI())
-    stream << "nsu=" << id.NamespaceURI << ";";
+    if (id.HasNamespaceURI())
+      { stream << "nsu=" << id.NamespaceURI << ";"; }
   }
 
   stream << "ns=" << id.GetNamespaceIndex() << ";";
+
   if (id.IsInteger())
-  {
-    stream << "i=" << id.GetIntegerIdentifier() << ";";
-  }
+    {
+      stream << "i=" << id.GetIntegerIdentifier() << ";";
+    }
+
 #ifndef __ENABLE_EMBEDDED_PROFILE__
-  else if(id.IsString())
-  {
-    stream << "s=" << id.GetStringIdentifier() << ";";
-  }
+
+  else if (id.IsString())
+    {
+      stream << "s=" << id.GetStringIdentifier() << ";";
+    }
+
   else if (id.IsGuid())
-  {
-    stream << "g=" << ToString(id.GetGuidIdentifier()) << ";";
-  }
+    {
+      stream << "g=" << ToString(id.GetGuidIdentifier()) << ";";
+    }
+
 #endif
 
   return stream.str();
 }
 
 
-std::string OpcUa::ToString(const OpcUa::Guid& guid)
+std::string OpcUa::ToString(const OpcUa::Guid & guid)
 {
   char buf[36] = {0};
   sprintf(buf, "%08X-%04X-%04X-%02X%02X%02X%02X%02X%02X%02X%02X", guid.Data1, guid.Data2, guid.Data3, guid.Data4[0], guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
   return buf;
 }
 
-OpcUa::Guid OpcUa::ToGuid(const std::string& str)
+OpcUa::Guid OpcUa::ToGuid(const std::string & str)
 {
   if (str.size() != 35)
-  {
-    return OpcUa::Guid();
-  }
+    {
+      return OpcUa::Guid();
+    }
+
   Guid guid;
 
   unsigned data1 = 0;
@@ -87,7 +94,7 @@ OpcUa::Guid OpcUa::ToGuid(const std::string& str)
   unsigned data10 = 0;
   unsigned data11 = 0;
   const int parts = sscanf(str.c_str(), "%08X-%04X-%04X-%02X%02X%02X%02X%02X%02X%02X%02X",
-      &data1, &data2, &data3, &data4, &data5, &data6, &data7, &data8, &data9, &data10, &data11);
+                           &data1, &data2, &data3, &data4, &data5, &data6, &data7, &data8, &data9, &data10, &data11);
 
   guid.Data1    = static_cast<uint32_t>(data1);
   guid.Data2    = static_cast<uint16_t>(data2);
@@ -102,154 +109,173 @@ OpcUa::Guid OpcUa::ToGuid(const std::string& str)
   guid.Data4[7] = static_cast<uint8_t>(data11);
 
   if (parts != 11)
-  {
-    return OpcUa::Guid();
-  }
+    {
+      return OpcUa::Guid();
+    }
+
   return guid;
 }
 
 
 namespace
 {
-  std::string GetNodeField(const std::string& data, const char* field)
-  {
-    std::size_t colon = 0;
-    do
+std::string GetNodeField(const std::string & data, const char * field)
+{
+  std::size_t colon = 0;
+
+  do
     {
       // if something found at previous cycle
       if (colon)
-      {
-        ++colon;
-      }
+        {
+          ++colon;
+        }
+
       // find field string
       colon = data.find(field, colon);
 
       // if found nothing
       if (colon == std::string::npos)
-      {
-        return std::string();
-      }
+        {
+          return std::string();
+        }
+
       // if found at the begin
       if (colon == 0)
-      {
-        break;
-      }
+        {
+          break;
+        }
     }
-    // if finding 's=' in the 'ns=1;i-3;' will be found field 'ns=1;'
-    // check that previous character is the ';' if not then search next.
-    while(data[colon - 1] != ';');
 
-    colon += std::strlen(field);
-    const std::size_t semicolon = data.find(";", colon);
-    if (semicolon == std::string::npos)
+  // if finding 's=' in the 'ns=1;i-3;' will be found field 'ns=1;'
+  // check that previous character is the ';' if not then search next.
+  while (data[colon - 1] != ';');
+
+  colon += std::strlen(field);
+  const std::size_t semicolon = data.find(";", colon);
+
+  if (semicolon == std::string::npos)
     {
       data.substr(colon);
     }
-    return data.substr(colon, semicolon - colon);
-  }
 
-  uint32_t GetInteger(const std::string&value)
-  {
-    if (value.empty())
+  return data.substr(colon, semicolon - colon);
+}
+
+uint32_t GetInteger(const std::string & value)
+{
+  if (value.empty())
     {
       return 0;
     }
-    return std::stoul(value);
-  }
+
+  return std::stoul(value);
+}
 
 }
 
-OpcUa::NodeId OpcUa::ToNodeId(const std::string& data, uint32_t defaultNamespace)
+OpcUa::NodeId OpcUa::ToNodeId(const std::string & data, uint32_t defaultNamespace)
 {
   OpcUa::NodeId result;
   uint32_t ns = defaultNamespace;
 
   const std::string nsString = GetNodeField(data, "ns=");
+
   if (nsString.empty())
-  {
-    if (ns == std::numeric_limits<uint32_t>::max() )
     {
-      throw(std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + data));
+      if (ns == std::numeric_limits<uint32_t>::max())
+        {
+          throw (std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + data));
+        }
     }
-  }
+
   else
-  {
-    ns = GetInteger(nsString);
-  }
+    {
+      ns = GetInteger(nsString);
+    }
 
   const std::string srv = GetNodeField(data, "srv=");
+
   if (!srv.empty())
-  {
-    result.SetServerIndex(GetInteger(srv));
-  }
+    {
+      result.SetServerIndex(GetInteger(srv));
+    }
 
   const std::string nsu = GetNodeField(data, "nsu=");
+
   if (!nsu.empty())
-  {
-    result.SetNamespaceURI(nsu);
-  }
+    {
+      result.SetNamespaceURI(nsu);
+    }
 
   const std::string integer = GetNodeField(data, "i=");
+
   if (!integer.empty())
-  {
-    return OpcUa::NumericNodeId(GetInteger(integer), ns);
-  }
+    {
+      return OpcUa::NumericNodeId(GetInteger(integer), ns);
+    }
 
   const std::string str = GetNodeField(data, "s=");
+
   if (!str.empty())
-  {
-    return OpcUa::StringNodeId(str, ns);
-  }
+    {
+      return OpcUa::StringNodeId(str, ns);
+    }
 
   const std::string g = GetNodeField(data, "g=");
-  if (!g.empty())
-  {
-    return OpcUa::GuidNodeId(ToGuid(g), ns);
-  }
 
-  throw(std::runtime_error("No identifier found in string: '" + data +"'"));
+  if (!g.empty())
+    {
+      return OpcUa::GuidNodeId(ToGuid(g), ns);
+    }
+
+  throw (std::runtime_error("No identifier found in string: '" + data + "'"));
 }
 
-OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string& str, uint32_t default_ns)
+OpcUa::QualifiedName OpcUa::ToQualifiedName(const std::string & str, uint32_t default_ns)
 {
   std::size_t found = str.find(":");
+
   if (found != std::string::npos)
-  {
-    uint16_t ns = std::stoi(str.substr(0, found));
-    std::string name = str.substr(found+1, str.length() - found);
-    return QualifiedName(ns, name);
-  }
-  
-  if (default_ns == std::numeric_limits<uint32_t>::max() )
-  {
-    throw(std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + str));
-  }
+    {
+      uint16_t ns = std::stoi(str.substr(0, found));
+      std::string name = str.substr(found + 1, str.length() - found);
+      return QualifiedName(ns, name);
+    }
+
+  if (default_ns == std::numeric_limits<uint32_t>::max())
+    {
+      throw (std::runtime_error("Namespace index coult not be parsed from string and not default index specified in string: " + str));
+    }
 
   return QualifiedName(default_ns, str);
 }
 
-std::string OpcUa::ToString(const OpcUa::BrowseDirection& direction)
+std::string OpcUa::ToString(const OpcUa::BrowseDirection & direction)
 {
   switch (direction)
-  {
+    {
     case OpcUa::BrowseDirection::Forward:
       return "forward";
+
     case OpcUa::BrowseDirection::Inverse:
       return "inverse";
+
     case OpcUa::BrowseDirection::Both:
       return "both";
+
     default:
       return "unknown";
-  }
+    }
 }
 
-std::string OpcUa::ToString(const OpcUa::DateTime& t)
+std::string OpcUa::ToString(const OpcUa::DateTime & t)
 {
   std::time_t st = OpcUa::DateTime::ToTimeT(t);
   return std::ctime(&st);
 }
 
-std::string OpcUa::ToString(const OpcUa::LocalizedText& t)
+std::string OpcUa::ToString(const OpcUa::LocalizedText & t)
 {
   return t.Text;
 }

@@ -45,15 +45,15 @@ TEST_F(InputFromBuffer, ThrowsIfNullBuffer)
 
 TEST_F(InputFromBuffer, ThrowsIfZeroSize)
 {
-  ASSERT_THROW(OpcUa::InputFromBuffer((char*)1, 0), std::invalid_argument);
+  ASSERT_THROW(OpcUa::InputFromBuffer((char *)1, 0), std::invalid_argument);
 }
 
 TEST_F(InputFromBuffer, ReadReturnsZeroWhenReadZero)
 {
   OpcUa::InputFromBuffer input(&SourceBuffer[0], SourceBuffer.size());
 
-  std::vector<char> targetBuf{9,8,7};
-  std::vector<char> expectedBuf{9,8,7};
+  std::vector<char> targetBuf{9, 8, 7};
+  std::vector<char> expectedBuf{9, 8, 7};
   const size_t sizeToRead = 0;
 
   ASSERT_EQ(input.Receive(&targetBuf[0], sizeToRead), 0);
@@ -64,7 +64,7 @@ TEST_F(InputFromBuffer, ReadSmallBuffer)
 {
   OpcUa::InputFromBuffer input(&SourceBuffer[0], SourceBuffer.size());
 
-  std::vector<char> targetBuf{9,8,7};
+  std::vector<char> targetBuf{9, 8, 7};
   const std::vector<char> expectedBuf{0, 1, 2};
   size_t revceivedSize = 0;
   ASSERT_NO_THROW(revceivedSize = input.Receive(&targetBuf[0], 3));
@@ -93,7 +93,7 @@ TEST_F(InputFromBuffer, ReadWithLittlePortions)
   std::vector<char> targetBuf1(3, 11);
   ASSERT_NO_THROW(revceivedSize = input.Receive(&targetBuf1[0], targetBuf1.size()));
   ASSERT_EQ(revceivedSize, 3);
-  const std::vector<char> expectedBuf1{0,1,2};
+  const std::vector<char> expectedBuf1{0, 1, 2};
   ASSERT_EQ(targetBuf1, expectedBuf1);
 
 
@@ -101,14 +101,14 @@ TEST_F(InputFromBuffer, ReadWithLittlePortions)
   std::vector<char> targetBuf2(3, 11);
   ASSERT_NO_THROW(revceivedSize = input.Receive(&targetBuf2[0], targetBuf2.size()));
   ASSERT_EQ(revceivedSize, 3);
-  const std::vector<char> expectedBuf2{3,4,5};
+  const std::vector<char> expectedBuf2{3, 4, 5};
   ASSERT_EQ(targetBuf2, expectedBuf2);
 
   // Read third three bytes.
   std::vector<char> targetBuf3(3, 11);
   ASSERT_NO_THROW(revceivedSize = input.Receive(&targetBuf3[0], targetBuf3.size()));
   ASSERT_EQ(revceivedSize, 3);
-  const std::vector<char> expectedBuf3{6,7,8};
+  const std::vector<char> expectedBuf3{6, 7, 8};
   ASSERT_EQ(targetBuf3, expectedBuf3);
 
   // Read forth three bytes.
@@ -122,6 +122,6 @@ TEST_F(InputFromBuffer, ReadWithLittlePortions)
   std::vector<char> targetBuf5(3, 11);
   ASSERT_NO_THROW(revceivedSize = input.Receive(&targetBuf5[0], targetBuf5.size()));
   ASSERT_EQ(revceivedSize, 0);
-  const std::vector<char> expectedBuf5{11,11,11};
+  const std::vector<char> expectedBuf5{11, 11, 11};
   ASSERT_EQ(targetBuf5, expectedBuf5);
 }

@@ -19,32 +19,32 @@
 namespace Common
 {
 
-  class Addon : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(Addon)
+class Addon : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(Addon)
 
-  public:
-    /// @brief initialize addon.
-    /// @note Calls when all addons dependencies resolved.
-    /// suppose that addon fully ready for work.
-    virtual void Initialize(AddonsManager& manager, const AddonParameters& parameters) = 0;
+public:
+  /// @brief initialize addon.
+  /// @note Calls when all addons dependencies resolved.
+  /// suppose that addon fully ready for work.
+  virtual void Initialize(AddonsManager & manager, const AddonParameters & parameters) = 0;
 
-    /// @brief Stopping addon work.
-    /// After calling this method addon should throw exception on any calls.
-    virtual void Stop() = 0;
-  };
+  /// @brief Stopping addon work.
+  /// After calling this method addon should throw exception on any calls.
+  virtual void Stop() = 0;
+};
 
-  // @brief factory of addon.
-  class AddonFactory : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(AddonFactory)
+// @brief factory of addon.
+class AddonFactory : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(AddonFactory)
 
-  public:
-    /// @brief Create instance of addon.
-    virtual Addon::UniquePtr CreateAddon() = 0;
-  };
+public:
+  /// @brief Create instance of addon.
+  virtual Addon::UniquePtr CreateAddon() = 0;
+};
 
 } // namespace Common
 

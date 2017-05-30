@@ -29,42 +29,47 @@ int CALLBACK WinMain(_In_  HINSTANCE hInstance, _In_  HINSTANCE hPrevInstance, _
 
 #else
 */
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
 
 //#endif
   try
-  {
-    const char** arv = (const char**)argv;
-    OpcUa::Server::CommandLine options(argc, arv);
-    if (!options.NeedStartServer())
     {
+      const char ** arv = (const char **)argv;
+      OpcUa::Server::CommandLine options(argc, arv);
+
+      if (!options.NeedStartServer())
+        {
+          return 0;
+        }
+
+      OpcUa::Daemon daemon;
+
+      if (options.IsDaemonMode())
+        {
+          daemon.Daemonize(options.GetLogFile());
+        }
+
+      Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+      OpcUa::Server::LoadConfiguration(options.GetConfigDir(), *manager);
+
+      manager->Start();
+      daemon.WaitForTerminate();
+      manager->Stop();
+
       return 0;
     }
 
-    OpcUa::Daemon daemon;
-    if (options.IsDaemonMode())
+  catch (const std::exception & exc)
     {
-      daemon.Daemonize(options.GetLogFile());
+      std::cout << exc.what() << std::endl;
     }
 
-    Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
-    OpcUa::Server::LoadConfiguration(options.GetConfigDir(), *manager);
-
-    manager->Start();
-    daemon.WaitForTerminate();
-    manager->Stop();
-
-    return 0;
-  }
-  catch (const std::exception& exc)
-  {
-    std::cout << exc.what() << std::endl;
-  }
   catch (...)
-  {
-    std::cout << "Unknown error." << std::endl;
-  }
+    {
+      std::cout << "Unknown error." << std::endl;
+    }
+
   return -1;
 }
 

@@ -23,17 +23,17 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    const char ServerObjectAddonId[] = "server_object";
+const char ServerObjectAddonId[] = "server_object";
 
-    class ServerObjectFactory : public Common::AddonFactory
-    {
-    public:
-      /// @brief Create instance of addon.
-      Common::Addon::UniquePtr CreateAddon() override;
-    };
+class ServerObjectFactory : public Common::AddonFactory
+{
+public:
+  /// @brief Create instance of addon.
+  Common::Addon::UniquePtr CreateAddon() override;
+};
 
-  }
+}
 }

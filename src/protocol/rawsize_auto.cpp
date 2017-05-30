@@ -19,185 +19,185 @@
 
 namespace OpcUa
 {
-    namespace Binary
-    {
+namespace Binary
+{
 
-    template<>
-    std::size_t RawSize<OpenFileMode>(const OpenFileMode& data)
-    {
-        return sizeof(uint32_t);
-    }
-
-
-    template<>
-    std::size_t RawSize<NodeClass>(const NodeClass& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<OpenFileMode>(const OpenFileMode & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<ApplicationType>(const ApplicationType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<NodeClass>(const NodeClass & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<MessageSecurityMode>(const MessageSecurityMode& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<ApplicationType>(const ApplicationType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<UserTokenType>(const UserTokenType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<MessageSecurityMode>(const MessageSecurityMode & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<SecurityTokenRequestType>(const SecurityTokenRequestType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<UserTokenType>(const UserTokenType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<NodeAttributesMask>(const NodeAttributesMask& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<SecurityTokenRequestType>(const SecurityTokenRequestType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<AttributeWriteMask>(const AttributeWriteMask& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<NodeAttributesMask>(const NodeAttributesMask & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<BrowseDirection>(const BrowseDirection& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<AttributeWriteMask>(const AttributeWriteMask & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<BrowseResultMask>(const BrowseResultMask& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<BrowseDirection>(const BrowseDirection & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<ComplianceLevel>(const ComplianceLevel& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<BrowseResultMask>(const BrowseResultMask & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<FilterOperator>(const FilterOperator& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<ComplianceLevel>(const ComplianceLevel & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<TimestampsToReturn>(const TimestampsToReturn& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<FilterOperator>(const FilterOperator & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<HistoryUpdateType>(const HistoryUpdateType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<TimestampsToReturn>(const TimestampsToReturn & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<PerformUpdateType>(const PerformUpdateType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<HistoryUpdateType>(const HistoryUpdateType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<MonitoringMode>(const MonitoringMode& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<PerformUpdateType>(const PerformUpdateType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<MonitoringMode>(const MonitoringMode & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<DeadbandType>(const DeadbandType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<DataChangeTrigger>(const DataChangeTrigger & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<EnumeratedTestType>(const EnumeratedTestType& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<DeadbandType>(const DeadbandType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<RedundancySupport>(const RedundancySupport& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<EnumeratedTestType>(const EnumeratedTestType & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<ServerState>(const ServerState& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<RedundancySupport>(const RedundancySupport & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<ServerState>(const ServerState & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<AxisScaleEnumeration>(const AxisScaleEnumeration& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<ModelChangeStructureVerbMask>(const ModelChangeStructureVerbMask & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<ExceptionDeviationFormat>(const ExceptionDeviationFormat& data)
-    {
-        return sizeof(uint32_t);
-    }
+template<>
+std::size_t RawSize<AxisScaleEnumeration>(const AxisScaleEnumeration & data)
+{
+  return sizeof(uint32_t);
+}
 
 
-    template<>
-    std::size_t RawSize<XmlElement>(const XmlElement& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Length);
-        size += RawSizeContainer(data.Value);
-        return size;
-    }
+template<>
+std::size_t RawSize<ExceptionDeviationFormat>(const ExceptionDeviationFormat & data)
+{
+  return sizeof(uint32_t);
+}
+
+
+template<>
+std::size_t RawSize<XmlElement>(const XmlElement & data)
+{
+  size_t size = 0;
+  size += RawSize(data.Length);
+  size += RawSizeContainer(data.Value);
+  return size;
+}
 
 
 /* DISABLED
@@ -295,15 +295,17 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<ExtensionObject>(const ExtensionObject& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Encoding);
-        if ((data.Encoding) & (1<<(0))) size += RawSize(data.Body);
-        return size;
-    }
+template<>
+std::size_t RawSize<ExtensionObject>(const ExtensionObject & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Encoding);
+
+  if ((data.Encoding) & (1 << (0))) { size += RawSize(data.Body); }
+
+  return size;
+}
 
 
 /* DISABLED
@@ -716,19 +718,19 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<ApplicationDescription>(const ApplicationDescription& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ApplicationUri);
-        size += RawSize(data.ProductUri);
-        size += RawSize(data.ApplicationName);
-        size += RawSize(data.ApplicationType);
-        size += RawSize(data.GatewayServerUri);
-        size += RawSize(data.DiscoveryProfileUri);
-        size += RawSizeContainer(data.DiscoveryUrls);
-        return size;
-    }
+template<>
+std::size_t RawSize<ApplicationDescription>(const ApplicationDescription & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ApplicationUri);
+  size += RawSize(data.ProductUri);
+  size += RawSize(data.ApplicationName);
+  size += RawSize(data.ApplicationType);
+  size += RawSize(data.GatewayServerUri);
+  size += RawSize(data.DiscoveryProfileUri);
+  size += RawSizeContainer(data.DiscoveryUrls);
+  return size;
+}
 
 
 /* DISABLED
@@ -833,66 +835,66 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.PolicyId);
-        size += RawSize(data.TokenType);
-        size += RawSize(data.IssuedTokenType);
-        size += RawSize(data.IssuerEndpointUrl);
-        size += RawSize(data.SecurityPolicyUri);
-        return size;
-    }
+template<>
+std::size_t RawSize<UserTokenPolicy>(const UserTokenPolicy & data)
+{
+  size_t size = 0;
+  size += RawSize(data.PolicyId);
+  size += RawSize(data.TokenType);
+  size += RawSize(data.IssuedTokenType);
+  size += RawSize(data.IssuerEndpointUrl);
+  size += RawSize(data.SecurityPolicyUri);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<EndpointDescription>(const EndpointDescription& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.EndpointUrl);
-        size += RawSize(data.Server);
-        size += RawSize(data.ServerCertificate);
-        size += RawSize(data.SecurityMode);
-        size += RawSize(data.SecurityPolicyUri);
-        size += RawSizeContainer(data.UserIdentityTokens);
-        size += RawSize(data.TransportProfileUri);
-        size += RawSize(data.SecurityLevel);
-        return size;
-    }
+template<>
+std::size_t RawSize<EndpointDescription>(const EndpointDescription & data)
+{
+  size_t size = 0;
+  size += RawSize(data.EndpointUrl);
+  size += RawSize(data.Server);
+  size += RawSize(data.ServerCertificate);
+  size += RawSize(data.SecurityMode);
+  size += RawSize(data.SecurityPolicyUri);
+  size += RawSizeContainer(data.UserIdentityTokens);
+  size += RawSize(data.TransportProfileUri);
+  size += RawSize(data.SecurityLevel);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<GetEndpointsParameters>(const GetEndpointsParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.EndpointUrl);
-        size += RawSizeContainer(data.LocaleIds);
-        size += RawSizeContainer(data.ProfileUris);
-        return size;
-    }
+template<>
+std::size_t RawSize<GetEndpointsParameters>(const GetEndpointsParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.EndpointUrl);
+  size += RawSizeContainer(data.LocaleIds);
+  size += RawSizeContainer(data.ProfileUris);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<GetEndpointsRequest>(const GetEndpointsRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Endpoints);
-        return size;
-    }
+template<>
+std::size_t RawSize<GetEndpointsResponse>(const GetEndpointsResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Endpoints);
+  return size;
+}
 
 
 /* DISABLED
@@ -1052,79 +1054,79 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<SignedSoftwareCertificate>(const SignedSoftwareCertificate& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.CertificateData);
-        size += RawSize(data.Signature);
-        return size;
-    }
+template<>
+std::size_t RawSize<SignedSoftwareCertificate>(const SignedSoftwareCertificate & data)
+{
+  size_t size = 0;
+  size += RawSize(data.CertificateData);
+  size += RawSize(data.Signature);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<SignatureData>(const SignatureData& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Algorithm);
-        size += RawSize(data.Signature);
-        return size;
-    }
+template<>
+std::size_t RawSize<SignatureData>(const SignatureData & data)
+{
+  size_t size = 0;
+  size += RawSize(data.Algorithm);
+  size += RawSize(data.Signature);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ClientDescription);
-        size += RawSize(data.ServerUri);
-        size += RawSize(data.EndpointUrl);
-        size += RawSize(data.SessionName);
-        size += RawSize(data.ClientNonce);
-        size += RawSize(data.ClientCertificate);
-        size += RawSize(data.RequestedSessionTimeout);
-        size += RawSize(data.MaxResponseMessageSize);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSessionParameters>(const CreateSessionParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ClientDescription);
+  size += RawSize(data.ServerUri);
+  size += RawSize(data.EndpointUrl);
+  size += RawSize(data.SessionName);
+  size += RawSize(data.ClientNonce);
+  size += RawSize(data.ClientCertificate);
+  size += RawSize(data.RequestedSessionTimeout);
+  size += RawSize(data.MaxResponseMessageSize);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSessionRequest>(const CreateSessionRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSessionResult>(const CreateSessionResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SessionId);
-        size += RawSize(data.AuthenticationToken);
-        size += RawSize(data.RevisedSessionTimeout);
-        size += RawSize(data.ServerNonce);
-        size += RawSize(data.ServerCertificate);
-        size += RawSizeContainer(data.ServerEndpoints);
-        size += RawSizeContainer(data.ServerSoftwareCertificates);
-        size += RawSize(data.ServerSignature);
-        size += RawSize(data.MaxRequestMessageSize);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSessionResult>(const CreateSessionResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SessionId);
+  size += RawSize(data.AuthenticationToken);
+  size += RawSize(data.RevisedSessionTimeout);
+  size += RawSize(data.ServerNonce);
+  size += RawSize(data.ServerCertificate);
+  size += RawSizeContainer(data.ServerEndpoints);
+  size += RawSizeContainer(data.ServerSoftwareCertificates);
+  size += RawSize(data.ServerSignature);
+  size += RawSize(data.MaxRequestMessageSize);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSessionResponse>(const CreateSessionResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
 /* DISABLED
@@ -1208,50 +1210,50 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<ActivateSessionParameters>(const ActivateSessionParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ClientSignature);
-        size += RawSizeContainer(data.ClientSoftwareCertificates);
-        size += RawSizeContainer(data.LocaleIds);
-        size += RawSize(data.UserIdentityToken);
-        size += RawSize(data.UserTokenSignature);
-        return size;
-    }
+template<>
+std::size_t RawSize<ActivateSessionParameters>(const ActivateSessionParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ClientSignature);
+  size += RawSizeContainer(data.ClientSoftwareCertificates);
+  size += RawSizeContainer(data.LocaleIds);
+  size += RawSize(data.UserIdentityToken);
+  size += RawSize(data.UserTokenSignature);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<ActivateSessionRequest>(const ActivateSessionRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ActivateSessionResult>(const ActivateSessionResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ServerNonce);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<ActivateSessionResult>(const ActivateSessionResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ServerNonce);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<ActivateSessionResponse>(const ActivateSessionResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
 /* DISABLED
@@ -1645,37 +1647,37 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<DeleteNodesItem>(const DeleteNodesItem& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.NodeId);
-        size += RawSize(data.DeleteTargetReferences);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteNodesItem>(const DeleteNodesItem & data)
+{
+  size_t size = 0;
+  size += RawSize(data.NodeId);
+  size += RawSize(data.DeleteTargetReferences);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<DeleteNodesRequest>(const DeleteNodesRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.NodesToDelete);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteNodesRequest>(const DeleteNodesRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.NodesToDelete);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<DeleteNodesResponse>(const DeleteNodesResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteNodesResponse>(const DeleteNodesResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -2481,50 +2483,50 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<ReadValueId>(const ReadValueId& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.NodeId);
-        size += RawSize(data.AttributeId);
-        size += RawSize(data.IndexRange);
-        size += RawSize(data.DataEncoding);
-        return size;
-    }
+template<>
+std::size_t RawSize<ReadValueId>(const ReadValueId & data)
+{
+  size_t size = 0;
+  size += RawSize(data.NodeId);
+  size += RawSize(data.AttributeId);
+  size += RawSize(data.IndexRange);
+  size += RawSize(data.DataEncoding);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ReadParameters>(const ReadParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.MaxAge);
-        size += RawSize(data.TimestampsToReturn);
-        size += RawSizeContainer(data.AttributesToRead);
-        return size;
-    }
+template<>
+std::size_t RawSize<ReadParameters>(const ReadParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.MaxAge);
+  size += RawSize(data.TimestampsToReturn);
+  size += RawSizeContainer(data.AttributesToRead);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ReadRequest>(const ReadRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<ReadRequest>(const ReadRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ReadResponse>(const ReadResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<ReadResponse>(const ReadResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -2688,48 +2690,48 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<WriteValue>(const WriteValue& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.NodeId);
-        size += RawSize(data.AttributeId);
-        size += RawSize(data.IndexRange);
-        size += RawSize(data.Value);
-        return size;
-    }
+template<>
+std::size_t RawSize<WriteValue>(const WriteValue & data)
+{
+  size_t size = 0;
+  size += RawSize(data.NodeId);
+  size += RawSize(data.AttributeId);
+  size += RawSize(data.IndexRange);
+  size += RawSize(data.Value);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<WriteParameters>(const WriteParameters& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.NodesToWrite);
-        return size;
-    }
+template<>
+std::size_t RawSize<WriteParameters>(const WriteParameters & data)
+{
+  size_t size = 0;
+  size += RawSizeContainer(data.NodesToWrite);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<WriteRequest>(const WriteRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<WriteRequest>(const WriteRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<WriteResponse>(const WriteResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<WriteResponse>(const WriteResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -2868,59 +2870,59 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<CallMethodRequest>(const CallMethodRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ObjectId);
-        size += RawSize(data.MethodId);
-        size += RawSizeContainer(data.InputArguments);
-        return size;
-    }
+template<>
+std::size_t RawSize<CallMethodRequest>(const CallMethodRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ObjectId);
+  size += RawSize(data.MethodId);
+  size += RawSizeContainer(data.InputArguments);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CallMethodResult>(const CallMethodResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Status);
-        size += RawSizeContainer(data.InputArgumentResults);
-        size += RawSizeContainer(data.InputArgumentDiagnosticInfos);
-        size += RawSizeContainer(data.OutputArguments);
-        return size;
-    }
+template<>
+std::size_t RawSize<CallMethodResult>(const CallMethodResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.Status);
+  size += RawSizeContainer(data.InputArgumentResults);
+  size += RawSizeContainer(data.InputArgumentDiagnosticInfos);
+  size += RawSizeContainer(data.OutputArguments);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CallParameters>(const CallParameters& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.MethodsToCall);
-        return size;
-    }
+template<>
+std::size_t RawSize<CallParameters>(const CallParameters & data)
+{
+  size_t size = 0;
+  size += RawSizeContainer(data.MethodsToCall);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CallRequest>(const CallRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<CallRequest>(const CallRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CallResponse>(const CallResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<CallResponse>(const CallResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -3102,75 +3104,75 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<MonitoringParameters>(const MonitoringParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ClientHandle);
-        size += RawSize(data.SamplingInterval);
-        size += RawSize(data.Filter);
-        size += RawSize(data.QueueSize);
-        size += RawSize(data.DiscardOldest);
-        return size;
-    }
+template<>
+std::size_t RawSize<MonitoringParameters>(const MonitoringParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ClientHandle);
+  size += RawSize(data.SamplingInterval);
+  size += RawSize(data.Filter);
+  size += RawSize(data.QueueSize);
+  size += RawSize(data.DiscardOldest);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.ItemToMonitor);
-        size += RawSize(data.MonitoringMode);
-        size += RawSize(data.RequestedParameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<MonitoredItemCreateRequest>(const MonitoredItemCreateRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.ItemToMonitor);
+  size += RawSize(data.MonitoringMode);
+  size += RawSize(data.RequestedParameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<MonitoredItemCreateResult>(const MonitoredItemCreateResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Status);
-        size += RawSize(data.MonitoredItemId);
-        size += RawSize(data.RevisedSamplingInterval);
-        size += RawSize(data.RevisedQueueSize);
-        size += RawSize(data.FilterResult);
-        return size;
-    }
+template<>
+std::size_t RawSize<MonitoredItemCreateResult>(const MonitoredItemCreateResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.Status);
+  size += RawSize(data.MonitoredItemId);
+  size += RawSize(data.RevisedSamplingInterval);
+  size += RawSize(data.RevisedQueueSize);
+  size += RawSize(data.FilterResult);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<MonitoredItemsParameters>(const MonitoredItemsParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSize(data.TimestampsToReturn);
-        size += RawSizeContainer(data.ItemsToCreate);
-        return size;
-    }
+template<>
+std::size_t RawSize<MonitoredItemsParameters>(const MonitoredItemsParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSize(data.TimestampsToReturn);
+  size += RawSizeContainer(data.ItemsToCreate);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateMonitoredItemsRequest>(const CreateMonitoredItemsRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateMonitoredItemsResponse>(const CreateMonitoredItemsResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -3357,185 +3359,185 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSizeContainer(data.MonitoredItemIds);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteMonitoredItemsParameters>(const DeleteMonitoredItemsParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSizeContainer(data.MonitoredItemIds);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteMonitoredItemsRequest>(const DeleteMonitoredItemsRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteMonitoredItemsResponse>(const DeleteMonitoredItemsResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.RequestedPublishingInterval);
-        size += RawSize(data.RequestedLifetimeCount);
-        size += RawSize(data.RequestedMaxKeepAliveCount);
-        size += RawSize(data.MaxNotificationsPerPublish);
-        size += RawSize(data.PublishingEnabled);
-        size += RawSize(data.Priority);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSubscriptionParameters>(const CreateSubscriptionParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.RequestedPublishingInterval);
+  size += RawSize(data.RequestedLifetimeCount);
+  size += RawSize(data.RequestedMaxKeepAliveCount);
+  size += RawSize(data.MaxNotificationsPerPublish);
+  size += RawSize(data.PublishingEnabled);
+  size += RawSize(data.Priority);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSubscriptionRequest>(const CreateSubscriptionRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSubscriptionRequest>(const CreateSubscriptionRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<SubscriptionData>(const SubscriptionData& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSize(data.RevisedPublishingInterval);
-        size += RawSize(data.RevisedLifetimeCount);
-        size += RawSize(data.RevisedMaxKeepAliveCount);
-        return size;
-    }
+template<>
+std::size_t RawSize<SubscriptionData>(const SubscriptionData & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSize(data.RevisedPublishingInterval);
+  size += RawSize(data.RevisedLifetimeCount);
+  size += RawSize(data.RevisedMaxKeepAliveCount);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<CreateSubscriptionResponse>(const CreateSubscriptionResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Data);
-        return size;
-    }
+template<>
+std::size_t RawSize<CreateSubscriptionResponse>(const CreateSubscriptionResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Data);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ModifySubscriptionParameters>(const ModifySubscriptionParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSize(data.RequestedPublishingInterval);
-        size += RawSize(data.RequestedLifetimeCount);
-        size += RawSize(data.RequestedMaxKeepAliveCount);
-        size += RawSize(data.MaxNotificationsPerPublish);
-        size += RawSize(data.Priority);
-        return size;
-    }
+template<>
+std::size_t RawSize<ModifySubscriptionParameters>(const ModifySubscriptionParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSize(data.RequestedPublishingInterval);
+  size += RawSize(data.RequestedLifetimeCount);
+  size += RawSize(data.RequestedMaxKeepAliveCount);
+  size += RawSize(data.MaxNotificationsPerPublish);
+  size += RawSize(data.Priority);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ModifySubscriptionRequest>(const ModifySubscriptionRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<ModifySubscriptionRequest>(const ModifySubscriptionRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ModifySubscriptionResult>(const ModifySubscriptionResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.RevisedPublishingInterval);
-        size += RawSize(data.RevisedLifetimeCount);
-        size += RawSize(data.RevisedMaxKeepAliveCount);
-        return size;
-    }
+template<>
+std::size_t RawSize<ModifySubscriptionResult>(const ModifySubscriptionResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.RevisedPublishingInterval);
+  size += RawSize(data.RevisedLifetimeCount);
+  size += RawSize(data.RevisedMaxKeepAliveCount);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<ModifySubscriptionResponse>(const ModifySubscriptionResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<ModifySubscriptionResponse>(const ModifySubscriptionResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<PublishingModeParameters>(const PublishingModeParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.PublishingEnabled);
-        size += RawSizeContainer(data.SubscriptionIds);
-        return size;
-    }
+template<>
+std::size_t RawSize<PublishingModeParameters>(const PublishingModeParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.PublishingEnabled);
+  size += RawSizeContainer(data.SubscriptionIds);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<SetPublishingModeRequest>(const SetPublishingModeRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<SetPublishingModeRequest>(const SetPublishingModeRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<PublishingModeResult>(const PublishingModeResult& data)
-    {
-        size_t size = 0;
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<PublishingModeResult>(const PublishingModeResult & data)
+{
+  size_t size = 0;
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<SetPublishingModeResponse>(const SetPublishingModeResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Result);
-        return size;
-    }
+template<>
+std::size_t RawSize<SetPublishingModeResponse>(const SetPublishingModeResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Result);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<NotificationMessage>(const NotificationMessage& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SequenceNumber);
-        size += RawSize(data.PublishTime);
-        size += RawSizeContainer(data.NotificationData);
-        return size;
-    }
+template<>
+std::size_t RawSize<NotificationMessage>(const NotificationMessage & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SequenceNumber);
+  size += RawSize(data.PublishTime);
+  size += RawSizeContainer(data.NotificationData);
+  return size;
+}
 
 
 /* DISABLED
@@ -3664,82 +3666,82 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSize(data.SequenceNumber);
-        return size;
-    }
+template<>
+std::size_t RawSize<SubscriptionAcknowledgement>(const SubscriptionAcknowledgement & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSize(data.SequenceNumber);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<PublishRequest>(const PublishRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.SubscriptionAcknowledgements);
-        return size;
-    }
+template<>
+std::size_t RawSize<PublishRequest>(const PublishRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.SubscriptionAcknowledgements);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<PublishResult>(const PublishResult& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSizeContainer(data.AvailableSequenceNumbers);
-        size += RawSize(data.MoreNotifications);
-        size += RawSize(data.NotificationMessage);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<PublishResult>(const PublishResult & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSizeContainer(data.AvailableSequenceNumbers);
+  size += RawSize(data.MoreNotifications);
+  size += RawSize(data.NotificationMessage);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<PublishResponse>(const PublishResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<PublishResponse>(const PublishResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<RepublishParameters>(const RepublishParameters& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.SubscriptionId);
-        size += RawSize(data.RetransmitSequenceNumber);
-        return size;
-    }
+template<>
+std::size_t RawSize<RepublishParameters>(const RepublishParameters & data)
+{
+  size_t size = 0;
+  size += RawSize(data.SubscriptionId);
+  size += RawSize(data.RetransmitSequenceNumber);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<RepublishRequest>(const RepublishRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.Parameters);
-        return size;
-    }
+template<>
+std::size_t RawSize<RepublishRequest>(const RepublishRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.Parameters);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<RepublishResponse>(const RepublishResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSize(data.NotificationMessage);
-        return size;
-    }
+template<>
+std::size_t RawSize<RepublishResponse>(const RepublishResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSize(data.NotificationMessage);
+  return size;
+}
 
 
 /* DISABLED
@@ -3809,27 +3811,27 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.SubscriptionIds);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteSubscriptionsRequest>(const DeleteSubscriptionsRequest & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.SubscriptionIds);
+  return size;
+}
 
 
-    template<>
-    std::size_t RawSize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.TypeId);
-        size += RawSize(data.Header);
-        size += RawSizeContainer(data.Results);
-        size += RawSizeContainer(data.DiagnosticInfos);
-        return size;
-    }
+template<>
+std::size_t RawSize<DeleteSubscriptionsResponse>(const DeleteSubscriptionsResponse & data)
+{
+  size_t size = 0;
+  size += RawSize(data.TypeId);
+  size += RawSize(data.Header);
+  size += RawSizeContainer(data.Results);
+  size += RawSizeContainer(data.DiagnosticInfos);
+  return size;
+}
 
 
 /* DISABLED
@@ -4409,18 +4411,18 @@ namespace OpcUa
 
 */
 
-    template<>
-    std::size_t RawSize<Annotation>(const Annotation& data)
-    {
-        size_t size = 0;
-        size += RawSize(data.Message);
-        size += RawSize(data.UserName);
-        size += RawSize(data.AnnotationTime);
-        return size;
-    }
+template<>
+std::size_t RawSize<Annotation>(const Annotation & data)
+{
+  size_t size = 0;
+  size += RawSize(data.Message);
+  size += RawSize(data.UserName);
+  size += RawSize(data.AnnotationTime);
+  return size;
+}
 
 
-   }
+}
 
 } // namespace
-    
+

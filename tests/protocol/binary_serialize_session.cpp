@@ -44,25 +44,26 @@ TEST_F(OpcUaBinarySerialization, CreateSessionRequest)
   request.Parameters.ServerUri = "su";
   request.Parameters.EndpointUrl = "eu";
   request.Parameters.SessionName = "sn";
-  request.Parameters.ClientNonce =  ByteString(std::vector<uint8_t>{1,2,3,4});
-  request.Parameters.ClientCertificate = ByteString(std::vector<uint8_t>{5,6,7,8});
+  request.Parameters.ClientNonce =  ByteString(std::vector<uint8_t> {1, 2, 3, 4});
+  request.Parameters.ClientCertificate = ByteString(std::vector<uint8_t> {5, 6, 7, 8});
   request.Parameters.RequestedSessionTimeout = 1200000;
   request.Parameters.MaxResponseMessageSize = 2;
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xcd, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
-  2,0,0,0, 's','u',
-  2,0,0,0, 'e','u',
-  2,0,0,0, 's','n',
-  4,0,0,0, 1,2,3,4,
-  4,0,0,0, 5,6,7,8,
-  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-  2,0,0,0
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xcd, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
+    2, 0, 0, 0, 's', 'u',
+    2, 0, 0, 0, 'e', 'u',
+    2, 0, 0, 0, 's', 'n',
+    4, 0, 0, 0, 1, 2, 3, 4,
+    4, 0, 0, 0, 5, 6, 7, 8,
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
+    2, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -74,18 +75,19 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xcd, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
-  2,0,0,0, 's','u',
-  2,0,0,0, 'e','u',
-  2,0,0,0, 's','n',
-  4,0,0,0, 1,2,3,4,
-  4,0,0,0, 5,6,7,8,
-  0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
-  2,0,0,0
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xcd, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    TEST_APPLICATION_DESCRIPTION_BINARY_DATA,
+    2, 0, 0, 0, 's', 'u',
+    2, 0, 0, 0, 'e', 'u',
+    2, 0, 0, 0, 's', 'n',
+    4, 0, 0, 0, 1, 2, 3, 4,
+    4, 0, 0, 0, 5, 6, 7, 8,
+    0, 0, 0, 0, (char)0x80, (char)0x4f, (char)0x32, (char)0x41,
+    2, 0, 0, 0
   };
 
   GetChannel().SetData(expectedData);
@@ -103,9 +105,9 @@ TEST_F(OpcUaBinaryDeserialization, CreateSessionRequest)
   ASSERT_EQ(request.Parameters.ServerUri, "su");
   ASSERT_EQ(request.Parameters.EndpointUrl, "eu");
   ASSERT_EQ(request.Parameters.SessionName, "sn");
-  ByteString clientNonce = ByteString(std::vector<uint8_t>{1,2,3,4});
+  ByteString clientNonce = ByteString(std::vector<uint8_t> {1, 2, 3, 4});
   ASSERT_EQ(request.Parameters.ClientNonce, clientNonce);
-  ByteString cert = ByteString(std::vector<uint8_t>{5,6,7,8});
+  ByteString cert = ByteString(std::vector<uint8_t> {5, 6, 7, 8});
   ASSERT_EQ(request.Parameters.ClientCertificate, cert);
   ASSERT_EQ(request.Parameters.RequestedSessionTimeout, 1200000);
   ASSERT_EQ(request.Parameters.MaxResponseMessageSize, 2);
@@ -253,19 +255,20 @@ TEST_F(OpcUaBinarySerialization, UserIdentifyToken_Anonymous)
 
   UserIdentifyToken token;
   token.setPolicyId("0");
-/*
-  ASSERT_EQ(token.Header.TypeId.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(token.Header.TypeId.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(token.Hader.TypeId.FourByteData.Identifier, USER_IdENTIFY_TOKEN_ANONYMOUS);
-  ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
-  ASSERT_EQ(token.Anonymous.Data, std::vector{});
-*/
+  /*
+    ASSERT_EQ(token.Header.TypeId.Encoding, EV_FOUR_BYTE);
+    ASSERT_EQ(token.Header.TypeId.FourByteData.NamespaceIndex, 0);
+    ASSERT_EQ(token.Hader.TypeId.FourByteData.Identifier, USER_IdENTIFY_TOKEN_ANONYMOUS);
+    ASSERT_EQ(token.Header.Encoding, HAS_BINARY_BODY);
+    ASSERT_EQ(token.Anonymous.Data, std::vector{});
+  */
   GetStream() << token << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeId
-  HAS_BINARY_BODY,
-  0x5,0,0,0, 1,0,0,0,'0'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x41, 0x1, // TypeId
+    HAS_BINARY_BODY,
+    0x5, 0, 0, 0, 1, 0, 0, 0, '0'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -276,10 +279,11 @@ TEST_F(OpcUaBinaryDeserialization, UserIdentifyToken_Anonymous)
 {
   using namespace OpcUa;
   using namespace OpcUa::Binary;
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeId
-  HAS_BINARY_BODY,
-  0x5,0,0,0, 1,0,0,0,'0'
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x41, 0x1, // TypeId
+    HAS_BINARY_BODY,
+    0x5, 0, 0, 0, 1, 0, 0, 0, '0'
   };
 
   GetChannel().SetData(expectedData);
@@ -481,11 +485,12 @@ TEST_F(OpcUaBinarySerialization, CloseSessionRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xd9, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  1
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xd9, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    1
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData) << PrintData(GetChannel().SerializedData) << std::endl << PrintData(expectedData);
@@ -498,11 +503,12 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionRequest)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xd9, 0x1, // TypeId
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
-  1,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xd9, 0x1, // TypeId
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
+    1,
   };
 
   GetChannel().SetData(expectedData);
@@ -539,10 +545,11 @@ TEST_F(OpcUaBinarySerialization, CloseSessionResponse)
 
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xdc, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xdc, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(response));
@@ -555,11 +562,12 @@ TEST_F(OpcUaBinaryDeserialization, CloseSessionResponse)
   using namespace OpcUa;
   using namespace OpcUa::Binary;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xdc, 0x1, // TypeId
-  // RequestHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
-  1,
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xdc, 0x1, // TypeId
+    // RequestHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
+    1,
   };
 
   GetChannel().SetData(expectedData);

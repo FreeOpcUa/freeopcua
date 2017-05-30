@@ -18,24 +18,26 @@
 
 namespace OpcUa
 {
-  namespace Tests
-  {
-    inline std::string GetTcpServerAddonPath()
+namespace Tests
+{
+inline std::string GetTcpServerAddonPath()
+{
+  if (const char * path = getenv("TCP_ADDON_PATH"))
     {
-      if (const char* path = getenv("TCP_ADDON_PATH"))
-      {
-        return path;
-      }
-      return std::string();
+      return path;
     }
-    inline std::string GetBuiltinServerAddonPath()
+
+  return std::string();
+}
+inline std::string GetBuiltinServerAddonPath()
+{
+  if (const char * path = getenv("BUILTIN_COMPUTER_ADDON_PATH"))
     {
-      if (const char* path = getenv("BUILTIN_COMPUTER_ADDON_PATH"))
-      {
-        return path;
-      }
-      return std::string();
+      return path;
     }
+
+  return std::string();
+}
 /*
     inline std::string GetEndpointsAddonPath()
     {
@@ -46,14 +48,15 @@ namespace OpcUa
       return std::string();
     }
 */
-    inline std::string GetEndpointsConfigPath()
+inline std::string GetEndpointsConfigPath()
+{
+  if (const char * path = getenv("ENDPOINTS_CONFIG_PATH"))
     {
-      if (const char* path = getenv("ENDPOINTS_CONFIG_PATH"))
-      {
-        return path;
-      }
-      return std::string();
+      return path;
     }
+
+  return std::string();
+}
 
 /*
      class IncomingConnectionProcessorMock : public OpcUa::UaServer::IncomingConnectionProcessor
@@ -80,7 +83,7 @@ namespace OpcUa
 
 //    std::unique_ptr<Common::AddonsManager> LoadAddons(const std::string& configPath);
 
-  } // namspace Tests
+} // namspace Tests
 } // namespace OpcUa
 
 #endif //  opcua_tests_common_utils_h

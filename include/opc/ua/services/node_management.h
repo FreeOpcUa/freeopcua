@@ -22,15 +22,15 @@
 namespace OpcUa
 {
 
-  class NodeManagementServices : private Common::Interface
-  {
-  public:
-    DEFINE_CLASS_POINTERS(NodeManagementServices)
+class NodeManagementServices : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(NodeManagementServices)
 
-  public:
-    virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem>& items) = 0;
-    virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem>& items) = 0;
-  };
+public:
+  virtual std::vector<AddNodesResult> AddNodes(const std::vector<AddNodesItem> & items) = 0;
+  virtual std::vector<StatusCode> AddReferences(const std::vector<AddReferencesItem> & items) = 0;
+};
 
 } // namespace OpcUa
 

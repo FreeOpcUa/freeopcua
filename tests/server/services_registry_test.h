@@ -17,16 +17,16 @@
 
 namespace OpcUa
 {
-  namespace Test
-  {
+namespace Test
+{
 
-    inline void RegisterServicesRegistry(Common::AddonsManager& addons)
-    {
-      Common::AddonInformation services = Server::CreateServicesRegistryAddon();
-      addons.Register(services);
-    }
+inline void RegisterServicesRegistry(Common::AddonsManager & addons)
+{
+  Common::AddonInformation services = Server::CreateServicesRegistryAddon();
+  addons.Register(services);
+}
 
-  }
+}
 }
 
 

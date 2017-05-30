@@ -43,8 +43,9 @@
 // First, define a fixture class template.  It should be parameterized
 // by a type.  Remember to derive it from testing::Test.
 template <typename T>
-class FooTest : public testing::Test {
- public:
+class FooTest : public testing::Test
+{
+public:
   ...
   typedef std::list<T> List;
   static T shared_;
@@ -63,7 +64,8 @@ TYPED_TEST_CASE(FooTest, MyTypes);
 
 // Then, use TYPED_TEST() instead of TEST_F() to define as many typed
 // tests for this test case as you want.
-TYPED_TEST(FooTest, DoesBlah) {
+TYPED_TEST(FooTest, DoesBlah)
+{
   // Inside a test, refer to TypeParam to get the type parameter.
   // Since we are inside a derived class template, C++ requires use to
   // visit the members of FooTest via 'this'.
@@ -103,7 +105,8 @@ TYPED_TEST(FooTest, HasPropertyA) { ... }
 // First, define a fixture class template.  It should be parameterized
 // by a type.  Remember to derive it from testing::Test.
 template <typename T>
-class FooTest : public testing::Test {
+class FooTest : public testing::Test
+{
   ...
 };
 
@@ -114,7 +117,8 @@ TYPED_TEST_CASE_P(FooTest);
 
 // Then, use TYPED_TEST_P() to define as many type-parameterized tests
 // for this type-parameterized test case as you want.
-TYPED_TEST_P(FooTest, DoesBlah) {
+TYPED_TEST_P(FooTest, DoesBlah)
+{
   // Inside a test, refer to TypeParam to get the type parameter.
   TypeParam n = 0;
   ...

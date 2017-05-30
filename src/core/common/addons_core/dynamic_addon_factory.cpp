@@ -18,34 +18,34 @@
 
 namespace
 {
-  using namespace Common;
+using namespace Common;
 
-  class DynamicAddonFactory : public AddonFactory
-  {
-  public:
-    DEFINE_CLASS_POINTERS(DynamicAddonFactory)
+class DynamicAddonFactory : public AddonFactory
+{
+public:
+  DEFINE_CLASS_POINTERS(DynamicAddonFactory)
 
-  public:
-    DynamicAddonFactory(const std::string& modulePath);
+public:
+  DynamicAddonFactory(const std::string & modulePath);
 
-    virtual Addon::UniquePtr CreateAddon();
+  virtual Addon::UniquePtr CreateAddon();
 
-  private:
-    DynamicLibrary Library;
-  };
+private:
+  DynamicLibrary Library;
+};
 
-  DynamicAddonFactory::DynamicAddonFactory(const std::string& modulePath)
-    : Library(modulePath)
-  {
-  }
-
-  Addon::UniquePtr DynamicAddonFactory::CreateAddon()
-  {
-    return Addon::UniquePtr(Library.Find<CreateAddonFunc>("CreateAddon")());
-  }
+DynamicAddonFactory::DynamicAddonFactory(const std::string & modulePath)
+  : Library(modulePath)
+{
 }
 
-Common::AddonFactory::UniquePtr Common::CreateDynamicAddonFactory(const char* modulePath)
+Addon::UniquePtr DynamicAddonFactory::CreateAddon()
+{
+  return Addon::UniquePtr(Library.Find<CreateAddonFunc>("CreateAddon")());
+}
+}
+
+Common::AddonFactory::UniquePtr Common::CreateDynamicAddonFactory(const char * modulePath)
 {
   return Common::AddonFactory::UniquePtr(new DynamicAddonFactory(modulePath));
 }

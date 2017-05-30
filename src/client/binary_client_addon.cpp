@@ -21,41 +21,41 @@
 
 namespace
 {
-  class BinaryClientAddon : public OpcUa::Client::Addon
+class BinaryClientAddon : public OpcUa::Client::Addon
+{
+public:
+  virtual void Initialize(Common::AddonsManager & manager, const Common::AddonParameters & parameters)
   {
-  public:
-    virtual void Initialize(Common::AddonsManager& manager, const Common::AddonParameters& parameters)
-    {
-      for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
+    for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
       {
         if (param->Name == "debug" && param->Value != "false" && param->Value != "0")
-        {
-          Debug = true;
-        }
+          {
+            Debug = true;
+          }
       }
-    }
+  }
 
-    virtual void Stop()
-    {
-    }
+  virtual void Stop()
+  {
+  }
 
-  public:
-    virtual std::string GetProtocol() const
-    {
-      return "opc.tcp";
-    }
+public:
+  virtual std::string GetProtocol() const
+  {
+    return "opc.tcp";
+  }
 
-    virtual OpcUa::Services::SharedPtr Connect(const std::string& url)
-    {
-      return OpcUa::CreateBinaryClient(url, Debug);
-    }
+  virtual OpcUa::Services::SharedPtr Connect(const std::string & url)
+  {
+    return OpcUa::CreateBinaryClient(url, Debug);
+  }
 
-  private:
-    bool Debug = false;
-  };
+private:
+  bool Debug = false;
+};
 }
 
-extern "C" Common::Addon* CreateAddon()
+extern "C" Common::Addon * CreateAddon()
 {
   return new BinaryClientAddon();
 }

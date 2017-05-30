@@ -4,12 +4,12 @@
 namespace OpcUa
 {
 
-  ReadParameters::ReadParameters()
-    : MaxAge(0)
-    , TimestampsToReturn(OpcUa::TimestampsToReturn::Neither)
-  {
+ReadParameters::ReadParameters()
+  : MaxAge(0)
+  , TimestampsToReturn(OpcUa::TimestampsToReturn::Neither)
+{
 
-  }
+}
 
 
 }

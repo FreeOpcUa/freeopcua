@@ -17,15 +17,15 @@
 #include <opc/ua/server/addons/common_addons.h>
 namespace OpcUa
 {
-  namespace Test
-  {
+namespace Test
+{
 
-    inline void RegisterEndpointsServicesAddon(Common::AddonsManager& addons)
-    {
-      Common::AddonInformation endpoints = Server::CreateEndpointsRegistryAddon();
-      addons.Register(endpoints);
-    }
+inline void RegisterEndpointsServicesAddon(Common::AddonsManager & addons)
+{
+  Common::AddonInformation endpoints = Server::CreateEndpointsRegistryAddon();
+  addons.Register(endpoints);
+}
 
-  }
+}
 }
 

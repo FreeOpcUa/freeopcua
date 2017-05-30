@@ -23,47 +23,47 @@
 
 namespace OpcUa
 {
-  namespace Model
-  {
+namespace Model
+{
 
-    ObjectType::ObjectType(NodeId objectId, Services::SharedPtr services)
-      : Node(services)
-    {
-      Id = objectId;
-      ReadParameters attrs;
-      attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::DisplayName));
-      attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::BrowseName));
-      attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::IsAbstract));
-      std::vector<DataValue> values = services->Attributes()->Read(attrs);
-      DisplayName = values[0].Value.As<LocalizedText>();
-      BrowseName = values[1].Value.As<QualifiedName>();
-      Abstract = values[2].Value.As<bool>();
-    }
+ObjectType::ObjectType(NodeId objectId, Services::SharedPtr services)
+  : Node(services)
+{
+  Id = objectId;
+  ReadParameters attrs;
+  attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::DisplayName));
+  attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::BrowseName));
+  attrs.AttributesToRead.push_back(ToReadValueId(objectId, AttributeId::IsAbstract));
+  std::vector<DataValue> values = services->Attributes()->Read(attrs);
+  DisplayName = values[0].Value.As<LocalizedText>();
+  BrowseName = values[1].Value.As<QualifiedName>();
+  Abstract = values[2].Value.As<bool>();
+}
 
-    bool ObjectType::IsAbstract() const
-    {
-      return false;
-    }
+bool ObjectType::IsAbstract() const
+{
+  return false;
+}
 
-    std::vector<Variable> ObjectType::Variables() const
-    {
-      return Browse<Variable>(GetId(), NodeClass::Variable, GetServices());
-    }
+std::vector<Variable> ObjectType::Variables() const
+{
+  return Browse<Variable>(GetId(), NodeClass::Variable, GetServices());
+}
 
-    std::vector<Object> ObjectType::Objects() const
-    {
-      return Browse<Object>(GetId(), NodeClass::Object, GetServices());
-    }
+std::vector<Object> ObjectType::Objects() const
+{
+  return Browse<Object>(GetId(), NodeClass::Object, GetServices());
+}
 
-    std::vector<ObjectType> ObjectType::SubTypes() const
-    {
-      return Browse<ObjectType>(GetId(), NodeClass::ObjectType, GetServices());
-    }
+std::vector<ObjectType> ObjectType::SubTypes() const
+{
+  return Browse<ObjectType>(GetId(), NodeClass::ObjectType, GetServices());
+}
 
-    ObjectType ObjectType::Parent() const
-    {
-      return ObjectType(ObjectId::Null, GetServices());
-    }
+ObjectType ObjectType::Parent() const
+{
+  return ObjectType(ObjectId::Null, GetServices());
+}
 
-  }
+}
 }

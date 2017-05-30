@@ -28,45 +28,45 @@
 
 namespace OpcUa
 {
-  namespace Impl
-  {
-    class BufferedInput;
+namespace Impl
+{
+class BufferedInput;
 
-    class BuiltinServerAddon
-      : public Common::Addon
-      , public Server::TcpServer
-      , public Server::BuiltinServer
-      , private Common::ThreadObserver
-    {
-    public:
-      BuiltinServerAddon();
-      ~BuiltinServerAddon();
+class BuiltinServerAddon
+  : public Common::Addon
+  , public Server::TcpServer
+  , public Server::BuiltinServer
+  , private Common::ThreadObserver
+{
+public:
+  BuiltinServerAddon();
+  ~BuiltinServerAddon();
 
-      OpcUa::Services::SharedPtr GetServices() const override;
+  OpcUa::Services::SharedPtr GetServices() const override;
 
-    public: // Common::Addon
-      virtual void Initialize(Common::AddonsManager& addons, const Common::AddonParameters& params);
-      virtual void Stop();
+public: // Common::Addon
+  virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params);
+  virtual void Stop();
 
-    public: // TcpServer
-      virtual void Listen(const OpcUa::Server::TcpParameters& params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
-      virtual void StopListen(const OpcUa::Server::TcpParameters& params);
+public: // TcpServer
+  virtual void Listen(const OpcUa::Server::TcpParameters & params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
+  virtual void StopListen(const OpcUa::Server::TcpParameters & params);
 
-    private:
-      virtual void OnSuccess();
-      virtual void OnError(const std::exception& exc);
+private:
+  virtual void OnSuccess();
+  virtual void OnError(const std::exception & exc);
 
-    private:
-      std::shared_ptr<BufferedInput> ClientInput;
-      std::shared_ptr<BufferedInput> ServerInput;
+private:
+  std::shared_ptr<BufferedInput> ClientInput;
+  std::shared_ptr<BufferedInput> ServerInput;
 
-      std::shared_ptr<OpcUa::IOChannel> ClientChannel;
-      std::shared_ptr<OpcUa::IOChannel> ServerChannel;
-      std::unique_ptr<Common::Thread> Thread;
+  std::shared_ptr<OpcUa::IOChannel> ClientChannel;
+  std::shared_ptr<OpcUa::IOChannel> ServerChannel;
+  std::unique_ptr<Common::Thread> Thread;
 
-      OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
-      bool Debug;
-    };
+  OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
+  bool Debug;
+};
 
-  } // namespace Impl
+} // namespace Impl
 } // namespace OpcUa

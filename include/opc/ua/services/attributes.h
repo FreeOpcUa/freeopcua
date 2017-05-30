@@ -22,15 +22,15 @@
 namespace OpcUa
 {
 
-    class AttributeServices : private Common::Interface
-    {
-    public:
-      DEFINE_CLASS_POINTERS(AttributeServices)
+class AttributeServices : private Common::Interface
+{
+public:
+  DEFINE_CLASS_POINTERS(AttributeServices)
 
-    public:
-      virtual std::vector<DataValue> Read(const OpcUa::ReadParameters& filter) const = 0;
-      virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue>& filter) = 0;
-    };
+public:
+  virtual std::vector<DataValue> Read(const OpcUa::ReadParameters & filter) const = 0;
+  virtual std::vector<StatusCode> Write(const std::vector<OpcUa::WriteValue> & filter) = 0;
+};
 
 } // namespace OpcUa
 

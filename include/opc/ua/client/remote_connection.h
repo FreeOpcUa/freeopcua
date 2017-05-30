@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -18,19 +18,19 @@
 
 namespace OpcUa
 {
- 
-  class RemoteConnection : public IOChannel
-  {
-  public:
-     virtual std::size_t Receive(char* data, std::size_t size) = 0;
-     virtual void Send(const char* message, std::size_t size) = 0;
 
-     virtual std::string GetHost() const = 0;
-     virtual unsigned GetPort() const = 0;
-  };
+class RemoteConnection : public IOChannel
+{
+public:
+  virtual std::size_t Receive(char * data, std::size_t size) = 0;
+  virtual void Send(const char * message, std::size_t size) = 0;
+
+  virtual std::string GetHost() const = 0;
+  virtual unsigned GetPort() const = 0;
+};
 
 
-  std::unique_ptr<RemoteConnection> Connect(const std::string& host, unsigned port);
+std::unique_ptr<RemoteConnection> Connect(const std::string & host, unsigned port);
 
 } // namespace OpcUa
 

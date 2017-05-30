@@ -19,50 +19,50 @@
 
 namespace OpcUa
 {
-  namespace Server
+namespace Server
+{
+
+class OpcTcpMessages
+{
+public:
+  OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel & outputChannel, bool debug);
+  ~OpcTcpMessages();
+
+  bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary & iStream);
+
+private:
+  void HelloClient(Binary::IStreamBinary & istream, Binary::OStreamBinary & ostream);
+  void OpenChannel(Binary::IStreamBinary & istream, Binary::OStreamBinary & ostream);
+  void CloseChannel(Binary::IStreamBinary & istream);
+  void ProcessRequest(Binary::IStreamBinary & istream, Binary::OStreamBinary & ostream);
+  void FillResponseHeader(const RequestHeader & requestHeader, ResponseHeader & responseHeader);
+  void DeleteSubscriptions(const std::vector<uint32_t> & ids);
+  void DeleteAllSubscriptions();
+  void ForwardPublishResponse(const PublishResult response);
+
+private:
+  std::mutex ProcessMutex;
+  std::shared_ptr<OpcUa::Services> Server;
+  OpcUa::Binary::OStreamBinary OutputStream;
+  bool Debug;
+  uint32_t ChannelId;
+  uint32_t TokenId;
+  ExpandedNodeId SessionId;
+  //ExpandedNodeId AuthenticationToken;
+  uint32_t SequenceNb;
+
+  struct PublishRequestElement
   {
+    Binary::SequenceHeader sequence;
+    RequestHeader requestHeader;
+    Binary::SymmetricAlgorithmHeader algorithmHeader;
+  };
 
-    class OpcTcpMessages
-    {
-    public:
-      OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel& outputChannel, bool debug);
-      ~OpcTcpMessages();
-
-      bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary& iStream);
-
-    private:
-      void HelloClient(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
-      void OpenChannel(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
-      void CloseChannel(Binary::IStreamBinary& istream);
-      void ProcessRequest(Binary::IStreamBinary& istream, Binary::OStreamBinary& ostream);
-      void FillResponseHeader(const RequestHeader& requestHeader, ResponseHeader& responseHeader);
-      void DeleteSubscriptions(const std::vector<uint32_t>& ids);
-      void DeleteAllSubscriptions();
-      void ForwardPublishResponse(const PublishResult response);
-
-    private:
-      std::mutex ProcessMutex;
-      std::shared_ptr<OpcUa::Services> Server;
-      OpcUa::Binary::OStreamBinary OutputStream;
-      bool Debug;
-      uint32_t ChannelId;
-      uint32_t TokenId;
-      ExpandedNodeId SessionId;
-      //ExpandedNodeId AuthenticationToken;
-      uint32_t SequenceNb;
-
-      struct PublishRequestElement
-      {
-        Binary::SequenceHeader sequence;
-        RequestHeader requestHeader;
-        Binary::SymmetricAlgorithmHeader algorithmHeader;
-      };
-
-      std::list<uint32_t> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
-      std::mutex PublishRequestQueueMutex;
-      std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and
-    };
+  std::list<uint32_t> Subscriptions; //Keep a list of subscriptions to query internal server at correct rate
+  std::mutex PublishRequestQueueMutex;
+  std::queue<PublishRequestElement> PublishRequestQueue; //Keep track of request data to answer them when we have data and
+};
 
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa

@@ -17,16 +17,16 @@
 
 namespace OpcUa
 {
-  namespace Client
-  {
-    class Addon : public Common::Addon
-    {
-    public:
-      DEFINE_CLASS_POINTERS(Addon)
+namespace Client
+{
+class Addon : public Common::Addon
+{
+public:
+  DEFINE_CLASS_POINTERS(Addon)
 
-    public:
-      virtual std::string GetProtocol() const = 0;
-      virtual OpcUa::Services::SharedPtr Connect(const std::string& url) = 0;
-    };
-  }
+public:
+  virtual std::string GetProtocol() const = 0;
+  virtual OpcUa::Services::SharedPtr Connect(const std::string & url) = 0;
+};
+}
 }

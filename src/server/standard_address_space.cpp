@@ -8,22 +8,22 @@
 
 namespace OpcUa
 {
-  namespace Server
-  {
+namespace Server
+{
 
-    void FillStandardNamespace(OpcUa::NodeManagementServices& registry, bool debug)
-    {
-      OpcUa::CreateAddressSpacePart3(registry);
-      OpcUa::CreateAddressSpacePart4(registry);
-      OpcUa::CreateAddressSpacePart5(registry);
-      OpcUa::CreateAddressSpacePart8(registry);
-      OpcUa::CreateAddressSpacePart9(registry);
-      OpcUa::CreateAddressSpacePart10(registry);
-      OpcUa::CreateAddressSpacePart11(registry);
-      OpcUa::CreateAddressSpacePart13(registry);
-    }
+void FillStandardNamespace(OpcUa::NodeManagementServices & registry, bool debug)
+{
+  OpcUa::CreateAddressSpacePart3(registry);
+  OpcUa::CreateAddressSpacePart4(registry);
+  OpcUa::CreateAddressSpacePart5(registry);
+  OpcUa::CreateAddressSpacePart8(registry);
+  OpcUa::CreateAddressSpacePart9(registry);
+  OpcUa::CreateAddressSpacePart10(registry);
+  OpcUa::CreateAddressSpacePart11(registry);
+  OpcUa::CreateAddressSpacePart13(registry);
+}
 
-  } // namespace UaServer
+} // namespace UaServer
 } // namespace OpcUa
 
 

@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -23,17 +23,17 @@
 
 namespace
 {
-  class OpcBinaryHandshake : public ::testing::Test
+class OpcBinaryHandshake : public ::testing::Test
+{
+protected:
+  virtual void SetUp()
   {
-  protected:
-    virtual void SetUp()
-    {
-    }
+  }
 
-    virtual void TearDown()
-    {
-    } 
-  };
+  virtual void TearDown()
+  {
+  }
+};
 }
 
 using namespace OpcUa::Binary;
@@ -66,7 +66,7 @@ TEST_F(OpcBinaryHandshake, SayingHello)
   hello.EndpointUrl = GetEndpoint();
 
   OpcUa::Binary::Header hdr(OpcUa::Binary::MT_HELLO, OpcUa::Binary::CHT_SINGLE);
-  hdr.AddSize(RawSize(hello));  
+  hdr.AddSize(RawSize(hello));
 
   os << hdr << hello << flush;
 
@@ -134,7 +134,7 @@ TEST_F(OpcBinaryHandshake, GetEndpoints)
 // CreateSession
 //----------------------------------------------------------------------
 
-EndpointDescription GetEndpoint(OpcUa::Binary::IOStream& stream)
+EndpointDescription GetEndpoint(OpcUa::Binary::IOStream & stream)
 {
   OpcUa::Binary::GetEndpointsRequest request;
   request.EndpointUrl = GetEndpointUrl();
@@ -142,10 +142,12 @@ EndpointDescription GetEndpoint(OpcUa::Binary::IOStream& stream)
 
   OpcUa::Binary::GetEndpointsResponse response;
   stream >> response;
+
   if (response.Endpoints.empty())
-  {
-    throw std::logic_error("Server returned empty list of endpoints");
-  }
+    {
+      throw std::logic_error("Server returned empty list of endpoints");
+    }
+
   return response.Endpoints.front();
 }
 
@@ -173,7 +175,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
   request.ServerURI = endpoint.ServerDescription.URI;
   request.EndpointUrl = endpoint.EndpointUrl;
   request.SessionName = "libiocuamappings session test";
-  request.ClientNonce = std::vector<uint8_t>(32,0);
+  request.ClientNonce = std::vector<uint8_t>(32, 0);
 //  request.ClientCertificate = GetCertificate();
   request.RequestedSessionTimeout = 3600000;
   request.MaxResponseMessageSize = 65536;
@@ -192,7 +194,7 @@ TEST_F(OpcBinaryHandshake, GetCreateSession)
 // ActivateSession
 //----------------------------------------------------------------------
 
-OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream& stream)
+OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream & stream)
 {
   EndpointDescription endpoint = GetEndpoint(stream);
 
@@ -206,7 +208,7 @@ OpcUa::Binary::CreateSessionResponse CreateSession(OpcUa::Binary::IOStream& stre
   request.ServerURI = endpoint.ServerDescription.URI;
   request.EndpointUrl = endpoint.EndpointUrl; // TODO make just endpoint.URL;
   request.SessionName = "libiocuamappings session test";
-  request.ClientNonce = std::vector<uint8_t>(32,0);
+  request.ClientNonce = std::vector<uint8_t>(32, 0);
 //  request.ClientCertificate = GetCertificate();
   request.RequestedSessionTimeout = 3600000;
   request.MaxResponseMessageSize = 65536;
@@ -279,7 +281,7 @@ TEST_F(OpcBinaryHandshake, CloseSession)
 // Browse
 //----------------------------------------------------------------------
 
-void CloseSession(OpcUa::Binary::IOStream& stream, const OpcUa::Binary::CreateSessionResponse& session)
+void CloseSession(OpcUa::Binary::IOStream & stream, const OpcUa::Binary::CreateSessionResponse & session)
 {
   CloseSessionRequest closeSession;
   closeSession.Header.SessionAuthenticationToken = session.AuthenticationToken;
@@ -289,7 +291,7 @@ void CloseSession(OpcUa::Binary::IOStream& stream, const OpcUa::Binary::CreateSe
   stream >> closeResponse;
 }
 
-void ActivateSession(OpcUa::Binary::IOStream& stream, const OpcUa::Binary::CreateSessionResponse& session)
+void ActivateSession(OpcUa::Binary::IOStream & stream, const OpcUa::Binary::CreateSessionResponse & session)
 {
   using namespace OpcUa::Binary;
   ActivateSessionRequest activate;
@@ -330,7 +332,7 @@ TEST_F(OpcBinaryHandshake, Browse)
   desc.NodeClasses = NodeClass::Unspecified;
   desc.ResultMask = BrowseResultMask::All;
   browse.NodesToBrowse.push_back(desc);
-  
+
   stream << browse << flush;
 
   BrowseResponse response;
@@ -340,8 +342,8 @@ TEST_F(OpcBinaryHandshake, Browse)
 
   BrowseNextRequest browseNext;
   browseNext.Header.SessionAuthenticationToken = session.AuthenticationToken;
-  browseNext.ReleaseContinuationPoints= false;
-  browseNext.ContinuationPoints.push_back(response.Results[0].ContinuationPoint);  
+  browseNext.ReleaseContinuationPoints = false;
+  browseNext.ContinuationPoints.push_back(response.Results[0].ContinuationPoint);
 
   stream << browseNext << flush;
 
@@ -387,7 +389,7 @@ TEST_F(OpcBinaryHandshake, Read)
   request.MaxAge = 0;
   request.TimestampsType = TimestampsToReturn::Neither;
   request.AttributesToRead.push_back(value);
- 
+
   stream << request << flush;
 
   ReadResponse response;
@@ -424,7 +426,7 @@ TEST_F(OpcBinaryHandshake, Write)
 
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectId::RootFolder); 
+  value.Node.FourByteData.Identifier = static_cast<uint8_t>(ObjectId::RootFolder);
   value.Attribute = AttributeId::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value.Type = VariantType::STRING;

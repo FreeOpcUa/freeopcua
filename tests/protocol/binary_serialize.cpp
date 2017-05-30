@@ -4,7 +4,7 @@
 /// @license GNU LGPL
 ///
 /// Distributed under the GNU LGPL License
-/// (See accompanying file LICENSE or copy at 
+/// (See accompanying file LICENSE or copy at
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
@@ -116,15 +116,15 @@ TEST_F(OpcUaBinarySerialization, Guid)
   dataForSerialize.Data3 = 0x0708;
 
   for (unsigned i = 0; i < 8; ++i)
-  {
-    dataForSerialize.Data4[i] = i + 1;
-  }
-  
-  const std::vector<char> expectedData = 
+    {
+      dataForSerialize.Data4[i] = i + 1;
+    }
+
+  const std::vector<char> expectedData =
   {
     4, 3, 2, 1,
     6, 5,
-    8, 7, 
+    8, 7,
     1, 2, 3, 4, 5, 6, 7, 8
   };
   GetStream() << dataForSerialize << flush;
@@ -214,10 +214,10 @@ TEST_F(OpcUaBinarySerialization, LocalizedText_Full)
   lt.Encoding = HAS_LOCALE | HAS_TEXT;
   lt.Locale = "en";
   lt.Text = "text";
-  
+
   GetStream() << lt << flush;
-  
-  const std::vector<char> expectedData = {3, 2,0,0,0,'e','n', 4,0,0,0,'t','e','x','t'};
+
+  const std::vector<char> expectedData = {3, 2, 0, 0, 0, 'e', 'n', 4, 0, 0, 0, 't', 'e', 'x', 't'};
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
   ASSERT_EQ(RawSize(lt), expectedData.size());
 }
@@ -231,10 +231,10 @@ TEST_F(OpcUaBinarySerialization, LocalizedText_Locale)
   lt.Encoding = HAS_LOCALE;
   lt.Locale = "en";
   lt.Text = "text";
-  
+
   GetStream() << lt << flush;
-  
-  const std::vector<char> expectedData = {1, 2,0,0,0,'e','n'};
+
+  const std::vector<char> expectedData = {1, 2, 0, 0, 0, 'e', 'n'};
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
   ASSERT_EQ(RawSize(lt), expectedData.size());
 }
@@ -248,10 +248,10 @@ TEST_F(OpcUaBinarySerialization, LocalizedText_Text)
   lt.Encoding = HAS_TEXT;
   lt.Locale = "en";
   lt.Text = "text";
-  
+
   GetStream() << lt << flush;
-  
-  const std::vector<char> expectedData = {2, 4,0,0,0,'t','e','x','t'};
+
+  const std::vector<char> expectedData = {2, 4, 0, 0, 0, 't', 'e', 'x', 't'};
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
   ASSERT_EQ(RawSize(lt), expectedData.size());
 }
@@ -360,7 +360,7 @@ TEST_F(OpcUaBinarySerialization, SecureMessageHeader)
   hdr.Size = 0x01020304;
   hdr.ChannelId = 0x1;
 
-  const std::vector<char> expectedData = 
+  const std::vector<char> expectedData =
   {
     'H', 'E', 'L',
     'F',
@@ -387,14 +387,15 @@ TEST_F(OpcUaBinarySerialization, Hello)
   message.MaxChunkCount     = 5;
   message.EndpointUrl       = "url";
 
-  const std::vector<char> expectedData = {
-  1, 0, 0, 0,      // ProtocolVersion
-  2, 0, 0, 0,      // ReceiveBufferSize
-  3, 0, 0, 0,      // SendBufferSize
-  4, 0, 0, 0,      // MaxMessageSize
-  5, 0, 0, 0,      // MaxChunkCount
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,      // ProtocolVersion
+    2, 0, 0, 0,      // ReceiveBufferSize
+    3, 0, 0, 0,      // SendBufferSize
+    4, 0, 0, 0,      // MaxMessageSize
+    5, 0, 0, 0,      // MaxChunkCount
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
 
   GetStream() << message << flush;
@@ -414,8 +415,9 @@ TEST_F(OpcUaBinarySerialization, Acknowledge)
   message.SendBufferSize    = 3;
   message.MaxMessageSize    = 4;
   message.MaxChunkCount     = 5;
- 
-  const std::vector<char> expectedData = {
+
+  const std::vector<char> expectedData =
+  {
     1, 0, 0, 0,      // ProtocolVersion
     2, 0, 0, 0,      // ReceiveBufferSize
     3, 0, 0, 0,      // SendBufferSize
@@ -438,10 +440,11 @@ TEST_F(OpcUaBinarySerialization, Error)
   message.Code           = 1;
   message.Reason         = "url";
 
-  const std::vector<char> expectedData = {
-  1, 0, 0, 0,      // Error code
-  3, 0, 0, 0,      // string size
-  'u', 'r', 'l'    // Endpoint
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,      // Error code
+    3, 0, 0, 0,      // string size
+    'u', 'r', 'l'    // Endpoint
   };
 
   GetStream() << message << flush;
@@ -460,13 +463,14 @@ TEST_F(OpcUaBinarySerialization, Asymmetric)
   header.SenderCertificate = {1, 2, 3};
   header.ReceiverCertificateThumbPrint = {4, 5, 6};
 
-  const std::vector<char> expectedData = {
-  3, 0, 0, 0,      
-  'p', 'o', 'l',
-  3, 0, 0, 0,
-  1, 2, 3,
-  3, 0, 0, 0,
-  4, 5, 6
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0,
+    'p', 'o', 'l',
+    3, 0, 0, 0,
+    1, 2, 3,
+    3, 0, 0, 0,
+    4, 5, 6
   };
 
   GetStream() << header << flush;
@@ -483,8 +487,9 @@ TEST_F(OpcUaBinarySerialization, Symmetric)
   OpcUa::Binary::SymmetricAlgorithmHeader header;
   header.TokenId = 0x04050607;
 
-  const std::vector<char> expectedData = {
-  7, 6, 5, 4
+  const std::vector<char> expectedData =
+  {
+    7, 6, 5, 4
   };
 
   GetStream() << header << flush;
@@ -502,9 +507,10 @@ TEST_F(OpcUaBinarySerialization, Sequence)
   header.SequenceNumber = 0x04050607;
   header.RequestId = 0x1;
 
-  const std::vector<char> expectedData = {
-  7, 6, 5, 4,
-  1, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    7, 6, 5, 4,
+    1, 0, 0, 0
   };
 
   GetStream() << header << flush;
@@ -528,15 +534,16 @@ TEST_F(OpcUaBinarySerialization, AdditionalHeader)
   header.TypeId.ServerIndex = 1;
   header.Encoding = 1;
 
-  const std::vector<char> expectedData = {
-  int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
-  1, 0,
-  2, 0, 0, 0,
-  'i', 'd',
-  3, 0, 0, 0,
-  'u', 'r', 'i',
-  1, 0, 0, 0,
-  1
+  const std::vector<char> expectedData =
+  {
+    int8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_Server_INDEX_FLAG),
+    1, 0,
+    2, 0, 0, 0,
+    'i', 'd',
+    3, 0, 0, 0,
+    'u', 'r', 'i',
+    1, 0, 0, 0,
+    1
   };
 
   GetStream() << header << flush;
@@ -560,8 +567,9 @@ TEST_F(OpcUaBinarySerialization, RequestHeader)
 
   GetStream() << header << flush;
 
-  const std::vector<char> expectedData = {
-   TEST_REQUEST_HEADER_BINARY_DATA
+  const std::vector<char> expectedData =
+  {
+    TEST_REQUEST_HEADER_BINARY_DATA
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -582,8 +590,9 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_Empty)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  0,
+  const std::vector<char> expectedData =
+  {
+    0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -601,9 +610,10 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id,
-  2, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id,
+    2, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -622,10 +632,11 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId_Namespace)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id | DIM_NAMESPACE,
-  2, 0, 0, 0,
-  3, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id | DIM_NAMESPACE,
+    2, 0, 0, 0,
+    3, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -644,10 +655,11 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_SymbolicId_LocalizedText)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT,
-  2, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_SYMBOLIC_Id | DIM_LOCALIZED_TEXT,
+    2, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -664,12 +676,13 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_LocalizedText_Locale)
   info.LocalizedText = 2;
   info.Locale = 4;
 
-  GetStream() << info <<flush;
+  GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_LOCALIZED_TEXT | DIM_LOCALE,
-  2, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    DIM_LOCALIZED_TEXT | DIM_LOCALE,
+    2, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -687,10 +700,11 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_AdditionalInfo)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_ADDITIONAL_INFO,
-  3,0,0,0,
-  'a', 'd', 'd'
+  const std::vector<char> expectedData =
+  {
+    DIM_ADDITIONAL_INFO,
+    3, 0, 0, 0,
+    'a', 'd', 'd'
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -708,9 +722,10 @@ TEST_F(OpcUaBinarySerialization, DiagnosticInfo_InnerStatusCode)
 
   GetStream() << info << flush;
 
-  const std::vector<char> expectedData = {
-  DIM_INNER_STATUS_CODE,
-  6,0,0,0,
+  const std::vector<char> expectedData =
+  {
+    DIM_INNER_STATUS_CODE,
+    6, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -733,7 +748,8 @@ TEST_F(OpcUaBinarySerialization, ResponseHeader)
 
   GetStream() << header << flush;
 
-  const std::vector<char> expectedData = {
+  const std::vector<char> expectedData =
+  {
     TEST_RESPONSE_HEADER_BINARY_DATA
   };
 
@@ -752,7 +768,7 @@ TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
 
   OpenSecureChannelRequest request;
   FILL_TEST_REQUEST_HEADER(request.Header);
-  
+
   request.Parameters.ClientProtocolVersion = 1;
   request.Parameters.RequestType = SecurityTokenRequestType::Renew;
   request.Parameters.SecurityMode = MessageSecurityMode::Sign;
@@ -761,18 +777,19 @@ TEST_F(OpcUaBinarySerialization, OpenSequreChannelRequest)
 
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xbe, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xbe, 0x1, // TypeId
 
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
 
-  1, 0, 0, 0,
-  (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
-  (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
-  1, 0, 0, 0,
-  1,
-  5, 0, 0, 0,
+    1, 0, 0, 0,
+    (uint32_t)SecurityTokenRequestType::Renew,  0, 0, 0,
+    (uint32_t)MessageSecurityMode::Sign, 0, 0, 0,
+    1, 0, 0, 0,
+    1,
+    5, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -797,11 +814,12 @@ TEST_F(OpcUaBinarySerialization, SecurityToken)
 
   GetStream() << token << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, 0, 0,
-  2,  0, 0, 0,
-  3, 0, 0, 0, 0, 0, 0, 0,
-  4, 0, 0, 0,
+  const std::vector<char> expectedData =
+  {
+    1, 0, 0, 0,
+    2,  0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0,
+    4, 0, 0, 0,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -831,22 +849,23 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
   response.ChannelSecurityToken.CreatedAt.Value = 4;
   response.ChannelSecurityToken.RevisedLifetime = 5;
   response.ServerNonce = std::vector<uint8_t>(1, 6);
-  
+
   GetStream() << response << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xC1, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xC1, 0x1, // TypeId
 
-  // ResponseHeader
-  TEST_RESPONSE_HEADER_BINARY_DATA,
+    // ResponseHeader
+    TEST_RESPONSE_HEADER_BINARY_DATA,
 
-  1, 0, 0, 0,
-  2, 0, 0, 0,
-  3,  0, 0, 0,
-  4, 0, 0, 0, 0, 0, 0, 0,
-  5, 0, 0, 0,
-  1, 0, 0, 0,
-  6
+    1, 0, 0, 0,
+    2, 0, 0, 0,
+    3,  0, 0, 0,
+    4, 0, 0, 0, 0, 0, 0, 0,
+    5, 0, 0, 0,
+    1, 0, 0, 0,
+    6
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -869,14 +888,15 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
   ASSERT_EQ(request.TypeId.FourByteData.Identifier, OpcUa::CLOSE_SECURE_CHANNEL_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
-  
+
   GetStream() << request << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0xc4, 0x1, // TypeId
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0xc4, 0x1, // TypeId
 
-  // RequestHeader
-  TEST_REQUEST_HEADER_BINARY_DATA,
+    // RequestHeader
+    TEST_REQUEST_HEADER_BINARY_DATA,
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -890,12 +910,13 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
 TEST_F(OpcUaBinarySerialization, SignatureData)
 {
   OpcUa::SignatureData s;
-  s.Signature = OpcUa::ByteString(std::vector<uint8_t>{1,2,3,4});
+  s.Signature = OpcUa::ByteString(std::vector<uint8_t> {1, 2, 3, 4});
   s.Algorithm = "aes";
- 
-  const std::vector<char> expectedData = {
-    3, 0, 0, 0, 'a','e','s',   // Algorithm
-    4, 0, 0, 0, 1,2,3,4      // Signature
+
+  const std::vector<char> expectedData =
+  {
+    3, 0, 0, 0, 'a', 'e', 's', // Algorithm
+    4, 0, 0, 0, 1, 2, 3, 4   // Signature
   };
 
   GetStream() << s << flush;
@@ -917,9 +938,10 @@ TEST_F(OpcUaBinarySerialization, ExtensionObjectHeader)
 
   GetStream() << header << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0, (char)0x41, 0x1, // TypeId
-  HAS_BINARY_BODY
+  const std::vector<char> expectedData =
+  {
+    1, 0, (char)0x41, 0x1, // TypeId
+    HAS_BINARY_BODY
   };
 
   ASSERT_EQ(expectedData, GetChannel().SerializedData);
@@ -942,9 +964,10 @@ TEST_F(OpcUaBinarySerialization, QualifiedName)
 
   GetStream() << name << flush;
 
-  const std::vector<char> expectedData = {
-  1, 0,
-  4, 0, 0, 0, 'n','a','m','e'
+  const std::vector<char> expectedData =
+  {
+    1, 0,
+    4, 0, 0, 0, 'n', 'a', 'm', 'e'
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(name));
@@ -964,8 +987,9 @@ TEST_F(OpcUaBinarySerialization, IntegerId)
 
   GetStream() << id << flush;
 
-  const std::vector<char> expectedData = {
-  5, 0, 0, 0
+  const std::vector<char> expectedData =
+  {
+    5, 0, 0, 0
   };
 
   ASSERT_EQ(expectedData.size(), RawSize(id));

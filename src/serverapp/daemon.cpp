@@ -14,26 +14,26 @@
 namespace OpcUa
 {
 
-  Daemon::Daemon()
-  {
-    SetTerminateHandlers();
-  }
+Daemon::Daemon()
+{
+  SetTerminateHandlers();
+}
 
-  Daemon::~Daemon()
-  {
-  }
+Daemon::~Daemon()
+{
+}
 
-  void Daemon::WaitForTerminate()
-  {
-    std::unique_lock<std::mutex> lock(Mutex);
-    ExitEvent.wait(lock, [this](){ return Terminating; });
-  }
+void Daemon::WaitForTerminate()
+{
+  std::unique_lock<std::mutex> lock(Mutex);
+  ExitEvent.wait(lock, [this]() { return Terminating; });
+}
 
-  void Daemon::Terminate()
-  {
-    Terminating = true;
-    ExitEvent.notify_all();
-  }
+void Daemon::Terminate()
+{
+  Terminating = true;
+  ExitEvent.notify_all();
+}
 
 }
 

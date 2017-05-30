@@ -16,86 +16,86 @@
 
 namespace OpcUa
 {
-  struct Guid
-  {
-    uint32_t Data1;
-    uint16_t Data2;
-    uint16_t Data3;
-    uint8_t  Data4[8];
+struct Guid
+{
+  uint32_t Data1;
+  uint16_t Data2;
+  uint16_t Data3;
+  uint8_t  Data4[8];
 
-    Guid()
-      : Data1(0)
-      , Data2(0)
-      , Data3(0)
-    {
-      for (unsigned i = 0; i < 8; ++i)
+  Guid()
+    : Data1(0)
+    , Data2(0)
+    , Data3(0)
+  {
+    for (unsigned i = 0; i < 8; ++i)
       {
         Data4[i] = 0;
       }
-    }
+  }
 
-    inline bool operator== (const Guid& r) const
-    {
-      for (unsigned i = 0; i < 8; ++i)
+  inline bool operator== (const Guid & r) const
+  {
+    for (unsigned i = 0; i < 8; ++i)
       {
         if (Data4[i] != r.Data4[i])
-        {
-          return false;
-        }
+          {
+            return false;
+          }
       }
 
-      return Data1 == r.Data1 && Data2 == r.Data2 && Data3 == r.Data3;
-    }
+    return Data1 == r.Data1 && Data2 == r.Data2 && Data3 == r.Data3;
+  }
 
-    inline bool operator< (const Guid& r) const
-    {
-      if (Data1 > r.Data1)
+  inline bool operator< (const Guid & r) const
+  {
+    if (Data1 > r.Data1)
       {
         return false;
       }
 
-      if (Data1 < r.Data1)
+    if (Data1 < r.Data1)
       {
         return true;
       }
 
-      if (Data2 > r.Data2)
+    if (Data2 > r.Data2)
       {
         return false;
       }
 
-      if (Data2 < r.Data2)
+    if (Data2 < r.Data2)
       {
         return true;
       }
 
-      if (Data3 > r.Data3)
+    if (Data3 > r.Data3)
       {
         return false;
       }
 
-      if (Data3 < r.Data3)
+    if (Data3 < r.Data3)
       {
         return true;
       }
 
-      for (unsigned i = 0; i < 8; ++i)
+    for (unsigned i = 0; i < 8; ++i)
       {
         if (Data4[i] > r.Data4[i])
-        {
-          return false;
-        }
+          {
+            return false;
+          }
 
         if (Data4[i] < r.Data4[i])
-        {
-          return true;
-        }
+          {
+            return true;
+          }
       }
 
-      return false;
-    }
+    return false;
+  }
 
-  };
+};
 
 } // namespace OpcUa
 
