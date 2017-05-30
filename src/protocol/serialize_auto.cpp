@@ -2994,8 +2994,6 @@ namespace OpcUa
     }
 
 
-/*  DISABLED
-
     template<>
     void DataSerializer::Serialize<ModifySubscriptionParameters>(const ModifySubscriptionParameters& data)
     {
@@ -3007,9 +3005,6 @@ namespace OpcUa
         *this << data.Priority;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ModifySubscriptionRequest>(const ModifySubscriptionRequest& data)
@@ -3019,9 +3014,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ModifySubscriptionResult>(const ModifySubscriptionResult& data)
@@ -3031,9 +3023,6 @@ namespace OpcUa
         *this << data.RevisedMaxKeepAliveCount;
     }
 
-*/
-
-/*  DISABLED
 
     template<>
     void DataSerializer::Serialize<ModifySubscriptionResponse>(const ModifySubscriptionResponse& data)
@@ -3043,7 +3032,6 @@ namespace OpcUa
         *this << data.Parameters;
     }
 
-*/
 
     template<>
     void DataSerializer::Serialize<PublishingModeParameters>(const PublishingModeParameters& data)

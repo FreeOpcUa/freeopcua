@@ -73,6 +73,7 @@ namespace OpcUa
         bool HasExpired();
         void TriggerEvent(NodeId node, Event event);
         RepublishResponse Republish(const RepublishParameters& params);
+        ModifySubscriptionResult ModifySubscription(const ModifySubscriptionParameters& data);
 
       private:
         void DeleteAllMonitoredItems(); 

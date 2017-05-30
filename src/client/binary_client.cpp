@@ -459,6 +459,14 @@ namespace
       return response.Data;
     }
 
+    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionRequest& request) override
+    {
+      if (Debug) { std::cout << "binary_client| ModifySubscription -->" << std::endl; }
+      const ModifySubscriptionResponse response = Send<ModifySubscriptionResponse>(request);
+      if (Debug) { std::cout << "binary_client| ModifySubscription <--" << std::endl; }
+      return response;
+    }
+
     virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions) override
     {
       if (Debug) { std::cout << "binary_client| DeleteSubscriptions -->" << std::endl; }

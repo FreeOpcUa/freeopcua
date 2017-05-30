@@ -3438,8 +3438,6 @@ namespace OpcUa
     }
 
 
-/* DISABLED
-
     template<>
     std::size_t RawSize<ModifySubscriptionParameters>(const ModifySubscriptionParameters& data)
     {
@@ -3453,9 +3451,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionRequest>(const ModifySubscriptionRequest& data)
@@ -3467,9 +3462,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionResult>(const ModifySubscriptionResult& data)
@@ -3481,9 +3473,6 @@ namespace OpcUa
         return size;
     }
 
-*/
-
-/* DISABLED
 
     template<>
     std::size_t RawSize<ModifySubscriptionResponse>(const ModifySubscriptionResponse& data)
@@ -3495,7 +3484,6 @@ namespace OpcUa
         return size;
     }
 
-*/
 
     template<>
     std::size_t RawSize<PublishingModeParameters>(const PublishingModeParameters& data)

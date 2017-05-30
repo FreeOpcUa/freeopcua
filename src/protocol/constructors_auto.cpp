@@ -483,21 +483,15 @@ namespace OpcUa
     {
     }
 
-/*  DISABLED
-
      ModifySubscriptionRequest::ModifySubscriptionRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionRequest_Encoding_DefaultBinary))
     {
     }
-*/
-
-/*  DISABLED
 
      ModifySubscriptionResponse::ModifySubscriptionResponse()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::ModifySubscriptionResponse_Encoding_DefaultBinary))
     {
     }
-*/
 
      SetPublishingModeRequest::SetPublishingModeRequest()
         : TypeId(FourByteNodeId((uint16_t)ObjectId::SetPublishingModeRequest_Encoding_DefaultBinary))

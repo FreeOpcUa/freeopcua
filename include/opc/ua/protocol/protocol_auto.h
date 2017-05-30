@@ -2622,8 +2622,6 @@ namespace OpcUa
          CreateSubscriptionResponse();
     };
 
-/* DISABLED
-
     struct ModifySubscriptionParameters 
     {
          uint32_t SubscriptionId;
@@ -2633,9 +2631,6 @@ namespace OpcUa
          uint32_t MaxNotificationsPerPublish;
          uint8_t Priority;
     };
-*/
-
-/* DISABLED
 
     struct ModifySubscriptionRequest 
     {
@@ -2645,9 +2640,6 @@ namespace OpcUa
 
          ModifySubscriptionRequest();
     };
-*/
-
-/* DISABLED
 
     struct ModifySubscriptionResult 
     {
@@ -2655,9 +2647,6 @@ namespace OpcUa
          uint32_t RevisedLifetimeCount;
          uint32_t RevisedMaxKeepAliveCount;
     };
-*/
-
-/* DISABLED
 
     struct ModifySubscriptionResponse 
     {
@@ -2667,7 +2656,6 @@ namespace OpcUa
 
          ModifySubscriptionResponse();
     };
-*/
 
     struct PublishingModeParameters 
     {
