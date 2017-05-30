@@ -535,6 +535,25 @@ namespace OpcUa
           return;
         }
 
+        case MODIFY_SUBSCRIPTION_REQUEST:
+        {
+          if (Debug) std::clog << "opc_tcp_processor| Processing modify subscription request." << std::endl;
+          ModifySubscriptionRequest request;
+          istream >> request.Parameters;
+          request.Header = requestHeader;
+
+          ModifySubscriptionResponse response = Server->Subscriptions()->ModifySubscription(request.Parameters);
+          FillResponseHeader(requestHeader, response.Header);
+
+          SecureHeader secureHeader(MT_SECURE_MESSAGE, CHT_SINGLE, ChannelId);
+          secureHeader.AddSize(RawSize(algorithmHeader));
+          secureHeader.AddSize(RawSize(sequence));
+          secureHeader.AddSize(RawSize(response));
+          if (Debug) std::clog << "opc_tcp_processor| Sending response to Modify Subscription Request." << std::endl;
+          ostream << secureHeader << algorithmHeader << sequence << response << flush;
+          return;
+        }
+
         case DELETE_SUBSCRIPTION_REQUEST:
         {
           if (Debug) std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl;

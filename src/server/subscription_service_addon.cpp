@@ -55,6 +55,11 @@ namespace
       return Subscriptions->CreateSubscription(request, callback);
     }
 
+    OpcUa::ModifySubscriptionResponse ModifySubscription(const OpcUa::ModifySubscriptionParameters& parameters)
+    {
+      return Subscriptions->ModifySubscription(parameters);
+    }
+
     std::vector<OpcUa::StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       return Subscriptions->DeleteSubscriptions(subscriptions);

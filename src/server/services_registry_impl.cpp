@@ -136,6 +136,11 @@ namespace
       return SubscriptionData();
     }
 
+    virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters& parameters)
+    {
+      return ModifySubscriptionResponse();
+    }
+
     virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions)
     {
       return std::vector<StatusCode>();

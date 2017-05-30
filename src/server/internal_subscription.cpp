@@ -185,6 +185,28 @@ namespace OpcUa
       return response;
     }
 
+    ModifySubscriptionResult InternalSubscription::ModifySubscription(const ModifySubscriptionParameters& data)
+    {
+      ModifySubscriptionResult result;
+
+      if (data.RequestedLifetimeCount) {
+        Data.RevisedLifetimeCount = data.RequestedLifetimeCount;
+      }
+      LifeTimeCount = result.RevisedLifetimeCount = Data.RevisedLifetimeCount;
+
+      if (data.RequestedPublishingInterval) {
+        Data.RevisedPublishingInterval = data.RequestedPublishingInterval;
+      }
+      result.RevisedPublishingInterval = Data.RevisedPublishingInterval;
+
+      if (data.RequestedMaxKeepAliveCount) {
+        Data.RevisedMaxKeepAliveCount = data.RequestedMaxKeepAliveCount;
+      }
+      result.RevisedMaxKeepAliveCount = Data.RevisedMaxKeepAliveCount;
+
+      return result;
+    }
+
     NotificationData InternalSubscription::GetNotificationData()
     {
       DataChangeNotification notification;

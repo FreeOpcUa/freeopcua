@@ -89,6 +89,27 @@ namespace OpcUa
       return result;
     }
 
+    ModifySubscriptionResponse SubscriptionServiceInternal::ModifySubscription(const ModifySubscriptionParameters& parameters)
+    {
+      boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+      ModifySubscriptionResponse response;
+
+      uint32_t subid = parameters.SubscriptionId;
+      SubscriptionsIdMap::iterator itsub = SubscriptionsMap.find(subid);
+      if (itsub == SubscriptionsMap.end())
+      {
+        std::cout << "SubscriptionService | Error, got request to modify non existing Subscription: " << subid << std::endl;
+        response.Header.ServiceResult = StatusCode::BadSubscriptionIdInvalid;
+        return response;
+      }
+      if (Debug) std::cout << "SubscriptionService | Modify Subscription with Id: " << subid << std::endl;
+
+      std::shared_ptr<InternalSubscription> sub = itsub->second;
+      response.Parameters = sub->ModifySubscription(parameters);
+      return response;
+    }
+
     SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback)
     {
       boost::unique_lock<boost::shared_mutex> lock(DbMutex);

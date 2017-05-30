@@ -49,6 +49,7 @@ namespace OpcUa
        ~SubscriptionServiceInternal();
 
         virtual std::vector<StatusCode> DeleteSubscriptions(const std::vector<uint32_t>& subscriptions);
+        virtual ModifySubscriptionResponse ModifySubscription(const ModifySubscriptionParameters& parameters);
         virtual SubscriptionData CreateSubscription(const CreateSubscriptionRequest& request, std::function<void (PublishResult)> callback);
         virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters& params);
         virtual std::vector<StatusCode> DeleteMonitoredItems(const DeleteMonitoredItemsParameters& params);
