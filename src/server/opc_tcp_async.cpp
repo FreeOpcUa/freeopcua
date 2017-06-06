@@ -146,12 +146,15 @@ void OpcTcpConnection::Start()
 
 void OpcTcpConnection::ReadNextData()
 {
+  // do not lose reference to shared instance even if another
+  // async operation decides to call GoodBye()
+  OpcTcpConnection::SharedPtr self = shared_from_this();
   async_read(Socket, buffer(Buffer), transfer_exactly(GetHeaderSize()),
-             [this](const boost::system::error_code & error, std::size_t bytes_transferred)
+             [self](const boost::system::error_code & error, std::size_t bytes_transferred)
   {
     try
       {
-        ProcessHeader(error, bytes_transferred);
+        self->ProcessHeader(error, bytes_transferred);
       }
 
     catch (const std::exception & exc)
@@ -193,17 +196,20 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
       std::cout << "opc_tcp_async| Waiting " << messageSize << " bytes from client." << std::endl;
     }
 
+  // do not lose reference to shared instance even if another
+  // async operation decides to call GoodBye()
+  OpcTcpConnection::SharedPtr self = shared_from_this();
   async_read(Socket, buffer(Buffer), transfer_exactly(messageSize),
-             [this, header](const boost::system::error_code & error, std::size_t bytesTransferred)
+             [self, header](const boost::system::error_code & error, std::size_t bytesTransferred)
   {
     if (error)
       {
-        if (Debug) { std::cerr << "opc_tcp_async| Error during receiving message body." << std::endl; }
+        if (self->Debug) { std::cerr << "opc_tcp_async| Error during receiving message body." << std::endl; }
 
         return;
       }
 
-    ProcessMessage(header.Type, error, bytesTransferred);
+    self->ProcessMessage(header.Type, error, bytesTransferred);
   }
             );
 
@@ -260,9 +266,10 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
 void OpcTcpConnection::GoodBye()
 {
-  TcpServer.RemoveClient(shared_from_this());
-  // valgrind complains that Debug  cannot be read at that point, so do not use it
-  //if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
+  // reference to shared instance
+  OpcTcpConnection::SharedPtr self = shared_from_this();
+  TcpServer.RemoveClient(self);
+  if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
 }
 
 void OpcTcpConnection::Send(const char * message, std::size_t size)
@@ -275,16 +282,19 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
       PrintBlob(*data);
     }
 
-  async_write(Socket, buffer(&(*data)[0], data->size()), [this, data](const boost::system::error_code & err, size_t bytes)
+  // do not lose reference to shared instance even if another
+  // async operation decides to call GoodBye()
+  OpcTcpConnection::SharedPtr self = shared_from_this();
+  async_write(Socket, buffer(&(*data)[0], data->size()), [self, data](const boost::system::error_code & err, size_t bytes)
   {
     if (err)
       {
         std::cerr << "opc_tcp_async| Failed to send data to the client. " << err.message() << std::endl;
-        GoodBye();
+        self->GoodBye();
         return;
       }
 
-    if (Debug)
+    if (self->Debug)
       {
         std::cout << "opc_tcp_async| Response sent to the client." << std::endl;
       }
