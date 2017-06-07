@@ -82,7 +82,7 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
       return;
     }
 
-  if (HasPublishResult() && Service.PopPublishRequest(CurrentSession))   //Check we received a publishrequest before sening respomse
+  if (HasPublishResult() && Service.PopPublishRequest(CurrentSession))   //Check we received a publishrequest before sending response
     {
 
       std::vector<PublishResult> results = PopPublishResult();
@@ -98,7 +98,7 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
 
           else
             {
-              if (Debug) { std::cout << "InternalSubcsription | No callback defined for this subscription" << std::endl; }
+              if (Debug) { std::cout << "InternalSubscription | No callback defined for this subscription" << std::endl; }
             }
         }
     }
@@ -149,7 +149,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
   if (! TriggeredEvents.empty())
     {
-      if (Debug) { std::cout << "InternalSubcsription | Subscription " << Data.SubscriptionId << " has " << TriggeredEvents.size() << " events to send to client" << std::endl; }
+      if (Debug) { std::cout << "InternalSubscription | Subscription " << Data.SubscriptionId << " has " << TriggeredEvents.size() << " events to send to client" << std::endl; }
 
       EventNotificationList notif;
 
@@ -181,7 +181,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
   NotAcknowledgedResults.push_back(result);
 
-  if (Debug) { std::cout << "InternalSubcsription | Sending Notification with " << result.NotificationMessage.NotificationData.size() << " notifications"  << std::endl; }
+  if (Debug) { std::cout << "InternalSubscription | Sending Notification with " << result.NotificationMessage.NotificationData.size() << " notifications"  << std::endl; }
 
   std::vector<PublishResult> resultlist;
   resultlist.push_back(result);
@@ -191,7 +191,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
 RepublishResponse InternalSubscription::Republish(const RepublishParameters & params)
 {
-  if (Debug) { std::cout << "SubscriptionService| RepublishRequest for sequence: " << params.RetransmitSequenceNumber << std::endl; }
+  if (Debug) { std::cout << "InternalSubscription | RepublishRequest for sequence: " << params.RetransmitSequenceNumber << std::endl; }
 
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -324,7 +324,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 
 void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval)
 {
-  if (Debug) { std::cout << "InternalSubcsription | Manual Trigger of DataChangeEvent for sub: " << Data.SubscriptionId << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
+  if (Debug) { std::cout << "InternalSubscription | Manual Trigger of DataChangeEvent for sub: " << Data.SubscriptionId << " and clienthandle: " << monitoreditems.ClientHandle << std::endl; }
 
   ReadParameters params;
   params.AttributesToRead.push_back(attrval);
@@ -345,7 +345,7 @@ std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std:
 
   for (const uint32_t & handle : monitoreditemsids)
     {
-      if (Debug) { std::cout << "InternalSubcsription | Deleting Monitoreditemsid: " << handle << std::endl; }
+      if (Debug) { std::cout << "InternalSubscription | Deleting Monitoreditemsid: " << handle << std::endl; }
 
       if (DeleteMonitoredEvent(handle))
         {
@@ -444,7 +444,7 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
 
   if (it_monitoreditem == MonitoredDataChanges.end())
     {
-      std::cout << "InternalSubcsription | DataChangeCallback called for unknown item" << std::endl;
+      std::cout << "InternalSubscription | DataChangeCallback called for unknown item" << std::endl;
       return ;
     }
 
@@ -452,7 +452,7 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
   event.Data.ClientHandle = it_monitoreditem->second.ClientHandle;
   event.Data.Value = value;
 
-  if (Debug) { std::cout << "InternalSubcsription | Enqueued DataChange triggered item for sub: " << Data.SubscriptionId << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
+  if (Debug) { std::cout << "InternalSubscription | Enqueued DataChange triggered item for sub: " << Data.SubscriptionId << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
 
   TriggeredDataChangeEvents.push_back(event);
 }
@@ -465,7 +465,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
   if (it == MonitoredEvents.end())
     {
-      if (Debug) { std::cout << "InternalSubcsription | Subscription: " << Data.SubscriptionId << " has no subcsription for this event" << std::endl; }
+      if (Debug) { std::cout << "InternalSubscription | Subscription: " << Data.SubscriptionId << " has no subscription for this event" << std::endl; }
 
       return;
     }
@@ -476,7 +476,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
 bool InternalSubscription::EnqueueEvent(uint32_t monitoreditemid, const Event & event)
 {
-  if (Debug) { std::cout << "InternalSubcsription | Enqueing event to be send" << std::endl; }
+  if (Debug) { std::cout << "InternalSubscription | Enqueing event to be send" << std::endl; }
 
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -487,7 +487,7 @@ bool InternalSubscription::EnqueueEvent(uint32_t monitoreditemid, const Event & 
 
   if (mii_it == MonitoredDataChanges.end())
     {
-      if (Debug) { std::cout << "InternalSubcsription | monitoreditem " << monitoreditemid << " is already deleted" << std::endl; }
+      if (Debug) { std::cout << "InternalSubscription | monitoreditem " << monitoreditemid << " is already deleted" << std::endl; }
 
       return false;
     }

@@ -111,6 +111,7 @@ std::vector<BrowseResult> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery &
           std::cout << ", Direction: " << browseDescription.Direction;
           std::cout << ", NodeClasses: 0x" << std::hex << (unsigned)browseDescription.NodeClasses;
           std::cout << ", ResultMask: '0x" << std::hex << (unsigned)browseDescription.ResultMask << std::endl;
+          std::cout << std::dec;
         }
 
       NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
