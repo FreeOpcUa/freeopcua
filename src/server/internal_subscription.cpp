@@ -35,6 +35,13 @@ void InternalSubscription::Stop()
 {
   DeleteAllMonitoredItems();
   Timer.cancel();
+  {
+    boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+    // after Stop() the callback is useless or - as Stop is part
+    // of the shutdown sequence of OpcTcpConnection - points to
+    // a no longer existing instance of OpcTcpMessages.
+    Callback = NULL;
+  }
 }
 
 void InternalSubscription::DeleteAllMonitoredItems()
