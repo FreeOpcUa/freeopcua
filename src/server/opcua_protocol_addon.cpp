@@ -54,7 +54,7 @@ public:
 
     if (Debug) { std::clog << "opc_tcp_processor| Hello client!" << std::endl; }
 
-    std::unique_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, *clientChannel, Debug));
+    std::unique_ptr<OpcTcpMessages> messageProcessor(new OpcTcpMessages(Server, clientChannel, Debug));
 
     for (;;)
       {
