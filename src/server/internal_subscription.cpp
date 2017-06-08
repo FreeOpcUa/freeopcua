@@ -98,15 +98,17 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
         {
           if (Debug) { std::cout << "InternalSubscription | Subscription has " << results.size() << " results, calling callback" << std::endl; }
 
-          if (Callback)
-            {
-              Callback(results[0]);
-            }
-
-          else
-            {
-              if (Debug) { std::cout << "InternalSubscription | No callback defined for this subscription" << std::endl; }
-            }
+          {
+            boost::shared_lock<boost::shared_mutex> lock(DbMutex);
+            if (Callback)
+              {
+                Callback(results[0]);
+              }
+            else
+              {
+                if (Debug) { std::cout << "InternalSubscription | No callback defined for this subscription" << std::endl; }
+              }
+          }
         }
     }
 
