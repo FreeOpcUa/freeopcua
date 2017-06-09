@@ -227,7 +227,7 @@ public:
 
     HelloServer(params);
 
-    ReceiveThread = std::move(std::thread([this]()
+    ReceiveThread = std::thread([this]()
     {
       try
         {
@@ -243,7 +243,7 @@ public:
 
           std::cerr << exc.what() << std::endl;
         }
-    }));
+    });
   }
 
   ~BinaryClient()

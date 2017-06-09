@@ -456,7 +456,7 @@ std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, 
 
 ServerOperations UaClient::CreateServerOperations()
 {
-  return std::move(ServerOperations(Server));
+  return ServerOperations(Server);
 }
 } // namespace OpcUa
 
