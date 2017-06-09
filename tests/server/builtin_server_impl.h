@@ -40,21 +40,21 @@ class BuiltinServerAddon
 {
 public:
   BuiltinServerAddon();
-  ~BuiltinServerAddon();
+  ~BuiltinServerAddon() override;
 
   OpcUa::Services::SharedPtr GetServices() const override;
 
 public: // Common::Addon
-  virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params);
-  virtual void Stop();
+  virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params) override;
+  virtual void Stop() override;
 
 public: // TcpServer
-  virtual void Listen(const OpcUa::Server::TcpParameters & params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor);
-  virtual void StopListen(const OpcUa::Server::TcpParameters & params);
+  virtual void Listen(const OpcUa::Server::TcpParameters & params, std::shared_ptr<OpcUa::Server::IncomingConnectionProcessor> processor) override;
+  virtual void StopListen(const OpcUa::Server::TcpParameters & params) override;
 
 private:
-  virtual void OnSuccess();
-  virtual void OnError(const std::exception & exc);
+  virtual void OnSuccess() override;
+  virtual void OnError(const std::exception & exc) override;
 
 private:
   std::shared_ptr<BufferedInput> ClientInput;
