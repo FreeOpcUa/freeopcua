@@ -244,8 +244,8 @@ static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
 
 static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
 {
-  std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
-  return boost::shared_ptr<Subscription>(sub.release());
+  Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
+  return boost::shared_ptr<Subscription>(sub.get());
 }
 
 static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
@@ -259,8 +259,8 @@ static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
 
 static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
 {
-  std::unique_ptr<Subscription> sub  = self.CreateSubscription(period, callback);
-  return boost::shared_ptr<Subscription>(sub.release());
+  Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
+  return boost::shared_ptr<Subscription>(sub.get());
 }
 
 static Node UaServer_GetNode(UaServer & self, ObjectId objectid)

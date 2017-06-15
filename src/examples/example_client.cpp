@@ -96,7 +96,7 @@ int main(int argc, char ** argv)
 
       //Subscription
       SubClient sclt;
-      std::unique_ptr<Subscription> sub = client.CreateSubscription(100, sclt);
+      Subscription::SharedPtr sub = client.CreateSubscription(100, sclt);
       uint32_t handle = sub->SubscribeDataChange(myvar);
       std::cout << "Got sub handle: " << handle << ", sleeping 5 seconds" << std::endl;
       std::this_thread::sleep_for(std::chrono::seconds(5));

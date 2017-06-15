@@ -187,12 +187,12 @@ void UaServer::EnableEventNotification()
   server.SetAttribute(AttributeId::EventNotifier, dval);
 }
 
-std::unique_ptr<Subscription> UaServer::CreateSubscription(unsigned int period, SubscriptionHandler & callback)
+Subscription::SharedPtr UaServer::CreateSubscription(unsigned int period, SubscriptionHandler & callback)
 {
   CheckStarted();
   CreateSubscriptionParameters params;
   params.RequestedPublishingInterval = period;
-  return std::unique_ptr<Subscription>(new Subscription(Registry->GetServer(), params, callback, Debug));
+  return std::make_shared<Subscription>(Registry->GetServer(), params, callback, Debug);
 }
 
 ServerOperations UaServer::CreateServerOperations()
