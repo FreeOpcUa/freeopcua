@@ -82,7 +82,7 @@ public:
   /// @brief Create a subscription objects
   // returned object can then be used to subscribe to
   // datachange or custom events on server side
-  std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler & callback);
+  Subscription::SharedPtr CreateSubscription(unsigned int period, SubscriptionHandler & callback);
 
   /// @brief Create a server operations object
   ServerOperations CreateServerOperations();

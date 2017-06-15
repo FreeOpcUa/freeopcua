@@ -145,7 +145,7 @@ public:
   /// @brief Create a subscription objects
   // returned object can then be used to subscribe
   // to datachange or custom events from server
-  std::unique_ptr<Subscription> CreateSubscription(unsigned int period, SubscriptionHandler & client);
+  Subscription::SharedPtr CreateSubscription(unsigned int period, SubscriptionHandler & client);
 
   /// @brief Create a server operations object
   ServerOperations CreateServerOperations();
@@ -156,6 +156,7 @@ private:
 
   std::vector<OpcUa::Node> AddChilds(std::vector<OpcUa::Node> nodes);
 
+protected:
   EndpointDescription Endpoint;
   // defined some sensible defaults that should let us connect to most servers
   std::string SessionName = "Open source OPC-UA Client Session";
@@ -166,10 +167,7 @@ private:
   uint32_t SecureChannelId;
   bool Debug = false;
   uint32_t DefaultTimeout = 3600000;
-
-protected:
   Services::SharedPtr Server;
-
 };
 
 } // namespace OpcUa

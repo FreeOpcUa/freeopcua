@@ -446,12 +446,12 @@ std::vector<OpcUa::Node> UaClient::AddChilds(std::vector<OpcUa::Node> nodes)
   return results;
 }
 
-std::unique_ptr<Subscription> UaClient::CreateSubscription(unsigned int period, SubscriptionHandler & callback)
+Subscription::SharedPtr UaClient::CreateSubscription(unsigned int period, SubscriptionHandler & callback)
 {
   CreateSubscriptionParameters params;
   params.RequestedPublishingInterval = period;
 
-  return std::unique_ptr<Subscription>(new Subscription(Server, params, callback, Debug));
+  return std::make_shared<Subscription>(Server, params, callback, Debug);
 }
 
 ServerOperations UaClient::CreateServerOperations()
