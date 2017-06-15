@@ -89,6 +89,9 @@ public:
 class Subscription
 {
 public:
+  DEFINE_CLASS_POINTERS(Subscription)
+
+public:
   //Create a new subscription on server
   //methods of callback object will be called everytime an event is received from the server
   //FIXME: should we use interface or std::function for callback???? std::function syntax is ugly but is more flexible
