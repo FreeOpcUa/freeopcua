@@ -163,6 +163,12 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
       result.Results.push_back(StatusCode::Good);
     }
 
+  // clear TriggerCount to enable new events for next
+  // publishing cycle
+  for (auto & mdc : MonitoredDataChanges)
+    {
+        mdc.second.TriggerCount = 0;
+    }
 
   // FIXME: also add statuschange notification since they can be send in same result
 
@@ -319,6 +325,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 
     mdata.Parameters = result;
     mdata.Mode = request.MonitoringMode;
+    mdata.TriggerCount = 0;
     mdata.ClientHandle = request.RequestedParameters.ClientHandle;
     mdata.CallbackHandle = callbackHandle;
     mdata.MonitoredItemId = result.MonitoredItemId;
@@ -473,12 +480,21 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
       return ;
     }
 
+  MonitoredDataChange& monitoredDataChange = it_monitoreditem->second;
+  // spec says default sample interval for MonitoredItems is the same
+  // as Subscription publishing interval, so bail out if event has been
+  // triggered before
+  if (monitoredDataChange.TriggerCount > 0)
+    {
+      return;
+    }
   event.MonitoredItemId = it_monitoreditem->first;
-  event.Data.ClientHandle = it_monitoreditem->second.ClientHandle;
+  event.Data.ClientHandle = monitoredDataChange.ClientHandle;
   event.Data.Value = value;
 
   if (Debug) { std::cout << "InternalSubscription | Enqueued DataChange triggered item for sub: " << Data.SubscriptionId << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
 
+  ++monitoredDataChange.TriggerCount;
   TriggeredDataChangeEvents.push_back(event);
 }
 
