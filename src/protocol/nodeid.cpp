@@ -376,6 +376,9 @@ bool NodeId::IsNull() const
 {
   switch (GetEncodingValue())
     {
+    case EV_TWO_BYTE:
+      break;
+
     case EV_FOUR_BYTE:
       if (FourByteData.NamespaceIndex != 0)
         { return false; }
@@ -419,6 +422,12 @@ bool NodeId::HasNullIdentifier() const
 {
   switch (GetEncodingValue())
     {
+    case EV_TWO_BYTE:
+      if (TwoByteData.Identifier != 0)
+        { return false; }
+
+      break;
+
     case EV_FOUR_BYTE:
       if (FourByteData.Identifier != 0)
         { return false; }
