@@ -41,16 +41,15 @@ void InternalSubscription::DeleteAllMonitoredItems()
 {
   if (Debug) { std::cout << "InternalSubscription | Deleting all monitoreditems" << std::endl; }
 
-  boost::shared_lock<boost::shared_mutex> lock(DbMutex);
-
   std::vector<uint32_t> handles;
+  {
+    boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-  for (auto pair : MonitoredDataChanges)
-    {
-      handles.push_back(pair.first);
-    }
-
-  lock.unlock();
+    for (auto pair : MonitoredDataChanges)
+      {
+        handles.push_back(pair.first);
+      }
+  }
   DeleteMonitoredItemsIds(handles);
 }
 
@@ -164,6 +163,12 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
       result.Results.push_back(StatusCode::Good);
     }
 
+  // clear TriggerCount to enable new events for next
+  // publishing cycle
+  for (auto & mdc : MonitoredDataChanges)
+    {
+        mdc.second.TriggerCount = 0;
+    }
 
   // FIXME: also add statuschange notification since they can be send in same result
 
@@ -264,22 +269,32 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 {
   if (Debug) { std::cout << "SubscriptionService| Creating monitored item." << std::endl; }
 
-  boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
   MonitoredItemCreateResult result;
   uint32_t callbackHandle = 0;
-  result.MonitoredItemId = ++LastMonitoredItemId;
+  {
+    boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-  if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier)
-    {
-      if (Debug) { std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl; }
+    result.MonitoredItemId = ++LastMonitoredItemId;
+    result.Status = OpcUa::StatusCode::Good;
+    result.RevisedSamplingInterval = Data.RevisedPublishingInterval; // Force our own rate
+    result.RevisedQueueSize = request.RequestedParameters.QueueSize; // We should check that value, maybe set to a default...
+    result.FilterResult = request.RequestedParameters.Filter; // We can omit that one if we do not change anything in filter
 
-      //client want to subscribe to events
-      //FIXME: check attribute EVENT notifier is set for the node
-      MonitoredEvents[request.ItemToMonitor.NodeId] = result.MonitoredItemId;
-    }
+    if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier)
+      {
+        if (Debug) { std::cout << "SubscriptionService| Subscribed o event notifier " << std::endl; }
 
-  else
+        //client want to subscribe to events
+        //FIXME: check attribute EVENT notifier is set for the node
+        MonitoredEvents[request.ItemToMonitor.NodeId] = result.MonitoredItemId;
+      }
+  }
+
+  // do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
+  // function.
+  // AddressSpaceInMemory functions call locked InternalSubscription functions
+  // which will result in deadlocks when used from differengt threads
+  if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier)
     {
       if (Debug) { std::cout << "SubscriptionService| Subscribing to data chanes in the address space." << std::endl; }
 
@@ -289,6 +304,10 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
         this->DataChangeCallback(id, value);
       });
 
+      // AddressSpace.AddDataChangeCallback uses exceptions to signal errors.
+      // Do not introduce another layer of error handling by special meanings of
+      // handles
+      /*
       if (callbackHandle == 0)
         {
           if (Debug) { std::cout << "SubscriptionService| ERROR: address returned zero handle." << std::endl; }
@@ -297,20 +316,24 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
           result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
           return result;
         }
+      */
     }
 
-  result.Status = OpcUa::StatusCode::Good;
-  result.RevisedSamplingInterval = Data.RevisedPublishingInterval; //Force our own rate
-  result.RevisedQueueSize = request.RequestedParameters.QueueSize; // We should check that value, maybe set to a default...
-  result.FilterResult = request.RequestedParameters.Filter; //We can omit that one if we do not change anything in filter
   MonitoredDataChange mdata;
-  mdata.Parameters = result;
-  mdata.Mode = request.MonitoringMode;
-  mdata.ClientHandle = request.RequestedParameters.ClientHandle;
-  mdata.CallbackHandle = callbackHandle;
-  mdata.MonitoredItemId = result.MonitoredItemId;
-  MonitoredDataChanges[result.MonitoredItemId] = mdata;
+  {
+    boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
+    mdata.Parameters = result;
+    mdata.Mode = request.MonitoringMode;
+    mdata.TriggerCount = 0;
+    mdata.ClientHandle = request.RequestedParameters.ClientHandle;
+    mdata.CallbackHandle = callbackHandle;
+    mdata.MonitoredItemId = result.MonitoredItemId;
+    MonitoredDataChanges[result.MonitoredItemId] = mdata;
+  }
+
+  // do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
+  // function.
   if (Debug) { std::cout << "Created MonitoredItem with id: " << result.MonitoredItemId << " and client handle " << mdata.ClientHandle << std::endl; }
 
   //Forcing event,
@@ -334,13 +357,15 @@ void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoredi
   event.MonitoredItemId = monitoreditems.MonitoredItemId;
   event.Data.ClientHandle = monitoreditems.ClientHandle;
   event.Data.Value = vals[0];
-  TriggeredDataChangeEvents.push_back(event);
+  {
+    boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
+    TriggeredDataChangeEvents.push_back(event);
+  }
 }
 
 std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std::vector<uint32_t> & monitoreditemsids)
 {
-  boost::unique_lock<boost::shared_mutex> lock(DbMutex);
-
   std::vector<StatusCode> results;
 
   for (const uint32_t & handle : monitoreditemsids)
@@ -368,6 +393,8 @@ std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std:
 
 bool InternalSubscription::DeleteMonitoredDataChange(uint32_t handle)
 {
+  boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
   MonitoredDataChangeMap::iterator it = MonitoredDataChanges.find(handle);
 
   if (it == MonitoredDataChanges.end())
@@ -379,7 +406,10 @@ bool InternalSubscription::DeleteMonitoredDataChange(uint32_t handle)
     {
       if (it->second.CallbackHandle != 0)  //if 0 this monitoreditem did not use callbacks
         {
+          lock.unlock();
+          // break deadlock condition: InternalSubscription <-> AddressSpace
           AddressSpace.DeleteDataChangeCallback(it->second.CallbackHandle);
+          lock.lock();
         }
 
       MonitoredDataChanges.erase(handle);
@@ -406,6 +436,8 @@ bool InternalSubscription::DeleteMonitoredDataChange(uint32_t handle)
 
 bool InternalSubscription::DeleteMonitoredEvent(uint32_t handle)
 {
+  boost::unique_lock<boost::shared_mutex> lock(DbMutex);
+
   for (auto pair : MonitoredEvents)
     {
       if (pair.second == handle)
@@ -448,12 +480,21 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
       return ;
     }
 
+  MonitoredDataChange& monitoredDataChange = it_monitoreditem->second;
+  // spec says default sample interval for MonitoredItems is the same
+  // as Subscription publishing interval, so bail out if event has been
+  // triggered before
+  if (monitoredDataChange.TriggerCount > 0)
+    {
+      return;
+    }
   event.MonitoredItemId = it_monitoreditem->first;
-  event.Data.ClientHandle = it_monitoreditem->second.ClientHandle;
+  event.Data.ClientHandle = monitoredDataChange.ClientHandle;
   event.Data.Value = value;
 
   if (Debug) { std::cout << "InternalSubscription | Enqueued DataChange triggered item for sub: " << Data.SubscriptionId << " and clienthandle: " << event.Data.ClientHandle << std::endl; }
 
+  ++monitoredDataChange.TriggerCount;
   TriggeredDataChangeEvents.push_back(event);
 }
 

@@ -32,6 +32,7 @@ struct MonitoredDataChange
   uint32_t MonitoredItemId;
   MonitoringMode Mode;
   time_t LastTrigger;
+  uint32_t TriggerCount;
   MonitoredItemCreateResult Parameters;
   uint32_t ClientHandle;
   uint32_t CallbackHandle;
