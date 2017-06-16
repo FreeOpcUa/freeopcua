@@ -242,10 +242,16 @@ static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
 // UaClient helpers
 //--------------------------------------------------------------------------
 
+template<typename T>
+boost::shared_ptr<T> make_shared_ptr(std::shared_ptr<T>& ptr)
+{
+    return boost::shared_ptr<T>(ptr.get(), [ptr](T*) mutable {ptr.reset();});
+}
+
 static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
 {
   Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
-  return boost::shared_ptr<Subscription>(sub.get());
+  return make_shared_ptr<Subscription>(sub);
 }
 
 static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
@@ -260,7 +266,7 @@ static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
 static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
 {
   Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
-  return boost::shared_ptr<Subscription>(sub.get());
+  return make_shared_ptr<Subscription>(sub);
 }
 
 static Node UaServer_GetNode(UaServer & self, ObjectId objectid)
