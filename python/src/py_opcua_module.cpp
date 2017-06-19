@@ -80,7 +80,7 @@ static uint64_t ToWinEpoch(PyObject * pydate)
   return (myptime - ref).total_microseconds() * 10;
 }
 
-static boost::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object & bobj)
+static std::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object & bobj)
 {
   PyObject * pydate = bobj.ptr();
 
@@ -89,7 +89,7 @@ static boost::shared_ptr<DateTime> makeOpcUaDateTime(const boost::python::object
       throw std::runtime_error("method take a python datetime as argument");
     }
 
-  return boost::shared_ptr<DateTime>(new DateTime(ToWinEpoch(pydate)));
+  return std::shared_ptr<DateTime>(new DateTime(ToWinEpoch(pydate)));
 }
 
 struct DateTimeOpcUaToPythonConverter
@@ -166,8 +166,8 @@ struct PythonStringToLocalizedTextConverter
 // NodeId helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<NodeId> NodeId_constructor(const std::string & encodedNodeId)
-{ return boost::shared_ptr<NodeId>(new NodeId(ToNodeId(encodedNodeId))); }
+static std::shared_ptr<NodeId> NodeId_constructor(const std::string & encodedNodeId)
+{ return std::shared_ptr<NodeId>(new NodeId(ToNodeId(encodedNodeId))); }
 
 static object NodeId_GetIdentifier(const NodeId & self)
 {
@@ -191,8 +191,8 @@ static object NodeId_GetIdentifier(const NodeId & self)
 // DataValue helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<DataValue> DataValue_constructor1(const object & obj, VariantType vtype)
-{ return boost::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype))); }
+static std::shared_ptr<DataValue> DataValue_constructor1(const object & obj, VariantType vtype)
+{ return std::shared_ptr<DataValue>(new DataValue(ToVariant2(obj, vtype))); }
 
 static object DataValue_get_value(const DataValue & self)
 { return ToObject(self.Value); }
@@ -242,16 +242,9 @@ static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
 // UaClient helpers
 //--------------------------------------------------------------------------
 
-template<typename T>
-boost::shared_ptr<T> make_shared_ptr(std::shared_ptr<T>& ptr)
+static std::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
 {
-    return boost::shared_ptr<T>(ptr.get(), [ptr](T*) mutable {ptr.reset();});
-}
-
-static boost::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
-{
-  Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
-  return make_shared_ptr<Subscription>(sub);
+  return self.CreateSubscription(period, callback);
 }
 
 static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
@@ -263,10 +256,9 @@ static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
 // UaServer helpers
 //--------------------------------------------------------------------------
 
-static boost::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
+static std::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
 {
-  Subscription::SharedPtr sub  = self.CreateSubscription(period, callback);
-  return make_shared_ptr<Subscription>(sub);
+  return self.CreateSubscription(period, callback);
 }
 
 static Node UaServer_GetNode(UaServer & self, ObjectId objectid)
@@ -321,7 +313,7 @@ BOOST_PYTHON_MODULE(opcua)
   //;
 
 
-  class_<NodeId, boost::shared_ptr<NodeId>>("NodeId")
+  class_<NodeId, std::shared_ptr<NodeId>>("NodeId")
                                          .def(init<uint32_t, uint16_t>())
                                          .def(init<std::string, uint16_t>())
                                          .def("__init__", make_constructor(NodeId_constructor)) // XXX add this constructor to freeopcua
@@ -351,7 +343,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def(self == self)
   ;
 
-  class_<DataValue, boost::shared_ptr<DataValue>>("DataValue")
+  class_<DataValue, std::shared_ptr<DataValue>>("DataValue")
       .def(init<const Variant &>())
       .def("__init__", make_constructor(DataValue_constructor1))  // Variant, VariantType
 #define _property(X) add_property( #X, &DataValue_get_ ## X, &DataValue_set_ ## X)
@@ -503,7 +495,7 @@ BOOST_PYTHON_MODULE(opcua)
   .def(repr(self))
   ;
 
-  class_<Subscription, boost::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
+  class_<Subscription, std::shared_ptr<Subscription>, boost::noncopyable>("Subscription", no_init)
   .def("subscribe_data_change", (uint32_t (Subscription::*)(const Node &, AttributeId)) &Subscription::SubscribeDataChange, SubscriptionSubscribeDataChange_stubs((arg("node"), arg("attr") = AttributeId::Value)))
   .def("delete", &Subscription::Delete)
   .def("unsubscribe", (void (Subscription::*)(uint32_t)) &Subscription::UnSubscribe)
