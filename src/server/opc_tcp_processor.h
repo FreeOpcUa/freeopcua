@@ -22,10 +22,13 @@ namespace OpcUa
 namespace Server
 {
 
-class OpcTcpMessages
+class OpcTcpMessages: public std::enable_shared_from_this<OpcTcpMessages>
 {
 public:
-  OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel & outputChannel, bool debug);
+  DEFINE_CLASS_POINTERS(OpcTcpMessages)
+
+public:
+  OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, bool debug);
   ~OpcTcpMessages();
 
   bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary & iStream);
@@ -42,7 +45,8 @@ private:
 
 private:
   std::mutex ProcessMutex;
-  std::shared_ptr<OpcUa::Services> Server;
+  OpcUa::Services::SharedPtr Server;
+  OpcUa::OutputChannel::WeakPtr OutputChannel;
   OpcUa::Binary::OStreamBinary OutputStream;
   bool Debug;
   uint32_t ChannelId;

@@ -43,9 +43,13 @@ namespace Server
 
 using namespace OpcUa::Binary;
 
-OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa::OutputChannel & outputChannel, bool debug)
-  : Server(computer)
-  , OutputStream(outputChannel)
+OpcTcpMessages::OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, bool debug)
+  : Server(server)
+  , OutputChannel(outputChannel)
+  // do not create a reference loop - if OutputStream is called with a
+  // shared_ptr it holds a strong reference to it! So call it with a dereferenced
+  // pointer
+  , OutputStream(*outputChannel)
   , Debug(debug)
   , ChannelId(1)
   , TokenId(2)
@@ -53,13 +57,13 @@ OpcTcpMessages::OpcTcpMessages(std::shared_ptr<OpcUa::Services> computer, OpcUa:
   , SequenceNb(0)
 {
   std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
-  std::cout << "opc_tcp_processor| SessionId is " << Debug << std::endl;
+  std::cout << "opc_tcp_processor| SessionId is " << SessionId << std::endl;
 }
 
 
 OpcTcpMessages::~OpcTcpMessages()
 {
-  // This is a hack, we cannot leave subcsriptoins running since they have a cllback to us
+  // This is a hack, we cannot leave subscriptions running since they have a callback to us
   try
     {
       DeleteAllSubscriptions();
@@ -140,6 +144,15 @@ void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
   std::lock_guard<std::mutex> lock(ProcessMutex);
 
   if (Debug) { std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl; }
+
+  // get a shared_ptr from weak_ptr to make sure OutputChannel
+  // does not get deleted before end of operation
+  OpcUa::OutputChannel::SharedPtr outputChannel = OutputChannel.lock();
+  // test if OutputChannel was still active when calling lock
+  if (!outputChannel) {
+      std::cerr << "opc_tcp_processor| parent instance already deleted" << std::endl;
+      return;
+  }
 
   if (PublishRequestQueue.empty())
     {
@@ -555,11 +568,12 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       CreateSubscriptionResponse response;
       FillResponseHeader(requestHeader, response.Header);
 
-      response.Data = Server->Subscriptions()->CreateSubscription(request, [this](PublishResult i)
+      SharedPtr self = shared_from_this();
+      response.Data = Server->Subscriptions()->CreateSubscription(request, [self](PublishResult i)
       {
         try
           {
-            this->ForwardPublishResponse(i);
+            self->ForwardPublishResponse(i);
           }
 
         catch (std::exception & ex)

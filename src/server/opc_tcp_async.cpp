@@ -78,13 +78,19 @@ private:
 };
 
 
-class OpcTcpConnection : public std::enable_shared_from_this<OpcTcpConnection>, private OpcUa::OutputChannel
+class OpcTcpConnection : public std::enable_shared_from_this<OpcTcpConnection>, public OpcUa::OutputChannel
 {
 public:
   DEFINE_CLASS_POINTERS(OpcTcpConnection)
 
 public:
-  OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug);
+  // Even if this is a public constructor do not use it - use OpcTcpConnection::create().
+  // This constructor is needed for make_shared() which is needed
+  // to be able to use instances of OpcTcpConnection as
+  // OpcTcpConnection::SharedPtr and OpcUa::OutputChannel::SharedPtr
+  // at the same time.
+  OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, bool debug);
+  static SharedPtr create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug);
   ~OpcTcpConnection();
 
   void Start();
@@ -119,20 +125,30 @@ private:
 private:
   tcp::socket Socket;
   OpcTcpServer & TcpServer;
-  Server::OpcTcpMessages MessageProcessor;
+  Server::OpcTcpMessages::SharedPtr MessageProcessor;
   OStreamBinary OStream;
   const bool Debug = false;
   std::vector<char> Buffer;
 };
 
-OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug)
+OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, bool debug)
   : Socket(std::move(socket))
   , TcpServer(tcpServer)
-  , MessageProcessor(uaServer, *this, debug)
   , OStream(*this)
   , Debug(debug)
   , Buffer(8192)
 {
+}
+
+OpcTcpConnection::SharedPtr OpcTcpConnection::create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug)
+{
+  SharedPtr result = std::make_shared<OpcTcpConnection>(std::move(socket), tcpServer, debug);
+
+  // you must not take a shared_ptr in a constructor
+  // to give OpcTcpConnection as a shared_ptr to MessageProcessor
+  // we have to add this helper function
+  result->MessageProcessor = std::make_shared<Server::OpcTcpMessages>(uaServer, result, debug);
+  return result;
 }
 
 OpcTcpConnection::~OpcTcpConnection()
@@ -239,7 +255,7 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   try
     {
-      cont = MessageProcessor.ProcessMessage(type, messageStream);
+      cont = MessageProcessor->ProcessMessage(type, messageStream);
     }
 
   catch (const std::exception & exc)
@@ -351,7 +367,7 @@ void OpcTcpServer::Shutdown()
   // So have a copy of this container to have a stable iterator.
 
   // guard copy operation
-  typedef std::set<std::shared_ptr<OpcTcpConnection>> OpcTcpConnectionSet;
+  typedef std::set<OpcTcpConnection::SharedPtr> OpcTcpConnectionSet;
   OpcTcpConnectionSet tmp;
   {
     std::unique_lock<std::mutex> lock(Mutex);
@@ -397,7 +413,7 @@ void OpcTcpServer::Accept()
         if (!errorCode)
           {
             std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
-            std::shared_ptr<OpcTcpConnection> connection = std::make_shared<OpcTcpConnection>(std::move(socket), *this, Server, Params.DebugMode);
+            OpcTcpConnection::SharedPtr connection = OpcTcpConnection::create(std::move(socket), *this, Server, Params.DebugMode);
             {
               std::unique_lock<std::mutex> lock(Mutex);
               Clients.insert(connection);

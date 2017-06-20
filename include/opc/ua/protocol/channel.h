@@ -15,6 +15,8 @@
 #include <memory>
 #include <system_error>
 
+#include <opc/common/class_pointers.h>
+
 namespace OpcUa
 {
 
@@ -35,8 +37,7 @@ public:
 class InputChannel : public virtual BreakableChannel
 {
 public:
-  typedef std::shared_ptr<InputChannel> SharedPtr;
-  typedef std::unique_ptr<InputChannel> UniquePtr;
+  DEFINE_CLASS_POINTERS(InputChannel)
 
 public:
   virtual ~InputChannel() {}
@@ -57,8 +58,7 @@ public:
 class OutputChannel : public virtual BreakableChannel
 {
 public:
-  typedef std::shared_ptr<OutputChannel> SharedPtr;
-  typedef std::unique_ptr<OutputChannel> UniquePtr;
+  DEFINE_CLASS_POINTERS(OutputChannel)
 
 public:
   virtual ~OutputChannel() {}
@@ -78,8 +78,7 @@ class IOChannel :
   public OutputChannel
 {
 public:
-  typedef std::shared_ptr<IOChannel> SharedPtr;
-  typedef std::unique_ptr<IOChannel> UniquePtr;
+  DEFINE_CLASS_POINTERS(IOChannel)
 };
 
 }
