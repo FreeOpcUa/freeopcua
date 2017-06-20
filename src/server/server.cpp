@@ -197,7 +197,7 @@ Subscription::SharedPtr UaServer::CreateSubscription(unsigned int period, Subscr
 
 ServerOperations UaServer::CreateServerOperations()
 {
-  return std::move(ServerOperations(Registry->GetServer()));
+  return ServerOperations(Registry->GetServer());
 }
 
 void UaServer::TriggerEvent(Event event)

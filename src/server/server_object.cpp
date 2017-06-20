@@ -58,7 +58,7 @@ ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service
   : Server(services)
   , Io(io)
   , Debug(debug)
-  , Instance(std::move(CreateServerObject(services)))
+  , Instance(CreateServerObject(services))
   , ServerTime(Instance.GetVariable(GetCurrentTimeRelativepath()))
   , Timer(io)
 {
