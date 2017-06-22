@@ -103,7 +103,7 @@ Boost and libxml2 are necessary
 rem compiling
 mkdir build
 cd build
-cmake .. -DBOOST_ROOT=c:\boost_1_56
+cmake .. -DBOOST_ROOT=D:\software\boost_1_64 -DBoost_USE_STATIC_LIBS=ON -DBoost_USE_MULTITHREADED=ON
 cmake --build
 ctest -C Debug
 cd bin\Debug
