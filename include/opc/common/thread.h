@@ -14,6 +14,7 @@
 #include <opc/common/class_pointers.h>
 
 #include <thread>
+#include <functional>
 #include <stdexcept>
 
 namespace Common

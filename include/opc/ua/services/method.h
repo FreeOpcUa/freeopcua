@@ -16,6 +16,7 @@
 #include <opc/ua/protocol/protocol.h>
 
 #include <vector>
+#include <functional>
 
 namespace OpcUa
 {
