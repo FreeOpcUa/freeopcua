@@ -23,8 +23,8 @@ using namespace OpcUa::Server;
 class OpcUaParameters
 {
 public:
-  OpcUaParameters(bool debug)
-    : Debug(debug)
+  OpcUaParameters(const Common::Logger::SharedPtr & logger)
+    : Logger(logger)
   {
   }
 
@@ -365,6 +365,8 @@ private:
   template <typename T, typename... Args>
   void Log(T && msg, Args... args) const
   {
+    LOG_DEBUG(Logger, msg, args...);
+    /*
     if (!Debug)
       {
         return;
@@ -372,8 +374,10 @@ private:
 
     std::clog << msg;
     Log(args...);
+    */
   }
 
+  /*
   void Log() const
   {
     if (!Debug)
@@ -383,22 +387,23 @@ private:
 
     std::clog << std::endl;
   }
+  */
 
 private:
-  const bool Debug;
+  Common::Logger::SharedPtr Logger;
 };
 }
 
-std::vector<OpcUa::Server::ApplicationData> OpcUa::ParseEndpointsParameters(const std::vector<Common::ParametersGroup> & applicationGroups, bool debug)
+std::vector<OpcUa::Server::ApplicationData> OpcUa::ParseEndpointsParameters(const std::vector<Common::ParametersGroup> & applicationGroups, const Common::Logger::SharedPtr & logger)
 {
-  OpcUaParameters parser(debug);
+  OpcUaParameters parser(logger);
   const std::vector<OpcUa::Server::ApplicationData> & data = parser.GetApplications(applicationGroups);
   return data;
 }
 
-std::vector<Common::ParametersGroup> OpcUa::CreateCommonParameters(const std::vector<Server::ApplicationData> & endpoints, bool debug)
+std::vector<Common::ParametersGroup> OpcUa::CreateCommonParameters(const std::vector<Server::ApplicationData> & endpoints, const Common::Logger::SharedPtr & logger)
 {
-  OpcUaParameters parser(debug);
+  OpcUaParameters parser(logger);
   const std::vector<Common::ParametersGroup> & result = parser.GetAddonParameters(endpoints);
   return result;
 }

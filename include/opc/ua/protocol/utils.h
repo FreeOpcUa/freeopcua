@@ -20,18 +20,18 @@
 #pragma once
 
 #include <algorithm>
-#include <iostream>
+#include <sstream>
 #include <vector>
-#include <algorithm>
 
 namespace OpcUa
 {
 
-inline void PrintBlob(const std::vector<char> & buf, std::size_t size)
+inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
 {
+  std::stringstream result;
   size = std::min(size, buf.size());
   unsigned pos = 0;
-  std::cout << "Data size: " << size << std::endl;
+  result << "Data size: " << size << std::endl;
 
   while (pos < size)
     {
@@ -42,20 +42,21 @@ inline void PrintBlob(const std::vector<char> & buf, std::size_t size)
       printf("%02x", (unsigned)letter & 0x000000FF);
 
       if (letter > ' ')
-        { std::cout << "(" << letter << ")"; }
+        { result << "(" << letter << ")"; }
 
       else
-        { std::cout << "   "; }
+        { result << "   "; }
 
       ++pos;
     }
 
-  std::cout << std::endl << std::flush;
+  result << std::endl << std::flush;
+  return result.str();
 }
 
-inline void PrintBlob(const std::vector<char> & buf)
+inline std::string ToHexDump(const std::vector<char> & buf)
 {
-  PrintBlob(buf, buf.size());
+  return ToHexDump(buf, buf.size());
 }
 
 

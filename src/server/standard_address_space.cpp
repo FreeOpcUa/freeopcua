@@ -1,6 +1,7 @@
 
 #include "standard_address_space_parts.h"
 
+#include <opc/common/logger.h>
 #include <opc/ua/server/standard_address_space.h>
 
 #include <opc/ua/services/node_management.h>
@@ -11,7 +12,7 @@ namespace OpcUa
 namespace Server
 {
 
-void FillStandardNamespace(OpcUa::NodeManagementServices & registry, bool debug)
+void FillStandardNamespace(OpcUa::NodeManagementServices & registry, const Common::Logger::SharedPtr & /*logger*/)
 {
   OpcUa::CreateAddressSpacePart3(registry);
   OpcUa::CreateAddressSpacePart4(registry);

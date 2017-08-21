@@ -62,15 +62,7 @@ public: // Server internal methods
   virtual void SetMethod(const NodeId & node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback);
 
 private:
-  struct Options
-  {
-    bool Debug = false;
-  };
-
-private:
-  Options GetOptions(const Common::AddonParameters & addonParams);
-
-private:
+  Common::Logger::SharedPtr Logger;
   OpcUa::Server::AddressSpace::SharedPtr Registry;
   std::shared_ptr<OpcUa::Server::ServicesRegistry> InternalServer;
 };

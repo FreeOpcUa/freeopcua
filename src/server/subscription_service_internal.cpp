@@ -33,10 +33,10 @@ namespace OpcUa
 namespace Internal
 {
 
-SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & ioService, bool debug)
+SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger)
   : io(ioService)
   , AddressSpace(addressspace)
-  , Debug(debug)
+  , Logger(logger)
 {
 }
 
@@ -56,7 +56,7 @@ boost::asio::io_service & SubscriptionServiceInternal::GetIOService()
 
 void SubscriptionServiceInternal::DeleteAllSubscriptions()
 {
-  if (Debug) { std::cout << "SubscriptionService | Deleting all subscriptions." << std::endl; }
+  LOG_DEBUG(Logger, "subscription_service | DeleteAllSubscriptions");
 
   std::vector<uint32_t> ids(SubscriptionsMap.size());
   {
@@ -79,13 +79,13 @@ std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const s
 
       if (itsub == SubscriptionsMap.end())
         {
-          std::cout << "SubscriptionService | Error, got request to delete non existing Subscription: " << subid << std::endl;
+          LOG_ERROR(Logger, "subscription_service | got request to delete non existing SubscriptionId: {}", subid);
           result.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
 
       else
         {
-          if (Debug) { std::cout << "SubscriptionService | Deleting Subscription: " << subid << std::endl; }
+          LOG_DEBUG(Logger, "subscription_service | delete SubscriptionId: {}", subid);
 
           itsub->second->Stop();
           SubscriptionsMap.erase(subid);
@@ -107,12 +107,12 @@ ModifySubscriptionResponse SubscriptionServiceInternal::ModifySubscription(const
 
   if (itsub == SubscriptionsMap.end())
     {
-      std::cout << "SubscriptionService | Error, got request to modify non existing Subscription: " << subid << std::endl;
+      LOG_ERROR(Logger, "subscription_service | got request to modify non existing SubscriptionId: {}", subid);
       response.Header.ServiceResult = StatusCode::BadSubscriptionIdInvalid;
       return response;
     }
 
-  if (Debug) { std::cout << "SubscriptionService | Modify Subscription with Id: " << subid << std::endl; }
+  LOG_DEBUG(Logger, "subscription_service | modify SubscriptionId: {}", subid);
 
   std::shared_ptr<InternalSubscription> sub = itsub->second;
   response.Parameters = sub->ModifySubscription(parameters);
@@ -129,9 +129,9 @@ SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSub
   data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
   data.RevisedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
 
-  if (Debug) { std::cout << "SubscriptionService | Creating Subscription with Id: " << data.SubscriptionId << std::endl; }
+  LOG_DEBUG(Logger, "subscription_service | CreateSubscription id: {}", data.SubscriptionId);
 
-  std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Debug));
+  std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Logger));
   sub->Start();
   SubscriptionsMap[data.SubscriptionId] = sub;
   return data;
@@ -234,14 +234,15 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
 
   if (queue_it == PublishRequestQueues.end())
     {
-      std::cout << "SubscriptionService | Error request for publish queue for unknown session: " << node << " queue are available for: ";
+      LOG_ERROR(Logger, "subscription_service | attempt to pop publish request for unknown session: {}", node);
 
-      for (auto i : PublishRequestQueues)
+      if (Logger && Logger->should_log(spdlog::level::debug))
         {
-          std::cout << "    " << i.first ;
+          for (auto i : PublishRequestQueues)
+            {
+              Logger->debug("subscription_service |   available session: {}", i.first);
+            }
         }
-
-      std::cout << std::endl;
       return false;
     }
 
@@ -249,12 +250,13 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
     {
       if (queue_it->second == 0)
         {
-          std::cout << "SubscriptionService | Missing publish request, cannot send response for session: " << node << std::endl;
+          LOG_ERROR(Logger, "subscription_service | unable to send response: no publish request for session: {}", node);
           return false;
         }
 
       else
         {
+          LOG_TRACE(Logger, "subscription_service | pop PublishRequest for session: {}: available requests: {}", node, queue_it->second);
           --queue_it->second;
           return true;
         }
@@ -284,9 +286,9 @@ void SubscriptionServiceInternal::TriggerEvent(NodeId node, Event event)
 namespace Server
 {
 
-SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service & io, bool debug)
+SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger)
 {
-  return SubscriptionService::UniquePtr(new Internal::SubscriptionServiceInternal(addressspace, io, debug));
+  return SubscriptionService::UniquePtr(new Internal::SubscriptionServiceInternal(addressspace, io, logger));
 }
 
 }

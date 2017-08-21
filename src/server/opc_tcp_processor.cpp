@@ -43,21 +43,21 @@ namespace Server
 
 using namespace OpcUa::Binary;
 
-OpcTcpMessages::OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, bool debug)
+OpcTcpMessages::OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, const Common::Logger::SharedPtr & logger)
   : Server(server)
   , OutputChannel(outputChannel)
   // do not create a reference loop - if OutputStream is called with a
   // shared_ptr it holds a strong reference to it! So call it with a dereferenced
   // pointer
   , OutputStream(*outputChannel)
-  , Debug(debug)
+  , Logger(logger)
   , ChannelId(1)
   , TokenId(2)
   , SessionId(GenerateSessionId())
   , SequenceNb(0)
 {
-  std::cout << "opc_tcp_processor| Debug is " << Debug << std::endl;
-  std::cout << "opc_tcp_processor| SessionId is " << SessionId << std::endl;
+  LOG_INFO(Logger, "opc_tcp_processor| log level: {}", Logger->level());
+  LOG_INFO(Logger, "opc_tcp_processor| SessionId; {}",  SessionId);
 }
 
 
@@ -71,7 +71,7 @@ OpcTcpMessages::~OpcTcpMessages()
 
   catch (const std::exception & exc)
     {
-      std::cerr << "Error during stopping OpcTcpMessages. " << exc.what() << std::endl;
+      LOG_ERROR(Logger, "stopping OpcTcpMessages failed: {}", exc.what());
     }
 }
 
@@ -83,7 +83,7 @@ bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary & iStream
     {
     case MT_HELLO:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Accepted hello message." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| accepted hello message");
 
       HelloClient(iStream, OutputStream);
       break;
@@ -92,7 +92,7 @@ bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary & iStream
 
     case MT_SECURE_OPEN:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Opening secure channel." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| opening secure channel");
 
       OpenChannel(iStream, OutputStream);
       break;
@@ -100,7 +100,7 @@ bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary & iStream
 
     case MT_SECURE_CLOSE:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Closing secure channel." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| closing secure channel");
 
       CloseChannel(iStream);
       return false;
@@ -108,7 +108,7 @@ bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary & iStream
 
     case MT_SECURE_MESSAGE:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing secure message." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing secure message");
 
       ProcessRequest(iStream, OutputStream);
       break;
@@ -116,23 +116,23 @@ bool OpcTcpMessages::ProcessMessage(MessageType msgType, IStreamBinary & iStream
 
     case MT_ACKNOWLEDGE:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Received acknowledge from client. This should not have happend..." << std::endl; }
+      LOG_ERROR(Logger, "opc_tcp_processor| received acknowledge from client: this should not have happend...");
 
       throw std::logic_error("Thank to client about acknowledge.");
     }
 
     case MT_ERROR:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| There is an error happend in the client!" << std::endl; }
+      LOG_ERROR(Logger, "opc_tcp_processor| client signaled an error");
 
       throw std::logic_error("It is very nice get to know server about error in the client.");
     }
 
     default:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Unknown message type '" << msgType << "' received!" << std::endl; }
+      LOG_ERROR(Logger, "opc_tcp_processor| unknown message type '{}' received", msgType);
 
-      throw std::logic_error("Invalid message type received.");
+      throw std::logic_error("unknown message type received.");
     }
     }
 
@@ -143,20 +143,20 @@ void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
 {
   std::lock_guard<std::mutex> lock(ProcessMutex);
 
-  if (Debug) { std::clog << "opc_tcp_processor| Sending PublishResult to client!" << std::endl; }
+  LOG_DEBUG(Logger, "opc_tcp_processor| sending PublishResult to client");
 
   // get a shared_ptr from weak_ptr to make sure OutputChannel
   // does not get deleted before end of operation
   OpcUa::OutputChannel::SharedPtr outputChannel = OutputChannel.lock();
   // test if OutputChannel was still active when calling lock
   if (!outputChannel) {
-      std::cerr << "opc_tcp_processor| parent instance already deleted" << std::endl;
-      return;
+    LOG_WARN(Logger, "opc_tcp_processor| parent instance already deleted");
+    return;
   }
 
   if (PublishRequestQueue.empty())
     {
-      std::cerr << "Error trying to send publish response while we do not have data from a PublishRequest" << std::endl;
+      LOG_WARN(Logger, "error trying to send publish response while we do not have data from a PublishRequest");
       return;
     }
 
@@ -175,10 +175,7 @@ void OpcTcpMessages::ForwardPublishResponse(const PublishResult result)
   secureHeader.AddSize(RawSize(requestData.sequence));
   secureHeader.AddSize(RawSize(response));
 
-  if (Debug)
-    {
-      std::cout << "opc_tcp_processor| Sedning publishResponse with " << response.Parameters.NotificationMessage.NotificationData.size() << " PublishResults" << std::endl;
-    }
+  LOG_DEBUG(Logger, "opc_tcp_processor| sending PublishResponse with: {} PublishResults", response.Parameters.NotificationMessage.NotificationData.size());
 
   OutputStream << secureHeader << requestData.algorithmHeader << requestData.sequence << response << flush;
 }
@@ -187,7 +184,7 @@ void OpcTcpMessages::HelloClient(IStreamBinary & istream, OStreamBinary & ostrea
 {
   using namespace OpcUa::Binary;
 
-  if (Debug) { std::clog << "opc_tcp_processor| Reading hello message." << std::endl; }
+  LOG_DEBUG(Logger, "opc_tcp_processor| reading hello message");
 
   Hello hello;
   istream >> hello;
@@ -201,7 +198,7 @@ void OpcTcpMessages::HelloClient(IStreamBinary & istream, OStreamBinary & ostrea
   Header ackHeader(MT_ACKNOWLEDGE, CHT_SINGLE);
   ackHeader.AddSize(RawSize(ack));
 
-  if (Debug) { std::clog << "opc_tcp_processor| Sending answer to client." << std::endl; }
+  LOG_DEBUG(Logger, "opc_tcp_processor| sending answer");
 
   ostream << ackHeader << ack << flush;
 }
@@ -298,7 +295,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
     {
     case OpcUa::GET_ENDPOINTS_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing get endpoints request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Get Endpoints' request");
 
       GetEndpointsParameters filter;
       istream >> filter;
@@ -317,7 +314,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case OpcUa::FIND_ServerS_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Find Servers' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Find Servers' request");
 
       FindServersParameters params;
       istream >> params;
@@ -336,7 +333,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case OpcUa::BROWSE_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing browse request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Browse' request");
 
       NodesQuery query;
       istream >> query;
@@ -359,16 +356,14 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       ReadParameters params;
       istream >> params;
 
-      if (Debug)
+      if (Logger && Logger->should_log(spdlog::level::debug))
         {
-          std::clog << "opc_tcp_processor| Processing read request for Node:";
+          Logger->debug("opc_tcp_processor| processing 'Read' request for Node:");
 
           for (ReadValueId id : params.AttributesToRead)
             {
-              std::clog << "opc_tcp_processor|  " << id.NodeId;
+              Logger->debug("opc_tcp_processor|  {}", id.NodeId);
             }
-
-          std::cout << std::endl;
         }
 
       ReadResponse response;
@@ -404,7 +399,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case OpcUa::WRITE_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing write request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Write' request");
 
       WriteParameters params;
       istream >> params;
@@ -434,40 +429,38 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case TRANSLATE_BROWSE_PATHS_TO_NODE_IdS_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Translate Browse Paths To Node Ids' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Translate Browse Paths To Node Ids' request");
 
       TranslateBrowsePathsParameters params;
       istream >> params;
 
-      if (Debug)
+      if (Logger && Logger->should_log(spdlog::level::debug))
         {
           for (BrowsePath path : params.BrowsePaths)
             {
-              std::cout << "opc_tcp_processor| Requested path is: " << path.StartingNode << " : " ;
+              std::stringstream result;
+              result << path.StartingNode << ":";
 
               for (RelativePathElement el : path.Path.Elements)
                 {
-                  std::cout << "/" << el.TargetName ;
+                  result << "/" << el.TargetName ;
                 }
-
-              std::cout << std::endl;
+              Logger->debug("opc_tcp_processor| requested path is: {}", result.str());
             }
         }
 
       std::vector<BrowsePathResult> result = Server->Views()->TranslateBrowsePathsToNodeIds(params);
 
-      if (Debug)
+      if (Logger && Logger->should_log(spdlog::level::debug))
         {
           for (BrowsePathResult res : result)
             {
-              std::cout << "opc_tcp_processor| Result of browsePath is: " << (uint32_t) res.Status << ". Target is: ";
-
+              std::stringstream target;
               for (BrowsePathTarget path : res.Targets)
                 {
-                  std::cout << path.Node ;
+                  target << path.Node ;
                 }
-
-              std::cout << std::endl;
+              Logger->debug("opc_tcp_processor| result of browsePath is: {}, target is: {}", (uint32_t)res.Status, target.str());
             }
         }
 
@@ -479,7 +472,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to 'Translate Browse Paths To Node Ids' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Translate Browse Paths To Node Ids' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -488,7 +481,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case CREATE_SESSION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing create session request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Create Session' request");
 
       CreateSessionParameters params;
       istream >> params;
@@ -515,7 +508,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case ACTIVATE_SESSION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing activate session request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Activate Session' request");
 
       ActivateSessionParameters params;
       istream >> params;
@@ -533,7 +526,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case CLOSE_SESSION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing close session request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Close Session' request");
 
       bool deleteSubscriptions = false;
       istream >> deleteSubscriptions;
@@ -552,14 +545,14 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(response));
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
 
-      if (Debug) { std::clog << "opc_tcp_processor| Session Closed " << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| session closed");
 
       return;
     }
 
     case CREATE_SUBSCRIPTION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing create subscription request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Create Subscription' request");
 
       CreateSubscriptionRequest request;
       istream >> request.Parameters;
@@ -579,7 +572,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
         catch (std::exception & ex)
           {
             // TODO Disconnect client!
-            std::cerr << "Error forwarding publishResult to client: " << ex.what() << std::endl;
+            LOG_WARN(self->Logger, "error forwarding PublishResult to client: {}", ex.what());
           }
       });
 
@@ -595,7 +588,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case MODIFY_SUBSCRIPTION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing modify subscription request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Modify Subscription' request");
 
       ModifySubscriptionRequest request;
       istream >> request.Parameters;
@@ -609,7 +602,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to Modify Subscription Request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Modify Subscription' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -617,7 +610,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case DELETE_SUBSCRIPTION_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing delete subscription request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Delete Subscription' request");
 
       std::vector<uint32_t> ids;
       istream >> ids;
@@ -634,7 +627,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to Delete Subscription Request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Delete Subscription' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -642,7 +635,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case CREATE_MONITORED_ITEMS_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Create Monitored Items' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Create Monitored Items' request");
 
       MonitoredItemsParameters params;
       istream >> params;
@@ -657,7 +650,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to Create Monitored Items Request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Create Monitored Items' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -665,7 +658,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case DELETE_MONITORED_ITEMS_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Delete Monitored Items' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Delete Monitored Items' request");
 
       DeleteMonitoredItemsParameters params;
       istream >> params;
@@ -680,7 +673,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to Delete Monitored Items Request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Delete Monitored Items' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -688,7 +681,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case PUBLISH_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Publish' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Publish' request");
 
       PublishRequest request;
       request.Header = requestHeader;
@@ -708,7 +701,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case SET_PUBLISHING_MODE_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Set Publishing Mode' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Set Publishing Mode' request");
 
       PublishingModeParameters params;
       istream >> params;
@@ -723,7 +716,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to 'Set Publishing Mode' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Set Publishing Mode' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -731,7 +724,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case ADD_NODES_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Add Nodes' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Add Nodes' request");
 
       AddNodesParameters params;
       istream >> params;
@@ -747,7 +740,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to 'Add Nodes' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Add Nodes' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -755,7 +748,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case ADD_REFERENCES_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Add References' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Add References' request");
 
       AddReferencesParameters params;
       istream >> params;
@@ -771,7 +764,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to 'Add References' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Add References' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -779,7 +772,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case REPUBLISH_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing 'Republish' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Republish' request");
 
       RepublishParameters params;
       istream >> params;
@@ -794,7 +787,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to 'Republish' request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Republish' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -802,7 +795,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case CALL_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing call request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Call' request");
 
       CallParameters params;
       istream >> params;
@@ -836,7 +829,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case OpcUa::REGISTER_NODES_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing register nodes request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Register Nodes' request");
 
       RegisterNodesRequest request;
 
@@ -852,7 +845,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to register nodes request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Register Nodes' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -860,7 +853,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
     case OpcUa::UNREGISTER_NODES_REQUEST:
     {
-      if (Debug) { std::clog << "opc_tcp_processor| Processing unregister nodes request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| processing 'Unregister Nodes' request");
 
       UnregisterNodesRequest request;
 
@@ -876,7 +869,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::clog << "opc_tcp_processor| Sending response to unregister nodes request." << std::endl; }
+      LOG_DEBUG(Logger, "opc_tcp_processor| sending response to 'Unregister Nodes' request");
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;
@@ -893,7 +886,7 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
       secureHeader.AddSize(RawSize(sequence));
       secureHeader.AddSize(RawSize(response));
 
-      if (Debug) { std::cerr << "opc_tcp_processor| Sending ServiceFaultResponse to unsupported request of id: " << message << std::endl; }
+      LOG_WARN(Logger, "opc_tcp_processor| sending 'ServiceFaultResponse' to unsupported request of id: {}", message);
 
       ostream << secureHeader << algorithmHeader << sequence << response << flush;
       return;

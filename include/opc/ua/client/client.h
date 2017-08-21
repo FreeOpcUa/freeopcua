@@ -25,6 +25,7 @@
 #include <opc/ua/subscription.h>
 #include <opc/ua/client/binary_client.h>
 #include <opc/ua/server_operations.h>
+#include <opc/common/logger.h>
 
 #include <thread>
 #include <condition_variable>
@@ -40,9 +41,11 @@ class KeepAliveThread
 public:
   /// @brief Internal
   // Send keepalive request to server so it does not disconnect us
-  KeepAliveThread(bool debug = false) : StopRequest(false), Running(false), Debug(debug) {}
+  KeepAliveThread(const Common::Logger::SharedPtr & logger = nullptr) : StopRequest(false), Running(false), Logger(logger) {}
   void Start(Services::SharedPtr server, Node node, Duration period);
   void Stop();
+
+  void SetLogger(const Common::Logger::SharedPtr & logger) { Logger = logger; }
 
 private:
   void Run();
@@ -54,7 +57,7 @@ private:
   std::atomic<bool> Running;
   std::condition_variable Condition;
   std::mutex Mutex;
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
 };
 
 
@@ -70,7 +73,8 @@ public:
   /// opc.tcp://localhost:4841/opcua/server
   /// opc.tcp://192.168.1.1:4840/opcua/server
   /// opc.tcp://server.freeopca.org:4841/opcua/server
-  UaClient(bool debug = false) :  KeepAlive(debug), Debug(debug) {}
+  UaClient(bool debug = false);
+  UaClient(std::shared_ptr<spdlog::logger> logger) :  KeepAlive(logger), Logger(logger) {}
   ~UaClient();
 
   UaClient(const UaClient &&) = delete;
@@ -165,7 +169,7 @@ protected:
   std::string SecurityPolicy = "none";
   KeepAliveThread KeepAlive;
   uint32_t SecureChannelId;
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
   uint32_t DefaultTimeout = 3600000;
   Services::SharedPtr Server;
 };

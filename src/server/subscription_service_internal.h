@@ -44,7 +44,7 @@ typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> Subscriptions
 class SubscriptionServiceInternal : public Server::SubscriptionService
 {
 public:
-  SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & io, bool debug);
+  SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger);
 
   ~SubscriptionServiceInternal();
 
@@ -65,7 +65,7 @@ public:
 private:
   boost::asio::io_service & io;
   Server::AddressSpace::SharedPtr AddressSpace;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
   mutable boost::shared_mutex DbMutex;
   SubscriptionsIdMap SubscriptionsMap; // Map SubscptioinId, SubscriptionData
   uint32_t LastSubscriptionId = 2;

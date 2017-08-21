@@ -45,8 +45,9 @@ class AddonsManagerImpl : public Common::AddonsManager
   typedef std::map<Common::AddonId, AddonData> AddonList;
 
 public:
-  AddonsManagerImpl()
-    : ManagerStarted(false)
+  AddonsManagerImpl(const Common::Logger::SharedPtr & logger)
+    : Common::AddonsManager(logger)
+    , ManagerStarted(false)
   {
   }
 
@@ -62,12 +63,12 @@ public:
 
     catch (const Common::Error & err)
       {
-        std::cerr << err.GetFullMessage() << std::endl;
+        LOG_ERROR(Logger, "addons_manager | error: {}", err.GetFullMessage());
       }
 
     catch (...)
       {
-        std::cerr << "unknown exception, terminating" << std::endl;
+        LOG_ERROR(Logger, "addons_manager | unknown exception, terminating");
         std::terminate();
       }
   }
@@ -156,7 +157,7 @@ private:
 
         catch (const std::exception & exc)
           {
-            std::cerr << "Failed to initialize addon '" << addonData->Id << "': " << exc.what() <<  std::endl;
+            LOG_ERROR(Logger, "addons_manager | failed to stop addon '{}': {}", addonData->Id, exc.what());
           }
       }
 
@@ -179,7 +180,7 @@ private:
 
         catch (const std::exception & exc)
           {
-            std::cerr << "Failed to initialize addon '" << addonData->Id << "': " << exc.what() <<  std::endl;
+            LOG_ERROR(Logger, "addons_manager | failed to initialize addon '{}': {}", addonData->Id, exc.what());
             return false;
           }
 
@@ -246,7 +247,7 @@ private:
   {
     for (const AddonList::value_type & addonIt : Addons)
       {
-        // Skip alreay sopped addons.
+        // Skip alreay stopped addons.
         if (!IsAddonStarted(addonIt.second))
           {
             continue;
@@ -309,8 +310,8 @@ private:
 };
 }
 
-Common::AddonsManager::UniquePtr Common::CreateAddonsManager()
+Common::AddonsManager::UniquePtr Common::CreateAddonsManager(const Common::Logger::SharedPtr & logger)
 {
-  return AddonsManager::UniquePtr(new AddonsManagerImpl());
+  return AddonsManager::UniquePtr(new AddonsManagerImpl(logger));
 }
 

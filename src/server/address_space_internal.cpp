@@ -25,8 +25,8 @@ struct AttSubscription
   MonitoringParameters Parameters;
 };
 
-AddressSpaceInMemory::AddressSpaceInMemory(bool debug)
-  : Debug(debug)
+AddressSpaceInMemory::AddressSpaceInMemory(const Common::Logger::SharedPtr & logger)
+  : Logger(logger)
   , DataChangeCallbackHandle(0)
 {
   /*
@@ -95,7 +95,7 @@ std::vector<BrowseResult> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery &
 {
   boost::shared_lock<boost::shared_mutex> lock(DbMutex);
 
-  if (Debug) { std::cout << "AddressSpaceInternal | Browsing." << std::endl; }
+  LOG_DEBUG(Logger, "AddressSpaceInternal | Browse");
 
   std::vector<BrowseResult> results;
 
@@ -103,22 +103,21 @@ std::vector<BrowseResult> AddressSpaceInMemory::Browse(const OpcUa::NodesQuery &
     {
       BrowseResult result;
 
-      if (Debug)
+      if (Logger && Logger->should_log(spdlog::level::debug))
         {
-          std::cout << "AddressSpaceInternal | Browsing ";
-          std::cout << " NodeId: '" << browseDescription.NodeToBrowse << "'";
-          std::cout << ", ReferenceId: '" << browseDescription.ReferenceTypeId << "'";
-          std::cout << ", Direction: " << browseDescription.Direction;
-          std::cout << ", NodeClasses: 0x" << std::hex << (unsigned)browseDescription.NodeClasses;
-          std::cout << ", ResultMask: '0x" << std::hex << (unsigned)browseDescription.ResultMask << std::endl;
-          std::cout << std::dec;
+          Logger->debug("AddressSpaceInternal | Browsing");
+          Logger->debug("  NodeId: '{}'", browseDescription.NodeToBrowse);
+          Logger->debug("  ReferenceId: '{}'", browseDescription.ReferenceTypeId);
+          Logger->debug("  Direction: {}", browseDescription.Direction);
+          Logger->debug("  NodeClasses: {:#x}", (unsigned)browseDescription.NodeClasses);
+          Logger->debug("  ResultMask:  {:#x}", (unsigned)browseDescription.ResultMask);
         }
 
       NodesMap::const_iterator node_it = Nodes.find(browseDescription.NodeToBrowse);
 
       if (node_it == Nodes.end())
         {
-          if (Debug) { std::cout << "AddressSpaceInternal | Node '" << OpcUa::ToString(browseDescription.NodeToBrowse) << "' not found in the address space." << std::endl; }
+          LOG_WARN(Logger, "AddressSpaceInternal | Node '{}' not found in the address space", OpcUa::ToString(browseDescription.NodeToBrowse));
 
           continue;
         }
@@ -240,7 +239,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
 
   if (nodeit == Nodes.end())
     {
-      if (Debug) { std::cout << "AddressSpaceInternal | Bad node not found: " << node << std::endl; }
+      LOG_WARN(Logger, "AddressSpaceInternal | node not found: {}", node);
     }
 
   else
@@ -249,19 +248,19 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
 
       if (attrit == nodeit->second.Attributes.end())
         {
-          if (Debug) { std::cout << "AddressSpaceInternal | node " << node << " has not attribute: " << (uint32_t)attribute << std::endl; }
+          LOG_WARN(Logger, "AddressSpaceInternal | node: {} has no attribute: ", node, (uint32_t)attribute);
         }
 
       else
         {
           if (attrit->second.GetValueCallback)
             {
-              if (Debug) { std::cout << "AddressSpaceInternal | A callback is set for this value, calling callback" << std::endl; }
+              LOG_DEBUG(Logger, "AddressSpaceInternal | invoke registered callback");
 
               return attrit->second.GetValueCallback();
             }
 
-          if (Debug) { std::cout << "AddressSpaceInternal | No callback is set for this value returning stored value" << std::endl; }
+          LOG_DEBUG(Logger, "AddressSpaceInternal | no callback registered, returning stored value");
 
           return attrit->second.Value;
         }
@@ -277,15 +276,13 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
 {
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-  if (Debug) std::cout << "AddressSpaceInternal| Set data changes callback for node " << node
-                         << " and attribute " << (unsigned)attribute <<  std::endl;
+  LOG_DEBUG(Logger, "AddressSpaceInternal | Set data changes callback for node {} and attribute {}", node, (unsigned)attribute);
 
   NodesMap::iterator it = Nodes.find(node);
 
   if (it == Nodes.end())
     {
-      if (Debug) { std::cout << "AddressSpaceInternal| Node '" << node << "' not found." << std::endl; }
-
+      LOG_ERROR(Logger, "AddressSpaceInternal | Node: '{}' not found", node);
       throw std::runtime_error("AddressSpaceInternal | NodeId not found");
     }
 
@@ -293,8 +290,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
 
   if (ait == it->second.Attributes.end())
     {
-      if (Debug) { std::cout << "address_space| Attribute " << (unsigned)attribute << " of node '" << node << "' not found." << std::endl; }
-
+      LOG_ERROR(Logger, "AddressSpaceInternal | Attribute: {} of node: ‘{}‘ not found", (unsigned)attribute, node);
       throw std::runtime_error("Attribute not found");
     }
 
@@ -310,13 +306,13 @@ void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle)
 {
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-  if (Debug) { std::cout << "AddressSpaceInternal | Deleting callback with client id. " << serverhandle << std::endl; }
+  LOG_DEBUG(Logger, "AddressSpaceInternal | deleting callback with client id: {}", serverhandle);
 
   ClientIdToAttributeMapType::iterator it = ClientIdToAttributeMap.find(serverhandle);
 
   if (it == ClientIdToAttributeMap.end())
     {
-      std::cout << "AddressSpaceInternal | Error, request to delete a callback using unknown handle: " << serverhandle << std::endl;
+      LOG_WARN(Logger, "AddressSpaceInternal | request to delete a callback using unknown handle: {1}", serverhandle);
       return;
     }
 
@@ -330,7 +326,7 @@ void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle)
         {
           size_t nb = ait->second.DataChangeCallbacks.erase(serverhandle);
 
-          if (Debug) { std::cout << "AddressSpaceInternal | deleted " << nb << " callbacks" << std::endl; }
+          LOG_DEBUG(Logger, "AddressSpaceInternal | deleted {} callbacks", nb);
 
           ClientIdToAttributeMap.erase(serverhandle);
           return;
@@ -372,7 +368,9 @@ void AddressSpaceInMemory::SetMethod(const NodeId & node, std::function<std::vec
     }
 
   else
-    { throw std::runtime_error("While setting node callback: node does not exist."); }
+    {
+      throw std::runtime_error("AddressSpaceInternal | while setting node callback: node does not exist.");
+    }
 }
 
 std::vector<OpcUa::CallMethodResult> AddressSpaceInMemory::Call(const std::vector<OpcUa::CallMethodRequest> & methodsToCall)
@@ -422,7 +420,7 @@ CallMethodResult AddressSpaceInMemory::CallMethod(CallMethodRequest request)
 
   catch (std::exception & ex)
     {
-      std::cout << "Exception whil calling method" << request.MethodId << ":  " << ex.what() << std::endl;
+      LOG_ERROR(Logger, "AddressSpaceInternal | exception while calling method: {}: {}", request.MethodId, ex.what());
       result.Status = StatusCode::BadUnexpectedError;
       return result;
     }
@@ -465,31 +463,27 @@ StatusCode AddressSpaceInMemory::SetValue(const NodeId & node, AttributeId attri
 
 bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription & desc, const ReferenceDescription & reference) const
 {
-  if (Debug) { std::cout << "AddressSpaceInternal | Checking reference '" << reference.ReferenceTypeId << "' to the node '" << reference.TargetNodeId << "' (" << reference.BrowseName << ") which must fit ref: " << desc.ReferenceTypeId << " with include subtype: " << desc.IncludeSubtypes << std::endl; }
+  LOG_DEBUG(Logger, "AddressSpaceInternal | Checking reference: '{}' to node: '{}' ({}) which must fit ref: '{}' with IncludeSubtypes: '{}'", reference.ReferenceTypeId, reference.TargetNodeId, reference.BrowseName, desc.ReferenceTypeId, desc.IncludeSubtypes);
 
   if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
     {
-      if (Debug) { std::cout << "AddressSpaceInternal | Reference in different direction." << std::endl; }
-
+      LOG_DEBUG(Logger, "AddressSpaceInternal | reference in wrong direction");
       return false;
     }
 
   if (desc.ReferenceTypeId != ObjectId::Null && !IsSuitableReferenceType(reference, desc.ReferenceTypeId, desc.IncludeSubtypes))
     {
-      if (Debug) { std::cout << "AddressSpaceInternal | Reference has wrong type." << std::endl; }
-
+      LOG_DEBUG(Logger, "AddressSpaceInternal | reference has wrong type");
       return false;
     }
 
   if (desc.NodeClasses != NodeClass::Unspecified && (desc.NodeClasses & reference.TargetNodeClass) == NodeClass::Unspecified)
     {
-      if (Debug) { std::cout << "AddressSpaceInternal | Reference has wrong class." << std::endl; }
-
+      LOG_DEBUG(Logger, "AddressSpaceInternal | reference has wrong class");
       return false;
     }
 
-  if (Debug) { std::cout << "AddressSpaceInternal | Reference suitable." << std::endl; }
-
+  LOG_DEBUG(Logger, "AddressSpaceInternal | reference suitable");
   return true;
 }
 
@@ -537,13 +531,13 @@ AddNodesResult AddressSpaceInMemory::AddNode(const AddNodesItem & item)
 {
   AddNodesResult result;
 
-  if (Debug) { std::cout << "AddressSpaceInternal | address_space| Adding new node id='" << item.RequestedNewNodeId << "' name=" << item.BrowseName.Name << std::endl; }
+  LOG_DEBUG(Logger, "AddressSpaceInternal | adding new node id: '{}' name: '{}'", item.RequestedNewNodeId, item.BrowseName.Name);
 
   const NodeId resultId = GetNewNodeId(item.RequestedNewNodeId);
 
   if (!Nodes.empty() && resultId != ObjectId::Null && Nodes.find(resultId) != Nodes.end())
     {
-      std::cerr << "AddressSpaceInternal | Error: NodeId '" << resultId << "' allready exist: " << std::endl;
+      LOG_ERROR(Logger, "AddressSpaceInternal | NodeId: '{}' already exists", resultId);
       result.Status = StatusCode::BadNodeIdExists;
       return result;
     }
@@ -556,8 +550,7 @@ AddNodesResult AddressSpaceInMemory::AddNode(const AddNodesItem & item)
 
       if (parent_node_it == Nodes.end())
         {
-          if (Debug) { std::cout << "AddressSpaceInternal | Error: Parent node '" << item.ParentNodeId << "'does not exist" << std::endl; }
-
+          LOG_ERROR(Logger, "AddressSpaceInternal | parent node '{}' does not exists", item.ParentNodeId);
           result.Status = StatusCode::BadParentNodeIdInvalid;
           return result;
         }
@@ -610,7 +603,7 @@ AddNodesResult AddressSpaceInMemory::AddNode(const AddNodesItem & item)
   result.Status = StatusCode::Good;
   result.AddedNodeId = resultId;
 
-  if (Debug) { std::cout << "AddressSpaceInternal | node added." << std::endl; }
+  LOG_DEBUG(Logger, "AddressSpaceInternal | node added");
 
   return result;
 }
@@ -712,9 +705,9 @@ NodeId AddressSpaceInMemory::GetNewNodeId(const NodeId & id)
 
 namespace Server
 {
-AddressSpace::UniquePtr CreateAddressSpace(bool debug)
+AddressSpace::UniquePtr CreateAddressSpace(const Common::Logger::SharedPtr & logger)
 {
-  return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory(debug));
+  return AddressSpace::UniquePtr(new Internal::AddressSpaceInMemory(logger));
 }
 }
 }

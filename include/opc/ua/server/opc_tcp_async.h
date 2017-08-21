@@ -53,7 +53,7 @@ public:
   virtual void Shutdown() = 0;
 };
 
-AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io);
+AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger);
 
 }
 }

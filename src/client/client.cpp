@@ -42,11 +42,11 @@ void KeepAliveThread::Start(Services::SharedPtr server, Node node, Duration peri
 
 void KeepAliveThread::Run()
 {
-  if (Debug)  { std::cout << "KeepAliveThread | Starting." << std::endl; }
+  LOG_INFO(Logger, "KeepAliveThread | starting");
 
-  while (! StopRequest)
+  while (!StopRequest)
     {
-      if (Debug)  { std::cout << "KeepAliveThread | Sleeping for: " << (int64_t)(Period * 0.7) << std::endl; }
+      LOG_DEBUG(Logger, "KeepAliveThread | sleeping for: {}", (int64_t)(Period * 0.7));
 
       std::unique_lock<std::mutex> lock(Mutex);
       std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds((int64_t)(Period * 0.7)));
@@ -56,7 +56,7 @@ void KeepAliveThread::Run()
           break;
         }
 
-      if (Debug)  { std::cout << "KeepAliveThread | renewing secure channel " << std::endl; }
+      LOG_DEBUG(Logger, "KeepAliveThread | renewing secure channel");
 
       OpenSecureChannelParameters params;
       params.ClientProtocolVersion = 0;
@@ -71,24 +71,21 @@ void KeepAliveThread::Run()
           Period = response.ChannelSecurityToken.RevisedLifetime;
         }
 
-      if (Debug)  { std::cout << "KeepAliveThread | read a variable from address space to keep session open " << std::endl; }
+      LOG_DEBUG(Logger, "KeepAliveThread | read a variable from address space to keep session open");
 
       NodeToRead.GetValue();
     }
 
   Running = false;
 
-  if (Debug)
-    {
-      std::cout << "KeepAliveThread | Stopped" << std::endl;
-    }
+  LOG_INFO(Logger, "KeepAliveThread | stopped");
 }
 
 void KeepAliveThread::Stop()
 {
-  if (! Running) { return; }
+  if (!Running) { return; }
 
-  if (Debug)  { std::cout << "KeepAliveThread | Stopping." << std::endl; }
+  LOG_DEBUG(Logger, "KeepAliveThread | stopping");
 
   StopRequest = true;
   Condition.notify_all();
@@ -100,10 +97,25 @@ void KeepAliveThread::Stop()
 
   catch (std::system_error ex)
     {
-      if (Debug) { std::cout << "KeepaliveThread | Exception thrown at attempt to join: " << ex.what() << std::endl; }
+      LOG_ERROR(Logger, "KeepaliveThread | exception thrown at attempt to join: {}", ex.what());
 
       throw ex;
     }
+}
+
+UaClient::UaClient(bool debug)
+  : KeepAlive(nullptr)
+{
+  Logger = spdlog::stderr_color_mt("UaClient");
+  if (debug)
+    {
+      Logger->set_level(spdlog::level::debug);
+    }
+  else
+    {
+      Logger->set_level(spdlog::level::info);
+    }
+  KeepAlive.SetLogger(Logger);
 }
 
 std::vector<EndpointDescription> UaClient::GetServerEndpoints(const std::string & endpoint)
@@ -115,7 +127,7 @@ std::vector<EndpointDescription> UaClient::GetServerEndpoints(const std::string 
   params.EndpointUrl = endpoint;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-  Server = OpcUa::CreateBinaryClient(channel, params, Debug);
+  Server = OpcUa::CreateBinaryClient(channel, params, Logger);
 
   OpenSecureChannel();
   std::vector<EndpointDescription> endpoints = UaClient::GetServerEndpoints();
@@ -141,22 +153,22 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
 {
   std::vector<EndpointDescription> endpoints = GetServerEndpoints(endpoint);
 
-  if (Debug)  { std::cout << "UaClient | Going through server endpoints and selected one we support" << std::endl; }
+  LOG_DEBUG(Logger, "UaClient | going through server endpoints and selected one we support");
 
   Common::Uri uri(endpoint);
   bool has_login = !uri.User().empty();
 
   for (EndpointDescription ed : endpoints)
     {
-      if (Debug)  { std::cout << "UaClient | Examining endpoint: " << ed.EndpointUrl << " with security: " << ed.SecurityPolicyUri <<  std::endl; }
+      LOG_DEBUG(Logger, "UaClient | examining endpoint: {} with security: {}", ed.EndpointUrl, ed.SecurityPolicyUri);
 
       if (ed.SecurityPolicyUri == "http://opcfoundation.org/UA/SecurityPolicy#None")
         {
-          if (Debug)  { std::cout << "UaClient | Security policy is OK, now looking at user token" <<  std::endl; }
+          LOG_DEBUG(Logger, "UaClient | security policy is OK, now looking at user token");
 
           if (ed.UserIdentityTokens.empty())
             {
-              if (Debug)  { std::cout << "UaClient | Server does not use user token, OK" <<  std::endl; }
+              LOG_DEBUG(Logger, "UaClient | server does not use user token, OK");
 
               return ed;
             }
@@ -167,7 +179,7 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
                 {
                   if (token.TokenType == UserTokenType::UserName)
                     {
-                      if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
+                      LOG_DEBUG(Logger, "UaClient | endpoint selected");
 
                       return ed;
                     }
@@ -175,7 +187,7 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
 
               else if (token.TokenType == UserTokenType::Anonymous)
                 {
-                  if (Debug)  { std::cout << "UaClient | Endpoint selected " <<  std::endl; }
+                  LOG_DEBUG(Logger, "UaClient | endpoint selected");
 
                   return ed;
                 }
@@ -203,12 +215,12 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   params.EndpointUrl = Endpoint.EndpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";
 
-  Server = OpcUa::CreateBinaryClient(channel, params, Debug);
+  Server = OpcUa::CreateBinaryClient(channel, params, Logger);
 
   OpenSecureChannel();
 
 
-  if (Debug)  { std::cout << "UaClient | Creating session ..." <<  std::endl; }
+  LOG_INFO(Logger, "UaClient | creating session ...");
 
   OpcUa::RemoteSessionParameters session;
   session.ClientDescription.ApplicationUri = ApplicationUri;
@@ -223,9 +235,9 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   CreateSessionResponse response = Server->CreateSession(session);
   CheckStatusCode(response.Header.ServiceResult);
 
-  if (Debug)  { std::cout << "UaClient | Create session OK" <<  std::endl; }
+  LOG_INFO(Logger, "UaClient | create session OK");
 
-  if (Debug)  { std::cout << "UaClient | Activating session ..." <<  std::endl; }
+  LOG_INFO(Logger, "UaClient | activating session ...");
 
   ActivateSessionParameters session_parameters;
   {
@@ -274,7 +286,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   ActivateSessionResponse aresponse = Server->ActivateSession(session_parameters);
   CheckStatusCode(aresponse.Header.ServiceResult);
 
-  if (Debug)  { std::cout << "UaClient | Activate session OK" <<  std::endl; }
+  LOG_INFO(Logger, "UaClient | activate session OK");
 
   if (response.Parameters.RevisedSessionTimeout > 0 && response.Parameters.RevisedSessionTimeout < DefaultTimeout)
     {
@@ -322,7 +334,7 @@ void UaClient::Disconnect()
     {
       CloseSessionResponse response = Server->CloseSession();
 
-      if (Debug) { std::cout << "CloseSession response is " << ToString(response.Header.ServiceResult) << std::endl; }
+      LOG_INFO(Logger, "UaClient | CloseSession response is {}", ToString(response.Header.ServiceResult));
 
       CloseSecureChannel();
       Server.reset();
@@ -339,7 +351,7 @@ void UaClient::Abort()
 
 std::vector<std::string>  UaClient::GetServerNamespaces()
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   Node namespacearray(Server, ObjectId::Server_NamespaceArray);
   return namespacearray.GetValue().As<std::vector<std::string>>();;
@@ -347,7 +359,7 @@ std::vector<std::string>  UaClient::GetServerNamespaces()
 
 uint32_t UaClient::GetNamespaceIndex(std::string uri)
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   Node namespacearray(Server, ObjectId::Server_NamespaceArray);
   std::vector<std::string> uris = namespacearray.GetValue().As<std::vector<std::string>>();;
@@ -360,7 +372,7 @@ uint32_t UaClient::GetNamespaceIndex(std::string uri)
         }
     }
 
-  throw (std::runtime_error("Error namespace uri does not exists in server"));
+  throw std::runtime_error("Error namespace uri does not exists in server");
   //return -1;
 }
 
@@ -372,28 +384,28 @@ Node UaClient::GetNode(const std::string & nodeId) const
 
 Node UaClient::GetNode(const NodeId & nodeId) const
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   return Node(Server, nodeId);
 }
 
 Node UaClient::GetRootNode() const
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   return Node(Server, OpcUa::ObjectId::RootFolder);
 }
 
 Node UaClient::GetObjectsNode() const
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   return Node(Server, OpcUa::ObjectId::ObjectsFolder);
 }
 
 Node UaClient::GetServerNode() const
 {
-  if (! Server) { throw std::runtime_error("Not connected");}
+  if (!Server) { throw std::runtime_error("Not connected");}
 
   return Node(Server, OpcUa::ObjectId::Server);
 }
@@ -406,7 +418,7 @@ void UaClient::DeleteNodes(std::vector<OpcUa::Node> & nodes, bool recursive)
       nodes.insert(nodes.end(), children.begin(), children.end());
     }
 
-  if (Debug)  { std::cout << "UaClient | Deleting nodes ..." <<  std::endl; }
+  LOG_DEBUG(Logger, "UaClient | deleting nodes ...");
 
   std::vector<OpcUa::DeleteNodesItem> nodesToDelete;
   nodesToDelete.resize(nodes.size());
@@ -451,7 +463,7 @@ Subscription::SharedPtr UaClient::CreateSubscription(unsigned int period, Subscr
   CreateSubscriptionParameters params;
   params.RequestedPublishingInterval = period;
 
-  return std::make_shared<Subscription>(Server, params, callback, Debug);
+  return std::make_shared<Subscription>(Server, params, callback, Logger);
 }
 
 ServerOperations UaClient::CreateServerOperations()

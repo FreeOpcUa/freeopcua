@@ -15,6 +15,7 @@
 #include "tcp_server.h"
 
 #include <opc/common/interface.h>
+#include <opc/common/logger.h>
 #include <opc/ua/server/services_registry.h>
 
 
@@ -32,7 +33,7 @@ public:
   virtual void StopEndpoints() = 0;
 };
 
-OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer & tcpServer, bool debug);
+OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer & tcpServer, const Common::Logger::SharedPtr & logger);
 
 } // namespace UaServer
 } // nmespace OpcUa

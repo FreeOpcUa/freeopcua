@@ -42,8 +42,10 @@ class ModelVariable : public Test
 protected:
   virtual void SetUp()
   {
-    const bool debug = false;
-    Addons = Common::CreateAddonsManager();
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
+    Addons = Common::CreateAddonsManager(Logger);
 
     OpcUa::Test::RegisterServicesRegistry(*Addons);
     OpcUa::Test::RegisterAddressSpace(*Addons);
@@ -62,6 +64,7 @@ protected:
   }
 
 protected:
+  Common::Logger::SharedPtr Logger;
   Common::AddonsManager::UniquePtr Addons;
   OpcUa::Services::SharedPtr Services;
 };

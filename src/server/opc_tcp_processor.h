@@ -8,6 +8,7 @@
 /// http://www.gnu.org/licenses/lgpl.html)
 ///
 
+#include <opc/common/logger.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/services/services.h>
@@ -28,7 +29,7 @@ public:
   DEFINE_CLASS_POINTERS(OpcTcpMessages)
 
 public:
-  OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, bool debug);
+  OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputChannel::SharedPtr outputChannel, const Common::Logger::SharedPtr & logger);
   ~OpcTcpMessages();
 
   bool ProcessMessage(Binary::MessageType msgType, Binary::IStreamBinary & iStream);
@@ -48,7 +49,7 @@ private:
   OpcUa::Services::SharedPtr Server;
   OpcUa::OutputChannel::WeakPtr OutputChannel;
   OpcUa::Binary::OStreamBinary OutputStream;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
   uint32_t ChannelId;
   uint32_t TokenId;
   ExpandedNodeId SessionId;

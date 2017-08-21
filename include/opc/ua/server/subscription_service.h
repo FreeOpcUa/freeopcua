@@ -36,7 +36,7 @@ public:
   virtual void TriggerEvent(NodeId node, Event event) = 0;
 };
 
-SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service & io, bool debug);
+  SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<AddressSpace> addressspace, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger);
 
 } // namespace UaServer
 } // nmespace OpcUa

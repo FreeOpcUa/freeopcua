@@ -9,6 +9,7 @@
 ///
 
 #include <opc/common/exception.h>
+#include <opc/common/logger.h>
 #include <opc/common/addons_core/addon.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/managers/device_manager/id.h>
@@ -27,6 +28,9 @@ class AddonsManagerTestCase : public CPPUNIT_NS::TestFixture
 public:
   virtual void setUp()
   {
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
     Addons = Common::CreateAddonsManager();
   }
 
@@ -35,6 +39,7 @@ public:
     Addons.reset();
   }
 protected:
+  Common::Logger::SharedPtr Logger;
   Common::AddonsManager::UniquePtr Addons;
 
 

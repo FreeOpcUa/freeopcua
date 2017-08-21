@@ -15,6 +15,7 @@
 #include <opc/common/addons_core/addon_parameters.h>
 #include <opc/common/class_pointers.h>
 #include <opc/common/interface.h>
+#include <opc/common/logger.h>
 #include <string>
 #include <vector>
 
@@ -39,6 +40,8 @@ public:
   DEFINE_CLASS_POINTERS(AddonsManager)
 
 public:
+  AddonsManager(const Logger::SharedPtr & logger): Logger(logger) {}
+
   /// @brief register new addon.
   /// @param addonConfiguration configuration of new addon.
   /// @throws if addon already redistered. If manager started thows if not all dependencies resolved.
@@ -83,6 +86,11 @@ public:
 
   // @brief Stopping all addons;
   virtual void Stop() = 0;
+
+  virtual const Logger::SharedPtr & GetLogger() const { return Logger; }
+
+protected:
+  Logger::SharedPtr Logger;
 };
 
 
@@ -90,7 +98,7 @@ public:
 /// @throws in case of error
 /// @note Only one instance of addons manager can be at one time.
 /// When all smart pointers are gone addons manager deletes.
-AddonsManager::UniquePtr CreateAddonsManager();
+AddonsManager::UniquePtr CreateAddonsManager(const Common::Logger::SharedPtr & logger);
 
 template <class AddonClass>
 typename std::shared_ptr<AddonClass> AddonsManager::GetAddon(const AddonId & id) const

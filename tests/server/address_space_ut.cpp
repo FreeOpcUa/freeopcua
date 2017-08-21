@@ -34,9 +34,11 @@ class AddressSpace : public Test
 protected:
   virtual void SetUp()
   {
-    const bool debug = false;
-    NameSpace = OpcUa::Server::CreateAddressSpace(debug);
-    OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
+    NameSpace = OpcUa::Server::CreateAddressSpace(Logger);
+    OpcUa::Server::FillStandardNamespace(*NameSpace, Logger);
   }
 
   virtual void TearDown()
@@ -57,6 +59,7 @@ protected:
 
 protected:
   OpcUa::Server::AddressSpace::UniquePtr NameSpace;
+  Common::Logger::SharedPtr Logger;
 };
 
 TEST_F(AddressSpace, GeneratesNodeIdIfPassNull)

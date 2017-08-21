@@ -15,11 +15,12 @@
 #include "endpoints_parameters.h"
 #include "tcp_server.h"
 
-#include <opc/ua/protocol/utils.h>
+#include <opc/common/logger.h>
 #include <opc/common/uri_facade.h>
 #include <opc/common/addons_core/addon_manager.h>
 #include <opc/ua/protocol/endpoints.h>
 #include <opc/ua/protocol/input_from_buffer.h>
+#include <opc/ua/protocol/utils.h>
 #include <opc/ua/server/addons/opcua_protocol.h>
 #include <opc/ua/server/addons/endpoints_services.h>
 #include <opc/ua/server/addons/services_registry.h>
@@ -37,9 +38,9 @@ using namespace OpcUa::Server;
 class OpcTcp : public OpcUa::Server::IncomingConnectionProcessor
 {
 public:
-  OpcTcp(OpcUa::Services::SharedPtr services, bool debug)
+  OpcTcp(OpcUa::Services::SharedPtr services, const Common::Logger::SharedPtr & logger)
     : Server(services)
-    , Debug(debug)
+    , Logger(logger)
   {
   }
 
@@ -47,14 +48,14 @@ public:
   {
     if (!clientChannel)
       {
-        if (Debug) { std::cerr << "opc_tcp_processor| Empty channel passed to endpoints opc binary protocol processor." << std::endl; }
+        LOG_WARN(Logger, "opc_tcp_processor| empty channel passed to endpoints opc binary protocol processor");
 
         return;
       }
 
-    if (Debug) { std::clog << "opc_tcp_processor| Hello client!" << std::endl; }
+    LOG_DEBUG(Logger, "opc_tcp_processor| Hello client!");
 
-    std::shared_ptr<OpcTcpMessages> messageProcessor = std::make_shared<OpcTcpMessages>(Server, clientChannel, Debug);
+    std::shared_ptr<OpcTcpMessages> messageProcessor = std::make_shared<OpcTcpMessages>(Server, clientChannel, Logger);
 
     for (;;)
       {
@@ -78,7 +79,7 @@ private:
   // TODO implement collecting full message from chunks before processing.
   void ProcessChunk(IStreamBinary & iStream, OpcTcpMessages & messageProcessor)
   {
-    if (Debug) { std::cout << "opc_tcp_processor| Processing new chunk." << std::endl; }
+    LOG_DEBUG(Logger, "opc_tcp_processor| processing new chunk");
 
     Header hdr;
     // Receive message header.
@@ -89,10 +90,10 @@ private:
     OpcUa::Binary::RawBuffer buf(&buffer[0], buffer.size());
     iStream >> buf;
 
-    if (Debug)
+    if (Logger && Logger->should_log(spdlog::level::debug))
       {
-        std::clog << "opc_tcp_processor| Received message." << std::endl;
-        PrintBlob(buffer);
+        Logger->debug("opc_tcp_processor| received message:");
+        Logger->debug("{}", ToHexDump(buffer));
       }
 
     // restrict server size code only with current message.
@@ -102,13 +103,13 @@ private:
 
     if (messageChannel.GetRemainSize())
       {
-        std::cerr << "opc_tcp_processor| ERROR!!! Message from client has been processed partially." << std::endl;
+        LOG_ERROR(Logger, "opc_tcp_processor| message has not been processed completely");
       }
   }
 
 private:
   OpcUa::Services::SharedPtr Server;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
 };
 
 class OpcUaProtocol : public OpcUa::Server::OpcUaProtocol
@@ -117,9 +118,9 @@ public:
   DEFINE_CLASS_POINTERS(OpcUaProtocol)
 
 public:
-  OpcUaProtocol(OpcUa::Server::TcpServer & tcpServer, bool debug)
+  OpcUaProtocol(OpcUa::Server::TcpServer & tcpServer, const Common::Logger::SharedPtr & logger)
     : TcpAddon(tcpServer)
-    , Debug(debug)
+    , Logger(logger)
   {
   }
 
@@ -131,11 +132,11 @@ public:
 
         if (uri.Scheme() == "opc.tcp")
           {
-            std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Debug));
+            std::shared_ptr<IncomingConnectionProcessor> processor(new OpcTcp(server, Logger));
             TcpParameters tcpParams;
             tcpParams.Port = uri.Port();
 
-            if (Debug) { std::clog << "opc_tcp_processor| Starting listen port " << tcpParams.Port << std::endl; }
+            LOG_INFO(Logger, "opc_tcp_processor| start to listen on port {}", tcpParams.Port);
 
             TcpAddon.Listen(tcpParams, processor);
             Ports.push_back(tcpParams);
@@ -154,7 +155,7 @@ public:
 private:
   OpcUa::Server::TcpServer & TcpAddon;
   std::vector<TcpParameters> Ports;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
 };
 
 
@@ -162,7 +163,6 @@ class OpcUaProtocolAddon : public Common::Addon
 {
 public:
   OpcUaProtocolAddon()
-    : Debug(false)
   {
   }
 
@@ -179,17 +179,18 @@ private:
   OpcUa::Server::ServicesRegistry::SharedPtr InternalServer;
   OpcUa::Server::TcpServer::SharedPtr TcpServer;
   OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
 };
 
 void OpcUaProtocolAddon::Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params)
 {
+  Logger = addons.GetLogger();
   ApplyAddonParameters(params);
-  const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+  const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(params.Groups, Logger);
 
   for (OpcUa::Server::ApplicationData d : applications)
     {
-      std::cout << "Endpoint is: " << d.Endpoints.front().EndpointUrl << std::endl;
+      LOG_INFO(Logger, "endpoint is: {}", d.Endpoints.front().EndpointUrl);
     }
 
   std::vector<OpcUa::ApplicationDescription> applicationDescriptions;
@@ -205,7 +206,7 @@ void OpcUaProtocolAddon::Initialize(Common::AddonsManager & addons, const Common
 
   if (!endpointsAddon)
     {
-      std::cerr << "Cannot save information about endpoints. Endpoints services addon didn't' registered." << std::endl;
+      LOG_ERROR(Logger, "cannot store endpoints information, endpoints service addon has not been registered");
       return;
     }
 
@@ -214,8 +215,8 @@ void OpcUaProtocolAddon::Initialize(Common::AddonsManager & addons, const Common
 
   InternalServer = addons.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
 
-  TcpServer = OpcUa::Server::CreateTcpServer();
-  Protocol.reset(new OpcUaProtocol(*TcpServer, Debug));
+  TcpServer = OpcUa::Server::CreateTcpServer(Logger);
+  Protocol.reset(new OpcUaProtocol(*TcpServer, Logger));
   Protocol->StartEndpoints(endpointDescriptions, InternalServer->GetServer());
 }
 
@@ -228,6 +229,7 @@ void OpcUaProtocolAddon::Stop()
 
 void OpcUaProtocolAddon::ApplyAddonParameters(const Common::AddonParameters & params)
 {
+  /*
   for (const Common::Parameter parameter : params.Parameters)
     {
       if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
@@ -236,6 +238,7 @@ void OpcUaProtocolAddon::ApplyAddonParameters(const Common::AddonParameters & pa
           std::cout << "Enabled debug mode in the binary protocol addon." << std::endl;
         }
     }
+   */
 }
 
 // not used
@@ -264,9 +267,9 @@ Common::Addon::UniquePtr OpcUaProtocolAddonFactory::CreateAddon()
 }
 
 
-OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer & tcpServer, bool debug)
+OpcUaProtocol::UniquePtr CreateOpcUaProtocol(TcpServer & tcpServer, const Common::Logger::SharedPtr & logger)
 {
-  return OpcUaProtocol::UniquePtr(new ::OpcUaProtocol(tcpServer, debug));
+  return OpcUaProtocol::UniquePtr(new ::OpcUaProtocol(tcpServer, logger));
 }
 
 }

@@ -17,7 +17,7 @@ namespace OpcUa
 namespace Server
 {
 
-void FillStandardNamespace(OpcUa::NodeManagementServices & registry, bool debug);
+void FillStandardNamespace(OpcUa::NodeManagementServices & registry, const Common::Logger::SharedPtr & logger);
 
 } // namespace UaServer
 } // namespace OpcUa

@@ -60,7 +60,7 @@ class AddressSpaceInMemory; //pre-declaration
 class InternalSubscription : public std::enable_shared_from_this<InternalSubscription>
 {
 public:
-  InternalSubscription(SubscriptionServiceInternal & service, const SubscriptionData & data, const NodeId & SessionAuthenticationToken, std::function<void (PublishResult)> Callback, bool debug = false);
+  InternalSubscription(SubscriptionServiceInternal & service, const SubscriptionData & data, const NodeId & SessionAuthenticationToken, std::function<void (PublishResult)> Callback, const Common::Logger::SharedPtr & logger);
   ~InternalSubscription();
   void Start();
   void Stop();
@@ -108,7 +108,7 @@ private:
   boost::asio::deadline_timer Timer;
   bool TimerStopped = false;
   uint32_t LifeTimeCount;
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
 
 };
 

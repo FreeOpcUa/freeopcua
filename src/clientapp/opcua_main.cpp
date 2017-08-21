@@ -788,6 +788,9 @@ int UnregisterModule(const OpcUa::CommandLine & cmd)
 
 int main(int argc, char ** argv)
 {
+  auto logger = spdlog::stderr_color_mt("client");
+  logger->set_level(spdlog::level::info);
+
   try
     {
       OpcUa::CommandLine cmd(argc, argv);
@@ -813,7 +816,7 @@ int main(int argc, char ** argv)
       std::vector<Common::AddonInformation> infos(config.Modules.size());
       std::transform(config.Modules.begin(), config.Modules.end(), infos.begin(), std::bind(&Common::GetAddonInfomation, std::placeholders::_1));
 
-      Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+      Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager(logger);
       std::for_each(infos.begin(), infos.end(), [&manager](const Common::AddonInformation & addon)
       {
         manager->Register(addon);

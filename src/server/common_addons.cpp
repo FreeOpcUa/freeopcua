@@ -112,7 +112,7 @@ inline void RegisterAddons(std::vector<Common::AddonInformation> addons, Common:
   });
 }
 
-Common::AddonParameters CreateAddonsParameters(const OpcUa::Server::Parameters & serverParams)
+Common::AddonParameters CreateAddonsParameters(const OpcUa::Server::Parameters & serverParams, const Common::Logger::SharedPtr & logger)
 {
   Common::Parameter debugMode("debug", std::to_string(serverParams.Debug));
 
@@ -140,7 +140,7 @@ Common::AddonParameters CreateAddonsParameters(const OpcUa::Server::Parameters &
   OpcUa::Server::ApplicationData applicationData;
   applicationData.Application = serverParams.Endpoint.Server;
   applicationData.Endpoints.push_back(serverParams.Endpoint);
-  opc_tcp.Groups = OpcUa::CreateCommonParameters({applicationData}, serverParams.Debug);
+  opc_tcp.Groups = OpcUa::CreateCommonParameters({applicationData}, logger);
   addons.Groups.push_back(opc_tcp);
 
   return addons;
@@ -239,7 +239,7 @@ Common::AddonInformation Server::CreateSubscriptionServiceAddon()
 void Server::RegisterCommonAddons(const Parameters & serverParams, Common::AddonsManager & manager)
 {
   std::vector<Common::AddonInformation> addons;
-  Common::AddonParameters addonParameters = CreateAddonsParameters(serverParams);
+  Common::AddonParameters addonParameters = CreateAddonsParameters(serverParams, manager.GetLogger());
   CreateCommonAddonsConfiguration(addonParameters, addons);
   RegisterAddons(addons, manager);
 }

@@ -40,8 +40,8 @@ std::vector<OpcUa::Variant> MyMethod(NodeId context, std::vector<OpcUa::Variant>
 void RunServer()
 {
   //First setup our server
-  const bool debug = true;
-  OpcUa::UaServer server(debug);
+  auto logger = spdlog::stderr_color_mt("server");
+  OpcUa::UaServer server(logger);
   server.SetEndpoint("opc.tcp://localhost:4840/freeopcua/server");
   server.SetServerURI("urn://exampleserver.freeopcua.github.io");
   server.Start();
@@ -64,12 +64,12 @@ void RunServer()
 
   //browse root node on server side
   Node root = server.GetRootNode();
-  std::cout << "Root node is: " << root << std::endl;
-  std::cout << "Childs are: " << std::endl;
+  logger->info("Root node is: {}", root);
+  logger->info("Children are:");
 
   for (Node node : root.GetChildren())
     {
-      std::cout << "    " << node << std::endl;
+      logger->info("    {}", node);
     }
 
 
@@ -95,7 +95,7 @@ void RunServer()
   ev.Time = DateTime::Current();
 
 
-  std::cout << "Ctrl-C to exit" << std::endl;
+  logger->info("Ctrl-C to exit");
 
   for (;;)
     {
