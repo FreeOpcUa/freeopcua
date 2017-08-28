@@ -992,6 +992,10 @@ private:
     std::vector<char> buffer(dataSize);
     BufferInputChannel bufferInput(buffer);
     Binary::RawBuffer raw(&buffer[0], dataSize);
+    if (Logger && Logger->should_log(spdlog::level::trace))
+      {
+        Logger->trace("binary_client| raw message:\n{}", ToHexDump(buffer));
+      }
 
     Stream >> raw;
 
