@@ -92,8 +92,7 @@ private:
 
     if (Logger && Logger->should_log(spdlog::level::debug))
       {
-        Logger->debug("opc_tcp_processor| received message:");
-        Logger->debug("{}", ToHexDump(buffer));
+        Logger->debug("opc_tcp_processor| received message:\n{}", ToHexDump(buffer));
       }
 
     // restrict server size code only with current message.

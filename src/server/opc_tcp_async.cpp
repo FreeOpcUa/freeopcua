@@ -242,8 +242,7 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async| received {} bytes:", bytesTransferred);
-      Logger->trace("{}", ToHexDump(Buffer, bytesTransferred));
+      Logger->trace("opc_tcp_async| received {} bytes:\n{}", bytesTransferred, ToHexDump(Buffer, bytesTransferred));
     }
 
   // restrict server size code only with current message.
@@ -293,8 +292,7 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async| sending next data to client:");
-      Logger->trace("{}", ToHexDump(*data));
+      Logger->trace("opc_tcp_async| sending next data to client:\n{}", ToHexDump(*data));
     }
 
   // do not lose reference to shared instance even if another
