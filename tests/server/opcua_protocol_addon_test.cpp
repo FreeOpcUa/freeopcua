@@ -34,7 +34,10 @@ class OpcUaProtocolAddonTest : public Test
 public:
   void SetUp()
   {
-    Addons = Common::CreateAddonsManager();
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
+    Addons = Common::CreateAddonsManager(Logger);
 
     OpcUa::Test::RegisterServicesRegistry(*Addons);
     OpcUa::Test::RegisterAddressSpace(*Addons);
@@ -54,6 +57,7 @@ public:
   }
 
 protected:
+  Common::Logger::SharedPtr Logger;
   std::unique_ptr<Common::AddonsManager> Addons;
 };
 

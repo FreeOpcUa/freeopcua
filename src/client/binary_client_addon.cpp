@@ -26,13 +26,16 @@ class BinaryClientAddon : public OpcUa::Client::Addon
 public:
   virtual void Initialize(Common::AddonsManager & manager, const Common::AddonParameters & parameters)
   {
+    /*
     for (auto param = parameters.Parameters.begin(); param != parameters.Parameters.begin(); ++param)
       {
         if (param->Name == "debug" && param->Value != "false" && param->Value != "0")
           {
-            Debug = true;
+            Logger = manager.GetLogger();
           }
       }
+     */
+    Logger = manager.GetLogger();
   }
 
   virtual void Stop()
@@ -47,11 +50,11 @@ public:
 
   virtual OpcUa::Services::SharedPtr Connect(const std::string & url)
   {
-    return OpcUa::CreateBinaryClient(url, Debug);
+    return OpcUa::CreateBinaryClient(url, Logger);
   }
 
 private:
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
 };
 }
 

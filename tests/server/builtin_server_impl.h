@@ -39,7 +39,7 @@ class BuiltinServerAddon
   , private Common::ThreadObserver
 {
 public:
-  BuiltinServerAddon();
+  BuiltinServerAddon(const Common::Logger::SharedPtr & logger = nullptr);
   ~BuiltinServerAddon() override;
 
   OpcUa::Services::SharedPtr GetServices() const override;
@@ -65,7 +65,6 @@ private:
   std::unique_ptr<Common::Thread> Thread;
 
   OpcUa::Server::OpcUaProtocol::SharedPtr Protocol;
-  bool Debug;
 };
 
 } // namespace Impl

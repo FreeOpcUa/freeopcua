@@ -31,12 +31,14 @@ class StandardNamespaceStructure : public Test
 protected:
   virtual void SetUp()
   {
-    const bool debug = false;
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
 
     if (!NameSpace)
       {
-        NameSpace = OpcUa::Server::CreateAddressSpace(debug);
-        OpcUa::Server::FillStandardNamespace(*NameSpace, debug);
+        NameSpace = OpcUa::Server::CreateAddressSpace(Logger);
+        OpcUa::Server::FillStandardNamespace(*NameSpace, Logger);
       }
   }
 
@@ -139,6 +141,9 @@ protected:
     ExpectHasTypeAttributes(id);
     EXPECT_TRUE(HasAttribute(id, AttributeId::Symmetric));
   }
+
+private:
+  Common::Logger::SharedPtr Logger;
 };
 
 template <typename T>

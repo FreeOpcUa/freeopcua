@@ -386,6 +386,7 @@ if(BUILD_SERVER)
         src/server/opc_tcp_async_addon.cpp
         src/server/opc_tcp_async_parameters.cpp
         src/server/opc_tcp_processor.cpp
+        src/server/tcp_server.cpp
         src/server/server_object.cpp
         src/server/server_object_addon.cpp
         src/server/services_registry_factory.cpp

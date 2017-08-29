@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <opc/common/logger.h>
 #include <opc/ua/event.h>
 #include <opc/ua/services/attributes.h>
 #include <opc/ua/services/node_management.h>
@@ -41,7 +42,7 @@ public:
   //FIXME : SHould we also expose SetValue and GetValue on server side? then we need to lock them ...
 };
 
-AddressSpace::UniquePtr CreateAddressSpace(bool debug);
+AddressSpace::UniquePtr CreateAddressSpace(const Common::Logger::SharedPtr & logger);
 
 } // namespace UaServer
 } // nmespace OpcUa

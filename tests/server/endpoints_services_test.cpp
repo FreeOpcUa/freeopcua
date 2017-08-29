@@ -12,6 +12,7 @@
 #include "services_registry_test.h"
 
 #include <src/server/endpoints_parameters.h>
+#include <opc/common/logger.h>
 #include <opc/ua/protocol/session.h>
 #include <opc/ua/server/endpoints_services.h>
 #include <gmock/gmock.h>
@@ -25,7 +26,10 @@ class EndpointsRegistry : public Test
 protected:
   virtual void SetUp()
   {
-    Addons = Common::CreateAddonsManager();
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
+    Addons = Common::CreateAddonsManager(Logger);
     OpcUa::Test::RegisterServicesRegistry(*Addons);
     OpcUa::Test::RegisterEndpointsServicesAddon(*Addons);
     Addons->Start();
@@ -38,6 +42,7 @@ protected:
   }
 
 protected:
+  Common::Logger::SharedPtr Logger;
   std::unique_ptr<Common::AddonsManager> Addons;
 };
 

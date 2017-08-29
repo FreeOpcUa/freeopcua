@@ -80,7 +80,7 @@ typedef std::map<NodeId, NodeStruct> NodesMap;
 class AddressSpaceInMemory : public Server::AddressSpace
 {
 public:
-  AddressSpaceInMemory(bool debug);
+  AddressSpaceInMemory(const Common::Logger::SharedPtr & logger);
 
   ~AddressSpaceInMemory();
 
@@ -125,7 +125,7 @@ private:
   CallMethodResult CallMethod(CallMethodRequest method);
 
 private:
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
   mutable boost::shared_mutex DbMutex;
   NodesMap Nodes;
   ClientIdToAttributeMapType ClientIdToAttributeMap; //Use to find callback using callback subcsriptionid
@@ -137,7 +137,7 @@ private:
 
 namespace Server
 {
-AddressSpace::UniquePtr CreateAddressSpace(bool debug);
+AddressSpace::UniquePtr CreateAddressSpace(const Common::Logger::SharedPtr & logger);
 }
 }
 

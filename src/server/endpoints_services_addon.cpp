@@ -28,13 +28,14 @@ class EndpointsAddon : public Common::Addon, public EndpointsRegistry
 public:
   virtual void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params) override
   {
+    Logger = addons.GetLogger();
     ApplyAddonParameters(params);
 
     Endpoints = OpcUa::Server::CreateEndpointsRegistry();
     InternalServer = addons.GetAddon<ServicesRegistry>(ServicesRegistryAddonId);
     InternalServer->RegisterEndpointsServices(Endpoints);
 
-    const std::vector<OpcUa::Server::ApplicationData> & data = OpcUa::ParseEndpointsParameters(params.Groups, Debug);
+    const std::vector<OpcUa::Server::ApplicationData> & data = OpcUa::ParseEndpointsParameters(params.Groups, Logger);
 
     for (const OpcUa::Server::ApplicationData & application : data)
       {
@@ -79,6 +80,7 @@ public:
 private:
   void ApplyAddonParameters(const Common::AddonParameters & addons)
   {
+    /*
     for (const Common::Parameter parameter : addons.Parameters)
       {
         if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
@@ -86,12 +88,13 @@ private:
             Debug = true;
           }
       }
+     */
   }
 
 private:
   EndpointsRegistry::SharedPtr Endpoints;
   ServicesRegistry::SharedPtr InternalServer;
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
 };
 
 } // namespace

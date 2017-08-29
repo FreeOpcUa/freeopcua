@@ -33,7 +33,10 @@ class XmlSpaceAddon : public testing::Test
 protected:
   virtual void SetUp()
   {
-    Addons = Common::CreateAddonsManager();
+    spdlog::drop_all();
+    Logger = spdlog::stderr_color_mt("test");
+    Logger->set_level(spdlog::level::info);
+    Addons = Common::CreateAddonsManager(Logger);
     OpcUa::Test::RegisterAddressSpace(*Addons);
     OpcUa::Test::RegisterServicesRegistry(*Addons);
     Addons->Register(CreateXmlAddressSpaceAddonConfig());
@@ -57,6 +60,7 @@ protected:
   }
 
 protected:
+  Common::Logger::SharedPtr Logger;
   Common::AddonsManager::SharedPtr Addons;
 };
 

@@ -12,6 +12,8 @@
 #include <opc/ua/node.h>
 #include <opc/ua/subscription.h>
 
+#include <opc/common/logger.h>
+
 #include <iostream>
 #include <stdexcept>
 #include <thread>
@@ -28,6 +30,7 @@ class SubClient : public SubscriptionHandler
 
 int main(int argc, char ** argv)
 {
+  auto logger = spdlog::stderr_color_mt("client");
   try
     {
       //std::string endpoint = "opc.tcp://192.168.56.101:48030";
@@ -39,29 +42,29 @@ int main(int argc, char ** argv)
       if (argc > 1)
         { endpoint = argv[1]; }
 
-      std::cout << "Connecting to: " << endpoint << std::endl;
-      bool debug = false;
-      OpcUa::UaClient client(debug);
+      logger->info("Connecting to: {}", endpoint);
+
+      OpcUa::UaClient client(logger);
       client.Connect(endpoint);
 
       //get Root node on server
       OpcUa::Node root = client.GetRootNode();
-      std::cout << "Root node is: " << root << std::endl;
+      logger->info("Root node is: {}", root);
 
       //get and browse Objects node
-      std::cout << "Child of objects node are: " << std::endl;
+      logger->info("Child of objects node are:");
       Node objects = client.GetObjectsNode();
 
       for (OpcUa::Node node : objects.GetChildren())
-        { std::cout << "    " << node << std::endl; }
+        { logger->info("    {}", node); }
 
       //get a node from standard namespace using objectId
-      std::cout << "NamespaceArray is: " << std::endl;
+      logger->info("NamespaceArray is:");
       OpcUa::Node nsnode = client.GetNode(ObjectId::Server_NamespaceArray);
       OpcUa::Variant ns = nsnode.GetValue();
 
       for (std::string d : ns.As<std::vector<std::string>>())
-        { std::cout << "    " << d << std::endl; }
+        { logger->info("    {}", d); }
 
       OpcUa::Node myvar;
       OpcUa::Node myobject;
@@ -92,28 +95,29 @@ int main(int argc, char ** argv)
       std::vector<std::string> varpath{ "Objects", "Server", "ServerStatus", "CurrentTime" };
       myvar = root.GetChild(varpath);
 
-      std::cout << "got node: " << myvar << std::endl;
+      logger->info("got node: {}", myvar);
 
       //Subscription
       SubClient sclt;
       Subscription::SharedPtr sub = client.CreateSubscription(100, sclt);
       uint32_t handle = sub->SubscribeDataChange(myvar);
-      std::cout << "Got sub handle: " << handle << ", sleeping 5 seconds" << std::endl;
+      logger->info("Got sub handle: {}, sleeping 5 seconds", handle);
       std::this_thread::sleep_for(std::chrono::seconds(5));
 
-      std::cout << "Disconnecting" << std::endl;
+      logger->info("Disconnecting");
       client.Disconnect();
+      logger->flush();
       return 0;
     }
 
   catch (const std::exception & exc)
     {
-      std::cout << exc.what() << std::endl;
+      logger->error("Error: {}", exc.what());
     }
 
   catch (...)
     {
-      std::cout << "Unknown error." << std::endl;
+      logger->error("Unknown error.");
     }
 
   return -1;

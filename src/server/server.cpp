@@ -32,7 +32,20 @@ UaServer::UaServer()
 }
 
 UaServer::UaServer(bool debug)
-  : Debug(debug)
+{
+  Logger = spdlog::stderr_color_mt("UaServer");
+  if (debug)
+    {
+      Logger->set_level(spdlog::level::debug);
+    }
+  else
+    {
+      Logger->set_level(spdlog::level::info);
+    }
+}
+
+UaServer::UaServer(const Common::Logger::SharedPtr & logger)
+  : Logger(logger)
 {
 }
 
@@ -63,7 +76,7 @@ void UaServer::AddAddressSpace(const std::string & path)
 
 void UaServer::CheckStarted() const
 {
-  if (! Registry)
+  if (!Registry)
     {
       throw (std::runtime_error("Server is not started"));
     }
@@ -107,7 +120,7 @@ void UaServer::Start()
   appDesc.ProductUri = ProductUri;
 
   OpcUa::Server::Parameters params;
-  params.Debug = Debug;
+  params.Debug = Logger.get();
   params.Endpoint.Server = appDesc;
   params.Endpoint.EndpointUrl = Endpoint;
   params.Endpoint.SecurityMode = SecurityMode;
@@ -118,7 +131,7 @@ void UaServer::Start()
   policy.TokenType = UserTokenType::Anonymous;
   params.Endpoint.UserIdentityTokens.push_back(policy);
 
-  Addons = Common::CreateAddonsManager();
+  Addons = Common::CreateAddonsManager(Logger);
   Server::RegisterCommonAddons(params, *Addons);
   Addons->Start();
 
@@ -154,7 +167,7 @@ Node UaServer::GetNodeFromPath(const std::vector<std::string> & path) const
 
 void UaServer::Stop()
 {
-  std::cout << "Stopping opcua server application" << std::endl;
+  LOG_INFO(Logger, "UaServer | stopping opcua server application");
   CheckStarted();
   Addons->Stop();
 }
@@ -192,7 +205,7 @@ Subscription::SharedPtr UaServer::CreateSubscription(unsigned int period, Subscr
   CheckStarted();
   CreateSubscriptionParameters params;
   params.RequestedPublishingInterval = period;
-  return std::make_shared<Subscription>(Registry->GetServer(), params, callback, Debug);
+  return std::make_shared<Subscription>(Registry->GetServer(), params, callback, Logger);
 }
 
 ServerOperations UaServer::CreateServerOperations()

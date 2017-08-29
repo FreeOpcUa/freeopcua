@@ -22,6 +22,7 @@ public:
   // debug argument will make freeopcua write A LOT to stdout
   UaServer();
   explicit UaServer(bool debug);
+  explicit UaServer(const Common::Logger::SharedPtr & logger);
 
   /// @brief set endpoint uri on wich server will listen.
   /// opc.tcp://localhost:4841/opcua/server
@@ -94,7 +95,7 @@ protected:
   std::string ServerUri = "urn:freeopcua:server";
   std::string ProductUri = "urn:freeopcua.github.no:server";
   std::string Name = "FreeOpcUa Server";
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
   bool LoadCppAddressSpace = true;
   OpcUa::MessageSecurityMode SecurityMode = OpcUa::MessageSecurityMode::None;
   void CheckStarted() const;

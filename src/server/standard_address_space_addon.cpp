@@ -27,8 +27,7 @@ public:
   void Initialize(Common::AddonsManager & addons, const Common::AddonParameters & params)
   {
     OpcUa::NodeManagementServices::SharedPtr registry = addons.GetAddon<OpcUa::NodeManagementServices>(OpcUa::Server::AddressSpaceRegistryAddonId);
-    const bool debug = false;
-    OpcUa::Server::FillStandardNamespace(*registry, debug);
+    OpcUa::Server::FillStandardNamespace(*registry, addons.GetLogger());
   }
 
   void Stop()

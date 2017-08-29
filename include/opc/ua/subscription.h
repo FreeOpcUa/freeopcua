@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <opc/common/logger.h>
 #include <opc/ua/global.h>
 #include <opc/ua/node.h>
 #include <opc/ua/event.h>
@@ -98,7 +99,7 @@ public:
   //Alternative could be
   //AddDataChangeCallback(std::function<const Node&, const Variuant& val, AttributeId> callback);
   //AddEventCallback(std::function<std::vector<Variant>> callback);
-  Subscription(Services::SharedPtr server, const CreateSubscriptionParameters & params, SubscriptionHandler & callback, bool debug = false);
+  Subscription(Services::SharedPtr server, const CreateSubscriptionParameters & params, SubscriptionHandler & callback, const Common::Logger::SharedPtr & logger = nullptr);
   virtual ~Subscription() {}
 
   //Delete the subscription from server
@@ -154,7 +155,7 @@ private:
   AttValMap AttributeValueMap;
   SimpleAttOpMap SimpleAttributeOperandMap; //Not used currently
   std::mutex Mutex;
-  bool Debug;
+  Common::Logger::SharedPtr Logger;
 };
 }
 

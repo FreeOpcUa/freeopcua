@@ -55,7 +55,7 @@ public:
   DEFINE_CLASS_POINTERS(OpcTcpServer)
 
 public:
-  OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService);
+  OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger);
 
   virtual void Listen() override;
   virtual void Shutdown() override;
@@ -70,6 +70,7 @@ private:// OpcTcpClient interface;
 private:
   Parameters Params;
   Services::SharedPtr Server;
+  Common::Logger::SharedPtr Logger;
   std::mutex Mutex;
   std::set<std::shared_ptr<OpcTcpConnection>> Clients;
 
@@ -89,8 +90,8 @@ public:
   // to be able to use instances of OpcTcpConnection as
   // OpcTcpConnection::SharedPtr and OpcUa::OutputChannel::SharedPtr
   // at the same time.
-  OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, bool debug);
-  static SharedPtr create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug);
+  OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, const Common::Logger::SharedPtr & logger);
+  static SharedPtr create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, const Common::Logger::SharedPtr & logger);
   ~OpcTcpConnection();
 
   void Start();
@@ -127,27 +128,27 @@ private:
   OpcTcpServer & TcpServer;
   Server::OpcTcpMessages::SharedPtr MessageProcessor;
   OStreamBinary OStream;
-  const bool Debug = false;
+  Common::Logger::SharedPtr Logger;
   std::vector<char> Buffer;
 };
 
-OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, bool debug)
+OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, const Common::Logger::SharedPtr & logger)
   : Socket(std::move(socket))
   , TcpServer(tcpServer)
   , OStream(*this)
-  , Debug(debug)
+  , Logger(logger)
   , Buffer(8192)
 {
 }
 
-OpcTcpConnection::SharedPtr OpcTcpConnection::create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, bool debug)
+OpcTcpConnection::SharedPtr OpcTcpConnection::create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, const Common::Logger::SharedPtr & logger)
 {
-  SharedPtr result = std::make_shared<OpcTcpConnection>(std::move(socket), tcpServer, debug);
+  SharedPtr result = std::make_shared<OpcTcpConnection>(std::move(socket), tcpServer, logger);
 
   // you must not take a shared_ptr in a constructor
   // to give OpcTcpConnection as a shared_ptr to MessageProcessor
   // we have to add this helper function
-  result->MessageProcessor = std::make_shared<Server::OpcTcpMessages>(uaServer, result, debug);
+  result->MessageProcessor = std::make_shared<Server::OpcTcpMessages>(uaServer, result, logger);
   return result;
 }
 
@@ -175,7 +176,7 @@ void OpcTcpConnection::ReadNextData()
 
     catch (const std::exception & exc)
       {
-        std::cerr << "opc_tcp_async| Failed to process message header: " << exc.what() << std::endl;
+        LOG_WARN(self->Logger, "opc_tcp_async| failed to process message header: {}", exc.what());
       }
   }
             );
@@ -190,12 +191,12 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 {
   if (error)
     {
-      std::cerr << "opc_tcp_async| Error during receiving message header: " << error.message() << std::endl;
+      LOG_ERROR(Logger, "opc_tcp_async| error receiving message header: {}", error.message());
       GoodBye();
       return;
     }
 
-  if (Debug) { std::cout << "opc_tcp_async| Received message header with size " << bytes_transferred << std::endl; }
+  LOG_DEBUG(Logger, "opc_tcp_async| received message header with size: {}", bytes_transferred);
 
   OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytes_transferred);
   IStreamBinary messageStream(messageChannel);
@@ -204,12 +205,12 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 
   const std::size_t messageSize = header.Size - GetHeaderSize();
 
-  if (Debug)
+  if (Logger && Logger->should_log(spdlog::level::debug))
     {
-      std::cout << "opc_tcp_async| Message type: " << header.Type << std::endl;
-      std::cout << "opc_tcp_async| Chunk type: " << header.Chunk << std::endl;
-      std::cout << "opc_tcp_async| MessageSize: " << header.Size << std::endl;
-      std::cout << "opc_tcp_async| Waiting " << messageSize << " bytes from client." << std::endl;
+      Logger->debug("opc_tcp_async| message type: {}", header.Type);
+      Logger->debug("opc_tcp_async| chunk type: {}", header.Chunk);
+      Logger->debug("opc_tcp_async| message size: {}", header.Size);
+      Logger->debug("opc_tcp_async| waiting {} bytes from client", messageSize);
     }
 
   // do not lose reference to shared instance even if another
@@ -220,8 +221,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
   {
     if (error)
       {
-        if (self->Debug) { std::cerr << "opc_tcp_async| Error during receiving message body." << std::endl; }
-
+        LOG_WARN(self->Logger, "opc_tcp_async| error receiving message body");
         return;
       }
 
@@ -235,16 +235,14 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 {
   if (error)
     {
-      std::cerr << "opc_tcp_async| Error during receiving message body: " << error.message() << std::endl;
+      LOG_ERROR(Logger, "opc_tcp_async| error receiving message body: {}", error.message());
       GoodBye();
       return;
     }
 
-  if (Debug)
+  if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      if (Debug) { std::cout << "opc_tcp_async| Received " << bytesTransferred << " bytes from client:" << std::endl; }
-
-      PrintBlob(Buffer, bytesTransferred);
+      Logger->trace("opc_tcp_async| received {} bytes:\n{}", bytesTransferred, ToHexDump(Buffer, bytesTransferred));
     }
 
   // restrict server size code only with current message.
@@ -285,17 +283,16 @@ void OpcTcpConnection::GoodBye()
   // reference to shared instance
   OpcTcpConnection::SharedPtr self = shared_from_this();
   TcpServer.RemoveClient(self);
-  if (Debug) std::cout << "opc_tcp_async| Good bye." << std::endl;
+  LOG_DEBUG(Logger, "opc_tcp_async| good bye");
 }
 
 void OpcTcpConnection::Send(const char * message, std::size_t size)
 {
   std::shared_ptr<std::vector<char>> data = std::make_shared<std::vector<char>>(message, message + size);
 
-  if (Debug)
+  if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      std::cout << "opc_tcp_async| Sending next data to the client:" << std::endl;
-      PrintBlob(*data);
+      Logger->trace("opc_tcp_async| sending next data to client:\n{}", ToHexDump(*data));
     }
 
   // do not lose reference to shared instance even if another
@@ -305,21 +302,19 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
   {
     if (err)
       {
-        std::cerr << "opc_tcp_async| Failed to send data to the client. " << err.message() << std::endl;
+        LOG_ERROR(self->Logger, "opc_tcp_async| failed to send data: {}", err.message());
         self->GoodBye();
         return;
       }
 
-    if (self->Debug)
-      {
-        std::cout << "opc_tcp_async| Response sent to the client." << std::endl;
-      }
+    LOG_DEBUG(self->Logger, "opc_tcp_async| response sent");
   });
 }
 
-OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService)
+OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger)
   : Params(params)
   , Server(server)
+  , Logger(logger)
   , socket(ioService)
   , acceptor(ioService)
 {
@@ -347,9 +342,9 @@ OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::Sha
 
 void OpcTcpServer::Listen()
 {
-  std::clog << "opc_tcp_async| Running server." << std::endl;
+  LOG_DEBUG(Logger, "opc_tcp_async| running server");
 
-  std::cout << "opc_tcp_async| Waiting for client connection at: " << acceptor.local_endpoint().address() << ":" << acceptor.local_endpoint().port() <<  std::endl;
+  LOG_DEBUG(Logger, "opc_tcp_async| waiting for client connection at: {}:{}", acceptor.local_endpoint().address(), acceptor.local_endpoint().port());
   acceptor.listen();
 
   Accept();
@@ -357,7 +352,7 @@ void OpcTcpServer::Listen()
 
 void OpcTcpServer::Shutdown()
 {
-  std::clog << "opc_tcp_async| Shutting down server." << std::endl;
+  LOG_DEBUG(Logger, "opc_tcp_async| shutting down server");
   acceptor.close();
 
   // Actively shutdown OpcTcpConnections to clear open async requests from worker
@@ -412,8 +407,8 @@ void OpcTcpServer::Accept()
 
         if (!errorCode)
           {
-            std::cout << "opc_tcp_async| Accepted new client connection." << std::endl;
-            OpcTcpConnection::SharedPtr connection = OpcTcpConnection::create(std::move(socket), *this, Server, Params.DebugMode);
+            LOG_DEBUG(Logger, "opc_tcp_async| accepted new client connection");
+            OpcTcpConnection::SharedPtr connection = OpcTcpConnection::create(std::move(socket), *this, Server, Logger);
             {
               std::unique_lock<std::mutex> lock(Mutex);
               Clients.insert(connection);
@@ -423,7 +418,7 @@ void OpcTcpServer::Accept()
 
         else
           {
-            std::cout << "opc_tcp_async| Error during client connection: " << errorCode.message() << std::endl;
+            LOG_WARN(Logger, "opc_tcp_async| error during client connection: {}", errorCode.message());
           }
 
         Accept();
@@ -432,7 +427,7 @@ void OpcTcpServer::Accept()
 
   catch (const std::exception & exc)
     {
-      std::cout << "opc_tcp_async| Error accepting client connection: " << exc.what() << std::endl;
+      LOG_WARN(Logger, "opc_tcp_async| error accepting client connection: {}", exc.what());
     }
 }
 
@@ -444,7 +439,7 @@ void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)
 
 } // namespace
 
-OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io)
+OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger)
 {
-  return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server, io));
+  return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server, io, logger));
 }

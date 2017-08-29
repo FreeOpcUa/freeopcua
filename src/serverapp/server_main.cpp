@@ -31,8 +31,10 @@ int CALLBACK WinMain(_In_  HINSTANCE hInstance, _In_  HINSTANCE hPrevInstance, _
 */
 int main(int argc, char ** argv)
 {
-
 //#endif
+  auto logger = spdlog::stderr_color_mt("server");
+  logger->set_level(spdlog::level::info);
+
   try
     {
       const char ** arv = (const char **)argv;
@@ -50,7 +52,7 @@ int main(int argc, char ** argv)
           daemon.Daemonize(options.GetLogFile());
         }
 
-      Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager();
+      Common::AddonsManager::UniquePtr manager = Common::CreateAddonsManager(logger);
       OpcUa::Server::LoadConfiguration(options.GetConfigDir(), *manager);
 
       manager->Start();

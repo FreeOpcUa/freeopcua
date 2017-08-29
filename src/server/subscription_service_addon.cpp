@@ -28,11 +28,12 @@ class SubscriptionAddon:
 public:
   void Initialize(Common::AddonsManager & manager, const Common::AddonParameters & parameters)
   {
+    Logger = manager.GetLogger();
     ApplyAddonParameters(parameters);
     Services = manager.GetAddon<OpcUa::Server::ServicesRegistry>(OpcUa::Server::ServicesRegistryAddonId);
     OpcUa::Server::AddressSpace::SharedPtr addressSpace = manager.GetAddon<OpcUa::Server::AddressSpace>(OpcUa::Server::AddressSpaceRegistryAddonId);
     OpcUa::Server::AsioAddon::SharedPtr asio = manager.GetAddon<OpcUa::Server::AsioAddon>(OpcUa::Server::AsioAddonId);
-    Subscriptions = OpcUa::Server::CreateSubscriptionService(addressSpace, asio->GetIoService(), Debug);
+    Subscriptions = OpcUa::Server::CreateSubscriptionService(addressSpace, asio->GetIoService(), Logger);
     Services->RegisterSubscriptionServices(Subscriptions);
   }
 
@@ -89,20 +90,21 @@ public:
 private:
   void ApplyAddonParameters(const Common::AddonParameters & addons)
   {
+    /*
     for (const Common::Parameter parameter : addons.Parameters)
       {
         if (parameter.Name == "debug" && !parameter.Value.empty() && parameter.Value != "0")
           {
             std::cout << "SubscriptionService | Debug mode enabled." << std::endl;
-            Debug = true;
           }
       }
+    */
   }
 
 private:
   SubscriptionService::SharedPtr Subscriptions;
   OpcUa::Server::ServicesRegistry::SharedPtr Services;
-  bool Debug = false;
+  Common::Logger::SharedPtr Logger;
 };
 
 }
