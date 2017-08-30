@@ -291,6 +291,10 @@ std::vector<Node> Node::GetProperties() const
   _GetChildren(OpcUa::ReferenceId::HasProperty, result);
   Node parent = GetParent();
   while (!parent.GetId().IsNull()) {
+    if (parent.GetAttribute(AttributeId::NodeClass).Value.As<int32_t>() != static_cast<int32_t>(NodeClass::ObjectType))
+      {
+        return result;
+      }
     parent._GetChildren(OpcUa::ReferenceId::HasProperty, result);
     parent = parent.GetParent();
   }
