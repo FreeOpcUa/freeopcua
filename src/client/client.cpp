@@ -153,22 +153,22 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
 {
   std::vector<EndpointDescription> endpoints = GetServerEndpoints(endpoint);
 
-  LOG_DEBUG(Logger, "UaClient | going through server endpoints and selected one we support");
+  LOG_DEBUG(Logger, "ua_client             | going through server endpoints and selected one we support");
 
   Common::Uri uri(endpoint);
   bool has_login = !uri.User().empty();
 
   for (EndpointDescription ed : endpoints)
     {
-      LOG_DEBUG(Logger, "UaClient | examining endpoint: {} with security: {}", ed.EndpointUrl, ed.SecurityPolicyUri);
+      LOG_DEBUG(Logger, "ua_client             | examining endpoint: {} with security: {}", ed.EndpointUrl, ed.SecurityPolicyUri);
 
       if (ed.SecurityPolicyUri == "http://opcfoundation.org/UA/SecurityPolicy#None")
         {
-          LOG_DEBUG(Logger, "UaClient | security policy is OK, now looking at user token");
+          LOG_DEBUG(Logger, "ua_client             | security policy is OK, now looking at user token");
 
           if (ed.UserIdentityTokens.empty())
             {
-              LOG_DEBUG(Logger, "UaClient | server does not use user token, OK");
+              LOG_DEBUG(Logger, "ua_client             | server does not use user token, OK");
 
               return ed;
             }
@@ -179,7 +179,7 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
                 {
                   if (token.TokenType == UserTokenType::UserName)
                     {
-                      LOG_DEBUG(Logger, "UaClient | endpoint selected");
+                      LOG_DEBUG(Logger, "ua_client             | endpoint selected");
 
                       return ed;
                     }
@@ -187,7 +187,7 @@ EndpointDescription UaClient::SelectEndpoint(const std::string & endpoint)
 
               else if (token.TokenType == UserTokenType::Anonymous)
                 {
-                  LOG_DEBUG(Logger, "UaClient | endpoint selected");
+                  LOG_DEBUG(Logger, "ua_client             | endpoint selected");
 
                   return ed;
                 }
@@ -220,7 +220,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   OpenSecureChannel();
 
 
-  LOG_INFO(Logger, "UaClient | creating session ...");
+  LOG_INFO(Logger, "ua_client             | creating session ...");
 
   OpcUa::RemoteSessionParameters session;
   session.ClientDescription.ApplicationUri = ApplicationUri;
@@ -235,9 +235,9 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   CreateSessionResponse response = Server->CreateSession(session);
   CheckStatusCode(response.Header.ServiceResult);
 
-  LOG_INFO(Logger, "UaClient | create session OK");
+  LOG_INFO(Logger, "ua_client             | create session OK");
 
-  LOG_INFO(Logger, "UaClient | activating session ...");
+  LOG_INFO(Logger, "ua_client             | activating session ...");
 
   ActivateSessionParameters session_parameters;
   {
@@ -286,7 +286,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   ActivateSessionResponse aresponse = Server->ActivateSession(session_parameters);
   CheckStatusCode(aresponse.Header.ServiceResult);
 
-  LOG_INFO(Logger, "UaClient | activate session OK");
+  LOG_INFO(Logger, "ua_client             | activate session OK");
 
   if (response.Parameters.RevisedSessionTimeout > 0 && response.Parameters.RevisedSessionTimeout < DefaultTimeout)
     {
@@ -334,7 +334,7 @@ void UaClient::Disconnect()
     {
       CloseSessionResponse response = Server->CloseSession();
 
-      LOG_INFO(Logger, "UaClient | CloseSession response is {}", ToString(response.Header.ServiceResult));
+      LOG_INFO(Logger, "ua_client             | CloseSession response is {}", ToString(response.Header.ServiceResult));
 
       CloseSecureChannel();
       Server.reset();
@@ -418,7 +418,7 @@ void UaClient::DeleteNodes(std::vector<OpcUa::Node> & nodes, bool recursive)
       nodes.insert(nodes.end(), children.begin(), children.end());
     }
 
-  LOG_DEBUG(Logger, "UaClient | deleting nodes ...");
+  LOG_DEBUG(Logger, "ua_client             | deleting nodes ...");
 
   std::vector<OpcUa::DeleteNodesItem> nodesToDelete;
   nodesToDelete.resize(nodes.size());

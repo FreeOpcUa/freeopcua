@@ -51,34 +51,34 @@ void Subscription::Delete()
 void Subscription::PublishCallback(Services::SharedPtr server, const PublishResult result)
 {
 
-  LOG_DEBUG(Logger, "Subscription | Suscription::PublishCallback called with {} notifications", result.NotificationMessage.NotificationData.size());
+  LOG_DEBUG(Logger, "subscription          | Suscription::PublishCallback called with {} notifications", result.NotificationMessage.NotificationData.size());
 
   for (const NotificationData & data : result.NotificationMessage.NotificationData)
     {
       if (data.Header.TypeId == ExpandedObjectId::DataChangeNotification)
         {
-          LOG_DEBUG(Logger, "Subscription | notification is of type DataChange");
+          LOG_DEBUG(Logger, "subscription          | notification is of type DataChange");
 
           CallDataChangeCallback(data);
         }
 
       else if (data.Header.TypeId == ExpandedObjectId::EventNotificationList)
         {
-          LOG_DEBUG(Logger, "Subscription | notification is of type Event");
+          LOG_DEBUG(Logger, "subscription          | notification is of type Event");
 
           CallEventCallback(data);
         }
 
       else if (data.Header.TypeId == ExpandedObjectId::StatusChangeNotification)
         {
-          LOG_DEBUG(Logger, "Subscription | notification is of type StatusChange");
+          LOG_DEBUG(Logger, "subscription          | notification is of type StatusChange");
 
           CallStatusChangeCallback(data);
         }
 
       else
         {
-          LOG_WARN(Logger, "Subscription | unknown notficiation type received: {}", data.Header.TypeId);
+          LOG_WARN(Logger, "subscription          | unknown notficiation type received: {}", data.Header.TypeId);
         }
     }
 
@@ -100,7 +100,7 @@ void Subscription::CallDataChangeCallback(const NotificationData & data)
 
       if (mapit == AttributeValueMap.end())
         {
-          LOG_WARN(Logger, "Subscription | got PublishResult for an unknown monitoreditem id: {}", item.ClientHandle);
+          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown monitoreditem id: {}", item.ClientHandle);
         }
 
       else
@@ -109,7 +109,7 @@ void Subscription::CallDataChangeCallback(const NotificationData & data)
           Node node = mapit->second.TargetNode;
           lock.unlock(); //unlock before calling client cades, you never know what they may do
 
-          LOG_DEBUG(Logger, "Subscription | calling DataChange user callback: {} and node: {}", item.ClientHandle, mapit->second.TargetNode);
+          LOG_DEBUG(Logger, "subscription          | calling DataChange user callback: {} and node: {}", item.ClientHandle, mapit->second.TargetNode);
 
           Client.DataValueChange(mapit->second.MonitoredItemId, node, item.Value, attr);
           Client.DataChange(mapit->second.MonitoredItemId, node, item.Value.Value, attr);
@@ -132,7 +132,7 @@ void Subscription::CallEventCallback(const NotificationData & data)
 
       if (mapit == AttributeValueMap.end())
         {
-          LOG_WARN(Logger, "Subscription | got PublishResult for an unknown MonitoredItem id: {}", ef.ClientHandle);
+          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown MonitoredItem id: {}", ef.ClientHandle);
         }
 
       else
@@ -142,7 +142,7 @@ void Subscription::CallEventCallback(const NotificationData & data)
 
           if (mapit->second.Filter.Event.SelectClauses.size() != ef.EventFields.size())
             {
-              throw std::runtime_error("Subscription | receive event format does not match requested filter");
+              throw std::runtime_error("subscription          | receive event format does not match requested filter");
             }
 
           for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses)
@@ -203,11 +203,11 @@ void Subscription::CallEventCallback(const NotificationData & data)
 
           lock.unlock();
 
-          LOG_DEBUG(Logger, "Subscription | calling client event callback");
+          LOG_DEBUG(Logger, "subscription          | calling client event callback");
 
           Client.Event(mapit->second.MonitoredItemId, ev);
 
-          LOG_DEBUG(Logger, "Subscription | callback call finished");
+          LOG_DEBUG(Logger, "subscription          | callback call finished");
         }
     }
 }
@@ -229,7 +229,7 @@ uint32_t Subscription::SubscribeDataChange(const Node & node, AttributeId attr)
   //avid.IndexRange //We leave it null, then the entire array is returned
   std::vector<uint32_t> results = SubscribeDataChange(std::vector<ReadValueId>({avid}));
 
-  if (results.size() != 1) { throw std::runtime_error("Subscription | SubscribeDataChange should have returned exactly one result"); }
+  if (results.size() != 1) { throw std::runtime_error("subscription          | SubscribeDataChange should have returned exactly one result"); }
 
   return results.front();
 }
@@ -276,7 +276,7 @@ std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadVa
 
   if (results.size() != attributes.size())
     {
-      throw (std::runtime_error("Subscription | server did not send answer for all MonitoredItem requests"));
+      throw (std::runtime_error("subscription          | server did not send answer for all MonitoredItem requests"));
     }
 
   std::vector<uint32_t> monitoredItemsIds;
@@ -286,7 +286,7 @@ std::vector<uint32_t> Subscription::SubscribeDataChange(const std::vector<ReadVa
     {
       CheckStatusCode(res.Status);
 
-      LOG_DEBUG(Logger, "Subscription | storing monitoreditem with handle: {} and id: {}", itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle, res.MonitoredItemId);
+      LOG_DEBUG(Logger, "subscription          | storing monitoreditem with handle: {} and id: {}", itemsParams.ItemsToCreate[i].RequestedParameters.ClientHandle, res.MonitoredItemId);
 
       MonitoredItemData mdata;
       mdata.MonitoredItemId = res.MonitoredItemId;
@@ -325,7 +325,7 @@ void Subscription::UnSubscribe(std::vector<uint32_t> handles)
 
   for (auto id : handles)
     {
-      LOG_DEBUG(Logger, "Subscription | sending unsubscribe for MonitoredItem id: {}", id);
+      LOG_DEBUG(Logger, "subscription          | sending unsubscribe for MonitoredItem id: {}", id);
       mids.push_back(uint32_t(id));
 
       //Now trying to remove monitoreditem from our internal cache
@@ -357,7 +357,7 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const Node & eventtype
 {
   EventFilter filter;
 
-  LOG_DEBUG(Logger, "Subscription | Subscribing events with filter for properties:");
+  LOG_DEBUG(Logger, "subscription          | Subscribing events with filter for properties:");
 
   for (Node & child : eventtype.GetProperties())
     {
@@ -403,7 +403,7 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const EventFilter & ev
 
   if (results.size() != 1)
     {
-      throw (std::runtime_error("Subscription | CreateMonitoredItems should return one result"));
+      throw (std::runtime_error("subscription          | CreateMonitoredItems should return one result"));
     }
 
   MonitoredItemData mdata;
