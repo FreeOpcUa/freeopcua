@@ -138,8 +138,7 @@ void Node::SetValue(const DataValue & dval) const
   SetAttribute(AttributeId::Value, dval);
 }
 
-
-std::vector<Node> Node::GetChildren(const ReferenceId & refid) const
+void Node::_GetChildren(const ReferenceId & refid, std::vector<Node>& nodes) const
 {
   BrowseDescription description;
   description.NodeToBrowse = Id;
@@ -147,17 +146,16 @@ std::vector<Node> Node::GetChildren(const ReferenceId & refid) const
   description.IncludeSubtypes = true;
   description.NodeClasses = NodeClass::Unspecified;
   description.ResultMask = BrowseResultMask::All;
-  description.ReferenceTypeId =  refid;
+  description.ReferenceTypeId = refid;
 
   NodesQuery query;
   query.NodesToBrowse.push_back(description);
   query.MaxReferenciesPerNode = 100;
-  std::vector<Node> nodes;
   std::vector<BrowseResult> results = Server->Views()->Browse(query);
 
   if (results.empty())
     {
-      return nodes;
+      return;
     }
 
   while (!results[0].Referencies.empty())
@@ -172,10 +170,44 @@ std::vector<Node> Node::GetChildren(const ReferenceId & refid) const
 
       if (results.empty())
         {
-          return nodes;
+          return;
         }
     }
+}
 
+Node Node::GetParent() const
+{
+  BrowseDescription description;
+  description.NodeToBrowse = Id;
+  description.Direction = BrowseDirection::Inverse;
+  description.IncludeSubtypes = true;
+  description.NodeClasses = NodeClass::Unspecified;
+  description.ResultMask = BrowseResultMask::All;
+  description.ReferenceTypeId = ReferenceId::HierarchicalReferences;
+
+  NodesQuery query;
+  query.NodesToBrowse.push_back(description);
+  query.MaxReferenciesPerNode = 100;
+  std::vector<BrowseResult> results = Server->Views()->Browse(query);
+
+  if (results.empty())
+    {
+      return Node();
+    }
+  if (!results[0].Referencies.empty())
+    {
+      for (auto refIt : results[0].Referencies)
+        {
+          return Node(Server, refIt.TargetNodeId);
+        }
+    }
+  return Node();
+}
+
+std::vector<Node> Node::GetChildren(const ReferenceId & refid) const
+{
+  std::vector<Node> nodes;
+  _GetChildren(refid, nodes);
   return nodes;
 }
 
@@ -251,6 +283,18 @@ Node Node::GetChild(const std::vector<QualifiedName> & path) const
 
   NodeId node = result.front().Targets.front().Node ;
   return Node(Server, node);
+}
+
+std::vector<Node> Node::GetProperties() const
+{
+  std::vector<Node> result;
+  _GetChildren(OpcUa::ReferenceId::HasProperty, result);
+  Node parent = GetParent();
+  while (!parent.GetId().IsNull()) {
+    parent._GetChildren(OpcUa::ReferenceId::HasProperty, result);
+    parent = parent.GetParent();
+  }
+  return result;
 }
 
 std::string Node::ToString() const

@@ -512,7 +512,10 @@ std::vector<NodeId> AddressSpaceInMemory::SelectNodesHierarchy(std::vector<NodeI
         {
           for (auto & ref :  node_it->second.References)
             {
-              subNodes.push_back(ref.TargetNodeId);
+              if (ref.IsForward)
+                {
+                  subNodes.push_back(ref.TargetNodeId);
+                }
             }
         }
     }
@@ -575,7 +578,9 @@ AddNodesResult AddressSpaceInMemory::AddNode(const AddNodesItem & item)
 
   if (parent_node_it != Nodes.end())
     {
-      // Link to parent
+      // Link from parent to child
+      NodeStruct& parent = parent_node_it->second;
+
       ReferenceDescription desc;
       desc.ReferenceTypeId = item.ReferenceTypeId;
       desc.TargetNodeId = resultId;
@@ -585,7 +590,16 @@ AddNodesResult AddressSpaceInMemory::AddNode(const AddNodesItem & item)
       desc.TargetNodeTypeDefinition = item.TypeDefinition;
       desc.IsForward = true; // should this be in constructor?
 
-      parent_node_it->second.References.push_back(desc);
+      parent.References.push_back(desc);
+
+      // Link to parent
+      AddReferencesItem typeRef;
+      typeRef.ReferenceTypeId = item.ReferenceTypeId;
+      typeRef.SourceNodeId = resultId;
+      typeRef.TargetNodeId = item.ParentNodeId;
+      typeRef.TargetNodeClass = static_cast<NodeClass>(parent.Attributes[AttributeId::NodeClass].Value.Value.As<int32_t>());
+      typeRef.IsForward = false;
+      AddReference(typeRef);
     }
 
   if (item.TypeDefinition != ObjectId::Null)

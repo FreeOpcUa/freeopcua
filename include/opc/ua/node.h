@@ -53,8 +53,10 @@ public:
   QualifiedName GetBrowseName() const;
   //void SetBrowseName(const QualifiedName& name) const;
 
-  /// @brief List childrenn nodes by specified reference
-  /// @return One or zero chilren nodes.
+  Node GetParent() const;
+
+  /// @brief List child nodes by specified reference
+  /// @return zero or more child nodes.
   std::vector<Node> GetChildren(const OpcUa::ReferenceId & refid) const;
 
   /// @brief Get ghildren by hierarchal referencies.
@@ -69,7 +71,7 @@ public:
   Node GetChild(const std::vector<std::string> & path) const;
   Node GetChild(const std::string & browsename) const ;
 
-  std::vector<Node> GetProperties() const {return GetChildren(OpcUa::ReferenceId::HasProperty);}
+  std::vector<Node> GetProperties() const;
   std::vector<Node> GetVariables() const {return GetChildren(OpcUa::ReferenceId::HasComponent);} //Not correct should filter by variable type
 
 
@@ -127,6 +129,11 @@ public:
 
   //FIXME: I need this to create a copy for python binding, another way?
   OpcUa::Services::SharedPtr GetServices() const {return Server;}
+
+protected:
+  // base function for GetChildren(), put found children into given nodes
+  // parameter
+  void _GetChildren(const OpcUa::ReferenceId & refid, std::vector<Node> & nodes) const;
 
 protected:
   OpcUa::Services::SharedPtr Server;
