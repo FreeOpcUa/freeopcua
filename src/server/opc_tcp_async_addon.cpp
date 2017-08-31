@@ -58,8 +58,8 @@ void AsyncOpcTcpAddon::Initialize(Common::AddonsManager & addons, const Common::
   Logger = addons.GetLogger();
   AsyncOpcTcp::Parameters params = GetOpcTcpParameters(addonParams);
 
-  LOG_DEBUG(Logger, "opc_tcp_async| parameters:");
-  LOG_DEBUG(Logger, "opc_tcp_async|   DebugMode: {}", params.DebugMode);
+  LOG_DEBUG(Logger, "opc_tcp_async         | parameters:");
+  LOG_DEBUG(Logger, "opc_tcp_async         |   DebugMode: {}", params.DebugMode);
 
   const std::vector<OpcUa::Server::ApplicationData> applications = OpcUa::ParseEndpointsParameters(addonParams.Groups, Logger);
 
@@ -67,7 +67,7 @@ void AsyncOpcTcpAddon::Initialize(Common::AddonsManager & addons, const Common::
     {
       for (OpcUa::Server::ApplicationData d : applications)
         {
-          Logger->debug("opc_tcp_async| Endpoint is: {}", d.Endpoints.front().EndpointUrl);
+          Logger->debug("opc_tcp_async         | Endpoint is: {}", d.Endpoints.front().EndpointUrl);
         }
     }
 
@@ -82,13 +82,13 @@ void AsyncOpcTcpAddon::Initialize(Common::AddonsManager & addons, const Common::
 
   if (endpointDescriptions.empty())
     {
-      LOG_ERROR(Logger, "opc_tcp_async| Endpoints parameter not present in configuration");
+      LOG_ERROR(Logger, "opc_tcp_async         | Endpoints parameter not present in configuration");
       return;
     }
 
   if (endpointDescriptions.size() > 1)
     {
-      LOG_ERROR(Logger, "opc_tcp_async| too many endpoints specified in configuration");
+      LOG_ERROR(Logger, "opc_tcp_async         | too many endpoints specified in configuration");
       return;
     }
 
@@ -107,7 +107,7 @@ void AsyncOpcTcpAddon::PublishApplicationsInformation(std::vector<OpcUa::Applica
 
   if (!endpointsAddon)
     {
-      LOG_ERROR(Logger, "opc_tcp_async| cannot publish information about endpoints. Endpoints services addon not registered.");
+      LOG_ERROR(Logger, "opc_tcp_async         | cannot publish information about endpoints. Endpoints services addon not registered.");
       return;
     }
 

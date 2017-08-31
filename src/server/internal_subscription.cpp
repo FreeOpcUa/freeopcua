@@ -18,10 +18,12 @@ InternalSubscription::InternalSubscription(SubscriptionServiceInternal & service
   , LifeTimeCount(data.RevisedLifetimeCount)
   , Logger(logger)
 {
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, create", Data.SubscriptionId);
 }
 
 void InternalSubscription::Start()
 {
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, start", Data.SubscriptionId);
   std::shared_ptr<InternalSubscription> self = shared_from_this();
   Timer.async_wait([self](const boost::system::error_code & error) { self->PublishResults(error); });
 }
@@ -29,17 +31,19 @@ void InternalSubscription::Start()
 InternalSubscription::~InternalSubscription()
 {
   //Stop();
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, destroy", Data.SubscriptionId);
 }
 
 void InternalSubscription::Stop()
 {
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, stop", Data.SubscriptionId);
   DeleteAllMonitoredItems();
   Timer.cancel();
 }
 
 void InternalSubscription::DeleteAllMonitoredItems()
 {
-  LOG_DEBUG(Logger, "internal_subscription | deleting all monitored items");
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, DeleteAllMonitoredItems", Data.SubscriptionId);
 
   std::vector<uint32_t> handles;
   {
@@ -59,7 +63,7 @@ bool InternalSubscription::HasExpired()
 
   if (expired)
     {
-      LOG_DEBUG(Logger, "internal_subscription | subscription has expired: keep alive: {} > life time: {}", KeepAliveCount, LifeTimeCount);
+      LOG_DEBUG(Logger, "internal_subscription | id: {} has expired: keep alive: {} > life time: {}", Data.SubscriptionId, KeepAliveCount, LifeTimeCount);
     }
 
   return expired;
@@ -69,7 +73,7 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
 {
   if (error)
     {
-      LOG_DEBUG(Logger, "internal_subscription | PublishResults: error: stopping subscription timer");
+      LOG_WARN(Logger, "internal_subscription | id: {}, PublishResults: error: stopping subscription timer", Data.SubscriptionId);
       return;
     }
 
@@ -85,17 +89,17 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
 
       if (results.size() > 0)
         {
-          LOG_DEBUG(Logger, "internal_subscription | subscription has: {} results", results.size());
+          LOG_DEBUG(Logger, "internal_subscription | id: {}, have {} results", Data.SubscriptionId, results.size());
 
           if (Callback)
             {
-              LOG_DEBUG(Logger, "internal_subscription | calling callback");
+              LOG_DEBUG(Logger, "internal_subscription | id: {}, calling callback", Data.SubscriptionId);
               Callback(results[0]);
             }
 
           else
             {
-              LOG_DEBUG(Logger, "internal_subscription | no callback defined for this subscription");
+              LOG_DEBUG(Logger, "internal_subscription | id: {}, no callback defined for this subscription", Data.SubscriptionId);
             }
         }
     }
@@ -113,17 +117,17 @@ bool InternalSubscription::HasPublishResult()
 
   if (Startup || !TriggeredDataChangeEvents.empty() || !TriggeredEvents.empty())
     {
-      LOG_TRACE(Logger, "internal_subscription | HasPublishResult: all queues empty, should send publish event");
+      LOG_TRACE(Logger, "internal_subscription | id: {}, HasPublishResult: all queues empty, should send publish event", Data.SubscriptionId);
       return true;
     }
 
   if (KeepAliveCount > Data.RevisedMaxKeepAliveCount)   //we need to send keepalive notification
     {
-      LOG_TRACE(Logger, "internal_subscription | HasPublishResult: KeepAliveCount: {} > MaxKeepAliveCount: {}, should send publish event", KeepAliveCount, Data.RevisedMaxKeepAliveCount);
+      LOG_TRACE(Logger, "internal_subscription | id: {}, HasPublishResult: KeepAliveCount: {} > MaxKeepAliveCount: {}, should send publish event", Data.SubscriptionId, KeepAliveCount, Data.RevisedMaxKeepAliveCount);
       return true;
     }
 
-  LOG_TRACE(Logger, "internal_subscription | HasPublishResult: KeepAliveCount: {}, MaxKeepAliveCount: {}", KeepAliveCount, Data.RevisedMaxKeepAliveCount);
+  LOG_TRACE(Logger, "internal_subscription | id: {}, HasPublishResult: KeepAliveCount: {}, MaxKeepAliveCount: {}", Data.SubscriptionId, KeepAliveCount, Data.RevisedMaxKeepAliveCount);
   ++KeepAliveCount;
   return false;
 
@@ -133,7 +137,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 {
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-  LOG_DEBUG(Logger, "internal_subscription | PopPublishResult: subscription: {} with: {} queued items", Data.SubscriptionId, TriggeredDataChangeEvents.size());
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, PopPublishResult: {} queued items", Data.SubscriptionId, TriggeredDataChangeEvents.size());
   PublishResult result;
   result.SubscriptionId = Data.SubscriptionId;
   result.NotificationMessage.PublishTime = DateTime::Current();
@@ -147,7 +151,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
   if (!TriggeredEvents.empty())
     {
-      LOG_DEBUG(Logger, "internal_subscription | subscription: {} has: {} events to send", Data.SubscriptionId, TriggeredEvents.size());
+      LOG_DEBUG(Logger, "internal_subscription | id: {}, PopPublishResult: {} events to send", Data.SubscriptionId, TriggeredEvents.size());
 
       EventNotificationList notif;
 
@@ -185,7 +189,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
   NotAcknowledgedResults.push_back(result);
 
-  LOG_DEBUG(Logger, "internal_subscription | sending PublishResult with: {} notifications", result.NotificationMessage.NotificationData.size());
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, sending PublishResult with: {} notifications", Data.SubscriptionId, result.NotificationMessage.NotificationData.size());
 
   std::vector<PublishResult> resultlist;
   resultlist.push_back(result);
@@ -195,7 +199,7 @@ std::vector<PublishResult> InternalSubscription::PopPublishResult()
 
 RepublishResponse InternalSubscription::Republish(const RepublishParameters & params)
 {
-  LOG_DEBUG(Logger, "internal_subscription | Republish request for sequence: {}", params.RetransmitSequenceNumber);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, Republish request for sequence: {}", Data.SubscriptionId, params.RetransmitSequenceNumber);
 
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -216,6 +220,8 @@ RepublishResponse InternalSubscription::Republish(const RepublishParameters & pa
 
 ModifySubscriptionResult InternalSubscription::ModifySubscription(const ModifySubscriptionParameters & data)
 {
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, ModifySubscription", Data.SubscriptionId);
+
   ModifySubscriptionResult result;
 
   if (data.RequestedLifetimeCount)
@@ -266,7 +272,7 @@ void InternalSubscription::NewAcknowlegment(const SubscriptionAcknowledgement & 
 
 MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const MonitoredItemCreateRequest & request)
 {
-  LOG_DEBUG(Logger, "internal_subscription | CreateMonitoredItem");
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, CreateMonitoredItem", Data.SubscriptionId);
 
   MonitoredItemCreateResult result;
   uint32_t callbackHandle = 0;
@@ -281,7 +287,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 
     if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier)
       {
-        LOG_DEBUG(Logger, "internal_subscription | subscribe to event notifier");
+        LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to event notifier", Data.SubscriptionId);
 
         //client want to subscribe to events
         //FIXME: check attribute EVENT notifier is set for the node
@@ -295,7 +301,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
   // which will result in deadlocks when used from differengt threads
   if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier)
     {
-      LOG_DEBUG(Logger, "internal_subscription | subscribe to data changes");
+      LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to data changes", Data.SubscriptionId);
 
       uint32_t id = result.MonitoredItemId;
       callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.NodeId, request.ItemToMonitor.AttributeId, [this, id](const OpcUa::NodeId & nodeId, OpcUa::AttributeId attr, const DataValue & value)
@@ -333,7 +339,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 
   // do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
   // function.
-  LOG_DEBUG(Logger, "internal_subscription | created MonitoredItem id: {}, ClientHandle: {}", result.MonitoredItemId, mdata.ClientHandle);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, created MonitoredItem id: {}, ClientHandle: {}", Data.SubscriptionId, result.MonitoredItemId, mdata.ClientHandle);
 
   //Forcing event,
   if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier)
@@ -346,7 +352,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
 
 void InternalSubscription::TriggerDataChangeEvent(MonitoredDataChange monitoreditems, ReadValueId attrval)
 {
-  LOG_DEBUG(Logger, "internal_subscription | TriggerDataChangeEvent SubscriptionId: {}, ClientHandle: {}", Data.SubscriptionId, monitoreditems.ClientHandle);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, TriggerDataChangeEvent: ClientHandle: {}", Data.SubscriptionId, monitoreditems.ClientHandle);
 
   ReadParameters params;
   params.AttributesToRead.push_back(attrval);
@@ -369,7 +375,7 @@ std::vector<StatusCode> InternalSubscription::DeleteMonitoredItemsIds(const std:
 
   for (const uint32_t & handle : monitoreditemsids)
     {
-      LOG_DEBUG(Logger, "internal_subscription | DeletingMonitoredItemsIds: handle: {}", handle);
+      LOG_DEBUG(Logger, "internal_subscription | id: {}, DeletingMonitoredItemsIds: handle: {}", Data.SubscriptionId, handle);
 
       if (DeleteMonitoredEvent(handle))
         {
@@ -418,7 +424,7 @@ bool InternalSubscription::DeleteMonitoredDataChange(uint32_t handle)
         {
           if (ev->MonitoredItemId == handle)
             {
-              LOG_DEBUG(Logger, "internal_subscription | remove TriggeredDataChangeEvents of MonitoredItemId: {}", handle);
+              LOG_DEBUG(Logger, "internal_subscription | id: {}, remove TriggeredDataChangeEvents of MonitoredItemId: {}", Data.SubscriptionId, handle);
 
               ev = TriggeredDataChangeEvents.erase(ev);
             }
@@ -448,7 +454,7 @@ bool InternalSubscription::DeleteMonitoredEvent(uint32_t handle)
             {
               if (ev->MonitoredItemId == handle)
                 {
-                  LOG_DEBUG(Logger, "internal_subscription | remove TriggeredEvents of MonitoredItemId: {}", handle);
+                  LOG_DEBUG(Logger, "internal_subscription | id: {}, remove TriggeredEvents of MonitoredItemId: {}", Data.SubscriptionId, handle);
 
                   ev = TriggeredEvents.erase(ev);
                 }
@@ -475,7 +481,7 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
 
   if (it_monitoreditem == MonitoredDataChanges.end())
     {
-      LOG_WARN(Logger, "internal_subscription | DataChangeCallback called for unknown item: {}", m_id);
+      LOG_WARN(Logger, "internal_subscription | id: {}, DataChangeCallback called for unknown item: {}", Data.SubscriptionId, m_id);
       return ;
     }
 
@@ -491,7 +497,7 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
   event.Data.ClientHandle = monitoredDataChange.ClientHandle;
   event.Data.Value = value;
 
-  LOG_DEBUG(Logger, "internal_subscription | enqueue TriggeredDataChange event for SubscriptionId: {}, ClientHandle: {}", Data.SubscriptionId, event.Data.ClientHandle);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, enqueue TriggeredDataChange event: ClientHandle: {}", Data.SubscriptionId, event.Data.ClientHandle);
 
   ++monitoredDataChange.TriggerCount;
   TriggeredDataChangeEvents.push_back(event);
@@ -505,7 +511,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
   if (it == MonitoredEvents.end())
     {
-      LOG_DEBUG(Logger, "internal_subscription | SubscriptionId: {} does not monitor this NodeId: {}", Data.SubscriptionId, node);
+      LOG_DEBUG(Logger, "internal_subscription | id: {} does not monitor NodeId: {}", Data.SubscriptionId, node);
 
       return;
     }
@@ -516,7 +522,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
 bool InternalSubscription::EnqueueEvent(uint32_t monitoredItemId, const Event & event)
 {
-  LOG_DEBUG(Logger, "internal_subscription | EnqueEvent: {}", event);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, EnqueEvent: {}", Data.SubscriptionId, event);
 
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -525,7 +531,7 @@ bool InternalSubscription::EnqueueEvent(uint32_t monitoredItemId, const Event & 
 
   if (mii_it == MonitoredDataChanges.end())
     {
-      LOG_DEBUG(Logger, "internal_subscription | MonitoredItemId: {} is already deleted", monitoredItemId);
+      LOG_DEBUG(Logger, "internal_subscription | id: {}, MonitoredItemId: {} is already deleted", Data.SubscriptionId, monitoredItemId);
 
       return false;
     }
@@ -547,11 +553,11 @@ std::vector<Variant> InternalSubscription::GetEventFields(const EventFilter & fi
   //Go through filter and add value og matches as in spec
   std::vector<Variant> fields;
 
-  LOG_DEBUG(Logger, "internal_subscription | GetEventFields: filter size: {}", filter.SelectClauses.size());
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, GetEventFields: filter size: {}", Data.SubscriptionId, filter.SelectClauses.size());
 
   for (SimpleAttributeOperand sattr : filter.SelectClauses)
     {
-      LOG_DEBUG(Logger, "internal_subscription | BrowsePath size: {}", sattr.BrowsePath.size());
+      LOG_DEBUG(Logger, "internal_subscription | id: {}, BrowsePath size: {}", Data.SubscriptionId, sattr.BrowsePath.size());
 
       if (sattr.BrowsePath.size() == 0)
         {
@@ -560,7 +566,7 @@ std::vector<Variant> InternalSubscription::GetEventFields(const EventFilter & fi
 
       else
         {
-          LOG_DEBUG(Logger, "internal_subscription | send value for: {}", sattr.BrowsePath[0]);
+          LOG_DEBUG(Logger, "internal_subscription | id: {}, send value for: {}", Data.SubscriptionId, sattr.BrowsePath[0]);
 
           if (sattr.BrowsePath[0] == QualifiedName("EventId", 0))
             {

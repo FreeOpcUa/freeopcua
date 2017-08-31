@@ -176,7 +176,7 @@ void OpcTcpConnection::ReadNextData()
 
     catch (const std::exception & exc)
       {
-        LOG_WARN(self->Logger, "opc_tcp_async| failed to process message header: {}", exc.what());
+        LOG_WARN(self->Logger, "opc_tcp_async         | failed to process message header: {}", exc.what());
       }
   }
             );
@@ -191,12 +191,12 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 {
   if (error)
     {
-      LOG_ERROR(Logger, "opc_tcp_async| error receiving message header: {}", error.message());
+      LOG_ERROR(Logger, "opc_tcp_async         | error receiving message header: {}", error.message());
       GoodBye();
       return;
     }
 
-  LOG_DEBUG(Logger, "opc_tcp_async| received message header with size: {}", bytes_transferred);
+  LOG_DEBUG(Logger, "opc_tcp_async         | received message header with size: {}", bytes_transferred);
 
   OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytes_transferred);
   IStreamBinary messageStream(messageChannel);
@@ -207,10 +207,10 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 
   if (Logger && Logger->should_log(spdlog::level::debug))
     {
-      Logger->debug("opc_tcp_async| message type: {}", header.Type);
-      Logger->debug("opc_tcp_async| chunk type: {}", header.Chunk);
-      Logger->debug("opc_tcp_async| message size: {}", header.Size);
-      Logger->debug("opc_tcp_async| waiting {} bytes from client", messageSize);
+      Logger->debug("opc_tcp_async         | message type: {}", header.Type);
+      Logger->debug("opc_tcp_async         | chunk type: {}", header.Chunk);
+      Logger->debug("opc_tcp_async         | message size: {}", header.Size);
+      Logger->debug("opc_tcp_async         | waiting {} bytes from client", messageSize);
     }
 
   // do not lose reference to shared instance even if another
@@ -221,7 +221,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
   {
     if (error)
       {
-        LOG_WARN(self->Logger, "opc_tcp_async| error receiving message body");
+        LOG_WARN(self->Logger, "opc_tcp_async         | error receiving message body");
         return;
       }
 
@@ -235,14 +235,14 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 {
   if (error)
     {
-      LOG_ERROR(Logger, "opc_tcp_async| error receiving message body: {}", error.message());
+      LOG_ERROR(Logger, "opc_tcp_async         | error receiving message body: {}", error.message());
       GoodBye();
       return;
     }
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async| received {} bytes:\n{}", bytesTransferred, ToHexDump(Buffer, bytesTransferred));
+      Logger->trace("opc_tcp_async         | received {} bytes:\n{}", bytesTransferred, ToHexDump(Buffer, bytesTransferred));
     }
 
   // restrict server size code only with current message.
@@ -258,14 +258,14 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   catch (const std::exception & exc)
     {
-      std::cerr << "opc_tcp_async| Failed to process message. " << exc.what() << std::endl;
+      std::cerr << "opc_tcp_async         | Failed to process message. " << exc.what() << std::endl;
       GoodBye();
       return;
     }
 
   if (messageChannel.GetRemainSize())
     {
-      std::cerr << "opc_tcp_async| ERROR!!! Message from client has been processed partially." << std::endl;
+      std::cerr << "opc_tcp_async         | ERROR!!! Message from client has been processed partially." << std::endl;
     }
 
   if (!cont)
@@ -283,7 +283,7 @@ void OpcTcpConnection::GoodBye()
   // reference to shared instance
   OpcTcpConnection::SharedPtr self = shared_from_this();
   TcpServer.RemoveClient(self);
-  LOG_DEBUG(Logger, "opc_tcp_async| good bye");
+  LOG_DEBUG(Logger, "opc_tcp_async         | good bye");
 }
 
 void OpcTcpConnection::Send(const char * message, std::size_t size)
@@ -292,7 +292,7 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async| sending next data to client:\n{}", ToHexDump(*data));
+      Logger->trace("opc_tcp_async         | sending next data to client:\n{}", ToHexDump(*data));
     }
 
   // do not lose reference to shared instance even if another
@@ -302,12 +302,12 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
   {
     if (err)
       {
-        LOG_ERROR(self->Logger, "opc_tcp_async| failed to send data: {}", err.message());
+        LOG_ERROR(self->Logger, "opc_tcp_async         | failed to send data: {}", err.message());
         self->GoodBye();
         return;
       }
 
-    LOG_DEBUG(self->Logger, "opc_tcp_async| response sent");
+    LOG_DEBUG(self->Logger, "opc_tcp_async         | response sent");
   });
 }
 
@@ -342,9 +342,9 @@ OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::Sha
 
 void OpcTcpServer::Listen()
 {
-  LOG_DEBUG(Logger, "opc_tcp_async| running server");
+  LOG_DEBUG(Logger, "opc_tcp_async         | running server");
 
-  LOG_DEBUG(Logger, "opc_tcp_async| waiting for client connection at: {}:{}", acceptor.local_endpoint().address(), acceptor.local_endpoint().port());
+  LOG_DEBUG(Logger, "opc_tcp_async         | waiting for client connection at: {}:{}", acceptor.local_endpoint().address(), acceptor.local_endpoint().port());
   acceptor.listen();
 
   Accept();
@@ -352,7 +352,7 @@ void OpcTcpServer::Listen()
 
 void OpcTcpServer::Shutdown()
 {
-  LOG_DEBUG(Logger, "opc_tcp_async| shutting down server");
+  LOG_DEBUG(Logger, "opc_tcp_async         | shutting down server");
   acceptor.close();
 
   // Actively shutdown OpcTcpConnections to clear open async requests from worker
@@ -407,7 +407,7 @@ void OpcTcpServer::Accept()
 
         if (!errorCode)
           {
-            LOG_DEBUG(Logger, "opc_tcp_async| accepted new client connection");
+            LOG_DEBUG(Logger, "opc_tcp_async         | accepted new client connection");
             OpcTcpConnection::SharedPtr connection = OpcTcpConnection::create(std::move(socket), *this, Server, Logger);
             {
               std::unique_lock<std::mutex> lock(Mutex);
@@ -418,7 +418,7 @@ void OpcTcpServer::Accept()
 
         else
           {
-            LOG_WARN(Logger, "opc_tcp_async| error during client connection: {}", errorCode.message());
+            LOG_WARN(Logger, "opc_tcp_async         | error during client connection: {}", errorCode.message());
           }
 
         Accept();
@@ -427,7 +427,7 @@ void OpcTcpServer::Accept()
 
   catch (const std::exception & exc)
     {
-      LOG_WARN(Logger, "opc_tcp_async| error accepting client connection: {}", exc.what());
+      LOG_WARN(Logger, "opc_tcp_async         | error accepting client connection: {}", exc.what());
     }
 }
 

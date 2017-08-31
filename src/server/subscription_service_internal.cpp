@@ -56,7 +56,7 @@ boost::asio::io_service & SubscriptionServiceInternal::GetIOService()
 
 void SubscriptionServiceInternal::DeleteAllSubscriptions()
 {
-  LOG_DEBUG(Logger, "subscription_service | DeleteAllSubscriptions");
+  LOG_DEBUG(Logger, "subscription_service  | DeleteAllSubscriptions");
 
   std::vector<uint32_t> ids(SubscriptionsMap.size());
   {
@@ -79,13 +79,13 @@ std::vector<StatusCode> SubscriptionServiceInternal::DeleteSubscriptions(const s
 
       if (itsub == SubscriptionsMap.end())
         {
-          LOG_ERROR(Logger, "subscription_service | got request to delete non existing SubscriptionId: {}", subid);
+          LOG_ERROR(Logger, "subscription_service  | got request to delete non existing SubscriptionId: {}", subid);
           result.push_back(StatusCode::BadSubscriptionIdInvalid);
         }
 
       else
         {
-          LOG_DEBUG(Logger, "subscription_service | delete SubscriptionId: {}", subid);
+          LOG_DEBUG(Logger, "subscription_service  | delete SubscriptionId: {}", subid);
 
           itsub->second->Stop();
           SubscriptionsMap.erase(subid);
@@ -107,12 +107,12 @@ ModifySubscriptionResponse SubscriptionServiceInternal::ModifySubscription(const
 
   if (itsub == SubscriptionsMap.end())
     {
-      LOG_ERROR(Logger, "subscription_service | got request to modify non existing SubscriptionId: {}", subid);
+      LOG_ERROR(Logger, "subscription_service  | got request to modify non existing SubscriptionId: {}", subid);
       response.Header.ServiceResult = StatusCode::BadSubscriptionIdInvalid;
       return response;
     }
 
-  LOG_DEBUG(Logger, "subscription_service | modify SubscriptionId: {}", subid);
+  LOG_DEBUG(Logger, "subscription_service  | modify SubscriptionId: {}", subid);
 
   std::shared_ptr<InternalSubscription> sub = itsub->second;
   response.Parameters = sub->ModifySubscription(parameters);
@@ -129,7 +129,7 @@ SubscriptionData SubscriptionServiceInternal::CreateSubscription(const CreateSub
   data.RevisedPublishingInterval = request.Parameters.RequestedPublishingInterval;
   data.RevisedMaxKeepAliveCount = request.Parameters.RequestedMaxKeepAliveCount;
 
-  LOG_DEBUG(Logger, "subscription_service | CreateSubscription id: {}", data.SubscriptionId);
+  LOG_DEBUG(Logger, "subscription_service  | CreateSubscription id: {}", data.SubscriptionId);
 
   std::shared_ptr<InternalSubscription> sub(new InternalSubscription(*this, data, request.Header.SessionAuthenticationToken, callback, Logger));
   sub->Start();
@@ -193,9 +193,11 @@ void SubscriptionServiceInternal::Publish(const PublishRequest & request)
 {
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
-  if (PublishRequestQueues[request.Header.SessionAuthenticationToken] < 100)
+  const NodeId& session = request.Header.SessionAuthenticationToken;
+  if (PublishRequestQueues[session] < 100)
     {
-      PublishRequestQueues[request.Header.SessionAuthenticationToken] += 1;
+      PublishRequestQueues[session] += 1;
+      LOG_DEBUG(Logger, "subscription_service  | push PublishRequest for session: {}: available requests: {}", session, PublishRequestQueues[session]);
     }
 
   //FIXME: else spec says we should return error to warn client
@@ -234,13 +236,13 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
 
   if (queue_it == PublishRequestQueues.end())
     {
-      LOG_ERROR(Logger, "subscription_service | attempt to pop publish request for unknown session: {}", node);
+      LOG_ERROR(Logger, "subscription_service  | attempt to pop publish request for unknown session: {}", node);
 
       if (Logger && Logger->should_log(spdlog::level::debug))
         {
           for (auto i : PublishRequestQueues)
             {
-              Logger->debug("subscription_service |   available session: {}", i.first);
+              Logger->debug("subscription_service  |   available session: {}", i.first);
             }
         }
       return false;
@@ -250,13 +252,13 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
     {
       if (queue_it->second == 0)
         {
-          LOG_ERROR(Logger, "subscription_service | unable to send response: no publish request for session: {}", node);
+          LOG_ERROR(Logger, "subscription_service  | unable to send response: no publish request for session: {}", node);
           return false;
         }
 
       else
         {
-          LOG_TRACE(Logger, "subscription_service | pop PublishRequest for session: {}: available requests: {}", node, queue_it->second);
+          LOG_DEBUG(Logger, "subscription_service  | pop PublishRequest for session: {}: available requests: {}", node, queue_it->second);
           --queue_it->second;
           return true;
         }
