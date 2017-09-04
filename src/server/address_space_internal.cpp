@@ -248,7 +248,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
 
       if (attrit == nodeit->second.Attributes.end())
         {
-          LOG_WARN(Logger, "address_space_internal| node: {} has no attribute: ", node, (uint32_t)attribute);
+          LOG_WARN(Logger, "address_space_internal| node: {} has no attribute: {}", node, ToString(attribute));
         }
 
       else
@@ -260,7 +260,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
               return attrit->second.GetValueCallback();
             }
 
-          LOG_TRACE(Logger, "address_space_internal| no callback registered, returning stored value");
+//          LOG_TRACE(Logger, "address_space_internal| no callback registered, returning stored value");
 
           return attrit->second.Value;
         }
@@ -463,27 +463,27 @@ StatusCode AddressSpaceInMemory::SetValue(const NodeId & node, AttributeId attri
 
 bool AddressSpaceInMemory::IsSuitableReference(const BrowseDescription & desc, const ReferenceDescription & reference) const
 {
-  LOG_TRACE(Logger, "address_space_internal| checking reference: '{}' to node: '{}' ({}) which must fit ref: '{}' with IncludeSubtypes: '{}'", reference.ReferenceTypeId, reference.TargetNodeId, reference.BrowseName, desc.ReferenceTypeId, desc.IncludeSubtypes);
+//  LOG_TRACE(Logger, "address_space_internal| checking reference: '{}' to node: '{}' ({}) which must fit ref: '{}' with IncludeSubtypes: '{}'", reference.ReferenceTypeId, reference.TargetNodeId, reference.BrowseName, desc.ReferenceTypeId, desc.IncludeSubtypes);
 
   if ((desc.Direction == BrowseDirection::Forward && !reference.IsForward) || (desc.Direction == BrowseDirection::Inverse && reference.IsForward))
     {
-      LOG_TRACE(Logger, "address_space_internal| reference in wrong direction");
+//      LOG_TRACE(Logger, "address_space_internal| reference in wrong direction");
       return false;
     }
 
   if (desc.ReferenceTypeId != ObjectId::Null && !IsSuitableReferenceType(reference, desc.ReferenceTypeId, desc.IncludeSubtypes))
     {
-      LOG_TRACE(Logger, "address_space_internal| reference has wrong type");
+//      LOG_TRACE(Logger, "address_space_internal| reference has wrong type");
       return false;
     }
 
   if (desc.NodeClasses != NodeClass::Unspecified && (desc.NodeClasses & reference.TargetNodeClass) == NodeClass::Unspecified)
     {
-      LOG_TRACE(Logger, "address_space_internal| reference has wrong class");
+//      LOG_TRACE(Logger, "address_space_internal| reference has wrong class");
       return false;
     }
 
-  LOG_TRACE(Logger, "address_space_internal| reference suitable");
+//  LOG_TRACE(Logger, "address_space_internal| reference suitable");
   return true;
 }
 
@@ -510,7 +510,7 @@ std::vector<NodeId> AddressSpaceInMemory::SelectNodesHierarchy(std::vector<NodeI
 
       if (node_it != Nodes.end())
         {
-          for (auto & ref :  node_it->second.References)
+          for (auto & ref : node_it->second.References)
             {
               if (ref.IsForward)
                 {

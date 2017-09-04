@@ -11,6 +11,7 @@
 #ifndef __OPC_UA_BINARY_CHANNEL
 #define __OPC_UA_BINARY_CHANNEL
 
+#include <opc/common/logger.h>
 #include <opc/ua/protocol/channel.h>
 
 #include <memory>
@@ -30,7 +31,7 @@ public:
 };
 
 
-std::unique_ptr<RemoteConnection> Connect(const std::string & host, unsigned port);
+  std::unique_ptr<RemoteConnection> Connect(const std::string & host, unsigned port, const Common::Logger::SharedPtr & logger);
 
 } // namespace OpcUa
 

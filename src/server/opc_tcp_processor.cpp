@@ -14,6 +14,7 @@
 
 #include <opc/common/uri_facade.h>
 #include <opc/ua/connection_listener.h>
+#include <opc/ua/node.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/input_from_buffer.h>
@@ -57,7 +58,7 @@ OpcTcpMessages::OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputC
   , SequenceNb(0)
 {
   LOG_INFO(Logger, "opc_tcp_processor     | log level: {}", Logger->level());
-  LOG_INFO(Logger, "opc_tcp_processor     | SessionId; {}",  SessionId);
+  LOG_INFO(Logger, "opc_tcp_processor     | SessionId; {}", SessionId);
 }
 
 
@@ -362,7 +363,12 @@ void OpcTcpMessages::ProcessRequest(IStreamBinary & istream, OStreamBinary & ost
 
           for (ReadValueId id : params.AttributesToRead)
             {
-              Logger->debug("opc_tcp_processor     |  {}", id.NodeId);
+              std::string name = "unknown";
+                {
+                  Node node(Server, id.NodeId);
+                  name = node.GetBrowseName().Name;
+                }
+              Logger->debug("opc_tcp_processor     |   {} ({})", id.NodeId, name);
             }
         }
 

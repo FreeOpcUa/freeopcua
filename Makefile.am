@@ -209,6 +209,9 @@ test_opcuaserver_LDFLAGS =  -ldl -lpthread $(GTEST_LIB) $(GTEST_MAIN_LIB) $(GMOC
 include/opc/ua/protocol/object_ids.h: schemas/NodeIds.csv schemas/codegen.py
 	python $(top_srcdir)/schemas/codegen.py cxx object_ids > $@
 
+src/protocol/string_utils_objectid_tostring.cpp: schemas/NodeIds.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx object_ids_tostring > $@
+
 include/opc/ua/protocol/status_codes.h: schemas/StatusCode.csv schemas/codegen.py
 	python $(top_srcdir)/schemas/codegen.py cxx status_codes > $@
 
@@ -220,6 +223,9 @@ include/opc/ua/protocol/attribute_ids.h: schemas/AttributeIds.csv schemas/codege
 
 src/client/opcua_options_attribute_ids.h: schemas/AttributeIds.csv schemas/codegen.py
 	python $(top_srcdir)/schemas/codegen.py cxx attribute_ids_getoptionvalue > $@
+
+src/protocol/string_utils_attributeid_tostring.cpp: schemas/AttributeIds.csv schemas/codegen.py
+	python $(top_srcdir)/schemas/codegen.py cxx attribute_ids_tostring > $@
 
 binaryinclude_HEADERS = \
   include/opc/ua/protocol/binary/common.h \
@@ -281,6 +287,8 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/subscriptions.cpp \
   src/protocol/status_codes.cpp \
   src/protocol/string_utils.cpp \
+  src/protocol/string_utils_attributeid_tostring.cpp \
+  src/protocol/string_utils_object_tostring.cpp \
   src/protocol/string_utils_statuscode_tostring.cpp \
   src/protocol/constructors_auto.cpp
 

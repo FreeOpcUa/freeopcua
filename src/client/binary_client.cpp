@@ -166,16 +166,12 @@ public:
 
         while (!Queue.empty())   //to avoid crashing on spurious events
           {
-            LOG_DEBUG(Logger, "binary_client         | CallbackThread: condition has triggered copying callback and poping. Queue size: {}", Queue.size());
-
-            std::function<void()> callbackcopy = Queue.front();
+            std::function<void()> callback = Queue.front();
             Queue.pop();
             lock.unlock();
 
-            LOG_DEBUG(Logger, "binary_client         | CallbackThread: now calling callback");
-
-            callbackcopy();
-
+            LOG_DEBUG(Logger, "binary_client         | CallbackThread: calling callback");
+            callback();
             LOG_DEBUG(Logger, "binary_client         | CallbackThread: callback finished");
 
             lock.lock();
@@ -367,7 +363,7 @@ public:
       {
         for (ReadValueId attr : params.AttributesToRead)
           {
-            Logger->trace("node id: {} attr id: {}", attr.NodeId, (uint32_t)attr.AttributeId);
+            Logger->trace("binary_client         | Read: node id: {} attr id: {}", attr.NodeId, ToString(attr.AttributeId));
           }
       }
 
@@ -871,6 +867,11 @@ private:
     std::unique_lock<std::mutex> lock(Mutex);
     Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
     lock.unlock();
+    
+    if (Logger && Logger->should_log(spdlog::level::debug))
+      {
+        Logger->debug("binary_client         | send: id: {}({}), handle: {}: UtcTime: {}", ToString(request.TypeId), ToString(ObjectId(request.TypeId.GetIntegerIdentifier())), request.Header.RequestHandle, ToString(request.Header.UtcTime));
+      }
 
     Send(request);
 
@@ -918,6 +919,7 @@ private:
   {
     Binary::SecureHeader responseHeader;
     Stream >> responseHeader;
+    LOG_DEBUG(Logger, "binary_client         | received message: Type: {}, ChunkType: {}, Size: {}, ChannelId: {}", responseHeader.Type, responseHeader.Chunk, responseHeader.Size, responseHeader.ChannelId);
 
     size_t algo_size;
 
@@ -992,12 +994,11 @@ private:
     std::vector<char> buffer(dataSize);
     BufferInputChannel bufferInput(buffer);
     Binary::RawBuffer raw(&buffer[0], dataSize);
+    Stream >> raw;
     if (Logger && Logger->should_log(spdlog::level::trace))
       {
-        Logger->trace("binary_client         | raw message:\n{}", ToHexDump(buffer));
+        Logger->trace("binary_client         | received message data: {}", ToHexDump(buffer));
       }
-
-    Stream >> raw;
 
     if (!firstMsgParsed)
       {
@@ -1005,16 +1006,15 @@ private:
         in >> id;
         in >> header;
 
-        LOG_DEBUG(Logger, "binary_client         | got response id: {}, handle: {}", id, header.RequestHandle);
-
-        if (header.ServiceResult != StatusCode::Good)
-          {
-            LOG_WARN(Logger, "binary_client         | received a response from server with error status: {}", OpcUa::ToString(header.ServiceResult));
-          }
+        LOG_DEBUG(Logger, "binary_client         | got response id: {}({}), handle: {}", id, ToString(ObjectId(id.GetIntegerIdentifier())), header.RequestHandle);
 
         if (id == SERVICE_FAULT)
           {
-            LOG_WARN(Logger, "binary_client         | receive ServiceFault from Server with StatusCode {}", OpcUa::ToString(header.ServiceResult));
+            LOG_WARN(Logger, "binary_client         | receive ServiceFault from Server with StatusCode: {}", OpcUa::ToString(header.ServiceResult));
+          }
+        else if (header.ServiceResult != StatusCode::Good)
+          {
+            LOG_WARN(Logger, "binary_client         | received a response from server with error status: {}", OpcUa::ToString(header.ServiceResult));
           }
 
         messageBuffer.insert(messageBuffer.end(), buffer.begin(), buffer.end());
@@ -1145,7 +1145,7 @@ OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(OpcUa::IOChannel::SharedPtr
 OpcUa::Services::SharedPtr OpcUa::CreateBinaryClient(const std::string & endpointUrl, const Common::Logger::SharedPtr & logger)
 {
   const Common::Uri serverUri(endpointUrl);
-  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port(), logger);
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpointUrl;
   params.SecurePolicy = "http://opcfoundation.org/UA/SecurityPolicy#None";

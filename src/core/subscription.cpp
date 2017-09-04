@@ -124,7 +124,7 @@ void Subscription::CallStatusChangeCallback(const NotificationData & data)
 
 void Subscription::CallEventCallback(const NotificationData & data)
 {
-  for (EventFieldList ef :  data.Events.Events)
+  for (EventFieldList ef : data.Events.Events)
     {
       std::unique_lock<std::mutex> lock(Mutex); //could used boost::shared_lock to improve perf
 
@@ -357,11 +357,11 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const Node & eventtype
 {
   EventFilter filter;
 
-  LOG_DEBUG(Logger, "subscription          | Subscribing events with filter for properties:");
+  LOG_DEBUG(Logger, "subscription          | subscribing events with filter for:");
 
   for (Node & child : eventtype.GetProperties())
     {
-      LOG_DEBUG(Logger, "      property: {}", child.GetBrowseName());
+      LOG_DEBUG(Logger, "  property: {}", child.GetBrowseName());
 
       SimpleAttributeOperand op;
       op.TypeId = eventtype.GetId();

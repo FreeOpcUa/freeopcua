@@ -42,21 +42,22 @@ void KeepAliveThread::Start(Services::SharedPtr server, Node node, Duration peri
 
 void KeepAliveThread::Run()
 {
-  LOG_INFO(Logger, "KeepAliveThread | starting");
+  LOG_INFO(Logger, "keep_alive_thread     | starting");
 
   while (!StopRequest)
     {
-      LOG_DEBUG(Logger, "KeepAliveThread | sleeping for: {}", (int64_t)(Period * 0.7));
+      int64_t t_sleep = Period * 0.7;
+      LOG_DEBUG(Logger, "keep_alive_thread     | sleeping for: {}ms", t_sleep);
 
       std::unique_lock<std::mutex> lock(Mutex);
-      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds((int64_t)(Period * 0.7)));
+      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds(t_sleep));
 
       if (status == std::cv_status::no_timeout)
         {
           break;
         }
 
-      LOG_DEBUG(Logger, "KeepAliveThread | renewing secure channel");
+      LOG_DEBUG(Logger, "keep_alive_thread     | renewing secure channel");
 
       OpenSecureChannelParameters params;
       params.ClientProtocolVersion = 0;
@@ -71,21 +72,21 @@ void KeepAliveThread::Run()
           Period = response.ChannelSecurityToken.RevisedLifetime;
         }
 
-      LOG_DEBUG(Logger, "KeepAliveThread | read a variable from address space to keep session open");
+      LOG_DEBUG(Logger, "keep_alive_thread     | read a variable from address space to keep session open");
 
       NodeToRead.GetValue();
     }
 
   Running = false;
 
-  LOG_INFO(Logger, "KeepAliveThread | stopped");
+  LOG_INFO(Logger, "keep_alive_thread     | stopped");
 }
 
 void KeepAliveThread::Stop()
 {
   if (!Running) { return; }
 
-  LOG_DEBUG(Logger, "KeepAliveThread | stopping");
+  LOG_DEBUG(Logger, "keep_alive_thread     | stopping");
 
   StopRequest = true;
   Condition.notify_all();
@@ -97,7 +98,7 @@ void KeepAliveThread::Stop()
 
   catch (std::system_error ex)
     {
-      LOG_ERROR(Logger, "KeepaliveThread | exception thrown at attempt to join: {}", ex.what());
+      LOG_ERROR(Logger, "keep_alive_thread     | exception thrown at attempt to join: {}", ex.what());
 
       throw ex;
     }
@@ -121,7 +122,7 @@ UaClient::UaClient(bool debug)
 std::vector<EndpointDescription> UaClient::GetServerEndpoints(const std::string & endpoint)
 {
   const Common::Uri serverUri(endpoint);
-  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port(), Logger);
 
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = endpoint;
@@ -209,7 +210,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
 {
   Endpoint = endpoint;
   const Common::Uri serverUri(Endpoint.EndpointUrl);
-  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port());
+  OpcUa::IOChannel::SharedPtr channel = OpcUa::Connect(serverUri.Host(), serverUri.Port(), Logger);
 
   OpcUa::SecureConnectionParams params;
   params.EndpointUrl = Endpoint.EndpointUrl;
