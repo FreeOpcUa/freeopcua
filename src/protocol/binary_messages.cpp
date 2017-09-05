@@ -139,11 +139,22 @@ DateTime DateTime::FromTimeT(time_t t, unsigned usec)
   return DateTime(t1);
 }
 
+// do not use high_resolution_clock here as we need to be able to
+// create times relative to 1601. high_resolution_clock may be an
+// instance of steady_clock (it is on OSX) which does not have
+// a from_time_t() method. Without from_time_t() it is not reliably
+// possible to compute a time difference to 1970 or 1601 so we use
+// have to use system_clock. Even for system_clock it is not _defined_
+// which date is taken as start time - not like posix time_t which
+// definitly starts 1970. So we have to honor a possible offset between
+// epoch and posix start of time even when most actual implementors
+// currently use 1970 as start of time and promise not to change that.
 DateTime DateTime::Current()
 {
   using namespace std::chrono;
-  const auto t = time_point<high_resolution_clock>(high_resolution_clock::now());
-  const auto us = duration_cast<microseconds>(t.time_since_epoch());
+  static auto offset = system_clock::from_time_t(0).time_since_epoch();
+  const auto t = system_clock::now();
+  const auto us = duration_cast<microseconds>(t.time_since_epoch() + offset);
   const auto n = us.count();
   return DateTime::FromTimeT(n / 1000000, n % 1000000);
 }
