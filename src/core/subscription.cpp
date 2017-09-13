@@ -147,58 +147,66 @@ void Subscription::CallEventCallback(const NotificationData & data)
 
           for (SimpleAttributeOperand op : mapit->second.Filter.Event.SelectClauses)
             {
-              //set the default fiedls of events into their event attributes
-              if (op.BrowsePath.size() == 1)
+              auto & value = ef.EventFields[count];
+              // add all fields as value
+              ev.SetValue(op.BrowsePath, value);
+              ++count;
+              // server may send NULL fields - do not try to convert them to actual values
+              if (value.IsNul())
                 {
-                  if (op.BrowsePath[0] == QualifiedName("EventId", 0))
-                    {
-                      ev.EventId = ef.EventFields[count].As<ByteString>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("EventType", 0))
-                    {
-                      ev.EventType = ef.EventFields[count].As<NodeId>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("SourceNode", 0))
-                    {
-                      ev.SourceNode = ef.EventFields[count].As<NodeId>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("SourceName", 0))
-                    {
-                      ev.SourceName = ef.EventFields[count].As<std::string>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("Message", 0))
-                    {
-                      ev.Message = ef.EventFields[count].As<LocalizedText>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("Severity", 0))
-                    {
-                      ev.Severity = ef.EventFields[count].As<uint16_t>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("LocalTime", 0))
-                    {
-                      ev.LocalTime = ef.EventFields[count].As<DateTime>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("ReceiveTime", 0))
-                    {
-                      ev.ReceiveTime = ef.EventFields[count].As<DateTime>();
-                    }
-
-                  else if (op.BrowsePath[0] == QualifiedName("Time", 0))
-                    {
-                      ev.Time = ef.EventFields[count].As<DateTime>();
-                    }
+                  continue;
                 }
 
-              //Add anyway all fields as value
-              ev.SetValue(op.BrowsePath, ef.EventFields[count]);
-              ++count;
+              // set the default fields of events into their event attributes
+              if (op.BrowsePath.size() == 1)
+                {
+                  auto & name = op.BrowsePath[0];
+
+                  if (name == QualifiedName("EventId", 0))
+                    {
+                      ev.EventId = value.As<ByteString>();
+                    }
+
+                  else if (name == QualifiedName("EventType", 0))
+                    {
+                      ev.EventType = value.As<NodeId>();
+                    }
+
+                  else if (name == QualifiedName("SourceNode", 0))
+                    {
+                      ev.SourceNode = value.As<NodeId>();
+                    }
+
+                  else if (name == QualifiedName("SourceName", 0))
+                    {
+                      ev.SourceName = value.As<std::string>();
+                    }
+
+                  else if (name == QualifiedName("Message", 0))
+                    {
+                      ev.Message = value.As<LocalizedText>();
+                    }
+
+                  else if (name == QualifiedName("Severity", 0))
+                    {
+                      ev.Severity = value.As<uint16_t>();
+                    }
+
+                  else if (name == QualifiedName("LocalTime", 0))
+                    {
+                      ev.LocalTime = value.As<DateTime>();
+                    }
+
+                  else if (name == QualifiedName("ReceiveTime", 0))
+                    {
+                      ev.ReceiveTime = value.As<DateTime>();
+                    }
+
+                  else if (name == QualifiedName("Time", 0))
+                    {
+                      ev.Time = value.As<DateTime>();
+                    }
+                }
             }
 
           lock.unlock();
@@ -361,12 +369,13 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const Node & eventtype
 
   for (Node & child : eventtype.GetProperties())
     {
-      LOG_DEBUG(Logger, "  property: {}", child.GetBrowseName());
+      auto propertyName = child.GetBrowseName();
+      LOG_DEBUG(Logger, "  property: {}", propertyName);
 
       SimpleAttributeOperand op;
       op.TypeId = eventtype.GetId();
       op.Attribute = AttributeId::Value;
-      op.BrowsePath = std::vector<QualifiedName>({child.GetBrowseName()});
+      op.BrowsePath = std::vector<QualifiedName>({propertyName});
       filter.SelectClauses.push_back(op);
     }
 
@@ -406,18 +415,26 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const EventFilter & ev
       throw (std::runtime_error("subscription          | CreateMonitoredItems should return one result"));
     }
 
+  auto result = results[0];
+  // allow remote side to sloppily skip SelectClauses and WhereClause in its answer
+  if (result.FilterResult.Event.SelectClauses.empty())
+    {
+      result.FilterResult.Event.SelectClauses = eventfilter.SelectClauses;
+    }
+  if (result.FilterResult.Event.WhereClause.empty())
+    {
+      result.FilterResult.Event.WhereClause = eventfilter.WhereClause;
+    }
   MonitoredItemData mdata;
   mdata.TargetNode = Node(Server, avid.NodeId);
   mdata.Attribute = avid.AttributeId;
-  mdata.MonitoredItemId = results[0].MonitoredItemId;
-  mdata.Filter = results[0].FilterResult;
+  mdata.MonitoredItemId = result.MonitoredItemId;
+  mdata.Filter = result.FilterResult;
   AttributeValueMap[params.ClientHandle] = mdata;
 
-
-  MonitoredItemCreateResult res = results[0];
-  CheckStatusCode(res.Status);
-  SimpleAttributeOperandMap[res.MonitoredItemId] = eventfilter; //Not used
-  return res.MonitoredItemId;
+  CheckStatusCode(result.Status);
+  SimpleAttributeOperandMap[result.MonitoredItemId] = eventfilter; //Not used
+  return result.MonitoredItemId;
 }
 
 }
