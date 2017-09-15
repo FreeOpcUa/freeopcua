@@ -415,8 +415,12 @@ Node Node::AddVariable(const NodeId & nodeid, const QualifiedName & browsename, 
   VariableAttributes attr;
   attr.DisplayName = LocalizedText(browsename.Name);
   attr.Description = LocalizedText(browsename.Name);
+
+  // this seems to be invalid - for WriteMask we have to use
+  // OpcUa::AttributeWriteMask enum
   attr.WriteMask = (uint32_t)OpenFileMode::Read;
   attr.UserWriteMask = (uint32_t)OpenFileMode::Read;
+
   attr.Value = val;
   attr.Type = datatype;
   attr.Rank  = -1;
