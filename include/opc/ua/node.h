@@ -89,6 +89,8 @@ public:
   VariableAccessLevel GetAccessLevel() const { return static_cast<VariableAccessLevel>(GetAttribute(AttributeId::AccessLevel).Value.As<uint8_t>()); }
   void SetDescription(const LocalizedText & value) { SetAttribute(AttributeId::Description, DataValue(value)); }
   LocalizedText GetDescription() const { return GetAttribute(AttributeId::Description).Value.As<LocalizedText>(); }
+  void SetNodeClass(NodeClass value) { SetAttribute(AttributeId::NodeClass, DataValue(static_cast<int32_t>(value))); }
+  NodeClass GetNodeClass() const { return static_cast<NodeClass>(GetAttribute(AttributeId::NodeClass).Value.As<int32_t>()); }
   void SetUserAccessLevel(VariableAccessLevel value) { SetAttribute(AttributeId::UserAccessLevel, DataValue(static_cast<uint8_t>(value))); }
   VariableAccessLevel GetUserAccessLevel() const { return static_cast<VariableAccessLevel>(GetAttribute(AttributeId::UserAccessLevel).Value.As<uint8_t>()); }
   void SetUserWriteMask(AttributeWriteMask value) { SetAttribute(AttributeId::UserWriteMask, DataValue(static_cast<uint32_t>(value))); }

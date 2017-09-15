@@ -177,6 +177,9 @@ void Node::_GetChildren(const ReferenceId & refid, std::vector<Node>& nodes) con
 
 Node Node::GetParent() const
 {
+  if (!Server) {
+    return Node();
+  }
   BrowseDescription description;
   description.NodeToBrowse = Id;
   description.Direction = BrowseDirection::Inverse;
@@ -289,9 +292,13 @@ std::vector<Node> Node::GetProperties() const
 {
   std::vector<Node> result;
   _GetChildren(OpcUa::ReferenceId::HasProperty, result);
+  if (GetNodeClass() != NodeClass::ObjectType)
+    {
+      return result;
+    }
   Node parent = GetParent();
   while (!parent.GetId().IsNull()) {
-    if (parent.GetAttribute(AttributeId::NodeClass).Value.As<int32_t>() != static_cast<int32_t>(NodeClass::ObjectType))
+    if (parent.GetNodeClass() != NodeClass::ObjectType)
       {
         return result;
       }
