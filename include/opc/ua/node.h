@@ -84,6 +84,16 @@ public:
   void SetAttribute(AttributeId attr, const DataValue & dval) const;
   //std::vector<StatusCode> WriteAttrs(OpcUa::AttributeId attr, const Variant &val);
 
+  // convenience methods for attributes
+  void SetAccessLevel(VariableAccessLevel value) { SetAttribute(AttributeId::AccessLevel, DataValue(static_cast<uint8_t>(value))); }
+  VariableAccessLevel GetAccessLevel() { return static_cast<VariableAccessLevel>(GetAttribute(AttributeId::AccessLevel).Value.As<uint8_t>()); }
+  void SetUserAccessLevel(VariableAccessLevel value) { SetAttribute(AttributeId::UserAccessLevel, DataValue(static_cast<uint8_t>(value))); }
+  VariableAccessLevel GetUserAccessLevel() { return static_cast<VariableAccessLevel>(GetAttribute(AttributeId::UserAccessLevel).Value.As<uint8_t>()); }
+  void SetUserWriteMask(AttributeWriteMask value) { SetAttribute(AttributeId::UserWriteMask, DataValue(static_cast<uint32_t>(value))); }
+  AttributeWriteMask GetUserWriteMask() { return static_cast<AttributeWriteMask>(GetAttribute(AttributeId::UserWriteMask).Value.As<uint32_t>()); }
+  void SetWriteMask(AttributeWriteMask value) { SetAttribute(AttributeId::WriteMask, DataValue(static_cast<uint32_t>(value))); }
+  AttributeWriteMask GetWriteMask() { return static_cast<AttributeWriteMask>(GetAttribute(AttributeId::WriteMask).Value.As<uint32_t>()); }
+
   //Helper method to get/set VALUE attribute of a node (Not all nodes support VALUE attribute)
   Variant GetValue() const;
   DataValue GetDataValue() const;
