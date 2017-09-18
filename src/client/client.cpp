@@ -106,7 +106,11 @@ void KeepAliveThread::Stop()
 UaClient::UaClient(bool debug)
   : KeepAlive(nullptr)
 {
-  Logger = spdlog::stderr_color_mt("UaClient");
+  Logger = spdlog::get("UaClient");
+  if (!Logger)
+    {
+      Logger = spdlog::stderr_color_mt("UaClient");
+    }
   if (debug)
     {
       Logger->set_level(spdlog::level::debug);

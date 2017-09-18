@@ -33,7 +33,11 @@ UaServer::UaServer()
 
 UaServer::UaServer(bool debug)
 {
-  Logger = spdlog::stderr_color_mt("UaServer");
+  Logger = spdlog::get("UaServer");
+  if (!Logger)
+  {
+    Logger = spdlog::stderr_color_mt("UaServer");
+  }
   if (debug)
     {
       Logger->set_level(spdlog::level::debug);
