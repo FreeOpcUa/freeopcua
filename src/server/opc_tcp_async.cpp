@@ -205,13 +205,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 
   const std::size_t messageSize = header.Size - GetHeaderSize();
 
-  if (Logger && Logger->should_log(spdlog::level::debug))
-    {
-      Logger->debug("opc_tcp_async         | message type: {}", header.Type);
-      Logger->debug("opc_tcp_async         | chunk type: {}", header.Chunk);
-      Logger->debug("opc_tcp_async         | message size: {}", header.Size);
-      Logger->debug("opc_tcp_async         | waiting {} bytes from client", messageSize);
-    }
+  LOG_DEBUG(Logger, "opc_tcp_async         | received message: Type: {}, ChunkType: {}, Size: {}: DataSize: {}", header.Type, header.Chunk, header.Size, messageSize);
 
   // do not lose reference to shared instance even if another
   // async operation decides to call GoodBye()
@@ -219,12 +213,6 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
   async_read(Socket, buffer(Buffer), transfer_exactly(messageSize),
              [self, header](const boost::system::error_code & error, std::size_t bytesTransferred)
   {
-    if (error)
-      {
-        LOG_WARN(self->Logger, "opc_tcp_async         | error receiving message body");
-        return;
-      }
-
     self->ProcessMessage(header.Type, error, bytesTransferred);
   }
             );
@@ -242,7 +230,7 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async         | received {} bytes:\n{}", bytesTransferred, ToHexDump(Buffer, bytesTransferred));
+      Logger->trace("opc_tcp_async         | received message: {}", ToHexDump(Buffer, bytesTransferred));
     }
 
   // restrict server size code only with current message.
@@ -258,7 +246,7 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   catch (const std::exception & exc)
     {
-      std::cerr << "opc_tcp_async         | Failed to process message. " << exc.what() << std::endl;
+      LOG_ERROR(Logger, "opc_tcp_async         | failed to process message: {}", exc.what());
       GoodBye();
       return;
     }
@@ -292,7 +280,7 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
 
   if (Logger && Logger->should_log(spdlog::level::trace))
     {
-      Logger->trace("opc_tcp_async         | sending next data to client:\n{}", ToHexDump(*data));
+      Logger->trace("opc_tcp_async         | send message: {}", ToHexDump(*data));
     }
 
   // do not lose reference to shared instance even if another

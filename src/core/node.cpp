@@ -59,7 +59,7 @@ DataValue Node::GetAttribute(const AttributeId attr) const
   attribute.NodeId = Id;
   attribute.AttributeId = attr;
   params.AttributesToRead.push_back(attribute);
-  std::vector<DataValue> vec =  Server->Attributes()-> Read(params);
+  std::vector<DataValue> vec = Server->Attributes()->Read(params);
 
   if (vec.size() > 0)
     {

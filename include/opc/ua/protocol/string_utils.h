@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/view.h>
 #include <ostream>
@@ -33,6 +34,8 @@ std::string ToString(const DateTime & t);
 std::string ToString(const BrowseDirection & direction);
 std::string ToString(const StatusCode & code);
 std::string ToString(const LocalizedText & code);
+std::string ToString(const AttributeId & value);
+std::string ToString(const ObjectId & value);
 
 Guid ToGuid(const std::string & str);
 NodeId ToNodeId(const std::string & str, uint32_t defaultNamespace = 0);

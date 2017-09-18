@@ -11,6 +11,7 @@
 #include <opc/ua/client/remote_connection.h>
 #include <opc/ua/errors.h>
 #include <opc/ua/socket_channel.h>
+#include <opc/ua/protocol/utils.h>
 
 
 #include <errno.h>
@@ -76,10 +77,11 @@ int ConnectToRemoteHost(const std::string & host, unsigned short port)
 class BinaryConnection : public OpcUa::RemoteConnection
 {
 public:
-  BinaryConnection(int sock, const std::string & host, unsigned short port)
+  BinaryConnection(int sock, const std::string & host, unsigned short port, const Common::Logger::SharedPtr & logger)
     : HostName(host)
     , Port(port)
     , Channel(sock)
+    , Logger(logger)
   {
   }
 
@@ -94,6 +96,10 @@ public:
 
   virtual void Send(const char * message, std::size_t size)
   {
+    if (Logger && Logger->should_log(spdlog::level::trace))
+      {
+        Logger->trace("binary_connection     | send: {}", OpcUa::ToHexDump(message, size));
+      }
     return Channel.Send(message, size);
   }
 
@@ -117,13 +123,14 @@ private:
   const std::string HostName;
   const unsigned Port;
   OpcUa::SocketChannel Channel;
+  Common::Logger::SharedPtr Logger;
 };
 
 }
 
-std::unique_ptr<OpcUa::RemoteConnection> OpcUa::Connect(const std::string & host, unsigned port)
+std::unique_ptr<OpcUa::RemoteConnection> OpcUa::Connect(const std::string & host, unsigned port, const Common::Logger::SharedPtr & logger)
 {
   const int sock = ConnectToRemoteHost(host, port);
-  return std::unique_ptr<RemoteConnection>(new BinaryConnection(sock, host, port));
+  return std::unique_ptr<RemoteConnection>(new BinaryConnection(sock, host, port, logger));
 }
 

@@ -26,13 +26,12 @@
 namespace OpcUa
 {
 
-inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
+inline std::string ToHexDump(const char * buf, std::size_t size)
 {
   std::stringstream result;
   std::stringstream lineEnd;
-  size = std::min(size, buf.size());
   unsigned pos = 0;
-  result << "Data size: " << size << "(0x" << std::hex << size << ")";
+  result << "size: " << size << "(0x" << std::hex << size << ")";
 
   while (pos < size)
     {
@@ -42,10 +41,46 @@ inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
           lineEnd.str(std::string());
         }
       if ((pos % 8) == 0)
-      {
-        result << " ";
-        lineEnd << " ";
-      }
+        {
+          result << " ";
+          lineEnd << " ";
+        }
+
+      const char c = buf[pos];
+      result << " " << std::setw(2) << (c & 0xFF);
+      lineEnd << ((c > ' ' && c < 0x7f) ? c : '.');
+
+      if ((pos % 16) == 15)
+        {
+          result << " " << lineEnd.str();
+        }
+      ++pos;
+    }
+
+  result << std::endl << std::flush;
+  return result.str();
+}
+
+inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
+{
+  std::stringstream result;
+  std::stringstream lineEnd;
+  size = std::min(size, buf.size());
+  unsigned pos = 0;
+  result << "size: " << size << "(0x" << std::hex << size << ")";
+
+  while (pos < size)
+    {
+      if ((pos % 16) == 0)
+        {
+          result << std::endl << std::setfill('0') << std::setw(4) << (pos & 0xFFFF);
+          lineEnd.str(std::string());
+        }
+      if ((pos % 8) == 0)
+        {
+          result << " ";
+          lineEnd << " ";
+        }
 
       const char c = buf[pos];
       result << " " << std::setw(2) << (c & 0xFF);
