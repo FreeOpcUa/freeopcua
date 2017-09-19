@@ -56,7 +56,7 @@ namespace Server
 
 ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service & io, bool debug)
   : Server(services)
-  , Io(io)
+//  , Io(io)
   , Debug(debug)
   , Instance(CreateServerObject(services))
   , ServerTime(Instance.GetVariable(GetCurrentTimeRelativepath()))
