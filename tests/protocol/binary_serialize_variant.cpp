@@ -1231,7 +1231,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_STRING_Array)
   Variant var;
   GetStream() >> var;
 
-  OpcUa::Guid guid = CreateTestGuid();
+//  OpcUa::Guid guid = CreateTestGuid();
 
   ASSERT_EQ(var.Type(), VariantType::STRING);
   std::vector<std::string> vals;
@@ -1265,7 +1265,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_STRING_DIMENSIONS)
   Variant var;
   GetStream() >> var;
 
-  OpcUa::Guid guid = CreateTestGuid();
+//  OpcUa::Guid guid = CreateTestGuid();
 
   ASSERT_EQ(var.Type(), VariantType::STRING);
   ASSERT_EQ(var.As<std::string>(), std::string("Root"));
@@ -1353,7 +1353,7 @@ TEST_F(OpcUaBinaryDeserialization, Variant_BYTE_STRING_DIMENSIONS)
   Variant var;
   GetStream() >> var;
 
-  OpcUa::Guid guid = CreateTestGuid();
+//  OpcUa::Guid guid = CreateTestGuid();
 
   ASSERT_EQ(var.Type(), VariantType::BYTE_STRING);
   ASSERT_EQ(var.As<ByteString>(), ByteString(std::vector<uint8_t> {1, 2}));

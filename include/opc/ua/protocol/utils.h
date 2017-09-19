@@ -61,39 +61,50 @@ inline std::string ToHexDump(const char * buf, std::size_t size)
   return result.str();
 }
 
-inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
+template <typename T> inline std::ostream & ToHexDump(std::ostream & os, const std::vector<T> & buf, std::size_t size)
 {
-  std::stringstream result;
   std::stringstream lineEnd;
   size = std::min(size, buf.size());
   unsigned pos = 0;
-  result << "size: " << size << "(0x" << std::hex << size << ")";
+  os << "size: " << size << "(0x" << std::hex << size << ")";
 
   while (pos < size)
     {
       if ((pos % 16) == 0)
         {
-          result << std::endl << std::setfill('0') << std::setw(4) << (pos & 0xFFFF);
+          os << std::endl << std::setfill('0') << std::setw(4) << (pos & 0xFFFF);
           lineEnd.str(std::string());
         }
       if ((pos % 8) == 0)
         {
-          result << " ";
+          os << " ";
           lineEnd << " ";
         }
 
       const char c = buf[pos];
-      result << " " << std::setw(2) << (c & 0xFF);
+      os << " " << std::setw(2) << (c & 0xFF);
       lineEnd << ((c > ' ' && c < 0x7f) ? c : '.');
 
       if ((pos % 16) == 15)
         {
-          result << " " << lineEnd.str();
+          os << " " << lineEnd.str();
         }
       ++pos;
     }
 
-  result << std::endl << std::flush;
+  os << std::endl;
+  return os;
+}
+
+template <typename T> inline std::ostream & ToHexDump(std::ostream & os, const std::vector<T> & buf)
+{
+    return ToHexDump(os, buf, buf.size());
+}
+
+inline std::string ToHexDump(const std::vector<char> & buf, std::size_t size)
+{
+  std::stringstream result;
+  ToHexDump(result, buf, size);
   return result.str();
 }
 
