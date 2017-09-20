@@ -45,6 +45,7 @@ std::string ToString(const NodeId & id, bool addObjectIdName = false);
 std::string ToString(const ObjectId & value);
 std::string ToString(const StatusCode & code);
 std::string ToString(const TimestampsToReturn & value);
+std::string ToString(const VariantType & value);
 
 std::ostream & indent(std::ostream & os, int level, bool noSeparator = false);
 std::ostream & ToStream(std::ostream & os, const AggregateFilter & value, int indentLevel = 0);
@@ -254,5 +255,10 @@ inline std::ostream & operator<<(std::ostream & os, const OpcUa::TimestampsToRet
   return os;
 }
 
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::VariantType & value)
+{
+  os << OpcUa::ToString(value);
+  return os;
+}
 }
 

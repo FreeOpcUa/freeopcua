@@ -226,6 +226,93 @@ std::string OpcUa::ToString(const OpcUa::TimestampsToReturn & value)
     }
 }
 
+std::string OpcUa::ToString(const OpcUa::VariantType & value)
+{
+  switch (value)
+    {
+    case OpcUa::VariantType::NUL:
+      return "NUL";
+
+    case OpcUa::VariantType::BOOLEAN:
+      return "BOOLEAN";
+
+    case OpcUa::VariantType::SBYTE:
+      return "SBYTE";
+
+    case OpcUa::VariantType::BYTE:
+      return "BYTE";
+
+    case OpcUa::VariantType::INT16:
+      return "INT16";
+
+    case OpcUa::VariantType::UINT16:
+      return "UINT16";
+
+    case OpcUa::VariantType::INT32:
+      return "INT32";
+
+    case OpcUa::VariantType::UINT32:
+      return "UINT32";
+
+    case OpcUa::VariantType::INT64:
+      return "INT64";
+
+    case OpcUa::VariantType::UINT64:
+      return "UINT64";
+
+    case OpcUa::VariantType::FLOAT:
+      return "FLOAT";
+
+    case OpcUa::VariantType::DOUBLE:
+      return "DOUBLE";
+
+    case OpcUa::VariantType::STRING:
+      return "STRING";
+
+    case OpcUa::VariantType::DATE_TIME:
+      return "DATE_TIME";
+
+    case OpcUa::VariantType::GUId:
+      return "GUId";
+
+    case OpcUa::VariantType::BYTE_STRING:
+      return "BYTE_STRING";
+
+    case OpcUa::VariantType::XML_ELEMENT:
+      return "XML_ELEMENT";
+
+    case OpcUa::VariantType::NODE_Id:
+      return "NODE_Id";
+
+    case OpcUa::VariantType::EXPANDED_NODE_Id:
+      return "EXPANDED_NODE_Id";
+
+    case OpcUa::VariantType::STATUS_CODE:
+      return "STATUS_CODE";
+
+    case OpcUa::VariantType::QUALIFIED_NAME:
+      return "QUALIFIED_NAME";
+
+    case OpcUa::VariantType::LOCALIZED_TEXT:
+      return "LOCALIZED_TEXT";
+
+    case OpcUa::VariantType::EXTENSION_OBJECT:
+      return "EXTENSION_OBJECT";
+
+    case OpcUa::VariantType::DATA_VALUE:
+      return "DATA_VALUE";
+
+    case OpcUa::VariantType::VARIANT:
+      return "VARIANT";
+
+    case OpcUa::VariantType::DIAGNOSTIC_INFO:
+      return "DIAGNOSTIC_INFO";
+
+    default:
+      return "unknown";
+    }
+}
+
 std::ostream & OpcUa::indent(std::ostream & os, int indent, bool noSeparator)
 {
   if (indent >= 0)
