@@ -100,11 +100,4 @@ Variant Event::GetValue(AttributeId attribute) const
       return it->second;
     }
 }
-
-std::string ToString(const Event & event)
-{
-  std::stringstream stream;
-  stream << "Event(type:" << event.EventType << ", time:" << event.Time << ", source:" << event.SourceNode << ", severity:" << event.Severity << ", message:" << event.Message << ")" ;
-  return stream.str();
-}
 }

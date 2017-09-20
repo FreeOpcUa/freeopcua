@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 #include <opc/ua/protocol/string_utils.h>
+#include <opc/ua/event.h>
 #include <cstring>
 #include <ctime>
 #include <stdexcept>
@@ -86,6 +87,14 @@ std::string OpcUa::ToString(const OpcUa::DeadbandType & value)
       return "unknown";
     }
 }
+
+std::string OpcUa::ToString(const OpcUa::Event & value, bool showAll)
+{
+  std::stringstream result;
+  ToStream(result, value, -1, showAll);
+  return result.str();
+}
+
 
 std::string OpcUa::ToString(const OpcUa::ExtensionObjectEncoding & value)
 {
@@ -397,6 +406,50 @@ std::ostream & OpcUa::ToStream(std::ostream & os, const OpcUa::ExtensionObjectHe
   indent(os, subIndentLevel);
   os << "Encoding: " << value.Encoding;
 
+  indent(os, indentLevel, true);
+  os << ")";
+  return os;
+}
+
+std::ostream & OpcUa::ToStream(std::ostream & os, const OpcUa::Event & value, int indentLevel, bool showAll)
+{
+  os << "Event(";
+  int subIndentLevel = (indentLevel < 0)
+  ? indentLevel
+  : indentLevel + 1;
+
+  indent(os, subIndentLevel, true);
+  os << "EventType: ";
+  ToStream(os, value.EventType, true);
+
+  indent(os, subIndentLevel);
+  os << "Time: " << value.Time;
+
+  if (showAll)
+    {
+      indent(os, subIndentLevel);
+      os << "LocalTime: " << value.LocalTime;
+      
+      indent(os, subIndentLevel);
+      os << "ReceiveTime: " << value.ReceiveTime;
+      
+      indent(os, subIndentLevel);
+      os << "EventId: " << value.EventId;
+      
+      indent(os, subIndentLevel);
+      os << "SourceName: " << value.SourceName;
+    }
+  
+  indent(os, subIndentLevel);
+  os << "SourceNode: ";
+  ToStream(os, value.SourceNode);
+
+  indent(os, subIndentLevel);
+  os << "Severity: " << value.Severity;
+  
+  indent(os, subIndentLevel);
+  os << "Message: " << value.Message;
+  
   indent(os, indentLevel, true);
   os << ")";
   return os;

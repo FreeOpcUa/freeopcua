@@ -31,11 +31,14 @@
 namespace OpcUa
 {
 
+class Event;
+  
 std::string ToString(const AttributeId & value);
 std::string ToString(const BrowseDirection & direction);
 std::string ToString(const DateTime & t);
 std::string ToString(const DataChangeTrigger & value);
 std::string ToString(const DeadbandType & value);
+std::string ToString(const Event & value, bool showAll = false);
 std::string ToString(const ExtensionObjectEncoding & value);
 std::string ToString(const FilterOperator & value);
 std::string ToString(const Guid & guid);
@@ -52,6 +55,7 @@ std::ostream & ToStream(std::ostream & os, const AggregateFilter & value, int in
 std::ostream & ToStream(std::ostream & os, const ContentFilterElement & value, int indentLevel = 0);
 std::ostream & ToStream(std::ostream & os, const DataChangeFilter & value, int indentLevel = 0);
 std::ostream & ToStream(std::ostream & os, const ExtensionObjectHeader & value, int indentLevel = 0);
+std::ostream & ToStream(std::ostream & os, const Event & value, int indentLevel = 0, bool showAll = false);
 std::ostream & ToStream(std::ostream & os, const EventFilter & value, int indentLevel = 0);
 std::ostream & ToStream(std::ostream & os, const FilterOperand & value, int indentLevel = 0);
 std::ostream & ToStream(std::ostream & os, const MonitoringFilter & value, int indentLevel = 0);
@@ -155,7 +159,12 @@ inline std::ostream & operator<<(std::ostream & os, const OpcUa::ExtensionObject
 {
   return OpcUa::ToStream(os, value);
 }
-
+  
+inline std::ostream & operator<<(std::ostream & os, const Event & value)
+{
+  return OpcUa::ToStream(os, value, -1, false);
+}
+  
 inline std::ostream & operator<<(std::ostream & os, const OpcUa::EventFilter & value)
 {
   return OpcUa::ToStream(os, value);

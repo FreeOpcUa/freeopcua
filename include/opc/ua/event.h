@@ -3,6 +3,7 @@
 
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/nodeid.h>
+#include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/types.h>
 #include <opc/ua/protocol/variant.h>
 #include <opc/ua/protocol/protocol.h>
@@ -66,13 +67,4 @@ protected:
   PathMap PathValues;
   AttributeMap AttributeValues;
 };
-
-std::string ToString(const Event & event);
-
-inline std::ostream & operator<<(std::ostream & os, const Event & event)
-{
-  os << "{" << ToString(event) << "}";
-  return os;
-}
-
 }
