@@ -21,6 +21,7 @@
 
 #include <opc/ua/protocol/attribute_ids.h>
 #include <opc/ua/protocol/types.h>
+#include <opc/ua/protocol/utils.h>
 #include <opc/ua/protocol/view.h>
 #include <ostream>
 #include <limits>
@@ -71,31 +72,9 @@ inline std::ostream & operator<<(std::ostream & os, const OpcUa::Guid & guid)
   return os;
 }
 
-inline std::ostream & operator<<(std::ostream & os, const OpcUa::ByteString & buf)
+inline std::ostream & operator<<(std::ostream & os, const OpcUa::ByteString & value)
 {
-  const std::size_t size = buf.Data.size();
-  unsigned pos = 0;
-  os << "Data size: " << size << std::endl;
-
-  while (pos < size)
-    {
-      if (pos)
-        { printf((pos % 16 == 0) ? "\n" : " "); }
-
-      const char letter = buf.Data[pos];
-      printf("%02x", (unsigned)letter & 0x000000FF);
-
-      if (letter > ' ')
-        { os << "(" << letter << ")"; }
-
-      else
-        { os << "   "; }
-
-      ++pos;
-    }
-
-  os << std::endl;
-  return os;
+  return ToHexDump(os, value.Data);
 }
 }
 
