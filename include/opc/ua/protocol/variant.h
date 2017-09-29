@@ -170,6 +170,7 @@ public:
 
   template <typename T>
   Variant(const T & value) : Value(value) {}
+  Variant(const char * value) : Variant(std::string(value)) {}
   Variant(MessageId id) : Variant(NodeId(id)) {}
   Variant(ReferenceId id) : Variant(NodeId(id)) {}
   Variant(ObjectId id) : Variant(NodeId(id)) {}
@@ -186,6 +187,12 @@ public:
   Variant & operator=(const T & value)
   {
     Value = value;
+    return *this;
+  }
+
+  Variant & operator=(const char * value)
+  {
+    Value = std::string(value);
     return *this;
   }
 
@@ -220,6 +227,11 @@ public:
   bool operator==(const T & value) const
   {
     return boost::any_cast<T>(Value) == value;
+  }
+
+  bool operator==(const char * value) const
+  {
+    return *this == std::string(value);
   }
 
   bool operator==(MessageId id) const
