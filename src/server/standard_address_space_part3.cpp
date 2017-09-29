@@ -16,1387 +16,1550 @@
 
 namespace OpcUa
 {
+
+static void create_3062(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3062");
+  node.BrowseName = ToQualifiedName("Default Binary");
+  node.Class = NodeClass::Object;
+  node.TypeDefinition = ToNodeId("i=58");
+  ObjectAttributes attrs;
+  attrs.Description = LocalizedText("The default binary encoding for a data type.");
+  attrs.DisplayName = LocalizedText("Default Binary");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3063(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3063");
+  node.BrowseName = ToQualifiedName("Default XML");
+  node.Class = NodeClass::Object;
+  node.TypeDefinition = ToNodeId("i=58");
+  ObjectAttributes attrs;
+  attrs.Description = LocalizedText("The default XML encoding for a data type.");
+  attrs.DisplayName = LocalizedText("Default XML");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_24(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=24");
+  node.BrowseName = ToQualifiedName("BaseDataType");
+  node.Class = NodeClass::DataType;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that can have any valid DataType.");
+  attrs.DisplayName = LocalizedText("BaseDataType");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_26(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=26");
+  node.BrowseName = ToQualifiedName("Number");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that can have any numeric DataType.");
+  attrs.DisplayName = LocalizedText("Number");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_27(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=27");
+  node.BrowseName = ToQualifiedName("Integer");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=26");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that can have any integer DataType.");
+  attrs.DisplayName = LocalizedText("Integer");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_28(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=28");
+  node.BrowseName = ToQualifiedName("UInteger");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=27");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that can have any unsigned integer DataType.");
+  attrs.DisplayName = LocalizedText("UInteger");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_29(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=29");
+  node.BrowseName = ToQualifiedName("Enumeration");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an enumerated DataType.");
+  attrs.DisplayName = LocalizedText("Enumeration");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_1(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=1");
+  node.BrowseName = ToQualifiedName("Boolean");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is either TRUE or FALSE.");
+  attrs.DisplayName = LocalizedText("Boolean");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2");
+  node.BrowseName = ToQualifiedName("SByte");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=27");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between -128 and 127.");
+  attrs.DisplayName = LocalizedText("SByte");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3");
+  node.BrowseName = ToQualifiedName("Byte");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=28");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 255.");
+  attrs.DisplayName = LocalizedText("Byte");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_4(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=4");
+  node.BrowseName = ToQualifiedName("Int16");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=27");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between −32,768 and 32,767.");
+  attrs.DisplayName = LocalizedText("Int16");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_5(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=5");
+  node.BrowseName = ToQualifiedName("UInt16");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=28");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 65535.");
+  attrs.DisplayName = LocalizedText("UInt16");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_6(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=6");
+  node.BrowseName = ToQualifiedName("Int32");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=27");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between −2,147,483,648  and 2,147,483,647.");
+  attrs.DisplayName = LocalizedText("Int32");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_7(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=7");
+  node.BrowseName = ToQualifiedName("UInt32");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=28");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 4,294,967,295.");
+  attrs.DisplayName = LocalizedText("UInt32");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_8(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8");
+  node.BrowseName = ToQualifiedName("Int64");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=27");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between −9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.");
+  attrs.DisplayName = LocalizedText("Int64");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_9(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9");
+  node.BrowseName = ToQualifiedName("UInt64");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=28");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 18,446,744,073,709,551,615.");
+  attrs.DisplayName = LocalizedText("UInt64");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_10(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10");
+  node.BrowseName = ToQualifiedName("Float");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=26");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 single precision floating point number.");
+  attrs.DisplayName = LocalizedText("Float");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11");
+  node.BrowseName = ToQualifiedName("Double");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=26");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 double precision floating point number.");
+  attrs.DisplayName = LocalizedText("Double");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_12(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=12");
+  node.BrowseName = ToQualifiedName("String");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is a sequence of printable Unicode characters.");
+  attrs.DisplayName = LocalizedText("String");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_13(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=13");
+  node.BrowseName = ToQualifiedName("DateTime");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is a Gregorian calender date and time.");
+  attrs.DisplayName = LocalizedText("DateTime");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_14(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=14");
+  node.BrowseName = ToQualifiedName("Guid");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is a 128-bit globally unique identifier.");
+  attrs.DisplayName = LocalizedText("Guid");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_15(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=15");
+  node.BrowseName = ToQualifiedName("ByteString");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is a sequence of bytes.");
+  attrs.DisplayName = LocalizedText("ByteString");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_16(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=16");
+  node.BrowseName = ToQualifiedName("XmlElement");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an XML element.");
+  attrs.DisplayName = LocalizedText("XmlElement");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_17(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=17");
+  node.BrowseName = ToQualifiedName("NodeId");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an identifier for a node within a Server address space.");
+  attrs.DisplayName = LocalizedText("NodeId");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_20(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=20");
+  node.BrowseName = ToQualifiedName("QualifiedName");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is a name qualified by a namespace.");
+  attrs.DisplayName = LocalizedText("QualifiedName");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_21(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=21");
+  node.BrowseName = ToQualifiedName("LocalizedText");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is human readable Unicode text with a locale identifier.");
+  attrs.DisplayName = LocalizedText("LocalizedText");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_22(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=22");
+  node.BrowseName = ToQualifiedName("Structure");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=24");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is any type of structure that can be described with a data encoding.");
+  attrs.DisplayName = LocalizedText("Structure");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_30(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=30");
+  node.BrowseName = ToQualifiedName("Image");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=15");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that is an image encoded as a string of bytes.");
+  attrs.DisplayName = LocalizedText("Image");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_31(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=31");
+  node.BrowseName = ToQualifiedName("References");
+  node.Class = NodeClass::ReferenceType;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The abstract base type for all references.");
+  attrs.DisplayName = LocalizedText("References");
+  attrs.InverseName = LocalizedText("References");
+  attrs.IsAbstract = true;
+  attrs.Symmetric = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_32(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=32");
+  node.BrowseName = ToQualifiedName("NonHierarchicalReferences");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=31");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The abstract base type for all non-hierarchical references.");
+  attrs.DisplayName = LocalizedText("NonHierarchicalReferences");
+  attrs.InverseName = LocalizedText("NonHierarchicalReferences");
+  attrs.IsAbstract = true;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_33(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=33");
+  node.BrowseName = ToQualifiedName("HierarchicalReferences");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=31");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The abstract base type for all hierarchical references.");
+  attrs.DisplayName = LocalizedText("HierarchicalReferences");
+  attrs.InverseName = LocalizedText("HierarchicalReferences");
+  attrs.IsAbstract = true;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_34(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=34");
+  node.BrowseName = ToQualifiedName("HasChild");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=33");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The abstract base type for all non-looping hierarchical references.");
+  attrs.DisplayName = LocalizedText("HasChild");
+  attrs.InverseName = LocalizedText("ChildOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_35(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=35");
+  node.BrowseName = ToQualifiedName("Organizes");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=33");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for hierarchical references that are used to organize nodes.");
+  attrs.DisplayName = LocalizedText("Organizes");
+  attrs.InverseName = LocalizedText("OrganizedBy");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_36(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=36");
+  node.BrowseName = ToQualifiedName("HasEventSource");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=33");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to organize event sources.");
+  attrs.DisplayName = LocalizedText("HasEventSource");
+  attrs.InverseName = LocalizedText("EventSourceOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_37(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=37");
+  node.BrowseName = ToQualifiedName("HasModellingRule");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from instance declarations to modelling rule nodes.");
+  attrs.DisplayName = LocalizedText("HasModellingRule");
+  attrs.InverseName = LocalizedText("ModellingRuleOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_38(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=38");
+  node.BrowseName = ToQualifiedName("HasEncoding");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from data type nodes to to data type encoding nodes.");
+  attrs.DisplayName = LocalizedText("HasEncoding");
+  attrs.InverseName = LocalizedText("EncodingOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_39(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=39");
+  node.BrowseName = ToQualifiedName("HasDescription");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from data type encoding nodes to data type description nodes.");
+  attrs.DisplayName = LocalizedText("HasDescription");
+  attrs.InverseName = LocalizedText("DescriptionOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_40(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=40");
+  node.BrowseName = ToQualifiedName("HasTypeDefinition");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from a instance node its type defintion node.");
+  attrs.DisplayName = LocalizedText("HasTypeDefinition");
+  attrs.InverseName = LocalizedText("TypeDefinitionOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_41(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=41");
+  node.BrowseName = ToQualifiedName("GeneratesEvent");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from a node to an event type that is raised by node.");
+  attrs.DisplayName = LocalizedText("GeneratesEvent");
+  attrs.InverseName = LocalizedText("GeneratesEvent");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3065(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3065");
+  node.BrowseName = ToQualifiedName("AlwaysGeneratesEvent");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for references from a node to an event type that is always raised by node.");
+  attrs.DisplayName = LocalizedText("AlwaysGeneratesEvent");
+  attrs.InverseName = LocalizedText("AlwaysGeneratesEvent");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_44(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=44");
+  node.BrowseName = ToQualifiedName("Aggregates");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=34");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to aggregate nodes into complex types.");
+  attrs.DisplayName = LocalizedText("Aggregates");
+  attrs.InverseName = LocalizedText("AggregatedBy");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_45(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=45");
+  node.BrowseName = ToQualifiedName("HasSubtype");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=34");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to define sub types.");
+  attrs.DisplayName = LocalizedText("HasSubtype");
+  attrs.InverseName = LocalizedText("HasSupertype");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_46(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=46");
+  node.BrowseName = ToQualifiedName("HasProperty");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=44");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its property.");
+  attrs.DisplayName = LocalizedText("HasProperty");
+  attrs.InverseName = LocalizedText("PropertyOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_47(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=47");
+  node.BrowseName = ToQualifiedName("HasComponent");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=44");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component.");
+  attrs.DisplayName = LocalizedText("HasComponent");
+  attrs.InverseName = LocalizedText("ComponentOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_48(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=48");
+  node.BrowseName = ToQualifiedName("HasNotifier");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=36");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to indicate how events propagate from node to node.");
+  attrs.DisplayName = LocalizedText("HasNotifier");
+  attrs.InverseName = LocalizedText("NotifierOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_49(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=49");
+  node.BrowseName = ToQualifiedName("HasOrderedComponent");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=47");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component when the order of references matters.");
+  attrs.DisplayName = LocalizedText("HasOrderedComponent");
+  attrs.InverseName = LocalizedText("OrderedComponentOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_120(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=120");
+  node.BrowseName = ToQualifiedName("NamingRuleType");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=29");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("Describes a value that specifies the significance of the BrowseName for an instance declaration.");
+  attrs.DisplayName = LocalizedText("NamingRuleType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=120");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=12169");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_12169(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=12169");
+  node.BrowseName = ToQualifiedName("EnumValues");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=120");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnumValues");
+  attrs.Type = ToNodeId("i=7594");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=12169");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_3068(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3068");
+  node.BrowseName = ToQualifiedName("NodeVersion");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The version number of the node (used to indicate changes to references of the owning node).");
+  attrs.DisplayName = LocalizedText("NodeVersion");
+  attrs.Type = ObjectId::String;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_12170(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=12170");
+  node.BrowseName = ToQualifiedName("ViewVersion");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The version number of the view.");
+  attrs.DisplayName = LocalizedText("ViewVersion");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3067(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3067");
+  node.BrowseName = ToQualifiedName("Icon");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("A small image representing the object.");
+  attrs.DisplayName = LocalizedText("Icon");
+  attrs.Type = ToNodeId("i=30");
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3069(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3069");
+  node.BrowseName = ToQualifiedName("LocalTime");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The local time where the owning variable value was collected.");
+  attrs.DisplayName = LocalizedText("LocalTime");
+  attrs.Type = ToNodeId("i=8912");
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3070(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3070");
+  node.BrowseName = ToQualifiedName("AllowNulls");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("Whether the value of the owning variable is allowed to be null.");
+  attrs.DisplayName = LocalizedText("AllowNulls");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11433(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11433");
+  node.BrowseName = ToQualifiedName("ValueAsText");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The string representation of the current value for a variable with an enumerated data type.");
+  attrs.DisplayName = LocalizedText("ValueAsText");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11498(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11498");
+  node.BrowseName = ToQualifiedName("MaxStringLength");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The maximum length for a string that can be stored in the owning variable.");
+  attrs.DisplayName = LocalizedText("MaxStringLength");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11512(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11512");
+  node.BrowseName = ToQualifiedName("MaxArrayLength");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The maximum length for an array that can be stored in the owning variable.");
+  attrs.DisplayName = LocalizedText("MaxArrayLength");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11513(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11513");
+  node.BrowseName = ToQualifiedName("EngineeringUnits");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The engineering units for the value of the owning variable.");
+  attrs.DisplayName = LocalizedText("EngineeringUnits");
+  attrs.Type = ToNodeId("i=887");
+  attrs.Rank = -2;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11432(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11432");
+  node.BrowseName = ToQualifiedName("EnumStrings");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values are sequential).");
+  attrs.DisplayName = LocalizedText("EnumStrings");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3071(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3071");
+  node.BrowseName = ToQualifiedName("EnumValues");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values have no sequence).");
+  attrs.DisplayName = LocalizedText("EnumValues");
+  attrs.Type = ToNodeId("i=7594");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3072(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3072");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The input arguments for a method.");
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_3073(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3073");
+  node.BrowseName = ToQualifiedName("OutputArguments");
+  node.Class = NodeClass::Variable;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("The output arguments for a method.");
+  attrs.DisplayName = LocalizedText("OutputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2000(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2000");
+  node.BrowseName = ToQualifiedName("ImageBMP");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=30");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An image encoded in BMP format.");
+  attrs.DisplayName = LocalizedText("ImageBMP");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2001(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2001");
+  node.BrowseName = ToQualifiedName("ImageGIF");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=30");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An image encoded in GIF format.");
+  attrs.DisplayName = LocalizedText("ImageGIF");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2002(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2002");
+  node.BrowseName = ToQualifiedName("ImageJPG");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=30");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An image encoded in JPEG format.");
+  attrs.DisplayName = LocalizedText("ImageJPG");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2003(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2003");
+  node.BrowseName = ToQualifiedName("ImagePNG");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=30");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An image encoded in PNG format.");
+  attrs.DisplayName = LocalizedText("ImagePNG");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_256(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=256");
+  node.BrowseName = ToQualifiedName("IdType");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=29");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("The type of identifier used in a node id.");
+  attrs.DisplayName = LocalizedText("IdType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=256");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=7591");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_7591(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=7591");
+  node.BrowseName = ToQualifiedName("EnumStrings");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=256");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnumStrings");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=7591");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_257(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=257");
+  node.BrowseName = ToQualifiedName("NodeClass");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=29");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("A mask specifying the class of the node.");
+  attrs.DisplayName = LocalizedText("NodeClass");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=257");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11878");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11878(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11878");
+  node.BrowseName = ToQualifiedName("EnumValues");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=257");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnumValues");
+  attrs.Type = ToNodeId("i=7594");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11878");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_296(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=296");
+  node.BrowseName = ToQualifiedName("Argument");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=22");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An argument for a method.");
+  attrs.DisplayName = LocalizedText("Argument");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_7594(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=7594");
+  node.BrowseName = ToQualifiedName("EnumValueType");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=22");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("A mapping between a value of an enumerated type and a name and description.");
+  attrs.DisplayName = LocalizedText("EnumValueType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_290(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=290");
+  node.BrowseName = ToQualifiedName("Duration");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=11");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("A period of time measured in seconds.");
+  attrs.DisplayName = LocalizedText("Duration");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_294(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=294");
+  node.BrowseName = ToQualifiedName("UtcTime");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=13");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("A date/time value specified in Universal Coordinated Time (UTC).");
+  attrs.DisplayName = LocalizedText("UtcTime");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_295(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=295");
+  node.BrowseName = ToQualifiedName("LocaleId");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=12");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.Description = LocalizedText("An identifier for a user locale.");
+  attrs.DisplayName = LocalizedText("LocaleId");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_8912(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8912");
+  node.BrowseName = ToQualifiedName("TimeZoneDataType");
+  node.Class = NodeClass::DataType;
+  node.ParentNodeId = ToNodeId("i=22");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  DataTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("TimeZoneDataType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_297(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=297");
+  node.BrowseName = ToQualifiedName("Default XML");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=296");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default XML");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=297");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8285");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_7616(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=7616");
+  node.BrowseName = ToQualifiedName("Default XML");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=7594");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default XML");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=7616");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8291");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8913(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8913");
+  node.BrowseName = ToQualifiedName("Default XML");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=8912");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default XML");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=8913");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8918");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_298(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=298");
+  node.BrowseName = ToQualifiedName("Default Binary");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=296");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default Binary");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=298");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=7650");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8251(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8251");
+  node.BrowseName = ToQualifiedName("Default Binary");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=7594");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default Binary");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=8251");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=7656");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8917(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8917");
+  node.BrowseName = ToQualifiedName("Default Binary");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=8912");
+  node.ReferenceTypeId = ReferenceId::HasEncoding;
+  node.TypeDefinition = ToNodeId("i=76");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Default Binary");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasDescription;
+    ref.SourceNodeId = ToNodeId("i=8917");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8914");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
 void CreateAddressSpacePart3(OpcUa::NodeManagementServices & registry)
 {
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3062");
-    node.BrowseName = ToQualifiedName("Default Binary");
-    node.Class = NodeClass::Object;
-    node.TypeDefinition = ToNodeId("i=58");
-    ObjectAttributes attrs;
-    attrs.Description = LocalizedText("The default binary encoding for a data type.");
-    attrs.DisplayName = LocalizedText("Default Binary");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3063");
-    node.BrowseName = ToQualifiedName("Default XML");
-    node.Class = NodeClass::Object;
-    node.TypeDefinition = ToNodeId("i=58");
-    ObjectAttributes attrs;
-    attrs.Description = LocalizedText("The default XML encoding for a data type.");
-    attrs.DisplayName = LocalizedText("Default XML");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=24");
-    node.BrowseName = ToQualifiedName("BaseDataType");
-    node.Class = NodeClass::DataType;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that can have any valid DataType.");
-    attrs.DisplayName = LocalizedText("BaseDataType");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=26");
-    node.BrowseName = ToQualifiedName("Number");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that can have any numeric DataType.");
-    attrs.DisplayName = LocalizedText("Number");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=27");
-    node.BrowseName = ToQualifiedName("Integer");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=26");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that can have any integer DataType.");
-    attrs.DisplayName = LocalizedText("Integer");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=28");
-    node.BrowseName = ToQualifiedName("UInteger");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=27");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that can have any unsigned integer DataType.");
-    attrs.DisplayName = LocalizedText("UInteger");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=29");
-    node.BrowseName = ToQualifiedName("Enumeration");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an enumerated DataType.");
-    attrs.DisplayName = LocalizedText("Enumeration");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=1");
-    node.BrowseName = ToQualifiedName("Boolean");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is either TRUE or FALSE.");
-    attrs.DisplayName = LocalizedText("Boolean");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2");
-    node.BrowseName = ToQualifiedName("SByte");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=27");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between -128 and 127.");
-    attrs.DisplayName = LocalizedText("SByte");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3");
-    node.BrowseName = ToQualifiedName("Byte");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=28");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 255.");
-    attrs.DisplayName = LocalizedText("Byte");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=4");
-    node.BrowseName = ToQualifiedName("Int16");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=27");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between −32,768 and 32,767.");
-    attrs.DisplayName = LocalizedText("Int16");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=5");
-    node.BrowseName = ToQualifiedName("UInt16");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=28");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 65535.");
-    attrs.DisplayName = LocalizedText("UInt16");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=6");
-    node.BrowseName = ToQualifiedName("Int32");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=27");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between −2,147,483,648  and 2,147,483,647.");
-    attrs.DisplayName = LocalizedText("Int32");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=7");
-    node.BrowseName = ToQualifiedName("UInt32");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=28");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 4,294,967,295.");
-    attrs.DisplayName = LocalizedText("UInt32");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8");
-    node.BrowseName = ToQualifiedName("Int64");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=27");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between −9,223,372,036,854,775,808 and 9,223,372,036,854,775,807.");
-    attrs.DisplayName = LocalizedText("Int64");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9");
-    node.BrowseName = ToQualifiedName("UInt64");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=28");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an integer between 0 and 18,446,744,073,709,551,615.");
-    attrs.DisplayName = LocalizedText("UInt64");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10");
-    node.BrowseName = ToQualifiedName("Float");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=26");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 single precision floating point number.");
-    attrs.DisplayName = LocalizedText("Float");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11");
-    node.BrowseName = ToQualifiedName("Double");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=26");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an IEEE 754-1985 double precision floating point number.");
-    attrs.DisplayName = LocalizedText("Double");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=12");
-    node.BrowseName = ToQualifiedName("String");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is a sequence of printable Unicode characters.");
-    attrs.DisplayName = LocalizedText("String");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=13");
-    node.BrowseName = ToQualifiedName("DateTime");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is a Gregorian calender date and time.");
-    attrs.DisplayName = LocalizedText("DateTime");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=14");
-    node.BrowseName = ToQualifiedName("Guid");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is a 128-bit globally unique identifier.");
-    attrs.DisplayName = LocalizedText("Guid");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=15");
-    node.BrowseName = ToQualifiedName("ByteString");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is a sequence of bytes.");
-    attrs.DisplayName = LocalizedText("ByteString");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=16");
-    node.BrowseName = ToQualifiedName("XmlElement");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an XML element.");
-    attrs.DisplayName = LocalizedText("XmlElement");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=17");
-    node.BrowseName = ToQualifiedName("NodeId");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an identifier for a node within a Server address space.");
-    attrs.DisplayName = LocalizedText("NodeId");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=20");
-    node.BrowseName = ToQualifiedName("QualifiedName");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is a name qualified by a namespace.");
-    attrs.DisplayName = LocalizedText("QualifiedName");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=21");
-    node.BrowseName = ToQualifiedName("LocalizedText");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is human readable Unicode text with a locale identifier.");
-    attrs.DisplayName = LocalizedText("LocalizedText");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=22");
-    node.BrowseName = ToQualifiedName("Structure");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=24");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is any type of structure that can be described with a data encoding.");
-    attrs.DisplayName = LocalizedText("Structure");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=30");
-    node.BrowseName = ToQualifiedName("Image");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=15");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that is an image encoded as a string of bytes.");
-    attrs.DisplayName = LocalizedText("Image");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=31");
-    node.BrowseName = ToQualifiedName("References");
-    node.Class = NodeClass::ReferenceType;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The abstract base type for all references.");
-    attrs.DisplayName = LocalizedText("References");
-    attrs.InverseName = LocalizedText("References");
-    attrs.IsAbstract = true;
-    attrs.Symmetric = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=32");
-    node.BrowseName = ToQualifiedName("NonHierarchicalReferences");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=31");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The abstract base type for all non-hierarchical references.");
-    attrs.DisplayName = LocalizedText("NonHierarchicalReferences");
-    attrs.InverseName = LocalizedText("NonHierarchicalReferences");
-    attrs.IsAbstract = true;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=33");
-    node.BrowseName = ToQualifiedName("HierarchicalReferences");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=31");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The abstract base type for all hierarchical references.");
-    attrs.DisplayName = LocalizedText("HierarchicalReferences");
-    attrs.InverseName = LocalizedText("HierarchicalReferences");
-    attrs.IsAbstract = true;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=34");
-    node.BrowseName = ToQualifiedName("HasChild");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=33");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The abstract base type for all non-looping hierarchical references.");
-    attrs.DisplayName = LocalizedText("HasChild");
-    attrs.InverseName = LocalizedText("ChildOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=35");
-    node.BrowseName = ToQualifiedName("Organizes");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=33");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for hierarchical references that are used to organize nodes.");
-    attrs.DisplayName = LocalizedText("Organizes");
-    attrs.InverseName = LocalizedText("OrganizedBy");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=36");
-    node.BrowseName = ToQualifiedName("HasEventSource");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=33");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to organize event sources.");
-    attrs.DisplayName = LocalizedText("HasEventSource");
-    attrs.InverseName = LocalizedText("EventSourceOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=37");
-    node.BrowseName = ToQualifiedName("HasModellingRule");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from instance declarations to modelling rule nodes.");
-    attrs.DisplayName = LocalizedText("HasModellingRule");
-    attrs.InverseName = LocalizedText("ModellingRuleOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=38");
-    node.BrowseName = ToQualifiedName("HasEncoding");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from data type nodes to to data type encoding nodes.");
-    attrs.DisplayName = LocalizedText("HasEncoding");
-    attrs.InverseName = LocalizedText("EncodingOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=39");
-    node.BrowseName = ToQualifiedName("HasDescription");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from data type encoding nodes to data type description nodes.");
-    attrs.DisplayName = LocalizedText("HasDescription");
-    attrs.InverseName = LocalizedText("DescriptionOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=40");
-    node.BrowseName = ToQualifiedName("HasTypeDefinition");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from a instance node its type defintion node.");
-    attrs.DisplayName = LocalizedText("HasTypeDefinition");
-    attrs.InverseName = LocalizedText("TypeDefinitionOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=41");
-    node.BrowseName = ToQualifiedName("GeneratesEvent");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from a node to an event type that is raised by node.");
-    attrs.DisplayName = LocalizedText("GeneratesEvent");
-    attrs.InverseName = LocalizedText("GeneratesEvent");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3065");
-    node.BrowseName = ToQualifiedName("AlwaysGeneratesEvent");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for references from a node to an event type that is always raised by node.");
-    attrs.DisplayName = LocalizedText("AlwaysGeneratesEvent");
-    attrs.InverseName = LocalizedText("AlwaysGeneratesEvent");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=44");
-    node.BrowseName = ToQualifiedName("Aggregates");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=34");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to aggregate nodes into complex types.");
-    attrs.DisplayName = LocalizedText("Aggregates");
-    attrs.InverseName = LocalizedText("AggregatedBy");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=45");
-    node.BrowseName = ToQualifiedName("HasSubtype");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=34");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to define sub types.");
-    attrs.DisplayName = LocalizedText("HasSubtype");
-    attrs.InverseName = LocalizedText("HasSupertype");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=46");
-    node.BrowseName = ToQualifiedName("HasProperty");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=44");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its property.");
-    attrs.DisplayName = LocalizedText("HasProperty");
-    attrs.InverseName = LocalizedText("PropertyOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=47");
-    node.BrowseName = ToQualifiedName("HasComponent");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=44");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component.");
-    attrs.DisplayName = LocalizedText("HasComponent");
-    attrs.InverseName = LocalizedText("ComponentOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=48");
-    node.BrowseName = ToQualifiedName("HasNotifier");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=36");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical references that are used to indicate how events propagate from node to node.");
-    attrs.DisplayName = LocalizedText("HasNotifier");
-    attrs.InverseName = LocalizedText("NotifierOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=49");
-    node.BrowseName = ToQualifiedName("HasOrderedComponent");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=47");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type for non-looping hierarchical reference from a node to its component when the order of references matters.");
-    attrs.DisplayName = LocalizedText("HasOrderedComponent");
-    attrs.InverseName = LocalizedText("OrderedComponentOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=120");
-    node.BrowseName = ToQualifiedName("NamingRuleType");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=29");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("Describes a value that specifies the significance of the BrowseName for an instance declaration.");
-    attrs.DisplayName = LocalizedText("NamingRuleType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=120");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=12169");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=12169");
-    node.BrowseName = ToQualifiedName("EnumValues");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=120");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnumValues");
-    attrs.Type = ToNodeId("i=7594");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=12169");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3068");
-    node.BrowseName = ToQualifiedName("NodeVersion");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The version number of the node (used to indicate changes to references of the owning node).");
-    attrs.DisplayName = LocalizedText("NodeVersion");
-    attrs.Type = ObjectId::String;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=12170");
-    node.BrowseName = ToQualifiedName("ViewVersion");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The version number of the view.");
-    attrs.DisplayName = LocalizedText("ViewVersion");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3067");
-    node.BrowseName = ToQualifiedName("Icon");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("A small image representing the object.");
-    attrs.DisplayName = LocalizedText("Icon");
-    attrs.Type = ToNodeId("i=30");
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3069");
-    node.BrowseName = ToQualifiedName("LocalTime");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The local time where the owning variable value was collected.");
-    attrs.DisplayName = LocalizedText("LocalTime");
-    attrs.Type = ToNodeId("i=8912");
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3070");
-    node.BrowseName = ToQualifiedName("AllowNulls");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("Whether the value of the owning variable is allowed to be null.");
-    attrs.DisplayName = LocalizedText("AllowNulls");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11433");
-    node.BrowseName = ToQualifiedName("ValueAsText");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The string representation of the current value for a variable with an enumerated data type.");
-    attrs.DisplayName = LocalizedText("ValueAsText");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11498");
-    node.BrowseName = ToQualifiedName("MaxStringLength");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The maximum length for a string that can be stored in the owning variable.");
-    attrs.DisplayName = LocalizedText("MaxStringLength");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11512");
-    node.BrowseName = ToQualifiedName("MaxArrayLength");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The maximum length for an array that can be stored in the owning variable.");
-    attrs.DisplayName = LocalizedText("MaxArrayLength");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11513");
-    node.BrowseName = ToQualifiedName("EngineeringUnits");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The engineering units for the value of the owning variable.");
-    attrs.DisplayName = LocalizedText("EngineeringUnits");
-    attrs.Type = ToNodeId("i=887");
-    attrs.Rank = -2;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11432");
-    node.BrowseName = ToQualifiedName("EnumStrings");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values are sequential).");
-    attrs.DisplayName = LocalizedText("EnumStrings");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3071");
-    node.BrowseName = ToQualifiedName("EnumValues");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The human readable strings associated with the values of an enumerated value (when values have no sequence).");
-    attrs.DisplayName = LocalizedText("EnumValues");
-    attrs.Type = ToNodeId("i=7594");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3072");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The input arguments for a method.");
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3073");
-    node.BrowseName = ToQualifiedName("OutputArguments");
-    node.Class = NodeClass::Variable;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("The output arguments for a method.");
-    attrs.DisplayName = LocalizedText("OutputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2000");
-    node.BrowseName = ToQualifiedName("ImageBMP");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=30");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An image encoded in BMP format.");
-    attrs.DisplayName = LocalizedText("ImageBMP");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2001");
-    node.BrowseName = ToQualifiedName("ImageGIF");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=30");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An image encoded in GIF format.");
-    attrs.DisplayName = LocalizedText("ImageGIF");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2002");
-    node.BrowseName = ToQualifiedName("ImageJPG");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=30");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An image encoded in JPEG format.");
-    attrs.DisplayName = LocalizedText("ImageJPG");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2003");
-    node.BrowseName = ToQualifiedName("ImagePNG");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=30");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An image encoded in PNG format.");
-    attrs.DisplayName = LocalizedText("ImagePNG");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=256");
-    node.BrowseName = ToQualifiedName("IdType");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=29");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("The type of identifier used in a node id.");
-    attrs.DisplayName = LocalizedText("IdType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=256");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=7591");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=7591");
-    node.BrowseName = ToQualifiedName("EnumStrings");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=256");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnumStrings");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=7591");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=257");
-    node.BrowseName = ToQualifiedName("NodeClass");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=29");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("A mask specifying the class of the node.");
-    attrs.DisplayName = LocalizedText("NodeClass");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=257");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11878");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11878");
-    node.BrowseName = ToQualifiedName("EnumValues");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=257");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnumValues");
-    attrs.Type = ToNodeId("i=7594");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11878");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=296");
-    node.BrowseName = ToQualifiedName("Argument");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=22");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An argument for a method.");
-    attrs.DisplayName = LocalizedText("Argument");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=7594");
-    node.BrowseName = ToQualifiedName("EnumValueType");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=22");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("A mapping between a value of an enumerated type and a name and description.");
-    attrs.DisplayName = LocalizedText("EnumValueType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=290");
-    node.BrowseName = ToQualifiedName("Duration");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=11");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("A period of time measured in seconds.");
-    attrs.DisplayName = LocalizedText("Duration");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=294");
-    node.BrowseName = ToQualifiedName("UtcTime");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=13");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("A date/time value specified in Universal Coordinated Time (UTC).");
-    attrs.DisplayName = LocalizedText("UtcTime");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=295");
-    node.BrowseName = ToQualifiedName("LocaleId");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=12");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.Description = LocalizedText("An identifier for a user locale.");
-    attrs.DisplayName = LocalizedText("LocaleId");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8912");
-    node.BrowseName = ToQualifiedName("TimeZoneDataType");
-    node.Class = NodeClass::DataType;
-    node.ParentNodeId = ToNodeId("i=22");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    DataTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("TimeZoneDataType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=297");
-    node.BrowseName = ToQualifiedName("Default XML");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=296");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default XML");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=297");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8285");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=7616");
-    node.BrowseName = ToQualifiedName("Default XML");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=7594");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default XML");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=7616");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8291");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8913");
-    node.BrowseName = ToQualifiedName("Default XML");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=8912");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default XML");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=8913");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8918");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=298");
-    node.BrowseName = ToQualifiedName("Default Binary");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=296");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default Binary");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=298");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=7650");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8251");
-    node.BrowseName = ToQualifiedName("Default Binary");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=7594");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default Binary");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=8251");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=7656");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8917");
-    node.BrowseName = ToQualifiedName("Default Binary");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=8912");
-    node.ReferenceTypeId = ReferenceId::HasEncoding;
-    node.TypeDefinition = ToNodeId("i=76");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Default Binary");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasDescription;
-      ref.SourceNodeId = ToNodeId("i=8917");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8914");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
+  create_3062(registry);
+  create_3063(registry);
+  create_24(registry);
+  create_26(registry);
+  create_27(registry);
+  create_28(registry);
+  create_29(registry);
+  create_1(registry);
+  create_2(registry);
+  create_3(registry);
+  create_4(registry);
+  create_5(registry);
+  create_6(registry);
+  create_7(registry);
+  create_8(registry);
+  create_9(registry);
+  create_10(registry);
+  create_11(registry);
+  create_12(registry);
+  create_13(registry);
+  create_14(registry);
+  create_15(registry);
+  create_16(registry);
+  create_17(registry);
+  create_20(registry);
+  create_21(registry);
+  create_22(registry);
+  create_30(registry);
+  create_31(registry);
+  create_32(registry);
+  create_33(registry);
+  create_34(registry);
+  create_35(registry);
+  create_36(registry);
+  create_37(registry);
+  create_38(registry);
+  create_39(registry);
+  create_40(registry);
+  create_41(registry);
+  create_3065(registry);
+  create_44(registry);
+  create_45(registry);
+  create_46(registry);
+  create_47(registry);
+  create_48(registry);
+  create_49(registry);
+  create_120(registry);
+  create_12169(registry);
+  create_3068(registry);
+  create_12170(registry);
+  create_3067(registry);
+  create_3069(registry);
+  create_3070(registry);
+  create_11433(registry);
+  create_11498(registry);
+  create_11512(registry);
+  create_11513(registry);
+  create_11432(registry);
+  create_3071(registry);
+  create_3072(registry);
+  create_3073(registry);
+  create_2000(registry);
+  create_2001(registry);
+  create_2002(registry);
+  create_2003(registry);
+  create_256(registry);
+  create_7591(registry);
+  create_257(registry);
+  create_11878(registry);
+  create_296(registry);
+  create_7594(registry);
+  create_290(registry);
+  create_294(registry);
+  create_295(registry);
+  create_8912(registry);
+  create_297(registry);
+  create_7616(registry);
+  create_8913(registry);
+  create_298(registry);
+  create_8251(registry);
+  create_8917(registry);
 
 }
 

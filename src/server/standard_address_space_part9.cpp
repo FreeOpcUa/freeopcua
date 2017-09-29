@@ -16,5936 +16,6295 @@
 
 namespace OpcUa
 {
+
+static void create_8995(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8995");
+  node.BrowseName = ToQualifiedName("TwoStateVariableType");
+  node.Class = NodeClass::VariableType;
+  node.ParentNodeId = ToNodeId("i=2755");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  VariableTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("TwoStateVariableType");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8995");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8996");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8995");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9000");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8995");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9001");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8995");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11110");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8995");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11111");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8996(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8996");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8995");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=8996");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9000(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9000");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8995");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9000");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9001(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9001");
+  node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8995");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9001");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11110(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11110");
+  node.BrowseName = ToQualifiedName("TrueState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8995");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TrueState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11110");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11111(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11111");
+  node.BrowseName = ToQualifiedName("FalseState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8995");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("FalseState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11111");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9002(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9002");
+  node.BrowseName = ToQualifiedName("ConditionVariableType");
+  node.Class = NodeClass::VariableType;
+  node.ParentNodeId = ToNodeId("i=63");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  VariableTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConditionVariableType");
+  attrs.Type = ObjectId::String;
+  attrs.Rank = -2;
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9002");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9003");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9003(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9003");
+  node.BrowseName = ToQualifiedName("SourceTimestamp");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9002");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SourceTimestamp");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9003");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9004(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9004");
+  node.BrowseName = ToQualifiedName("HasTrueSubState");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("HasTrueSubState");
+  attrs.InverseName = LocalizedText("IsTrueSubStateOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_9005(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9005");
+  node.BrowseName = ToQualifiedName("HasFalseSubState");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("HasFalseSubState");
+  attrs.InverseName = LocalizedText("IsFalseSubStateOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2782(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2782");
+  node.BrowseName = ToQualifiedName("ConditionType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2041");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConditionType");
+  attrs.IsAbstract = true;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11112");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11113");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9009");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9010");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=3874");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9011");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9020");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9022");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9024");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9026");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9028");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9027");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9029");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2782");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=3875");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11112(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11112");
+  node.BrowseName = ToQualifiedName("ConditionClassId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConditionClassId");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11112");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11113(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11113");
+  node.BrowseName = ToQualifiedName("ConditionClassName");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConditionClassName");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11113");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9009(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9009");
+  node.BrowseName = ToQualifiedName("ConditionName");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConditionName");
+  attrs.Type = ObjectId::String;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9009");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9010(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9010");
+  node.BrowseName = ToQualifiedName("BranchId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("BranchId");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9010");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_3874(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3874");
+  node.BrowseName = ToQualifiedName("Retain");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Retain");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=3874");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9011(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9011");
+  node.BrowseName = ToQualifiedName("EnabledState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnabledState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9011");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9012");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9011");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9015");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9011");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9016");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9011");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9017");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9011");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9012(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9012");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9011");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9012");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9015(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9015");
+  node.BrowseName = ToQualifiedName("EffectiveDisplayName");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9011");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EffectiveDisplayName");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9015");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9016(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9016");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9011");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9016");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9017(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9017");
+  node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9011");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9017");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9020(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9020");
+  node.BrowseName = ToQualifiedName("Quality");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=9002");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Quality");
+  attrs.Type = ObjectId::StatusCode;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9020");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9021");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9020");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9021(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9021");
+  node.BrowseName = ToQualifiedName("SourceTimestamp");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9020");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SourceTimestamp");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9021");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9022(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9022");
+  node.BrowseName = ToQualifiedName("LastSeverity");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=9002");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LastSeverity");
+  attrs.Type = ObjectId::UInt16;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9022");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9023");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9022");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9023(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9023");
+  node.BrowseName = ToQualifiedName("SourceTimestamp");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9022");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SourceTimestamp");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9023");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9024(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9024");
+  node.BrowseName = ToQualifiedName("Comment");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=9002");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Comment");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9024");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9025");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9024");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9025(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9025");
+  node.BrowseName = ToQualifiedName("SourceTimestamp");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9024");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SourceTimestamp");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9025");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9026(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9026");
+  node.BrowseName = ToQualifiedName("ClientUserId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ClientUserId");
+  attrs.Type = ObjectId::String;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9026");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9030(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9030");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9029");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9030");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_3876(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=3876");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=3875");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=3876");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2830(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2830");
+  node.BrowseName = ToQualifiedName("DialogConditionType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("DialogConditionType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9035");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9055");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2831");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9064");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9065");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9066");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9067");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9068");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2830");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9069");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9035(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9035");
+  node.BrowseName = ToQualifiedName("EnabledState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnabledState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9035");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9036");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9035");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9055");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9035");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9036(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9036");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9035");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9036");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9055(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9055");
+  node.BrowseName = ToQualifiedName("DialogState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("DialogState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9055");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9056");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9055");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9060");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9055");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9056(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9056");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9055");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9056");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9060(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9060");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9055");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9060");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2831(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2831");
+  node.BrowseName = ToQualifiedName("Prompt");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Prompt");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=2831");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9064(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9064");
+  node.BrowseName = ToQualifiedName("ResponseOptionSet");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ResponseOptionSet");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9064");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9065(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9065");
+  node.BrowseName = ToQualifiedName("DefaultResponse");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("DefaultResponse");
+  attrs.Type = ObjectId::Int32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9065");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9066(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9066");
+  node.BrowseName = ToQualifiedName("OkResponse");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("OkResponse");
+  attrs.Type = ObjectId::Int32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9066");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9067(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9067");
+  node.BrowseName = ToQualifiedName("CancelResponse");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("CancelResponse");
+  attrs.Type = ObjectId::Int32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9067");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9068(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9068");
+  node.BrowseName = ToQualifiedName("LastResponse");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2830");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LastResponse");
+  attrs.Type = ObjectId::Int32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9068");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9070(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9070");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9069");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9070");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2881(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2881");
+  node.BrowseName = ToQualifiedName("AcknowledgeableConditionType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2782");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AcknowledgeableConditionType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2881");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9073");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2881");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9093");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2881");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9102");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2881");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9111");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2881");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9113");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9073(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9073");
+  node.BrowseName = ToQualifiedName("EnabledState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2881");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnabledState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9073");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9074");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9073");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9093");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9073");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9102");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9073");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9074(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9074");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9073");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9074");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9093(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9093");
+  node.BrowseName = ToQualifiedName("AckedState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2881");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("AckedState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9093");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9094");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9093");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9098");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9093");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9094(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9094");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9093");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9094");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9098(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9098");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9093");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9098");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9102(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9102");
+  node.BrowseName = ToQualifiedName("ConfirmedState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2881");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ConfirmedState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9102");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9103");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9102");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9107");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9102");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9103(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9103");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9102");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9103");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9107(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9107");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9102");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9107");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9112(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9112");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9111");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9112");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9114(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9114");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9113");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9114");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2915(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2915");
+  node.BrowseName = ToQualifiedName("AlarmConditionType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2881");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AlarmConditionType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9118");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9160");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11120");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9169");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9178");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9215");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2915");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9216");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9118(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9118");
+  node.BrowseName = ToQualifiedName("EnabledState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EnabledState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9118");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9119");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9118");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9160");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9118");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9169");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9118");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9178");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9118");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9119(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9119");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9118");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9119");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9160(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9160");
+  node.BrowseName = ToQualifiedName("ActiveState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ActiveState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9160");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9161");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9160");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9164");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9160");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9165");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9160");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9166");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9160");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9161(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9161");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9160");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9161");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9164(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9164");
+  node.BrowseName = ToQualifiedName("EffectiveDisplayName");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9160");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EffectiveDisplayName");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9164");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9165(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9165");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9160");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9165");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9166(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9166");
+  node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9160");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9166");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11120(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11120");
+  node.BrowseName = ToQualifiedName("InputNode");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputNode");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11120");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9169(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9169");
+  node.BrowseName = ToQualifiedName("SuppressedState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SuppressedState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9169");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9170");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9169");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9174");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9169");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9170(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9170");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9169");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9170");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9174(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9174");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9169");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9174");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9178(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9178");
+  node.BrowseName = ToQualifiedName("ShelvingState");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2929");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("ShelvingState");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9179");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9184");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9189");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9211");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9212");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9213");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9178");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9179(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9179");
+  node.BrowseName = ToQualifiedName("CurrentState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9178");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2760");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("CurrentState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9179");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9180");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9179");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9180(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9180");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9179");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9180");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9184(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9184");
+  node.BrowseName = ToQualifiedName("LastTransition");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9178");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2767");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LastTransition");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9184");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9185");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9184");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9188");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9184");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9185(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9185");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9184");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9185");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9188(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9188");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9184");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9188");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9189(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9189");
+  node.BrowseName = ToQualifiedName("UnshelveTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9178");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("UnshelveTime");
+  attrs.Type = ToNodeId("i=290");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9189");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9214(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9214");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9213");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9214");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9215(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9215");
+  node.BrowseName = ToQualifiedName("SuppressedOrShelved");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SuppressedOrShelved");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9215");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9216(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9216");
+  node.BrowseName = ToQualifiedName("MaxTimeShelved");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("MaxTimeShelved");
+  attrs.Type = ToNodeId("i=290");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9216");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2929(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2929");
+  node.BrowseName = ToQualifiedName("ShelvedStateMachineType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2771");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ShelvedStateMachineType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9115");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2930");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2932");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2933");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2935");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2936");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2940");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2942");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2943");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2945");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2947");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2948");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=2929");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2949");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9115(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9115");
+  node.BrowseName = ToQualifiedName("UnshelveTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("UnshelveTime");
+  attrs.Type = ToNodeId("i=290");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9115");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2930(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2930");
+  node.BrowseName = ToQualifiedName("Unshelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Unshelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2930");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=6098");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_6098(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=6098");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2930");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=6098");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2932(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2932");
+  node.BrowseName = ToQualifiedName("TimedShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("TimedShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2932");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=6100");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_6100(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=6100");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2932");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=6100");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2933(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2933");
+  node.BrowseName = ToQualifiedName("OneShotShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("OneShotShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2933");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=6101");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_6101(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=6101");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2933");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=6101");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2935(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2935");
+  node.BrowseName = ToQualifiedName("UnshelvedToTimedShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("UnshelvedToTimedShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2935");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11322");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2935");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2930");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2935");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2932");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2935");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2935");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2949");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11322(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11322");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2935");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11322");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2936(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2936");
+  node.BrowseName = ToQualifiedName("UnshelvedToOneShotShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("UnshelvedToOneShotShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2936");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11323");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2936");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2930");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2936");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2933");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2936");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2936");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2948");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11323(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11323");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2936");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11323");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2940(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2940");
+  node.BrowseName = ToQualifiedName("TimedShelvedToUnshelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("TimedShelvedToUnshelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2940");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11324");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2940");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2932");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2940");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2930");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2940");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2940");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2947");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11324(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11324");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2940");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11324");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2942(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2942");
+  node.BrowseName = ToQualifiedName("TimedShelvedToOneShotShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("TimedShelvedToOneShotShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2942");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11325");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2942");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2932");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2942");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2933");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2942");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2942");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2948");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11325(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11325");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2942");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11325");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2943(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2943");
+  node.BrowseName = ToQualifiedName("OneShotShelvedToUnshelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("OneShotShelvedToUnshelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2943");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11326");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2943");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2933");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2943");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2930");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2943");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2943");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2947");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11326(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11326");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2943");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11326");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2945(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2945");
+  node.BrowseName = ToQualifiedName("OneShotShelvedToTimedShelved");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=2929");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("OneShotShelvedToTimedShelved");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11327");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=2945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2933");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=2945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2932");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=54");
+    ref.SourceNodeId = ToNodeId("i=2945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2915");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=53");
+    ref.SourceNodeId = ToNodeId("i=2945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=2949");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11327(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11327");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2945");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11327");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2991(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2991");
+  node.BrowseName = ToQualifiedName("InputArguments");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2949");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("InputArguments");
+  attrs.Type = ToNodeId("i=296");
+  attrs.Rank = 1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=2991");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2955(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2955");
+  node.BrowseName = ToQualifiedName("LimitAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("LimitAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2955");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11124");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2955");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11125");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2955");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11126");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2955");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11127");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11124(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11124");
+  node.BrowseName = ToQualifiedName("HighHighLimit");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighHighLimit");
+  attrs.Type = ObjectId::Double;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11124");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11125(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11125");
+  node.BrowseName = ToQualifiedName("HighLimit");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighLimit");
+  attrs.Type = ObjectId::Double;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11125");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11126(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11126");
+  node.BrowseName = ToQualifiedName("LowLimit");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowLimit");
+  attrs.Type = ObjectId::Double;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11126");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11127(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11127");
+  node.BrowseName = ToQualifiedName("LowLowLimit");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowLowLimit");
+  attrs.Type = ObjectId::Double;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11127");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9318(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9318");
+  node.BrowseName = ToQualifiedName("ExclusiveLimitStateMachineType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2771");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ExclusiveLimitStateMachineType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9329");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9331");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9333");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9335");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9337");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9338");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9339");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9318");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9340");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9329(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9329");
+  node.BrowseName = ToQualifiedName("HighHigh");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighHigh");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9329");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9330");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9330(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9330");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9329");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9330");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9331(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9331");
+  node.BrowseName = ToQualifiedName("High");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("High");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9331");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9332");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9332(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9332");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9331");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9332");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9333(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9333");
+  node.BrowseName = ToQualifiedName("Low");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("Low");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9333");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9334");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9334(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9334");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9333");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9334");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9335(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9335");
+  node.BrowseName = ToQualifiedName("LowLow");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2307");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowLow");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9335");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9336");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9336(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9336");
+  node.BrowseName = ToQualifiedName("StateNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9335");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("StateNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9336");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9337(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9337");
+  node.BrowseName = ToQualifiedName("LowLowToLow");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowLowToLow");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9337");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11340");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=9337");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9335");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=9337");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9333");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11340(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11340");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9337");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11340");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9338(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9338");
+  node.BrowseName = ToQualifiedName("LowToLowLow");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowToLowLow");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9338");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11341");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=9338");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9333");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=9338");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9335");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11341(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11341");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9338");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11341");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9339(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9339");
+  node.BrowseName = ToQualifiedName("HighHighToHigh");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighHighToHigh");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9339");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11342");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=9339");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9329");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=9339");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9331");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11342(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11342");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9339");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11342");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9340(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9340");
+  node.BrowseName = ToQualifiedName("HighToHighHigh");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9318");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2310");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighToHighHigh");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9340");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11343");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=51");
+    ref.SourceNodeId = ToNodeId("i=9340");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9331");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=52");
+    ref.SourceNodeId = ToNodeId("i=9340");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9329");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11343(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11343");
+  node.BrowseName = ToQualifiedName("TransitionNumber");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9340");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionNumber");
+  attrs.Type = ObjectId::UInt32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11343");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9341(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9341");
+  node.BrowseName = ToQualifiedName("ExclusiveLimitAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ExclusiveLimitAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9341");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9398");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9341");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9455");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9398(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9398");
+  node.BrowseName = ToQualifiedName("ActiveState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9341");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ActiveState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9398");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9399");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9398");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9455");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9398");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9399(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9399");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9398");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9399");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9455(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9455");
+  node.BrowseName = ToQualifiedName("LimitState");
+  node.Class = NodeClass::Object;
+  node.ParentNodeId = ToNodeId("i=9341");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=9318");
+  ObjectAttributes attrs;
+  attrs.DisplayName = LocalizedText("LimitState");
+  attrs.EventNotifier = 0;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9455");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9456");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9455");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9461");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9455");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9456(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9456");
+  node.BrowseName = ToQualifiedName("CurrentState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9455");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2760");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("CurrentState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9456");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9457");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9456");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9457(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9457");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9456");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9457");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9461(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9461");
+  node.BrowseName = ToQualifiedName("LastTransition");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9455");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=2767");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LastTransition");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9461");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9462");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9461");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9465");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9461");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9462(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9462");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9461");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9462");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9465(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9465");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9461");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9465");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9906(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9906");
+  node.BrowseName = ToQualifiedName("NonExclusiveLimitAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2955");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("NonExclusiveLimitAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9906");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9963");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9906");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10020");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9906");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10029");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9906");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10038");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasComponent;
+    ref.SourceNodeId = ToNodeId("i=9906");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10047");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9963(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9963");
+  node.BrowseName = ToQualifiedName("ActiveState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ActiveState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9964");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10020");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10029");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10038");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ToNodeId("i=9004");
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10047");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9963");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9964(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9964");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9963");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9964");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10020(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10020");
+  node.BrowseName = ToQualifiedName("HighHighState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighHighState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10020");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10021");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10020");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10025");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10020");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10021(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10021");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10020");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10021");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10025(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10025");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10020");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10025");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10029(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10029");
+  node.BrowseName = ToQualifiedName("HighState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("HighState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10029");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10030");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10029");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10034");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10029");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10030(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10030");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10029");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10030");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10034(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10034");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10029");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10034");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10038(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10038");
+  node.BrowseName = ToQualifiedName("LowState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10038");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10039");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10038");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10043");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10038");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10039(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10039");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10038");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10039");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10043(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10043");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10038");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10043");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10047(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10047");
+  node.BrowseName = ToQualifiedName("LowLowState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasComponent;
+  node.TypeDefinition = ToNodeId("i=8995");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("LowLowState");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10047");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10048");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10047");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10052");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10047");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10048(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10048");
+  node.BrowseName = ToQualifiedName("Id");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10047");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Id");
+  attrs.Type = ObjectId::Boolean;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10048");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10052(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10052");
+  node.BrowseName = ToQualifiedName("TransitionTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10047");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("TransitionTime");
+  attrs.Type = ToNodeId("i=294");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10052");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=80");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10060(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10060");
+  node.BrowseName = ToQualifiedName("NonExclusiveLevelAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("NonExclusiveLevelAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_9482(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9482");
+  node.BrowseName = ToQualifiedName("ExclusiveLevelAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9341");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ExclusiveLevelAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_10368(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10368");
+  node.BrowseName = ToQualifiedName("NonExclusiveDeviationAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("NonExclusiveDeviationAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10368");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=10522");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10522(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10522");
+  node.BrowseName = ToQualifiedName("SetpointNode");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10368");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SetpointNode");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=10522");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9764(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9764");
+  node.BrowseName = ToQualifiedName("ExclusiveDeviationAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9341");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ExclusiveDeviationAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=9764");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=9905");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_9905(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9905");
+  node.BrowseName = ToQualifiedName("SetpointNode");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=9764");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SetpointNode");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=9905");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_10214(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10214");
+  node.BrowseName = ToQualifiedName("NonExclusiveRateOfChangeAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9906");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("NonExclusiveRateOfChangeAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_9623(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9623");
+  node.BrowseName = ToQualifiedName("ExclusiveRateOfChangeAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=9341");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ExclusiveRateOfChangeAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_10523(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10523");
+  node.BrowseName = ToQualifiedName("DiscreteAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2915");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("DiscreteAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_10637(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10637");
+  node.BrowseName = ToQualifiedName("OffNormalAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=10523");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("OffNormalAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=10637");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11158");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11158(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11158");
+  node.BrowseName = ToQualifiedName("NormalState");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=10637");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("NormalState");
+  attrs.Type = ObjectId::NodeId;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11158");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11753(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11753");
+  node.BrowseName = ToQualifiedName("SystemOffNormalAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=10637");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("SystemOffNormalAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_10751(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=10751");
+  node.BrowseName = ToQualifiedName("TripAlarmType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=10637");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("TripAlarmType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11163(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11163");
+  node.BrowseName = ToQualifiedName("BaseConditionClassType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=58");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("BaseConditionClassType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11164(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11164");
+  node.BrowseName = ToQualifiedName("ProcessConditionClassType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=11163");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("ProcessConditionClassType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11165(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11165");
+  node.BrowseName = ToQualifiedName("MaintenanceConditionClassType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=11163");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("MaintenanceConditionClassType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_11166(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11166");
+  node.BrowseName = ToQualifiedName("SystemConditionClassType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=11163");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("SystemConditionClassType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2790(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2790");
+  node.BrowseName = ToQualifiedName("AuditConditionEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2127");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2803(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2803");
+  node.BrowseName = ToQualifiedName("AuditConditionEnableEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionEnableEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2829(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2829");
+  node.BrowseName = ToQualifiedName("AuditConditionCommentEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionCommentEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2829");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=4170");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=2829");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11851");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_4170(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=4170");
+  node.BrowseName = ToQualifiedName("EventId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2829");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("A globally unique identifier for the event.");
+  attrs.DisplayName = LocalizedText("EventId");
+  attrs.Type = ObjectId::ByteString;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=4170");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11851(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11851");
+  node.BrowseName = ToQualifiedName("Comment");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=2829");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Comment");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11851");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8927(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8927");
+  node.BrowseName = ToQualifiedName("AuditConditionRespondEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionRespondEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8927");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11852");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11852(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11852");
+  node.BrowseName = ToQualifiedName("SelectedResponse");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8927");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("SelectedResponse");
+  attrs.Type = ObjectId::Int32;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11852");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8944(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8944");
+  node.BrowseName = ToQualifiedName("AuditConditionAcknowledgeEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionAcknowledgeEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8944");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8945");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8944");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11853");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8945(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8945");
+  node.BrowseName = ToQualifiedName("EventId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8944");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("A globally unique identifier for the event.");
+  attrs.DisplayName = LocalizedText("EventId");
+  attrs.Type = ObjectId::ByteString;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=8945");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11853(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11853");
+  node.BrowseName = ToQualifiedName("Comment");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8944");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Comment");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11853");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8961(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8961");
+  node.BrowseName = ToQualifiedName("AuditConditionConfirmEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionConfirmEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8961");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=8962");
+    refs.push_back(ref);
+  }
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=8961");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11854");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_8962(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=8962");
+  node.BrowseName = ToQualifiedName("EventId");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8961");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.Description = LocalizedText("A globally unique identifier for the event.");
+  attrs.DisplayName = LocalizedText("EventId");
+  attrs.Type = ObjectId::ByteString;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=8962");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11854(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11854");
+  node.BrowseName = ToQualifiedName("Comment");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=8961");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("Comment");
+  attrs.Type = ObjectId::LocalizedText;
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11854");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11093(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11093");
+  node.BrowseName = ToQualifiedName("AuditConditionShelvingEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2790");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("AuditConditionShelvingEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasProperty;
+    ref.SourceNodeId = ToNodeId("i=11093");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=11855");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_11855(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=11855");
+  node.BrowseName = ToQualifiedName("ShelvingTime");
+  node.Class = NodeClass::Variable;
+  node.ParentNodeId = ToNodeId("i=11093");
+  node.ReferenceTypeId = ReferenceId::HasProperty;
+  node.TypeDefinition = ToNodeId("i=68");
+  VariableAttributes attrs;
+  attrs.DisplayName = LocalizedText("ShelvingTime");
+  attrs.Type = ToNodeId("i=290");
+  attrs.Rank = -1;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+  std::vector<AddReferencesItem> refs;
+  {
+    AddReferencesItem ref;
+    ref.IsForward = true;
+    ref.ReferenceTypeId = ReferenceId::HasModellingRule;
+    ref.SourceNodeId = ToNodeId("i=11855");
+    ref.TargetNodeClass = NodeClass::DataType;
+    ref.TargetNodeId = ToNodeId("i=78");
+    refs.push_back(ref);
+  }
+  registry.AddReferences(refs);
+}
+
+static void create_2787(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2787");
+  node.BrowseName = ToQualifiedName("RefreshStartEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2130");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("RefreshStartEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2788(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2788");
+  node.BrowseName = ToQualifiedName("RefreshEndEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2130");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("RefreshEndEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_2789(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=2789");
+  node.BrowseName = ToQualifiedName("RefreshRequiredEventType");
+  node.Class = NodeClass::ObjectType;
+  node.ParentNodeId = ToNodeId("i=2130");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ObjectTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("RefreshRequiredEventType");
+  attrs.IsAbstract = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
+static void create_9006(OpcUa::NodeManagementServices & registry)
+{
+  AddNodesItem node;
+  node.RequestedNewNodeId = ToNodeId("i=9006");
+  node.BrowseName = ToQualifiedName("HasCondition");
+  node.Class = NodeClass::ReferenceType;
+  node.ParentNodeId = ToNodeId("i=32");
+  node.ReferenceTypeId = ReferenceId::HasSubtype;
+  ReferenceTypeAttributes attrs;
+  attrs.DisplayName = LocalizedText("HasCondition");
+  attrs.InverseName = LocalizedText("IsConditionOf");
+  attrs.IsAbstract = false;
+  attrs.Symmetric = false;
+  node.Attributes = attrs;
+  registry.AddNodes(std::vector<AddNodesItem> {node});
+}
+
 void CreateAddressSpacePart9(OpcUa::NodeManagementServices & registry)
 {
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8995");
-    node.BrowseName = ToQualifiedName("TwoStateVariableType");
-    node.Class = NodeClass::VariableType;
-    node.ParentNodeId = ToNodeId("i=2755");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    VariableTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("TwoStateVariableType");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8995");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8996");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8995");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9000");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8995");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9001");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8995");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11110");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8995");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11111");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8996");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8995");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=8996");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9000");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8995");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9000");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9001");
-    node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8995");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9001");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11110");
-    node.BrowseName = ToQualifiedName("TrueState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8995");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TrueState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11110");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11111");
-    node.BrowseName = ToQualifiedName("FalseState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8995");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("FalseState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11111");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9002");
-    node.BrowseName = ToQualifiedName("ConditionVariableType");
-    node.Class = NodeClass::VariableType;
-    node.ParentNodeId = ToNodeId("i=63");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    VariableTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConditionVariableType");
-    attrs.Type = ObjectId::String;
-    attrs.Rank = -2;
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9002");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9003");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9003");
-    node.BrowseName = ToQualifiedName("SourceTimestamp");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9002");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SourceTimestamp");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9003");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9004");
-    node.BrowseName = ToQualifiedName("HasTrueSubState");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("HasTrueSubState");
-    attrs.InverseName = LocalizedText("IsTrueSubStateOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9005");
-    node.BrowseName = ToQualifiedName("HasFalseSubState");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("HasFalseSubState");
-    attrs.InverseName = LocalizedText("IsFalseSubStateOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2782");
-    node.BrowseName = ToQualifiedName("ConditionType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2041");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConditionType");
-    attrs.IsAbstract = true;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11112");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11113");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9009");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9010");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=3874");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9011");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9020");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9022");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9024");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9026");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9028");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9027");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9029");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2782");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=3875");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11112");
-    node.BrowseName = ToQualifiedName("ConditionClassId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConditionClassId");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11112");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11113");
-    node.BrowseName = ToQualifiedName("ConditionClassName");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConditionClassName");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11113");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9009");
-    node.BrowseName = ToQualifiedName("ConditionName");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConditionName");
-    attrs.Type = ObjectId::String;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9009");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9010");
-    node.BrowseName = ToQualifiedName("BranchId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("BranchId");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9010");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3874");
-    node.BrowseName = ToQualifiedName("Retain");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Retain");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=3874");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9011");
-    node.BrowseName = ToQualifiedName("EnabledState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnabledState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9011");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9012");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9011");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9015");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9011");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9016");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9011");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9017");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9011");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9012");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9011");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9012");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9015");
-    node.BrowseName = ToQualifiedName("EffectiveDisplayName");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9011");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EffectiveDisplayName");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9015");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9016");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9011");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9016");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9017");
-    node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9011");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9017");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9020");
-    node.BrowseName = ToQualifiedName("Quality");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=9002");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Quality");
-    attrs.Type = ObjectId::StatusCode;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9020");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9021");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9020");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9021");
-    node.BrowseName = ToQualifiedName("SourceTimestamp");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9020");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SourceTimestamp");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9021");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9022");
-    node.BrowseName = ToQualifiedName("LastSeverity");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=9002");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LastSeverity");
-    attrs.Type = ObjectId::UInt16;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9022");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9023");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9022");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9023");
-    node.BrowseName = ToQualifiedName("SourceTimestamp");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9022");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SourceTimestamp");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9023");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9024");
-    node.BrowseName = ToQualifiedName("Comment");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=9002");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Comment");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9024");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9025");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9024");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9025");
-    node.BrowseName = ToQualifiedName("SourceTimestamp");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9024");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SourceTimestamp");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9025");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9026");
-    node.BrowseName = ToQualifiedName("ClientUserId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ClientUserId");
-    attrs.Type = ObjectId::String;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9026");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9030");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9029");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9030");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=3876");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=3875");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=3876");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2830");
-    node.BrowseName = ToQualifiedName("DialogConditionType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("DialogConditionType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9035");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9055");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2831");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9064");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9065");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9066");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9067");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9068");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2830");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9069");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9035");
-    node.BrowseName = ToQualifiedName("EnabledState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnabledState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9035");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9036");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9035");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9055");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9035");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9036");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9035");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9036");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9055");
-    node.BrowseName = ToQualifiedName("DialogState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("DialogState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9055");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9056");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9055");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9060");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9055");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9056");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9055");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9056");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9060");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9055");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9060");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2831");
-    node.BrowseName = ToQualifiedName("Prompt");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Prompt");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=2831");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9064");
-    node.BrowseName = ToQualifiedName("ResponseOptionSet");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ResponseOptionSet");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9064");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9065");
-    node.BrowseName = ToQualifiedName("DefaultResponse");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("DefaultResponse");
-    attrs.Type = ObjectId::Int32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9065");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9066");
-    node.BrowseName = ToQualifiedName("OkResponse");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("OkResponse");
-    attrs.Type = ObjectId::Int32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9066");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9067");
-    node.BrowseName = ToQualifiedName("CancelResponse");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("CancelResponse");
-    attrs.Type = ObjectId::Int32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9067");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9068");
-    node.BrowseName = ToQualifiedName("LastResponse");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2830");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LastResponse");
-    attrs.Type = ObjectId::Int32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9068");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9070");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9069");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9070");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2881");
-    node.BrowseName = ToQualifiedName("AcknowledgeableConditionType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2782");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AcknowledgeableConditionType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2881");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9073");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2881");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9093");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2881");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9102");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2881");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9111");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2881");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9113");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9073");
-    node.BrowseName = ToQualifiedName("EnabledState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2881");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnabledState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9073");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9074");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9073");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9093");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9073");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9102");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9073");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9074");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9073");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9074");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9093");
-    node.BrowseName = ToQualifiedName("AckedState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2881");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("AckedState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9093");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9094");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9093");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9098");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9093");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9094");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9093");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9094");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9098");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9093");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9098");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9102");
-    node.BrowseName = ToQualifiedName("ConfirmedState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2881");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ConfirmedState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9102");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9103");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9102");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9107");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9102");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9103");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9102");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9103");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9107");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9102");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9107");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9112");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9111");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9112");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9114");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9113");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9114");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2915");
-    node.BrowseName = ToQualifiedName("AlarmConditionType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2881");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AlarmConditionType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9118");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9160");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11120");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9169");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9178");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9215");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2915");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9216");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9118");
-    node.BrowseName = ToQualifiedName("EnabledState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EnabledState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9118");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9119");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9118");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9160");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9118");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9169");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9118");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9178");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9118");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9119");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9118");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9119");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9160");
-    node.BrowseName = ToQualifiedName("ActiveState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ActiveState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9160");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9161");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9160");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9164");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9160");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9165");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9160");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9166");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9160");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9161");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9160");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9161");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9164");
-    node.BrowseName = ToQualifiedName("EffectiveDisplayName");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9160");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EffectiveDisplayName");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9164");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9165");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9160");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9165");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9166");
-    node.BrowseName = ToQualifiedName("EffectiveTransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9160");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("EffectiveTransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9166");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11120");
-    node.BrowseName = ToQualifiedName("InputNode");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputNode");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11120");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9169");
-    node.BrowseName = ToQualifiedName("SuppressedState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SuppressedState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9169");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9170");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9169");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9174");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9169");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9170");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9169");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9170");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9174");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9169");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9174");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9178");
-    node.BrowseName = ToQualifiedName("ShelvingState");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2929");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("ShelvingState");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9179");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9184");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9189");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9211");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9212");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9213");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9178");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9179");
-    node.BrowseName = ToQualifiedName("CurrentState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9178");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2760");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("CurrentState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9179");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9180");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9179");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9180");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9179");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9180");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9184");
-    node.BrowseName = ToQualifiedName("LastTransition");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9178");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2767");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LastTransition");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9184");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9185");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9184");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9188");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9184");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9185");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9184");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9185");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9188");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9184");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9188");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9189");
-    node.BrowseName = ToQualifiedName("UnshelveTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9178");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("UnshelveTime");
-    attrs.Type = ToNodeId("i=290");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9189");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9214");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9213");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9214");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9215");
-    node.BrowseName = ToQualifiedName("SuppressedOrShelved");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SuppressedOrShelved");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9215");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9216");
-    node.BrowseName = ToQualifiedName("MaxTimeShelved");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("MaxTimeShelved");
-    attrs.Type = ToNodeId("i=290");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9216");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2929");
-    node.BrowseName = ToQualifiedName("ShelvedStateMachineType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2771");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ShelvedStateMachineType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9115");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2930");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2932");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2933");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2935");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2936");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2940");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2942");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2943");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2945");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2947");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2948");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=2929");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2949");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9115");
-    node.BrowseName = ToQualifiedName("UnshelveTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("UnshelveTime");
-    attrs.Type = ToNodeId("i=290");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9115");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2930");
-    node.BrowseName = ToQualifiedName("Unshelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Unshelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2930");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=6098");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=6098");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2930");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=6098");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2932");
-    node.BrowseName = ToQualifiedName("TimedShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("TimedShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2932");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=6100");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=6100");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2932");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=6100");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2933");
-    node.BrowseName = ToQualifiedName("OneShotShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("OneShotShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2933");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=6101");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=6101");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2933");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=6101");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2935");
-    node.BrowseName = ToQualifiedName("UnshelvedToTimedShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("UnshelvedToTimedShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2935");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11322");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2935");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2930");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2935");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2932");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2935");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2935");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2949");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11322");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2935");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11322");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2936");
-    node.BrowseName = ToQualifiedName("UnshelvedToOneShotShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("UnshelvedToOneShotShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2936");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11323");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2936");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2930");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2936");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2933");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2936");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2936");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2948");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11323");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2936");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11323");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2940");
-    node.BrowseName = ToQualifiedName("TimedShelvedToUnshelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("TimedShelvedToUnshelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2940");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11324");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2940");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2932");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2940");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2930");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2940");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2940");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2947");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11324");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2940");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11324");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2942");
-    node.BrowseName = ToQualifiedName("TimedShelvedToOneShotShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("TimedShelvedToOneShotShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2942");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11325");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2942");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2932");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2942");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2933");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2942");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2942");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2948");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11325");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2942");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11325");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2943");
-    node.BrowseName = ToQualifiedName("OneShotShelvedToUnshelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("OneShotShelvedToUnshelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2943");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11326");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2943");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2933");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2943");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2930");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2943");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2943");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2947");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11326");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2943");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11326");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2945");
-    node.BrowseName = ToQualifiedName("OneShotShelvedToTimedShelved");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=2929");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("OneShotShelvedToTimedShelved");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11327");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=2945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2933");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=2945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2932");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=54");
-      ref.SourceNodeId = ToNodeId("i=2945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2915");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=53");
-      ref.SourceNodeId = ToNodeId("i=2945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=2949");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11327");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2945");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11327");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2991");
-    node.BrowseName = ToQualifiedName("InputArguments");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2949");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("InputArguments");
-    attrs.Type = ToNodeId("i=296");
-    attrs.Rank = 1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=2991");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2955");
-    node.BrowseName = ToQualifiedName("LimitAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("LimitAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2955");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11124");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2955");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11125");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2955");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11126");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2955");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11127");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11124");
-    node.BrowseName = ToQualifiedName("HighHighLimit");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighHighLimit");
-    attrs.Type = ObjectId::Double;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11124");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11125");
-    node.BrowseName = ToQualifiedName("HighLimit");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighLimit");
-    attrs.Type = ObjectId::Double;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11125");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11126");
-    node.BrowseName = ToQualifiedName("LowLimit");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowLimit");
-    attrs.Type = ObjectId::Double;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11126");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11127");
-    node.BrowseName = ToQualifiedName("LowLowLimit");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowLowLimit");
-    attrs.Type = ObjectId::Double;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11127");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9318");
-    node.BrowseName = ToQualifiedName("ExclusiveLimitStateMachineType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2771");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ExclusiveLimitStateMachineType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9329");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9331");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9333");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9335");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9337");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9338");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9339");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9318");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9340");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9329");
-    node.BrowseName = ToQualifiedName("HighHigh");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighHigh");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9329");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9330");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9330");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9329");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9330");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9331");
-    node.BrowseName = ToQualifiedName("High");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("High");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9331");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9332");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9332");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9331");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9332");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9333");
-    node.BrowseName = ToQualifiedName("Low");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("Low");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9333");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9334");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9334");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9333");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9334");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9335");
-    node.BrowseName = ToQualifiedName("LowLow");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2307");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowLow");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9335");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9336");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9336");
-    node.BrowseName = ToQualifiedName("StateNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9335");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("StateNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9336");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9337");
-    node.BrowseName = ToQualifiedName("LowLowToLow");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowLowToLow");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9337");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11340");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=9337");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9335");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=9337");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9333");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11340");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9337");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11340");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9338");
-    node.BrowseName = ToQualifiedName("LowToLowLow");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowToLowLow");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9338");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11341");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=9338");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9333");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=9338");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9335");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11341");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9338");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11341");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9339");
-    node.BrowseName = ToQualifiedName("HighHighToHigh");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighHighToHigh");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9339");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11342");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=9339");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9329");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=9339");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9331");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11342");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9339");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11342");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9340");
-    node.BrowseName = ToQualifiedName("HighToHighHigh");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9318");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2310");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighToHighHigh");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9340");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11343");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=51");
-      ref.SourceNodeId = ToNodeId("i=9340");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9331");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=52");
-      ref.SourceNodeId = ToNodeId("i=9340");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9329");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11343");
-    node.BrowseName = ToQualifiedName("TransitionNumber");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9340");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionNumber");
-    attrs.Type = ObjectId::UInt32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11343");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9341");
-    node.BrowseName = ToQualifiedName("ExclusiveLimitAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ExclusiveLimitAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9341");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9398");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9341");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9455");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9398");
-    node.BrowseName = ToQualifiedName("ActiveState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9341");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ActiveState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9398");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9399");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9398");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9455");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9398");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9399");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9398");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9399");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9455");
-    node.BrowseName = ToQualifiedName("LimitState");
-    node.Class = NodeClass::Object;
-    node.ParentNodeId = ToNodeId("i=9341");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=9318");
-    ObjectAttributes attrs;
-    attrs.DisplayName = LocalizedText("LimitState");
-    attrs.EventNotifier = 0;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9455");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9456");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9455");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9461");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9455");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9456");
-    node.BrowseName = ToQualifiedName("CurrentState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9455");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2760");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("CurrentState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9456");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9457");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9456");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9457");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9456");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9457");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9461");
-    node.BrowseName = ToQualifiedName("LastTransition");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9455");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=2767");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LastTransition");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9461");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9462");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9461");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9465");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9461");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9462");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9461");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9462");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9465");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9461");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9465");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9906");
-    node.BrowseName = ToQualifiedName("NonExclusiveLimitAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2955");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("NonExclusiveLimitAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9906");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9963");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9906");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10020");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9906");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10029");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9906");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10038");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasComponent;
-      ref.SourceNodeId = ToNodeId("i=9906");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10047");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9963");
-    node.BrowseName = ToQualifiedName("ActiveState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ActiveState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9964");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10020");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10029");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10038");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ToNodeId("i=9004");
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10047");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9963");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9964");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9963");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9964");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10020");
-    node.BrowseName = ToQualifiedName("HighHighState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighHighState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10020");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10021");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10020");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10025");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10020");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10021");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10020");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10021");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10025");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10020");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10025");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10029");
-    node.BrowseName = ToQualifiedName("HighState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("HighState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10029");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10030");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10029");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10034");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10029");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10030");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10029");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10030");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10034");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10029");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10034");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10038");
-    node.BrowseName = ToQualifiedName("LowState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10038");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10039");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10038");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10043");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10038");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10039");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10038");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10039");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10043");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10038");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10043");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10047");
-    node.BrowseName = ToQualifiedName("LowLowState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasComponent;
-    node.TypeDefinition = ToNodeId("i=8995");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("LowLowState");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10047");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10048");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10047");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10052");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10047");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10048");
-    node.BrowseName = ToQualifiedName("Id");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10047");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Id");
-    attrs.Type = ObjectId::Boolean;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10048");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10052");
-    node.BrowseName = ToQualifiedName("TransitionTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10047");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("TransitionTime");
-    attrs.Type = ToNodeId("i=294");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10052");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=80");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10060");
-    node.BrowseName = ToQualifiedName("NonExclusiveLevelAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("NonExclusiveLevelAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9482");
-    node.BrowseName = ToQualifiedName("ExclusiveLevelAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9341");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ExclusiveLevelAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10368");
-    node.BrowseName = ToQualifiedName("NonExclusiveDeviationAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("NonExclusiveDeviationAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10368");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=10522");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10522");
-    node.BrowseName = ToQualifiedName("SetpointNode");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10368");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SetpointNode");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=10522");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9764");
-    node.BrowseName = ToQualifiedName("ExclusiveDeviationAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9341");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ExclusiveDeviationAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=9764");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=9905");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9905");
-    node.BrowseName = ToQualifiedName("SetpointNode");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=9764");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SetpointNode");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=9905");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10214");
-    node.BrowseName = ToQualifiedName("NonExclusiveRateOfChangeAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9906");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("NonExclusiveRateOfChangeAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9623");
-    node.BrowseName = ToQualifiedName("ExclusiveRateOfChangeAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=9341");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ExclusiveRateOfChangeAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10523");
-    node.BrowseName = ToQualifiedName("DiscreteAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2915");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("DiscreteAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10637");
-    node.BrowseName = ToQualifiedName("OffNormalAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=10523");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("OffNormalAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=10637");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11158");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11158");
-    node.BrowseName = ToQualifiedName("NormalState");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=10637");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("NormalState");
-    attrs.Type = ObjectId::NodeId;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11158");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11753");
-    node.BrowseName = ToQualifiedName("SystemOffNormalAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=10637");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("SystemOffNormalAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=10751");
-    node.BrowseName = ToQualifiedName("TripAlarmType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=10637");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("TripAlarmType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11163");
-    node.BrowseName = ToQualifiedName("BaseConditionClassType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=58");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("BaseConditionClassType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11164");
-    node.BrowseName = ToQualifiedName("ProcessConditionClassType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=11163");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("ProcessConditionClassType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11165");
-    node.BrowseName = ToQualifiedName("MaintenanceConditionClassType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=11163");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("MaintenanceConditionClassType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11166");
-    node.BrowseName = ToQualifiedName("SystemConditionClassType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=11163");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("SystemConditionClassType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2790");
-    node.BrowseName = ToQualifiedName("AuditConditionEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2127");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2803");
-    node.BrowseName = ToQualifiedName("AuditConditionEnableEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionEnableEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2829");
-    node.BrowseName = ToQualifiedName("AuditConditionCommentEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionCommentEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2829");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=4170");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=2829");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11851");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=4170");
-    node.BrowseName = ToQualifiedName("EventId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2829");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("A globally unique identifier for the event.");
-    attrs.DisplayName = LocalizedText("EventId");
-    attrs.Type = ObjectId::ByteString;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=4170");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11851");
-    node.BrowseName = ToQualifiedName("Comment");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=2829");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Comment");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11851");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8927");
-    node.BrowseName = ToQualifiedName("AuditConditionRespondEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionRespondEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8927");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11852");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11852");
-    node.BrowseName = ToQualifiedName("SelectedResponse");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8927");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("SelectedResponse");
-    attrs.Type = ObjectId::Int32;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11852");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8944");
-    node.BrowseName = ToQualifiedName("AuditConditionAcknowledgeEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionAcknowledgeEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8944");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8945");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8944");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11853");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8945");
-    node.BrowseName = ToQualifiedName("EventId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8944");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("A globally unique identifier for the event.");
-    attrs.DisplayName = LocalizedText("EventId");
-    attrs.Type = ObjectId::ByteString;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=8945");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11853");
-    node.BrowseName = ToQualifiedName("Comment");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8944");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Comment");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11853");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8961");
-    node.BrowseName = ToQualifiedName("AuditConditionConfirmEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionConfirmEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8961");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=8962");
-      refs.push_back(ref);
-    }
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=8961");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11854");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=8962");
-    node.BrowseName = ToQualifiedName("EventId");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8961");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.Description = LocalizedText("A globally unique identifier for the event.");
-    attrs.DisplayName = LocalizedText("EventId");
-    attrs.Type = ObjectId::ByteString;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=8962");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11854");
-    node.BrowseName = ToQualifiedName("Comment");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=8961");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("Comment");
-    attrs.Type = ObjectId::LocalizedText;
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11854");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11093");
-    node.BrowseName = ToQualifiedName("AuditConditionShelvingEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2790");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("AuditConditionShelvingEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasProperty;
-      ref.SourceNodeId = ToNodeId("i=11093");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=11855");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=11855");
-    node.BrowseName = ToQualifiedName("ShelvingTime");
-    node.Class = NodeClass::Variable;
-    node.ParentNodeId = ToNodeId("i=11093");
-    node.ReferenceTypeId = ReferenceId::HasProperty;
-    node.TypeDefinition = ToNodeId("i=68");
-    VariableAttributes attrs;
-    attrs.DisplayName = LocalizedText("ShelvingTime");
-    attrs.Type = ToNodeId("i=290");
-    attrs.Rank = -1;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-    std::vector<AddReferencesItem> refs;
-    {
-      AddReferencesItem ref;
-      ref.IsForward = true;
-      ref.ReferenceTypeId = ReferenceId::HasModellingRule;
-      ref.SourceNodeId = ToNodeId("i=11855");
-      ref.TargetNodeClass = NodeClass::DataType;
-      ref.TargetNodeId = ToNodeId("i=78");
-      refs.push_back(ref);
-    }
-    registry.AddReferences(refs);
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2787");
-    node.BrowseName = ToQualifiedName("RefreshStartEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2130");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("RefreshStartEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2788");
-    node.BrowseName = ToQualifiedName("RefreshEndEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2130");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("RefreshEndEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=2789");
-    node.BrowseName = ToQualifiedName("RefreshRequiredEventType");
-    node.Class = NodeClass::ObjectType;
-    node.ParentNodeId = ToNodeId("i=2130");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ObjectTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("RefreshRequiredEventType");
-    attrs.IsAbstract = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
-
-  {
-    AddNodesItem node;
-    node.RequestedNewNodeId = ToNodeId("i=9006");
-    node.BrowseName = ToQualifiedName("HasCondition");
-    node.Class = NodeClass::ReferenceType;
-    node.ParentNodeId = ToNodeId("i=32");
-    node.ReferenceTypeId = ReferenceId::HasSubtype;
-    ReferenceTypeAttributes attrs;
-    attrs.DisplayName = LocalizedText("HasCondition");
-    attrs.InverseName = LocalizedText("IsConditionOf");
-    attrs.IsAbstract = false;
-    attrs.Symmetric = false;
-    node.Attributes = attrs;
-    registry.AddNodes(std::vector<AddNodesItem> {node});
-  }
+  create_8995(registry);
+  create_8996(registry);
+  create_9000(registry);
+  create_9001(registry);
+  create_11110(registry);
+  create_11111(registry);
+  create_9002(registry);
+  create_9003(registry);
+  create_9004(registry);
+  create_9005(registry);
+  create_2782(registry);
+  create_11112(registry);
+  create_11113(registry);
+  create_9009(registry);
+  create_9010(registry);
+  create_3874(registry);
+  create_9011(registry);
+  create_9012(registry);
+  create_9015(registry);
+  create_9016(registry);
+  create_9017(registry);
+  create_9020(registry);
+  create_9021(registry);
+  create_9022(registry);
+  create_9023(registry);
+  create_9024(registry);
+  create_9025(registry);
+  create_9026(registry);
+  create_9030(registry);
+  create_3876(registry);
+  create_2830(registry);
+  create_9035(registry);
+  create_9036(registry);
+  create_9055(registry);
+  create_9056(registry);
+  create_9060(registry);
+  create_2831(registry);
+  create_9064(registry);
+  create_9065(registry);
+  create_9066(registry);
+  create_9067(registry);
+  create_9068(registry);
+  create_9070(registry);
+  create_2881(registry);
+  create_9073(registry);
+  create_9074(registry);
+  create_9093(registry);
+  create_9094(registry);
+  create_9098(registry);
+  create_9102(registry);
+  create_9103(registry);
+  create_9107(registry);
+  create_9112(registry);
+  create_9114(registry);
+  create_2915(registry);
+  create_9118(registry);
+  create_9119(registry);
+  create_9160(registry);
+  create_9161(registry);
+  create_9164(registry);
+  create_9165(registry);
+  create_9166(registry);
+  create_11120(registry);
+  create_9169(registry);
+  create_9170(registry);
+  create_9174(registry);
+  create_9178(registry);
+  create_9179(registry);
+  create_9180(registry);
+  create_9184(registry);
+  create_9185(registry);
+  create_9188(registry);
+  create_9189(registry);
+  create_9214(registry);
+  create_9215(registry);
+  create_9216(registry);
+  create_2929(registry);
+  create_9115(registry);
+  create_2930(registry);
+  create_6098(registry);
+  create_2932(registry);
+  create_6100(registry);
+  create_2933(registry);
+  create_6101(registry);
+  create_2935(registry);
+  create_11322(registry);
+  create_2936(registry);
+  create_11323(registry);
+  create_2940(registry);
+  create_11324(registry);
+  create_2942(registry);
+  create_11325(registry);
+  create_2943(registry);
+  create_11326(registry);
+  create_2945(registry);
+  create_11327(registry);
+  create_2991(registry);
+  create_2955(registry);
+  create_11124(registry);
+  create_11125(registry);
+  create_11126(registry);
+  create_11127(registry);
+  create_9318(registry);
+  create_9329(registry);
+  create_9330(registry);
+  create_9331(registry);
+  create_9332(registry);
+  create_9333(registry);
+  create_9334(registry);
+  create_9335(registry);
+  create_9336(registry);
+  create_9337(registry);
+  create_11340(registry);
+  create_9338(registry);
+  create_11341(registry);
+  create_9339(registry);
+  create_11342(registry);
+  create_9340(registry);
+  create_11343(registry);
+  create_9341(registry);
+  create_9398(registry);
+  create_9399(registry);
+  create_9455(registry);
+  create_9456(registry);
+  create_9457(registry);
+  create_9461(registry);
+  create_9462(registry);
+  create_9465(registry);
+  create_9906(registry);
+  create_9963(registry);
+  create_9964(registry);
+  create_10020(registry);
+  create_10021(registry);
+  create_10025(registry);
+  create_10029(registry);
+  create_10030(registry);
+  create_10034(registry);
+  create_10038(registry);
+  create_10039(registry);
+  create_10043(registry);
+  create_10047(registry);
+  create_10048(registry);
+  create_10052(registry);
+  create_10060(registry);
+  create_9482(registry);
+  create_10368(registry);
+  create_10522(registry);
+  create_9764(registry);
+  create_9905(registry);
+  create_10214(registry);
+  create_9623(registry);
+  create_10523(registry);
+  create_10637(registry);
+  create_11158(registry);
+  create_11753(registry);
+  create_10751(registry);
+  create_11163(registry);
+  create_11164(registry);
+  create_11165(registry);
+  create_11166(registry);
+  create_2790(registry);
+  create_2803(registry);
+  create_2829(registry);
+  create_4170(registry);
+  create_11851(registry);
+  create_8927(registry);
+  create_11852(registry);
+  create_8944(registry);
+  create_8945(registry);
+  create_11853(registry);
+  create_8961(registry);
+  create_8962(registry);
+  create_11854(registry);
+  create_11093(registry);
+  create_11855(registry);
+  create_2787(registry);
+  create_2788(registry);
+  create_2789(registry);
+  create_9006(registry);
 
 }
 
