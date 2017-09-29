@@ -550,6 +550,7 @@ public:
   virtual std::vector<MonitoredItemCreateResult> CreateMonitoredItems(const MonitoredItemsParameters & parameters) override
   {
     LOG_DEBUG(Logger, "binary_client         | CreateMonitoredItems -->");
+    LOG_TRACE(Logger, "binary_client         | {}", parameters);
 
     CreateMonitoredItemsRequest request;
     request.Parameters = parameters;
@@ -868,10 +869,7 @@ private:
     Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
     lock.unlock();
     
-    if (Logger && Logger->should_log(spdlog::level::debug))
-      {
-        Logger->debug("binary_client         | send: id: {}({}), handle: {}: UtcTime: {}", ToString(request.TypeId), ToString(ObjectId(request.TypeId.GetIntegerIdentifier())), request.Header.RequestHandle, ToString(request.Header.UtcTime));
-      }
+    LOG_DEBUG(Logger, "binary_client         | send: id: {} handle: {}, UtcTime: {}", ToString(request.TypeId, true), request.Header.RequestHandle, request.Header.UtcTime);
 
     Send(request);
 
@@ -995,10 +993,7 @@ private:
     BufferInputChannel bufferInput(buffer);
     Binary::RawBuffer raw(&buffer[0], dataSize);
     Stream >> raw;
-    if (Logger && Logger->should_log(spdlog::level::trace))
-      {
-        Logger->trace("binary_client         | received message data: {}", ToHexDump(buffer));
-      }
+    LOG_TRACE(Logger, "binary_client         | received message data: {}", ToHexDump(buffer));
 
     if (!firstMsgParsed)
       {
@@ -1006,15 +1001,15 @@ private:
         in >> id;
         in >> header;
 
-        LOG_DEBUG(Logger, "binary_client         | got response id: {}({}), handle: {}", id, ToString(ObjectId(id.GetIntegerIdentifier())), header.RequestHandle);
+        LOG_DEBUG(Logger, "binary_client         | got response id: {}, handle: {}", ToString(id, true), header.RequestHandle);
 
         if (id == SERVICE_FAULT)
           {
-            LOG_WARN(Logger, "binary_client         | receive ServiceFault from Server with StatusCode: {}", OpcUa::ToString(header.ServiceResult));
+            LOG_WARN(Logger, "binary_client         | receive ServiceFault from Server with StatusCode: {}", header.ServiceResult);
           }
         else if (header.ServiceResult != StatusCode::Good)
           {
-            LOG_WARN(Logger, "binary_client         | received a response from server with error status: {}", OpcUa::ToString(header.ServiceResult));
+            LOG_WARN(Logger, "binary_client         | received a response from server with error status: {}", header.ServiceResult);
           }
 
         messageBuffer.insert(messageBuffer.end(), buffer.begin(), buffer.end());

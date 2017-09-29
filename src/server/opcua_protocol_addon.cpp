@@ -90,10 +90,7 @@ private:
     OpcUa::Binary::RawBuffer buf(&buffer[0], buffer.size());
     iStream >> buf;
 
-    if (Logger && Logger->should_log(spdlog::level::debug))
-      {
-        Logger->debug("opc_tcp_processor| received message:\n{}", ToHexDump(buffer));
-      }
+    LOG_DEBUG(Logger, "opc_tcp_processor| received message:\n{}", ToHexDump(buffer));
 
     // restrict server size code only with current message.
     OpcUa::InputFromBuffer messageChannel(&buffer[0], buffer.size());

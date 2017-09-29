@@ -96,10 +96,7 @@ public:
 
   virtual void Send(const char * message, std::size_t size)
   {
-    if (Logger && Logger->should_log(spdlog::level::trace))
-      {
-        Logger->trace("binary_connection     | send: {}", OpcUa::ToHexDump(message, size));
-      }
+    LOG_TRACE(Logger, "binary_connection     | send: {}", OpcUa::ToHexDump(message, size));
     return Channel.Send(message, size);
   }
 

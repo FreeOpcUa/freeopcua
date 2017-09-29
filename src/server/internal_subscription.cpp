@@ -288,17 +288,18 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
     if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier)
       {
         LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to event notifier", Data.SubscriptionId);
+        LOG_TRACE(Logger, "internal_subscription | id: {}, {}", Data.SubscriptionId, result.FilterResult);
 
-        //client want to subscribe to events
-        //FIXME: check attribute EVENT notifier is set for the node
+        // Client wants to subscribe to events
+        // FIXME: check attribute EVENT notifier is set for the node
         MonitoredEvents[request.ItemToMonitor.NodeId] = result.MonitoredItemId;
       }
   }
 
-  // do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
+  // Do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
   // function.
   // AddressSpaceInMemory functions call locked InternalSubscription functions
-  // which will result in deadlocks when used from differengt threads
+  // which will result in deadlocks when used from different threads
   if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier)
     {
       LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to data changes", Data.SubscriptionId);
@@ -308,20 +309,6 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
       {
         this->DataChangeCallback(id, value);
       });
-
-      // AddressSpace.AddDataChangeCallback uses exceptions to signal errors.
-      // Do not introduce another layer of error handling by special meanings of
-      // handles
-      /*
-      if (callbackHandle == 0)
-        {
-          LOG_ERROR(Logger, "internal_subscription | address returned zero handle");
-
-          --LastMonitoredItemId; //revert increment
-          result.Status = OpcUa::StatusCode::BadNodeAttributesInvalid;
-          return result;
-        }
-      */
     }
 
   MonitoredDataChange mdata;
@@ -337,11 +324,11 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
     MonitoredDataChanges[result.MonitoredItemId] = mdata;
   }
 
-  // do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
+  // Do not lock this part as it (indirectly) calls a locked AddressSpaceInMemory
   // function.
   LOG_DEBUG(Logger, "internal_subscription | id: {}, created MonitoredItem id: {}, ClientHandle: {}", Data.SubscriptionId, result.MonitoredItemId, mdata.ClientHandle);
 
-  //Forcing event,
+  // Forcing event
   if (request.ItemToMonitor.AttributeId != AttributeId::EventNotifier)
     {
       TriggerDataChangeEvent(mdata, request.ItemToMonitor);

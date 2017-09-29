@@ -42,7 +42,7 @@ enum NodeIdEncoding : uint8_t
 struct ExpandedNodeId;
 
 struct NodeId
-  {
+{
   NodeIdEncoding Encoding;
   std::string NamespaceURI;
   uint32_t ServerIndex;
