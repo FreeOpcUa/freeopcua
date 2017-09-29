@@ -239,7 +239,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
 
   if (nodeit == Nodes.end())
     {
-      LOG_WARN(Logger, "address_space_internal| node not found: {}", node);
+//      LOG_DEBUG(Logger, "address_space_internal| node not found: {}", node);
     }
 
   else
@@ -248,7 +248,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
 
       if (attrit == nodeit->second.Attributes.end())
         {
-          LOG_WARN(Logger, "address_space_internal| node: {} has no attribute: {}", node, ToString(attribute));
+//          LOG_DEBUG(Logger, "address_space_internal| node: {} has no attribute: {}", node, ToString(attribute));
         }
 
       else
