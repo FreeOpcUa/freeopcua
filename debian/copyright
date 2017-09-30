@@ -1,5 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: opcuaserver
+Upstream-Name: freeopcua
 source: https://github.com/treww/opcua-server/archive/master.zip
 
 Files: *
