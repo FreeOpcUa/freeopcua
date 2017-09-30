@@ -1,2 +1,14 @@
-usr/include/*
-usr/share/pkgconfig/*
+usr/include/opc/common/*
+usr/include/opc/spdlog/*
+usr/include/opc/ua/connection_listener.h
+usr/include/opc/ua/errors.h
+usr/include/opc/ua/event.h
+usr/include/opc/ua/global.h
+usr/include/opc/ua/model.h
+usr/include/opc/ua/node.h
+usr/include/opc/ua/server_operations.h
+usr/include/opc/ua/services/*
+usr/include/opc/ua/socket_channel.h
+usr/include/opc/ua/subscription.h
+usr/lib/cmake/FreeOpcUa/*
+usr/lib/*/pkgconfig/libopcuacore.pc

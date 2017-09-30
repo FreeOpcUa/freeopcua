@@ -1,0 +1,2 @@
+usr/include/opc/ua/protocol/*
+usr/lib/*/pkgconfig/libopcuaprotocol.pc

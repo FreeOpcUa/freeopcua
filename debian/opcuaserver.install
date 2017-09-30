@@ -1,6 +1,0 @@
-etc/opcua/server/main.conf
-usr/bin/opcuaserver
-usr/lib/libopcuaserver.a
-usr/lib/libopcuaserver.so*
-usr/share/pkgconfig/libopcuaprotocol.pc
-

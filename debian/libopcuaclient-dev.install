@@ -1,0 +1,2 @@
+usr/include/opc/ua/client/*
+usr/lib/*/pkgconfig/libopcuaclient.pc

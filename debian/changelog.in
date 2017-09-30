@@ -1,4 +1,4 @@
-opcuaserver (@PACKAGE_VERSION@) unstable; urgency=low
+freeopcua (@PACKAGE_VERSION@) unstable; urgency=low
 
   * Release @PACKAGE_VERSION@
 
