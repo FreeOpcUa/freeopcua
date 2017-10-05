@@ -54,6 +54,11 @@ NodeId Node::GetId() const
 
 DataValue Node::GetAttribute(const AttributeId attr) const
 {
+  if (!Server)
+    {
+      return DataValue();
+    }
+
   ReadParameters params;
   ReadValueId attribute;
   attribute.NodeId = Id;

@@ -71,12 +71,24 @@ public:
   Node GetChild(const std::vector<std::string> & path) const;
   Node GetChild(const std::string & browsename) const ;
 
-  std::vector<Node> GetProperties() const;
-  std::vector<Node> GetVariables() const {return GetChildren(OpcUa::ReferenceId::HasComponent);} //Not correct should filter by variable type
-
-
-
   //TODO: How to get References?
+  std::vector<Node> GetProperties() const;
+  std::vector<Node> GetVariables() const { return GetChildren(OpcUa::ReferenceId::HasComponent); } //Not correct should filter by variable type
+
+  bool IsValid() const
+  {
+    try
+      {
+        auto value = GetAttribute(AttributeId::NodeId).Value;
+        if (value.IsNul())
+          {
+            return false;
+          }
+        return !value.As<NodeId>().IsNull();
+      } catch (std::exception& e) {
+        return false;
+      }
+  }
 
   //The Read and Write methods read or write attributes of the node
   //FIXME: add possibility to read and write several nodes at once
