@@ -328,12 +328,18 @@ void DataDeserializer::Deserialize<XmlElement>(XmlElement & data)
 */
 
 template<>
-void DataDeserializer::Deserialize<ExtensionObject>(ExtensionObject & data)
+void DataDeserializer::Deserialize<OpcUa::ExtensionObject>(OpcUa::ExtensionObject & data)
 {
   *this >> data.TypeId;
   *this >> data.Encoding;
 
   if ((data.Encoding) & (1 >> (0))) { *this >> data.Body; }
+}
+
+template<>
+void DataDeserializer::Deserialize<std::vector<OpcUa::ExtensionObject>>(std::vector<OpcUa::ExtensionObject> & infos)
+{
+	DeserializeContainer(*this, infos);
 }
 
 
