@@ -288,7 +288,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/status_codes.cpp \
   src/protocol/string_utils.cpp \
   src/protocol/string_utils_attributeid_tostring.cpp \
-  src/protocol/string_utils_object_tostring.cpp \
+  src/protocol/string_utils_objectid_tostring.cpp \
   src/protocol/string_utils_statuscode_tostring.cpp \
   src/protocol/constructors_auto.cpp
 
