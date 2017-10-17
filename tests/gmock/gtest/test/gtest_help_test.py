@@ -109,18 +109,18 @@ class GTestHelpTest(gtest_test_utils.TestCase):
     """
 
     exit_code, output = RunWithFlag(flag)
-    self.assertEquals(0, exit_code)
-    self.assert_(HELP_REGEX.search(output), output)
+    self.assertEqual(0, exit_code)
+    self.assertTrue(HELP_REGEX.search(output), output)
 
     if IS_LINUX:
-      self.assert_(STREAM_RESULT_TO_FLAG in output, output)
+      self.assertTrue(STREAM_RESULT_TO_FLAG in output, output)
     else:
-      self.assert_(STREAM_RESULT_TO_FLAG not in output, output)
+      self.assertTrue(STREAM_RESULT_TO_FLAG not in output, output)
 
     if SUPPORTS_DEATH_TESTS and not IS_WINDOWS:
-      self.assert_(DEATH_TEST_STYLE_FLAG in output, output)
+      self.assertTrue(DEATH_TEST_STYLE_FLAG in output, output)
     else:
-      self.assert_(DEATH_TEST_STYLE_FLAG not in output, output)
+      self.assertTrue(DEATH_TEST_STYLE_FLAG not in output, output)
 
   def TestNonHelpFlag(self, flag):
     """Verifies correct behavior when no help flag is specified.
@@ -133,8 +133,8 @@ class GTestHelpTest(gtest_test_utils.TestCase):
     """
 
     exit_code, output = RunWithFlag(flag)
-    self.assert_(exit_code != 0)
-    self.assert_(not HELP_REGEX.search(output), output)
+    self.assertTrue(exit_code != 0)
+    self.assertTrue(not HELP_REGEX.search(output), output)
 
   def testPrintsHelpWithFullFlag(self):
     self.TestHelpFlag('--help')

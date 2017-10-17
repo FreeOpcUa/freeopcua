@@ -209,16 +209,16 @@ class GTestXMLOutputUnitTest(gtest_xml_test_utils.GTestXMLTestCase):
         'gtest_no_test_unittest')
     try:
       os.remove(output_file)
-    except OSError, e:
+    except OSError as e:
       if e.errno != errno.ENOENT:
         raise
 
     p = gtest_test_utils.Subprocess(
         [gtest_prog_path, '%s=xml' % GTEST_OUTPUT_FLAG],
         working_dir=gtest_test_utils.GetTempDir())
-    self.assert_(p.exited)
-    self.assertEquals(0, p.exit_code)
-    self.assert_(os.path.isfile(output_file))
+    self.assertTrue(p.exited)
+    self.assertEqual(0, p.exit_code)
+    self.assertTrue(os.path.isfile(output_file))
 
   def testSuppressedXmlOutput(self):
     """
@@ -241,13 +241,13 @@ class GTestXMLOutputUnitTest(gtest_xml_test_utils.GTestXMLTestCase):
           p.terminated_by_signal,
           '%s was killed by signal %d' % (GTEST_PROGRAM_NAME, p.signal))
     else:
-      self.assert_(p.exited)
-      self.assertEquals(1, p.exit_code,
+      self.assertTrue(p.exited)
+      self.assertEqual(1, p.exit_code,
                         "'%s' exited with code %s, which doesn't match "
                         'the expected exit code %s.'
                         % (command, p.exit_code, 1))
 
-    self.assert_(not os.path.isfile(xml_path))
+    self.assertTrue(not os.path.isfile(xml_path))
 
   def testFilteredTestXmlOutput(self):
     """Verifies XML output when a filter is applied.
@@ -272,11 +272,11 @@ class GTestXMLOutputUnitTest(gtest_xml_test_utils.GTestXMLTestCase):
                extra_args)
     p = gtest_test_utils.Subprocess(command)
     if p.terminated_by_signal:
-      self.assert_(False,
+      self.assertTrue(False,
                    '%s was killed by signal %d' % (gtest_prog_name, p.signal))
     else:
-      self.assert_(p.exited)
-      self.assertEquals(expected_exit_code, p.exit_code,
+      self.assertTrue(p.exited)
+      self.assertEqual(expected_exit_code, p.exit_code,
                         "'%s' exited with code %s, which doesn't match "
                         'the expected exit code %s.'
                         % (command, p.exit_code, expected_exit_code))
