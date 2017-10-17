@@ -70,7 +70,7 @@ def SetEnvVar(env_var, value):
 def Run(command):
   """Runs a command; returns True/False if its exit code is/isn't 0."""
 
-  print 'Running "%s". . .' % ' '.join(command)
+  print('Running "%s". . .' % ' '.join(command))
   p = gtest_test_utils.Subprocess(command)
   return p.exited and p.exit_code == 0
 
@@ -123,7 +123,7 @@ class ThrowOnFailureTest(gtest_test_utils.TestCase):
            'exit code.' %
            (THROW_ON_FAILURE, env_var_value_msg, ' '.join(command),
             should_or_not))
-    self.assert_(failed == should_fail, msg)
+    self.assertTrue(failed == should_fail, msg)
 
   def testDefaultBehavior(self):
     """Tests the behavior of the default mode."""

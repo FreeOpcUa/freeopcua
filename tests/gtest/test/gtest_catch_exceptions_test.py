@@ -87,21 +87,21 @@ if SUPPORTS_SEH_EXCEPTIONS:
 
 
     def TestSehExceptions(self, test_output):
-      self.assert_('SEH exception with code 0x2a thrown '
+      self.assertTrue('SEH exception with code 0x2a thrown '
                    'in the test fixture\'s constructor'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown '
+      self.assertTrue('SEH exception with code 0x2a thrown '
                    'in the test fixture\'s destructor'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown in SetUpTestCase()'
+      self.assertTrue('SEH exception with code 0x2a thrown in SetUpTestCase()'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown in TearDownTestCase()'
+      self.assertTrue('SEH exception with code 0x2a thrown in TearDownTestCase()'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown in SetUp()'
+      self.assertTrue('SEH exception with code 0x2a thrown in SetUp()'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown in TearDown()'
+      self.assertTrue('SEH exception with code 0x2a thrown in TearDown()'
                    in test_output)
-      self.assert_('SEH exception with code 0x2a thrown in the test body'
+      self.assertTrue('SEH exception with code 0x2a thrown in the test body'
                    in test_output)
 
     def testCatchesSehExceptionsWithCxxExceptionsEnabled(self):
@@ -121,11 +121,11 @@ class CatchCxxExceptionsTest(gtest_test_utils.TestCase):
   """
 
   def testCatchesCxxExceptionsInFixtureConstructor(self):
-    self.assert_('C++ exception with description '
+    self.assertTrue('C++ exception with description '
                  '"Standard C++ exception" thrown '
                  'in the test fixture\'s constructor'
                  in EX_BINARY_OUTPUT)
-    self.assert_('unexpected' not in EX_BINARY_OUTPUT,
+    self.assertTrue('unexpected' not in EX_BINARY_OUTPUT,
                  'This failure belongs in this test only if '
                  '"CxxExceptionInConstructorTest" (no quotes) '
                  'appears on the same line as words "called unexpectedly"')
@@ -134,87 +134,87 @@ class CatchCxxExceptionsTest(gtest_test_utils.TestCase):
       EX_BINARY_OUTPUT):
 
     def testCatchesCxxExceptionsInFixtureDestructor(self):
-      self.assert_('C++ exception with description '
+      self.assertTrue('C++ exception with description '
                    '"Standard C++ exception" thrown '
                    'in the test fixture\'s destructor'
                    in EX_BINARY_OUTPUT)
-      self.assert_('CxxExceptionInDestructorTest::TearDownTestCase() '
+      self.assertTrue('CxxExceptionInDestructorTest::TearDownTestCase() '
                    'called as expected.'
                    in EX_BINARY_OUTPUT)
 
   def testCatchesCxxExceptionsInSetUpTestCase(self):
-    self.assert_('C++ exception with description "Standard C++ exception"'
+    self.assertTrue('C++ exception with description "Standard C++ exception"'
                  ' thrown in SetUpTestCase()'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInConstructorTest::TearDownTestCase() '
+    self.assertTrue('CxxExceptionInConstructorTest::TearDownTestCase() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTestCaseTest constructor '
+    self.assertTrue('CxxExceptionInSetUpTestCaseTest constructor '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTestCaseTest destructor '
+    self.assertTrue('CxxExceptionInSetUpTestCaseTest destructor '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTestCaseTest::SetUp() '
+    self.assertTrue('CxxExceptionInSetUpTestCaseTest::SetUp() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTestCaseTest::TearDown() '
+    self.assertTrue('CxxExceptionInSetUpTestCaseTest::TearDown() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTestCaseTest test body '
+    self.assertTrue('CxxExceptionInSetUpTestCaseTest test body '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
 
   def testCatchesCxxExceptionsInTearDownTestCase(self):
-    self.assert_('C++ exception with description "Standard C++ exception"'
+    self.assertTrue('C++ exception with description "Standard C++ exception"'
                  ' thrown in TearDownTestCase()'
                  in EX_BINARY_OUTPUT)
 
   def testCatchesCxxExceptionsInSetUp(self):
-    self.assert_('C++ exception with description "Standard C++ exception"'
+    self.assertTrue('C++ exception with description "Standard C++ exception"'
                  ' thrown in SetUp()'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTest::TearDownTestCase() '
+    self.assertTrue('CxxExceptionInSetUpTest::TearDownTestCase() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTest destructor '
+    self.assertTrue('CxxExceptionInSetUpTest destructor '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInSetUpTest::TearDown() '
+    self.assertTrue('CxxExceptionInSetUpTest::TearDown() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('unexpected' not in EX_BINARY_OUTPUT,
+    self.assertTrue('unexpected' not in EX_BINARY_OUTPUT,
                  'This failure belongs in this test only if '
                  '"CxxExceptionInSetUpTest" (no quotes) '
                  'appears on the same line as words "called unexpectedly"')
 
   def testCatchesCxxExceptionsInTearDown(self):
-    self.assert_('C++ exception with description "Standard C++ exception"'
+    self.assertTrue('C++ exception with description "Standard C++ exception"'
                  ' thrown in TearDown()'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInTearDownTest::TearDownTestCase() '
+    self.assertTrue('CxxExceptionInTearDownTest::TearDownTestCase() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInTearDownTest destructor '
+    self.assertTrue('CxxExceptionInTearDownTest destructor '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
 
   def testCatchesCxxExceptionsInTestBody(self):
-    self.assert_('C++ exception with description "Standard C++ exception"'
+    self.assertTrue('C++ exception with description "Standard C++ exception"'
                  ' thrown in the test body'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInTestBodyTest::TearDownTestCase() '
+    self.assertTrue('CxxExceptionInTestBodyTest::TearDownTestCase() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInTestBodyTest destructor '
+    self.assertTrue('CxxExceptionInTestBodyTest destructor '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
-    self.assert_('CxxExceptionInTestBodyTest::TearDown() '
+    self.assertTrue('CxxExceptionInTestBodyTest::TearDown() '
                  'called as expected.'
                  in EX_BINARY_OUTPUT)
 
   def testCatchesNonStdCxxExceptions(self):
-    self.assert_('Unknown C++ exception thrown in the test body'
+    self.assertTrue('Unknown C++ exception thrown in the test body'
                  in EX_BINARY_OUTPUT)
 
   def testUnhandledCxxExceptionsAbortTheProgram(self):
@@ -228,9 +228,9 @@ class CatchCxxExceptionsTest(gtest_test_utils.TestCase):
          FITLER_OUT_SEH_TESTS_FLAG],
         env=environ).output
 
-    self.assert_('Unhandled C++ exception terminating the program'
+    self.assertTrue('Unhandled C++ exception terminating the program'
                  in uncaught_exceptions_ex_binary_output)
-    self.assert_('unexpected' not in uncaught_exceptions_ex_binary_output)
+    self.assertTrue('unexpected' not in uncaught_exceptions_ex_binary_output)
 
 
 if __name__ == '__main__':
