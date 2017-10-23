@@ -21,6 +21,17 @@ PKG_PROG_PKG_CONFIG
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
 
+# Setup custom BOOST paths
+AC_ARG_WITH([boost],
+   [AS_HELP_STRING(
+        [--with-boost=PATH],
+        [prefix where BOOST is installed @<:@default=/usr/local@:>@])],
+   [BOOST_INSTALL_PATH=$withval],
+   [BOOST_INSTALL_PATH=/usr/local])
+
+LDFLAGS="$LDFLAGS -L$BOOST_INSTALL_PATH/lib"
+CXXFLAGS="$CXXFLAGS -I$BOOST_INSTALL_PATH/include"
+
 AC_ARG_ENABLE([gcov],
               [AS_HELP_STRING([--enable-gcov],[Enable support of coverage analysis with gcov.])],
               [
