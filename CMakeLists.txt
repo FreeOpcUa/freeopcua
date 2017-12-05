@@ -97,12 +97,8 @@ else(WIN32)
     SET(OS_SUFFIX _lin)
 
 
-    find_package(LibXml2 REQUIRED)
-    message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
-    include_directories( ${LIBXML2_INCLUDE_DIR} )
-
     #FIXME: remove that variable and link directly when necessary!!!!
-    SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${LIBXML2_LIBRARIES})
+    SET(ADDITIONAL_LINK_LIBRARIES pthread dl)
 
 endif(WIN32)
 

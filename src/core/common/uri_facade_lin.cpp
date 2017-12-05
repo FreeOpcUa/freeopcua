@@ -13,44 +13,34 @@
 
 #include <opc/common/exception.h>
 
-#include <libxml/uri.h>
+#include <regex>
 
 namespace Common
 {
 
 void Uri::Initialize(const char * uriString, std::size_t)
 {
-  xmlURIPtr uri = xmlParseURI(uriString);
-
-  if (!uri)
+  std::regex uri_regex("([a-zA-Z][a-zA-Z0-9.+-]*)://(([^@:]*)(:([^@]+))?@)?([^/:]+)(:([0-9]+))?([^?]*)(.*)?");
+  std::string uri_str(uriString);
+  std::smatch uri_match;
+  if (!std::regex_match(uri_str, uri_match, uri_regex))
     {
       THROW_ERROR1(CannotParseUri, uriString);
     }
 
-  if (uri->scheme)
-    {
-      SchemeStr = uri->scheme;
-    }
+  enum {Scheme = 1, User = 3, Password = 5, Host = 6, Port = 8, Path = 9, Query = 10, Fragment = 11};
 
-  if (uri->user)
-    {
-      UserStr = uri->user;
-      int ix = UserStr.find(':');
-
-      if (ix > 0)
-        {
-          PasswordStr = UserStr.substr(ix + 1);
-          UserStr = UserStr.substr(0, ix);
-        }
-    }
-
-  if (uri->server)
-    {
-      HostStr = uri->server;
-    }
-
-  PortNum = uri->port;
-  xmlFreeURI(uri);
+  SchemeStr = uri_match[Scheme].str();
+  PasswordStr = uri_match[Password].str();
+  UserStr = uri_match[User].str();
+  HostStr = uri_match[Host].str();
+  try {
+    std::string n = uri_match[Port].str();
+    PortNum = n.empty()? 0: stoul(n);
+  }
+  catch (...) {
+    THROW_ERROR1(CannotParseUri, uriString);
+  }
 
   if (SchemeStr.empty() || HostStr.empty())
     {
