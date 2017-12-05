@@ -25,6 +25,12 @@
 #include <opc/ua/node.h>
 #include <opc/ua/protocol/string_utils.h>
 
+#ifdef SSL_SUPPORT_MBEDTLS
+#include <mbedtls/entropy.h>
+#include <mbedtls/ctr_drbg.h>
+#include <mbedtls/x509_crt.h>
+#include <mbedtls/error.h>
+#endif
 
 namespace OpcUa
 {
@@ -237,8 +243,8 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   session.Timeout = DefaultTimeout;
   session.ServerURI = endpoint.Server.ApplicationUri;
 
-  CreateSessionResponse response = Server->CreateSession(session);
-  CheckStatusCode(response.Header.ServiceResult);
+  CreateSessionResponse create_session_response = Server->CreateSession(session);
+  CheckStatusCode(create_session_response.Header.ServiceResult);
 
   LOG_INFO(Logger, "ua_client             | create session OK");
 
@@ -253,7 +259,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
     bool user_identify_token_found = false;
     session_parameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
 
-    for (auto ep : response.Parameters.ServerEndpoints)
+    for (auto ep : create_session_response.Parameters.ServerEndpoints)
       {
         if (ep.SecurityMode == MessageSecurityMode::None)
           {
@@ -275,6 +281,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                       {
                         session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
                         session_parameters.UserIdentityToken.setUser(user, password);
+                        EncryptPassword(session_parameters.UserIdentityToken, create_session_response);
                         user_identify_token_found = true;
                         break;
                       }
@@ -293,9 +300,9 @@ void UaClient::Connect(const EndpointDescription & endpoint)
 
   LOG_INFO(Logger, "ua_client             | activate session OK");
 
-  if (response.Parameters.RevisedSessionTimeout > 0 && response.Parameters.RevisedSessionTimeout < DefaultTimeout)
+  if (create_session_response.Parameters.RevisedSessionTimeout > 0 && create_session_response.Parameters.RevisedSessionTimeout < DefaultTimeout)
     {
-      DefaultTimeout = response.Parameters.RevisedSessionTimeout;
+      DefaultTimeout = create_session_response.Parameters.RevisedSessionTimeout;
     }
 
   KeepAlive.Start(Server, Node(Server, ObjectId::Server_ServerStatus_State), DefaultTimeout);
@@ -475,5 +482,100 @@ ServerOperations UaClient::CreateServerOperations()
 {
   return ServerOperations(Server);
 }
+
+void UaClient::EncryptPassword(OpcUa::UserIdentifyToken &identity, const CreateSessionResponse &response)
+{
+  if(response.Parameters.ServerCertificate.Data.empty() || response.Parameters.ServerNonce.Data.empty()) {
+    // server response does not contain information needed to encrypt password
+    return;
+  }
+#ifdef SSL_SUPPORT_MBEDTLS
+  // use RSA-OAEP encryption if server certificate and nounce is provided
+  LOG_DEBUG(Logger, "ua_client             | encrypting password RSA-OAEP");
+  auto error2string = [](int err_no) -> std::string
+  {
+    auto int_to_hex = [](u_int16_t i) -> std::string
+    {
+      std::stringstream stream;
+      stream << std::setfill ('0') << std::setw(sizeof(i)*2) << std::hex << i;
+      return stream.str();
+    };
+
+    char buff[1024];
+    mbedtls_strerror(err_no, buff, sizeof(buff));
+    return "-" + int_to_hex(-err_no) + ": " + std::string(buff);
+  };
+  auto hex = [](const std::vector<unsigned char> &bytes)
+  {
+    std::string ret;
+    for(unsigned char c : bytes) {
+      auto val_to_digit = [](unsigned char c) { return (c >= 10)? c-10+'a': c+'0'; };
+      ret.push_back(val_to_digit(c/16));
+      ret.push_back(val_to_digit(c%16));
+    }
+    return ret;
+  };
+  mbedtls_x509_crt x509;
+  mbedtls_x509_crt_init( &x509 );
+  LOG_DEBUG(Logger, "ua_client             | loading server certificate ... {}", hex(response.Parameters.ServerCertificate.Data));
+  int ret = mbedtls_x509_crt_parse_der( &x509, response.Parameters.ServerCertificate.Data.data(), response.Parameters.ServerCertificate.Data.size());
+  if( ret != 0 ) {
+    LOG_ERROR(Logger, "ua_client             | error loading server certificate {}", error2string(ret) );
+    goto exit1;
+  }
+  {
+      mbedtls_entropy_context entropy;
+      mbedtls_ctr_drbg_context ctr_drbg;
+      const char pers[] = "freeopcua_ua_client";
+
+      mbedtls_ctr_drbg_init( &ctr_drbg );
+      mbedtls_entropy_init( &entropy );
+
+      LOG_DEBUG(Logger, "ua_client             | seeding the random number generator...");
+      ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *) pers, sizeof(pers) );
+      if( ret != 0 ) {
+        LOG_ERROR(Logger, "ua_client             | error seeding the random number generator {}", error2string(ret) );
+        goto exit2;
+      }
+      {
+        mbedtls_rsa_context *rsa = mbedtls_pk_rsa(x509.pk);
+        rsa->padding = MBEDTLS_RSA_PKCS_V21;
+        rsa->hash_id = MBEDTLS_MD_SHA1;
+
+        LOG_DEBUG(Logger, "ua_client             | generating the RSA encrypted value...");
+
+        unsigned char buff[rsa->len];
+        std::string input = identity.UserName.Password;
+        input += std::string(response.Parameters.ServerNonce.Data.begin(), response.Parameters.ServerNonce.Data.end());
+        {
+          std::string sn(4, '\0');
+          size_t l = input.length();
+          for (size_t i = 0; i < l; ++i) {
+            unsigned char n = l % 256;
+            l /= 256;
+            sn[i] = n;
+          }
+          input = sn + input;
+        }
+
+        ret = mbedtls_rsa_pkcs1_encrypt( rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, input.size(), (const unsigned char*)input.data(), buff );
+        if( ret != 0 ) {
+          LOG_ERROR(Logger, "ua_client             | error RSA encryption {}", error2string(ret) );
+          goto exit2;
+        }
+        LOG_DEBUG(Logger, "ua_client             | encrypted password: {}", hex(std::vector<unsigned char>(buff, buff + sizeof(buff))));
+
+        identity.UserName.Password = std::string((const char*)buff, rsa->len);
+        identity.UserName.EncryptionAlgorithm = "http://www.w3.org/2001/04/xmlenc#rsa-oaep";
+      }
+exit2:
+      mbedtls_ctr_drbg_free( &ctr_drbg );
+      mbedtls_entropy_free( &entropy );
+  }
+exit1:
+  mbedtls_x509_crt_free( &x509 );
+#endif
+}
+
 } // namespace OpcUa
 
