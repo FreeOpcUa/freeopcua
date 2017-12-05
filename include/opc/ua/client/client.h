@@ -161,6 +161,8 @@ private:
   std::vector<OpcUa::Node> AddChilds(std::vector<OpcUa::Node> nodes);
 
 protected:
+  virtual void EncryptPassword(OpcUa::UserIdentifyToken &identity, const CreateSessionResponse &response);
+protected:
   EndpointDescription Endpoint;
   // defined some sensible defaults that should let us connect to most servers
   std::string SessionName = "Open source OPC-UA Client Session";

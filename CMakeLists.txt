@@ -9,6 +9,7 @@ project(freeopcua)
 
 option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
+option(SSL_SUPPORT_MBEDTLS "Support rsa-oaep password encryption using mbedtls library " OFF)
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
 OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
@@ -111,6 +112,14 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 link_directories( ${Boost_LIBRARY_DIRS} )
 message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIRS})
 message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIRS})
+
+if (SSL_SUPPORT_MBEDTLS)
+    add_definitions(-DSSL_SUPPORT_MBEDTLS)
+    include_directories( "/usr/local/include" )
+    link_directories( "/usr/local/lib" )
+    SET(SSL_SUPPORT_LINK_LIBRARIES mbedx509 mbedtls mbedcrypto)
+    message(STATUS "SSL LIBRARIES: " ${SSL_SUPPORT_LINK_LIBRARIES})
+endif (SSL_SUPPORT_MBEDTLS)
 
 SET(TEST_INCLUDES, "")
 IF(BUILD_TESTING)
@@ -305,6 +314,7 @@ endif(BUILD_TESTING)
 # client library
 ############################################################################
 if (BUILD_CLIENT)
+
     add_library(opcuaclient
     src/client/binary_connection.cpp
     src/client/binary_client.cpp
@@ -320,6 +330,7 @@ if (BUILD_CLIENT)
         ${ADDITIONAL_LINK_LIBRARIES}
         ${Boost_PROGRAMOPTIONS_LIBRARY}
         )
+
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaclient EXPORT FreeOpcUa
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -514,6 +525,7 @@ if (BUILD_CLIENT)
         opcuaprotocol
         opcuacore
         opcuaclient
+        ${SSL_SUPPORT_LINK_LIBRARIES}
     )
 
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
