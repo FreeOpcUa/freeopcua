@@ -9,7 +9,11 @@ project(freeopcua)
 
 option(BUILD_CLIENT "Build Client" ON)
 option(BUILD_SERVER "Build Server" ON)
+
 option(SSL_SUPPORT_MBEDTLS "Support rsa-oaep password encryption using mbedtls library " OFF)
+option(SSL_SUPPORT_MBEDTLS_INCLUDE_DIR "mbedtls include dir " "/usr/local/include")
+option(SSL_SUPPORT_MBEDTLS_LIB_DIR "mbedtls libraries dir " "/usr/local/lib")
+
 option(BUILD_PYTHON "Build Python bindings" ON)
 option(BUILD_TESTING "Build and run tests" OFF)
 OPTION(BUILD_SHARED_LIBS "Build shared libraries." ON)
@@ -115,8 +119,8 @@ message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIRS})
 
 if (SSL_SUPPORT_MBEDTLS)
     add_definitions(-DSSL_SUPPORT_MBEDTLS)
-    include_directories( "/usr/local/include" )
-    link_directories( "/usr/local/lib" )
+    include_directories( ${SSL_SUPPORT_MBEDTLS_INCLUDE_DIR} )
+    link_directories( ${SSL_SUPPORT_MBEDTLS_LIB_DIR} )
     SET(SSL_SUPPORT_LINK_LIBRARIES mbedx509 mbedtls mbedcrypto)
     message(STATUS "SSL LIBRARIES: " ${SSL_SUPPORT_LINK_LIBRARIES})
 endif (SSL_SUPPORT_MBEDTLS)
