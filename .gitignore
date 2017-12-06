@@ -90,3 +90,6 @@ tests/gtest/libtool
 tests/gtest/scripts/gtest-config
 .mypy_cache
 vscode
+
+# QtCreator
+CMakeLists.txt.user
