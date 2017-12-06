@@ -18,12 +18,11 @@
 namespace Common
 {
 
-void Uri::Initialize(const char * uriString, std::size_t)
+void Uri::Initialize(const std::string &uriString)
 {
   std::regex uri_regex("([a-zA-Z][a-zA-Z0-9.+-]*)://(([^@:]*)(:([^@]+))?@)?([^/:]+)(:([0-9]+))?([^?]*)(.*)?");
-  std::string uri_str(uriString);
   std::smatch uri_match;
-  if (!std::regex_match(uri_str, uri_match, uri_regex))
+  if (!std::regex_match(uriString, uri_match, uri_regex))
     {
       THROW_ERROR1(CannotParseUri, uriString);
     }
