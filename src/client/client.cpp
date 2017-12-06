@@ -243,23 +243,23 @@ void UaClient::Connect(const EndpointDescription & endpoint)
   session.Timeout = DefaultTimeout;
   session.ServerURI = endpoint.Server.ApplicationUri;
 
-  CreateSessionResponse create_session_response = Server->CreateSession(session);
-  CheckStatusCode(create_session_response.Header.ServiceResult);
+  CreateSessionResponse createSessionResponse = Server->CreateSession(session);
+  CheckStatusCode(createSessionResponse.Header.ServiceResult);
 
   LOG_INFO(Logger, "ua_client             | create session OK");
 
   LOG_INFO(Logger, "ua_client             | activating session ...");
 
-  ActivateSessionParameters session_parameters;
+  ActivateSessionParameters sessionParameters;
   {
     //const SessionData &session_data = response.Session;
     Common::Uri uri(session.EndpointUrl);
     std::string user = uri.User();
     std::string password = uri.Password();
     bool user_identify_token_found = false;
-    session_parameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
+    sessionParameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
 
-    for (auto ep : create_session_response.Parameters.ServerEndpoints)
+    for (auto ep : createSessionResponse.Parameters.ServerEndpoints)
       {
         if (ep.SecurityMode == MessageSecurityMode::None)
           {
@@ -269,7 +269,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                   {
                     if (token.TokenType == UserTokenType::Anonymous)
                       {
-                        session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
+                        sessionParameters.UserIdentityToken.setPolicyId(token.PolicyId);
                         user_identify_token_found = true;
                         break;
                       }
@@ -279,9 +279,9 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                   {
                     if (token.TokenType == UserTokenType::UserName)
                       {
-                        session_parameters.UserIdentityToken.setPolicyId(token.PolicyId);
-                        session_parameters.UserIdentityToken.setUser(user, password);
-                        EncryptPassword(session_parameters.UserIdentityToken, create_session_response);
+                        sessionParameters.UserIdentityToken.setPolicyId(token.PolicyId);
+                        sessionParameters.UserIdentityToken.setUser(user, password);
+                        EncryptPassword(sessionParameters.UserIdentityToken, createSessionResponse);
                         user_identify_token_found = true;
                         break;
                       }
@@ -295,14 +295,14 @@ void UaClient::Connect(const EndpointDescription & endpoint)
         throw std::runtime_error("Cannot find suitable user identify token for session");
       }
   }
-  ActivateSessionResponse aresponse = Server->ActivateSession(session_parameters);
+  ActivateSessionResponse aresponse = Server->ActivateSession(sessionParameters);
   CheckStatusCode(aresponse.Header.ServiceResult);
 
   LOG_INFO(Logger, "ua_client             | activate session OK");
 
-  if (create_session_response.Parameters.RevisedSessionTimeout > 0 && create_session_response.Parameters.RevisedSessionTimeout < DefaultTimeout)
+  if (createSessionResponse.Parameters.RevisedSessionTimeout > 0 && createSessionResponse.Parameters.RevisedSessionTimeout < DefaultTimeout)
     {
-      DefaultTimeout = create_session_response.Parameters.RevisedSessionTimeout;
+      DefaultTimeout = createSessionResponse.Parameters.RevisedSessionTimeout;
     }
 
   KeepAlive.Start(Server, Node(Server, ObjectId::Server_ServerStatus_State), DefaultTimeout);
