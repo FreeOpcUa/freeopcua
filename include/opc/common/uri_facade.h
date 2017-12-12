@@ -20,12 +20,7 @@ class Uri
 public:
   explicit Uri(const std::string & uriString)
   {
-    Initialize(uriString.c_str(), uriString.size());
-  }
-
-  explicit Uri(const char * uriString)
-  {
-    Initialize(uriString, 0);
+    Initialize(uriString);
   }
 
   std::string Scheme() const
@@ -54,7 +49,7 @@ public:
   }
 
 private:
-  void Initialize(const char * uriString, std::size_t len);
+  void Initialize(const std::string & uriString);
 
 private:
   std::string SchemeStr;
