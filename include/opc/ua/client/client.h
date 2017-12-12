@@ -75,7 +75,7 @@ public:
   /// opc.tcp://server.freeopca.org:4841/opcua/server
   UaClient(bool debug = false);
   UaClient(std::shared_ptr<spdlog::logger> logger) :  KeepAlive(logger), Logger(logger) {}
-  ~UaClient();
+  virtual ~UaClient();
 
   UaClient(const UaClient &&) = delete;
   UaClient(const UaClient &) = delete;
@@ -160,6 +160,8 @@ private:
 
   std::vector<OpcUa::Node> AddChilds(std::vector<OpcUa::Node> nodes);
 
+protected:
+  virtual void EncryptPassword(OpcUa::UserIdentifyToken &identity, const CreateSessionResponse &response);
 protected:
   EndpointDescription Endpoint;
   // defined some sensible defaults that should let us connect to most servers

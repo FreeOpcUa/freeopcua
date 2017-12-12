@@ -31,6 +31,7 @@ class SubClient : public SubscriptionHandler
 int main(int argc, char ** argv)
 {
   auto logger = spdlog::stderr_color_mt("client");
+  //logger->set_level(spdlog::level::debug);
   try
     {
       //std::string endpoint = "opc.tcp://192.168.56.101:48030";
