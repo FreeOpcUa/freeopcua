@@ -94,7 +94,7 @@ std::vector<StatusCode> AddressSpaceAddon::Write(const std::vector<OpcUa::WriteV
   return Registry->Write(filter);
 }
 
-uint32_t AddressSpaceAddon::AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback)
+std::pair<StatusCode,uint32_t> AddressSpaceAddon::AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback)
 {
   return Registry->AddDataChangeCallback(node, attribute, callback);
 }

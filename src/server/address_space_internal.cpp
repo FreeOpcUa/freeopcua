@@ -272,7 +272,7 @@ DataValue AddressSpaceInMemory::GetValue(const NodeId & node, AttributeId attrib
   return value;
 }
 
-uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback)
+std::pair<StatusCode,uint32_t> AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback)
 {
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -283,7 +283,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
   if (it == Nodes.end())
     {
       LOG_ERROR(Logger, "address_space_internal| Node: '{}' not found", node);
-      throw std::runtime_error("address_space_internal| NodeId not found");
+      return std::make_pair(StatusCode::BadNodeIdUnknown, 0u);
     }
 
   AttributesMap::iterator ait = it->second.Attributes.find(attribute);
@@ -291,7 +291,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
   if (ait == it->second.Attributes.end())
     {
       LOG_ERROR(Logger, "address_space_internal| Attribute: {} of node: ‘{}‘ not found", (unsigned)attribute, node);
-      throw std::runtime_error("Attribute not found");
+      return std::make_pair(StatusCode::BadAttributeIdInvalid, 0u);
     }
 
   uint32_t handle = ++DataChangeCallbackHandle;
@@ -299,7 +299,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
   data.Callback = callback;
   ait->second.DataChangeCallbacks[handle] = data;
   ClientIdToAttributeMap[handle] = NodeAttribute(node, attribute);
-  return handle;
+  return std::make_pair(StatusCode::Good,handle);
 }
 
 void AddressSpaceInMemory::DeleteDataChangeCallback(uint32_t serverhandle)
