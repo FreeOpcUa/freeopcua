@@ -34,6 +34,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#ifdef _WIN32
+#undef GetObject
+#endif
+
 using namespace testing;
 
 
