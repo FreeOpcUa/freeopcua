@@ -106,10 +106,6 @@ else(WIN32)
 endif(WIN32)
 
 find_package( Boost COMPONENTS system program_options filesystem thread REQUIRED )
-include_directories( ${Boost_INCLUDE_DIRS} )
-link_directories( ${Boost_LIBRARY_DIRS} )
-message(STATUS "Boost INCLUDE DIR IS: " ${Boost_INCLUDE_DIRS})
-message(STATUS "Boost LIBRARY DIR IS: " ${Boost_LIBRARY_DIRS})
 
 message(STATUS "SSL support using libmbedtls: " ${SSL_SUPPORT_MBEDTLS})
 if (SSL_SUPPORT_MBEDTLS)
@@ -197,7 +193,7 @@ install(TARGETS opcuaprotocol EXPORT FreeOpcUa
 generate_pkgconfig("libopcuaprotocol.pc")
 
 if (NOT WIN32)
-    target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
+    target_link_libraries(opcuaprotocol Boost::thread)
 endif ()
 
 if (BUILD_TESTING)
@@ -270,7 +266,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 endif ()
 
-target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol Boost::system Boost::filesystem)
 target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
                           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -333,7 +329,7 @@ if (BUILD_CLIENT)
     target_link_libraries(opcuaclient
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
-        ${Boost_PROGRAMOPTIONS_LIBRARY}
+        Boost::program_options
         )
 
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
@@ -366,7 +362,7 @@ if (BUILD_CLIENT)
 
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
-        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        Boost::program_options
         opcuaprotocol
         opcuacore
     )
@@ -426,7 +422,7 @@ if(BUILD_SERVER)
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     endif ()
-    target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
+    target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol Boost::system)
     target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -508,7 +504,7 @@ if(BUILD_SERVER)
         opcuaprotocol
         opcuacore
         opcuaserver
-        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        Boost::program_options
         )
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
