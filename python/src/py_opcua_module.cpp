@@ -242,7 +242,7 @@ static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
 // UaClient helpers
 //--------------------------------------------------------------------------
 
-static std::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint period, PySubscriptionHandler & callback)
+static std::shared_ptr<Subscription> UaClient_CreateSubscription(UaClient & self, uint32_t period, PySubscriptionHandler & callback)
 {
   return self.CreateSubscription(period, callback);
 }
@@ -256,7 +256,7 @@ static Node UaClient_GetNode(UaClient & self, ObjectId objectid)
 // UaServer helpers
 //--------------------------------------------------------------------------
 
-static std::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint period, PySubscriptionHandler & callback)
+static std::shared_ptr<Subscription> UaServer_CreateSubscription(UaServer & self, uint32_t period, PySubscriptionHandler & callback)
 {
   return self.CreateSubscription(period, callback);
 }

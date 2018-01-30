@@ -35,7 +35,7 @@ public:
   DEFINE_CLASS_POINTERS(AddressSpace)
 
   //Server side methods
-  virtual uint32_t AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<DataChangeCallback> callback) = 0;
+  virtual std::pair<StatusCode,uint32_t> AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<DataChangeCallback> callback) = 0;
   virtual void DeleteDataChangeCallback(uint32_t clienthandle) = 0;
   virtual StatusCode SetValueCallback(const NodeId & node, AttributeId attribute, std::function<DataValue(void)> callback) = 0;
   virtual void SetMethod(const NodeId & node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback) = 0;

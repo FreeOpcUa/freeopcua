@@ -305,10 +305,18 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
       LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to data changes", Data.SubscriptionId);
 
       uint32_t id = result.MonitoredItemId;
-      callbackHandle = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.NodeId, request.ItemToMonitor.AttributeId, [this, id](const OpcUa::NodeId & nodeId, OpcUa::AttributeId attr, const DataValue & value)
+      std::pair<OpcUa::StatusCode,uint32_t> addCallbackResult = AddressSpace.AddDataChangeCallback(request.ItemToMonitor.NodeId, request.ItemToMonitor.AttributeId, [this, id](const OpcUa::NodeId & nodeId, OpcUa::AttributeId attr, const DataValue & value)
       {
         this->DataChangeCallback(id, value);
       });
+
+      result.Status = addCallbackResult.first;
+      callbackHandle = addCallbackResult.second;
+
+      if (result.Status != StatusCode::Good) 
+        {
+          return result;
+        }
     }
 
   MonitoredDataChange mdata;

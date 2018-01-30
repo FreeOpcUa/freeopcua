@@ -106,13 +106,15 @@ TEST_F(AddressSpace, CallsDataChangeCallbackOnWrite)
   OpcUa::AttributeId callbackAttr;
   OpcUa::DataValue callbackValue;
   bool callbackCalled = false;
-  unsigned callbackHandle = NameSpace->AddDataChangeCallback(valueId, OpcUa::AttributeId::Value, [&](const OpcUa::NodeId & id, OpcUa::AttributeId attr, const OpcUa::DataValue & value)
+  std::pair<OpcUa::StatusCode,uint32_t> addCallbackResult = NameSpace->AddDataChangeCallback(valueId, OpcUa::AttributeId::Value, [&](const OpcUa::NodeId & id, OpcUa::AttributeId attr, const OpcUa::DataValue & value)
   {
     callbackId = id;
     callbackAttr = attr;
     callbackValue = value;
     callbackCalled = true;
   });
+
+  unsigned callbackHandle = addCallbackResult.second;
 
   EXPECT_NE(callbackHandle, 0);
 

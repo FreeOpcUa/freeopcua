@@ -100,7 +100,7 @@ public:
 
   /// @brief Add callback which will be called when values of attribute is changed.
   /// @return handle of a callback which should be passed to the DeletDataChangeCallabck
-  uint32_t AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
+  std::pair<StatusCode,uint32_t> AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
 
   /// @bried Delete data change callback assosioated with handle.
   void DeleteDataChangeCallback(uint32_t serverhandle);

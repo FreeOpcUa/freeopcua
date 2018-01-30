@@ -56,7 +56,7 @@ public: // MethodServices
   virtual std::vector<CallMethodResult> Call(const std::vector<CallMethodRequest> & methodsToCall);
 
 public: // Server internal methods
-  virtual uint32_t AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
+  virtual std::pair<StatusCode,uint32_t> AddDataChangeCallback(const NodeId & node, AttributeId attribute, std::function<Server::DataChangeCallback> callback);
   virtual void DeleteDataChangeCallback(uint32_t clienthandle);
   virtual StatusCode SetValueCallback(const NodeId & node, AttributeId attribute, std::function<DataValue(void)> callback);
   virtual void SetMethod(const NodeId & node, std::function<std::vector<OpcUa::Variant> (NodeId context, std::vector<OpcUa::Variant> arguments)> callback);
