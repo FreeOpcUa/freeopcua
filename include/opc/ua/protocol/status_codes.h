@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdexcept>
 
 namespace OpcUa
 {
@@ -232,6 +233,14 @@ enum class StatusCode : uint32_t
 
 //raise appropriate exception if StatusCode is not Good
 void CheckStatusCode(StatusCode code);
+
+class StatusCodeException : public std::runtime_error {
+public:
+	explicit StatusCodeException(StatusCode value);
+	StatusCode GetValue() const;
+private:
+	StatusCode Value;
+};
 
 }
 

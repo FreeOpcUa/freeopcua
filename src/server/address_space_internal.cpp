@@ -283,7 +283,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
   if (it == Nodes.end())
     {
       LOG_ERROR(Logger, "address_space_internal| Node: '{}' not found", node);
-      throw std::runtime_error("address_space_internal| NodeId not found");
+	  throw StatusCodeException(StatusCode::BadNodeIdUnknown);
     }
 
   AttributesMap::iterator ait = it->second.Attributes.find(attribute);
@@ -291,7 +291,7 @@ uint32_t AddressSpaceInMemory::AddDataChangeCallback(const NodeId & node, Attrib
   if (ait == it->second.Attributes.end())
     {
       LOG_ERROR(Logger, "address_space_internal| Attribute: {} of node: ‘{}‘ not found", (unsigned)attribute, node);
-      throw std::runtime_error("Attribute not found");
+	  throw StatusCodeException(StatusCode::BadAttributeIdInvalid);
     }
 
   uint32_t handle = ++DataChangeCallbackHandle;

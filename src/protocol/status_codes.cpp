@@ -19,7 +19,13 @@ void OpcUa::CheckStatusCode(StatusCode code)
   if (code == StatusCode::Good)
     { return; }
 
-  throw std::runtime_error(OpcUa::ToString(code));
+  throw StatusCodeException(code);
 }
 
+OpcUa::StatusCodeException::StatusCodeException(StatusCode value) : runtime_error(OpcUa::ToString(value)), Value(value) {
 
+}
+
+OpcUa::StatusCode OpcUa::StatusCodeException::GetValue() const {
+	return Value;
+}
