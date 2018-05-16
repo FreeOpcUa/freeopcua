@@ -26,7 +26,7 @@
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/channel.h>
 #include <opc/ua/protocol/secure_channel.h>
-#include <opc/ua/protocol/input_from_buffer.h>
+#include <opc/ua/protocol/input_from_stream_buffer.h>
 
 #include <array>
 #include <boost/asio.hpp>
@@ -129,7 +129,7 @@ private:
   Server::OpcTcpMessages::SharedPtr MessageProcessor;
   OStreamBinary OStream;
   Common::Logger::SharedPtr Logger;
-  std::vector<char> Buffer;
+  boost::asio::streambuf StreamBuffer;
 };
 
 OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer, const Common::Logger::SharedPtr & logger)
@@ -137,8 +137,8 @@ OpcTcpConnection::OpcTcpConnection(tcp::socket socket, OpcTcpServer & tcpServer,
   , TcpServer(tcpServer)
   , OStream(*this)
   , Logger(logger)
-  , Buffer(8192)
 {
+	StreamBuffer.prepare(8192);
 }
 
 OpcTcpConnection::SharedPtr OpcTcpConnection::create(tcp::socket socket, OpcTcpServer & tcpServer, Services::SharedPtr uaServer, const Common::Logger::SharedPtr & logger)
@@ -166,7 +166,7 @@ void OpcTcpConnection::ReadNextData()
   // do not lose reference to shared instance even if another
   // async operation decides to call GoodBye()
   OpcTcpConnection::SharedPtr self = shared_from_this();
-  async_read(Socket, buffer(Buffer), transfer_exactly(GetHeaderSize()),
+  async_read(Socket, StreamBuffer, transfer_exactly(GetHeaderSize()),
              [self](const boost::system::error_code & error, std::size_t bytes_transferred)
   {
     try
@@ -198,7 +198,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 
   LOG_DEBUG(Logger, "opc_tcp_async         | received message header with size: {}", bytes_transferred);
 
-  OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytes_transferred);
+  OpcUa::InputFromStreamBuffer messageChannel(StreamBuffer);
   IStreamBinary messageStream(messageChannel);
   OpcUa::Binary::Header header;
   messageStream >> header;
@@ -210,7 +210,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
   // do not lose reference to shared instance even if another
   // async operation decides to call GoodBye()
   OpcTcpConnection::SharedPtr self = shared_from_this();
-  async_read(Socket, buffer(Buffer), transfer_exactly(messageSize),
+  async_read(Socket, StreamBuffer, transfer_exactly(messageSize),
              [self, header](const boost::system::error_code & error, std::size_t bytesTransferred)
   {
     self->ProcessMessage(header.Type, error, bytesTransferred);
@@ -228,10 +228,10 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
       return;
     }
 
-  LOG_TRACE(Logger, "opc_tcp_async         | received message: {}", ToHexDump(Buffer, bytesTransferred));
+  LOG_TRACE(Logger, "opc_tcp_async         | received message: {}", ToHexDump(boost::asio::buffer_cast<const char*>(StreamBuffer.data()), bytesTransferred));
 
   // restrict server size code only with current message.
-  OpcUa::InputFromBuffer messageChannel(&Buffer[0], bytesTransferred);
+  OpcUa::InputFromStreamBuffer messageChannel(StreamBuffer);
   IStreamBinary messageStream(messageChannel);
 
   bool cont = true;
@@ -250,7 +250,7 @@ void OpcTcpConnection::ProcessMessage(OpcUa::Binary::MessageType type, const boo
 
   if (messageChannel.GetRemainSize())
     {
-      std::cerr << "opc_tcp_async         | ERROR!!! Message from client has been processed partially." << std::endl;
+	  LOG_ERROR(Logger, "opc_tcp_async         | ERROR!!! Message from client has been processed partially.");
     }
 
   if (!cont)
