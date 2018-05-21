@@ -245,6 +245,7 @@ protocolinclude_HEADERS = \
   include/opc/ua/protocol/extension_identifiers.h \
   include/opc/ua/protocol/guid.h \
   include/opc/ua/protocol/input_from_buffer.h \
+  include/opc/ua/protocol/input_from_stream_buffer.h \
   include/opc/ua/protocol/message_identifiers.h \
   include/opc/ua/protocol/monitored_items.h \
   include/opc/ua/protocol/node_management.h \
@@ -281,6 +282,7 @@ libopcuaprotocol_la_SOURCES = \
   src/protocol/binary_session.cpp \
   src/protocol/binary_view.cpp \
   src/protocol/input_from_buffer.cpp \
+  src/protocol/input_from_stream_buffer.cpp \
   src/protocol/monitored_items.cpp \
   src/protocol/nodeid.cpp \
   src/protocol/session.cpp \
