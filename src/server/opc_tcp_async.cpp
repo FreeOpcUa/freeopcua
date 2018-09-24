@@ -55,7 +55,7 @@ public:
   DEFINE_CLASS_POINTERS(OpcTcpServer)
 
 public:
-  OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger);
+  OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_context & ioService, const Common::Logger::SharedPtr & logger);
 
   virtual void Listen() override;
   virtual void Shutdown() override;
@@ -106,7 +106,7 @@ public:
      */
     typedef std::promise<void> Promise;
     Promise promise;
-    Socket.get_io_service().post(bind(&Promise::set_value, &promise));
+    Socket.get_io_context().post(bind(&Promise::set_value, &promise));
     promise.get_future().wait();
   }
 
@@ -293,7 +293,7 @@ void OpcTcpConnection::Send(const char * message, std::size_t size)
   });
 }
 
-OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger)
+OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_context & ioService, const Common::Logger::SharedPtr & logger)
   : Params(params)
   , Server(server)
   , Logger(logger)
@@ -372,7 +372,7 @@ void OpcTcpServer::Shutdown()
    */
   typedef std::promise<void> Promise;
   Promise promise;
-  acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
+  acceptor.get_io_context().post(bind(&Promise::set_value, &promise));
   promise.get_future().wait();
 }
 
@@ -421,7 +421,7 @@ void OpcTcpServer::RemoveClient(OpcTcpConnection::SharedPtr client)
 
 } // namespace
 
-OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger)
+OpcUa::Server::AsyncOpcTcp::UniquePtr OpcUa::Server::CreateAsyncOpcTcp(const OpcUa::Server::AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_context & io, const Common::Logger::SharedPtr & logger)
 {
   return AsyncOpcTcp::UniquePtr(new OpcTcpServer(params, server, io, logger));
 }

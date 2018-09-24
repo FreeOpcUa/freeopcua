@@ -33,7 +33,7 @@ namespace OpcUa
 namespace Internal
 {
 
-SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & ioService, const Common::Logger::SharedPtr & logger)
+SubscriptionServiceInternal::SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_context & ioService, const Common::Logger::SharedPtr & logger)
   : io(ioService)
   , AddressSpace(addressspace)
   , Logger(logger)
@@ -49,7 +49,7 @@ Server::AddressSpace & SubscriptionServiceInternal::GetAddressSpace()
   return *AddressSpace;
 }
 
-boost::asio::io_service & SubscriptionServiceInternal::GetIOService()
+boost::asio::io_context & SubscriptionServiceInternal::GetIOService()
 {
   return io;
 }
@@ -288,7 +288,7 @@ void SubscriptionServiceInternal::TriggerEvent(NodeId node, Event event)
 namespace Server
 {
 
-SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger)
+SubscriptionService::UniquePtr CreateSubscriptionService(std::shared_ptr<Server::AddressSpace> addressspace, boost::asio::io_context & io, const Common::Logger::SharedPtr & logger)
 {
   return SubscriptionService::UniquePtr(new Internal::SubscriptionServiceInternal(addressspace, io, logger));
 }

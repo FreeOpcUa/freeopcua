@@ -26,7 +26,7 @@ namespace boost
 {
 namespace asio
 {
-class io_service;
+class io_context;
 }
 }
 
@@ -53,7 +53,7 @@ public:
   virtual void Shutdown() = 0;
 };
 
-AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger);
+AsyncOpcTcp::UniquePtr CreateAsyncOpcTcp(const AsyncOpcTcp::Parameters & params, Services::SharedPtr server, boost::asio::io_context & io, const Common::Logger::SharedPtr & logger);
 
 }
 }

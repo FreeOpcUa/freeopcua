@@ -61,7 +61,7 @@ public:
     });
   }
 
-  virtual boost::asio::io_service & GetIoService() override
+  virtual boost::asio::io_context & GetIoService() override
   {
     return IoService;
   }
@@ -83,8 +83,8 @@ public:
   }
 
 private:
-  boost::asio::io_service IoService;
-  boost::asio::io_service::work Work;
+  boost::asio::io_context IoService;
+  boost::asio::io_context::work Work;
   std::vector<std::thread> Threads;
 };
 }

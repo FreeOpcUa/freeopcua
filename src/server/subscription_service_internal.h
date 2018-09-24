@@ -44,7 +44,7 @@ typedef std::map <uint32_t, std::shared_ptr<InternalSubscription>> Subscriptions
 class SubscriptionServiceInternal : public Server::SubscriptionService
 {
 public:
-  SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_service & io, const Common::Logger::SharedPtr & logger);
+  SubscriptionServiceInternal(Server::AddressSpace::SharedPtr addressspace, boost::asio::io_context & io, const Common::Logger::SharedPtr & logger);
 
   ~SubscriptionServiceInternal();
 
@@ -57,13 +57,13 @@ public:
   virtual RepublishResponse Republish(const RepublishParameters & request);
 
   void DeleteAllSubscriptions();
-  boost::asio::io_service & GetIOService();
+  boost::asio::io_context & GetIOService();
   bool PopPublishRequest(NodeId node);
   void TriggerEvent(NodeId node, Event event);
   Server::AddressSpace & GetAddressSpace();
 
 private:
-  boost::asio::io_service & io;
+  boost::asio::io_context & io;
   Server::AddressSpace::SharedPtr AddressSpace;
   Common::Logger::SharedPtr Logger;
   mutable boost::shared_mutex DbMutex;

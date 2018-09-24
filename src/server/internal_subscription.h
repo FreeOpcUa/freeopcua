@@ -104,7 +104,7 @@ private:
   std::list<PublishResult> NotAcknowledgedResults; //result that have not be acknowledeged and may have to be resent
   std::list<TriggeredDataChange> TriggeredDataChangeEvents;
   std::list<TriggeredEvent> TriggeredEvents;
-  boost::asio::io_service & io;
+  boost::asio::io_context & io;
   boost::asio::deadline_timer Timer;
   bool TimerStopped = false;
   uint32_t LifeTimeCount;

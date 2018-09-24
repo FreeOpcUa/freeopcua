@@ -55,7 +55,7 @@ namespace OpcUa
 namespace Server
 {
 
-ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_service & io, bool debug)
+ServerObject::ServerObject(Services::SharedPtr services, boost::asio::io_context & io, bool debug)
   : Server(services)
 //  , Io(io)
   , Debug(debug)

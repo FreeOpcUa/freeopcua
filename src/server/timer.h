@@ -30,7 +30,7 @@ namespace OpcUa
 class PeriodicTimer
 {
 public:
-  PeriodicTimer(boost::asio::io_service & io)
+  PeriodicTimer(boost::asio::io_context & io)
     : Timer(io)
     , IsCanceled(true)
     , Stopped(true)

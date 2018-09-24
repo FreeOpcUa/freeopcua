@@ -28,7 +28,7 @@ namespace boost
 {
 namespace asio
 {
-class io_service;
+class io_context;
 }
 }
 
@@ -43,7 +43,7 @@ public:
   DEFINE_CLASS_POINTERS(ServerObject)
 
 public:
-  ServerObject(Services::SharedPtr services, boost::asio::io_service & io, bool debug);
+  ServerObject(Services::SharedPtr services, boost::asio::io_context & io, bool debug);
   ~ServerObject();
 
 private:

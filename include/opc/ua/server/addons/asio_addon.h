@@ -28,7 +28,7 @@ namespace boost
 namespace asio
 {
 
-class io_service;
+class io_context;
 
 }
 }
@@ -47,7 +47,7 @@ public:
   DEFINE_CLASS_POINTERS(AsioAddon)
 
 public:
-  virtual boost::asio::io_service & GetIoService() = 0;
+  virtual boost::asio::io_context & GetIoService() = 0;
 };
 
 
