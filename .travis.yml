@@ -2,8 +2,8 @@ language: cpp
 compiler: gcc
 
 install:
-  - sudo apt-get install libboost1.54-all-dev -qq
-  - sudo apt-get install libboost-python1.54-dev -qq
+  - sudo apt-get install libboost1.68-all-dev -qq
+  - sudo apt-get install libboost-python1.68-dev -qq
   - sudo apt-get install libcppunit-dev
 
 #script: autoreconf -f -i && ./configure --disable-python-bindings && make && make check
