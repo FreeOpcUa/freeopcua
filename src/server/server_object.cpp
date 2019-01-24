@@ -23,6 +23,7 @@
 #include <opc/ua/node.h>
 #include <opc/ua/server/addons/services_registry.h>
 #include <functional>
+#include <iostream>
 
 #ifdef WIN32
 #undef GetObject
