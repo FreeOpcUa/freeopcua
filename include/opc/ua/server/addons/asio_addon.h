@@ -21,17 +21,7 @@
 
 
 #include <opc/common/addons_core/addon.h>
-
-
-namespace boost
-{
-namespace asio
-{
-
-class io_service;
-
-}
-}
+#include <opc/ua/services/services.h>
 
 namespace OpcUa
 {

@@ -24,14 +24,6 @@
 
 #include "timer.h"
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
-
 namespace OpcUa
 {
 namespace Server

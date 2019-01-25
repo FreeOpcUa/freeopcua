@@ -14,15 +14,6 @@
 #include <opc/ua/server/address_space.h>
 #include <opc/ua/services/subscriptions.h>
 
-
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
-
 namespace OpcUa
 {
 namespace Server
