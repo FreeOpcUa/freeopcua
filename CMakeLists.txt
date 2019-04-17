@@ -572,7 +572,7 @@ if (BUILD_PYTHON)
     add_subdirectory(python)
 endif (BUILD_PYTHON)
 
-install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
+install(EXPORT FreeOpcUa DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
 
 SET(CPACK_GENERATOR "DEB")
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")
