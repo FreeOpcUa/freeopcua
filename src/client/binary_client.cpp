@@ -83,8 +83,12 @@ class RequestCallback
 public:
   RequestCallback(const Common::Logger::SharedPtr & logger)
     : Logger(logger)
-    , lock(m)
   {
+    m.lock();
+  }
+  ~RequestCallback()
+  {
+    m.unlock();
   }
 
   void OnData(std::vector<char> data, ResponseHeader h)
@@ -92,12 +96,12 @@ public:
     //std::cout << ToHexDump(data);
     Data = std::move(data);
     this->header = std::move(h);
-    doneEvent.notify_all();
+    m.unlock();
   }
 
   T WaitForData(std::chrono::milliseconds msec)
   {
-    if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
+    if (m.try_lock_for(msec) == false)
       { throw std::runtime_error("Response timed out"); }
 
     T result;
@@ -122,9 +126,7 @@ private:
   Common::Logger::SharedPtr Logger;
   std::vector<char> Data;
   ResponseHeader header;
-  std::mutex m;
-  std::unique_lock<std::mutex> lock;
-  std::condition_variable doneEvent;
+  std::timed_mutex m;
 };
 
 class CallbackThread
@@ -883,6 +885,7 @@ private:
     catch (std::exception & ex)
       {
         //Remove the callback on timeout
+        LOG_DEBUG(Logger, "binary_client         | send exception: handle: {}", request.Header.RequestHandle);
         std::unique_lock<std::mutex> lock(Mutex);
         Callbacks.erase(request.Header.RequestHandle);
         lock.unlock();
