@@ -226,8 +226,16 @@ public:
   {
     //Initialize the worker thread for subscriptions
     callback_thread = std::thread([&]() { CallbackService.Run(); });
-
-    HelloServer(params);
+    try
+      {
+        HelloServer(params);
+      }
+    catch (...)
+      {
+        CallbackService.Stop();
+        callback_thread.join();
+        throw;
+      }
 
     ReceiveThread = std::thread([this]()
     {
@@ -870,7 +878,7 @@ private:
     std::unique_lock<std::mutex> lock(Mutex);
     Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
     lock.unlock();
-    
+
     LOG_DEBUG(Logger, "binary_client         | send: id: {} handle: {}, UtcTime: {}", ToString(request.TypeId, true), request.Header.RequestHandle, request.Header.UtcTime);
 
     Send(request);
