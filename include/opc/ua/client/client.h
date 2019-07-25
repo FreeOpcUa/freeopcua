@@ -99,6 +99,10 @@ public:
   // close communication with OPC-UA server, close all threads and subscriptions
   void Disconnect();
 
+  /// @brief Deal with Disconnection problem when TCP LINK DOWN.
+  static void test_handler(int sign);
+  static Common::Logger::SharedPtr Logger_bak;
+
   /// @brief Abort server connection
   // abort communication with OPC-UA server, close all threads and subcsriptions
   // Like Disconnect() but without CloseSession() call, which is not possible on faulty connection anyway

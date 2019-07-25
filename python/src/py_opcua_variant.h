@@ -182,19 +182,42 @@ Variant ToVariant2(const object & obj, VariantType vtype)
             {
             case VariantType::BOOLEAN:
               var = ToVector<bool>(obj);
-              return var;
+              break;
 
+            case VariantType::SBYTE:
+              var = ToVector<int8_t>(obj);
+              break;
+            case VariantType::INT16:
+              var = ToVector<int16_t>(obj);
+              break;
+            case VariantType::INT32:
+              var = ToVector<int32_t>(obj);
+              break;
+            case VariantType::INT64:
+              var = ToVector<int64_t>(obj);
+              break;
+
+            case VariantType::BYTE:
+              var = ToVector<uint8_t>(obj);
+              break;
             case VariantType::UINT16:
+              var = ToVector<uint16_t>(obj);
+              break;
             case VariantType::UINT32:
               var = ToVector<uint32_t>(obj);
-              return var;
-
+              break;
+            case VariantType::UINT64:
+              var = ToVector<uint64_t>(obj);
+              break;
             case VariantType::FLOAT:
               var = ToVector<float>(obj);
-              return var;
+              break;
+            case VariantType::DOUBLE:
+              var = ToVector<double>(obj);
+              break;
 
             default:
-              return ToVariant(obj);
+              var =  ToVariant(obj);
             }
         }
     }
@@ -205,21 +228,46 @@ Variant ToVariant2(const object & obj, VariantType vtype)
         {
         case VariantType::BOOLEAN:
           var = extract<bool>(obj)();
-          return var;
+          break;
 
+        case VariantType::SBYTE:
+          var = extract<int8_t>(obj)();
+          break;
+        case VariantType::INT16:
+          var = extract<int16_t>(obj)();
+          break;
+        case VariantType::INT32:
+          var = extract<int32_t>(obj)();
+          break;
+        case VariantType::INT64:
+          var = extract<int64_t>(obj)();
+          break;
+
+        case VariantType::BYTE:
+          var = extract<uint8_t>(obj)();
+          break;
         case VariantType::UINT16:
+          var = extract<uint16_t>(obj)();
+          break;
         case VariantType::UINT32:
           var = extract<uint32_t>(obj)();
-          return var;
-
+          break;
+        case VariantType::UINT64:
+          var = extract<uint64_t>(obj)();
+          break;
         case VariantType::FLOAT:
           var = extract<float>(obj)();
-          return var;
+          break;
+        case VariantType::DOUBLE:
+          var = extract<double>(obj)();
+          break;
 
         default:
-          return ToVariant(obj);
+          var =  ToVariant(obj);
         }
     }
+
+  return var;
 }
 
 
