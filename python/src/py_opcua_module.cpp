@@ -238,6 +238,24 @@ static void DataValue_set_server_picoseconds(DataValue & self, uint16_t ps)
 static void Node_SetValue(Node & self, const object & obj, VariantType vtype)
 { self.SetValue(ToVariant2(obj, vtype)); }
 
+static Node Node_AddVariable(Node & self, const NodeId & variableId, const QualifiedName & browsename, const object & obj, VariantType vtype)
+{ return self.AddVariable(variableId, browsename, ToVariant2(obj, vtype)); }
+
+static Node Node_AddVariable(Node & self, const std::string & nodeId, const std::string & browseName, const object & obj, VariantType vtype)
+{ return self.AddVariable(nodeId, browseName, ToVariant2(obj, vtype)); }
+
+static Node Node_AddVariable(Node & self, uint32_t namespaceidx, const std::string & BrowseName, const object & obj, VariantType vtype)
+{ return self.AddVariable(namespaceidx, BrowseName, ToVariant2(obj, vtype)); }
+
+static Node Node_AddProperty(Node & self, const NodeId & propertyId, const QualifiedName & browsename, const object & obj, VariantType vtype)
+{ return self.AddProperty(propertyId, browsename, ToVariant2(obj, vtype)); }
+
+static Node Node_AddProperty(Node & self, const std::string & nodeid, const std::string & browseName, const object & obj, VariantType vtype)
+{ return self.AddProperty(nodeid, browseName, ToVariant2(obj, vtype)); }
+
+static Node Node_AddProperty(Node & self, uint32_t namespaceidx, const std::string & browseName, const object & obj, VariantType vtype)
+{ return self.AddProperty(namespaceidx, browseName, ToVariant2(obj, vtype)); }
+
 //--------------------------------------------------------------------------
 // UaClient helpers
 //--------------------------------------------------------------------------
@@ -439,8 +457,8 @@ BOOST_PYTHON_MODULE(opcua)
   .def("get_attribute", &Node::GetAttribute)
   .def("set_attribute", &Node::SetAttribute)
   .def("get_value", &Node::GetValue)
-  .def("set_value", (void(Node::*)(const DataValue &) const) &Node::SetValue)
-  .def("set_value", (void(Node::*)(const Variant &) const) &Node::SetValue)
+  //.def("set_value", (void(Node::*)(const DataValue &) const) &Node::SetValue)
+  //.def("set_value", (void(Node::*)(const Variant &) const) &Node::SetValue)
   .def("set_value", &Node_SetValue)
   .def("get_properties", &Node::GetProperties)
   .def("get_variables", &Node::GetVariables)
@@ -454,12 +472,22 @@ BOOST_PYTHON_MODULE(opcua)
   .def("add_object", (Node(Node::*)(const NodeId &, const QualifiedName &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(const std::string &, const std::string &) const) &Node::AddObject)
   .def("add_object", (Node(Node::*)(uint32_t, const std::string &) const) &Node::AddObject)
-  .def("add_variable", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
-  .def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
-  .def("add_variable", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddVariable)
-  .def("add_property", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
-  .def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
-  .def("add_property", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddProperty)
+  //.def("add_variable", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddVariable)
+  //.def("add_variable", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddVariable)
+  //.def("add_variable", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddVariable)
+  //.def("add_property", (Node(Node::*)(const NodeId &, const QualifiedName &, const Variant &) const) &Node::AddProperty)
+  //.def("add_property", (Node(Node::*)(const std::string &, const std::string &, const Variant &) const) &Node::AddProperty)
+  //.def("add_property", (Node(Node::*)(uint32_t, const std::string &, const Variant &) const) &Node::AddProperty)
+
+  /*
+   *  Must GIVE data type, for python is type-less
+   */
+  .def("add_variable", (Node (*)(Node &, const NodeId &, const QualifiedName &, const object &, VariantType)) &Node_AddVariable)
+  .def("add_variable", (Node (*)(Node &, uint32_t, const std::string &, const object &, VariantType)) &Node_AddVariable)
+  .def("add_variable", (Node (*)(Node &, const std::string &, const std::string &, const object &, VariantType)) &Node_AddVariable)
+  .def("add_property", (Node(*)(Node &, const NodeId &, const QualifiedName &, const object &, VariantType)) &Node_AddProperty)
+  .def("add_property", (Node(*)(Node &, const std::string &, const std::string &, const object &, VariantType)) &Node_AddProperty)
+  .def("add_property", (Node(*)(Node &, uint32_t, const std::string &, const object &, VariantType)) &Node_AddProperty)
   .def(str(self))
   .def(repr(self))
   .def(self == self)
