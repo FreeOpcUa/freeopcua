@@ -14,7 +14,7 @@ InternalSubscription::InternalSubscription(SubscriptionServiceInternal & service
   , CurrentSession(SessionAuthenticationToken)
   , Callback(callback)
   , io(service.GetIOService())
-  , Timer(io, boost::posix_time::milliseconds(data.RevisedPublishingInterval))
+  , Timer(io, boost::posix_time::milliseconds(static_cast<long>(data.RevisedPublishingInterval)))
   , LifeTimeCount(data.RevisedLifetimeCount)
   , Logger(logger)
 {
@@ -105,7 +105,7 @@ void InternalSubscription::PublishResults(const boost::system::error_code & erro
     }
 
   TimerStopped = false;
-  Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(Data.RevisedPublishingInterval));
+  Timer.expires_at(Timer.expires_at() + boost::posix_time::milliseconds(static_cast<long>(Data.RevisedPublishingInterval)));
   std::shared_ptr<InternalSubscription> self = shared_from_this();
   Timer.async_wait([self](const boost::system::error_code & error) { self->PublishResults(error); });
 }
