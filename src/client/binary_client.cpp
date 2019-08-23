@@ -983,6 +983,12 @@ private:
         if (callbackIt == Callbacks.end())
           {
             LOG_WARN(Logger, "binary_client         | no callback found for message id: {}, handle: {}", id, header.RequestHandle);
+            /* 2019-8-22: Changed by jason416, Do clear buffer
+             *  Once we recieve a request alreay handled, buffer must BE CLEANED, otherwise there will be two packet laies in buffer.
+             *  As above, if two buffer are diffrent type request, it will cause logic_error excpetion.
+             *  SO ADD DO CLEAR buffer when wrong packet receive.
+             */
+            messageBuffer.clear();
             return;
           }
 
