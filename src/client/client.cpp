@@ -338,12 +338,26 @@ UaClient::~UaClient()
   Disconnect();//Do not leave any thread or connection running
 }
 
+/*
+ * Deal with SIGPIPE(broken pipe) when call Disconnect(with TCP LINK DOWN).
+ */
+#include <signal.h>
+void UaClient::test_handler(int sign)
+{
+  LOG_INFO(Logger_bak, "ua_client             | triggered SIGPIPE signal");
+}
+
+/* Save Logger */
+Common::Logger::SharedPtr UaClient::Logger_bak = 0;
+
 void UaClient::Disconnect()
 {
   KeepAlive.Stop();
+  Logger_bak = Logger;  // for static member test_handler use
 
   if (Server.get())
     {
+#if 0
       CloseSessionResponse response = Server->CloseSession();
 
       LOG_INFO(Logger, "ua_client             | CloseSession response is {}", ToString(response.Header.ServiceResult));
@@ -351,8 +365,46 @@ void UaClient::Disconnect()
       CloseSecureChannel();
       Server.reset();
     }
+#endif
+    /*
+     * Catch exception which raised by SIGPIPE durring CloseSession(which call tcp_send).
+     */
+      try
+        {
+          if(signal(SIGPIPE, test_handler) == SIG_ERR)
+            throw std::runtime_error("bind signal handler error!");
 
+          CloseSessionResponse response = Server->CloseSession();
+
+          LOG_INFO(Logger, "ua_client             | CloseSession response is {}", ToString(response.Header.ServiceResult));
+
+          CloseSecureChannel();
+          Server.reset();
+        }
+      catch(std::exception &ex)
+        {
+          std::string temp_str(ex.what());
+
+          // if exception code is SIGPIPE, clean resources
+          if(temp_str.find(" Broken pipe") != std::string::npos)
+            {
+              Server.reset();
+            }
+          else                                          // if not, throw to higher level
+            {
+              if(signal(SIGPIPE, SIG_DFL) == SIG_ERR)   // recovery default signal handle
+                throw std::runtime_error("bind default signal handler error!");
+              throw;
+            }
+        }
+    }
+
+    if(signal(SIGPIPE, SIG_DFL) == SIG_ERR)             // recovery default signal handle
+      throw std::runtime_error("bind default signal handler error!");
+
+  LOG_INFO(Logger, "ua_client             | Disconnectd");
 }
+
 
 void UaClient::Abort()
 {

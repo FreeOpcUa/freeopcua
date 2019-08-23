@@ -3,7 +3,7 @@ import time
 import sys
 sys.path.append(".")
 
-from IPython import embed
+# from IPython import embed
 import opcua
 
 class SubHandler(opcua.SubscriptionHandler):
@@ -19,6 +19,7 @@ if __name__ == "__main__":
     server = opcua.Server(True)
     server.set_endpoint("opc.tcp://localhost:4841/freeopcua/server/")
     server.set_server_name("FreeOpcUa Example Server")
+    server.set_uri("urn://exampleserver.freeopcua.github.io")
 
     # start the server
     server.start()
