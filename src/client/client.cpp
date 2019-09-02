@@ -281,7 +281,12 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                       {
                         sessionParameters.UserIdentityToken.setPolicyId(token.PolicyId);
                         sessionParameters.UserIdentityToken.setUser(user, password);
-                        EncryptPassword(sessionParameters.UserIdentityToken, createSessionResponse);
+
+                        if(token.SecurityPolicyUri != "http://opcfoundation.org/UA/SecurityPolicy#None")
+                        {
+                            EncryptPassword(sessionParameters.UserIdentityToken, createSessionResponse);
+                        }
+
                         user_identify_token_found = true;
                         break;
                       }
