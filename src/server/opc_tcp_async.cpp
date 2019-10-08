@@ -106,7 +106,7 @@ public:
      */
     typedef std::promise<void> Promise;
     Promise promise;
-    Socket.get_io_service().post(bind(&Promise::set_value, &promise));
+    post(Socket.get_executor(), bind(&Promise::set_value, &promise));
     promise.get_future().wait();
   }
 
@@ -372,7 +372,7 @@ void OpcTcpServer::Shutdown()
    */
   typedef std::promise<void> Promise;
   Promise promise;
-  acceptor.get_io_service().post(bind(&Promise::set_value, &promise));
+  post(acceptor.get_executor(), bind(&Promise::set_value, &promise));
   promise.get_future().wait();
 }
 
