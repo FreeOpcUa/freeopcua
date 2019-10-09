@@ -836,6 +836,8 @@ public:
         const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
         hdr.AddSize(RawSize(algorithmHeader));
 
+        std::unique_lock<std::mutex> send_lock(send_mutex);
+
         const SequenceHeader sequence = CreateSequenceHeader();
         hdr.AddSize(RawSize(sequence));
 
@@ -868,7 +870,7 @@ private:
     std::unique_lock<std::mutex> lock(Mutex);
     Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
     lock.unlock();
-    
+
     LOG_DEBUG(Logger, "binary_client         | send: id: {} handle: {}, UtcTime: {}", ToString(request.TypeId, true), request.Header.RequestHandle, request.Header.UtcTime);
 
     Send(request);
@@ -903,11 +905,12 @@ private:
     const SymmetricAlgorithmHeader algorithmHeader = CreateAlgorithmHeader();
     hdr.AddSize(RawSize(algorithmHeader));
 
+    std::unique_lock<std::mutex> send_lock(send_mutex);
+
     const SequenceHeader sequence = CreateSequenceHeader();
     hdr.AddSize(RawSize(sequence));
     hdr.AddSize(RawSize(request));
 
-    std::unique_lock<std::mutex> send_lock(send_mutex);
     Stream << hdr << algorithmHeader << sequence << request << flush;
   }
 
@@ -972,6 +975,7 @@ private:
         if (callbackIt == Callbacks.end())
           {
             LOG_WARN(Logger, "binary_client         | no callback found for message id: {}, handle: {}", id, header.RequestHandle);
+            messageBuffer.clear();
             return;
           }
 
@@ -1123,6 +1127,8 @@ void BinaryClient::Send<OpenSecureChannelRequest>(OpenSecureChannelRequest reque
   algorithmHeader.ReceiverCertificateThumbPrint = Params.ReceiverCertificateThumbPrint;
   hdr.AddSize(RawSize(algorithmHeader));
   hdr.AddSize(RawSize(request));
+
+  std::unique_lock<std::mutex> send_lock(send_mutex);
 
   const SequenceHeader sequence = CreateSequenceHeader();
   hdr.AddSize(RawSize(sequence));
