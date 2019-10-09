@@ -165,6 +165,7 @@ public:
   Variant() {}
   Variant(const Variant & var)
     : Value(var.Value)
+    , Dimensions(var.Dimensions)
   {
   }
 
@@ -180,6 +181,7 @@ public:
   Variant & operator= (const Variant & variant)
   {
     this->Value = variant.Value;
+    this->Dimensions = variant.Dimensions;
     return *this;
   }
 

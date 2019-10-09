@@ -20,6 +20,16 @@ TEST(Uri, CanParseFullURI)
   ASSERT_EQ(uri.Port(), 8080u);
 }
 
+TEST(Uri, CanParseFullURIWithUserAndPassword)
+{
+  Common::Uri uri("http://user:password@host:8080");
+  ASSERT_EQ(uri.Scheme(), "http");
+  ASSERT_EQ(uri.User(), "user");
+  ASSERT_EQ(uri.Password(), "password");
+  ASSERT_EQ(uri.Host(), "host");
+  ASSERT_EQ(uri.Port(), 8080u);
+}
+
 TEST(Uri, CanParseFullWithoutPort)
 {
   Common::Uri uri("http://host");

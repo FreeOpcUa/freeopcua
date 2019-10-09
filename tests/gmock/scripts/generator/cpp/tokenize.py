@@ -25,7 +25,7 @@ try:
     import builtins
 except ImportError:
     # Python 2.x
-    import __builtin__ as builtins
+    import builtins as builtins
 
 
 import sys
@@ -58,7 +58,7 @@ PREPROCESSOR = 'PREPROCESSOR'
 
 # Where the token originated from.  This can be used for backtracking.
 # It is always set to WHENCE_STREAM in this code.
-WHENCE_STREAM, WHENCE_QUEUE = range(2)
+WHENCE_STREAM, WHENCE_QUEUE = list(range(2))
 
 
 class Token(object):
@@ -279,7 +279,7 @@ if __name__ == '__main__':
                 continue
 
             for token in GetTokens(source):
-                print('%-12s: %s' % (token.token_type, token.name))
+                print(('%-12s: %s' % (token.token_type, token.name)))
                 # print('\r%6.2f%%' % (100.0 * index / token.end),)
             sys.stdout.write('\n')
 
