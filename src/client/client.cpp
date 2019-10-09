@@ -102,7 +102,7 @@ void KeepAliveThread::Stop()
       Thread.join();
     }
 
-  catch (std::system_error ex)
+  catch (std::system_error & ex)
     {
       LOG_ERROR(Logger, "keep_alive_thread     | exception thrown at attempt to join: {}", ex.what());
 

@@ -16,6 +16,7 @@ dist
 *.egg
 *.egg-info
 eggs
+.DS_Store
 .installed.cfg
 lib
 lib64
