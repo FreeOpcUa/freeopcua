@@ -157,7 +157,7 @@ TEST(NodeId, GuidToString)
 
   OpcUa::NodeId id = OpcUa::GuidNodeId(guid, 1);
   std::string strId = OpcUa::ToString(id);
-  ASSERT_EQ(strId, "ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
+  ASSERT_EQ(strId, "ns=1;g=01020304-0506-0708-090A-0B0C0D0E0F10;");
 }
 
 TEST(NodeId, GuidFromString)
@@ -176,7 +176,7 @@ TEST(NodeId, GuidFromString)
   guid.Data4[7] = 0x10;
 
   OpcUa::NodeId expected = OpcUa::GuidNodeId(guid, 2);
-  OpcUa::NodeId converted = OpcUa::ToNodeId("ns=1;g=01020304-0506-0708-090A0B0C0D0E0F10;");
+  OpcUa::NodeId converted = OpcUa::ToNodeId("ns=1;g=01020304-0506-0708-090A-0B0C0D0E0F10;");
   ASSERT_EQ(expected.Encoding, converted.Encoding);
 
   OpcUa::Guid expectedGuid = converted.GetGuidIdentifier();
