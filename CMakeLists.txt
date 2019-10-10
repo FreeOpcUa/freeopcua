@@ -68,14 +68,14 @@ if(MSVC)
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
 else(MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG " -Wall -ggdb -o0 ${CMAKE_CXX_FLAGS_DEBUG}")
+    set(CMAKE_CXX_FLAGS_DEBUG " -Wall -ggdb -O0 ${CMAKE_CXX_FLAGS_DEBUG}")
 
     SET(STATIC_LIBRARY_CXX_FLAGS)
     SET(EXECUTABLE_CXX_FLAGS)
     SET(DYNAMIC_LIBRARY_CXX_FLAGS)
     SET(D -D)
     set(CMAKE_CXX_FLAGS " -std=c++11 -Wall -fPIC ${CMAKE_CXX_FLAGS} ")
-    SET (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS})
+    SET (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_INIT} $ENV{LDFLAGS}")
     #set(CMAKE_SHARED_LINKER_FLAGS "--no-undefined" )
 endif()
 
@@ -98,10 +98,19 @@ else(WIN32)
     SET(DYNAMIC_ADDON_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libtest_dynamic_addon.so")
     SET(TEST_CORE_CONFIG_PATH "${PROJECT_SOURCE_DIR}/tests/core/configs/")
     SET(OS_SUFFIX _lin)
+    # gcc less then version 4.9 uses a broken std::regex implementation
+    # use libxml2 to parse URL's instead
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9.0)
+        find_package(LibXml2 REQUIRED)
+        message(STATUS "LibXML2 INCLUDE DIR IS: " ${LIBXML2_INCLUDE_DIR})
+        include_directories( ${LIBXML2_INCLUDE_DIR} )
+
+        SET(NO_REGEX_SUFFIX _noregex)
+    endif()
 
 
     #FIXME: remove that variable and link directly when necessary!!!!
-    SET(ADDITIONAL_LINK_LIBRARIES pthread dl)
+    SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${LIBXML2_LIBRARIES})
 
 endif(WIN32)
 
@@ -122,7 +131,7 @@ if (SSL_SUPPORT_MBEDTLS)
         message(STATUS "  mbedtls library LIB_DIR: " ${SSL_SUPPORT_MBEDTLS_LIB_DIR})
         link_directories( ${SSL_SUPPORT_MBEDTLS_LIB_DIR} )
     ENDIF ()
-    SET(SSL_SUPPORT_LINK_LIBRARIES mbedx509 mbedtls mbedcrypto)
+    SET(SSL_SUPPORT_LINK_LIBRARIES mbedcrypto mbedx509 mbedtls)
     message(STATUS "  mbedtls LIBRARIES: " ${SSL_SUPPORT_LINK_LIBRARIES})
 endif (SSL_SUPPORT_MBEDTLS)
 
@@ -248,7 +257,7 @@ SET(opcuacore_SOURCES
     src/core/common/common_errors.cpp
     src/core/common/exception.cpp
     src/core/common/thread.cpp
-    src/core/common/uri_facade${OS_SUFFIX}.cpp
+    src/core/common/uri_facade${OS_SUFFIX}${NO_REGEX_SUFFIX}.cpp
     src/core/common/value.cpp
     src/core/event.cpp
     src/core/model_impl.h
@@ -334,7 +343,8 @@ if (BUILD_CLIENT)
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
         ${Boost_PROGRAMOPTIONS_LIBRARY}
-        )
+        ${SSL_SUPPORT_LINK_LIBRARIES}
+    )
 
     target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaclient EXPORT FreeOpcUa
@@ -509,6 +519,7 @@ if(BUILD_SERVER)
         opcuacore
         opcuaserver
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${SSL_SUPPORT_LINK_LIBRARIES}
         )
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaserverapp PUBLIC ${EXECUTABLE_CXX_FLAGS})
@@ -549,10 +560,11 @@ if(BUILD_SERVER)
     )
 
     target_link_libraries(example_server
-    ${ADDITIONAL_LINK_LIBRARIES}
-    opcuaprotocol
-    opcuacore
-    opcuaserver
+        ${ADDITIONAL_LINK_LIBRARIES}
+        opcuaprotocol
+        opcuacore
+        opcuaserver
+        ${SSL_SUPPORT_LINK_LIBRARIES}
     )
 
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
@@ -572,7 +584,7 @@ if (BUILD_PYTHON)
     add_subdirectory(python)
 endif (BUILD_PYTHON)
 
-install(EXPORT FreeOpcUa DESTINATION lib/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
+install(EXPORT FreeOpcUa DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FreeOpcUa FILE FreeOpcUaConfig.cmake)
 
 SET(CPACK_GENERATOR "DEB")
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "FreeOpcUa")

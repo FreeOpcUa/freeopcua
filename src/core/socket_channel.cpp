@@ -50,12 +50,7 @@ OpcUa::SocketChannel::~SocketChannel()
 
 void OpcUa::SocketChannel::Stop()
 {
-  int error = shutdown(Socket, 2);
-
-  if (error < 0)
-    {
-      std::cerr << "Failed to close socket connection. " << strerror(errno) << std::endl;
-    }
+  close(Socket);
 }
 
 std::size_t OpcUa::SocketChannel::Receive(char * data, std::size_t size)

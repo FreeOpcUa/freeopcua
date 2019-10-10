@@ -51,6 +51,7 @@ void Uri::Initialize(const std::string &uriString)
       THROW_ERROR1(CannotParseUri, uriString);
     }
 
+
   enum {Scheme = 1, User = 3, Password = 5, Host = 6, Port = 8, Path = 9, QueryAndFragment = 10};
 
   SchemeStr = uri_match[Scheme].str();
