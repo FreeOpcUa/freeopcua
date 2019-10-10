@@ -84,7 +84,7 @@ TEST(Guid, ToString)
   guid.Data4[7] = 0x10;
 
   std::string converted = OpcUa::ToString(guid);
-  EXPECT_EQ(converted, "01020304-0506-0708-090A0B0C0D0E0F10");
+  EXPECT_EQ(converted, "01020304-0506-0708-090A-0B0C0D0E0F10");
 }
 
 TEST(Guid, FromString)
@@ -102,13 +102,13 @@ TEST(Guid, FromString)
   guid.Data4[6] = 0x0F;
   guid.Data4[7] = 0x10;
 
-  const OpcUa::Guid converted = OpcUa::ToGuid("01020304-0506-0708-090A0B0C0D0E0F10");
+  const OpcUa::Guid converted = OpcUa::ToGuid("01020304-0506-0708-090A-0B0C0D0E0F10");
   EXPECT_EQ(converted, guid);
 }
 
 TEST(Guid, InvalidString)
 {
-  EXPECT_EQ(OpcUa::ToGuid("01020304-0506-0708-090A0B0C0D0E0F10S"), OpcUa::Guid()); // 36 symbols
+  EXPECT_EQ(OpcUa::ToGuid("01020304-0506-0708-090A-0B0C0D0E0F10S"), OpcUa::Guid()); // 37 symbols
   EXPECT_EQ(OpcUa::ToGuid("0102030400506007080090A0B0C0D0E0F10"), OpcUa::Guid());
 }
 
