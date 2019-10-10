@@ -26,6 +26,7 @@
 #include <opc/ua/protocol/string_utils.h>
 
 #ifdef SSL_SUPPORT_MBEDTLS
+#define MBEDTLS_X509_CRT_PARSE_C
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/x509_crt.h>
@@ -281,7 +282,12 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                       {
                         sessionParameters.UserIdentityToken.setPolicyId(token.PolicyId);
                         sessionParameters.UserIdentityToken.setUser(user, password);
-                        EncryptPassword(sessionParameters.UserIdentityToken, createSessionResponse);
+
+                        if (token.SecurityPolicyUri != "http://opcfoundation.org/UA/SecurityPolicy#None")
+                          {
+                            EncryptPassword(sessionParameters.UserIdentityToken, createSessionResponse);
+                          }
+
                         user_identify_token_found = true;
                         break;
                       }
