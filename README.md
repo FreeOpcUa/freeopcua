@@ -70,7 +70,7 @@ https://github.com/FreeOpcUa/freeopcua/blob/master/python/tests/test_highlevel.p
 
 ## Installation
 
-An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4 or VS2013
+An environment supporting c++11 is necessary: gcc-4.8+, clang 3.4 or VS2020
 
 
 #### Ubuntu (Debians)
