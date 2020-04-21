@@ -57,7 +57,7 @@ OpcTcpMessages::OpcTcpMessages(OpcUa::Services::SharedPtr server, OpcUa::OutputC
   , SessionId(GenerateSessionId())
   , SequenceNb(0)
 {
-  LOG_INFO(Logger, "opc_tcp_processor     | log level: {}", Logger->level());
+  //LOG_INFO(Logger, "opc_tcp_processor     | log level: {}", Logger->level());
   LOG_INFO(Logger, "opc_tcp_processor     | SessionId; {}", SessionId);
 }
 
