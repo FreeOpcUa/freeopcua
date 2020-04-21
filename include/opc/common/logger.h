@@ -8,8 +8,9 @@
 #pragma once
 
 #include <opc/common/class_pointers.h>
-#include <opc/spdlog/spdlog.h>
-#include <opc/spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/ostr.h>
 
 namespace Common
 {
