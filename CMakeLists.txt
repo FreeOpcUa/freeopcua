@@ -114,6 +114,17 @@ else(WIN32)
 
 endif(WIN32)
 
+if(UNIX)
+    include(FindPkgConfig QUIET)
+    if(PKG_CONFIG_FOUND)
+        pkg_search_module(SPDLOG spdlog)
+        if(SPDLOG_FOUND)
+            add_compile_options(${SPDLOG_CFLAGS} -DHAVE_SYSTEM_SPDLOG)
+            SET(ADDITIONAL_LINK_LIBRARIES ${ADDITIONAL_LINK_LIBRARIES} ${SPDLOG_LDFLAGS})
+        endif()
+    endif()
+endif()
+
 find_package( Boost COMPONENTS system program_options filesystem thread REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
 link_directories( ${Boost_LIBRARY_DIRS} )
