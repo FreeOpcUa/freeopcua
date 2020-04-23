@@ -42,7 +42,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 # Takes the filename of the .pc file as a parameter and replaces all
 # placeholders in the .pc.in file with the actual values
 # (does nothing on non-unix systems)
-function(generate_pkgconfig BASENAME)
+function(generate_pkgconfig TARGET_NAME)
     if(UNIX)
         include(FindPkgConfig QUIET)
         if(PKG_CONFIG_FOUND)
@@ -51,10 +51,15 @@ function(generate_pkgconfig BASENAME)
             set(exec_prefix ${CMAKE_INSTALL_PREFIX})
             set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
             set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+            get_target_property(interface_cflags ${TARGET_NAME} INTERFACE_COMPILE_OPTIONS)
+            if(NOT interface_cflags)
+                # no flags, set to empty
+                set(interface_cflags)
+            endif()
 
             # generate pkg-config file
-            configure_file("${BASENAME}.in" "${BASENAME}" @ONLY)
-            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}"
+            configure_file("lib${TARGET_NAME}.pc.in" "lib${TARGET_NAME}.pc" @ONLY)
+            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET_NAME}.pc"
                     DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkgconfig")
         endif()
     endif()
@@ -211,7 +216,7 @@ install(TARGETS opcuaprotocol EXPORT FreeOpcUa
                               LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                               ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-generate_pkgconfig("libopcuaprotocol.pc")
+generate_pkgconfig(opcuaprotocol)
 
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
@@ -293,7 +298,7 @@ install(TARGETS opcuacore EXPORT FreeOpcUa
                           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-generate_pkgconfig("libopcuacore.pc")
+generate_pkgconfig(opcuacore)
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -359,7 +364,7 @@ if (BUILD_CLIENT)
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-    generate_pkgconfig("libopcuaclient.pc")
+    generate_pkgconfig(opcuaclient)
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -450,7 +455,7 @@ if(BUILD_SERVER)
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-    generate_pkgconfig("libopcuaserver.pc")
+    generate_pkgconfig(opcuaserver)
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
