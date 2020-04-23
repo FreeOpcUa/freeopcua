@@ -38,6 +38,8 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         ""
     )
 
+set(ADDITIONAL_PUBLIC_COMPILE_OPTIONS)
+
 # Helper function to generate a pkg-config file for a single library
 # Takes the filename of the .pc file as a parameter and replaces all
 # placeholders in the .pc.in file with the actual values
@@ -210,6 +212,7 @@ add_library(opcuaprotocol
 if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 endif ()
+target_compile_options(opcuaprotocol PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuaprotocol EXPORT FreeOpcUa
@@ -292,6 +295,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 endif ()
 
+target_compile_options(opcuacore PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
@@ -320,6 +324,7 @@ if (BUILD_TESTING)
         tests/core/test_uri.cpp
     )
 
+    target_compile_options(test_opcuacore PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(test_opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -352,6 +357,7 @@ if (BUILD_CLIENT)
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     endif ()
+    target_compile_options(opcuaclient PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaclient
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
@@ -387,6 +393,7 @@ if (BUILD_CLIENT)
     )
 
 
+    target_compile_options(opcuaclientapp PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -449,6 +456,7 @@ if(BUILD_SERVER)
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     endif ()
+    target_compile_options(opcuaserver PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
     target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
@@ -493,6 +501,7 @@ if(BUILD_SERVER)
         #  tests/server/xml_addressspace_ut.cpp
         #  tests/server/xml_address_space_addon_ut.cpp
 
+        target_compile_options(test_opcuaserver PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
         target_link_libraries(test_opcuaserver
             ${ADDITIONAL_LINK_LIBRARIES}
             opcuaclient
@@ -526,6 +535,7 @@ if(BUILD_SERVER)
     )
 
     add_executable(opcuaserverapp ${OPCUASERVERAPP_SOURCES})
+    target_compile_options(opcuaserverapp PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaserverapp
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -549,6 +559,7 @@ if (BUILD_CLIENT)
     src/examples/example_client.cpp
     )
 
+    target_compile_options(example_client PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(example_client
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -572,6 +583,7 @@ if(BUILD_SERVER)
     src/examples/example_server.cpp
     )
 
+    target_compile_options(example_server PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(example_server
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
