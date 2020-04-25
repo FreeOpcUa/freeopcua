@@ -94,3 +94,6 @@ vscode
 
 # QtCreator
 CMakeLists.txt.user
+
+# Temporary files left by editors and such
+*~
