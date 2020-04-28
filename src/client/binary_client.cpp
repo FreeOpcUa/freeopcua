@@ -83,21 +83,24 @@ class RequestCallback
 public:
   RequestCallback(const Common::Logger::SharedPtr & logger)
     : Logger(logger)
-    , lock(m)
   {
   }
 
   void OnData(std::vector<char> data, ResponseHeader h)
   {
-    //std::cout << ToHexDump(data);
-    Data = std::move(data);
-    this->header = std::move(h);
+    {
+      std::unique_lock<std::mutex> lock{m};
+      Data = std::move(data);
+      this->header = std::move(h);
+    }
     doneEvent.notify_all();
   }
 
   T WaitForData(std::chrono::milliseconds msec)
   {
-    if (doneEvent.wait_for(lock, msec) == std::cv_status::timeout)
+    std::unique_lock<std::mutex> lock{m};
+    if (doneEvent.wait_for(lock, msec, // RequestHandle is 0 before the response is received
+                           [&](){ return this->header.RequestHandle != 0; }) == false)
       { throw std::runtime_error("Response timed out"); }
 
     T result;
@@ -123,7 +126,6 @@ private:
   std::vector<char> Data;
   ResponseHeader header;
   std::mutex m;
-  std::unique_lock<std::mutex> lock;
   std::condition_variable doneEvent;
 };
 
@@ -875,9 +877,10 @@ private:
     {
       requestCallback.OnData(std::move(buffer), std::move(h));
     };
-    std::unique_lock<std::mutex> lock(Mutex);
-    Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
-    lock.unlock();
+    {
+      std::unique_lock<std::mutex> lock(Mutex);
+      Callbacks.insert(std::make_pair(request.Header.RequestHandle, responseCallback));
+    }
 
     LOG_DEBUG(Logger, "binary_client         | send: id: {} handle: {}, UtcTime: {}", ToString(request.TypeId, true), request.Header.RequestHandle, request.Header.UtcTime);
 
@@ -895,7 +898,6 @@ private:
         //Remove the callback on timeout
         std::unique_lock<std::mutex> lock(Mutex);
         Callbacks.erase(request.Header.RequestHandle);
-        lock.unlock();
         throw;
       }
 
