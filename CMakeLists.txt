@@ -490,6 +490,7 @@ if(BUILD_SERVER)
             opcuacore
             opcuaprotocol
             opcuaserver
+            ${Boost_PROGRAM_OPTIONS_LIBRARY}
             ${TEST_LIBS}
             )
 
