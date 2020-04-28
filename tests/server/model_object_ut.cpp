@@ -36,6 +36,10 @@
 
 using namespace testing;
 
+#if defined(_WIN32) && defined(GetObject)
+#undef GetObject // windows.h defines GetObject to GetObjectA/GetObjectW
+#endif
+
 
 class ModelObject : public Test
 {
