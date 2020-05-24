@@ -165,7 +165,7 @@ ADD_CUSTOM_COMMAND(
   )
 
 
-add_library(opcuaprotocol
+add_library(opcuaprotocol STATIC
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
     src/protocol/deserialize_auto.cpp
@@ -273,7 +273,7 @@ SET(opcuacore_SOURCES
     src/core/server_operations.cpp
 )
 
-add_library(opcuacore ${opcuacore_SOURCES})
+add_library(opcuacore STATIC ${opcuacore_SOURCES})
 
 if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
@@ -329,7 +329,7 @@ endif(BUILD_TESTING)
 ############################################################################
 if (BUILD_CLIENT)
 
-    add_library(opcuaclient
+    add_library(opcuaclient STATIC
     src/client/binary_connection.cpp
     src/client/binary_client.cpp
     src/client/binary_client_addon.cpp
@@ -400,7 +400,7 @@ if(BUILD_SERVER)
     #)
     #ENDFOREACH(PART)
 
-    add_library(opcuaserver
+    add_library(opcuaserver STATIC
         src/server/address_space_addon.cpp
         src/server/address_space_internal.cpp
         src/server/asio_addon.cpp

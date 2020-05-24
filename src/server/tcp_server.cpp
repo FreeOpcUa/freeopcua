@@ -36,6 +36,7 @@
 
 
 #ifdef _WIN32
+#define SHUT_RDWR 2
 #else
 #include <arpa/inet.h>
 #include <netdb.h>
