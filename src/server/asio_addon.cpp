@@ -20,6 +20,8 @@
 #include <opc/ua/server/addons/asio_addon.h>
 
 #include <boost/asio.hpp>
+
+#include <algorithm>
 #include <iostream>
 #include <thread>
 

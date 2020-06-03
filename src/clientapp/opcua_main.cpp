@@ -20,6 +20,7 @@
 #include <opc/ua/protocol/variant_visitor.h>
 #include <opc/ua/services/services.h>
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 
