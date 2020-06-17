@@ -20,6 +20,7 @@
 #pragma once
 
 #include <opc/ua/model.h>
+#include <algorithm>
 
 namespace OpcUa
 {
