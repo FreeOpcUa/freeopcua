@@ -38,11 +38,13 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
         ""
     )
 
+set(ADDITIONAL_PUBLIC_COMPILE_OPTIONS)
+
 # Helper function to generate a pkg-config file for a single library
 # Takes the filename of the .pc file as a parameter and replaces all
 # placeholders in the .pc.in file with the actual values
 # (does nothing on non-unix systems)
-function(generate_pkgconfig BASENAME)
+function(generate_pkgconfig TARGET_NAME)
     if(UNIX)
         include(FindPkgConfig QUIET)
         if(PKG_CONFIG_FOUND)
@@ -51,10 +53,15 @@ function(generate_pkgconfig BASENAME)
             set(exec_prefix ${CMAKE_INSTALL_PREFIX})
             set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
             set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+            get_target_property(interface_cflags ${TARGET_NAME} INTERFACE_COMPILE_OPTIONS)
+            if(NOT interface_cflags)
+                # no flags, set to empty
+                set(interface_cflags)
+            endif()
 
             # generate pkg-config file
-            configure_file("${BASENAME}.in" "${BASENAME}" @ONLY)
-            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}"
+            configure_file("lib${TARGET_NAME}.pc.in" "lib${TARGET_NAME}.pc" @ONLY)
+            install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET_NAME}.pc"
                     DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkgconfig")
         endif()
     endif()
@@ -113,6 +120,15 @@ else(WIN32)
     SET(ADDITIONAL_LINK_LIBRARIES pthread dl ${LIBXML2_LIBRARIES})
 
 endif(WIN32)
+
+if(UNIX)
+    find_package(spdlog)
+    if(spdlog_FOUND)
+        message(STATUS "Found spdlog")
+        set(ADDITIONAL_PUBLIC_COMPILE_OPTIONS -DHAVE_SYSTEM_SPDLOG)
+        set(ADDITIONAL_LINK_LIBRARIES ${ADDITIONAL_LINK_LIBRARIES} spdlog::spdlog)
+    endif()
+endif()
 
 find_package( Boost COMPONENTS system program_options filesystem thread REQUIRED )
 include_directories( ${Boost_INCLUDE_DIRS} )
@@ -197,13 +213,14 @@ add_library(opcuaprotocol
 if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuaprotocol PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 endif ()
+target_compile_options(opcuaprotocol PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
 target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuaprotocol EXPORT FreeOpcUa
                               LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                               ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-generate_pkgconfig("libopcuaprotocol.pc")
+generate_pkgconfig(opcuaprotocol)
 
 if (NOT WIN32)
     target_link_libraries(opcuaprotocol ${Boost_LIBRARIES})
@@ -279,13 +296,14 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     target_compile_options(opcuacore PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
 endif ()
 
+target_compile_options(opcuacore PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
                           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-generate_pkgconfig("libopcuacore.pc")
+generate_pkgconfig(opcuacore)
 
 if (BUILD_TESTING)
     add_library(test_dynamic_addon MODULE
@@ -307,6 +325,7 @@ if (BUILD_TESTING)
         tests/core/test_uri.cpp
     )
 
+    target_compile_options(test_opcuacore PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(test_opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -339,6 +358,7 @@ if (BUILD_CLIENT)
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaclient PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     endif ()
+    target_compile_options(opcuaclient PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaclient
         opcuacore
         ${ADDITIONAL_LINK_LIBRARIES}
@@ -351,7 +371,7 @@ if (BUILD_CLIENT)
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-    generate_pkgconfig("libopcuaclient.pc")
+    generate_pkgconfig(opcuaclient)
 
     #tests/client/binary_handshake.cpp
     #tests/client/common.h
@@ -374,6 +394,7 @@ if (BUILD_CLIENT)
     )
 
 
+    target_compile_options(opcuaclientapp PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaclientapp
         ${ADDITIONAL_LINK_LIBRARIES}
         ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -436,13 +457,14 @@ if(BUILD_SERVER)
     if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
         target_compile_options(opcuaserver PUBLIC ${STATIC_LIBRARY_CXX_FLAGS})
     endif ()
+    target_compile_options(opcuaserver PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
     target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
 
-    generate_pkgconfig("libopcuaserver.pc")
+    generate_pkgconfig(opcuaserver)
 
     #  src/server/xml_address_space_addon.cpp
     #  src/server/xml_address_space_loader.cpp
@@ -480,6 +502,7 @@ if(BUILD_SERVER)
         #  tests/server/xml_addressspace_ut.cpp
         #  tests/server/xml_address_space_addon_ut.cpp
 
+        target_compile_options(test_opcuaserver PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
         target_link_libraries(test_opcuaserver
             ${ADDITIONAL_LINK_LIBRARIES}
             opcuaclient
@@ -513,6 +536,7 @@ if(BUILD_SERVER)
     )
 
     add_executable(opcuaserverapp ${OPCUASERVERAPP_SOURCES})
+    target_compile_options(opcuaserverapp PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaserverapp
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -536,6 +560,7 @@ if (BUILD_CLIENT)
     src/examples/example_client.cpp
     )
 
+    target_compile_options(example_client PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(example_client
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol
@@ -559,6 +584,7 @@ if(BUILD_SERVER)
     src/examples/example_server.cpp
     )
 
+    target_compile_options(example_server PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(example_server
         ${ADDITIONAL_LINK_LIBRARIES}
         opcuaprotocol

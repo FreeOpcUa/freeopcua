@@ -8,8 +8,14 @@
 #pragma once
 
 #include <opc/common/class_pointers.h>
+#ifdef HAVE_SYSTEM_SPDLOG
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/ostr.h>
+#else
 #include <opc/spdlog/spdlog.h>
 #include <opc/spdlog/fmt/ostr.h>
+#endif
 
 namespace Common
 {
