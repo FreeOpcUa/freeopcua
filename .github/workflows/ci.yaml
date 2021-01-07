@@ -1,0 +1,22 @@
+name: Test freeopcua
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    # Run every morning to detect flakiness and broken dependencies
+    - cron: '17 6 * * *'
+
+jobs:
+  ci_linux:
+    name: Latest ubuntu build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - run: sudo apt-get update -qq && sudo apt-get upgrade
+      - run: sudo apt-get install libboost-all-dev -qq
+      - run: sudo apt-get install libboost-python-dev -qq
+      - run: sudo apt-get install libcppunit-dev
+      - run: autoreconf -f -i && ./configure && make && make check
