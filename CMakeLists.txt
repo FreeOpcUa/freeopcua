@@ -21,22 +21,22 @@ IF (NOT DEFINED CMAKE_INSTALL_LIBDIR)
 ENDIF ()
 
 SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
-        CACHE PATH
-        ""
-    )
+		${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+		CACHE PATH
+		""
+	)
 
 SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
-        CACHE PATH
-        ""
-    )
+		${PROJECT_BINARY_DIR}/bin
+		CACHE PATH
+		""
+	)
 
 SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
-        CACHE PATH
-        ""
-    )
+		${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+		CACHE PATH
+		""
+	)
 
 set(ADDITIONAL_PUBLIC_COMPILE_OPTIONS)
 
@@ -71,6 +71,11 @@ if(MSVC)
     SET(EXECUTABLE_CXX_FLAGS /MDd  CACHE STRING "")
     SET(DYNAMIC_LIBRARY_CXX_FLAGS /MDd  CACHE STRING "")
     SET(D  /D)
+
+    IF (BUILD_SHARED_LIBS)
+	    SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+        add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_PROGRAM_OPTIONS_DYN_LINK=1)
+    ENDIF ()
 
     add_definitions(/D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /D_WIN32 /D_WINDOWS /FS /D_WIN32_WINNT=0x0600)
     add_compile_options(/Zi /Od /EHsc /W4)
@@ -180,7 +185,6 @@ ADD_CUSTOM_COMMAND(
     #DEPENDS ${PROJECT_SOURCE_DIR}/NodeIds.csv
   )
 
-
 add_library(opcuaprotocol
     src/protocol/rawsize_auto.cpp
     src/protocol/serialize_auto.cpp
@@ -199,6 +203,7 @@ add_library(opcuaprotocol
     src/protocol/binary_variant.cpp
     src/protocol/binary_view.cpp
     src/protocol/input_from_buffer.cpp
+    src/protocol/input_from_stream_buffer.cpp
     src/protocol/monitored_items.cpp
     src/protocol/nodeid.cpp
     src/protocol/session.cpp

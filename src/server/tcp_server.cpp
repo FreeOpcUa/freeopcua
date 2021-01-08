@@ -9,7 +9,10 @@
 ///
 
 #ifdef _WIN32
+#define NOMINMAX
+#include <WinSock2.h>
 #include <windows.h>
+#define SHUT_RDWR SD_BOTH
 #endif
 
 #include "tcp_server.h"
