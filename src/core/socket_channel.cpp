@@ -23,6 +23,7 @@
 
 #ifdef _WIN32
 #include <WinSock2.h>
+#include <io.h>
 #else
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
