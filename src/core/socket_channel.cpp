@@ -23,6 +23,7 @@
 
 #ifdef _WIN32
 #include <WinSock2.h>
+int close(SOCKET s) { return closesocket(s); }
 #else
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
