@@ -1061,13 +1061,17 @@ void DataDeserializer::Deserialize<Variant>(Variant & var)
     { var = deserializer.get<DiagnosticInfo>(); }
 
   else if (encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO | HAS_ARRAY_MASK))
-    { var = deserializer.get<std::vector<DiagnosticInfo>>(); }
+  {
+	  var = deserializer.get<DiagnosticInfoList>();
+  }
 
   else if (encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT))
     { var = deserializer.get<ExtensionObject>(); }
 
   else if (encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT | HAS_ARRAY_MASK))
-    { var = deserializer.get<std::vector<ExtensionObject>>(); }
+  {
+	  var = deserializer.get<std::vector<OpcUa::ExtensionObject>>();
+  }
 
   else
     { throw std::logic_error("Deserialization of VariantType: " + std::to_string(encodingMask) + " is not supported yet."); }

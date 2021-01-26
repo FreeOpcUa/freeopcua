@@ -64,7 +64,7 @@ inline std::string ToHexDump(const char * buf, std::size_t size)
 template <typename T> inline std::ostream & ToHexDump(std::ostream & os, const std::vector<T> & buf, std::size_t size)
 {
   std::stringstream lineEnd;
-  size = std::min(size, buf.size());
+  size = (std::min)(size, buf.size());
   unsigned pos = 0;
   os << "size: " << size << "(0x" << std::hex << size << ")";
 

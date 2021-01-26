@@ -9,6 +9,7 @@
 ///
 
 #ifdef _WIN32
+#include <WinSock2.h>
 #include <windows.h>
 #endif
 
@@ -178,7 +179,7 @@ public:
       {
         LOG_INFO(Logger, "shutting down opc ua binary server");
         Stopped = true;
-        shutdown(Socket, SHUT_RDWR);
+		shutdown(Socket, SD_BOTH/*SHUT_RDWR*/);
         ServerThread->Join();
         ServerThread.reset();
       }
