@@ -53,35 +53,46 @@ void KeepAliveThread::Run()
 
   while (!StopRequest)
     {
-      int64_t t_sleep = Period * 0.7;
-      LOG_DEBUG(Logger, "keep_alive_thread     | sleeping for: {}ms", t_sleep);
-
-      std::unique_lock<std::mutex> lock(Mutex);
-      std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds(t_sleep));
-
-      if (status == std::cv_status::no_timeout)
+      try
         {
-          break;
+          int64_t t_sleep = Period * 0.7;
+          LOG_DEBUG(Logger, "keep_alive_thread     | sleeping for: {}ms", t_sleep);
+
+          std::unique_lock<std::mutex> lock(Mutex);
+          std::cv_status status = Condition.wait_for(lock, std::chrono::milliseconds(t_sleep));
+
+          if (status == std::cv_status::no_timeout)
+            {
+              break;
+            }
+
+          LOG_DEBUG(Logger, "keep_alive_thread     | renewing secure channel");
+
+          OpenSecureChannelParameters params;
+          params.ClientProtocolVersion = 0;
+          params.RequestType = SecurityTokenRequestType::Renew;
+          params.SecurityMode = MessageSecurityMode::None;
+          params.ClientNonce = std::vector<uint8_t>(1, 0);
+          params.RequestLifeTime = Period;
+          OpenSecureChannelResponse response = Server->OpenSecureChannel(params);
+
+          if ((response.ChannelSecurityToken.RevisedLifetime < Period) && (response.ChannelSecurityToken.RevisedLifetime > 0))
+            {
+              Period = response.ChannelSecurityToken.RevisedLifetime;
+            }
+
+          LOG_DEBUG(Logger, "keep_alive_thread     | read a variable from address space to keep session open");
+
+          NodeToRead.GetValue();
         }
-
-      LOG_DEBUG(Logger, "keep_alive_thread     | renewing secure channel");
-
-      OpenSecureChannelParameters params;
-      params.ClientProtocolVersion = 0;
-      params.RequestType = SecurityTokenRequestType::Renew;
-      params.SecurityMode = MessageSecurityMode::None;
-      params.ClientNonce = std::vector<uint8_t>(1, 0);
-      params.RequestLifeTime = Period;
-      OpenSecureChannelResponse response = Server->OpenSecureChannel(params);
-
-      if ((response.ChannelSecurityToken.RevisedLifetime < Period) && (response.ChannelSecurityToken.RevisedLifetime > 0))
+      catch (const std::exception &e)
         {
-          Period = response.ChannelSecurityToken.RevisedLifetime;
+          LOG_ERROR(Logger, "keep_alive_thread     | error", e.what());
         }
-
-      LOG_DEBUG(Logger, "keep_alive_thread     | read a variable from address space to keep session open");
-
-      NodeToRead.GetValue();
+      catch (...)
+        {
+          LOG_ERROR(Logger, "keep_alive_thread     | error unknown");
+        }
     }
 
   Running = false;
