@@ -341,7 +341,12 @@ void UaClient::CloseSecureChannel()
 
 UaClient::~UaClient()
 {
-  Disconnect();//Do not leave any thread or connection running
+  try {
+    Disconnect(); // Do not leave any thread or connection running
+  } catch (std::exception &e) {
+    LOG_WARN(Logger,
+             "ua_client             | Failed to disconnect: {}", e.what());
+  }
 }
 
 void UaClient::Disconnect()
