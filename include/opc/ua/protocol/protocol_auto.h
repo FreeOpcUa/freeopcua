@@ -2606,7 +2606,7 @@ struct CreateSubscriptionRequest
 struct SubscriptionData
 {
   uint32_t SubscriptionId;
-  double RevisedPublishingInterval;
+  long RevisedPublishingInterval;
   uint32_t RevisedLifetimeCount;
   uint32_t RevisedMaxKeepAliveCount;
 
