@@ -265,7 +265,15 @@ void UaClient::Connect(const EndpointDescription & endpoint)
         if (ep.SecurityMode == MessageSecurityMode::None)
           {
             for (auto token : ep.UserIdentityTokens)
+            {
+              LOG_DEBUG(Logger, "check token " + token.PolicyId);
+            }
+            for (auto token : ep.UserIdentityTokens)
               {
+                if (token.PolicyId!="UserName_Basic256Sha256_Token")
+                {
+                  continue;
+                }
                 if (user.empty())
                   {
                     if (token.TokenType == UserTokenType::Anonymous)
