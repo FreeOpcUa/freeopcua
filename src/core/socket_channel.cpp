@@ -50,7 +50,11 @@ OpcUa::SocketChannel::~SocketChannel()
 
 void OpcUa::SocketChannel::Stop()
 {
+#ifdef _WIN32
+  closesocket(Socket);
+#else
   close(Socket);
+#endif
 }
 
 std::size_t OpcUa::SocketChannel::Receive(char * data, std::size_t size)
