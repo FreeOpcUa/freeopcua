@@ -2,7 +2,7 @@ Open Source C++ OPC-UA Server and Client Library
 ========
 [![Build Status](https://travis-ci.org/FreeOpcUa/freeopcua.svg?branch=master)](https://travis-ci.org/FreeOpcUa/freeopcua)
 
-LGPL OPC-UA server and client library written in C++ and with a lot of code auto-generated from xml specification using python.  
+LGPL [OPC-UA](https://opcfoundation.org/about/opc-technologies/opc-ua/) server and client library written in C++ and with a lot of code auto-generated from xml specification using python.  
 
 Python bindings can be found in the python directory.
 
