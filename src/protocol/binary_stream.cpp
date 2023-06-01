@@ -523,7 +523,7 @@ void DataDeserializer::Deserialize<ByteString>(ByteString & value)
   uint32_t stringSize = 0;
   *this >> stringSize;
 
-  if (stringSize != ~uint32_t())
+  if (stringSize != ~uint32_t() && stringSize > 0)
     {
       value.Data.resize(stringSize);
       GetData(In, reinterpret_cast<char *>(&value.Data[0]), stringSize);
