@@ -23,6 +23,8 @@
 #include <opc/ua/model.h>
 #include <algorithm>
 
+#include <algorithm>
+
 namespace OpcUa
 {
 namespace Model
