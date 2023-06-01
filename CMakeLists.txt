@@ -215,7 +215,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
 endif ()
 target_compile_options(opcuaprotocol PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuaprotocol ${ADDITIONAL_LINK_LIBRARIES})
-target_include_directories(opcuaprotocol PUBLIC $<INSTALL_INTERFACE:include>)
+target_include_directories(opcuaprotocol PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuaprotocol EXPORT FreeOpcUa
                               LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                               ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
@@ -298,7 +298,7 @@ endif ()
 
 target_compile_options(opcuacore PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
 target_link_libraries(opcuacore ${ADDITIONAL_LINK_LIBRARIES} opcuaprotocol ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
-target_include_directories(opcuacore PUBLIC $<INSTALL_INTERFACE:include>)
+target_include_directories(opcuacore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 install(TARGETS opcuacore EXPORT FreeOpcUa
                           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
@@ -366,7 +366,7 @@ if (BUILD_CLIENT)
         ${SSL_SUPPORT_LINK_LIBRARIES}
     )
 
-    target_include_directories(opcuaclient PUBLIC $<INSTALL_INTERFACE:include>)
+    target_include_directories(opcuaclient PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaclient EXPORT FreeOpcUa
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
@@ -459,7 +459,7 @@ if(BUILD_SERVER)
     endif ()
     target_compile_options(opcuaserver PUBLIC ${ADDITIONAL_PUBLIC_COMPILE_OPTIONS})
     target_link_libraries(opcuaserver ${ADDITIONAL_LINK_LIBRARIES} opcuacore opcuaprotocol ${Boost_SYSTEM_LIBRARY})
-    target_include_directories(opcuaserver PUBLIC $<INSTALL_INTERFACE:include>)
+    target_include_directories(opcuaserver PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
     install(TARGETS opcuaserver EXPORT FreeOpcUa
                                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/static)
