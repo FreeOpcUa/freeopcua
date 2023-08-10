@@ -257,6 +257,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
     Common::Uri uri(session.EndpointUrl);
     std::string user = uri.User();
     std::string password = uri.Password();
+    LOG_INFO(Logger, "user: " + user + ", password: "+password + ", host: "+uri.Host()+ ", scheme: "+uri.Scheme());
     bool user_identify_token_found = false;
     sessionParameters.ClientSignature.Algorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
 
@@ -265,7 +266,15 @@ void UaClient::Connect(const EndpointDescription & endpoint)
         if (ep.SecurityMode == MessageSecurityMode::None)
           {
             for (auto token : ep.UserIdentityTokens)
+            {
+              LOG_DEBUG(Logger, "check token " + token.PolicyId);
+            }
+            for (auto token : ep.UserIdentityTokens)
               {
+                if (token.PolicyId!="UserName_Basic256Sha256_Token")
+                {
+                  continue;
+                }
                 if (user.empty())
                   {
                     if (token.TokenType == UserTokenType::Anonymous)
@@ -289,6 +298,7 @@ void UaClient::Connect(const EndpointDescription & endpoint)
                           }
 
                         user_identify_token_found = true;
+                        LOG_INFO(Logger, "Created user, starting request with policyid: " + token.PolicyId + "\n, securitypolicy: " + token.SecurityPolicyUri);
                         break;
                       }
                   }
