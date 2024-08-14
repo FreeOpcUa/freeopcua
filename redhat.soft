@@ -1,0 +1,7 @@
+# Execute this like `source redhat.soft`
+if which dnf; then pm=dnf; else pm=yum; fi
+sudo $pm install gcc g++ make autoconf automake libtool \
+boost-devel boost-thread boost-program-options boost-system boost-filesystem \
+cppunit-devel pkgconfig git \
+python-devel python3-devel boost-python-devel boost-python36-devel \
+libxml2-devel mbedtls-devel
