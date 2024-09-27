@@ -800,7 +800,7 @@ std::string GetNodeField(const std::string & data, const char * field)
 
   if (semicolon == std::string::npos)
     {
-      data.substr(colon);
+      return data.substr(colon);
     }
 
   return data.substr(colon, semicolon - colon);
