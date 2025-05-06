@@ -17,12 +17,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.        *
  ******************************************************************************/
 
-
 #include <opc/ua/subscription.h>
 #include <opc/ua/protocol/string_utils.h>
 
 #include <boost/asio.hpp>
 #include <iostream>
+
 
 namespace OpcUa
 {
@@ -78,7 +78,7 @@ void Subscription::PublishCallback(Services::SharedPtr server, const PublishResu
 
       else
         {
-          LOG_WARN(Logger, "subscription          | unknown notficiation type received: {}", data.Header.TypeId);
+          LOG_WARN(Logger, "subscription          | unknown notficiation type received: {}", ToString(data.Header.TypeId));
         }
     }
 
@@ -100,7 +100,7 @@ void Subscription::CallDataChangeCallback(const NotificationData & data)
 
       if (mapit == AttributeValueMap.end())
         {
-          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown monitoreditem id: {}", item.ClientHandle);
+          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown monitoreditem id: {}", (unsigned)item.ClientHandle);
         }
 
       else
@@ -109,7 +109,7 @@ void Subscription::CallDataChangeCallback(const NotificationData & data)
           Node node = mapit->second.TargetNode;
           lock.unlock(); //unlock before calling client cades, you never know what they may do
 
-          LOG_DEBUG(Logger, "subscription          | calling DataChange user callback: {} and node: {}", item.ClientHandle, mapit->second.TargetNode);
+          LOG_DEBUG(Logger, "subscription          | calling DataChange user callback: {} and node: {}", (unsigned)item.ClientHandle, ToString(mapit->second.TargetNode));
 
           Client.DataValueChange(mapit->second.MonitoredItemId, node, item.Value, attr);
           Client.DataChange(mapit->second.MonitoredItemId, node, item.Value.Value, attr);
@@ -132,7 +132,7 @@ void Subscription::CallEventCallback(const NotificationData & data)
 
       if (mapit == AttributeValueMap.end())
         {
-          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown MonitoredItem id: {}", ef.ClientHandle);
+          LOG_WARN(Logger, "subscription          | got PublishResult for an unknown MonitoredItem id: {}", (unsigned)ef.ClientHandle);
         }
 
       else
@@ -370,7 +370,7 @@ uint32_t Subscription::SubscribeEvents(const Node & node, const Node & eventtype
   for (Node & child : eventtype.GetProperties())
     {
       auto propertyName = child.GetBrowseName();
-      LOG_DEBUG(Logger, "  property: {}", propertyName);
+      LOG_DEBUG(Logger, "  property: {}", propertyName.Name);
 
       SimpleAttributeOperand op;
       op.TypeId = eventtype.GetId();

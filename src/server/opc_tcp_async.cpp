@@ -22,6 +22,7 @@
 #include <opc/ua/server/opc_tcp_async.h>
 
 #include <opc/ua/protocol/utils.h>
+#include <opc/ua/protocol/string_utils.h>
 #include <opc/ua/protocol/binary/common.h>
 #include <opc/ua/protocol/binary/stream.h>
 #include <opc/ua/protocol/channel.h>
@@ -209,7 +210,7 @@ void OpcTcpConnection::ProcessHeader(const boost::system::error_code & error, st
 
   const std::size_t messageSize = header.Size - GetHeaderSize();
 
-  LOG_DEBUG(Logger, "opc_tcp_async         | received message: Type: {}, ChunkType: {}, Size: {}: DataSize: {}", header.Type, header.Chunk, header.Size, messageSize);
+  LOG_DEBUG(Logger, "opc_tcp_async         | received message: Type: {}, ChunkType: {}, Size: {}: DataSize: {}", (unsigned)header.Type, (unsigned)header.Chunk, header.Size, messageSize);
 
   // do not lose reference to shared instance even if another
   // async operation decides to call GoodBye()
@@ -329,8 +330,7 @@ OpcTcpServer::OpcTcpServer(const AsyncOpcTcp::Parameters & params, Services::Sha
 void OpcTcpServer::Listen()
 {
   LOG_DEBUG(Logger, "opc_tcp_async         | running server");
-
-  LOG_DEBUG(Logger, "opc_tcp_async         | waiting for client connection at: {}:{}", acceptor.local_endpoint().address(), acceptor.local_endpoint().port());
+  LOG_DEBUG(Logger, "opc_tcp_async         | waiting for client connection at: {}:{}", acceptor.local_endpoint().address().to_string(), acceptor.local_endpoint().port());
   acceptor.listen();
 
   Accept();

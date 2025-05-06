@@ -167,7 +167,7 @@ time_t DateTime::ToTimeT(DateTime dateTime)
   if (dateTime.Value < secsFrom1601To1970)
     {
       std::stringstream stream;
-      stream << "OpcUa date time cannot be less than " << secsFrom1601To1970;
+      stream << "OpcUa date time cannot be less than " << secsFrom1601To1970 << ".  Current value: " << dateTime.Value;
       throw std::invalid_argument(stream.str());
     }
 

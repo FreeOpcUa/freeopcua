@@ -50,14 +50,14 @@ int main(int argc, char ** argv)
 
       //get Root node on server
       OpcUa::Node root = client.GetRootNode();
-      logger->info("Root node is: {}", root);
+      logger->info("Root node is: {}", ToString(root));
 
       //get and browse Objects node
       logger->info("Child of objects node are:");
       Node objects = client.GetObjectsNode();
 
       for (OpcUa::Node node : objects.GetChildren())
-        { logger->info("    {}", node); }
+        { logger->info("    {}", ToString(node)); }
 
       //get a node from standard namespace using objectId
       logger->info("NamespaceArray is:");
@@ -96,7 +96,7 @@ int main(int argc, char ** argv)
       std::vector<std::string> varpath{ "Objects", "Server", "ServerStatus", "CurrentTime" };
       myvar = root.GetChild(varpath);
 
-      logger->info("got node: {}", myvar);
+      logger->info("got node: {}", ToString(myvar));
 
       //Subscription
       SubClient sclt;
