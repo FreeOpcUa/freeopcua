@@ -197,7 +197,7 @@ void SubscriptionServiceInternal::Publish(const PublishRequest & request)
   if (PublishRequestQueues[session] < 100)
     {
       PublishRequestQueues[session] += 1;
-      LOG_DEBUG(Logger, "subscription_service  | push PublishRequest for session: {}: available requests: {}", session, PublishRequestQueues[session]);
+      LOG_DEBUG(Logger, "subscription_service  | push PublishRequest for session: {}: available requests: {}", ToString(session), PublishRequestQueues[session]);
     }
 
   //FIXME: else spec says we should return error to warn client
@@ -236,13 +236,13 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
 
   if (queue_it == PublishRequestQueues.end())
     {
-      LOG_ERROR(Logger, "subscription_service  | attempt to pop publish request for unknown session: {}", node);
+      LOG_ERROR(Logger, "subscription_service  | attempt to pop publish request for unknown session: {}", ToString(node));
 
       if (Logger && Logger->should_log(spdlog::level::debug))
         {
           for (auto i : PublishRequestQueues)
             {
-              Logger->debug("subscription_service  |   available session: {}", i.first);
+              Logger->debug("subscription_service  |   available session: {}",ToString( i.first));
             }
         }
       return false;
@@ -252,13 +252,13 @@ bool SubscriptionServiceInternal::PopPublishRequest(NodeId node)
     {
       if (queue_it->second == 0)
         {
-          LOG_ERROR(Logger, "subscription_service  | unable to send response: no publish request for session: {}", node);
+          LOG_ERROR(Logger, "subscription_service  | unable to send response: no publish request for session: {}", ToString(node));
           return false;
         }
 
       else
         {
-          LOG_DEBUG(Logger, "subscription_service  | pop PublishRequest for session: {}: available requests: {}", node, queue_it->second);
+          LOG_DEBUG(Logger, "subscription_service  | pop PublishRequest for session: {}: available requests: {}", ToString(node), queue_it->second);
           --queue_it->second;
           return true;
         }

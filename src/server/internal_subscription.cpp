@@ -288,7 +288,7 @@ MonitoredItemCreateResult InternalSubscription::CreateMonitoredItem(const Monito
     if (request.ItemToMonitor.AttributeId == AttributeId::EventNotifier)
       {
         LOG_DEBUG(Logger, "internal_subscription | id: {}, subscribe to event notifier", Data.SubscriptionId);
-        LOG_TRACE(Logger, "internal_subscription | id: {}, {}", Data.SubscriptionId, result.FilterResult);
+        LOG_TRACE(Logger, "internal_subscription | id: {}, {}", Data.SubscriptionId, ToString(result.FilterResult));
 
         // Client wants to subscribe to events
         // FIXME: check attribute EVENT notifier is set for the node
@@ -484,7 +484,7 @@ void InternalSubscription::DataChangeCallback(const uint32_t & m_id, const DataV
   event.Data.ClientHandle = monitoredDataChange.ClientHandle;
   event.Data.Value = value;
 
-  LOG_DEBUG(Logger, "internal_subscription | id: {}, enqueue TriggeredDataChange event: ClientHandle: {}", Data.SubscriptionId, event.Data.ClientHandle);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, enqueue TriggeredDataChange event: ClientHandle: {}", Data.SubscriptionId, (unsigned)event.Data.ClientHandle);
 
   ++monitoredDataChange.TriggerCount;
   TriggeredDataChangeEvents.push_back(event);
@@ -498,7 +498,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
   if (it == MonitoredEvents.end())
     {
-      LOG_DEBUG(Logger, "internal_subscription | id: {} does not monitor NodeId: {}", Data.SubscriptionId, node);
+      LOG_DEBUG(Logger, "internal_subscription | id: {} does not monitor NodeId: {}", Data.SubscriptionId, ToString(node));
 
       return;
     }
@@ -509,7 +509,7 @@ void InternalSubscription::TriggerEvent(NodeId node, Event event)
 
 bool InternalSubscription::EnqueueEvent(uint32_t monitoredItemId, const Event & event)
 {
-  LOG_DEBUG(Logger, "internal_subscription | id: {}, EnqueEvent: {}", Data.SubscriptionId, event);
+  LOG_DEBUG(Logger, "internal_subscription | id: {}, EnqueEvent: {}", Data.SubscriptionId, ToString(event));
 
   boost::unique_lock<boost::shared_mutex> lock(DbMutex);
 
@@ -553,7 +553,7 @@ std::vector<Variant> InternalSubscription::GetEventFields(const EventFilter & fi
 
       else
         {
-          LOG_DEBUG(Logger, "internal_subscription | id: {}, send value for: {}", Data.SubscriptionId, sattr.BrowsePath[0]);
+          LOG_DEBUG(Logger, "internal_subscription | id: {}, send value for: {}", Data.SubscriptionId, sattr.BrowsePath[0].Name);
 
           if (sattr.BrowsePath[0] == QualifiedName("EventId", 0))
             {
@@ -577,7 +577,7 @@ std::vector<Variant> InternalSubscription::GetEventFields(const EventFilter & fi
 
           else if (sattr.BrowsePath[0] == QualifiedName("Message", 0))
             {
-              LOG_DEBUG(Logger, "internal_subscription | message is: {}", event.Message);
+              LOG_DEBUG(Logger, "internal_subscription | message is: {}", ToString(event.Message));
 
               fields.push_back(event.Message);
             }

@@ -423,7 +423,15 @@ std::ostream & OpcUa::ToStream(std::ostream & os, const OpcUa::Event & value, in
   ToStream(os, value.EventType, true);
 
   indent(os, subIndentLevel);
-  os << "Time: " << value.Time;
+
+  try
+  {
+  	os << "Time: " << value.Time;
+  }
+  catch(const std::invalid_argument& e)
+  {
+	os << "Time: INVALID";
+  }
 
   if (showAll)
     {

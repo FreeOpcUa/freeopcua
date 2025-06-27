@@ -64,12 +64,12 @@ void RunServer()
 
   //browse root node on server side
   Node root = server.GetRootNode();
-  logger->info("Root node is: {}", root);
+  logger->info("Root node is: {}", ToString(root));
   logger->info("Children are:");
 
   for (Node node : root.GetChildren())
     {
-      logger->info("    {}", node);
+      logger->info("    {}", ToString(node));
     }
 
 
